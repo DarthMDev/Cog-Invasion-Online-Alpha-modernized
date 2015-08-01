@@ -1,0 +1,6 @@
+id: 100000001
+class: Account
+fields:
+  ACCOUNT_ID: "\"DecodedLogic\""
+  AVATAR_IDS: "[100000002, 0, 0, 0, 0, 0]"
+  BANNED: 0

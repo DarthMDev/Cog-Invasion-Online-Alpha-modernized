@@ -1,0 +1,6 @@
+id: 100000004
+class: Account
+fields:
+  AVATAR_IDS: "[100000005, 0, 0, 0, 0, 0]"
+  BANNED: 0
+  ACCOUNT_ID: "\"duckyduck1553\""

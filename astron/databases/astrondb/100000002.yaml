@@ -1,0 +1,13 @@
+id: 100000002
+class: DistributedToon
+fields:
+  setName: ("Deputy B.D.")
+  setMaxHealth: (137)
+  setGagAmmo: ([0, 3, 20, -2])
+  setPUInventory: ([-1])
+  setAdminToken: (0)
+  setMoney: (499124)
+  setDNAStrand: ("01/01/04/03/05/03/02/03/01/01/11/11/11/00/00")
+  ACCOUNT: 100000001
+  setHealth: (114)
+  setBackpack: (0)
