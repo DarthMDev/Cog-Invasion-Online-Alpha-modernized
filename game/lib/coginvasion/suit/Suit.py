@@ -59,8 +59,8 @@ class Suit(Avatar.Avatar):
         self.suitHeads = None
         self.suitHead = None
         self.loserSuit = None
-        self.healthMeterGlow = None
-        self.healthMeter = None
+        self.healthBarGlow = None
+        self.healthBar = None
         self.weapon = None
         self.weapon_sfx = None
         self.anim = None
@@ -336,8 +336,7 @@ class Suit(Avatar.Avatar):
                     self.headModel.setTexture(headTexture, 1)
 
     def cleanupSuit(self):
-        if self.healthMeter:
-            self.removeHealthBar()
+        self.removeHealthBar()
         if 'body' in self._Actor__commonBundleHandles:
             del self._Actor__commonBundleHandles['body']
         if self.shadow:
@@ -416,7 +415,7 @@ class Suit(Avatar.Avatar):
             self.updateHealthBar(self.getHealth())
 
     def updateHealthBar(self, hp):
-        if not self.healthMeter:
+        if not self.healthBar:
             return
         if hp > self.health:
             self.health = hp
@@ -470,7 +469,7 @@ class Suit(Avatar.Avatar):
         return Task.done
 
     def removeHealthBar(self):
-        if self.healthMeter:
+        if self.healthBar:
             self.healthBar.removeNode()
             self.healthBar = None
         if self.condition == 4 or self.condition == 5:

@@ -3124,7 +3124,8 @@ NPCEnter_Pointless_Dialogue = ["Hello there.", "How are you, %s?", "Hi there.", 
     "Throw wisely! Using a gag that is too strong for a Cog will not give you any experience towards that Gag track.",
     "You can see all of your unlocked Gags on the Inventory page in your Shticker Book.",
     "You can switch out Gags that you want to use on the Backpack page in your Shticker Book.",
-    "I heard Coach is selling Pie Turrets that can aid you in Cog Battles!"]
+    "I heard Coach is selling Pie Turrets that can aid you in Cog Battles!",
+    "Welcome to %s!"]
 NPCEnter_MFCO_Dialogue = ["%s, you must finish the current Quest I gave you before returning.",
     "Please finish the Quest I gave to you before returning.",
     "Back so soon, %s? Finish your Quest, then come back.",

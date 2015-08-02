@@ -92,10 +92,16 @@ class DistributedNPCToonAI(DistributedToonAI):
                 # This avatar entered, but still has to complete the objective I gave him/her.
                 chatArray = CIGlobals.NPCEnter_MFCO_Dialogue
 
+            welcomeToShopDialogueIndex = 28
+
             if chatArray:
                 chat = random.choice(chatArray)
                 if '%s' in chat:
-                    chat = chat % av.getName()
+                    if (chatArray == CIGlobals.NPCEnter_Pointless_Dialogue and
+                    CIGlobals.NPCEnter_Pointless_Dialogue.index(chat) == welcomeToShopDialogueIndex):
+                        chat = chat % CIGlobals.zone2TitleDict[self.zoneId][0]
+                    else:
+                        chat = chat % av.getName()
                 self.d_setChat(chat)
                 return False
             return True

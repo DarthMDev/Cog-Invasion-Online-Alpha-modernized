@@ -138,10 +138,13 @@ class CannedAttack(ThrowAttack):
             name = "doCannedAttack"
         self.suitTrack = Sequence(name = name)
         self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
+        self.suitTrack.append(Wait(1.2))
+        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-object'))
         if self.suit.type == "C":
-            self.suitTrack.append(Wait(2.3))
+            self.suitTrack.append(Wait(0))
         else:
-            self.suitTrack.append(Wait(3))
+            self.suitTrack.append(Wait(0.7))
+        self.suit.setPlayRate(2.0, 'throw-object')
         self.suit.play('throw-object')
         self.suitTrack.append(Func(self.throwObject))
         self.suitTrack.append(Wait(1.0))
@@ -209,10 +212,13 @@ class HardballAttack(ThrowAttack):
             name = "doHardballAttack"
         self.suitTrack = Sequence(name = name)
         self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
+        self.suitTrack.append(Wait(1.2))
+        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-object'))
         if self.suit.type == "C":
-            self.suitTrack.append(Wait(2.3))
+            self.suitTrack.append(Wait(0))
         else:
-            self.suitTrack.append(Wait(3))
+            self.suitTrack.append(Wait(0.7))
+        self.suit.setPlayRate(2.0, 'throw-object')
         self.suit.play('throw-object')
         self.suitTrack.append(Func(self.throwObject))
         self.suitTrack.append(Wait(1.0))
@@ -280,10 +286,13 @@ class ClipOnTieAttack(ThrowAttack):
             name = "doClipOnTieAttack"
         self.suitTrack = Sequence(name = name)
         self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
+        self.suitTrack.append(Wait(1.2))
+        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-paper'))
         if self.suit.type == "C":
-            self.suitTrack.append(Wait(2.3))
+            self.suitTrack.append(Wait(0))
         else:
-            self.suitTrack.append(Wait(3))
+            self.suitTrack.append(Wait(0.7))
+        self.suit.setPlayRate(2.0, 'throw-paper')
         self.suit.play('throw-paper')
         self.suitTrack.append(Func(self.throwObject))
         self.suitTrack.append(Wait(1.0))
@@ -348,10 +357,13 @@ class MarketCrashAttack(ThrowAttack):
             name = "doMarketCrashAttack"
         self.suitTrack = Sequence(name = name)
         self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
+        self.suitTrack.append(Wait(1.2))
+        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-paper'))
         if self.suit.type == "C":
-            self.suitTrack.append(Wait(2.3))
+            self.suitTrack.append(Wait(0))
         else:
-            self.suitTrack.append(Wait(3))
+            self.suitTrack.append(Wait(0.7))
+        self.suit.setPlayRate(2.0, 'throw-paper')
         self.suit.play('throw-paper')
         self.suitTrack.append(Func(self.throwObject))
         self.suitTrack.append(Wait(1.0))
@@ -417,10 +429,13 @@ class SackedAttack(ThrowAttack):
             name = "doSackedAttack"
         self.suitTrack = Sequence(name = name)
         self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
+        self.suitTrack.append(Wait(1.2))
+        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-paper'))
         if self.suit.type == "C":
-            self.suitTrack.append(Wait(2.3))
+            self.suitTrack.append(Wait(0))
         else:
-            self.suitTrack.append(Wait(3))
+            self.suitTrack.append(Wait(0.7))
+        self.suit.setPlayRate(2.0, 'throw-paper')
         self.suit.play('throw-paper')
         self.suitTrack.append(Func(self.throwObject))
         self.suitTrack.append(Wait(1.0))

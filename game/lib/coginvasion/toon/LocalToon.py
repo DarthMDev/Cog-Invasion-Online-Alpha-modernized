@@ -594,8 +594,7 @@ class LocalToon(DistributedToon):
                         'loader': ZoneUtil.getLoaderName(toZone),
                         'shardId': None,
                         'wantLaffMeter': 1,
-                        'how': 'teleportIn',
-                        'nextState': 'acknowledgeDeath'}
+                        'how': 'teleportIn'}
             self.cr.playGame.getPlace().doneStatus = requestStatus
             messenger.send(self.cr.playGame.getPlace().doneEvent)
 
@@ -633,12 +632,12 @@ class LocalToon(DistributedToon):
         self.stopMonitoringHP()
         taskMgr.remove("resetHeadColorAfterFountainPen")
         taskMgr.remove("LT.attackReactionDone")
+        self.stopLookAround()
         DistributedToon.disable(self)
         self.disableAvatarControls()
         self.disableLaffMeter()
         self.disablePies()
         self.disableChatInput()
-        self.stopLookAround()
         self.weaponType = None
         self.pieType = None
         self.myBattle = None

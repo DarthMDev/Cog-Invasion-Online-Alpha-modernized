@@ -327,8 +327,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if self.track:
             self.track.pause()
             self.track = None
-        self.track = Sequence(Wait(time), Func(self.setAttacking, False))
-        self.track.start()
         taskMgr.doMethodLater(CIGlobals.SuitAttackLengths[attackName],
                 self.continuePathTask, self.uniqueName('continueSuitRoam'))
 
@@ -346,11 +344,13 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                     self.d_handleWeaponTouch()
 
     def continuePathTask(self, task):
+        self.setAttacking(False)
         if self.head != "vp":
             if self.brain.fsm.getCurrentState().getName() == "followBoss":
                 # If we're protecting the boss, don't walk away from him!
                 return task.done
             else:
+                self.brain.neutral_startLookingForToons()
                 self.brain.start()
                 return task.done
         self.continuePath()
@@ -482,6 +482,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             toon.d_announceHealth(0, dmg)
             if toon.isDead():
                 self.b_setAnimState('win')
+                taskMgr.remove(self.uniqueName('continueSuitRoam'))
+                taskMgr.doMethodLater(6.0, self.continuePathTask, self.uniqueName('continueSuitRoam'))
 
     def turretHitByWeapon(weaponId, avId):
         weapon = CIGlobals.SuitAttacks[weaponId]

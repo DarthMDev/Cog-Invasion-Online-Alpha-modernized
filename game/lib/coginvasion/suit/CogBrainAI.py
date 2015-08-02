@@ -290,13 +290,19 @@ class CogBrain(DirectObject):
         self.suit.createPath(fromCurPos = True)
         self.numAttacksThrown = 0
         if not self.suit.isBackup():
-            taskMgr.add(self.__lookForToons, self.suit.uniqueName('lookForToon'))
+            self.neutral_startLookingForToons()
+
+    def neutral_startLookingForToons(self):
+        taskMgr.add(self.__lookForToons, self.suit.uniqueName('lookForToon'))
+
+    def neutral_stopLookingForToons(self):
+        taskMgr.remove(self.suit.uniqueName('lookForToon'))
 
     def __lookForToons(self, task):
         # This is so we wont't have to do a bunch of calculations
         # when we won't even be attacking if we already are.
         if self.suit.getAttacking():
-            task.delayTime = 3.5
+            task.delayTime = 1.0
             return task.again
 
         if self.numAttacksThrown >= self.Difficulty2MaxAttackThrows[self.suit.getLevel()]:
@@ -344,6 +350,7 @@ class CogBrain(DirectObject):
             if closestToonOrTurret.__class__.__name__ == "DistributedToonAI":
                 closestToonOrTurret.addNewAttacker(self.suit.doId)
             self.numAttacksThrown += 1
+            return task.done
         else:
             if self.numAttacksThrown > 0:
                 if not self.suit.isWalking():
@@ -356,7 +363,7 @@ class CogBrain(DirectObject):
         return task.again
 
     def exitNeutral(self):
-        taskMgr.remove(self.suit.uniqueName('lookForToon'))
+        self.neutral_stopLookingForToons()
         del self.numAttacksThrown
 
     def enterPanic(self):

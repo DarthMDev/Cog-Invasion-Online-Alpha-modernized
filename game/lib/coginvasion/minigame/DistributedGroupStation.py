@@ -16,7 +16,8 @@ class DistributedGroupStation(GroupStation.GroupStation, DistributedObject):
 	numPlayers2SphereSx = {3: 1.0, 4: 1.15, 8: 1.15}
 	numPlayers2SphereSy = {3: 1.0, 4: 0.8, 8: 1.0}
 	numPlayers2SphereY = {3: 0.0, 4: 5.0, 8: 5.0}
-	
+	numPlayers2CamPos = {3: (0, 30.0, 22.5), 4: (0, 30.0, 22.5), 8: (0, 35.0, 22.5)}
+
 	def __init__(self, cr):
 		try:
 			self.DistributedGroupStation_initialized
@@ -28,7 +29,7 @@ class DistributedGroupStation(GroupStation.GroupStation, DistributedObject):
 		self.name = None
 		self.mySlot = None
 		return
-	
+
 	def __initCollisions(self, name):
 		self.notify.debug("Initializing collision sphere...")
 		numSlots = len(self.circles)
@@ -43,31 +44,32 @@ class DistributedGroupStation(GroupStation.GroupStation, DistributedObject):
 		self.snp.setSx(self.numPlayers2SphereSx[numSlots])
 		self.snp.setSy(self.numPlayers2SphereSy[numSlots])
 		self.acceptOnce("enter" + self.snp.node().getName(), self.__handleEnterCollisionSphere)
-	
+
 	def __deleteCollisions(self):
 		self.ignore("enter" + self.snp.node().getName())
 		self.snp.removeNode()
 		del self.snp
-        
+
 	def __handleEnterCollisionSphere(self, entry):
 		self.notify.debug("Entering collision sphere...")
 		self.d_requestEnter()
-	
+
 	def setTimerTime(self, time):
 		GroupStation.GroupStation.setTimerTime(self, time)
-        
+
 	def setLocationPoint(self, lp):
 		GroupStation.GroupStation.setLocationPoint(self, lp)
-        
+
 	def slotOpen(self, slot):
 		self.mySlot = slot
 		circle2Run2 = self.circles[slot - 1]
 		self.enterStationSlot(circle2Run2)
-        
+
 	def enterStationSlot(self, slot):
 		self.cr.playGame.getPlace().fsm.request('station')
 		camera.reparentTo(self)
-		camera.setPos(0, 30.0, 22.5)
+		numSlots = len(self.circles)
+		camera.setPos(self.numPlayers2CamPos[numSlots])
 		camera.setPos(camera.getPos(render))
 		camera.reparentTo(render)
 		camera.lookAt(self)
@@ -96,38 +98,38 @@ class DistributedGroupStation(GroupStation.GroupStation, DistributedObject):
 								qt_btn.find('**/QuitBtn_DN'),
 								qt_btn.find('**/QuitBtn_RLVR')), relief=None, scale=1.2, text_scale=0.055,
 								pos=(0, 0, 0.85), text_pos = (0, -0.01), geom_scale = (0.8, 1, 1), command=self.d_requestAbort)
-                                
+
 	def deleteStationAbortGui(self):
 		if self.abortBtn:
 			self.abortBtn.destroy(); self.abortBtn = None
-            
+
 	def d_requestEnter(self):
 		self.cr.playGame.getPlace().fsm.request('stop')
 		self.sendUpdate("requestEnter", [])
-                                
+
 	def d_requestAbort(self):
 		self.deleteStationAbortGui()
 		self.sendUpdate("requestAbort", [self.mySlot])
-        
+
 	def abort(self):
 		self.exitMinigameStationSlot()
-	
+
 	def d_leaving(self):
 		self.sendUpdate("leaving", [])
-	
+
 	def fullStation(self):
 		self.cr.playGame.getPlace().fsm.request('walk')
-	
+
 	def announceGenerate(self):
 		DistributedObject.announceGenerate(self)
 		self.reparentTo(render)
 		self.name = self.uniqueName("MinigameStation")
 		self.__initCollisions(self.name)
-        
+
 	def disable(self):
 		DistributedObject.disable(self)
 		self.detachNode()
-        
+
 	def delete(self):
 		DistributedObject.delete(self)
 		self.__deleteCollisions()

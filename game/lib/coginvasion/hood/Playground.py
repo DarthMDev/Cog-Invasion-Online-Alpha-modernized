@@ -102,7 +102,10 @@ class Playground(Place.Place):
         Place.Place.exitWalk(self)
 
     def enterTeleportIn(self, requestStatus):
-        requestStatus['nextState'] = 'walk'
+        if base.localAvatar.getHealth() < 1:
+            requestStatus['nextState'] = 'acknowledgeDeath'
+        else:
+            requestStatus['nextState'] = 'walk'
         x, y, z, h, p, r = base.cr.hoodMgr.getPlaygroundCenterFromId(self.loader.hood.id)
         base.localAvatar.detachNode()
         base.localAvatar.setPosHpr(render, x, y, z, h, p, r)

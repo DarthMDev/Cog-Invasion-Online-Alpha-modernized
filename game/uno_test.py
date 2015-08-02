@@ -1,5 +1,4 @@
 from panda3d.core import *
-loadPrcFile('/c/Users/Brian/Documents/panda3d/Panda3D-CI/etc/Confauto.prc')
 loadPrcFile('config/config_client.prc')
 loadPrcFileData('', 'framebuffer-multisample 1')
 loadPrcFileData('', 'multisamples 2048')
@@ -15,6 +14,7 @@ from direct.interval.IntervalGlobal import *
 from lib.coginvasion.suit.DistributedSuit import DistributedSuit
 from direct.distributed.ClientRepository import ClientRepository
 from lib.coginvasion.toon.Toon import Toon
+from direct.directutil import Mopath
 
 base.enableParticles()
 
@@ -39,14 +39,43 @@ vfs.mount(Filename("phase_13.mf"), ".", VirtualFileSystem.MFReadOnly)
 
 base.cTrav = CollisionTraverser()
 base.shadowTrav = CollisionTraverser()
+"""
+tunnel = loader.loadModel("safe_zone_entrance_tunnel_TT.bam")
+tunnel.reparentTo(render)
 
-jj = Toon(base.cr)
-jj.setDNAStrand("00/07/03/07/01/07/01/07/09/09/01/03/03/05/00")
-jj.generateToon()
-jj.reparentTo(render)
-jj.setName('JJ')
-jj.setupNameTag()
+toon = Toon(base.cr)
+toon.setDNAStrand("00/00/00/00/00/00/00/00/00/00/00/00/00/00/00")
+toon.generateToon()
+toon.reparentTo(render)
 
+smiley = loader.loadModel('models/smiley.egg.pz')
+smiley.reparentTo(render)
+smiley.setX(45)
+smiley.setY(5)
+smiley.setZ(0)
+
+toon.setPos(-15, -5, 0)
+toon.setHpr(180, 0, 0)
+toon.reparentTo(smiley)
+toon.animFSM.request('run')
+
+smiley.setHpr(-90, 0, 0)
+
+ival = Sequence(LerpPosInterval(smiley, duration = 1.0, pos = (35, 5, 0), startPos = (45, 5, 0)), LerpHprInterval(smiley, duration = 2.0, hpr = (0, 0, 0), startHpr = (-90, 0, 0)))
+Sequence(Wait(3.0), Func(ival.start)).start()
+"""
+
+suit = DistributedSuit(base.cr)
+suit.doId = 0
+suit.generate()
+suit.announceGenerate()
+suit.reparentTo(render)
+suit.stopSmooth()
+suit.setSuit("C", "gladhander", "s", 0)
+suit.animFSM.request('attack', ['playhardball', 0])
+
+base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 
 #base.oobe()
 base.run()
+
