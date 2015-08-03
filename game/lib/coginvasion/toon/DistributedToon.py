@@ -55,7 +55,21 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.firstTimeChangingHP = True
         self.gagBPData = []
         self.quests = []
+        self.tier = None
+        self.questHistory = None
         return
+
+    def setTier(self, tier):
+        self.tier = tier
+
+    def getTier(self):
+        return self.tier
+
+    def setQuestHistory(self, array):
+        self.questHistory = array
+
+    def getQuestHistrory(self):
+        return self.questHistory
 
     def setQuests(self, questIds, currentObjectives, currentObjectivesProgress):
         self.quests = [questIds, currentObjectives, currentObjectivesProgress]

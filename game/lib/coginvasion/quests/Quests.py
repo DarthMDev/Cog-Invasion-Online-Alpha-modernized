@@ -22,12 +22,19 @@ RewardJellybeans = 8
 RewardHealth = 9
 RewardAccess = 10
 
+TierTT = 13
+TierDD = 14
+TierDG = 15
+TierML = 16
+TierBR = 17
+TierDL = 18
+
 Quests = {
     0: {"objectives": [[VisitNPC, 'visitanNPC', 2322, 2653],
                     [DefeatCog, 'namedropper', 10, ToontownCentralId],
                     [VisitNPC, 'visitanNPC', 2322, 2653]],
-        "reward": (RewardHealth, 3)},
-    1: {"objectives": [[DefeatCogDept, 'c', 5, Any], [VisitHQOfficer, 'visHQ', 0, 0]], "reward": (RewardHealth, 2)}
+        "reward": (RewardHealth, 3), "tier": TierTT},
+    1: {"objectives": [[DefeatCogDept, 'c', 5, Any], [VisitHQOfficer, 'visHQ', 0, 0]], "reward": (RewardHealth, 2), "tier": TierTT}
 }
 
 QuestNPCDialogue = {
@@ -35,6 +42,11 @@ QuestNPCDialogue = {
     "You look like the perfect Toon for the job.", "I'll tell you what, you go out and destroy 10 Name Droppers, and I'll give you three more Laff points.", "Sounds good? Great."], [], ["I knew you could do it! Here's your reward...",
     "You have earned a 3 point Laff boost."]]
 }
+
+QuestHQOfficerDialogue = {0: [["We've gotten word recently that something bad has happened at JJ's Diner.", "Go visit JJ and see if you can help out.", "Bye!"]],
+    1: [["Defeat 5 Bossbots.", "Bye!"]]}
+
+HQOfficerQuestCongrats = "Nice job completing that Quest! You have earned your reward."
 
 DefeatText = "Defeat"
 VisitText = "Visit"
@@ -72,6 +84,14 @@ class Quest:
         self.rewardType = rewardData[0]
         self.rewardValue = rewardData[1]
         self.index = index
+        self.tier = Quests[questId]["tier"]
+        self.lastQuestInTier = Quests[questId].get("lastQuestInTier", False)
+
+    def isLastQuestInTier(self):
+        return self.lastQuestInTier
+
+    def getTier(self):
+        return self.tier
 
     def isComplete(self):
         if self.currentObjective.type != VisitNPC:
@@ -113,3 +133,4 @@ class Quest:
         self.rewardType = None
         self.rewardValue = None
         self.index = None
+        self.tier = None

@@ -3130,6 +3130,8 @@ NPCEnter_MFCO_Dialogue = ["%s, you must finish the current Quest I gave you befo
     "Please finish the Quest I gave to you before returning.",
     "Back so soon, %s? Finish your Quest, then come back.",
     "You're back early, %s. You have to finish the Quest I gave you."]
+NPCEnter_HQ_PickQuest = "Choose a Quest."
+NPCEnter_HQ_FinishCurrentQuest = "Sorry, but you need to finish your current Quest before I can give you another one."
 
 zone2NpcDict = None
 

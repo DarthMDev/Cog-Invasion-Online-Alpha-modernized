@@ -14,7 +14,7 @@ import random
 class Bullet(DirectObject):
     damageFactor = 15.0
     max_dmg = 36
-    ShotgunBulletSpeed = 200.0
+    ShotgunBulletSpeed = 300.0
 
     def __init__(self, mg, gunNozzle, local, gunName):
         self.mg = mg
@@ -58,7 +58,7 @@ class Bullet(DirectObject):
                 self.bullet,
                 fluid = 1,
                 pos = pathNode.getPos(render),
-                duration = 30.0,
+                duration = 15.0,
                 startPos = self.gunNozzle.getPos(render)
             ).start()
         elif self.gunName == "shotgun":

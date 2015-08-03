@@ -83,7 +83,35 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.setupGags = False
         self.makeTopToons()
         self.quests = [[], [], []]
+        self.questHistory = []
+        self.tier = -1
         return
+
+    def setTier(self, tier):
+        self.tier = tier
+
+    def d_setTier(self, tier):
+        self.sendUpdate('setTier', [tier])
+
+    def b_setTier(self, tier):
+        self.d_setTier(tier)
+        self.setTier(tier)
+
+    def getTier(self):
+        return self.tier
+
+    def setQuestHistory(self, history):
+        self.questHistory = history
+
+    def d_setQuestHistory(self, history):
+        self.sendUpdate('setQuestHistory', [history])
+
+    def b_setQuestHistory(self, history):
+        self.d_setQuestHistory(history)
+        self.setQuestHistory(history)
+
+    def getQuestHistory(self):
+        return self.questHistory
 
     def d_setChat(self, chat):
         self.sendUpdate('setChat', [chat])

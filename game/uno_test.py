@@ -65,14 +65,41 @@ ival = Sequence(LerpPosInterval(smiley, duration = 1.0, pos = (35, 5, 0), startP
 Sequence(Wait(3.0), Func(ival.start)).start()
 """
 
-suit = DistributedSuit(base.cr)
-suit.doId = 0
-suit.generate()
-suit.announceGenerate()
-suit.reparentTo(render)
-suit.stopSmooth()
-suit.setSuit("C", "gladhander", "s", 0)
-suit.animFSM.request('attack', ['playhardball', 0])
+theTraverser = CollisionTraverser()
+
+pickerNode = CollisionNode('mouseRay')
+pickerNP = camera.attachNewNode(pickerNode)
+pickerNode.setCollideMask(BitMask32(0))
+pickerNode.setFromCollideMask(GeomNode.getDefaultCollideMask())
+pickerRay = CollisionRay()
+pickerNode.addSolid(pickerRay)
+myHandler = CollisionHandlerQueue()
+
+theTraverser.addCollider(pickerNP, myHandler)
+
+collSphere = CollisionSphere(0, 0, 0, 10)
+collNode = CollisionNode('node')
+collNode.addSolid(collSphere)
+collNode.setCollideMask(GeomNode.getDefaultCollideMask())
+np = render.attachNewNode(collNode)
+np.show()
+handler = CollisionHandlerPusher()
+
+base.cTrav.addCollider(np, handler)
+
+def traverse():
+    mpos = base.mouseWatcherNode.getMouse()
+    pickerRay.setFromLens(base.camNode, mpos.getX(), mpos.getY())
+ 
+    theTraverser.traverse(render)
+    # Assume for simplicity's sake that myHandler is a CollisionHandlerQueue.
+    if myHandler.getNumEntries() > 0:
+       # This is so we get the closest object.
+       myHandler.sortEntries()
+       pickedObj = myHandler.getEntry(0).getIntoNodePath()
+       pickedObj.setX(pickedObj, 5)
+
+base.accept('mouse1', traverse)
 
 base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 

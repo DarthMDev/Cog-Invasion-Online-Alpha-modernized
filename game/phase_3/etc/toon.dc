@@ -4,6 +4,7 @@
 from lib.coginvasion.avatar import DistributedAvatar/AI
 from lib.coginvasion.toon import DistributedToon/AI/UD
 from lib.coginvasion.toon import DistributedNPCToon/AI
+from lib.coginvasion.toon import DistributedHQNPCToon/AI
 from lib.coginvasion.npc import DistributedChar
 from lib.coginvasion.shop import DistributedBattleShop/AI
 from lib.coginvasion.shop import DistributedGagShop/AI
@@ -132,6 +133,8 @@ dclass DistributedToon : DistributedAvatar {
   setBackpack(int8 backpack = 0) required broadcast ownrecv db;
   setBackpackAmmo(uint8 gagIds [] = [2, 0, 1, 3], uint8 [] = [3, 7, 15, 0]) required broadcast airecv ownrecv db;
   setQuests(uint8[], uint8[], uint8[]) required broadcast ownrecv db;
+  setQuestHistory(uint8[]) required broadcast ownrecv db;
+  setTier(int8) required broadcast ownrecv db;
   updateBackpackAmmo() ownrecv;
   lookAtObject(float64, float64, float64, int8 = 1) broadcast ownsend;
   gagStart() broadcast ownsend;
@@ -222,6 +225,12 @@ dclass DistributedNPCToon : DistributedToon {
   exitAccepted();
   lookAtAvatar(uint32) broadcast;
   setChat(string) broadcast clsend;
+  oneChatThenExit();
+};
+
+dclass DistributedHQNPCToon : DistributedNPCToon {
+  makePickableQuests(uint8[]);
+  pickedQuest(uint8) clsend airecv;
 };
 
 dclass DistributedChar : DistributedSmoothNode {

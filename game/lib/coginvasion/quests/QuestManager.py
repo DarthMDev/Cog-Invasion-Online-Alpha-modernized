@@ -13,9 +13,11 @@ class QuestManager(QuestManagerBase):
     def makeQuestsFromData(self):
         QuestManagerBase.makeQuestsFromData(self, base.localAvatar)
 
-    def makeQuestNotes(self):
+    def makeQuestNotes(self, quests = None):
         notes = []
-        for quest in self.quests.values():
+        if not quests:
+            quests = self.quests.values()
+        for quest in quests:
 
             objective = quest.currentObjective
 
@@ -27,7 +29,7 @@ class QuestManager(QuestManagerBase):
             heading = None
             if isDefeatObjective:
                 heading = Quests.DefeatText
-            elif objective.type == Quests.VisitNPC:
+            elif objective.type in [Quests.VisitNPC, Quests.VisitHQOfficer]:
                 heading = Quests.VisitText
             note.setHeading(heading)
 
@@ -69,6 +71,8 @@ class QuestManager(QuestManagerBase):
                 nameOfNPC = CIGlobals.NPCToonNames[objective.npcId]
                 placeOfNPC = CIGlobals.zone2TitleDict[objective.npcZone][0]
                 taskInfo = nameOfNPC + "\nat " + placeOfNPC
+            elif objective.type == Quests.VisitHQOfficer:
+                taskInfo = "an HQ Officer\nat a Toon HQ"
             note.setTaskInfo(taskInfo)
 
             progress = ""
@@ -84,6 +88,9 @@ class QuestManager(QuestManagerBase):
                 streetName = CIGlobals.BranchZone2StreetName[streetZone]
                 hoodName = ZoneUtil.getHoodId(streetZone, 1)
                 progress = "on %s\nin %s" % (streetName, hoodName)
+                note.setProgress(progress)
+            elif objective.type == Quests.VisitHQOfficer:
+                progress = "Any Street\nAny Playground"
                 note.setProgress(progress)
 
             reward = ""

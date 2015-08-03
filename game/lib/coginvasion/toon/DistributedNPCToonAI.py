@@ -4,6 +4,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from DistributedToonAI import DistributedToonAI
+from lib.coginvasion.quests import Quests
 from lib.coginvasion.globals import CIGlobals
 
 import random
@@ -29,7 +30,7 @@ class DistributedNPCToonAI(DistributedToonAI):
         self.currentAvatarQuestOfMe = None
 
     def isHQOfficer(self):
-        return NPCToonDict[self.npcId][3] == CIGlobals.NPC_HQ
+        return CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_HQ
 
     def getNpcId(self):
         return self.npcId
@@ -71,13 +72,17 @@ class DistributedNPCToonAI(DistributedToonAI):
     def doQuestStuffWithThisAvatar(self):
         av = self.air.doId2do.get(self.currentAvatar)
         if av:
-            quest = self.currentAvatarQuestOfMe[1]
-            questId = self.currentAvatarQuestOfMe[0]
-            if av.questManager.isOnLastObjectiveOfQuest(questId):
-                if quest.isComplete():
-                    av.questManager.completedQuest(questId)
-            else:
-                av.questManager.incrementQuestObjective(questId)
+            if self.currentAvatarQuestOfMe != None:
+                quest = self.currentAvatarQuestOfMe[1]
+                questId = self.currentAvatarQuestOfMe[0]
+                if av.questManager.isOnLastObjectiveOfQuest(questId):
+                    if quest.isComplete():
+                        if self.isHQOfficer():
+                            self.d_setChat(Quests.HQOfficerQuestCongrats)
+                            self.sendUpdateToAvatarId(self.currentAvatar, 'oneChatThenExit', [])
+                        av.questManager.completedQuest(questId)
+                else:
+                    av.questManager.incrementQuestObjective(questId)
 
     def hasValidReasonToEnter(self, avId):
         av = self.air.doId2do.get(avId)

@@ -2,6 +2,7 @@
 # Created by:  blach (30Jul15)
 
 import Quests
+from lib.coginvasion.globals import CIGlobals
 
 class QuestManagerBase:
 
@@ -20,6 +21,7 @@ class QuestManagerBase:
             elif currObjective.type == Quests.VisitHQOfficer:
                 if CIGlobals.NPCToonDict[npcId][3] == CIGlobals.NPC_HQ:
                     return [questId, quest]
+        return None
 
     def makeQuestsFromData(self, avatar):
         for quest in self.quests.values():

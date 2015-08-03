@@ -4,6 +4,9 @@
 import QuestGlobals, Quests
 from QuestManagerBase import QuestManagerBase
 from lib.coginvasion.hood import ZoneUtil
+from lib.coginvasion.globals import CIGlobals
+
+import random
 
 class QuestManagerAI(QuestManagerBase):
 
@@ -14,6 +17,27 @@ class QuestManagerAI(QuestManagerBase):
     def cleanup(self):
         QuestManagerBase.cleanup(self)
         del self.avatar
+
+    def getPickableQuestList(self, npc):
+        generator = random.Random()
+        generator.seed(npc.doId)
+        quests = []
+        possibleQuestIds = list(Quests.Quests.keys())
+        for questId in possibleQuestIds:
+            if Quests.Quests[questId]["tier"] != self.avatar.getTier():
+                possibleQuestIds.remove(questId)
+        for questId in self.avatar.getQuestHistory():
+            if questId in possibleQuestIds:
+                possibleQuestIds.remove(questId)
+        if len(possibleQuestIds) > 1:
+            for questId in possibleQuestIds:
+                if Quests.Quests[questId].get("lastQuestInTier", False) == True:
+                    possibleQuestIds.remove(questId)
+        if len(possibleQuestIds) > 3:
+            quests += generator.sample(possibleQuestIds, 3)
+        else:
+            quests = possibleQuestIds
+        return quests
 
     def completedQuest(self, questId):
         quest = self.quests.get(questId)
@@ -127,11 +151,14 @@ class QuestManagerAI(QuestManagerBase):
         QuestManagerBase.makeQuestsFromData(self, self.avatar)
 
     def addNewQuest(self, questId):
+        questHistory = list(self.avatar.getQuestHistory())
         questData = list(self.avatar.getQuests())
         questData[0].append(questId)
         questData[1].append(0)
         questData[2].append(0)
+        questHistory.append(questId)
         self.avatar.b_setQuests(questData)
+        self.avatar.b_setQuestHistory(questHistory)
 
     def removeEntireQuest(self, questId):
         quest = self.quests[questId]

@@ -1,13 +1,13 @@
 id: 100000005
 class: DistributedToon
 fields:
-  setName: ("horse")
-  setDNAStrand: ("00/05/01/21/00/21/01/21/00/00/00/00/00/00/00")
-  setMoney: (20)
-  setHealth: (137)
-  setBackpack: (0)
   ACCOUNT: 100000004
-  setMaxHealth: (137)
+  setName: ("horse")
+  setBackpack: (0)
+  setDNAStrand: ("00/05/01/21/00/21/01/21/00/00/00/00/00/00/00")
   setBackpackAmmo: ([8, 6, 12, 5], [1, 0, 0, 0])
-  setAdminToken: (-1)
+  setMoney: (50)
+  setHealth: (137)
+  setMaxHealth: (137)
   setPUInventory: ([0])
+  setAdminToken: (-1)

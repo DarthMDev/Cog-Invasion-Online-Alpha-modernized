@@ -3,7 +3,7 @@
 
 from panda3d.core import CollisionNode, CollisionSphere, BitMask32
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import Parallel, LerpPosInterval, LerpQuatInterval
+from direct.interval.IntervalGlobal import Parallel, LerpPosInterval, LerpQuatInterval, Sequence, Wait, Func
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.quests import Quests
@@ -19,6 +19,12 @@ class DistributedNPCToon(DistributedToon):
         self.originIndex = None
         self.npcId = None
         self.currentChatIndex = 0
+        self.chatArray = None
+
+    def lookAtAvatar(self, avId):
+        av = self.cr.doId2do.get(avId)
+        if av:
+            self.headsUp(av)
 
     def setNpcId(self, id):
         self.npcId = id
@@ -73,23 +79,41 @@ class DistributedNPCToon(DistributedToon):
             self.cameraTrack.finish()
             self.cameraTrack = None
 
+    def oneChatThenExit(self):
+        self.acceptOnce('mouse1-up', self.d_requestExit)
+
     def enterAccepted(self):
         self.doCameraNPCInteraction()
-        questId, quest = base.localAvatar.questManager.getQuestAndIdWhereCurrentObjectiveIsToVisit(self.npcId)
-        self.currentQuestObjective = quest.currentObjectiveIndex
-        self.currentQuestId = questId
-        self.doNPCChat()
+        questData = base.localAvatar.questManager.getQuestAndIdWhereCurrentObjectiveIsToVisit(self.npcId)
+        if questData:
+            quest = questData[1]
+            self.currentQuestObjective = quest.currentObjectiveIndex
+            self.currentQuestId = questData[0]
+            self.currentChatIndex = 0
+            #if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_HQ:
+            #    self.doNPCChat(array = Quests.QuestHQOfficerDialogue)
+            if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_REGULAR:
+                self.doNPCChat(array = Quests.QuestNPCDialogue)
 
-    def doNPCChat(self):
-        self.b_setChat(Quests.QuestNPCDialogue[self.currentQuestId][self.currentQuestObjective][self.currentChatIndex])
-        self.currentChatIndex += 1
-        self.acceptOnce('mouse1-up', self.doNextNPCChat)
+    def doNPCChat(self, array = Quests.QuestNPCDialogue, chat = None):
+        if array and not chat:
+            self.chatArray = array
+            self.b_setChat(array[self.currentQuestId][self.currentQuestObjective][self.currentChatIndex])
+            self.currentChatIndex += 1
+            Sequence(Wait(0.1), Func(self.acceptOnce, 'mouse1-up', self.doNextNPCChat)).start()
+        elif chat and not array:
+            self.b_setChat(chat)
+            Sequence(Wait(0.1), Func(self.acceptOnce, 'mouse1-up', self.d_requestExit)).start()
+
+    def d_requestExit(self):
+        self.sendUpdate('requestExit', [])
 
     def doNextNPCChat(self):
-        if self.currentChatIndex >= len(Quests.QuestNPCDialogue[self.currentQuestId][self.currentQuestObjective]):
-            self.sendUpdate('requestExit', [])
+        if self.currentChatIndex >= len(self.chatArray[self.currentQuestId][self.currentQuestObjective]):
+            self.chatArray = None
+            self.d_requestExit()
         else:
-            self.doNPCChat()
+            self.doNPCChat(self.chatArray)
 
     def rejectEnter(self):
         self.exitAccepted()
@@ -137,6 +161,7 @@ class DistributedNPCToon(DistributedToon):
         self.ignore('mouse1-up')
         self.stopLookAround()
         self.stopNPCOriginPoll()
+        self.chatArray = None
         self.originIndex = None
         self.npcId = None
         self.stopCameraTrack()
