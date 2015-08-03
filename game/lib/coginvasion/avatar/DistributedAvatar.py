@@ -49,10 +49,13 @@ class DistributedAvatar(DistributedActor, Avatar):
     def showAndMoveHealthLabel(self):
         self.unstashHpLabel()
         self.stopMovingHealthLabel()
+        x = self.nameTag.getX()
+        y = self.nameTag.getY()
+        z = self.nameTag.getZ()
         moveTrack = LerpPosInterval(self.healthLabel,
                                 duration = 0.5,
-                                pos = self.tag.getPos(self) + (0, 0, 0.5),
-                                startPos = self.tag.getPos(self) - (0, 0, 2),
+                                pos = (x, y, z + 0.5),
+                                startPos = (x, y, z - 2),
                                 blendType = 'easeOut')
         self.healthLabelTrack = Sequence(moveTrack, Wait(1.0), Func(self.stashHpLabel))
         self.healthLabelTrack.start()
@@ -113,6 +116,7 @@ class DistributedAvatar(DistributedActor, Avatar):
 
     def announceGenerate(self):
         DistributedActor.announceGenerate(self)
+        self.setPythonTag('avatar', self.doId)
         self.setupHealthLabel()
         self.setParent(CIGlobals.SPHidden)
 

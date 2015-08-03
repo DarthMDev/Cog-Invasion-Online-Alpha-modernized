@@ -298,7 +298,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             icons = loader.loadModel("phase_3/models/props/gm_icons.bam")
             self.tokenIcon = icons.find('**/access_level_%s' % (tokens[tokenId]))
             self.tokenIcon.reparentTo(self)
-            self.tokenIcon.setPos(self.tag.getPos() + (0, 0, 0.5))
+            x = self.nameTag.getX()
+            y = self.nameTag.getY()
+            z = self.nameTag.getZ()
+            self.tokenIcon.setPos(Vec3(x, y, z) + (0, 0, 0.5))
             self.tokenIcon.setScale(0.4)
             self.tokenIconIval = Sequence(LerpHprInterval(self.tokenIcon, duration = 3.0, hpr = Vec3(360, 0, 0), startHpr = Vec3(0, 0, 0)))
             self.tokenIconIval.loop()
@@ -769,7 +772,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
         holeTrack.append(Func(restorePortal, portal))
         toonTrack = Sequence(
-            Wait(0.3), Func(self.getGeomNode().show), Func(self.tag.show),
+            Wait(0.3), Func(self.getGeomNode().show), Func(self.nameTag.show),
             ActorInterval(self, 'happy', startTime = 0.45)
         )
         if hasattr(self, 'uniqueName'):
@@ -783,7 +786,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             {"chan": "phase_3.5/models/props/portal-chan.bam"})
         self.show()
         self.getGeomNode().hide()
-        self.tag.hide()
+        self.nameTag.hide()
         self.track = self.getTeleportInTrack(self.portal2)
         self.track.setDoneEvent(self.track.getName())
         self.acceptOnce(self.track.getName(), self.teleportInDone, [callback, extraArgs])
@@ -805,8 +808,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             self.portal2 = None
         if self.getGeomNode():
             self.getGeomNode().show()
-        if self.tag:
-            self.tag.show()
+        if self.nameTag:
+            self.nameTag.show()
 
     def enterFallFWD(self, ts = 0, callback = None, extraArgs = []):
         self.play("fallf")

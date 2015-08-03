@@ -156,6 +156,7 @@ class DistributedNPCToon(DistributedToon):
         else:
             self.startNPCOriginPoll()
         self.acceptCollisions()
+        self.nameTag.setClickable(0)
 
     def disable(self):
         self.ignore('mouse1-up')

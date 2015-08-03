@@ -338,7 +338,7 @@ dclass DistributedToonFPSGame : DistributedMinigame {
   standingAvatar(uint32) broadcast clsend;
   runningAvatar(uint32) broadcast clsend;
   jumpingAvatar(uint32) broadcast clsend;
-  avatarHitByBullet(uint32, int8) clsend airecv;
+  avatarHitByBullet(uint32, int8) broadcast clsend airecv;
   damage(int8, uint32);
   deadAvatar(uint32, int16) broadcast clsend;
   respawnAvatar(uint32) broadcast clsend;

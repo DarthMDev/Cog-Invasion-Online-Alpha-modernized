@@ -36,7 +36,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         ToonTalker.ToonTalker.__init__(self)
         Actor.__init__(self, None, None, None, flattenable=0, setFinal=1)#self.setColorOff()
 
-        self.nameTag = NameTag()
+        self.nameTag = None
         self.setTwoSided(False)
 
         self.avatarType = None
@@ -47,9 +47,9 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         return
 
     def deleteNameTag(self):
-        if self.tag:
-            self.tag.destroy()
-            self.tag = None
+        if self.nameTag:
+            self.nameTag.destroy()
+            self.nameTag = None
 
     def disable(self):
         try:
@@ -78,7 +78,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             Actor.delete(self)
 
     def getNameTag(self):
-        return self.tag
+        return self.nameTag
 
     def setHeight(self, height):
         self.height = height
@@ -122,25 +122,26 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             name = tempName
         else:
             name = self.name
-        self.tag = self.nameTag.generate(name)
-        self.tag['text_fg'] = CIGlobals.NameTagColors[self.avatarType]["fg"]
-        self.tag['text_bg'] = CIGlobals.NameTagColors[self.avatarType]["bg"]
-        self.tag.setEffect(BillboardEffect.make(Vec3(0,0,1), True, False, 3.0, camera, Point3(0,0,0)))
+        self.nameTag = NameTag(name)
+        self.nameTag['fg'] = self.nameTag.NameTagColors[self.avatarType]["fg"]
+        self.nameTag['bg'] = self.nameTag.NameTagColors[self.avatarType]["bg"]
+        self.nameTag.setEffect(BillboardEffect.make(Vec3(0,0,1), True, False, 3.0, camera, Point3(0,0,0)))
 
-        ToonTalker.ToonTalker.setAvatar(self, self, self.tag)
+        ToonTalker.ToonTalker.setAvatar(self, self, self.nameTag)
 
-        self.tag.reparentTo(self)
+        self.nameTag.reparentTo(self)
         if self.avatarType == CIGlobals.Toon:
-            self.tag.setZ(self.getHeight() + offset)
+            self.nameTag.setZ(self.getHeight() + offset)
+            self.nameTag.setClickable(1)
         elif self.avatarType == CIGlobals.Suit or self.avatarType == CIGlobals.CChar:
-            self.tag.setZ(z + offset)
+            self.nameTag.setZ(z + offset)
 
         if self.avatarType == CIGlobals.Suit:
-            self.tag['text_font'] = CIGlobals.getSuitFont()
+            self.nameTag['font'] = CIGlobals.getSuitFont()
         else:
-            self.tag['text_font'] = CIGlobals.getToonFont()
+            self.nameTag['font'] = CIGlobals.getToonFont()
 
-        LabelScaler().resize(self.tag)
+        LabelScaler().resize(self.nameTag)
 
     def getAirborneHeight(self):
         height = self.getPos(self.shadowPlacer.shadowNodePath)

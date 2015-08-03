@@ -313,13 +313,6 @@ def getDefaultBtnGeom():
 					btn.find('**/QuitBtn_RLVR'))
 	return DefaultBtnGeom
 
-NameTagColors = {Suit: {"fg": (0.2, 0.2, 0.2, 1.0),
-						"bg": (0.8, 0.8, 0.8, 0.5)},
-				Toon: {"fg": (0.8, 0.4, 0.0, 1.0),
-						"bg": (0.8, 0.8, 0.8, 0.5)},
-				CChar: {"fg": (0.2, 0.5, 0.0, 1.0),
-						"bg": (0.8, 0.8, 0.8, 0.5)}}
-LocalNameTagColor = (0.3, 0.3, 0.7, 1.0)
 ShadowScales = {Suit: 0.4,
 				Toon: 0.4,
 				CChar: 0.55}

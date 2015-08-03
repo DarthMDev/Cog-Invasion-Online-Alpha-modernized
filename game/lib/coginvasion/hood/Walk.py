@@ -36,6 +36,7 @@ class Walk(StateData):
         base.localAvatar.startSmartCamera()
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
+        base.localAvatar.enablePicking()
         if base.localAvatar.getHealth() > 0:
             base.localAvatar.b_setAnimState("neutral")
         else:
@@ -43,6 +44,7 @@ class Walk(StateData):
 
     def exit(self):
         self.fsm.request('off')
+        base.localAvatar.enablePicking()
         base.localAvatar.disableAvatarControls()
         base.localAvatar.detachCamera()
         base.localAvatar.stopSmartCamera()

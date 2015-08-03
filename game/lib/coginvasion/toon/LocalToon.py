@@ -5,7 +5,7 @@
 
 """
 
-from panda3d.core import CollisionTraverser, Point3
+from panda3d.core import CollisionTraverser, Point3, CollisionRay, CollisionNode, BitMask32, CollisionHandlerQueue
 from lib.coginvasion.globals import CIGlobals
 from direct.controls import ControlManager
 from direct.controls.GravityWalker import GravityWalker
@@ -59,7 +59,83 @@ class LocalToon(DistributedToon):
         base.cTrav = CollisionTraverser()
         self.myBattle = None
         self.invGui = None
+
+        self.pickerTrav = None
+        self.pickerRay = None
+        self.pickerRayNode = None
+        self.pickerHandler = None
+        self.rolledOverTag = None
         #base.cTrav.showCollisions(render)
+
+    def setupPicker(self):
+        self.pickerTrav = CollisionTraverser('LT.pickerTrav')
+        self.pickerRay = CollisionRay()
+        rayNode = CollisionNode('LT.pickerNode')
+        rayNode.addSolid(self.pickerRay)
+        rayNode.setCollideMask(BitMask32(0))
+        rayNode.setFromCollideMask(CIGlobals.WallBitmask)
+        self.pickerRayNode = base.camera.attachNewNode(rayNode)
+        self.pickerHandler = CollisionHandlerQueue()
+        self.pickerTrav.addCollider(self.pickerRayNode, self.pickerHandler)
+
+    def enablePicking(self):
+        self.accept('mouse1', self.pickedSomething_down)
+        self.accept('mouse1-up', self.pickedSomething_up)
+        base.taskMgr.add(self.__travMousePicker, 'LT.travMousePicker')
+
+    def disablePicking(self):
+        base.taskMgr.remove('LT.travMousePicker')
+        self.ignore('mouse1')
+        self.ignore('mouse1-up')
+
+    def pickedSomething_down(self):
+        if self.rolledOverTag:
+            base.playSfx(DGG.getDefaultClickSound())
+            avatar = self.cr.doId2do.get(self.rolledOverTag)
+            avatar.getNameTag().setPickerState('down')
+
+    def pickedSomething_up(self):
+        if self.rolledOverTag:
+            avatar = self.cr.doId2do.get(self.rolledOverTag)
+            avatar.getNameTag().setPickerState('up')
+
+    def __travMousePicker(self, task):
+        if not base.mouseWatcherNode.hasMouse():
+            return task.cont
+
+        mpos = base.mouseWatcherNode.getMouse()
+        self.pickerRay.setFromLens(base.camNode, mpos.getX(), mpos.getY())
+
+        self.pickerTrav.traverse(render)
+        if self.pickerHandler.getNumEntries() > 0:
+            self.pickerHandler.sortEntries()
+            pickedObject = self.pickerHandler.getEntry(0).getIntoNodePath()
+            avatarId = pickedObject.getParent().getPythonTag('avatar')
+            if avatarId != None:
+                for do in self.cr.doId2do.values():
+                    if do.__class__.__name__ == "DistributedToon":
+                        if do.doId == avatarId:
+                            if do.getNameTag().getClickable() == 1:
+                                print 'clicakble'
+                                if (do.getNameTag().fsm.getCurrentState().getName() != "rollover" and
+                                do.getNameTag().fsm.getCurrentState().getName() != "down"):
+                                    print 'doing it!'
+                                    do.getNameTag().setPickerState('rollover')
+                                    base.playSfx(DGG.getDefaultRolloverSound())
+                                    self.rolledOverTag = avatarId
+                    else:
+                        if do.__class__.__name__ == "DistributedToon":
+                            if do.getNameTag().fsm.getCurrentState().getName() != "up":
+                                do.getNameTag().setPickerState('up')
+            else:
+                if self.rolledOverTag:
+                    avatar = self.cr.doId2do.get(self.rolledOverTag)
+                    if avatar:
+                        if avatar.getNameTag().fsm.getCurrentState().getName() != "up":
+                            avatar.getNameTag().setPickerState('up')
+                    self.rolledOverTag = None
+
+        return task.cont
 
     def prepareToSwitchControlType(self):
         # Hack fix for getting stuck moving in one direction without pressing the movement keys.
@@ -157,8 +233,8 @@ class LocalToon(DistributedToon):
 
     def setupNameTag(self, tempName = None):
         DistributedToon.setupNameTag(self, tempName)
-        if self.tag:
-            self.tag['text_fg'] = CIGlobals.LocalNameTagColor
+        if self.getNameTag():
+            self.getNameTag().setColorLocal()
 
     def d_broadcastPositionNow(self):
         self.d_clearSmoothing()
@@ -629,6 +705,7 @@ class LocalToon(DistributedToon):
 
     def disable(self):
         base.camLens.setMinFov(CIGlobals.OriginalCameraFov / (4./3.))
+        self.disablePicking()
         self.stopMonitoringHP()
         taskMgr.remove("resetHeadColorAfterFountainPen")
         taskMgr.remove("LT.attackReactionDone")
@@ -646,6 +723,7 @@ class LocalToon(DistributedToon):
 
     def announceGenerate(self):
         DistributedToon.announceGenerate(self)
+        self.setupPicker()
         self.setupControls()
         self.createChatInput()
         self.startLookAround()

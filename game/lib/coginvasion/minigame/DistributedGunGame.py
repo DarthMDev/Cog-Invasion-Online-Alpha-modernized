@@ -44,6 +44,11 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.cameraMovmentSeq = None
         return
 
+    def avatarHitByBullet(self, avId, damage):
+        avatar = self.getRemoteAvatar(avId)
+        if avatar:
+            avatar.grunt()
+
     def headBackToMinigameArea(self):
         if self.loader:
             self.loader.unload()
