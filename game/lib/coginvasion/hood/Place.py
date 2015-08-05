@@ -234,6 +234,11 @@ class Place(StateData):
         del self.loader
 
     def enterTeleportIn(self, requestStatus):
+        if requestStatus['avId'] != base.localAvatar.doId:
+            av = base.cr.doId2do.get(requestStatus['avId'])
+            if av:
+                base.localAvatar.gotoNode(av)
+                base.localAvatar.b_setChat("Hi, %s." % av.getName())
         base.transitions.irisIn()
         self.nextState = requestStatus.get('nextState', 'walk')
         base.localAvatar.attachCamera()
@@ -299,6 +304,9 @@ class Place(StateData):
             self.walkStateData.fsm.request('walking')
         self.watchTunnelSeq = Sequence(Wait(1.0), Func(LinkTunnel.globalAcceptCollisions))
         self.watchTunnelSeq.start()
+        base.localAvatar.setBusy(0)
+        base.localAvatar.enablePicking()
+        base.localAvatar.showFriendButton()
 
     def exitWalk(self):
         self.walkStateData.exit()
@@ -307,6 +315,11 @@ class Place(StateData):
             base.cr.playGame.hood.hideTitleText()
         self.watchTunnelSeq.pause()
         del self.watchTunnelSeq
+        base.localAvatar.setBusy(1)
+        base.localAvatar.disablePicking()
+        base.localAvatar.hideFriendButton()
+        base.localAvatar.friendsList.fsm.requestFinalState()
+        base.localAvatar.panel.fsm.requestFinalState()
         return
 
     def handleWalkDone(self, doneStatus):

@@ -1,6 +1,6 @@
 id: 100000000
 class: Account
 fields:
-  ACCOUNT_ID: "\"orange12345\""
   BANNED: 0
-  AVATAR_IDS: "[100000003, 100000006, 0, 0, 0, 0]"
+  AVATAR_IDS: "[100000003, 100000006, 100000009, 0, 0, 0]"
+  ACCOUNT_ID: "\"orange12345\""

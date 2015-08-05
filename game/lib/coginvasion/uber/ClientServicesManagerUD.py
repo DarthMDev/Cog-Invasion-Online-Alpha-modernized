@@ -127,6 +127,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         dg.addChannel(sender << 32 | avId)
         self.air.send(dg)
 
+        self.air.friendsManager.d_toonOnline(avId, fields['setFriendsList'][0], fields['setName'][0])
+
         #self.sendUpdateToAccountId(accId, 'enterResponse', [])
 
     def unloadAvatar(self, target, doId):
@@ -278,12 +280,14 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         fields = {"ACCOUNT": accId,
                 "setDNAStrand": (str(choice[0]),),
                 "setName": (str(choice[2]),),
-                "setHealth": (137,),
-                "setMaxHealth": (137,),
+                "setHealth": (15,),
+                "setMaxHealth": (15,),
                 "setMoney": (400,),
                 "setBackpackAmmo": ([13, 12, 7, 1], [15, 7, 10, 10],),
                 "setAdminToken": (-1,),
-                "setQuests": ([], [], [],)}
+                "setQuests": ([], [], [],),
+                "setQuestHistory": ([],),
+                "setTier": (13,)}
         self.notify.info("Creating new toon!")
         avId = 0
         avList = accFields["AVATAR_IDS"]

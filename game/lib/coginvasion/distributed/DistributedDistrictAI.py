@@ -80,6 +80,8 @@ class DistributedDistrictAI(DistributedObjectAI):
         print "[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is joining my district!"
         self.avatarIds.append(avId)
         self.b_setPopulation(self.getPopulation() + 1)
+        # Tell the DNM that a toon came online
+        self.air.districtNameMgr.d_toonJoined(avId)
 
     def monitorAvatars(self, task):
         for avId in self.avatarIds:
@@ -87,6 +89,7 @@ class DistributedDistrictAI(DistributedObjectAI):
                 print "[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is leaving my district!"
                 self.avatarIds.remove(avId)
                 self.b_setPopulation(self.getPopulation() - 1)
+                self.air.districtNameMgr.d_toonLeft(avId)
         task.delayTime = 0.5
         return task.again
 

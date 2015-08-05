@@ -107,32 +107,32 @@ class QuestManagerAI(QuestManagerBase):
         for questId in self.quests.keys():
             quest = self.quests[questId]
             objective = quest.getCurrentObjective()
-            if not objective.isComplete():
-                if objective.type == Quests.DefeatCog:
-                    if objective.subject == Quests.Any:
-                        if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
-                            self.incrementQuestObjectiveProgress(questId)
-                    elif objective.subject == cog.head:
-                        if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
-                            self.incrementQuestObjectiveProgress(questId)
-                elif objective.type == Quests.DefeatCogLevel:
-                    if cog.getLevel() >= objective.minCogLevel:
-                        if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
-                            self.incrementQuestObjectiveProgress(questId)
-                elif objective.type == Quests.DefeatCogDept:
-                    if objective.subject == cog.team:
-                        if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
-                            self.incrementQuestObjectiveProgress(questId)
+            if objective.type in Quests.DefeatCogObjectives:
+                if not objective.isComplete():
+                    if objective.type == Quests.DefeatCog:
+                        if objective.subject == Quests.Any:
+                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                                self.incrementQuestObjectiveProgress(questId)
+                        elif objective.subject == cog.head:
+                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                                self.incrementQuestObjectiveProgress(questId)
+                    elif objective.type == Quests.DefeatCogLevel:
+                        if cog.getLevel() >= objective.minCogLevel:
+                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                                self.incrementQuestObjectiveProgress(questId)
+                    elif objective.type == Quests.DefeatCogDept:
+                        if objective.subject == cog.team:
+                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                                self.incrementQuestObjectiveProgress(questId)
 
-                if objective.type in Quests.DefeatCogObjectives:
-                    self.checkIfObjectiveIsComplete(questId)
+                self.checkIfObjectiveIsComplete(questId)
 
     def invasionDefeated(self, hood, size = None):
         for questId in self.quests.keys():
             quest = self.quests[questId]
             objective = quest.getCurrentObjective()
-            if not objective.isComplete():
-                if objective.type == Quests.DefeatCogInvasion:
+            if objective.type == Quests.DefeatCogInvasion:
+                if not objective.isComplete():
                     if ZoneUtil.getHoodId(objective.area, 1) == hood or objective.area == Quests.Any:
                         self.incrementQuestObjectiveProgress(questId)
                         self.checkIfObjectiveIsComplete(questId)
@@ -141,8 +141,8 @@ class QuestManagerAI(QuestManagerBase):
         for questId in self.quests.keys():
             quest = self.quests[questId]
             objective = quest.getCurrentObjective()
-            if not objective.isComplete():
-                if objective.type == Quests.DefeatCogTournament:
+            if objective.type == Quests.DefeatCogTournament:
+                if not objective.isComplete():
                     if ZoneUtil.getHoodId(objective.area, 1) == hood or objective.area == Quests.Any:
                         self.incrementQuestObjectiveProgress(questId)
                         self.checkIfObjectiveIsComplete(questId)

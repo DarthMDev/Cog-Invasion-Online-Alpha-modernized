@@ -98,7 +98,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         animStateList = self.animFSM.getStates()
         self.animFSM.enterInitialState()
 
-        Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 3, 1.5)
+        if not hasattr(base, 'localAvatar') or not base.localAvatar == self:
+            Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 3, 1)
 
     def enterDeadNeutral(self, ts = 0, callback = None, extraArgs = []):
         self.loop('dneutral')
@@ -336,12 +337,12 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
     def setName(self, nameString):
         Avatar.Avatar.setName(self, nameString, avatarType = self.avatarType)
 
-    def setDNAStrand(self, dnaStrand):
+    def setDNAStrand(self, dnaStrand, makeTag = 1):
         ToonDNA.ToonDNA.setDNAStrand(self, dnaStrand)
         self.deleteCurrentToon()
-        self.generateToon()
+        self.generateToon(makeTag)
 
-    def generateToon(self):
+    def generateToon(self, makeTag = 1):
         self.generateLegs()
         self.generateTorso()
         self.generateHead()
@@ -350,7 +351,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.setGloves()
         self.parentToonParts()
         self.rescaleToon()
-        self.setupNameTag()
+        if makeTag:
+            self.setupNameTag()
         #self.tag.hide(BitMask32.bit(1))
         #objectPath = self.getGeomNode()
         #shadowCamera = objectPath.attachNewNode('shadowCamera')

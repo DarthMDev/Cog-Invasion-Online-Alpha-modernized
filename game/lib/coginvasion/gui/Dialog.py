@@ -77,7 +77,8 @@ class GlobalDialog(Dialog):
 
     def __init__(self, message = '', doneEvent = None, style = NoButtons,
             okButtonText = CIGlobals.DialogOk,
-            cancelButtonText = CIGlobals.DialogCancel, **kw):
+            cancelButtonText = CIGlobals.DialogCancel, extraArgs = [], **kw):
+        self.extraArgs = extraArgs
         if doneEvent == None and style != NoButtons:
             self.notify.error("You must specify a doneEvent on a dialog with buttons.")
         self.__doneEvent = doneEvent
@@ -104,10 +105,10 @@ class GlobalDialog(Dialog):
     def handleButton(self, value):
         if value == DGG.DIALOG_OK:
             self.doneStatus = 'ok'
-            messenger.send(self.__doneEvent)
+            messenger.send(self.__doneEvent, self.extraArgs)
         elif value == DGG.DIALOG_CANCEL:
             self.doneStatus = 'cancel'
-            messenger.send(self.__doneEvent)
+            messenger.send(self.__doneEvent, self.extraArgs)
 
     def getValue(self):
         if self.doneStatus == 'ok':

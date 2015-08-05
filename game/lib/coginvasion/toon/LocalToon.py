@@ -24,6 +24,12 @@ from direct.gui.DirectGui import DGG
 from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.quests import QuestManager
+from lib.coginvasion.gui.ToonPanel import ToonPanel
+from lib.coginvasion.friends.FriendRequestManager import FriendRequestManager
+from lib.coginvasion.base.PositionExaminer import PositionExaminer
+from lib.coginvasion.friends.FriendsList import FriendsList
+
+import random
 
 class LocalToon(DistributedToon):
     neverDisable = 1
@@ -40,6 +46,20 @@ class LocalToon(DistributedToon):
         self.chatInput = ChatInput()
         self.moneyGui = MoneyGui()
         self.laffMeter = LaffOMeter()
+        self.positionExaminer = PositionExaminer()
+        self.friendRequestManager = FriendRequestManager()
+        self.friendsList = FriendsList()
+        self.panel = ToonPanel()
+        friendsgui = loader.loadModel('phase_3.5/models/gui/friendslist_gui.bam')
+        self.friendButton = DirectButton(geom = (friendsgui.find('**/FriendsBox_Closed'),
+            friendsgui.find('**/FriendsBox_Rollover'), friendsgui.find('**/FriendsBox_Rollover')),
+            text = ("", "Friends", "Friends", ""),
+            text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1), text_scale = 0.065,
+            text_pos = (0, -0.2), relief = None, parent = base.a2dTopRight,
+            pos = (-0.18, 0.0, -0.17), command = self.friendsButtonClicked, scale = 0.75)
+        friendsgui.removeNode()
+        del friendsgui
+        self.hideFriendButton()
         self.runSfx = base.loadSfx("phase_3.5/audio/sfx/AV_footstep_runloop.wav")
         self.runSfx.setLoop(True)
         self.walkSfx = base.loadSfx("phase_3.5/audio/sfx/AV_footstep_walkloop.wav")
@@ -66,6 +86,61 @@ class LocalToon(DistributedToon):
         self.pickerHandler = None
         self.rolledOverTag = None
         #base.cTrav.showCollisions(render)
+
+    def friendsButtonClicked(self):
+        self.hideFriendButton()
+        self.friendsList.fsm.request('waitOnFriendsListResponse')
+
+    def hideFriendButton(self):
+        self.friendButton.hide()
+
+    def showFriendButton(self):
+        self.friendButton.show()
+
+    def gotoNode(self, node, eyeHeight = 3):
+        possiblePoints = (Point3(3, 6, 0),
+         Point3(-3, 6, 0),
+         Point3(6, 6, 0),
+         Point3(-6, 6, 0),
+         Point3(3, 9, 0),
+         Point3(-3, 9, 0),
+         Point3(6, 9, 0),
+         Point3(-6, 9, 0),
+         Point3(9, 9, 0),
+         Point3(-9, 9, 0),
+         Point3(6, 0, 0),
+         Point3(-6, 0, 0),
+         Point3(6, 3, 0),
+         Point3(-6, 3, 0),
+         Point3(9, 9, 0),
+         Point3(-9, 9, 0),
+         Point3(0, 12, 0),
+         Point3(3, 12, 0),
+         Point3(-3, 12, 0),
+         Point3(6, 12, 0),
+         Point3(-6, 12, 0),
+         Point3(9, 12, 0),
+         Point3(-9, 12, 0),
+         Point3(0, -6, 0),
+         Point3(-3, -6, 0),
+         Point3(0, -9, 0),
+         Point3(-6, -9, 0))
+        for point in possiblePoints:
+            pos = self.positionExaminer.consider(node, point, eyeHeight)
+            if pos:
+                self.setPos(node, pos)
+                self.lookAt(node)
+                self.setHpr(self.getH() + random.choice((-10, 10)), 0, 0)
+                return
+
+        self.setPos(node, 0, 0, 0)
+
+    def setFriendsList(self, friends):
+        DistributedToon.setFriendsList(self, friends)
+        self.panel.maybeUpdateFriendButton()
+
+    def d_requestAddFriend(self, avId):
+        self.sendUpdate('requestAddFriend', [avId])
 
     def setupPicker(self):
         self.pickerTrav = CollisionTraverser('LT.pickerTrav')
@@ -98,6 +173,7 @@ class LocalToon(DistributedToon):
         if self.rolledOverTag:
             avatar = self.cr.doId2do.get(self.rolledOverTag)
             avatar.getNameTag().setPickerState('up')
+            self.panel.makePanel(self.rolledOverTag)
 
     def __travMousePicker(self, task):
         if not base.mouseWatcherNode.hasMouse():
@@ -116,10 +192,8 @@ class LocalToon(DistributedToon):
                     if do.__class__.__name__ == "DistributedToon":
                         if do.doId == avatarId:
                             if do.getNameTag().getClickable() == 1:
-                                print 'clicakble'
                                 if (do.getNameTag().fsm.getCurrentState().getName() != "rollover" and
                                 do.getNameTag().fsm.getCurrentState().getName() != "down"):
-                                    print 'doing it!'
                                     do.getNameTag().setPickerState('rollover')
                                     base.playSfx(DGG.getDefaultRolloverSound())
                                     self.rolledOverTag = avatarId
@@ -705,6 +779,10 @@ class LocalToon(DistributedToon):
 
     def disable(self):
         base.camLens.setMinFov(CIGlobals.OriginalCameraFov / (4./3.))
+        self.friendsList.destroy()
+        self.friendsList = None
+        self.positionExaminer.delete()
+        self.positionExaminer = None
         self.disablePicking()
         self.stopMonitoringHP()
         taskMgr.remove("resetHeadColorAfterFountainPen")
@@ -727,6 +805,7 @@ class LocalToon(DistributedToon):
         self.setupControls()
         self.createChatInput()
         self.startLookAround()
+        self.friendRequestManager.watch()
         #posBtn = DirectButton(text = "Get Pos", scale = 0.08, pos = (0.3, 0, 0), parent = base.a2dLeftCenter, command = self.printAvPos)
         self.accept("gotLookSpot", self.handleLookSpot)
 

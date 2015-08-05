@@ -11,6 +11,38 @@ class DistrictNameManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
         self.availableNames = []
 
+    def toonJoined(self, avatarId):
+
+        def toonResponse(dclass, fields):
+            if dclass != self.air.dclassesByName['DistributedToonUD']:
+                return
+
+            name = fields['setName'][0]
+            fl = fields['setFriendsList'][0]
+            self.air.friendsManager.d_toonOnline(avatarId, name, fl)
+
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            avatarId,
+            toonResponse
+        )
+
+    def toonLeft(self, avatarId):
+
+        def toonResponse(dclass, fields):
+            if dclass != self.air.dclassesByName['DistributedToonUD']:
+                return
+
+            name = fields['setName'][0]
+            fl = fields['setFriendsList'][0]
+            self.air.friendsManager.d_toonOffline(avatarId, name, fl)
+
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            avatarId,
+            toonResponse
+        )
+
     def requestDistrictName(self):
         sender = self.air.getMsgSender()
         # Give them the first name in the array, if it exists.

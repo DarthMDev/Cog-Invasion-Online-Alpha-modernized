@@ -85,7 +85,10 @@ class QuestManager(QuestManagerBase):
                     note.setCompleted(1)
             elif objective.type == Quests.VisitNPC:
                 streetZone = ZoneUtil.getBranchZone(objective.npcZone)
-                streetName = CIGlobals.BranchZone2StreetName[streetZone]
+                if streetZone % 1000 >= 100:
+                    streetName = CIGlobals.BranchZone2StreetName[streetZone]
+                else:
+                    streetName = "the Playground"
                 hoodName = ZoneUtil.getHoodId(streetZone, 1)
                 progress = "on %s\nin %s" % (streetName, hoodName)
                 note.setProgress(progress)

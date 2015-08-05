@@ -92,9 +92,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
     def setName(self, nameString = None, avatarType = None, charName = None, createNow = 0):
         if not nameString:
             return
-
         self.name = nameString
-        self.avatarType = avatarType
         if charName:
             self.charName = charName
         if createNow:
@@ -104,6 +102,8 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         return self.name
 
     def setupNameTag(self, tempName = None):
+        if not self.name and not tempName:
+            return
         offset = 0.0
         if self.avatarType:
             if self.avatarType == CIGlobals.Suit:
@@ -122,7 +122,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             name = tempName
         else:
             name = self.name
-        self.nameTag = NameTag(name)
+        self.nameTag = NameTag(name, self.avatarType)
         self.nameTag['fg'] = self.nameTag.NameTagColors[self.avatarType]["fg"]
         self.nameTag['bg'] = self.nameTag.NameTagColors[self.avatarType]["bg"]
         self.nameTag.setEffect(BillboardEffect.make(Vec3(0,0,1), True, False, 3.0, camera, Point3(0,0,0)))

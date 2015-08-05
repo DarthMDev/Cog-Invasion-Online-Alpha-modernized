@@ -145,3 +145,5 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
                                 'ClientServicesManager')
         self.dnm = self.generateGlobalObject(DO_ID_DISTRICT_NAME_MANAGER,
                                 'DistrictNameManager')
+        self.friendsManager = self.generateGlobalObject(DO_ID_FRIENDS_MANAGER,
+                                'FriendsManager')

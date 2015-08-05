@@ -14,12 +14,18 @@ uberdogs:
     - id: 1002
       class: LauncherLoginManager
       anonymous: true
+    - id: 1003
+      class: DistrictNameManager
+      anonymous: false
+    - id: 1004
+      class: FriendsManager
+      anonymous: false
 
 roles:
     - type: clientagent
       bind: 0.0.0.0:7032
       version: "ver-0.9.8"
-      manual_dc_hash: 0x1dcc8c0e
+      manual_dc_hash: 0x8e3020c7
       client:
        relocate: true
        add_interest: enabled

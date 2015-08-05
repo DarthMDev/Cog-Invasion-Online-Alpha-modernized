@@ -57,7 +57,21 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.quests = []
         self.tier = None
         self.questHistory = None
+        self.busy = None
+        self.friends = None
         return
+
+    def setFriendsList(self, friends):
+        self.friends = friends
+
+    def getFriendsList(self):
+        return self.friends
+
+    def setBusy(self, busy):
+        self.busy = busy
+
+    def getBusy(self):
+        return self.busy
 
     def setTier(self, tier):
         self.tier = tier
@@ -513,6 +527,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.startSmooth()
 
     def disable(self):
+        self.busy = None
         taskMgr.remove(self.uniqueName('sBAL'))
         taskMgr.remove(self.uniqueName('blinkOnTurn'))
         if self.track != None:

@@ -54,6 +54,7 @@ from lib.coginvasion.hood import DistributedCinemaInterior/AI
 from lib.coginvasion.hood import DistributedToonHQInterior/AI
 from lib.coginvasion.hood import DistributedBoat/AI
 from lib.coginvasion.hood import DistributedDoor/AI
+from lib.coginvasion.friends import FriendsManager/UD
 
 struct AvChoice {
   uint32 avId;
@@ -93,6 +94,8 @@ dclass DistrictNameManager : DistributedObject {
   requestDistrictName() clsend;
   claimDistrictName(string);
   noAvailableNames();
+  toonJoined(uint32) clsend;
+  toonLeft(uint32) clsend;
 };
 
 dclass LauncherLoginManager : DistributedObject {
@@ -135,6 +138,7 @@ dclass DistributedToon : DistributedAvatar {
   setQuests(uint8[], uint8[], uint8[]) required broadcast ownrecv db;
   setQuestHistory(uint8[]) required broadcast ownrecv db;
   setTier(int8) required broadcast ownrecv db;
+  setFriendsList(uint32[] = []) required ownrecv db airecv;
   updateBackpackAmmo() ownrecv;
   lookAtObject(float64, float64, float64, int8 = 1) broadcast ownsend;
   gagStart() broadcast ownsend;
@@ -161,6 +165,7 @@ dclass DistributedToon : DistributedAvatar {
   setEquippedPU(int8) required broadcast ownrecv db;
   requestEquipPU(int8) ownsend airecv;
   usedPU(int8) ownsend airecv;
+  requestAddFriend(uint32) ownsend airecv;
 };
 
 dclass DistributedTreasure : DistributedObject {
@@ -462,4 +467,32 @@ dclass DistributedPieTurret : DistributedAvatar {
   shoot(uint32) broadcast;
   makeSplat(float64[]) broadcast clsend;
   die() broadcast;
+};
+
+dclass FriendsManager : DistributedObject {
+  requestAvatarInfo(uint32) clsend;
+  askAvatarToBeFriends(uint32) clsend;
+  iAcceptedFriendRequest(uint32) clsend;
+  acceptedFriendRequest();
+  rejectedFriendRequest();
+  avatarInfo(string, string, uint8, uint8);
+  friendRequest(uint32, string, string);
+  cancelFriendRequest(uint32) clsend;
+  requestAvatarStatus(uint32) clsend;
+  someoneWantsYourStatus(uint32);
+  myAvatarStatus(uint32, int8) clsend;
+  avatarStatus(uint32, int8);
+  iCancelledFriendRequest(uint32) clsend;
+  iRejectedFriendRequest(uint32) clsend;
+  toonOnline(uint32, string);
+  toonOffline(uint32, string);
+  iRemovedFriend(uint32) clsend;
+  friendLeftYourList(uint32);
+  iWantToTeleportToAvatar(uint32) clsend;
+  avatarWantsYourLocation(uint32);
+  myAvatarLocation(uint32, uint32, uint32) clsend;
+  avatarLocation(uint32, uint32, uint32);
+  teleportNotify(string);
+  requestFriendsList() clsend;
+  friendsList(uint32[], string[]);
 };

@@ -24,10 +24,8 @@ class DistributedBattleShop(DistributedShop):
 
     def setupClerk(self):
         self.clerk = Toon(self.cr)
+        self.clerk.setName("Coach")
         self.clerk.setDNAStrand(NPC_DNA['Coach'])
-        self.clerk.setName('Coach')
-        self.clerk.setupNameTag()
-        self.clerk.generateToon()
         self.clerk.reparentTo(self)
         self.clerk.animFSM.request('neutral')
         self.clerk.setH(180)

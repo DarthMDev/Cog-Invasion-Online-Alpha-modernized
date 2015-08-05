@@ -85,7 +85,29 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.quests = [[], [], []]
         self.questHistory = []
         self.tier = -1
+        self.friends = []
         return
+
+    def requestAddFriend(self, avId):
+        av = self.air.doId2do.get(avId)
+        if av:
+            if av.zoneId == self.zoneId and not avId in self.friends:
+                fl = list(self.friends)
+                fl.append(avId)
+                self.b_setFriendsList(fl)
+
+    def setFriendsList(self, friends):
+        self.friends = friends
+
+    def d_setFriendsList(self, friends):
+        self.sendUpdate('setFriendsList', [friends])
+
+    def b_setFriendsList(self, friends):
+        self.d_setFriendsList(friends)
+        self.setFriendsList(friends)
+
+    def getFriendsList(self):
+        return self.friends
 
     def setTier(self, tier):
         self.tier = tier

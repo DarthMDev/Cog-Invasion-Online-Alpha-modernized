@@ -13,10 +13,16 @@ def getWhereName(zoneId):
 	else:
 		return 'street'
 
+def getBranchZone(zoneId):
+	branchZone = zoneId - zoneId % 100
+	if zoneId % 1000 >= 500:
+		branchZone -= 500
+	return branchZone
+
 def getLoaderName(zoneId):
-	if getWhereName(zoneId) == 'playground':
+	if str(getBranchZone(zoneId))[1:] == '000':
 		return 'safeZoneLoader'
-	elif getWhereName(zoneId) == 'street':
+	elif int(str(getBranchZone(zoneId))[1:]) >= 100 and int(str(getBranchZone(zoneId))[1:]) <= 300:
 		return 'townLoader'
 	else:
 		return None
@@ -26,12 +32,6 @@ def isStreetInSameHood(zoneId):
 
 def isStreet(zoneId):
 	return getWhereName(zoneId) == 'street'
-
-def getBranchZone(zoneId):
-	branchZone = zoneId - zoneId % 100
-	if zoneId % 1000 >= 500:
-		branchZone -= 500
-	return branchZone
 
 def getCanonicalBranchZone(zoneId):
     return getBranchZone(getCanonicalZoneId(zoneId))
