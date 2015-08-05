@@ -1,17 +1,17 @@
 id: 100000006
 class: DistributedToon
 fields:
-  setMaxHealth: (137)
-  setQuestHistory: ([2])
-  setTier: (13)
-  setHealth: (137)
-  setBackpackAmmo: ([12, 7, 1, 13], [7, 10, 10, 14])
   setName: ("Dogity")
-  setDNAStrand: ("00/01/04/14/02/18/01/14/01/01/01/02/02/05/00")
+  setHealth: (137)
   setBackpack: (0)
-  setFriendsList: ([100000005])
-  setMoney: (400)
-  ACCOUNT: 100000000
+  setDNAStrand: ("00/01/04/14/02/18/01/14/01/01/01/02/02/05/00")
   setQuests: ([2], [1], [0])
+  ACCOUNT: 100000000
+  setQuestHistory: ([2])
+  setFriendsList: ([100000005])
+  setMoney: (555)
+  setBackpackAmmo: ([12, 7, 1, 13], [7, 10, 10, 14])
+  setMaxHealth: (137)
+  setTier: (13)
   setAdminToken: (-1)
   setPUInventory: ([0])

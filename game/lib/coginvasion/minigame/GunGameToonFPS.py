@@ -92,6 +92,7 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
         self.mg.d_gunShot()
+        self.mg.makeSmokeEffect(self.weapon.find('**/joint_nozzle').getPos(render))
         self.traverse()
 
     def traverse(self):

@@ -287,7 +287,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
                 "setAdminToken": (-1,),
                 "setQuests": ([], [], [],),
                 "setQuestHistory": ([],),
-                "setTier": (13,)}
+                "setTier": (13,),
+                "setFriendsList": ([],)}
         self.notify.info("Creating new toon!")
         avId = 0
         avList = accFields["AVATAR_IDS"]

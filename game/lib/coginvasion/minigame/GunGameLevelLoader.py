@@ -104,6 +104,18 @@ class GunGameLevelLoader:
             'spawn_points': hoodMgr.dropPoints[CIGlobals.MinniesMelodyland]
         },
 
+        'oz': {
+            'name': CIGlobals.OutdoorZone,
+            'camera': (Point3(-54.42, -91.05, 34.89), Vec3(315.29, 336.80, 0.00)),
+            'dna': [
+                'phase_6/dna/storage_OZ.dna',
+                'phase_6/dna/storage_OZ_sz.dna',
+                'phase_6/dna/outdoor_zone_sz.dna'
+            ],
+            'sky': 'TT',
+            'spawn_points': hoodMgr.dropPoints[CIGlobals.OutdoorZone]
+        },
+
         'cbhq': {
             'name': CIGlobals.CashbotHQ,
             'camera': (Point3(302.64, 5.00, 15.20), Vec3(135.00, 341.57, 0.00)),

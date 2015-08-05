@@ -20,7 +20,7 @@ def getBranchZone(zoneId):
 	return branchZone
 
 def getLoaderName(zoneId):
-	if str(getBranchZone(zoneId))[1:] == '000':
+	if str(getBranchZone(zoneId))[-3:] == '000':
 		return 'safeZoneLoader'
 	elif int(str(getBranchZone(zoneId))[1:]) >= 100 and int(str(getBranchZone(zoneId))[1:]) <= 300:
 		return 'townLoader'
@@ -55,8 +55,10 @@ def getTrueZoneId(zoneId, currentZoneId):
 
 def getHoodId(zoneId, street = 0):
 	if street:
-		if str(zoneId)[0] == '1':
+		if str(zoneId)[0] == '1' and len(str(zoneId)) == 4:
 			return DonaldsDock
+		elif str(zoneId)[0] == '1' and len(str(zoneId)) == 5:
+			return MinigameArea
 		elif str(zoneId)[0] == '2':
 			return ToontownCentral
 		elif str(zoneId)[0] == '3':

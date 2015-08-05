@@ -66,9 +66,55 @@ ival = Sequence(LerpPosInterval(smiley, duration = 1.0, pos = (35, 5, 0), startP
 Sequence(Wait(3.0), Func(ival.start)).start()
 """
 
-tag = NameTag.NameTag("Ducky")
-tag.reparentTo(render)
-tag.show()
+torsoType2flagY = {"dgs_shorts": -1.5, "dgs_skirt": -1.5, "dgm_shorts": -1.1, "dgm_skirt": -1.1, "dgl_shorts": -1.1, "dgl_skirt": -1.1}
+
+flag = loader.loadModel('phase_4/models/minigames/flag.egg')
+flag.find('**/flag').setTwoSided(1)
+flag.find('**/flag_pole').setColor(0.1, 0.1, 0.1, 1.0)
+flag.find('**/flag').setColor(1, 0, 0, 1.0)
+flag.reparentTo(render)
+
+toon = Toon(base.cr)
+toon.parseDNAStrand("00/01/04/17/01/17/01/17/03/03/09/09/09/04/00")
+toon.generateToon()
+toon.reparentTo(render)
+toon.animFSM.request('run')
+toon.setX(-5)
+
+flag.reparentTo(toon.find('**/def_joint_attachFlower'))
+flag.setPos(0.2, torsoType2flagY[toon.torso], -1)
+
+flag2 = loader.loadModel('phase_4/models/minigames/flag.egg')
+flag2.find('**/flag').setTwoSided(1)
+flag2.find('**/flag_pole').setColor(0.1, 0.1, 0.1, 1.0)
+flag2.find('**/flag').setColor(0, 0, 1, 1.0)
+flag2.reparentTo(render)
+
+toon2 = Toon(base.cr)
+toon2.parseDNAStrand("00/01/04/17/00/17/01/17/03/03/09/09/09/04/00")
+toon2.generateToon()
+toon2.reparentTo(render)
+toon2.animFSM.request('run')
+toon2.setX(0)
+
+flag2.reparentTo(toon2.find('**/def_joint_attachFlower'))
+flag2.setPos(0.2, torsoType2flagY[toon2.torso], -1)
+
+flag3 = loader.loadModel('phase_4/models/minigames/flag.egg')
+flag3.find('**/flag').setTwoSided(1)
+flag3.find('**/flag_pole').setColor(0.1, 0.1, 0.1, 1.0)
+flag3.find('**/flag').setColor(0, 0, 1, 1.0)
+flag3.reparentTo(render)
+
+toon3 = Toon(base.cr)
+toon3.parseDNAStrand("00/01/04/17/02/17/01/17/03/03/09/09/09/04/00")
+toon3.generateToon()
+toon3.reparentTo(render)
+toon3.animFSM.request('run')
+toon3.setX(5)
+
+flag3.reparentTo(toon3.find('**/def_joint_attachFlower'))
+flag3.setPos(0.2, torsoType2flagY[toon3.torso], -1)
 
 base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 

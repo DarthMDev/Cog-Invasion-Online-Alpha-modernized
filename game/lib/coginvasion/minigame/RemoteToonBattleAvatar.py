@@ -190,6 +190,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
             self.track.start(ts)
             del gunSound
 
+            self.mg.makeSmokeEffect(self.avatar.gun.find('**/joint_nozzle').getPos(render))
+
     def exitShoot(self):
         self.resetTrack()
 

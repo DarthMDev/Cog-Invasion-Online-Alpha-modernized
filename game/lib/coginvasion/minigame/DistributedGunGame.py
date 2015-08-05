@@ -44,6 +44,15 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.cameraMovmentSeq = None
         return
 
+    def makeSmokeEffect(self, pos):
+        smoke = loader.loadModel("phase_4/models/props/test_clouds.bam")
+        smoke.setBillboardAxis()
+        smoke.reparentTo(render)
+        smoke.setPos(pos)
+        smoke.setScale(0.05, 0.05, 0.05)
+        track = Sequence(Parallel(LerpScaleInterval(smoke, 0.5, (0.1, 0.15, 0.15)), LerpColorScaleInterval(smoke, 0.5, Vec4(2, 2, 2, 0))), Func(smoke.removeNode))
+        track.start()
+
     def avatarHitByBullet(self, avId, damage):
         avatar = self.getRemoteAvatar(avId)
         if avatar:
