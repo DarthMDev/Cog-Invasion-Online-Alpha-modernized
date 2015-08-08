@@ -89,7 +89,7 @@ class LocalToon(DistributedToon):
 
     def friendsButtonClicked(self):
         self.hideFriendButton()
-        self.friendsList.fsm.request('waitOnFriendsListResponse')
+        self.friendsList.fsm.request('onlineFriendsList')
 
     def hideFriendButton(self):
         self.friendButton.hide()

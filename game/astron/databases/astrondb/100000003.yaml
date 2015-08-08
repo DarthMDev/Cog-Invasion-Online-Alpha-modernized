@@ -1,17 +1,17 @@
 id: 100000003
 class: DistributedToon
 fields:
-  setHealth: (10)
-  setMoney: (490641)
-  setTier: (13)
-  setFriendsList: ([])
-  setName: ("Ducky")
-  ACCOUNT: 100000000
-  setMaxHealth: (15)
-  setBackpackAmmo: ([12, 7, 1, 13], [7, 10, 10, 14])
-  setQuests: ([], [], [])
-  setQuestHistory: ([])
-  setBackpack: (0)
   setDNAStrand: ("00/08/00/10/01/12/01/10/18/18/07/00/00/00/00")
-  setPUInventory: ([0])
+  setMoney: (490451)
+  setBackpackAmmo: ([0, 1, 7, 6], [0, 0, 0, 0])
+  setTier: (13)
+  ACCOUNT: 100000000
+  setHealth: (0)
+  setFriendsList: ([])
+  setMaxHealth: (15)
+  setBackpack: (0)
+  setQuests: ([1], [0], [1])
+  setQuestHistory: ([1])
+  setName: ("Ducky")
   setAdminToken: (0)
+  setPUInventory: ([1])

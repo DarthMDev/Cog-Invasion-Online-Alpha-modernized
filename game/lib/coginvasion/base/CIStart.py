@@ -17,10 +17,10 @@ print "CIStart: Reading settings file " + jsonfile
 
 import os
 class game:
-	name = 'coginvasion'
-	process = 'client'
-	version = os.environ.get("GAME_VERSION")
-	serverAddress = os.environ.get("GAME_SERVER")
+    name = 'coginvasion'
+    process = 'client'
+    version = os.environ.get("GAME_VERSION")
+    serverAddress = os.environ.get("GAME_SERVER")
 
 
 __builtin__.game = game()
@@ -40,13 +40,13 @@ print ConfigPageManager.getGlobalPtr()
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 if base.config.GetString('audio-library-name') == 'p3miles_audio':
-	print "CIStart: Using RAD Game Tools, Miles Sound System."
+    print "CIStart: Using RAD Game Tools, Miles Sound System."
 elif base.config.GetString('audio-library-name') == 'p3fmod_audio':
-	print "CIStart: Using FMOD audio library."
+    print "CIStart: Using FMOD audio library."
 elif base.config.GetString('audio-library-name') == 'p3openal_audio':
-	print "CIStart: Using OpenAL audio library."
+    print "CIStart: Using OpenAL audio library."
 else:
-	print "CIStart: Using no or an unknown audio library."
+    print "CIStart: Using no or an unknown audio library."
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.filter.CommonFilters import CommonFilters
@@ -88,10 +88,10 @@ from direct.filter.CommonFilters import CommonFilters
 print "CIStart: Setting display preferences..."
 SettingsManager().applySettings(jsonfile)
 if base.win == None:
-	print "CIStart: Unable to open window; aborting."
-	sys.exit()
+    print "CIStart: Unable to open window; aborting."
+    sys.exit()
 else:
-	print "CIStart: Successfully opened window."
+    print "CIStart: Successfully opened window."
 ConfigVariableDouble('decompressor-step-time').setValue(0.01)
 ConfigVariableDouble('extractor-step-time').setValue(0.01)
 
@@ -105,23 +105,23 @@ print "CIStart: Setting default Dialog geometry..."
 DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialog_box_gui.bam"))
 
 def maybeDoSomethingWithMusic(condition):
-	# 0 = paused
-	# 1 = restarted
-	width, height, fs, music, sfx, tex_detail, model_detail, aa, af = SettingsManager().getSettings(jsonfile)
-	if condition == 0:
-		if music == True:
-			base.enableMusic(False)
-	elif condition == 1:
-		if music == True:
-			base.enableMusic(True)
+    # 0 = paused
+    # 1 = restarted
+    width, height, fs, music, sfx, tex_detail, model_detail, aa, af = SettingsManager().getSettings(jsonfile)
+    if condition == 0:
+        if music == True:
+            base.enableMusic(False)
+    elif condition == 1:
+        if music == True:
+            base.enableMusic(True)
 
 base.accept("PandaPaused", maybeDoSomethingWithMusic, [0])
 base.accept("PandaRestarted", maybeDoSomethingWithMusic, [1])
 
 def doneInitLoad():
-	print "CIStart: Initial game load finished."
-	from lib.coginvasion.distributed import CogInvasionClientRepository
-	base.cr = CogInvasionClientRepository.CogInvasionClientRepository(music, "ver-" + game.version)
+    print "CIStart: Initial game load finished."
+    from lib.coginvasion.distributed import CogInvasionClientRepository
+    base.cr = CogInvasionClientRepository.CogInvasionClientRepository(music, "ver-" + game.version)
 
 print "CIStart: Starting initial game load..."
 from InitialLoad import InitialLoad
@@ -129,6 +129,5 @@ il = InitialLoad(doneInitLoad)
 music = base.loadMusic(CIGlobals.ThemeSong)
 base.playMusic(music, looping = 1, volume = 0.75)
 il.load()
-
 
 base.run()

@@ -2,7 +2,7 @@
 
   Filename: DistributedFactorySneakGame.py
   Created by: mliberty (30Mar15)
-    
+
 """
 
 import DistributedToonFPSGame
@@ -18,7 +18,7 @@ import random
 
 class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame):
     notify = directNotify.newCategory("DistributedFactorySneakGame")
-    
+
     def __init__(self, cr):
         try:
             self.DistributedFactorySneakGame_initalized
@@ -32,16 +32,16 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
         self.whistleSfx = None
         self.toonFps = FactorySneakGameToonFPS(self)
         self.spawnPoints = []
-        
+
     def createSpawnPoint(self, pos, hpr = Vec3(0, 0, 0)):
         self.spawnPoints.append((pos, hpr))
-        
+
     def loadSpawnPoints(self):
         self.createSpawnPoint(Point3(21, 14.5, 3.73))
         self.createSpawnPoint(Point3(200, 250, 8.68), hpr = Vec3(90, 0, 0))
         self.createSpawnPoint(Point3(-97.2, 324, 18.73), hpr = Vec3(90, 0, 0))
         self.createSpawnPoint(Point3(-97.2, 305, 18.73), hpr = Vec3(90, 0, 0))
-        
+
     def chooseSpawnPoint(self):
         spawn = [Vec3(0, 0, 0), Vec3(0, 0, 0)]
         if len(self.spawnPoints) > 0:
@@ -49,7 +49,7 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
         else:
             self.notify.info("Could not find spawn point to spawn player at.")
         return spawn
-    
+
     def enterCountdown(self):
         countdownSounds = []
         sfx = 5
@@ -85,16 +85,16 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
             Func(text.destroy)
         )
         self.countdownSeq.start()
-        
+
     def exitCountdown(self):
         self.countdownSeq.pause()
         del self.countdownSeq
         self.text.destroy()
         del self.text
-        
+
     def allPlayersReady(self):
         self.fsm.request('countdown')
-        
+
     def createBarrel(self):
         barrel = loader.loadModel("phase_4/models/cogHQ/gagTank.bam")
         jarIcon = loader.loadModel("phase_3.5/models/gui/jar_gui.bam")
@@ -108,7 +108,7 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
         jarIcon.setPos(0, -0.1, 0)
         jarIcon.setScale(13)
         return barrel
-        
+
     def load(self):
         print "Loading the environment."
         destroy = ['ZONE12', 'ZONE30', 'ZONE31', 'ZONE32', 'ZONE33', 'ZONE34', 'ZONE35', 'ZONE36', 'ZONE37', 'ZONE38', 'ZONE60', 'ZONE61']
@@ -122,30 +122,30 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
         base.localAvatar.setPos(pos)
         base.localAvatar.setHpr(hpr)
         self.myRemoteAvatar = RemoteToonBattleAvatar(self, self.cr, base.localAvatar.doId)
-        self.setMinigameMusic("phase_12/audio/bgm/Bossbot_Entry_v3.ogg")
+        self.setMinigameMusic("phase_12/audio/bgm/Bossbot_Entry_v3.mid")
         self.setDescription("Sneak around the Sellbot Factory and collect jellybean barrels. " + \
                             "Avoid the guards and exit by the Factory Foreman to redeem your jellybeans.")
         self.toonFps.start()
         self.toonFps.enableMouse()
         self.whistleSfx = loader.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
         DistributedToonFPSGame.DistributedToonFPSGame.load(self)
-        
+
     def enterPlay(self):
         DistributedToonFPSGame.DistributedToonFPSGame.enterPlay(self)
         self.toonFps.reallyStart()
         base.localAvatar.disableChatInput()
-        
+
     def exitPlay(self):
         DistributedToonFPSGame.DistributedToonFPSGame.exitPlay(self)
         self.toonFps.end()
         base.localAvatar.createChatInput()
-        
+
     def announceGenerate(self):
         DistributedToonFPSGame.DistributedToonFPSGame.announceGenerate(self)
         self.load()
         base.camLens.setMinFov(CIGlobals.GunGameFOV / (4./3.))
         base.camLens.setFar(250)
-        
+
     def disable(self):
         self.deleteWorld()
         self.spawnPoints = None
@@ -155,7 +155,7 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.camLens.setFar(CIGlobals.DefaultCameraFar)
         DistributedToonFPSGame.DistributedToonFPSGame.disable(self)
-        
+
     def deleteWorld(self):
         if self.environ:
             self.environ.destroy()

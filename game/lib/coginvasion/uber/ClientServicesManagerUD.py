@@ -127,8 +127,6 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         dg.addChannel(sender << 32 | avId)
         self.air.send(dg)
 
-        self.air.friendsManager.d_toonOnline(avId, fields['setFriendsList'][0], fields['setName'][0])
-
         #self.sendUpdateToAccountId(accId, 'enterResponse', [])
 
     def unloadAvatar(self, target, doId):

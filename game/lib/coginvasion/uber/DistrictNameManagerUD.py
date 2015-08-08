@@ -19,7 +19,7 @@ class DistrictNameManagerUD(DistributedObjectGlobalUD):
 
             name = fields['setName'][0]
             fl = fields['setFriendsList'][0]
-            self.air.friendsManager.d_toonOnline(avatarId, name, fl)
+            self.air.friendsManager.d_toonOnline(avatarId, fl, name)
 
         self.air.dbInterface.queryObject(
             self.air.dbId,
@@ -35,7 +35,7 @@ class DistrictNameManagerUD(DistributedObjectGlobalUD):
 
             name = fields['setName'][0]
             fl = fields['setFriendsList'][0]
-            self.air.friendsManager.d_toonOffline(avatarId, name, fl)
+            self.air.friendsManager.d_toonOffline(avatarId, fl, name)
 
         self.air.dbInterface.queryObject(
             self.air.dbId,

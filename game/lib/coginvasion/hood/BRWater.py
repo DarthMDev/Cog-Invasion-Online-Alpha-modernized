@@ -12,7 +12,7 @@ from random import choice
 
 class BRWater:
 	notify = directNotify.newCategory("BRWater")
-	
+
 	def __init__(self, playground):
 		self.playground = playground
 		self.fsm = ClassicFSM(
@@ -22,13 +22,13 @@ class BRWater:
 				State('freezeUp', self.enterFreezeUp, self.exitFreezeUp),
 				State('coolDown', self.enterCoolDown, self.exitCoolDown),
 				State('frozen', self.enterFrozen, self.exitFrozen)
-			], 
+			],
 			'off', 'off'
 		)
 		self.fsm.enterInitialState()
-		
+
 		#base.localAvatar.audio3d
-		
+
 		self.freezeUpSfx = base.loadSfx('phase_8/audio/sfx/freeze_up.mp3')
 		self.frozenSfxArray = [
 			base.loadSfx('phase_8/audio/sfx/frozen_1.mp3'),
@@ -39,7 +39,7 @@ class BRWater:
 			base.loadSfx('phase_8/audio/sfx/cool_down_1.mp3'),
 			base.loadSfx('phase_8/audio/sfx/cool_down_2.mp3')
 		]
-		
+
 		self.freezeUpSfx.setVolume(12)
 		for sfx in self.frozenSfxArray:
 			sfx.setVolume(12)
@@ -50,16 +50,16 @@ class BRWater:
 		#for sfx in self.coolSfxArray:
 		#	self.attachSound(sfx)
 		#self.attachSound(self.freezeUpSfx)
-		
+
 	def attachSound(self, sound):
 		base.localAvatar.audio3d.attachSoundToObject(sound, base.localAvatar)
-		
+
 	def enterOff(self):
 		self.playground.startWaterWatch()
-		
+
 	def exitOff(self):
 		self.playground.stopWaterWatch()
-		
+
 	def loadIceCube(self):
 		self.iceCube = loader.loadModel('phase_8/models/props/icecube.bam')
 		for node in self.iceCube.findAllMatches('**/billboard*'):
@@ -72,11 +72,11 @@ class BRWater:
 		self.iceCube.setScale(1.2, 1.0, base.localAvatar.getHeight() / 1.7)
 		self.iceCube.setTransparency(1)
 		self.iceCube.setColorScale(0.76, 0.76, 1.0, 0.0)
-		
+
 	def unloadIceCube(self):
 		self.iceCube.removeNode()
 		del self.iceCube
-		
+
 	def enterFreezeUp(self):
 		length = 1.0
 		base.playSfx(self.freezeUpSfx)
@@ -92,12 +92,12 @@ class BRWater:
 		)
 		self.fucsIval.start()
 		self.playground.startWaterWatch(0)
-		
+
 	def exitFreezeUp(self):
 		self.fucsIval.pause()
 		del self.fucsIval
 		self.playground.stopWaterWatch()
-		
+
 	def enterFrozen(self):
 		self.loadIceCube()
 		base.cr.playGame.getPlace().fsm.request('stop', [0])
@@ -122,7 +122,7 @@ class BRWater:
 		mw = base.mouseWatcherNode
 		if mw.hasMouse():
 			self.lastMouseX = mw.getMouseX()
-			
+
 	def __lowerPowerBar(self, task):
 		if self.powerBar['value'] <= 0:
 			self.powerBar.update(0)
@@ -130,7 +130,7 @@ class BRWater:
 		self.powerBar.update(self.powerBar['value'] - decrement)
 		task.delayTime = 0.1
 		return task.again
-		
+
 	def __watchMouseMovement(self, task):
 		if self.powerBar['value'] >= self.powerBar['range']:
 			self.fsm.request('coolDown', [1])
@@ -142,7 +142,7 @@ class BRWater:
 				self.lastMouseX = mw.getMouseX()
 				self.powerBar.update(self.powerBar['value'] + abs(value))
 		return task.cont
-		
+
 	def exitFrozen(self):
 		props = WindowProperties()
 		props.setCursorHidden(False)
@@ -161,7 +161,7 @@ class BRWater:
 		del self.lastMouseX
 		base.cr.playGame.getPlace().fsm.request('walk')
 		base.localAvatar.b_setAnimState('neutral')
-		
+
 	def enterCoolDown(self, fromFrozen = 0):
 		if fromFrozen:
 			self.loadIceCube()
@@ -187,7 +187,7 @@ class BRWater:
 			Func(self.fsm.request, 'off')
 		)
 		self.cdcsIval.start()
-		
+
 	def exitCoolDown(self):
 		if hasattr(self, 'iccdIval'):
 			self.iccdIval.pause()
@@ -195,7 +195,7 @@ class BRWater:
 			self.unloadIceCube()
 		self.cdcsIval.pause()
 		del self.cdcsIval
-		
+
 	def cleanup(self):
 		self.fsm.requestFinalState()
 		self.playground.stopWaterWatch()

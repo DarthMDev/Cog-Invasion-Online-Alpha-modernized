@@ -17,7 +17,6 @@ class TrapGag(Gag):
 
     def __init__(self, name, model, damage, idleSfx, hitSfx, particleFx, anim = None, wantParticles = True, autoRelease = False):
         Gag.__init__(self, name, model, damage, GagType.TRAP, hitSfx, anim = anim, autoRelease = autoRelease)
-        self.audio3d = self.getAudio3D()
         self.particleFx = particleFx
         self.particles = None
         self.wantParticles = wantParticles
@@ -25,8 +24,8 @@ class TrapGag(Gag):
         self.hitSfx = None
         self.entity = None
         if game.process == 'client':
-            self.idleSfx = self.audio3d.loadSfx(idleSfx)
-            self.hitSfx = self.audio3d.loadSfx(hitSfx)
+            self.idleSfx = base.audio3d.loadSfx(idleSfx)
+            self.hitSfx = base.audio3d.loadSfx(hitSfx)
 
     def build(self):
         super(TrapGag, self).build()

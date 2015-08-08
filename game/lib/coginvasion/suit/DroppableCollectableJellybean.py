@@ -13,13 +13,13 @@ import random
 
 class DroppableCollectableJellybean(DroppableCollectableJellybeans):
 	notify = directNotify.newCategory("DroppableCollectableJellybean")
-	
+
 	def __init__(self):
 		DroppableCollectableJellybeans.__init__(self)
 		self.bean = None
 		self.spinIval = None
 		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.wav")
-		
+
 	def loadObject(self):
 		self.removeObject()
 		self.bean = loader.loadModel("phase_5.5/models/estate/jellyBean.bam")
@@ -37,21 +37,21 @@ class DroppableCollectableJellybean(DroppableCollectableJellybeans):
 			)
 		)
 		self.spin()
-		
+
 	def removeObject(self):
 		if self.bean:
 			self.bean.removeNode()
 			self.bean = None
-	
+
 	def load(self):
 		print "loading droppableCollectableJellybean"
-		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.wav")
+		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.mp3")
 		DroppableCollectableJellybeans.load(self)
-		
+
 	def unload(self):
 		self.stopSpin()
 		DroppableCollectableJellybeans.unload(self)
-			
+
 	def spin(self):
 		self.stopSpin()
 		self.spinIval = LerpHprInterval(
@@ -61,7 +61,7 @@ class DroppableCollectableJellybean(DroppableCollectableJellybeans):
 			startHpr = (0, 0, 0),
 		)
 		self.spinIval.loop()
-		
+
 	def stopSpin(self):
 		if self.spinIval:
 			self.spinIval.finish()

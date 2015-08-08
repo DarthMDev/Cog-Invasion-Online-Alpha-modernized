@@ -167,11 +167,13 @@ class ToonHead(Actor.Actor):
     def guiFix(self):
         #if self.animal in ['monkey', 'rabbit', 'cat', 'duck']:
         #    return
-        self.drawInFront('eyes*', 'head-front*', -2)
-        if not self.find('joint_pupil*').isEmpty():
-            self.drawInFront('joint_pupil*', 'eyes*', -1)
-        else:
-            self.drawInFront('def_*_pupil', 'eyes*', -1)
+
+        #self.drawInFront('eyes*', 'head-front*', -2)
+        #if not self.find('**/joint_pupil*').isEmpty():
+        #    self.drawInFront('joint_pupil*', 'eyes*', -1)
+        #else:
+        #    self.drawInFront('def_*_pupil', 'eyes*', -1)
+        """
         self.__eyes = self.find('**/eyes*')
         if not self.__eyes.isEmpty():
             self.__eyes.setColorOff()
@@ -195,6 +197,10 @@ class ToonHead(Actor.Actor):
             rp.reparentTo(rpt)
             self.__lpupil.adjustAllPriorities(1)
             self.__rpupil.adjustAllPriorities(1)
+            self.__lpupil.flattenStrong()
+            self.__rpupil.flattenStrong()
+        """
+
 
     def setupEyelashes(self):
         head = self.getPart('head')

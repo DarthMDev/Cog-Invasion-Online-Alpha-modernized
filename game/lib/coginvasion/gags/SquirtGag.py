@@ -32,11 +32,10 @@ class SquirtGag(Gag):
         self.enableReleaseFrame = enableReleaseFrame
         self.completeSquirtFrame = completeSquirtFrame
         self.lastFrame = 0
-        self.audio3d = self.getAudio3D()
 
         if game.process == 'client':
-            self.spraySfx = self.audio3d.loadSfx(spraySfx)
-            self.missSfx = self.audio3d.loadSfx(missSfx)
+            self.spraySfx = base.audio3d.loadSfx(spraySfx)
+            self.missSfx = base.audio3d.loadSfx(missSfx)
 
     def start(self):
         super(SquirtGag, self).start()
@@ -53,7 +52,7 @@ class SquirtGag(Gag):
         self.canSquirt = flag
 
     def doSpray(self, scaleUp, scaleDown, hold):
-        self.audio3d.attachSoundToObject(self.spraySfx, self.gag)
+        base.audio3d.attachSoundToObject(self.spraySfx, self.gag)
         self.spraySfx.play()
         spraySequence = Sequence(Func(self.getSprayTrack(self.origin, self.sprayRange, scaleUp, hold, scaleDown).start))
         sprayParallel = Parallel()
@@ -75,7 +74,7 @@ class SquirtGag(Gag):
 
     def onCollision(self, entry):
         self.hitSomething = True
-        self.audio3d.attachSoundToObject(self.hitSfx, self.sprayNP)
+        base.audio3d.attachSoundToObject(self.hitSfx, self.sprayNP)
         self.hitSfx.play()
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
@@ -98,7 +97,7 @@ class SquirtGag(Gag):
 
     def handleMiss(self):
         if self.spray and self.hitSomething == False:
-            self.audio3d.attachSoundToObject(self.missSfx, self.spray)
+            base.audio3d.attachSoundToObject(self.missSfx, self.spray)
             self.missSfx.play()
             self.cleanupSpray()
 

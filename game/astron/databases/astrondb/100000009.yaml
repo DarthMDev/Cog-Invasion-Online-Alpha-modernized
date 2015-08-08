@@ -1,17 +1,17 @@
 id: 100000009
 class: DistributedToon
 fields:
-  setTier: (13)
-  setBackpackAmmo: ([13, 1, 7, 12], [2, 0, 9, 7])
-  setMaxHealth: (16)
-  setQuestHistory: ([2])
   setName: ("Mr. Monkey Man")
-  setMoney: (415)
+  setMoney: (412)
+  setQuestHistory: ([2, 0])
   ACCOUNT: 100000000
-  setQuests: ([], [], [])
-  setFriendsList: ([])
-  setHealth: (16)
+  setHealth: (7)
+  setFriendsList: ([100000005])
+  setMaxHealth: (16)
   setBackpack: (0)
+  setBackpackAmmo: ([5, 9, 6, 13], [1, 3, 3, 1])
+  setQuests: ([0], [1], [5])
+  setTier: (13)
   setDNAStrand: ("00/04/00/02/02/13/02/10/09/09/01/00/00/02/00")
   setPUInventory: ([0])
   setAdminToken: (-1)

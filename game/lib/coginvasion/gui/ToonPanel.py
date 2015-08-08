@@ -302,6 +302,12 @@ class ToonPanel(DirectFrame):
         self.ignore('avatarInfoResponse')
 
     def makePanel(self, avId):
+        if self.avatarInfo:
+            if self.avatarInfo[0] == avId:
+                # They clicked on the same toon without closing the
+                # previous panel, maybe they're spamming?
+                return
+
         self.cleanup()
 
         base.localAvatar.hideFriendButton()
@@ -366,6 +372,7 @@ class ToonPanel(DirectFrame):
                 base.cr.friendsManager.d_iCancelledFriendRequest(self.avatarInfo[0])
         self.actionFSM.requestFinalState()
         self.action = None
+        self.avatarInfo = None
         self.removeActionPanel()
         self.hide()
         if self.nameText:

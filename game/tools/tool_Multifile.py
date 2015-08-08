@@ -17,7 +17,7 @@ def do(mtype, filename):
 	if mtype == "decompile":
 		cmd += " -x -f %s" % filename
 	elif mtype == "compile":
-		cmd += " -c -f %s %s" % (filename, filename.replace(".mf", ""))
+		cmd += " -c -f %s %s -p \"cio6-17-14_blach\"" % (filename, filename.replace(".mf", ""))
 	os.system(cmd)
 
 def do_all(mtype):

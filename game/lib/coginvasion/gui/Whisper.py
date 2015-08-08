@@ -1,8 +1,8 @@
 """
-  
+
   Filename: Whisper.py
   Created by: blach (??Aug14)
-  
+
 """
 
 from lib.coginvasion.toon.ChatBalloon import ChatBalloon
@@ -14,7 +14,7 @@ import math
 
 class Whisper:
 	LENGTH_FACTOR = 0.6
-	
+
 	def createSystemMessage(self, message, important = 1):
 		try:
 			taskMgr.remove("clearSystemMessage-" + self.taskName)
@@ -39,9 +39,9 @@ class Whisper:
 		self.bubble.reparent_to(data[1])
 		self.bubble.set_pos(data[0])
 		self.bubble.set_scale(0.05)
-			
+
 		taskMgr.doMethodLater(length, self.clearSystemMessage, "clearSystemMessage-" + self.taskName)
-		
+
 	def clearSystemMessage(self, task):
 		self.bubble.remove_node()
 		self.bubble = None

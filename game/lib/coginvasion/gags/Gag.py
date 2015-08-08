@@ -8,20 +8,12 @@
 
 from direct.task.Task import Task
 from direct.actor.Actor import Actor
-from direct.showbase import Audio3DManager
 from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags import GagGlobals
 from panda3d.core import Point3
 from abc import ABCMeta
 import abc
-
-if game.process == 'client':
-    audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0], camera)
-    audio3d.setDistanceFactor(25)
-    audio3d.setDropOffFactor(0.025)
-else:
-    audio3d = None
 
 class Gag(object):
 
@@ -47,12 +39,11 @@ class Gag(object):
         self.health = 0
         self.id = GagGlobals.getIDByName(name)
         self.image = None
-        self.audio3d = audio3d
 
         if game.process == 'client':
             if gagType == GagType.THROW:
-                self.woosh = self.audio3d.loadSfx(GagGlobals.PIE_WOOSH_SFX)
-            self.hitSfx = self.audio3d.loadSfx(hitSfx)
+                self.woosh = base.audio3d.loadSfx(GagGlobals.PIE_WOOSH_SFX)
+            self.hitSfx = base.audio3d.loadSfx(hitSfx)
 
     @abc.abstractmethod
     def start(self):
@@ -66,7 +57,7 @@ class Gag(object):
         elif backpack.getSupply(self.getName()) == 0:
             return
         try:
-            self.audio3d.detachSound(self.woosh)
+            base.audio3d.detachSound(self.woosh)
             self.track.pause()
             self.cleanupGag()
         except: pass

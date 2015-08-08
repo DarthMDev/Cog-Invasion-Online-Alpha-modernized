@@ -47,6 +47,9 @@ class Interval(DirectObject):
     def getStartT(self):
         return self.__startT
 
+    def getEndT(self):
+        return self.__endT
+
     def getName(self):
         return self.name
 
@@ -421,8 +424,13 @@ class Interval(DirectObject):
         self.__removeTask()
         taskName = self.getName() + '-play'
         task = Task(self.__playTask)
+        taskChain = None
+        if self.__class__.__name__ == "SoundInterval":
+            if hasattr(base, 'cr'):
+                if hasattr(base.cr, 'threadedTaskChain'):
+                    taskChain = base.cr.threadedTaskChain
         task.interval = self
-        taskMgr.add(task, taskName)
+        taskMgr.add(task, taskName, taskChain = taskChain)
 
     def __removeTask(self):
         # Kill old task(s), including those from a similarly-named but

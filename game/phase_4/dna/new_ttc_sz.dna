@@ -2,7 +2,7 @@ group "toontownCentral" [
  visgroup "2000:safe_zone" [
   vis [   "2000:safe_zone"   ]
   prop "toontown_central_DNARoot" [
-   code [ "toontown_central_old" ]
+   code [ "toontown_central" ]
    pos [ 0 0 0 ]
    nhpr [ 0 0 0 ]
    scale [ 1.25 1.25 1.25 ]
@@ -37,11 +37,6 @@ group "toontownCentral" [
    pos [ 41.32 85.35 7.32 ]
    nhpr [ 0 0 0 ]
   ]
-  //prop "prop_green_tree_large_ul_3_DNARoot" [
-   //code [ "old_tree_large_ul" ]
-   //pos [ 0 0 0 ]
-   //nhpr [ 0 0 0 ]
-  //]
   node "buildings" [
    nhpr [ 48.01 0 0 ]
    pos [ 0 0 0.5 ]

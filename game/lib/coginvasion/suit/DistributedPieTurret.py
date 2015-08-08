@@ -141,7 +141,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
 		if self.readyPie:
 			self.readyPie.removeNode()
 			self.readyPie = None
-		
+
 	def createAndShootPie(self):
 		if not self.readyPie:
 			self.loadPieInTurret()

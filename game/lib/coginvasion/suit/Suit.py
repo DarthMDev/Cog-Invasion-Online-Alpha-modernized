@@ -25,9 +25,6 @@ import CogBattleGlobals
 notify = DirectNotify().newCategory("Suit")
 
 class Suit(Avatar.Avatar):
-    audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0], camera)
-    audio3d.setDistanceFactor(25)
-    audio3d.setDropOffFactor(0.025)
     healthColors = (Vec4(0, 1, 0, 1),
         Vec4(1, 1, 0, 1),
         Vec4(1, 0.5, 0, 1),
@@ -358,21 +355,21 @@ class Suit(Avatar.Avatar):
         self.chat = chatString
         if self.isSkele:
             if "?" in chatString:
-                self.suit_dial = self.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_question.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_question.mp3")
             elif "!" in chatString:
-                self.suit_dial = self.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_grunt.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_grunt.mp3")
             else:
-                self.suit_dial = self.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_statement.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_statement.mp3")
         elif self.head in ["vp"]:
             if "?" in chatString:
-                self.suit_dial = self.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_question.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_question.mp3")
             elif "!" in chatString:
-                self.suit_dial = self.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_grunt.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_grunt.mp3")
             else:
-                self.suit_dial = self.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_statement.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_statement.mp3")
         else:
             if "?" in chatString:
-                self.suit_dial = self.audio3d.loadSfx(
+                self.suit_dial = base.audio3d.loadSfx(
                     random.choice(
                         [
                             "phase_3.5/audio/dial/COG_VO_question.mp3",
@@ -381,13 +378,13 @@ class Suit(Avatar.Avatar):
                     )
                 )
             elif "!" in chatString:
-                self.suit_dial = self.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_grunt.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_grunt.mp3")
             else:
-                self.suit_dial = self.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_statement.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_statement.mp3")
         if self.isSkele:
-            self.audio3d.attachSoundToObject(self.suit_dial, self)
+            base.audio3d.attachSoundToObject(self.suit_dial, self)
         else:
-            self.audio3d.attachSoundToObject(self.suit_dial, self.headModel)
+            base.audio3d.attachSoundToObject(self.suit_dial, self.headModel)
         self.suit_dial.play()
         Avatar.Avatar.setChat(self, chatString)
 
@@ -593,8 +590,8 @@ class Suit(Avatar.Avatar):
         self.clearChat()
         self.state = "dead"
         self.play("lose")
-        deathSound = self.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.mp3")
-        self.audio3d.attachSoundToObject(deathSound, self)
+        deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.mp3")
+        base.audio3d.attachSoundToObject(deathSound, self)
         trackName = self.uniqueName('enterDie')
         self.suitTrack = Sequence(Wait(0.8), Func(self.smallDeathParticles), Wait(4.2),
                 Func(self.suitExplode), Wait(1.0), Func(self.delSuit), name = trackName)
@@ -643,10 +640,10 @@ class Suit(Avatar.Avatar):
 
     def enterFlyNeutral(self, ts = 0):
         self.disableRay()
-        self.sfx = self.audio3d.loadSfx("phase_4/audio/sfx/TB_propeller.wav")
+        self.sfx = base.audio3d.loadSfx("phase_4/audio/sfx/TB_propeller.wav")
         self.prop = Actor("phase_4/models/props/propeller-mod.bam",
                         {"chan": "phase_4/models/props/propeller-chan.bam"})
-        self.audio3d.attachSoundToObject(self.sfx, self.prop)
+        base.audio3d.attachSoundToObject(self.sfx, self.prop)
         self.prop.reparentTo(self.find('**/joint_head'))
         self.sfx.setLoop(True)
         self.sfx.play()
@@ -657,16 +654,16 @@ class Suit(Avatar.Avatar):
     def exitFlyNeutral(self):
         self.prop.cleanup()
         del self.prop
-        self.audio3d.detachSound(self.sfx)
+        base.audio3d.detachSound(self.sfx)
         del self.sfx
         self.stop()
 
     def enterFlyDown(self, ts = 0):
         self.disableRay()
-        self.fd_sfx = self.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_in.mp3")
+        self.fd_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_in.mp3")
         self.prop = Actor("phase_4/models/props/propeller-mod.bam",
                         {"chan": "phase_4/models/props/propeller-chan.bam"})
-        self.audio3d.attachSoundToObject(self.fd_sfx, self.prop)
+        base.audio3d.attachSoundToObject(self.fd_sfx, self.prop)
         self.prop.reparentTo(self.find('**/joint_head'))
         self.fd_sfx.play()
         dur = self.getDuration('land')
@@ -714,7 +711,7 @@ class Suit(Avatar.Avatar):
             DelayDelete.cleanupDelayDeletes(self.suitTrack)
             self.suitTrack = None
         if hasattr(self, 'fd_sfx'):
-            self.audio3d.detachSound(self.fd_sfx)
+            base.audio3d.detachSound(self.fd_sfx)
         self.exitGeneral()
         if self.prop:
             self.prop.cleanup()
@@ -722,10 +719,10 @@ class Suit(Avatar.Avatar):
 
     def enterFlyAway(self, ts = 0):
         self.show()
-        self.fa_sfx = self.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_out.mp3")
+        self.fa_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_out.mp3")
         self.prop = Actor("phase_4/models/props/propeller-mod.bam",
                         {"chan": "phase_4/models/props/propeller-chan.bam"})
-        self.audio3d.attachSoundToObject(self.fa_sfx, self.prop)
+        base.audio3d.attachSoundToObject(self.fa_sfx, self.prop)
         self.fa_sfx.play()
         self.prop.reparentTo(self.find('**/joint_head'))
         self.prop.setPlayRate(-1.0, "chan")
@@ -750,7 +747,7 @@ class Suit(Avatar.Avatar):
             DelayDelete.cleanupDelayDeletes(self.suitTrack)
             self.suitTrack = None
         if hasattr(self, 'fa_sfx'):
-            self.audio3d.detachSound(self.fa_sfx)
+            base.audio3d.detachSound(self.fa_sfx)
         self.exitGeneral()
         if self.prop:
             self.prop.cleanup()
@@ -927,19 +924,19 @@ class Suit(Avatar.Avatar):
 
     def playWeaponSound(self):
         if self.attack == "glowerpower":
-            self.weapon_sfx = self.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.mp3")
+            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.mp3")
         elif self.attack == "canned":
-            self.weapon_sfx = self.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.mp3")
+            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.mp3")
         elif self.attack == "clipontie":
-            self.weapon_sfx = self.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
+            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
         elif self.attack == "sacked":
             self.weapon_sfx = None
         elif self.attack == "playhardball":
-            self.weapon_sfx = self.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.mp3")
+            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.mp3")
         elif self.attack == "marketcrash":
             self.weapon_sfx = None
         if self.weapon and self.weapon_sfx:
-            self.audio3d.attachSoundToObject(self.weapon_sfx, self.weapon)
+            base.audio3d.attachSoundToObject(self.weapon_sfx, self.weapon)
             self.weapon_sfx.play()
 
     """

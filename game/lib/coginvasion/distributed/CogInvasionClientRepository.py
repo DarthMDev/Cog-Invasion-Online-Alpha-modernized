@@ -16,6 +16,7 @@ from direct.distributed.MsgTypes import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from direct.interval.IntervalGlobal import *
+from direct.showbase.Audio3DManager import Audio3DManager
 from CogInvasionDoGlobals import *
 from direct.task import Task
 from pandac.PandaModules import UniqueIdAllocator
@@ -106,6 +107,11 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.uberZoneInterest = None
         self.isShowingPlayerIds = False
         self.doBetaInform = True
+        self.tournamentMusicChunks = {}
+        self.threadedTaskChain = taskMgr.setupTaskChain("threadedTaskChainForSoundIntervals", numThreads = 2)
+        base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)
+        base.audio3d.setDropOffFactor(25)
+        base.audio3d.setDistanceFactor(0.025)
         self.accountName = os.environ.get('ACCOUNT_NAME', '')
         self.csm = self.generateGlobalObject(DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
         self.friendsManager = self.generateGlobalObject(DO_ID_FRIENDS_MANAGER, 'FriendsManager')

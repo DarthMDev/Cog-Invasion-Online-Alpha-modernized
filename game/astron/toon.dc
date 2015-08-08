@@ -350,6 +350,9 @@ dclass DistributedToonFPSGame : DistributedMinigame {
 };
 
 dclass DistributedGunGame : DistributedToonFPSGame {
+  setGameMode(int8) required broadcast ram;
+  startGameModeVote() broadcast;
+  myGameModeVote(int8) clsend;
   dead(uint32) clsend airecv;
   incrementKills();
   timeUp() broadcast;
@@ -494,5 +497,5 @@ dclass FriendsManager : DistributedObject {
   avatarLocation(uint32, uint32, uint32);
   teleportNotify(string);
   requestFriendsList() clsend;
-  friendsList(uint32[], string[]);
+  friendsList(uint32[], string[], int8[]);
 };

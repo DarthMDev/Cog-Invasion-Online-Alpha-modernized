@@ -57,12 +57,13 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.quests = []
         self.tier = None
         self.questHistory = None
-        self.busy = None
+        self.busy = 1
         self.friends = None
         return
 
     def setFriendsList(self, friends):
         self.friends = friends
+        self.cr.friendsManager.d_requestFriendsList()
 
     def getFriendsList(self):
         return self.friends
@@ -510,8 +511,8 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
 
     def announceHealthAndPlaySound(self, level, hp):
         DistributedAvatar.announceHealth(self, level, hp)
-        hpSfx = self.audio3d.loadSfx("phase_11/audio/sfx/LB_toonup.mp3")
-        self.audio3d.attachSoundToObject(hpSfx, self)
+        hpSfx = base.audio3d.loadSfx("phase_11/audio/sfx/LB_toonup.mp3")
+        base.audio3d.attachSoundToObject(hpSfx, self)
         SoundInterval(hpSfx).start()
         del hpSfx
 

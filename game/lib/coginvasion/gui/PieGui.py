@@ -91,7 +91,7 @@ class GagGui(DirectObject):
             SoundInterval(sfx).start()
         self.resetScroll()
         self.update()
-        
+
     def resetScroll(self):
         prevGag = 0
         currGag = -1

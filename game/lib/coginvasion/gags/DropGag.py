@@ -26,7 +26,6 @@ class DropGag(Gag):
         self.fallSoundInterval = None
         self.buttonSfx = None
         self.fallSfx = None
-        self.audio3D = self.getAudio3D()
         self.button = None
         self.buttonAnim = 'push-button'
         self.moveShadowTaskName = 'Move Shadow'
@@ -40,9 +39,9 @@ class DropGag(Gag):
         self.locationSeeker = None
         self.dropLoc = None
         if game.process == 'client':
-            self.missSfx = self.audio3D.loadSfx(missSfx)
-            self.buttonSfx = self.audio3D.loadSfx(self.buttonSoundPath)
-            self.fallSfx = self.audio3D.loadSfx(self.fallSoundPath)
+            self.missSfx = base.audio3d.loadSfx(missSfx)
+            self.buttonSfx = base.audio3d.loadSfx(self.buttonSoundPath)
+            self.fallSfx = base.audio3d.loadSfx(self.fallSoundPath)
 
     def buildButton(self):
         self.cleanupButton()

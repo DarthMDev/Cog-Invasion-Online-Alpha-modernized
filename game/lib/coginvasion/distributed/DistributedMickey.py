@@ -1,8 +1,8 @@
 """
-  
+
   Filename: DistributedMickey.py
   Created by: blach (??June14)
-  
+
 """
 
 from lib.coginvasion.globals import CIGlobals
@@ -18,7 +18,7 @@ from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.showbase.ShadowPlacer import ShadowPlacer
 
 class DistributedMickey(DistributedSmoothNode):
-	
+
 	def __init__(self, cr):
 		self.cr = cr
 		DistributedSmoothNode.__init__(self, cr)
@@ -26,7 +26,7 @@ class DistributedMickey(DistributedSmoothNode):
 		self.name = "Mickey"
 		self.anim = ""
 		self.chat = ""
-		
+
 		self.mickey = Actor("phase_3/models/char/mickey-1200.bam",
 						{"neutral": "phase_3/models/char/mickey-wait.bam",
 						"walk": "phase_3/models/char/mickey-walk.bam",
@@ -39,14 +39,14 @@ class DistributedMickey(DistributedSmoothNode):
 		self.mickeyEye.setY(0.025)
 		self.mickey.reparentTo(self)
 		self.mickey.setScale(1.25)
-		
+
 		for bundle in self.mickey.getPartBundleDict().values():
 			bundle = bundle['modelRoot'].getBundle()
 			earNull = bundle.findChild('sphere3')
 			if not earNull:
 				earNull = bundle.findChild('*sphere3')
 			earNull.clearNetTransforms()
-			
+
 		for bundle in self.mickey.getPartBundleDict().values():
 			charNodepath = bundle['modelRoot'].partBundleNP
 			bundle = bundle['modelRoot'].getBundle()
@@ -67,7 +67,7 @@ class DistributedMickey(DistributedSmoothNode):
 			ears.setP(-40.0)
 			ears.flattenMedium()
 			ears.setBillboardAxis()
-		
+
 		self.shadow = loader.loadModel("phase_3/models/props/drop_shadow.bam")
 		self.shadow.setScale(0.55)
 		self.shadow.flattenMedium()
@@ -78,7 +78,7 @@ class DistributedMickey(DistributedSmoothNode):
 		except:
 			pass
 		self.shadow.reparentTo(self)
-		
+
 		cs = CollisionSphere(0, 0, 0, 2)
 		cnode = CollisionNode('mickeyCNode')
 		cnode.addSolid(cs)
@@ -88,13 +88,13 @@ class DistributedMickey(DistributedSmoothNode):
 		self.cnp = self.attachNewNode(cnode)
 		self.cnp.setZ(0.75)
 		self.rnp = self.attachNewNode(rnode)
-		
+
 	def mickeyCollisions(self):
 		self.cnp.setCollideMask(BitMask32(0))
 		self.cnp.node().setFromCollideMask(CIGlobals.WallBitmask)
 		self.rnp.setCollideMask(BitMask32(0))
 		self.rnp.node().setFromCollideMask(CIGlobals.FloorBitmask)
-		
+
 		ss = CollisionSphere(0,0,0,10)
 		snode = CollisionNode('mickeySNode')
 		snode.addSolid(ss)
@@ -102,7 +102,7 @@ class DistributedMickey(DistributedSmoothNode):
 		self.snp.setZ(0.75)
 		self.snp.setCollideMask(BitMask32(0))
 		self.snp.node().setFromCollideMask(CIGlobals.EventBitmask)
-		
+
 		pusher = CollisionHandlerPusher()
 		pusher.setInPattern("%in")
 		pusher.addCollider(self.cnp, self)
@@ -115,7 +115,7 @@ class DistributedMickey(DistributedSmoothNode):
 		base.cTrav.addCollider(self.cnp, pusher)
 		base.cTrav.addCollider(self.rnp, floor)
 		base.cTrav.addCollider(self.snp, event)
-		
+
 	def setName(self, name):
 		self.name = name
 		if name == "":
@@ -138,7 +138,7 @@ class DistributedMickey(DistributedSmoothNode):
 		self.setName(name)
 	def d_setName(self, name):
 		self.sendUpdate("setName", [name])
-		
+
 	def setChat(self, chat):
 		if chat == "":
 			return
@@ -151,14 +151,14 @@ class DistributedMickey(DistributedSmoothNode):
 		self.chat = chat
 		self.it = loader.loadFont(CIGlobals.ToonFont, lineHeight=CIGlobals.ToonFontLineHeight)
 		b = loader.loadTexture("phase_3/maps/chatbubble.jpg", "phase_3/maps/chatbubble_a.rgb")
-		
+
 		self.balloon_sfx = loader.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.mp3")
 		self.balloon_sfx.play()
-		
+
 		self.dial = loader.loadSfx("phase_3/audio/dial/mickey.wav")
-		
+
 		self.dial.play()
-		
+
 		self.box = loader.loadModel(CIGlobals.ChatBubble)
 		self.ChatBalloon = ChatBalloon(self.box)
 		LS = LabelScaler()
@@ -181,7 +181,7 @@ class DistributedMickey(DistributedSmoothNode):
 		self.sendUpdate("setChat", [chat])
 	def getChat(self):
 		return self.chat
-		
+
 	def setAnimState(self, anim):
 		self.anim = anim
 		if "start" in anim:
@@ -194,14 +194,14 @@ class DistributedMickey(DistributedSmoothNode):
 		self.sendUpdate("setAnimState", [anim])
 	def getAnimState(self):
 		return self.anim
-		
+
 	def announceGenerate(self):
 		DistributedSmoothNode.announceGenerate(self)
-		
+
 		self.reparentTo(render)
 	def generate(self):
 		DistributedSmoothNode.generate(self)
-		
+
 		self.activateSmoothing(True, False)
 		self.startSmooth()
 	def disable(self):

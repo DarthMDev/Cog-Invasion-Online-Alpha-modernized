@@ -6,12 +6,8 @@
 """
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.showbase import Audio3DManager
 
 class RemoteAvatar:
-    audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0], camera)
-    audio3d.setDistanceFactor(25)
-    audio3d.setDropOffFactor(0.025)
 
     notify = directNotify.newCategory("RemoteAvatar")
 

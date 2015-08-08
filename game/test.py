@@ -1,8 +1,5 @@
 from pandac.PandaModules import *
 
-loadPrcFileData('', 'audio-library-name p3fmod_audio')
-loadPrcFileData('', 'notify-level info')
-loadPrcFileData('', 'default-directnotify-level info')
 loadPrcFile('config/config_client.prc')
 import __builtin__
 class game:
@@ -74,13 +71,7 @@ sky.find('**/cloud1').setSz(0.65)
 sky.find('**/cloud2').removeNode()
 
 
-geom.hide(BitMask32.bit(1))
-shadowStage = TextureStage("shadowTexStage")
-shadowStage.setMode(TextureStage.MBlend)
-geom.projectTexture(shadowStage, caster.shadowTexture, caster.shadowCamera)
-
-
-music = base.loadMusic("phase_4/audio/bgm/TC_nbrhood.ogg")
+music = base.loadMusic("phase_4/audio/bgm/TC_nbrhood.mid")
 base.playMusic(music, volume = 0.25, looping = 1, interrupt = 1)
 
 for nodepath in render.findAllMatches('*'):
@@ -96,6 +87,7 @@ for nodepath in render.findAllMatches('*'):
 
 base.cTrav = CollisionTraverser()
 cr = ClientRepository(['astron/direct.dc'])
+cr.isShowingPlayerIds = False
 """
 controlManager = ControlManager.ControlManager(True, False)
 localAv = Toon(cr)
@@ -234,7 +226,7 @@ render.setShaderAuto()
 
 #geom.find('**/prop_green_tree_large_ur_2_DNARoot').place()
 
-caster.shadowCamera.place()
+#caster.shadowCamera.place()
 
-base.oobe()
-run()
+#base.oobe()
+base.run()

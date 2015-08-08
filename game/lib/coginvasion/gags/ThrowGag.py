@@ -17,7 +17,6 @@ class ThrowGag(Gag):
 
     def __init__(self, name, model, damage, hitSfx, splatColor, anim = None, scale = 1):
         Gag.__init__(self, name, model, damage, GagType.THROW, hitSfx, anim = anim, scale = scale)
-        self.audio3d = self.getAudio3D()
         self.splatScale = GagGlobals.splatSizes[self.name]
         self.splatColor = splatColor
 
@@ -40,7 +39,7 @@ class ThrowGag(Gag):
     def release(self):
         if self.gag == None: return
         super(ThrowGag, self).release()
-        self.audio3d.attachSoundToObject(self.woosh, self.gag)
+        base.audio3d.attachSoundToObject(self.woosh, self.gag)
         self.woosh.play()
 
         throwPath = NodePath('ThrowPath')
@@ -63,7 +62,7 @@ class ThrowGag(Gag):
     def handleSplat(self):
         if self.woosh: self.woosh.stop()
         self.buildSplat(self.splatScale, self.splatColor)
-        self.audio3d.attachSoundToObject(self.hitSfx, self.splat)
+        base.audio3d.attachSoundToObject(self.hitSfx, self.splat)
         self.splat.reparentTo(render)
         self.splat.setPos(self.splatPos)
         self.hitSfx.play()

@@ -2,7 +2,7 @@
 
   Filename: Char.py
   Created by: blach (??July14)
-  
+
 """
 
 from lib.coginvasion.globals import CIGlobals
@@ -14,18 +14,12 @@ from direct.showbase.ShadowPlacer import ShadowPlacer
 from panda3d.core import *
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.showbase import Audio3DManager
 import random
-
-if game.process == "client":
-	audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0], camera)
-	audio3d.setDistanceFactor(25)
-	audio3d.setDropOffFactor(0.025)
 
 notify = DirectNotify().newCategory("Char")
 
 class Char(Avatar.Avatar):
-	
+
 	def __init__(self):
 		try:
 			self.Char_initialized
@@ -45,9 +39,9 @@ class Char(Avatar.Avatar):
 								State('run', self.enterRun, self.exitRun)], 'off', 'off')
 		animStateList = self.animFSM.getStates()
 		self.animFSM.enterInitialState()
-		
+
 		Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 3.5, 1)
-		
+
 	def stopAnimations(self):
 		if hasattr(self, 'animFSM'):
 			if not self.animFSM.isInternalStateInFlux():
@@ -57,13 +51,13 @@ class Char(Avatar.Avatar):
 		else:
 			notify.warning("animFSM has been deleted")
 		return
-		
+
 	def disable(self):
 		self.stopBlink()
 		self.stopAnimations()
 		Avatar.Avatar.disable(self)
 		return
-		
+
 	def delete(self):
 		try:
 			self.Char_deleted
@@ -71,24 +65,24 @@ class Char(Avatar.Avatar):
 			self.Char_deleted = 1
 			del self.animFSM
 			Avatar.Avatar.delete(self)
-		
+
 		return
-			
+
 	def setChat(self, chatString):
 		if self.charType == CIGlobals.Mickey:
-			self.dial = audio3d.loadSfx("phase_3/audio/dial/mickey.wav")
+			self.dial = base.audio3d.loadSfx("phase_3/audio/dial/mickey.wav")
 		elif self.charType == CIGlobals.Minnie:
-			self.dial = audio3d.loadSfx("phase_3/audio/dial/minnie.wav")
+			self.dial = base.audio3d.loadSfx("phase_3/audio/dial/minnie.wav")
 		elif self.charType == CIGlobals.Goofy:
-			self.dial = audio3d.loadSfx("phase_6/audio/dial/goofy.wav")
-		audio3d.attachSoundToObject(self.dial, self)
+			self.dial = base.audio3d.loadSfx("phase_6/audio/dial/goofy.wav")
+		base.audio3d.attachSoundToObject(self.dial, self)
 		self.dial.play()
 		Avatar.Avatar.setChat(self, chatString)
-		
+
 	def setName(self, nameString, charName = None):
 		self.avatarName = nameString
 		Avatar.Avatar.setName(self, nameString, avatarType=self.avatarType, charName=charName)
-		
+
 	def generateChar(self, charType):
 		self.charType = charType
 		if charType == CIGlobals.Mickey or charType == CIGlobals.Minnie:
@@ -103,14 +97,14 @@ class Char(Avatar.Avatar):
 			if charType == CIGlobals.Mickey:
 				self.mickeyEye = self.controlJoint(None, "modelRoot", "joint_pupilR")
 				self.mickeyEye.setY(0.025)
-			
+
 			for bundle in self.getPartBundleDict().values():
 				bundle = bundle['modelRoot'].getBundle()
 				earNull = bundle.findChild('sphere3')
 				if not earNull:
 					earNull = bundle.findChild('*sphere3')
 				earNull.clearNetTransforms()
-				
+
 			for bundle in self.getPartBundleDict().values():
 				charNodepath = bundle['modelRoot'].partBundleNP
 				bundle = bundle['modelRoot'].getBundle()
@@ -131,7 +125,7 @@ class Char(Avatar.Avatar):
 				ears.setP(-40.0)
 				ears.flattenMedium()
 				ears.setBillboardAxis()
-				
+
 				self.startBlink()
 		elif charType == CIGlobals.Pluto:
 			self.loadModel("phase_6/models/char/pluto-1000.bam")
@@ -139,7 +133,7 @@ class Char(Avatar.Avatar):
 								"neutral": "phase_6/models/char/pluto-neutral.bam",
 								"sit": "phase_6/models/char/pluto-sit.bam",
 								"stand": "phase_6/models/char/pluto-stand.bam"})
-			
+
 		elif charType == CIGlobals.Goofy:
 			self.loadModel("phase_6/models/char/TT_G-1500.bam")
 			self.loadAnims({"neutral": "phase_6/models/char/TT_GWait.bam",
@@ -148,71 +142,70 @@ class Char(Avatar.Avatar):
 			raise StandardError("unknown char %s!" % (charType))
 		#self.getGeomNode().setScale(1.25)
 		Avatar.Avatar.initShadow(self)
-		
+
 	def initializeLocalCollisions(self, name, radius):
 		Avatar.Avatar.initializeLocalCollisions(self, radius, 2, name)
-		
+
 	def startBlink(self):
 		randomStart = random.uniform(0.5, 5)
 		taskMgr.add(self.blinkTask, "blinkTask")
-		
+
 	def stopBlink(self):
 		taskMgr.remove("blinkTask")
 		taskMgr.remove("doBlink")
 		taskMgr.remove("openEyes")
-		
+
 	def blinkTask(self, task):
 		taskMgr.add(self.doBlink, "doBlink")
 		delay = random.uniform(0.5, 7)
 		task.delayTime = delay
 		return task.again
-		
+
 	def doBlink(self, task):
 		self.closeEyes()
 		taskMgr.doMethodLater(0.2, self.openEyes, "openEyes")
 		return task.done
-		
+
 	def closeEyes(self):
 		self.find('**/joint_pupilR').hide()
 		self.find('**/joint_pupilL').hide()
 		if self.charType == CIGlobals.Mickey:
 			self.mickeyEye.setY(-0.025)
 			self.mickeyEye.hide()
-		
+
 		self.find('**/eyes').setTexture(self.closedEyes, 1)
-			
+
 	def openEyes(self, task):
 		self.find('**/joint_pupilR').show()
 		self.find('**/joint_pupilL').show()
 		if self.charType == CIGlobals.Mickey:
 			self.mickeyEye.setY(0.025)
 			self.mickeyEye.show()
-		
+
 		self.find('**/eyes').setTexture(self.eyes, 1)
 		return task.done
-			
+
 	def enterOff(self):
 		self.currentAnim = None
 		return
-	
+
 	def exitOff(self):
 		pass
-			
+
 	def enterNeutral(self):
 		self.loop("neutral")
-	
+
 	def exitNeutral(self):
 		self.stop()
-		
+
 	def enterWalk(self):
 		self.loop("walk")
-		
+
 	def exitWalk(self):
 		self.stop()
-		
+
 	def enterRun(self):
 		self.loop("run")
-	
+
 	def exitRun(self):
 		self.stop()
-		 

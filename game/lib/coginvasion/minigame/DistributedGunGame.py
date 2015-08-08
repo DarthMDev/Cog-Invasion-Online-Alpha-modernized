@@ -42,7 +42,14 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.track = None
         self.isTimeUp = False
         self.cameraMovmentSeq = None
+        self.gameMode = None
         return
+
+    def setGameMode(self, mode):
+        self.gameMode = mode
+
+    def getGameMode(self):
+        return self.gameMode
 
     def makeSmokeEffect(self, pos):
         smoke = loader.loadModel("phase_4/models/props/test_clouds.bam")
@@ -130,54 +137,6 @@ class DistributedGunGame(DistributedToonFPSGame):
         if remoteAvatar:
             remoteAvatar.setGunName(choice)
 
-    """
-    def enterStart(self):
-        DistributedToonFPSGame.enterStart(self)
-        self.cameraMovementSeq = Sequence(
-            Wait(10.5),
-            LerpQuatInterval(camera, duration = 1.0, quat = (90, 0, 0), startHpr = Vec3(0, 0, 0), blendType = 'easeInOut'),
-            LerpQuatInterval(camera, duration = 1.0, quat = (90, 15, 0), startHpr = Vec3(90, 0, 0), blendType = 'easeInOut'),
-            LerpQuatInterval(camera, duration = 1.0, quat = (120, 0, 0), startHpr = Vec3(90, 15, 0), blendType = 'easeInOut'),
-            Wait(0.3),
-            LerpQuatInterval(camera, duration = 1.0, quat = (25, 0, 0), startHpr = Vec3(120, 0, 0), blendType = 'easeInOut'),
-            Wait(1.35),
-            LerpQuatInterval(camera, duration = 1.0, quat = (90, -15, 0), startHpr = Vec3(25, 0, 0), blendType = 'easeInOut'),
-            Wait(0.3),
-            LerpQuatInterval(camera, duration = 1.5, quat = (183, 0, 0), startHpr = Vec3(90, -15, 0), blendType = 'easeInOut'),
-            Wait(6.0),
-            LerpQuatInterval(camera, duration = 1.5, quat = (160, 0, 0), startHpr = Vec3(183, 0, 0), blendType = 'easeInOut'),
-            Wait(1.5),
-            LerpQuatInterval(camera, duration = 1.5, quat = (203, 0, 0), startHpr = Vec3(160, 0, 0), blendType = 'easeInOut'),
-            Wait(3.85),
-            LerpQuatInterval(camera, duration = 1.35, quat = (188, 0, 0), startHpr = Vec3(203, 0, 0), blendType = 'easeInOut'),
-            Wait(7.0),
-            LerpQuatInterval(camera, duration = 1.0, quat = (97, 0, 0), startHpr = Vec3(188, 0, 0), blendType = 'easeInOut'),
-            Wait(0.35),
-            LerpQuatInterval(camera, duration = 1.0, quat = (182, 0, 0), startHpr = Vec3(97, 0, 0), blendType = 'easeInOut'),
-            Wait(1.0),
-            Func(self.cameraMovementSeqDone)
-        )
-        taskMgr.add(self.cameraMovement, "cameraMovement")
-        self.cameraMovementSeq.start()
-
-    def cameraMovementSeqDone(self):
-        taskMgr.remove("cameraMovement")
-
-    def cameraMovement(self, task):
-        # Gradually move the camera forward every frame.
-        # The LerpQuatIntervals in self.cameraMovementSeq
-        # will turn the camera.
-        camera.setY(camera, 25 * globalClock.getDt())
-        return task.cont
-
-    def exitStart(self):
-        self.cameraMovementSeq.finish()
-        self.cameraMovementSeq = None
-        camera.setPos(0.0, 0, 0)
-        camera.setHpr(0.00, 0.00, 0.00)
-        DistributedToonFPSGame.exitStart(self)
-    """
-
     def handleDescAck(self):
         self.fsm.request('chooseGun')
 
@@ -193,7 +152,7 @@ class DistributedGunGame(DistributedToonFPSGame):
             self.isTimeUp = True
 
     def enterAnnounceGameOver(self):
-        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
+        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
         whistleSfx.play()
         del whistleSfx
         self.gameOverLbl = DirectLabel(text = "TIME'S\nUP!", relief = None, scale = 0.35, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
@@ -215,26 +174,16 @@ class DistributedGunGame(DistributedToonFPSGame):
         camera.setPos(0, 0, 0)
         camera.setHpr(0, 0, 0)
         self.toonFps.fsm.request('alive')
-        sec5 = base.loadSfx("phase_4/audio/sfx/announcer_begins_5sec.wav")
-        sec4 = base.loadSfx("phase_4/audio/sfx/announcer_begins_4sec.wav")
-        sec3 = base.loadSfx("phase_4/audio/sfx/announcer_begins_3sec.wav")
-        sec2 = base.loadSfx("phase_4/audio/sfx/announcer_begins_2sec.wav")
-        sec1 = base.loadSfx("phase_4/audio/sfx/announcer_begins_1sec.wav")
         text = OnscreenText(text = "", scale = 0.1, pos = (0, 0.5), fg = (1, 1, 1, 1), shadow = (0,0,0,1))
         self.track = Sequence(
-            #Func(sec5.play),
             Func(text.setText, "5"),
             Wait(1.0),
-            #Func(sec4.play),
             Func(text.setText, "4"),
             Wait(1.0),
-            #Func(sec3.play),
             Func(text.setText, "3"),
             Wait(1.0),
-            #Func(sec2.play),
             Func(text.setText, "2"),
             Wait(1.0),
-            #Func(sec1.play),
             Func(text.setText, "1"),
             Wait(1.0),
             Func(text.setText, "FIGHT!"),
@@ -260,18 +209,12 @@ class DistributedGunGame(DistributedToonFPSGame):
         DistributedToonFPSGame.enterPlay(self)
         self.toonFps.reallyStart()
         self.createTimer()
-        #base.localAvatar.chatInput.disableKeyboardShortcuts()
-        #base.localAvatar.attachCamera()
-        #base.localAvatar.startSmartCamera()
-        #base.localAvatar.enableAvatarControls()
 
     def exitPlay(self):
         self.deleteTimer()
         if self.toonFps:
             self.toonFps.end()
         base.localAvatar.createChatInput()
-        #base.localAvatar.chatInput.enableKeyboardShortcuts()
-        #base.localAvatar.disableAvatarControls()
         DistributedToonFPSGame.exitPlay(self)
 
     def announceGenerate(self):

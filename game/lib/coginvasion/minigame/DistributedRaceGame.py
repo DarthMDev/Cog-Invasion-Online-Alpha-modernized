@@ -2,7 +2,7 @@
 
   Filename: DistributedRaceGame.py
   Created by: blach (07Oct14)
-  
+
 """
 
 from panda3d.core import *
@@ -17,7 +17,7 @@ from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
 
 class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
-	
+
 	def __init__(self, cr):
 		try:
 			self.DistributedRaceGame_initialized
@@ -49,7 +49,7 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		self.raceCamPos = (-24.52, -37.22, 25.00)
 		self.lane = 0
 		return
-		
+
 	def load(self):
 		self.deleteWorld()
 		self.track = loader.loadModel(self.trackPath)
@@ -68,48 +68,48 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		camera.setPos(self.initialCamPos["pos"])
 		camera.setHpr(self.initialCamPos["hpr"])
 		DistributedMinigame.DistributedMinigame.load(self)
-		
+
 	def enterPlay(self):
 		DistributedMinigame.DistributedMinigame.enterPlay(self)
 		self.raceFSM.request('raceTransition')
-		
+
 	def exitPlay(self):
 		DistributedMinigame.DistributedMinigame.exitPlay(self)
 		self.raceFSM.request('off')
-		
+
 	def enterRace(self):
 		self.startMovement()
-		
+
 	def exitRace(self):
 		self.stopMovement()
-		
+
 	def enterRaceOff(self):
 		pass
-		
+
 	def exitRaceOff(self):
 		pass
-		
+
 	def enterRaceTransition(self):
 		self.raceTrans = Sequence(Wait(0.5), Func(self.moveCameraToToon), Wait(4.5), Func(self.moveCameraToTop),
 			Wait(4.5), Func(self.startCountdown))
 		self.raceTrans.start()
-			
+
 	def exitRaceTransition(self):
 		self.raceTrans.pause()
 		del self.raceTrans
-		
+
 	def startMovement(self):
 		self.movement.createGui()
 		self.movement.fsm.request('run')
-		
+
 	def enterGameOver(self, winner=0, winnerDoId=0):
 		self.raceFSM.request('off')
 		DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId)
-			
+
 	def stopMovement(self):
 		self.movement.cleanup()
 		self.movement.deleteGui()
-		
+
 	def startCountdown(self):
 		""" Start the countdown to the start of the race. """
 		self.countdownLbl = DirectLabel(text="", text_scale=0.3, text_font=CIGlobals.getMickeyFont(),
@@ -117,7 +117,7 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		Sequence(Func(self.setCountdownText, "3"), Wait(1.0), Func(self.setCountdownText, "2"),
 				Wait(1.0), Func(self.setCountdownText, "1"), Wait(1.0), Func(self.setCountdownText, "GO!"),
 				Wait(1.5), Func(self.deleteCountdownLabel)).start()
-		
+
 	def setCountdownText(self, number):
 		self.countdownLbl['text'] = number
 		if number == "GO!":
@@ -126,11 +126,11 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 			self.raceFSM.request('race')
 		else:
 			self.countSfx.play()
-			
+
 	def deleteCountdownLabel(self):
 		self.countdownLbl.destroy()
 		del self.countdownLbl
-		
+
 	def moveCameraToToon(self):
 		camPInt = LerpPosInterval(camera,
 								duration=3.0,
@@ -140,7 +140,7 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		camQInt = camera.quatInterval(3.0, hpr=Vec3(180, 0, 0), blendType="easeInOut")
 		camPInt.start()
 		camQInt.start()
-		
+
 	def moveCameraToTop(self):
 		camera.setPos(camera.getPos(self.localAv))
 		camera.reparentTo(self.localAv)
@@ -159,8 +159,8 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		camQInt = camera.quatInterval(3.0, hpr=newHpr, blendType="easeInOut")
 		camPInt.start()
 		camQInt.start()
-								
-		
+
+
 	def deleteWorld(self):
 		if self.track:
 			self.track.removeNode()
@@ -169,22 +169,22 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 			self.skyUtil.stopSky()
 			self.sky.removeNode()
 			self.sky = None
-			
+
 	def setToonLane(self, lane):
 		self.lane = lane
 		base.localAvatar.setPos(self.lanePos[lane])
 		base.localAvatar.setHpr(0, 0, 0)
-			
+
 	def getToonLane(self):
 		return self.lane
-			
+
 	def d_requestToonLane(self):
 		self.sendUpdate('requestToonLane', [])
-		
+
 	def announceGenerate(self):
 		DistributedMinigame.DistributedMinigame.announceGenerate(self)
 		self.load()
-		
+
 	def disable(self):
 		DistributedMinigame.DistributedMinigame.disable(self)
 		self.deleteWorld()

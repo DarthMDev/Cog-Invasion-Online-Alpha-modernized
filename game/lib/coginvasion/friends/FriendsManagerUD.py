@@ -14,7 +14,7 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
     def requestFriendsList(self):
         sender = self.air.getAvatarIdFromSender()
 
-        realFriendsList = [[], []]
+        realFriendsList = [[], [], []]
         avatarFriendsList = []
 
         def friendResponse(dclass, fields):
@@ -27,6 +27,8 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
             avatarId = avatarFriendsList[friendResponse.friend]
             realFriendsList[0].append(avatarId)
             realFriendsList[1].append(name)
+            isOnline = int(avatarId in self.toonsOnline)
+            realFriendsList[2].append(isOnline)
             if friendResponse.friend == len(avatarFriendsList) - 1:
                 # Done, send it out
                 self.sendUpdateToAvatarId(sender, 'friendsList', realFriendsList)
@@ -49,7 +51,7 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
             avatarFriendsList = fields['setFriendsList'][0]
 
             if len(avatarFriendsList) == 0:
-                self.sendUpdateToAvatarId(sender, 'friendsList', [[], []])
+                self.sendUpdateToAvatarId(sender, 'friendsList', [[], [], []])
                 return
 
             self.air.dbInterface.queryObject(

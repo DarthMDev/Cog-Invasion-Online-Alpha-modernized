@@ -2,7 +2,7 @@
 
   Filename: RaceGameMovement.py
   Created by: blach (10Oct14)
-  
+
 """
 
 from panda3d.core import *
@@ -21,7 +21,7 @@ class RaceGameMovement(DirectObject):
 	POWER_FACTOR = 2.5
 	defaultBoostBarColor = (0.4, 0.4, 0.7, 1.0)
 	fullBoostBarColor = (0.0, 0.0, 0.7, 1.0)
-	
+
 	def __init__(self, avatar):
 		DirectObject.__init__(self)
 		self.avatar = avatar
@@ -45,19 +45,19 @@ class RaceGameMovement(DirectObject):
 		self.isStopped = True
 		self.isBoosting = False
 		return
-		
+
 	def setBoosting(self, value):
 		self.isBoosting = value
-		
+
 	def getBoosting(self):
 		return self.isBoosting
-		
+
 	def enterBoostOff(self):
 		self.ignore("control")
-		
+
 	def exitBoostOff(self):
 		pass
-		
+
 	def createGui(self):
 		""" Create the GUI that will tell the client how much
 		running power they have. """
@@ -66,7 +66,7 @@ class RaceGameMovement(DirectObject):
 		self.powerBar = DirectWaitBar(barColor=(0, 0.7, 0, 1), range=20.0, value=0, parent=self.powerFrame, scale=(0.15, 0, 1.1), pos=(1.02, 0, 0.66))
 		self.powerBar.setR(-90)
 		self.powerTitle = DirectLabel(text="POWER", text_scale=0.08, pos=(1.02, 0, 0.85), relief=None, parent=self.powerFrame, text_fg=(1, 1, 0, 1), text_font=CIGlobals.getMickeyFont())
-		
+
 		self.boostFrame = DirectFrame()
 		self.boostBg = OnscreenImage(image=DGG.getDefaultDialogGeom(), scale=(0.5, 1.0, 0.5), pos=(0.45, 0, 0.7), parent=self.boostFrame, color=CIGlobals.DialogColor)
 		self.boostBar = DirectWaitBar(barColor=self.defaultBoostBarColor, range=10, value=0, parent=self.boostFrame, scale=(0.15, 0, 1.1), pos=(0.45, 0, 0.66))
@@ -75,7 +75,7 @@ class RaceGameMovement(DirectObject):
 		self.boostFullLbl = DirectLabel(text="BOOST READY", text_scale=0.065, pos=(0.45, 0, 0.3), relief=None, parent=self.boostFrame, text_fg=self.fullBoostBarColor,
 					text_shadow=(0.4, 0.4, 0.4, 1.0), text_font=CIGlobals.getToonFont())
 		self.boostFullLbl.hide()
-		
+
 	def deleteGui(self):
 		""" Delete the GUI that will tell the client how much
 		running power they have. """
@@ -88,21 +88,21 @@ class RaceGameMovement(DirectObject):
 		self.boostBar.destroy()
 		self.boostTitle.destroy()
 		self.boostFullLbl.destroy()
-		
+
 	def enableArrowKeys(self):
 		""" Enable the arrow keys to increase movement power. """
 		self.accept("arrow_left", self.keyPressed, ["arrow_left"])
 		self.accept("arrow_right", self.keyPressed, ["arrow_right"])
-		
+
 	def disableArrowKeys(self):
 		""" Disable the arrow keys to increase movement power. """
 		self.ignore("arrow_left")
 		self.ignore("arrow_right")
-		
+
 	def boostKeyPressed(self):
 		self.boostFullLbl.hide()
 		self.boostFSM.request('boost')
-		
+
 	def keyPressed(self, key):
 		""" Figure out which key was pressed and increment the movement power
 		if the values of both keys are 1. Also, make the avatar fall down if
@@ -118,7 +118,7 @@ class RaceGameMovement(DirectObject):
 			self.resetKeys()
 			self.changePower()
 			self.restartDelayTimer()
-			
+
 	def enterBoost(self):
 		self.disableArrowKeys()
 		self.resetKeys()
@@ -127,7 +127,7 @@ class RaceGameMovement(DirectObject):
 		taskMgr.add(self.boostTask, 'boostTask')
 		self.boostSfx = base.loadSfx("phase_6/audio/sfx/KART_turboLoop.wav")
 		base.playSfx(self.boostSfx, looping = 1)
-		
+
 	def exitBoost(self):
 		self.enableArrowKeys()
 		base.localAvatar.b_setAnimState("run")
@@ -135,7 +135,7 @@ class RaceGameMovement(DirectObject):
 		taskMgr.remove('boostTask')
 		self.boostSfx.stop()
 		del self.boostSfx
-		
+
 	def boostTask(self, task):
 		if self.boostBar['value'] <= 0.0:
 			self.boostFSM.request('off')
@@ -144,27 +144,27 @@ class RaceGameMovement(DirectObject):
 		self.boostBar['value'] -= 0.3
 		task.delayTime = 0.05
 		return task.again
-			
+
 	def enterFall(self):
-		""" The avatar is pressing his arrow keys too fast. Stop running and 
+		""" The avatar is pressing his arrow keys too fast. Stop running and
 		make the avatar fall down. """
 		self.avatar.b_setAnimState("fallFWD")
 		self.fallTrack = Sequence(Wait(2.5), Func(self.fsm.request, "run"))
 		self.fallTrack.start()
-		
+
 	def exitFall(self):
 		self.fallTrack.pause()
 		self.fallTrack = None
-			
+
 	def isTooFast(self):
 		""" Determine if the delay between key presses in seconds is too low. """
 		return (self.getDelayTime() < self.MINIMUM_KEY_DELAY)
-			
+
 	def resetKeys(self):
 		""" Reset the value of the keys. """
 		for key in self.keysPressed:
 			self.keysPressed[key] = 0
-			
+
 	def changePower(self):
 		""" Increase the avatar's movement power. """
 		self.power = self.POWER_FACTOR / self.getDelayTime()
@@ -177,25 +177,25 @@ class RaceGameMovement(DirectObject):
 					self.acceptOnce("control", self.boostKeyPressed)
 		print self.power
 		self.powerBar.update(self.power)
-		
+
 	def startDelayTimer(self):
 		self.startTime = globalClock.getFrameTime()
-		
+
 	def stopDelayTimer(self):
 		self.endTime = globalClock.getFrameTime()
-		
+
 	def resetDelayTimer(self):
 		self.startTime = 0.0
 		self.endTime = 0.0
-		
+
 	def restartDelayTimer(self):
 		self.stopDelayTimer()
 		self.resetDelayTimer()
 		self.startDelayTimer()
-		
+
 	def getDelayTime(self):
 		return self.endTime - self.startTime
-		
+
 	def enterRun(self):
 		""" Start moving the avatar, make the avatar run, and
 		start tracking the delay between key presses. """
@@ -207,7 +207,7 @@ class RaceGameMovement(DirectObject):
 		self.enableArrowKeys()
 		self.avatar.b_setAnimState("run")
 		self.isStopped = False
-		
+
 	def exitRun(self):
 		""" Stop moving the avatar, make the avatar stand, and stop
 		tracking the delay between key presses. """
@@ -223,19 +223,19 @@ class RaceGameMovement(DirectObject):
 		self.isStopped = True
 		self.power = self.MINIMUM_POWER
 		self.powerBar.update(0)
-		
+
 	def enterOff(self):
 		pass
-		
+
 	def exitOff(self):
 		pass
-		
+
 	def enterFinal(self):
 		pass
-		
+
 	def exitFinal(self):
 		pass
-		
+
 	def decreasePower(self, task):
 		""" Decrease power so the avatar does not keep the same amount
 		of power while not tapping the arrow keys. """
@@ -245,12 +245,12 @@ class RaceGameMovement(DirectObject):
 				self.power = self.MINIMUM_POWER
 		task.delayTime = 0.5
 		return Task.again
-		
+
 	def move(self, task):
 		""" Move the avatar forward on the Y axis with the current amount of power. """
 		dt = globalClock.getDt()
 		self.avatar.setY(self.avatar.getY() + self.power * dt)
 		return Task.cont
-		
+
 	def cleanup(self):
 		self.fsm.requestFinalState()

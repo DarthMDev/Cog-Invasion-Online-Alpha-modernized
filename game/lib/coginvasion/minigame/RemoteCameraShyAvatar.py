@@ -12,21 +12,21 @@ from RemoteAvatar import RemoteAvatar
 
 class RemoteCameraShyAvatar(RemoteAvatar):
 	notify = directNotify.newCategory("RemoteCameraShyAvatar")
-	
+
 	def __init__(self, mg, cr, avId):
 		RemoteAvatar.__init__(self, mg, cr, avId)
-		self.shutter = self.audio3d.loadSfx("phase_4/audio/sfx/Photo_shutter.mp3")
+		self.shutter = base.audio3d.loadSfx("phase_4/audio/sfx/Photo_shutter.mp3")
 		self.camera = None
 		self.pictureTrack = None
 		self.cameraFlash = None
 		self.retrieveAvatar()
-	
+
 	def retrieveAvatar(self):
 		RemoteAvatar.retrieveAvatar(self)
 		if self.avatar:
-			self.audio3d.attachSoundToObject(self.shutter, self.avatar)
+			base.audio3d.attachSoundToObject(self.shutter, self.avatar)
 			self.attachCamera()
-	
+
 	def attachCamera(self):
 		self.camera = loader.loadModel("models/camera.egg.pz")
 		self.camera.setScale(0.8)
@@ -40,7 +40,7 @@ class RemoteCameraShyAvatar(RemoteAvatar):
 		self.cameraFlash.setPos(-0.43, 0.28, 0.63)
 		self.cameraFlash.setH(180.00)
 		self.cameraFlash.setScale(0.0)
-		
+
 	def detachCamera(self):
 		if self.camera:
 			self.camera.removeNode()
@@ -51,21 +51,21 @@ class RemoteCameraShyAvatar(RemoteAvatar):
 		if self.cameraFlash:
 			self.cameraFlash.removeNode()
 			self.cameraFlash = None
-		
+
 	def run(self):
 		if self.avatar:
 			self.avatar.loop('catchrun', partName = 'legs')
 			self.avatar.pose('catchrun', 1, partName = 'torso')
-			
+
 	def stand(self):
 		if self.avatar:
 			self.avatar.loop('catchneutral', partName = 'legs')
 			self.avatar.pose('catchneutral', 1, partName = 'torso')
-	
+
 	def jump(self):
 		if self.avatar:
 			self.avatar.loop('jump')
-	
+
 	def takePicture(self, ts = 0.0):
 		self.pictureTrack = Sequence(
 			Func(base.playSfx, self.shutter),
@@ -83,12 +83,12 @@ class RemoteCameraShyAvatar(RemoteAvatar):
 			)
 		)
 		self.pictureTrack.start(ts)
-	
+
 	def doWinDance(self):
 		self.avatar.play('hdance')
 		sfx = base.loadSfx("phase_5/audio/sfx/AA_heal_happydance.mp3")
 		SoundInterval(sfx).start()
-		
+
 	def cleanup(self):
 		self.detachCamera()
 		del self.shutter

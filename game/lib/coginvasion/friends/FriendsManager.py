@@ -22,8 +22,8 @@ class FriendsManager(DistributedObjectGlobal):
     def d_requestFriendsList(self):
         self.sendUpdate('requestFriendsList', [])
 
-    def friendsList(self, idArray, nameArray):
-        messenger.send('gotFriendsList', [idArray, nameArray])
+    def friendsList(self, idArray, nameArray, flags):
+        messenger.send('gotFriendsList', [idArray, nameArray, flags])
 
     def teleportNotify(self, name):
         Whisper().createSystemMessage(self.TeleportNotify % name)
@@ -31,14 +31,17 @@ class FriendsManager(DistributedObjectGlobal):
     def friendLeftYourList(self, avatarId):
         Whisper().createSystemMessage(self.LeftListMessage % self.getAvatarName(avatarId))
         base.localAvatar.panel.maybeUpdateFriendButton()
+        self.d_requestFriendsList()
 
     def toonOnline(self, avatarId, name):
         if avatarId in base.localAvatar.friends:
             Whisper().createSystemMessage(self.ComingOnlineMessage % name)
+            self.d_requestFriendsList()
 
     def toonOffline(self, avatarId, name):
         if avatarId in base.localAvatar.friends:
             Whisper().createSystemMessage(self.GoingOfflineMessage % name)
+            self.d_requestFriendsList()
 
     def avatarInfo(self, name, dna, maxHP, hp):
         messenger.send('avatarInfoResponse', [name, dna, maxHP, hp])

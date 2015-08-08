@@ -63,8 +63,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         RemoteAvatar.retrieveAvatar(self)
         if self.avatar:
             self.avatar.attachGun(self.gunName)
-            self.soundGrunt = self.avatar.audio3d.loadSfx('phase_4/audio/sfx/target_impact_grunt1.mp3')
-            self.avatar.audio3d.attachSoundToObject(self.soundGrunt, self.avatar)
+            self.soundGrunt = base.loadSfx('phase_4/audio/sfx/target_impact_grunt1.mp3')
 
     def enterOff(self):
         pass
@@ -73,7 +72,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         pass
 
     def grunt(self):
-        base.playSfx(self.soundGrunt)
+        base.playSfx(self.soundGrunt, node = self.avatar)
 
     def enterDead(self):
         if self.avatar:
@@ -90,8 +89,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
 
     def enterDie(self, ts):
         if self.avatar:
-            dieSound = self.audio3d.loadSfx(self.avatar.getToonAnimalNoise('exclaim'))
-            self.audio3d.attachSoundToObject(dieSound, self.avatar)
+            dieSound = base.audio3d.loadSfx(self.avatar.getToonAnimalNoise('exclaim'))
+            base.audio3d.attachSoundToObject(dieSound, self.avatar)
             self.avatar.setTransparency(1)
             self.avatar.getGeomNode().setTransparency(1)
             self.track = Sequence(
@@ -163,10 +162,10 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 self.avatar.loop(self.avatar.getCurrentAnim(partName = 'legs'))
 
             if self.gunName == "pistol":
-                gunSound = self.audio3d.loadSfx("phase_4/audio/sfx/pistol_shoot.wav")
+                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/pistol_shoot.wav")
             elif self.gunName == "shotgun":
-                gunSound = self.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
-            self.audio3d.attachSoundToObject(gunSound, self.avatar)
+                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
+            base.audio3d.attachSoundToObject(gunSound, self.avatar)
             self.track = Sequence(
                 Func(createBullet),
                 Func(gunSound.play),
@@ -198,9 +197,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
     def cleanup(self):
         if self.avatar:
             self.avatar.detachGun()
-            if self.soundGrunt:
-                self.avatar.audio3d.detachSound(self.soundGrunt)
-                self.soundGrunt = None
+        self.soundGrunt = None
         if self.track:
             self.track.pause()
         del self.track

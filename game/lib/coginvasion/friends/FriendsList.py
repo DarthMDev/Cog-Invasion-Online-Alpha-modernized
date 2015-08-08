@@ -75,13 +75,14 @@ class FriendsList(DirectFrame):
         self.onlineFriends = {}
 
         self.fsm = ClassicFSM.ClassicFSM('FriendsList', [State.State('off', self.enterOff, self.exitOff),
-            State.State('waitOnFriendsListResponse', self.enterWaitOnFriendsListResponse, self.exitWaitOnFriendsListResponse),
             State.State('onlineFriendsList', self.enterOnlineFriendsList, self.exitOnlineFriendsList),
             State.State('allFriendsList', self.enterAllFriendsList, self.exitAllFriendsList)],
             'off', 'off')
         self.fsm.enterInitialState()
+        self.accept('gotFriendsList', self.handleFriendsList)
 
     def destroy(self):
+        self.ignore('gotFriendsList')
         self.fsm.requestFinalState()
         del self.fsm
         self.headingText.destroy()
@@ -120,24 +121,17 @@ class FriendsList(DirectFrame):
             self.backBtn['extraArgs'] = []
             self.backBtn['state'] = DGG.DISABLED
 
-    def enterWaitOnFriendsListResponse(self):
+
+    def handleFriendsList(self, friendIdArray, nameArray, flags):
         self.friends = {}
         self.onlineFriends = {}
-        self.acceptOnce('gotFriendsList', self.handleFriendsList)
-        base.cr.friendsManager.d_requestFriendsList()
-
-    def handleFriendsList(self, friendIdArray, nameArray):
         for i in xrange(len(friendIdArray)):
             avatarId = friendIdArray[i]
             name = nameArray[i]
             self.friends[avatarId] = name
-            if avatarId in base.cr.doId2do.keys():
+            if flags[i] == 1:
                 # This friend is online
                 self.onlineFriends[avatarId] = name
-        self.fsm.request('onlineFriendsList')
-
-    def exitWaitOnFriendsListResponse(self):
-        self.ignore('gotFriendsList')
 
     def enterOff(self):
         self.hide()
@@ -168,10 +162,15 @@ class FriendsList(DirectFrame):
         self.frameForNames.removeAndDestroyAllItems()
         self.setButtons(None, None)
 
+    def sortListItems(self):
+        self.frameForNames['items'].sort(key = lambda x: x['text'])
+        self.frameForNames.refresh()
+
     def enterAllFriendsList(self):
         self.headingText.setText("All\nFriends")
         for friendId, name in self.friends.items():
             self.addFriend(name, friendId)
+        self.sortListItems()
         self.setButtons(None, 'onlineFriendsList')
 
     def exitAllFriendsList(self):
@@ -181,6 +180,7 @@ class FriendsList(DirectFrame):
         self.headingText.setText("Online\nFriends")
         for friendId, name in self.onlineFriends.items():
             self.addFriend(name, friendId)
+        self.sortListItems()
         self.setButtons('allFriendsList', None)
 
     def exitOnlineFriendsList(self):

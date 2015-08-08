@@ -18,10 +18,7 @@ from lib.coginvasion.npc.NPCWalker import NPCWalkInterval, NPCLookInterval
 
 class VicePresident(Avatar):
 	notify = directNotify.newCategory("VicePresident")
-	audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0], camera)
-	audio3d.setDistanceFactor(25)
-	audio3d.setDropOffFactor(0.025)
-	
+
 	def __init__(self):
 		Avatar.__init__(self)
 		self.fsm = ClassicFSM('VicePresident', [State('off', self.enterOff, self.exitOff),
@@ -39,23 +36,23 @@ class VicePresident(Avatar):
 		self.gearModel = None
 		self.gearThrowIval = None
 		self.knockedDown = False
-		self.chirps = self.audio3d.loadSfx("phase_4/audio/sfx/SZ_TC_bird1.mp3")
-		self.audio3d.attachSoundToObject(self.chirps, self)
+		self.chirps = base.audio3d.loadSfx("phase_4/audio/sfx/SZ_TC_bird1.mp3")
+		base.audio3d.attachSoundToObject(self.chirps, self)
 		self.vp_torso_node = NodePath('vp_torso_node')
-	
+
 	def enterOff(self):
 		pass
-		
+
 	def exitOff(self):
 		pass
-		
+
 	def enterRiseUp(self, ts = 0):
 		if hasattr(self, 'uniqueName'):
 			name = self.uniqueName('vpRiseUp')
 		else:
 			name = 'vpRiseUp'
-		sfx = self.audio3d.loadSfx("phase_9/audio/sfx/CHQ_VP_raise_up.mp3")
-		self.audio3d.attachSoundToObject(sfx, self)
+		sfx = base.audio3d.loadSfx("phase_9/audio/sfx/CHQ_VP_raise_up.mp3")
+		base.audio3d.attachSoundToObject(sfx, self)
 		self.track = Sequence(
 			Func(base.playSfx, sfx),
 			ActorInterval(
@@ -68,20 +65,20 @@ class VicePresident(Avatar):
 		self.track.setDoneEvent(self.track.getName())
 		self.acceptOnce(self.track.getDoneEvent(), self.fsm.request, ["neutral"])
 		self.track.start(ts)
-		
+
 	def exitRiseUp(self):
 		if self.track:
 			self.ignore(self.track.getDoneEvent())
 			self.track.finish()
 			self.track = None
-		
+
 	def enterKnockDown(self, ts = 0):
 		if hasattr(self, 'uniqueName'):
 			name = self.uniqueName('vpKnockDown')
 		else:
 			name = 'vpKnockDown'
-		sfx = self.audio3d.loadSfx("phase_5/audio/sfx/AA_sound_aoogah.mp3")
-		self.audio3d.attachSoundToObject(sfx, self)
+		sfx = base.audio3d.loadSfx("phase_5/audio/sfx/AA_sound_aoogah.mp3")
+		base.audio3d.attachSoundToObject(sfx, self)
 		self.track = Sequence(
 			Func(base.playSfx, sfx),
 			ActorInterval(
@@ -94,21 +91,21 @@ class VicePresident(Avatar):
 		self.track.setDoneEvent(self.track.getName())
 		self.acceptOnce(self.track.getDoneEvent(), self.fsm.request, ["neutral"])
 		self.track.start(ts)
-		
+
 	def exitKnockDown(self):
 		if self.track:
 			self.ignore(self.track.getDoneEvent())
 			self.track.finish()
 			self.track = None
-		
+
 	def enterEmerge(self, ts = 0):
 		if hasattr(self, 'uniqueName'):
 			name = self.uniqueName('emergeTrack')
 		else:
 			name = 'emergeTrack'
 		self.setScale(0.1)
-		emergeSfx = self.audio3d.loadSfx("phase_5/audio/sfx/TL_train_track_appear.mp3")
-		self.audio3d.attachSoundToObject(emergeSfx, self)
+		emergeSfx = base.audio3d.loadSfx("phase_5/audio/sfx/TL_train_track_appear.mp3")
+		base.audio3d.attachSoundToObject(emergeSfx, self)
 		self.track = Sequence(
 			Func(base.playSfx, emergeSfx),
 			LerpScaleInterval(
@@ -124,13 +121,13 @@ class VicePresident(Avatar):
 		self.acceptOnce(self.track.getDoneEvent(), self.fsm.request, ["neutral"])
 		self.track.start(ts)
 		self.loop('stand-angry')
-		
+
 	def exitEmerge(self):
 		if self.track:
 			self.ignore(self.track.getDoneEvent())
 			self.track.finish()
 			self.track = None
-			
+
 	def enterNeutral(self, ts = 0):
 		if self.getCurrentAnim() != 'stand-angry':
 			if self.knockedDown:
@@ -146,20 +143,20 @@ class VicePresident(Avatar):
 			isBackwards = False
 		)
 		self.track.start(ts)
-		
+
 	def exitNeutral(self):
 		self.stop()
 		self.chirps.stop()
-	
+
 	def enterJump(self, ts = 0):
 		if hasattr(self, 'uniqueName'):
 			name = self.uniqueName('vpJump')
 		else:
 			name = 'vpJump'
-		jumpSfx = self.audio3d.loadSfx("phase_5/audio/sfx/General_throw_miss.mp3")
-		landSfx = self.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
-		self.audio3d.attachSoundToObject(jumpSfx, self)
-		self.audio3d.attachSoundToObject(landSfx, self)
+		jumpSfx = base.audio3d.loadSfx("phase_5/audio/sfx/General_throw_miss.mp3")
+		landSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
+		base.audio3d.attachSoundToObject(jumpSfx, self)
+		base.audio3d.attachSoundToObject(landSfx, self)
 		self.track = Sequence(
 			Func(self.play, "jump"),
 			Func(base.playSfx, jumpSfx),
@@ -171,20 +168,20 @@ class VicePresident(Avatar):
 		self.track.setDoneEvent(self.track.getName())
 		self.acceptOnce(self.track.getDoneEvent(), self.fsm.request, ["neutral"])
 		self.track.start(ts)
-	
+
 	def exitJump(self):
 		if self.track:
 			self.ignore(self.track.getDoneEvent())
 			self.track.finish()
 			self.track = None
-	
+
 	def enterThrowGear(self, point, ts = 0):
 		lookNode = render.attachNewNode('pointNode')
 		lookNode.setPos(point)
 		#self.gearModel.reparentTo(render)
 		#self.gearModel.setPos(point)
-		throwSfx = self.audio3d.loadSfx("phase_9/audio/sfx/CHQ_VP_frisbee_gears.mp3")
-		self.audio3d.attachSoundToObject(throwSfx, self)
+		throwSfx = base.audio3d.loadSfx("phase_9/audio/sfx/CHQ_VP_frisbee_gears.mp3")
+		base.audio3d.attachSoundToObject(throwSfx, self)
 		if hasattr(self, 'uniqueName'):
 			name = self.uniqueName('vpThrowGear')
 		else:
@@ -206,7 +203,7 @@ class VicePresident(Avatar):
 		self.track.start(ts)
 		lookNode.removeNode()
 		del lookNode
-	
+
 	def throwGear(self, point):
 		self.gearModel.reparentTo(self.getPart("body"))
 		self.gearModel.setX(0.0)
@@ -227,13 +224,13 @@ class VicePresident(Avatar):
 			lookAtTarget = False
 		)
 		self.gearThrowIval.start()
-	
+
 	def exitThrowGear(self):
 		if self.track:
 			self.ignore(self.track.getDoneEvent())
 			self.track.finish()
 			self.track = None
-	
+
 	def destroy(self):
 		if 'head' in self._Actor__commonBundleHandles:
 			del self._Actor__commonBundleHandles['head']
@@ -262,7 +259,7 @@ class VicePresident(Avatar):
 		self.removePart("head")
 		self.removePart("body")
 		self.removePart("legs")
-		
+
 	def generate(self):
 		self.generateLegs()
 		self.generateBody()
@@ -270,25 +267,25 @@ class VicePresident(Avatar):
 		self.generateTreads()
 		self.generateGear()
 		self.parentParts()
-		
+
 	def parentParts(self):
 		self.attach('head', 'body', 'joint34')
 		self.treads.reparentTo(self.getPart("legs").find('**/joint_axle'))
 		self.vp_torso_node.reparentTo(self.getPart("legs").find('**/joint_legs'))
 		self.getPart("body").reparentTo(self.vp_torso_node)
 		self.getPart("body").setH(180)
-		
+
 		self.frontDoor.setR(-80)
 		self.rearDoor.setR(77)
-		
+
 	def generateGear(self):
 		self.gearModel = loader.loadModel("phase_9/models/char/gearProp.bam")
 		self.gearModel.setScale(0.25)
 		self.gearModel.hide()
-	
+
 	def generateTreads(self):
 		self.treads = loader.loadModel("phase_9/models/char/bossCog-treads.bam")
-	
+
 	def generateLegs(self):
 		self.loadModel("phase_9/models/char/bossCog-legs-zero.bam", "legs")
 		self.loadAnims(
@@ -307,10 +304,10 @@ class VicePresident(Avatar):
 			},
 			"legs"
 		)
-		
+
 		self.frontDoor = self.controlJoint(None, "legs", "joint_doorFront")
 		self.rearDoor = self.controlJoint(None, "legs", "joint_doorRear")
-	
+
 	def generateBody(self):
 		self.loadModel("phase_9/models/char/sellbotBoss-torso-zero.bam", "body")
 		self.loadAnims(
@@ -329,7 +326,7 @@ class VicePresident(Avatar):
 			},
 			"body"
 		)
-	
+
 	def generateHead(self):
 		self.loadModel("phase_9/models/char/sellbotBoss-head-zero.bam", "head")
 		self.loadAnims(

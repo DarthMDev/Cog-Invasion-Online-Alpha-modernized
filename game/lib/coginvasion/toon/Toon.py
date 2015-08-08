@@ -26,9 +26,6 @@ import random
 notify = DirectNotify().newCategory("Toon")
 
 class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
-    audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0], camera)
-    audio3d.setDistanceFactor(25)
-    audio3d.setDropOffFactor(0.025)
 
     def __init__(self, cr, mat=0):
         self.cr = cr
@@ -56,8 +53,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.tokenIcon = None
         self.tokenIconIval = None
         self.backpack = None
-        self.fallSfx = self.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
-        self.audio3d.attachSoundToObject(self.fallSfx, self)
+        self.fallSfx = base.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
+        base.audio3d.attachSoundToObject(self.fallSfx, self)
         self.eyes = loader.loadTexture("phase_3/maps/eyes.jpg", "phase_3/maps/eyes_a.rgb")
         self.myTaskId = random.uniform(0, 1231231232132131231232)
         self.closedEyes = loader.loadTexture("phase_3/maps/eyesClosed.jpg", "phase_3/maps/eyesClosed_a.rgb")
@@ -120,18 +117,18 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         return 0
 
     def updateChatSoundDict(self):
-        self.chatSoundDict['exclaim'] = self.audio3d.loadSfx(self.getToonAnimalNoise('exclaim'))
-        self.chatSoundDict['question'] = self.audio3d.loadSfx(self.getToonAnimalNoise('question'))
-        self.chatSoundDict['short'] = self.audio3d.loadSfx(self.getToonAnimalNoise('short'))
-        self.chatSoundDict['medium'] = self.audio3d.loadSfx(self.getToonAnimalNoise('med'))
-        self.chatSoundDict['long'] = self.audio3d.loadSfx(self.getToonAnimalNoise('long'))
-        self.chatSoundDict['howl'] = self.audio3d.loadSfx(self.getToonAnimalNoise('howl'))
-        self.audio3d.attachSoundToObject(self.chatSoundDict['exclaim'], self.getPart('head'))
-        self.audio3d.attachSoundToObject(self.chatSoundDict['question'], self.getPart('head'))
-        self.audio3d.attachSoundToObject(self.chatSoundDict['short'], self.getPart('head'))
-        self.audio3d.attachSoundToObject(self.chatSoundDict['medium'], self.getPart('head'))
-        self.audio3d.attachSoundToObject(self.chatSoundDict['long'], self.getPart('head'))
-        self.audio3d.attachSoundToObject(self.chatSoundDict['howl'], self.getPart('head'))
+        self.chatSoundDict['exclaim'] = base.audio3d.loadSfx(self.getToonAnimalNoise('exclaim'))
+        self.chatSoundDict['question'] = base.audio3d.loadSfx(self.getToonAnimalNoise('question'))
+        self.chatSoundDict['short'] = base.audio3d.loadSfx(self.getToonAnimalNoise('short'))
+        self.chatSoundDict['medium'] = base.audio3d.loadSfx(self.getToonAnimalNoise('med'))
+        self.chatSoundDict['long'] = base.audio3d.loadSfx(self.getToonAnimalNoise('long'))
+        self.chatSoundDict['howl'] = base.audio3d.loadSfx(self.getToonAnimalNoise('howl'))
+        base.audio3d.attachSoundToObject(self.chatSoundDict['exclaim'], self.getPart('head'))
+        base.audio3d.attachSoundToObject(self.chatSoundDict['question'], self.getPart('head'))
+        base.audio3d.attachSoundToObject(self.chatSoundDict['short'], self.getPart('head'))
+        base.audio3d.attachSoundToObject(self.chatSoundDict['medium'], self.getPart('head'))
+        base.audio3d.attachSoundToObject(self.chatSoundDict['long'], self.getPart('head'))
+        base.audio3d.attachSoundToObject(self.chatSoundDict['howl'], self.getPart('head'))
 
     def ghostOn(self):
         self.getGeomNode().hide()
@@ -530,9 +527,9 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         pass
 
     def enterWin(self, ts = 0, callback = None, extraArgs = []):
-        self.sfx = self.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_Win.mp3")
+        self.sfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_Win.mp3")
         self.sfx.setLoop(True)
-        self.audio3d.attachSoundToObject(self.sfx, self)
+        base.audio3d.attachSoundToObject(self.sfx, self)
         base.playSfx(self.sfx)
         self.loop("win")
 
@@ -732,8 +729,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.exitTeleportOut()
 
     def teleportOutSfx(self):
-        self.outSfx = self.audio3d.loadSfx("phase_3.5/audio/sfx/AV_teleport.mp3")
-        self.audio3d.attachSoundToObject(self.outSfx, self.portal1)
+        self.outSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/AV_teleport.mp3")
+        base.audio3d.attachSoundToObject(self.outSfx, self.portal1)
         self.outSfx.play()
 
     def throwPortal(self):
@@ -837,13 +834,19 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.loop("swim")
         self.getGeomNode().setP(-89.0)
         self.getGeomNode().setZ(4.0)
-        self.getNameTag().setPos(0, -2, 5.0)
+        nt = self.getNameTag()
+        nt.setX(0)
+        nt.setY(-2)
+        nt.setZ(5.0)
 
     def exitSwim(self):
         self.exitGeneral()
         self.getGeomNode().setP(0.0)
         self.getGeomNode().setZ(0.0)
-        self.getNameTag().setPos(0, 0, self.getHeight() + 0.3)
+        nt = self.getNameTag()
+        nt.setX(0)
+        nt.setY(0)
+        nt.setZ(self.getHeight() + 0.3)
 
     def enterDied(self, ts = 0, callback = None, extraArgs = []):
         self.isdying = True
@@ -867,8 +870,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                 callback()
 
     def dieSfx(self):
-        self.Losesfx = self.audio3d.loadSfx("phase_5/audio/sfx/ENC_Lose.mp3")
-        self.audio3d.attachSoundToObject(self.Losesfx, self)
+        self.Losesfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_Lose.mp3")
+        base.audio3d.attachSoundToObject(self.Losesfx, self)
         self.Losesfx.play()
 
     def delToon(self):

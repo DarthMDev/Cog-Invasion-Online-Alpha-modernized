@@ -1,8 +1,8 @@
 """
-  
+
   Filename: DistributedSneakyGame.py
   Created by: blach (26Oct14)
-  
+
 """
 
 from panda3d.core import *
@@ -45,7 +45,7 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 				Vec3(359.95, 0.00, 0.00),
 				Vec3(90.00, 0.00, 0.00),
 				Vec3(270.00, 0.00, 0.00)]
-	
+
 	def __init__(self, cr):
 		try:
 			self.DistributedSneakyGame_initialized
@@ -67,31 +67,31 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 		self.myRemoteAvatar = None
 		self.isTimeUp = False
 		return
-		
+
 	def finalScores(self, avIdList, scoreList):
 		self.toonFps.gui.handleFinalScores(avIdList, scoreList)
-		
+
 	def pickSpawnPoint(self):
 		return random.choice(self.spawnPoints)
-		
+
 	def standingAvatar(self, avId):
 		av = self.getRemoteAvatar(avId)
 		if av:
 			av.stand()
-			
+
 	def runningAvatar(self, avId):
 		av = self.getRemoteAvatar(avId)
 		if av:
 			av.run()
-			
+
 	def jumpingAvatar(self, avId):
 		av = self.getRemoteAvatar(avId)
 		if av:
 			av.jump()
-			
+
 	def getMyRemoteAvatar(self):
 		return self.myRemoteAvatar
-		
+
 	def load(self):
 		self.createWorld()
 		pos, hpr = self.pickSpawnPoint()
@@ -106,7 +106,7 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 		self.setWinnerPrize(70)
 		self.setLoserPrize(15)
 		DistributedMinigame.DistributedMinigame.load(self)
-		
+
 	def createWorld(self):
 		self.deleteWorld()
 		_numItems = 0
@@ -131,10 +131,10 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 		self.createSpawnPoint(Point3(35, 250, 0), Vec3(-90, 0, 0))
 		self.createSpawnPoint(Point3(0, 285, 0), Vec3(180, 0, 0))
 		self.createSpawnPoint(Point3(-185, 250, 0), Vec3(90, 0, 0))
-		
+
 	def createSpawnPoint(self, pos, hpr):
 		self.spawnPoints.append((pos, hpr))
-		
+
 	def attachArea(self, itemNum):
 		name = 'SneakyArea-%s' % itemNum
 		area = self.areaName2areaModel.get(name)
@@ -146,48 +146,48 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 		area.reparentTo(parent)
 		area.setPos(pos)
 		area.setHpr(hpr)
-		
+
 	def deleteWorld(self):
 		for area in self.areas:
 			area.removeNode()
 			del area
-			
+
 	def damage(self, amount, avId):
 		self.toonFps.damageTaken(amount, avId)
-			
+
 	def incrementKills(self):
 		self.toonFps.killedSomebody()
-			
+
 	def allPlayersReady(self):
 		self.fsm.request('countdown')
-		
+
 	def timeUp(self):
 		if not self.isTimeUp:
 			self.fsm.request('announceGameOver')
 			self.isTimeUp = True
-		
+
 	def enterAnnounceGameOver(self):
-		whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
+		whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
 		whistleSfx.play()
 		del whistleSfx
 		self.gameOverLbl = DirectLabel(text = "TIME'S\nUP!", relief = None, scale = 0.5, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
 		self.track = Sequence(Wait(3.0), Func(self.fsm.request, 'finalScores'))
 		self.track.start()
-		
+
 	def exitAnnounceGameOver(self):
 		self.gameOverLbl.destroy()
 		del self.gameOverLbl
 		if self.track:
 			self.track.pause()
 			self.track = None
-			
+
 	def enterFinalScores(self):
 		self.toonFps.gui.showFinalScores()
 		self.sendUpdate('myFinalScore', [self.toonFps.points])
-		
+
 	def exitFinalScores(self):
 		self.toonFps.gui.hideFinalScores()
-			
+
 	def enterCountdown(self):
 		self.toonFps.fsm.request('alive')
 		sec5 = base.loadSfx("phase_4/audio/sfx/announcer_begins_5sec.wav")
@@ -222,12 +222,12 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 		del sec2
 		del sec1
 		del text
-		
+
 	def exitCountdown(self):
 		if self.track:
 			self.track.finish()
 			self.track = None
-			
+
 	def enterPlay(self):
 		DistributedMinigame.DistributedMinigame.enterPlay(self)
 		self.toonFps.reallyStart()
@@ -236,50 +236,50 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 		#base.localAvatar.attachCamera()
 		#base.localAvatar.startSmartCamera()
 		#base.localAvatar.enableAvatarControls()
-		
+
 	def exitPlay(self):
 		self.deleteTimer()
 		self.toonFps.end()
 		#base.localAvatar.chatInput.enableKeyboardShortcuts()
 		#base.localAvatar.disableAvatarControls()
 		DistributedMinigame.DistributedMinigame.exitPlay(self)
-		
+
 	def attachGunToAvatar(self, avId):
 		self.remoteAvatars.append(RemoteToonBattleAvatar(self, self.cr, avId))
-				
+
 	def d_gunShot(self):
 		timestamp = globalClockDelta.getFrameNetworkTime()
 		self.sendUpdate('gunShot', [base.localAvatar.doId, timestamp])
-		
+
 	def gunShot(self, avId, timestamp):
 		ts = globalClockDelta.localElapsedTime(timestamp)
 		av = self.getRemoteAvatar(avId)
 		if av:
 			av.fsm.request('shoot', [ts])
-			
+
 	def deadAvatar(self, avId, timestamp):
 		ts = globalClockDelta.localElapsedTime(timestamp)
 		av = self.getRemoteAvatar(avId)
 		if av:
 			av.fsm.request('die', [ts])
-			
+
 	def respawnAvatar(self, avId):
 		av = self.getRemoteAvatar(avId)
 		if av:
 			av.exitDead()
 			av.fsm.requestFinalState()
-			
+
 	def getRemoteAvatar(self, avId):
 		for avatar in self.remoteAvatars:
 			if avatar.avId == avId:
 				return avatar
 		return None
-		
+
 	def announceGenerate(self):
 		DistributedMinigame.DistributedMinigame.announceGenerate(self)
 		self.load()
 		base.camLens.setMinFov(CIGlobals.SneakyGameFOV / (4./3.))
-		
+
 	def disable(self):
 		DistributedMinigame.DistributedMinigame.disable(self)
 		base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
