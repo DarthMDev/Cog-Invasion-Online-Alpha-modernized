@@ -1,0 +1,8 @@
+# Ignore multifiles, the user can compile them
+# themselves when they clone the repo
+
+*.mf
+
+# I hate .pyc!
+
+*.pyc
