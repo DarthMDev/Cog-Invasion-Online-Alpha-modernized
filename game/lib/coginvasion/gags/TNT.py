@@ -5,7 +5,7 @@
 
 """
 
-from lib.coginvasion.gags.TrapGag import TrapGag
+from lib.coginvasion.gags.TossTrapGag import TossTrapGag
 from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.globals import CIGlobals
@@ -13,11 +13,11 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.interval.SoundInterval import SoundInterval
 from direct.actor.Actor import Actor
 
-class TNT(TrapGag):
+class TNT(TossTrapGag):
 
     def __init__(self):
-        TrapGag.__init__(self, CIGlobals.TNT, "phase_5/models/props/tnt-mod.bam", 180, "phase_5/audio/sfx/TL_dynamite.mp3",
-                         "phase_3.5/audio/sfx/ENC_cogfall_apart.mp3", "phase_5/etc/tnt.ptf", anim = "phase_5/models/props/tnt-chan.bam", autoRelease = True)
+        TossTrapGag.__init__(self, CIGlobals.TNT, "phase_5/models/props/tnt-mod.bam", 180, "phase_3.5/audio/sfx/ENC_cogfall_apart.mp3",
+                             "phase_5/audio/sfx/TL_dynamite.mp3", particlesFx="phase_5/etc/tnt.ptf", anim = "phase_5/models/props/tnt-chan.bam")
         self.maxDistance = GagGlobals.TNT_RANGE
         self.setImage('phase_3.5/maps/tnt.png')
 
@@ -40,10 +40,10 @@ class TNT(TrapGag):
             self.gag.reparentTo(self.handJoint)
 
     def unEquip(self):
-        TrapGag.unEquip(self)
+        TossTrapGag.unEquip(self)
 
     def onCollision(self, entry):
-        super(TNT, self).onCollision(entry)
+        TossTrapGag.onCollision(self, entry)
         self.doCollision()
 
     def doCollision(self):
@@ -63,8 +63,7 @@ class TNT(TrapGag):
             self.track.pause()
             self.track = None
         x, y, z = self.entity.getPos(render)
-        if self.avatar == base.localAvatar:
-            self.avatar.sendUpdate('setGagPos', [x, y, z])
+        if self.isLocal():
             Sequence(Wait(2), Func(self.avatar.b_gagActivate)).start()
 
     def explode(self):

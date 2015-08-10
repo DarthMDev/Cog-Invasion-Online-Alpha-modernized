@@ -7,7 +7,7 @@
 
 from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
-from direct.interval.IntervalGlobal import Sequence, SoundInterval, Wait, Parallel, LerpScaleInterval
+from direct.interval.IntervalGlobal import Sequence, SoundInterval, Wait, Parallel, LerpScaleInterval, ActorInterval
 from panda3d.core import Point3
 import random
 
@@ -36,33 +36,33 @@ class ToonUpGag(Gag):
         if not self.hips:
             self.hips = self.avatar.find('**/joint_hips')
 
-    def placeProp(self, handJoint, prop, pos = None, hpr = None, scale = None):
-        prop.reparentTo(handJoint)
-        if pos:
-            prop.setPos(pos)
-        if hpr:
-            prop.setHpr(hpr)
-        if scale:
-            prop.setScale(scale)
-
-    def getScaleTrack(self, props, duration, startScale, endScale):
-        track = Parallel()
-        for prop in props:
-            track.append(LerpScaleInterval(prop, duration, endScale, startScale = startScale))
-        return track
-
-    def getSoundTrack(self, delay, node, duration):
-        soundTrack = Sequence()
-        soundTrack.append(Wait(delay))
-        soundTrack.append(SoundInterval(self.hitSfx, duration = duration, node = node))
-        return soundTrack
-
     def setHealAmount(self):
         if random.randint(0, 100) < self.efficiency:
             healAmount = random.randint(self.minHeal, self.maxHeal)
         else:
             healAmount = random.randint(int(self.minHeal * 0.2), int(self.maxHeal * 0.2))
         self.healAmount = healAmount
+
+    def healAvatar(self, avatar, anim = None):
+        if anim:
+            ActorInterval(avatar, anim).start()
+        avatar.sendUpdate('toonUp', [self.healAmount, 1, 1])
+
+    def getClosestAvatar(self):
+        avatars = {}
+        distances = []
+        for obj in base.cr.doId2do.values():
+            if obj.__class__.__name__ == "DistributedToon":
+                distance = self.avatar.getDistance(obj)
+                if distance > 0:
+                    avatars.update({obj : distance})
+        for dist in avatars.values():
+            distances.append(dist)
+        distances.sort()
+        for avatar in avatars.keys():
+            distance = avatars.get(avatar)
+            if distance == distances[0]:
+                return avatar
 
     def healNearbyAvatars(self, radius):
         for obj in base.cr.doId2do.values():

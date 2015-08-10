@@ -25,7 +25,15 @@ class Backpack:
         CIGlobals.FruitPieSlice : 10,
         CIGlobals.CreamPieSlice : 10,
         CIGlobals.Megaphone : 7,
-        CIGlobals.Cupcake: 15}
+        CIGlobals.Cupcake: 15,
+        CIGlobals.TrapDoor : 7,
+        CIGlobals.Quicksand : 7,
+        CIGlobals.BananaPeel : 10,
+        CIGlobals.Lipstick : 5,
+        CIGlobals.Aoogah : 7,
+        CIGlobals.ElephantHorn : 5,
+        CIGlobals.Foghorn : 3,
+        CIGlobals.Opera : 1}
 
     def __init__(self):
         __metaclass__ = ABCMeta

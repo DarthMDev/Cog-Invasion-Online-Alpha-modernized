@@ -112,7 +112,10 @@ class ToonHead(Actor.Actor):
                 'juggle' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_juggle.bam',
                 'shout': 'phase_5/models/char/tt_a_chr_' + headtype + '_head_shout.bam',
                 'dneutral': 'phase_4/models/char/tt_a_chr_' + headtype + '_head_sad-neutral.bam',
-                'dwalk': 'phase_4/models/char/tt_a_chr_' + headtype + '_head_losewalk.bam'}, 'head')
+                'dwalk': 'phase_4/models/char/tt_a_chr_' + headtype + '_head_losewalk.bam',
+                'smooch' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_smooch.bam',
+                'conked' : 'phase_3.5/models/char/tt_a_chr_' + headtype + '_head_conked.bam',
+                'sound' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_shout.bam'}, 'head')
             _pupilL = self.findAllMatches('**/def_left_pupil')
             _pupilR = self.findAllMatches('**/def_right_pupil')
         if headtype == "1":

@@ -230,6 +230,29 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         task.delayTime = delay
         return task.again
 
+    def enableMovement(self):
+        self.brain.start()
+        if self.head != "vp":
+            attackTime = random.randint(8, 20)
+        else:
+            attackTime = random.randint(8, 12)
+        taskMgr.doMethodLater(attackTime, self.attackTask, self.uniqueName('attackTask'))
+
+    def disableMovement(self):
+        taskMgr.remove(self.uniqueName('attackTask'))
+        taskMgr.remove(self.uniqueName('continueSuitRoam'))
+        if self.suitHealTrack:
+            self.suitHealTrack.pause()
+            self.suitHealTrack = None
+        self.b_setSuitState(3, -1, -1)
+        if self.head != "vp":
+            if self.walkTrack:
+                self.ignore(self.walkTrack.getName())
+                self.walkTrack.clearToInitial()
+                self.walkTrack = None
+        self.d_interruptAttack()
+        self.brain.end()
+
     def chooseVictim(self):
         toons = []
         for key in self.air.doId2do.keys():
@@ -249,14 +272,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if toons == []:
             return
         toon = random.randint(0, len(toons) - 1)
-        if self.head != "vp":
-            if self.walkTrack:
-                self.ignore(self.walkTrack.getName())
-                self.walkTrack.clearToInitial()
-                self.walkTrack = None
-        self.b_setSuitState(3, -1, -1)
-        self.b_setAnimState("neutral")
-        self.brain.end()
+        self.disableMovement()
         self.headsUp(toons[toon])
         self.attackToon(toons[toon])
         self.setAttacking(True)

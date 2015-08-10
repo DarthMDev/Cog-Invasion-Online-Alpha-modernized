@@ -18,12 +18,14 @@ from direct.distributed.ClientRepository import ClientRepository
 from lib.coginvasion.toon.Toon import Toon
 from lib.coginvasion.toon import NameTag, ToonDNA, ToonHead
 from direct.directutil import Mopath
+from direct.showbase.Audio3DManager import Audio3DManager
 import glob
 
 base.enableParticles()
 
 base.cr = ClientRepository([])
 base.cr.isShowingPlayerIds = False
+base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)
 
 vfs = VirtualFileSystem.getGlobalPtr()
 vfs.mount(Filename("phase_0.mf"), ".", VirtualFileSystem.MFReadOnly)
@@ -121,7 +123,7 @@ toon3.setX(5)
 flag3.reparentTo(toon3.find('**/def_joint_attachFlower'))
 flag3.setPos(0.2, torsoType2flagY[toon3.torso], -1)
 """
-
+"""
 dna = ToonDNA.ToonDNA()
 dna.parseDNAStrand(dna.dnaStrand)
 
@@ -148,7 +150,7 @@ def handlePartDone():
 		testClip.makeData()
 		testClip.playAllParts()
 	nextClip = None
-		
+
 
 testClip = AudioClip(1, "5050_orchestra")
 testClip.makeData()
@@ -160,10 +162,17 @@ def setNextClip(clip):
 
 base.accept('AudioClip_partDone', handlePartDone)
 base.accept('l', setNextClip, ['located_orchestra'])
+"""
 
+suit = DistributedSuit(base.cr)
+suit.doId = 0
+suit.generate()
+suit.announceGenerate()
+suit.setSuit("A", "mrhollywood", "s", 0)
+suit.reparentTo(render)
+suit.animFSM.request('die')
 
 base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 
 #base.oobe()
 base.run()
-

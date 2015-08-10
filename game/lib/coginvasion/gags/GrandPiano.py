@@ -20,8 +20,8 @@ class GrandPiano(DropGag):
         self.setImage('phase_3.5/maps/grand-piano.png')
 
     def startDrop(self):
-        if self.gag and self.dropLoc:
-            endPos = self.dropLoc
+        if self.gag and self.getLocation():
+            endPos = self.getLocation()
             startPos = Point3(endPos.getX(), endPos.getY(), endPos.getZ() + 20)
             self.gag.setPos(startPos.getX(), startPos.getY() + 2, startPos.getZ())
             self.gag.setScale(5)

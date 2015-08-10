@@ -37,7 +37,7 @@ class ToonTalker:
 
 		self.clearChat()
 		self.taskId = random.randint(0, 1000000000000000000000000000000)
-		self.nameTag.hide()
+		self.getNameTag().hide()
 
 		if self.isThought(chatString):
 			chatString = self.removeThoughtPrefix(chatString)
@@ -58,7 +58,7 @@ class ToonTalker:
 
 		self.chatBubble = ChatBalloon(bubble).generate(chatString, font)
 		self.chatBubble.setEffect(BillboardEffect.make(Vec3(0,0,1), True, False, 3.0, camera, Point3(0,0,0)))
-		self.chatBubble.setZ(self.nameTag.getZ())
+		self.chatBubble.setZ(self.getNameTag().getZ())
 
 		if hasattr(self.avatar, 'getGhost'):
 			if not self.avatar.getGhost() or self.avatar.doId == base.localAvatar.doId:
@@ -95,8 +95,8 @@ class ToonTalker:
 			return
 		if hasattr(self.avatar, 'getGhost'):
 			if self.nameTag and not self.avatar.getGhost() or self.nameTag and self.avatar.doId == base.localAvatar.doId:
-				self.nameTag.show()
+				self.getNameTag().show()
 		else:
 			if self.nameTag:
-				self.nameTag.show()
+				self.getNameTag().show()
 		taskMgr.remove("clearAvatarChat-" + str(self.taskId))

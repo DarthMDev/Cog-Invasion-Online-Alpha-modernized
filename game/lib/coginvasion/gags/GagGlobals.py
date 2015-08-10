@@ -12,7 +12,9 @@ from lib.coginvasion.globals import CIGlobals
 gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobals.BirthdayCake, 3 : CIGlobals.TNT,
           4 : CIGlobals.SeltzerBottle, 5 : CIGlobals.WholeFruitPie, 6 : CIGlobals.WeddingCake,
           7 : CIGlobals.FruitPieSlice, 8 : CIGlobals.GrandPiano, 9 : CIGlobals.Safe, 10 : CIGlobals.BambooCane,
-          11 : CIGlobals.JugglingBalls, 12 : CIGlobals.Megaphone, 13 : CIGlobals.Cupcake}
+          11 : CIGlobals.JugglingBalls, 12 : CIGlobals.Megaphone, 13 : CIGlobals.Cupcake, 14 : CIGlobals.TrapDoor,
+          15 : CIGlobals.Quicksand, 16 : CIGlobals.BananaPeel, 17 : CIGlobals.Lipstick, 18 : CIGlobals.Foghorn,
+          19 : CIGlobals.Aoogah, 20 : CIGlobals.ElephantHorn, 21 : CIGlobals.Opera}
 
 # These are the splat scales
 splatSizes = {
@@ -37,7 +39,20 @@ SAFE_DROP_SFX = "phase_5/audio/sfx/AA_drop_safe.mp3"
 SAFE_MISS_SFX = "phase_5/audio/sfx/AA_drop_safe_miss.mp3"
 BAMBOO_CANE_SFX = "phase_5/audio/sfx/AA_heal_happydance.mp3"
 JUGGLE_SFX = "phase_5/audio/sfx/AA_heal_juggle.mp3"
+SMOOCH_SFX = "phase_5/audio/sfx/AA_heal_smooch.mp3"
 TELLJOKE_SFX = "phase_5/audio/sfx/AA_heal_telljoke.mp3"
+TRAP_DOOR_SFX = "phase_5/audio/sfx/TL_trap_door.mp3"
+QUICKSAND_SFX = "phase_5/audio/sfx/TL_quicksand.mp3"
+BANANA_SFX = "phase_5/audio/sfx/TL_banana.mp3"
+FALL_SFX = "phase_5/audio/sfx/Toon_bodyfall_synergy.mp3"
+FOG_APPEAR_SFX = "phase_5/audio/sfx/mailbox_full_wobble.mp3"
+FOG_SFX = "phase_5/audio/sfx/SZ_DD_foghorn.mp3"
+ELEPHANT_APPEAR_SFX = "phase_5/audio/sfx/toonbldg_grow.mp3"
+ELEPHANT_SFX = "phase_5/audio/sfx/AA_sound_elephant.mp3"
+AOOGAH_APPEAR_SFX = "phase_5/audio/sfx/TL_step_on_rake.mp3"
+AOOGAH_SFX = "phase_5/audio/sfx/AA_sound_aoogah.mp3"
+OPERA_SFX = "phase_5/audio/sfx/AA_sound_Opera_Singer.mp3"
+OPERA_HIT_SFX = "phase_5/audio/sfx/AA_sound_Opera_Singer_Cog_Glass.mp3"
 
 # These are globals for splats.
 SPLAT_MDL = "phase_3.5/models/props/splat-mod.bam"
@@ -52,6 +67,7 @@ CAKE_SPLAT_COLOR = VBase4(253.0 / 255.0, 119.0 / 255.0, 220.0 / 255.0, 1.0)
 WATER_SPRAY_COLOR = Point4(0.75, 0.75, 1.0, 0.8)
 
 PNT3NEAR0 = Point3(0.01, 0.01, 0.01)
+PNT3NORMAL = Point3(1, 1, 1)
 
 # The range these gags extend.
 TNT_RANGE = 25
@@ -69,6 +85,12 @@ SELTZER_HEAL = 5
 
 # Scales of gags.
 CUPCAKE_SCALE = 0.5
+
+def loadProp(phase, name):
+    return loader.loadModel('phase_%s/models/props/%s.bam' % (str(phase), name))
+
+def getProp(phase, name):
+    return 'phase_%s/models/props/%s.bam' % (str(phase), name)
 
 def getGagByID(gId):
     return gagIds.get(gId)

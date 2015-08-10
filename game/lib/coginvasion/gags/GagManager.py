@@ -20,6 +20,14 @@ from lib.coginvasion.gags.BambooCane import BambooCane
 from lib.coginvasion.gags.JugglingBalls import JugglingBalls
 from lib.coginvasion.gags.Megaphone import Megaphone
 from lib.coginvasion.gags.Cupcake import Cupcake
+from lib.coginvasion.gags.TrapDoor import TrapDoor
+from lib.coginvasion.gags.Quicksand import Quicksand
+from lib.coginvasion.gags.BananaPeel import BananaPeel
+from lib.coginvasion.gags.Lipstick import Lipstick
+from lib.coginvasion.gags.Foghorn import Foghorn
+from lib.coginvasion.gags.Aoogah import Aoogah
+from lib.coginvasion.gags.ElephantHorn import ElephantHorn
+from lib.coginvasion.gags.Opera import Opera
 
 class GagManager:
 
@@ -37,7 +45,15 @@ class GagManager:
                      CIGlobals.BambooCane : BambooCane,
                      CIGlobals.JugglingBalls : JugglingBalls,
                      CIGlobals.Megaphone : Megaphone,
-                     CIGlobals.Cupcake : Cupcake}
+                     CIGlobals.Cupcake : Cupcake,
+                     CIGlobals.TrapDoor : TrapDoor,
+                     CIGlobals.Quicksand : Quicksand,
+                     CIGlobals.BananaPeel : BananaPeel,
+                     CIGlobals.Lipstick : Lipstick,
+                     CIGlobals.Foghorn : Foghorn,
+                     CIGlobals.Aoogah : Aoogah,
+                     CIGlobals.ElephantHorn : ElephantHorn,
+                     CIGlobals.Opera : Opera}
 
     def getGagByName(self, name):
         for gName in self.gags.keys():

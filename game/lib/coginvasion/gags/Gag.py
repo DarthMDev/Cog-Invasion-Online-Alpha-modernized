@@ -8,6 +8,7 @@
 
 from direct.task.Task import Task
 from direct.actor.Actor import Actor
+from direct.interval.IntervalGlobal import Parallel, Sequence, LerpScaleInterval, SoundInterval, Wait
 from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags import GagGlobals
@@ -36,6 +37,7 @@ class Gag(object):
         self.equipped = False
         self.autoRelease = autoRelease
         self.index = None
+        self.target = None
         self.health = 0
         self.id = GagGlobals.getIDByName(name)
         self.image = None
@@ -67,6 +69,7 @@ class Gag(object):
     @abc.abstractmethod
     def reset(self):
         self.state = GagState.LOADED
+        self.target = None
         if self.avatar:
             backpack = self.avatar.getBackpack()
             if backpack.getActiveGag():
@@ -102,6 +105,12 @@ class Gag(object):
     def getState(self):
         return self.state
 
+    def setTarget(self, target):
+        self.target = target
+
+    def getTarget(self):
+        return self.target
+
     def getType(self):
         return self.gagType
 
@@ -110,6 +119,7 @@ class Gag(object):
             self.gag = Actor(self.model, {'chan' : self.anim})
         else:
             self.gag = loader.loadModel(self.model)
+        self.setHandJoint()
         self.gag.setScale(self.scale)
         self.gag.setName(self.getName())
 
@@ -183,6 +193,45 @@ class Gag(object):
     def getGag(self):
         return self.gag
 
+    def placeProp(self, handJoint, prop, pos = None, hpr = None, scale = None):
+        prop.reparentTo(handJoint)
+        if pos:
+            prop.setPos(pos)
+        if hpr:
+            prop.setHpr(hpr)
+        if scale:
+            prop.setScale(scale)
+
+    def getScaleTrack(self, props, duration, startScale, endScale):
+        track = Parallel()
+        if not isinstance(props, list):
+            props = [props]
+        for prop in props:
+            track.append(LerpScaleInterval(prop, duration, endScale, startScale = startScale))
+        return track
+
+    def getSoundTrack(self, delay, node, duration):
+        soundTrack = Sequence()
+        soundTrack.append(Wait(delay))
+        soundTrack.append(SoundInterval(self.hitSfx, duration = duration, node = node))
+        return soundTrack
+
+    def getScaleIntervals(self, props, duration, startScale, endScale):
+        tracks = Parallel()
+        if not isinstance(props, list):
+            props = [props]
+        for prop in props:
+            tracks.append(LerpScaleInterval(prop, duration, endScale, startScale=startScale))
+        return tracks
+
+    def getScaleBlendIntervals(self, props, duration, startScale, endScale, blendType):
+        tracks = Parallel()
+        if not isinstance(props, list):
+            props = [props]
+        for prop in props:
+            tracks.append(LerpScaleInterval(prop, duration, endScale, startScale=startScale, blendType=blendType))
+        return tracks
+
     def buildSplat(self, scale, color):
         self.cleanupSplat()
         self.splat = Actor(GagGlobals.SPLAT_MDL, {'chan' : GagGlobals.SPLAT_CHAN})
@@ -219,6 +268,8 @@ class Gag(object):
         return self.autoRelease
 
     def isLocal(self):
+        if not self.avatar:
+            return False
         return self.avatar.doId == base.localAvatar.doId
 
     def getID(self):

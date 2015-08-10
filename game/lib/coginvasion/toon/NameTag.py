@@ -2,12 +2,12 @@
 # Created by:  blach (??Jul14)
 
 
-from direct.gui.DirectGui import OnscreenText
+from panda3d.core import TextNode
 from direct.fsm import ClassicFSM, State
 
 from lib.coginvasion.globals import CIGlobals
 
-class NameTag(OnscreenText):
+class NameTag(TextNode):
     NameTagColors = {CIGlobals.Suit: {"fg": (0.2, 0.2, 0.2, 1.0),
                             "bg": (0.8, 0.8, 0.8, 0.5)},
                     CIGlobals.Toon: {"fg": (0.8, 0.4, 0.0, 1.0),
@@ -27,13 +27,22 @@ class NameTag(OnscreenText):
             State.State('up', self.enterUp, self.exitUp)],
             'off', 'off')
         self.fsm.enterInitialState()
-        OnscreenText.__init__(self, text = name, fg = (0.191406, 0.5625, 0.773438, 1.0),
-            wordwrap = 8, decal = True, parent = hidden)
-        self.setBillboardPointEye()
+        TextNode.__init__(self, 'nameTag-' + str(id(self)))
+        self.setText(name)
+        self.setTextColor(0.191406, 0.5625, 0.773438, 1.0)
+        self.setWordwrap(8)
+        self.setCardAsMargin(0.1, 0.1, 0.1, 0.1)
+        self.setCardDecal(True)
+        self.setAlign(self.ACenter)
+        self.nodePath = hidden.attachNewNode(self)
+        self.nodePath.setBillboardPointEye()
         self.clickable = 0
 
+    def getNodePath(self):
+        return self.nodePath
+
     def setColorLocal(self):
-        self['fg'] = self.LocalNameTagColor
+        self.setTextColor(self.LocalNameTagColor)
 
     def setClickable(self, value):
         self.clickable = value
@@ -51,22 +60,22 @@ class NameTag(OnscreenText):
         pass
 
     def enterRollover(self):
-        self['bg'] = self.NameTagBackgrounds['rollover']
+        self.setCardColor(self.NameTagBackgrounds['rollover'])
 
     def exitRollover(self):
         pass
 
     def enterDown(self):
-        self['bg'] = self.NameTagBackgrounds['down']
+        self.setCardColor(self.NameTagBackgrounds['down'])
 
     def makeDefaultFG(self):
-        self['fg'] = self.NameTagColors[self.avatarType]["fg"]
+        self.setTextColor(self.NameTagColors[self.avatarType]["fg"])
 
     def exitDown(self):
         pass
 
     def enterUp(self):
-        self['bg'] = self.NameTagBackgrounds['up']
+        self.setCardColor(self.NameTagBackgrounds['up'])
 
     def exitUp(self):
         pass
@@ -76,4 +85,5 @@ class NameTag(OnscreenText):
         del self.fsm
         del self.avatarType
         del self.clickable
-        OnscreenText.destroy(self)
+        self.nodePath.removeNode()
+        self.nodePath = None

@@ -388,11 +388,11 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                 obj.b_setHealth(obj.getHealth() - dmg)
                 obj.d_announceHealth(0, dmg)
                 if obj.getHealth() <= 0:
-                    if gag.getType() == GagType.THROW or gag.getType() == GagType.TRAP:
+                    if gag.getType() == GagType.THROW or gag.getName() == CIGlobals.TNT:
                         obj.b_setAnimState('pie')
                     elif gag.getType() == GagType.DROP:
                         obj.b_setAnimState('drop')
-                    elif gag.getType() == GagType.SQUIRT:
+                    elif gag.getType() == GagType.SQUIRT or gag.getType() == GagType.SOUND:
                         obj.b_setAnimState('squirt-small')
 
                     self.questManager.cogDefeated(obj)

@@ -25,7 +25,7 @@ def look_through_here(folder_name):
 	for fileName in fileList:
 		print "Currently looking in " + fileName
 		for line in fileinput.input(fileName, inplace = True):
-			print line.replace(FILE_WORD, FILE_WORD_2_REPLACE_WITH),
+			print line.replace(FILE_WORD, FILE_WORD_2_REPLACE_WITH)
 
 for folderName in FOLDER_NAME_LIST:
 	look_through_here(folderName)

@@ -5,7 +5,6 @@ from lib.coginvasion.gags.ToonUpGag import ToonUpGag
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.globals import CIGlobals
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, ActorInterval
-from panda3d.core import Point3
 
 import random
 
@@ -44,7 +43,6 @@ class Megaphone(ToonUpGag):
         self.track.start()
 
     def equip(self):
-        # self.gag returns the cane object.
         super(Megaphone, self).equip()
         self.build()
 

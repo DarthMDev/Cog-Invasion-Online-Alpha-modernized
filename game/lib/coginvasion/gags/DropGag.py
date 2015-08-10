@@ -9,78 +9,45 @@ from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.globals import CIGlobals
-from LocationSeeker import LocationSeeker
+from LocationGag import LocationGag
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import Sequence, ActorInterval, Func, SoundInterval, Wait, LerpScaleInterval
+from direct.interval.IntervalGlobal import Sequence, Func, SoundInterval, Wait, LerpScaleInterval
 from panda3d.core import CollisionNode, CollisionHandlerEvent, CollisionHandlerFloor, CollisionSphere, BitMask32, Point3
 import abc
 
-class DropGag(Gag):
+class DropGag(Gag, LocationGag):
     notify = directNotify.newCategory('DropGag')
 
     def __init__(self, name, model, anim, damage, hitSfx, missSfx, scale, playRate):
         Gag.__init__(self, name, model, damage, GagType.DROP, hitSfx, anim = anim, playRate = playRate, scale = scale, autoRelease = True)
+        LocationGag.__init__(self, 10, 50)
         self.missSfx = None
-        self.buttonSoundPath = 'phase_5/audio/sfx/AA_drop_trigger_box.mp3'
         self.fallSoundPath = 'phase_5/audio/sfx/incoming_whistleALT.mp3'
         self.fallSoundInterval = None
-        self.buttonSfx = None
         self.fallSfx = None
-        self.button = None
-        self.buttonAnim = 'push-button'
-        self.moveShadowTaskName = 'Move Shadow'
-        self.lHandJoint = None
         self.chooseLocFrame = 34
         self.completeFrame = 77
         self.collHandlerF = CollisionHandlerFloor()
         self.fallDuration = 0.75
-        self.tButtonPress = 2.44
         self.isDropping = False
-        self.locationSeeker = None
-        self.dropLoc = None
         if game.process == 'client':
             self.missSfx = base.audio3d.loadSfx(missSfx)
-            self.buttonSfx = base.audio3d.loadSfx(self.buttonSoundPath)
             self.fallSfx = base.audio3d.loadSfx(self.fallSoundPath)
 
-    def buildButton(self):
-        self.cleanupButton()
-        self.button = loader.loadModel('phase_3.5/models/props/button.bam')
-
-    def cleanupButton(self):
-        if self.button:
-            self.button.removeNode()
-
     def completeDrop(self):
+        LocationGag.complete(self)
         self.isDropping = False
         if game.process != 'client': return
-        numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
-        ActorInterval(self.avatar, self.buttonAnim, startFrame = self.completeFrame, endFrame = numFrames,
-                      playRate = self.playRate).start()
         self.reset()
-        self.cleanupButton()
-        if base.localAvatar == self.avatar:
+        if self.isLocal():
             base.localAvatar.enablePieKeys()
-
-    def setEndPos(self, x, y, z):
-        self.dropLoc = Point3(x, y, z)
 
     def start(self):
         super(DropGag, self).start()
-        self.buildButton()
-        if not self.lHandJoint:
-            self.lHandJoint = self.avatar.find('**/def_joint_left_hold')
-        self.button.reparentTo(self.lHandJoint)
-        track = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = 0, endFrame = self.chooseLocFrame,
-                                       playRate = self.playRate))
-        if self.isLocal():
-            self.locationSeeker = LocationSeeker(self.avatar, 10, 50)
-            self.avatar.acceptOnce(self.locationSeeker.getLocationSelectedName(), base.localAvatar.releaseGag)
-            track.append(Func(self.locationSeeker.startSeeking))
-        track.start()
+        LocationGag.start(self, self.avatar)
 
     def unEquip(self):
-        self.cleanupLocationSeeker()
+        LocationGag.cleanupLocationSeeker(self)
         super(DropGag, self).unEquip()
         if self.state != GagState.LOADED:
             self.completeDrop()
@@ -128,21 +95,19 @@ class DropGag(Gag):
     def startDrop(self):
         pass
 
-    def cleanupLocationSeeker(self):
-        if self.locationSeeker:
-            self.dropLoc = self.locationSeeker.getLocation()
-            self.locationSeeker.cleanup()
-            self.locationSeeker = None
-
     def cleanupGag(self):
         if not self.isDropping:
             super(DropGag, self).cleanupGag()
 
     def release(self):
+        LocationGag.release(self)
         self.build()
-        self.cleanupLocationSeeker()
         self.isDropping = True
-        Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = self.chooseLocFrame,
-                               endFrame = self.completeFrame, playRate = self.playRate), Func(self.startDrop)).start()
         self.fallSoundInterval = SoundInterval(self.fallSfx, node = self.avatar)
-        Sequence(Wait(0.6), SoundInterval(self.buttonSfx, node = self.avatar), self.fallSoundInterval).start()
+        actorTrack = LocationGag.getActorTrack(self)
+        soundTrack = LocationGag.getSoundTrack(self)
+        if actorTrack:
+            actorTrack.append(Func(self.startDrop))
+            actorTrack.start()
+            soundTrack.append(self.fallSoundInterval)
+            soundTrack.start()

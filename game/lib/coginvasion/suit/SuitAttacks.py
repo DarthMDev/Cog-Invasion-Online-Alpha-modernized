@@ -75,7 +75,7 @@ class ThrowAttack(Attack):
 
     def playWeaponSound(self):
         if self.weapon and self.weaponSfx:
-            self.suit.audio3d.attachSoundToObject(self.weaponSfx, self.suit)
+            base.audio3d.attachSoundToObject(self.weaponSfx, self.suit)
             self.weaponSfx.play()
 
     def throwObject(self):
@@ -163,7 +163,7 @@ class CannedAttack(ThrowAttack):
         self.suitTrack.start(ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = self.suit.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.mp3")
         ThrowAttack.playWeaponSound(self)
 
     def throwObject(self):
@@ -237,7 +237,7 @@ class HardballAttack(ThrowAttack):
         self.suitTrack.start(ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = self.suit.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.mp3")
         ThrowAttack.playWeaponSound(self)
 
     def throwObject(self):
@@ -311,7 +311,7 @@ class ClipOnTieAttack(ThrowAttack):
         self.suitTrack.start(ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = self.suit.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
         ThrowAttack.playWeaponSound(self)
 
     def throwObject(self):
@@ -512,7 +512,7 @@ class GlowerPowerAttack(ThrowAttack):
         self.suitTrack.start(ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = self.suit.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.mp3")
         ThrowAttack.playWeaponSound(self)
 
     def throwObject(self):
@@ -571,8 +571,8 @@ class PickPocketAttack(Attack):
             base.localAvatar.b_handleSuitAttack(self.getAttackId(self.attack), self.suit.doId)
 
     def playWeaponSound(self):
-        self.pickSfx = self.suit.audio3d.loadSfx("phase_5/audio/sfx/SA_pick_pocket.mp3")
-        self.suit.audio3d.attachSoundToObject(self.pickSfx, self.suit)
+        self.pickSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_pick_pocket.mp3")
+        base.audio3d.attachSoundToObject(self.pickSfx, self.suit)
         self.pickSfx.play()
 
     def cleanup(self):
@@ -674,8 +674,8 @@ class FountainPenAttack(Attack):
         self.sprayScaleIval.pause()
 
     def playWeaponSound(self):
-        self.spraySfx = self.suit.audio3d.loadSfx("phase_5/audio/sfx/SA_fountain_pen.mp3")
-        self.suit.audio3d.attachSoundToObject(self.spraySfx, self.pen)
+        self.spraySfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_fountain_pen.mp3")
+        base.audio3d.attachSoundToObject(self.spraySfx, self.pen)
         self.spraySfx.play()
 
     def cleanup(self):
@@ -731,10 +731,10 @@ class HangUpAttack(Attack):
         self.cord.ropeNode.setUseVertexThickness(1)
         self.cord.setup(3, ({'node': self.phone, 'point': (0.8, 0, 0.2), 'color': (0, 0, 0, 1), 'thickness': 1000}, {'node': self.phone, 'point': (2, 0, 0), 'color': (0, 0, 0, 1), 'thickness': 1000}, {'node': self.receiver, 'point': (1.1, 0.25, 0.5), 'color': (0, 0, 0, 1), 'thickness': 1000}), [])
         self.cord.setH(180)
-        self.phoneSfx = self.suit.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup.mp3")
-        self.suit.audio3d.attachSoundToObject(self.phoneSfx, self.phone)
-        self.hangupSfx = self.suit.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup_place_down.mp3")
-        self.suit.audio3d.attachSoundToObject(self.hangupSfx, self.phone)
+        self.phoneSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup.mp3")
+        base.audio3d.attachSoundToObject(self.phoneSfx, self.phone)
+        self.hangupSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup_place_down.mp3")
+        base.audio3d.attachSoundToObject(self.hangupSfx, self.phone)
         collSphere = CollisionSphere(0, 0, 0, 2)
         collSphere.setTangible(0)
         collNode = CollisionNode('phone_shootout')
@@ -871,8 +871,8 @@ class BounceCheckAttack(ThrowAttack):
         self.weapon = loader.loadModel('phase_5/models/props/bounced-check.bam')
         self.weapon.setScale(10)
         self.weapon.setTwoSided(1)
-        self.bounceSound = self.suit.audio3d.loadSfx('phase_5/audio/sfx/SA_bounce_check_bounce.mp3')
-        self.suit.audio3d.attachSoundToObject(self.bounceSound, self.suit)
+        self.bounceSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_bounce_check_bounce.mp3')
+        base.audio3d.attachSoundToObject(self.bounceSound, self.suit)
         cSphere = CollisionSphere(0, 0, 0, 0.1)
         cSphere.setTangible(0)
         if hasattr(self, 'uniqueName'):

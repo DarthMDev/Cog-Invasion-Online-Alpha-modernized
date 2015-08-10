@@ -13,7 +13,6 @@ from panda3d.direct import HideInterval, ShowInterval
 from lib.coginvasion.globals import CIGlobals
 
 class DistributedTreasure(DistributedObject):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedTreasure')
 
     def __init__(self, cr):

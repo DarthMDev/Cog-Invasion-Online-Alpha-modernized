@@ -245,6 +245,27 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
     def setChat(self, chat):
         Toon.Toon.setChat(self, chat)
 
+    def setTarget(self, targetId):
+        gag = self.backpack.getActiveGag()
+        if not gag:
+            gag = self.backpack.getCurrentGag()
+        target = self.cr.doId2do.get(targetId, None)
+        gag.setTarget(target)
+
+    def trapActivate(self, avId, entityId, suitId):
+        sender = self.cr.doId2do.get(avId, None)
+        suit = self.cr.doId2do.get(suitId, None)
+        if sender:
+            backpack = sender.getBackpack()
+            if backpack and backpack.getActiveGag():
+                trapGag = backpack.getActiveGag()
+                entity = trapGag.getEntities()[entityId]
+                trapGag.onActivate(entity, suit)
+
+    def b_trapActivate(self, avId, entityId, suitId):
+        self.trapActivate(avId, entityId, suitId)
+        self.sendUpdate('trapActivate', [avId, entityId, suitId])
+
     def gagCollision(self):
         gag = self.backpack.getCurrentGag()
         if self.backpack.getActiveGag():

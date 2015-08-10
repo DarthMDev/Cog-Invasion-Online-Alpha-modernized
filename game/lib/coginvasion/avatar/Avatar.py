@@ -78,7 +78,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             Actor.delete(self)
 
     def getNameTag(self):
-        return self.nameTag
+        return self.nameTag.getNodePath()
 
     def setHeight(self, height):
         self.height = height
@@ -122,26 +122,29 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             name = tempName
         else:
             name = self.name
-        self.nameTag = NameTag(name, self.avatarType)
-        self.nameTag['fg'] = self.nameTag.NameTagColors[self.avatarType]["fg"]
-        self.nameTag['bg'] = self.nameTag.NameTagColors[self.avatarType]["bg"]
-        self.nameTag.setEffect(BillboardEffect.make(Vec3(0,0,1), True, False, 3.0, camera, Point3(0,0,0)))
+        tag = NameTag(name, self.avatarType)
+        tag.setTextColor(tag.NameTagColors[self.avatarType]["fg"])
+        tag.setCardColor(tag.NameTagColors[self.avatarType]["bg"])
 
-        ToonTalker.ToonTalker.setAvatar(self, self, self.nameTag)
+        self.nameTag = tag
+        np = tag.getNodePath()
+        np.setEffect(BillboardEffect.make(Vec3(0,0,1), True, False, 3.0, camera, Point3(0,0,0)))
 
-        self.nameTag.reparentTo(self)
+        ToonTalker.ToonTalker.setAvatar(self, self, np)
+
+        np.reparentTo(self)
         if self.avatarType == CIGlobals.Toon:
-            self.nameTag.setZ(self.getHeight() + offset)
+            np.setZ(self.getHeight() + offset)
             self.nameTag.setClickable(1)
         elif self.avatarType == CIGlobals.Suit or self.avatarType == CIGlobals.CChar:
-            self.nameTag.setZ(z + offset)
+            np.setZ(z + offset)
 
         if self.avatarType == CIGlobals.Suit:
-            self.nameTag['font'] = CIGlobals.getSuitFont()
+            self.nameTag.setFont(CIGlobals.getSuitFont())
         else:
-            self.nameTag['font'] = CIGlobals.getToonFont()
+            self.nameTag.setFont(CIGlobals.getToonFont())
 
-        LabelScaler().resize(self.nameTag)
+        LabelScaler().resize(np)
 
     def getAirborneHeight(self):
         height = self.getPos(self.shadowPlacer.shadowNodePath)

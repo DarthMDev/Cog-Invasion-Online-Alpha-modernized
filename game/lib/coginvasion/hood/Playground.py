@@ -44,6 +44,7 @@ class Playground(Place.Place):
         return
 
     def enter(self, requestStatus):
+        Place.Place.enter(self)
         self.fsm.enterInitialState()
         messenger.send('enterPlayground')
         if self.loader.music:
@@ -71,6 +72,7 @@ class Playground(Place.Place):
             self.loader.invasionMusic.stop()
         if self.loader.tournamentMusic:
             self.loader.tournamentMusic.stop()
+        Place.Place.exit(self)
 
     def load(self):
         Place.Place.load(self)

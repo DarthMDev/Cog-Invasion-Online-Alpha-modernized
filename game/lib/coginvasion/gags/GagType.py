@@ -6,4 +6,4 @@
 """
 
 class GagType:
-    THROW, SQUIRT, TRAP, DROP, TOON_UP = range(5)
+    THROW, SQUIRT, TRAP, DROP, TOON_UP, SOUND = range(6)

@@ -1123,6 +1123,14 @@ BambooCane = "Bamboo Cane"
 JugglingBalls = "Juggling Balls"
 Megaphone = "Megaphone"
 Cupcake = "Cupcake"
+TrapDoor = "Trap Door"
+Quicksand = "Quicksand"
+BananaPeel = "Banana Peel"
+Lipstick = "Lipstick"
+Foghorn = "Foghorn"
+Aoogah = "Aoogah"
+ElephantHorn = "Elephant Horn"
+Opera = "Opera Singer"
 
 ToonHealJokes = [['What goes TICK-TICK-TICK-WOOF?', 'A watchdog! '],
  ['Why do male deer need braces?', "Because they have 'buck teeth'!"],

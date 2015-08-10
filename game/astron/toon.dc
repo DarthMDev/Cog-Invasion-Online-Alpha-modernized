@@ -145,6 +145,7 @@ dclass DistributedToon : DistributedAvatar {
   gagThrow() broadcast ownsend;
   gagBuild() broadcast ownsend;
   gagRelease(uint8 gag_id) broadcast ownsend airecv;
+  trapActivate(uint32 avId, uint8 entityId, uint32 suitId) broadcast ownsend;
   setDropLoc(int16/10, int16/10, int16/10) clsend broadcast;
   setSplatPos(uint8 index, int16/10, int16/10, int16/10) ownsend broadcast;
   gagCollision() broadcast;
@@ -156,6 +157,7 @@ dclass DistributedToon : DistributedAvatar {
   suitKilled(uint32) ownsend airecv;
   died() ownsend airecv;
   gagActivate() ownsend broadcast;
+  setTarget(uint32 target) clsend broadcast;
   setGagPos(float64, float64, float64) ownsend broadcast;
   setAdminToken(int8) required broadcast db ownrecv; // Is this me?
   announceHealthAndPlaySound(int8, int16) broadcast;
@@ -251,6 +253,8 @@ dclass DistributedSuit : DistributedAvatar {
   setName(string name) required broadcast ram;
   setAnimState(uint8 anim, int16) broadcast ram;
   handleWeaponTouch() clsend broadcast;
+  disableMovement() clsend broadcast;
+  enableMovement() clsend broadcast;
   interruptAttack() broadcast;
   toonHitByWeapon(int8, uint32) clsend airecv;
   turretHitByWeapon(int8, uint32) clsend airecv;

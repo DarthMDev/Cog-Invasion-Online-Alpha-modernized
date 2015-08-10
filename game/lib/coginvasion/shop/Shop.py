@@ -23,75 +23,77 @@ class Shop(StateData):
         StateData.__init__(self, doneEvent)
         self.distShop = distShop
         self.avMoney = base.localAvatar.getMoney()
+        self.newHealth = None
         self.pages = 1
         self.window = None
+        self.upgradesPurchased = False
 
     def confirmPurchase(self):
+        if self.newHealth != None:
+            self.distShop.d_requestHealth(self.newHealth)
         messenger.send(self.doneEvent)
 
     def cancelPurchase(self):
         messenger.send(self.doneEvent)
         base.localAvatar.setMoney(self.avMoney)
+        
+    def __purchaseUpgradeItem(self, values):
+        upgradeID = values.get('upgradeID')
+        upgrades = base.localAvatar.getPUInventory()[upgradeID]
+        maxUpgrades = values.get('maxUpgrades')
+        if upgrades < maxUpgrades:
+            if upgrades < 0:
+                upgrades = 1
+            else:
+                upgrades += 1
+            self.upgradesPurchased = True
+            base.localAvatar.setPUInventory([upgrades])
+            
+    def __purchaseGagItem(self, gag, values):
+        name = gag.getName()
+        supply = self.backpack.getSupply(name)
+        maxSupply = self.backpack.getMaxSupply(name)
+        if supply < maxSupply:
+            gagIds = []
+            ammoList = []
+            for bpGag in self.backpack.getGags():
+                gagIds.append(bpGag.getID())
+                bpSupply = self.backpack.getSupply(bpGag.getName())
+                if bpGag.getName() == name:
+                    ammoList.append(supply + 1)
+                else: ammoList.append(bpSupply)
+            self.window.showInfo('Purchased a %s' % (name), duration = 3)
+            base.localAvatar.setBackpackAmmo(gagIds, ammoList)
+            base.localAvatar.updateBackpackAmmo()
+            
+    def __purchaseHealItem(self, values):
+        health = base.localAvatar.getHealth()
+        maxHealth = base.localAvatar.getMaxHealth()
+        healAmt = health + values.get('heal')
+        if health < maxHealth:
+            if healAmt > maxHealth:
+                healAmt = maxHealth
+            self.newHealth = healAmt
+            base.localAvatar.setHealth(healAmt)
 
     def purchaseItem(self, item):
         items = self.items
         price = 0
         itemType = None
-        upgradeID = None
-        maxUpgrades = None
-        for index in range(len(items)):
-            iItem = items.keys()[index]
+        values = None
+        for iItem, iValues in items.iteritems():
             if iItem == item:
-                price = items.values()[index].get('price')
-                itemType = items.values()[index].get('type')
-                if 'upgradeID' in items.values()[index]:
-                    upgradeID = items.values()[index].get('upgradeID')
-                if 'maxUpgrades' in items.values()[index]:
-                    maxUpgrades = items.values()[index].get('maxUpgrades')
-        if base.localAvatar.getMoney() < price:
-            Shop.handleNoMoney(self, duration = 2)
-        if itemType == ItemType.GAG:
-            name = item().getName()
-            supply = self.backpack.getSupply(name)
-            if supply < self.backpack.getMaxSupply(name):
-                gagIds = []
-                ammoList = []
-                for gag in self.backpack.getGags():
-                    gagIds.append(gag.getID())
-                    supply = self.backpack.getSupply(gag.getName())
-                    if gag.getName() == name:
-                        ammoList.append(supply + 1)
-                    else: ammoList.append(supply)
-                if base.localAvatar.getMoney() - price >= 0:
-                    base.localAvatar.setMoney(base.localAvatar.getMoney() - price)
-                    base.localAvatar.setBackpackAmmo(gagIds, ammoList)
-                    self.window.showInfo('Purchased a %s' % (name), duration = 3)
-                    base.localAvatar.updateBackpackAmmo()
-                else:
-                    self.handleNoMoney()
-        elif itemType == ItemType.UPGRADE:
-            upgrade = base.localAvatar.getPUInventory()[upgradeID]
-            if upgrade < maxUpgrades:
-                if base.localAvatar.getMoney() - price > 0:
-                    base.localAvatar.setMoney(base.localAvatar.getMoney() - price)
-                    if upgrade < 0:
-                        upgrade = 1
-                    else:
-                        upgrade = upgrade + 1
-                    self.upgradesPurchased = True
-                    base.localAvatar.setPUInventory([upgrade])
-                else:
-                    self.handleNoMoney()
-            #if upgradeID == 0:
-            #    if not base.localAvatar.getMyBattle().getTurretManager().myTurret:
-            #        base.localAvatar.getMyBattle().getTurretManager().createTurretButton()
-        elif itemType == ItemType.HEAL:
-            if base.localAvatar.getHealth() < base.localAvatar.getMaxHealth():
-                health = items.values()[index].get('heal')
-                healAmount = health
-                if base.localAvatar.getHealth() + health > base.localAvatar.getMaxHealth():
-                    healAmount = base.localAvatar.getMaxHealth()
-                self.distShop.d_requestHealth(healAmount)
+                values = iValues
+                itemType = values.get('type')
+                break
+        if self.isAffordable(price):
+            base.localAvatar.setMoney(base.localAvatar.getMoney() - price)
+            if itemType == ItemType.GAG:
+                self.__purchaseGagItem(item(), values)
+            elif itemType == ItemType.UPGRADE:
+                self.__purchaseUpgradeItem(values)
+            elif itemType == ItemType.HEAL:
+                self.__purchaseHealItem(values)
         self.update()
 
     def update(self):
@@ -101,6 +103,14 @@ class Shop(StateData):
 
     def handleNoMoney(self, duration = -1):
         self.window.showInfo('You need more jellybeans!', negative = 1, duration = duration)
+        
+    def isAffordable(self, price, silent = 0):
+        if base.localAvatar.getMoney() - price >= 0:
+            return True
+        else:
+            if not silent:
+                Shop.handleNoMoney(self, duration = 2)
+            return False
 
     def setup(self):
         pass
@@ -117,7 +127,9 @@ class Shop(StateData):
 
     def exit(self):
         StateData.exit(self)
-        if self.window: self.window.delete()
+        if self.window: 
+            self.window.delete()
+            self.newHealth = None
 
 class Page(DirectFrame):
 
@@ -132,30 +144,34 @@ class Page(DirectFrame):
             itemType = values.get('type')
             price = values.get('price')
             money = base.localAvatar.getMoney()
-            entry[0].setColorScale(NORMAL_COLOR)
+            button = entry[0]
+            label = entry[1]
+            button.setColorScale(NORMAL_COLOR)
+            if price > money:
+                button.setColorScale(GRAYED_OUT_COLOR)
             if itemType == ItemType.GAG:
                 name = item().getName()
                 backpack = base.localAvatar.getBackpack()
                 supply = backpack.getSupply(name)
                 maxSupply = backpack.getMaxSupply(name)
                 inBackpack = backpack.isInBackpack(name)
-                if not inBackpack or inBackpack and supply >= maxSupply or inBackpack and price > money:
-                    entry[0].setColorScale(GRAYED_OUT_COLOR)
+                if not inBackpack or inBackpack and supply >= maxSupply:
+                    button.setColorScale(GRAYED_OUT_COLOR)
                 supply = base.localAvatar.getBackpack().getSupply(name)
                 maxSupply = base.localAvatar.getBackpack().getMaxSupply(name)
-                entry[1]['text'] = '%s/%s\n%s JBS' % (str(supply), str(maxSupply), str(price))
+                label['text'] = '%s/%s\n%s JBS' % (str(supply), str(maxSupply), str(price))
             elif itemType == ItemType.UPGRADE:
                 upgradeID = values.get('upgradeID')
                 maxSupply = values.get('maxUpgrades')
                 supply = base.localAvatar.getPUInventory()[upgradeID]
                 if supply < 0:
                     supply = 0
-                if supply >= maxSupply or price > money:
-                    entry[0].setColorScale(GRAYED_OUT_COLOR)
-                entry[1]['text'] = '%s/%s\n%s JBS' % (str(supply), str(maxSupply), str(price))
+                if supply >= maxSupply:
+                    button.setColorScale(GRAYED_OUT_COLOR)
+                label['text'] = '%s/%s\n%s JBS' % (str(supply), str(maxSupply), str(price))
             elif itemType == ItemType.HEAL:
-                if base.localAvatar.getHealth() == base.localAvatar.getMaxHealth() or price > money:
-                    entry[0].setColorScale(GRAYED_OUT_COLOR)
+                if base.localAvatar.getHealth() == base.localAvatar.getMaxHealth():
+                    button.setColorScale(GRAYED_OUT_COLOR)
 
     def addItemEntry(self, item, entry):
         self.itemEntries.update({item : entry})
@@ -214,6 +230,65 @@ class ShopWindow(DirectFrame):
         if direction == 1:
             var = self.nextPage
         self.setPage(var)
+        
+    def __makeGagEntry(self, pos, item, values, page):
+        itemImage = values.get('image')
+        button = DirectButton(
+                geom = (itemImage), scale = 1.3, pos = pos,
+                relief = None, parent = page,
+                command = self.shop.purchaseItem, extraArgs = [item]
+        )
+        supply = base.localAvatar.getBackpack().getSupply(item().getName())
+        maxSupply = base.localAvatar.getBackpack().getMaxSupply(item().getName())
+        buttonLabel = DirectLabel(
+                text = '%s/%s\n%s JBS' % (str(supply), str(maxSupply),
+                str(values.get('price'))), relief = None,
+                parent = button, text_scale = 0.05, pos = (0, 0, -0.11)
+        )
+        self.addEntryToPage(page, item, values, button, buttonLabel)
+        
+    def __makeUpgradeEntry(self, pos, item, values, page):
+        itemImage = values.get('image')
+        button = DirectButton(
+                image = (itemImage), scale = 0.15, pos = pos, relief = None,
+                parent = page, command = self.shop.purchaseItem,
+                extraArgs = [item]
+        )
+        button.setTransparency(TransparencyAttrib.MAlpha)
+        upgradeID = values.get('upgradeID')
+        supply = base.localAvatar.getPUInventory()[upgradeID]
+        if supply < 0:
+            supply = 0
+        maxSupply = values.get('maxUpgrades')
+        if upgradeID == 0 and base.localAvatar.getMyBattle().getTurretManager().myTurret:
+            supply = 1
+        buttonLabel = DirectLabel(
+                 text = '%s/%s\n%s JBS' % (str(supply), str(maxSupply),
+                 str(values.get('price'))), relief = None,
+                 parent = button, text_scale = 0.5, pos = (0, 0, -1.2)
+        )
+        self.addEntryToPage(page, item, values, button, buttonLabel)
+        
+    def __makeHealEntry(self, pos, item, values, page):
+        label = '%s' % (item)
+        itemImage = values.get('image')
+        if 'showTitle' in values:
+            label = '%s\n%s JBS' % (item, values.get('price'))
+        button = DirectButton(
+                  image = (itemImage), scale = 0.105, pos = pos,
+                  relief = None, parent = page,
+                  command = self.shop.purchaseItem, extraArgs = [item]
+        )
+        button.setTransparency(TransparencyAttrib.MAlpha)
+        buttonLabel = DirectLabel(
+                  text = label, relief = None, parent = button,
+                  text_scale = 0.75, pos = (0, 0, -1.6)
+        )
+        self.addEntryToPage(page, item, values, button, buttonLabel)
+        
+    def addEntryToPage(self, page, item, values, button, buttonLabel):
+        page.addItemEntry(item, [button, buttonLabel])
+        page.addItem({item : values})
 
     def makePages(self, items):
         newItems = dict(items)
@@ -236,59 +311,14 @@ class ShopWindow(DirectFrame):
             self.pages.append(page)
         for item, values in newItems.iteritems():
             pos = itemPos[itemIndex]
-            itemImage = values.get('image')
             page = self.pages[pageIndex]
             itemType = values.get('type')
-            supply = 0
-            maxSupply = 0
             if itemType == ItemType.GAG:
-                button = DirectButton(
-                        geom = (itemImage), scale = 1.3, pos = pos,
-                        relief = None, parent = page,
-                        command = self.shop.purchaseItem, extraArgs = [item]
-                )
-                supply = base.localAvatar.getBackpack().getSupply(item().getName())
-                maxSupply = base.localAvatar.getBackpack().getMaxSupply(item().getName())
-                buttonLabel = DirectLabel(
-                        text = '%s/%s\n%s JBS' % (str(supply), str(maxSupply),
-                        str(values.get('price'))), relief = None,
-                        parent = button, text_scale = 0.05, pos = (0, 0, -0.11)
-                )
+                self.__makeGagEntry(pos, item, values, page)
             elif itemType == ItemType.UPGRADE:
-                button = DirectButton(
-                        image = (itemImage), scale = 0.15, pos = pos, relief = None,
-                        parent = page, command = self.shop.purchaseItem,
-                        extraArgs = [item]
-                )
-                button.setTransparency(TransparencyAttrib.MAlpha)
-                upgradeID = values.get('upgradeID')
-                supply = base.localAvatar.getPUInventory()[upgradeID]
-                if supply < 0:
-                    supply = 0
-                maxSupply = values.get('maxUpgrades')
-                if upgradeID == 0 and base.localAvatar.getMyBattle().getTurretManager().myTurret:
-                    supply = 1
-                buttonLabel = DirectLabel(
-                         text = '%s/%s\n%s JBS' % (str(supply), str(maxSupply),
-                         str(values.get('price'))), relief = None,
-                         parent = button, text_scale = 0.5, pos = (0, 0, -1.2)
-                )
+                self.__makeUpgradeEntry(pos, item, values, page)
             elif itemType == ItemType.HEAL:
-                label = '%s' % (item)
-                if 'showTitle' in values:
-                    label = '%s\n%s JBS' % (item, values.get('price'))
-                button = DirectButton(
-                          image = (itemImage), scale = 0.105, pos = pos,
-                          relief = None, parent = page,
-                          command = self.shop.purchaseItem, extraArgs = [item]
-                )
-                button.setTransparency(TransparencyAttrib.MAlpha)
-                buttonLabel = DirectLabel(
-                          text = label, relief = None, parent = button,
-                          text_scale = 0.75, pos = (0, 0, -1.6)
-                )
-            page.addItemEntry(item, [button, buttonLabel])
-            page.addItem({item : values})
+                self.__makeHealEntry(pos, item, values, page)
             if index % 4 == 0:
                 index = 1
                 pageIndex += 1

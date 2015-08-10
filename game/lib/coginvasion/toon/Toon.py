@@ -296,9 +296,9 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             icons = loader.loadModel("phase_3/models/props/gm_icons.bam")
             self.tokenIcon = icons.find('**/access_level_%s' % (tokens[tokenId]))
             self.tokenIcon.reparentTo(self)
-            x = self.nameTag.getX()
-            y = self.nameTag.getY()
-            z = self.nameTag.getZ()
+            x = self.getNameTag().getX()
+            y = self.getNameTag().getY()
+            z = self.getNameTag().getZ()
             self.tokenIcon.setPos(Vec3(x, y, z) + (0, 0, 0.5))
             self.tokenIcon.setScale(0.4)
             self.tokenIconIval = Sequence(LerpHprInterval(self.tokenIcon, duration = 3.0, hpr = Vec3(360, 0, 0), startHpr = Vec3(0, 0, 0)))
@@ -453,7 +453,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             'juggle' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_juggle.bam',
                             'shout': 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_shout.bam',
                             'dneutral': 'phase_4/models/char/tt_a_chr_' + legtype + '_shorts_legs_sad-neutral.bam',
-                            'dwalk': 'phase_4/models/char/tt_a_chr_' + legtype + '_shorts_legs_losewalk.bam'}, 'legs')
+                            'dwalk': 'phase_4/models/char/tt_a_chr_' + legtype + '_shorts_legs_losewalk.bam',
+                            'smooch' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_smooch.bam',
+                            'conked' : 'phase_3.5/models/char/tt_a_chr_' + legtype + '_shorts_legs_conked.bam',
+                            'sound' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_shout.bam'}, 'legs')
         self.findAllMatches('**/boots_long').stash()
         self.findAllMatches('**/boots_short').stash()
         self.findAllMatches('**/shoes').stash()
@@ -495,7 +498,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             'juggle' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_juggle.bam',
                             'shout': 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_shout.bam',
                             'dneutral': 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_sad-neutral.bam',
-                            'dwalk': 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_losewalk.bam'}, 'torso')
+                            'dwalk': 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_losewalk.bam',
+                            'smooch' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_smooch.bam',
+                            'conked' : 'phase_3.5/models/char/tt_a_chr_' + torsotype + '_torso_conked.bam',
+                            'sound' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_shout.bam'}, 'torso')
 
     def generateHead(self, pat=0):
         gender = self.getGender()
@@ -771,7 +777,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
         holeTrack.append(Func(restorePortal, portal))
         toonTrack = Sequence(
-            Wait(0.3), Func(self.getGeomNode().show), Func(self.nameTag.show),
+            Wait(0.3), Func(self.getGeomNode().show), Func(self.getNameTag().show),
             ActorInterval(self, 'happy', startTime = 0.45)
         )
         if hasattr(self, 'uniqueName'):
@@ -785,7 +791,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             {"chan": "phase_3.5/models/props/portal-chan.bam"})
         self.show()
         self.getGeomNode().hide()
-        self.nameTag.hide()
+        self.getNameTag().hide()
         self.track = self.getTeleportInTrack(self.portal2)
         self.track.setDoneEvent(self.track.getName())
         self.acceptOnce(self.track.getName(), self.teleportInDone, [callback, extraArgs])
@@ -807,8 +813,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             self.portal2 = None
         if self.getGeomNode():
             self.getGeomNode().show()
-        if self.nameTag:
-            self.nameTag.show()
+        if self.getNameTag():
+            self.getNameTag().show()
 
     def enterFallFWD(self, ts = 0, callback = None, extraArgs = []):
         self.play("fallf")

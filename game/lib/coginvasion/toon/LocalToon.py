@@ -167,12 +167,12 @@ class LocalToon(DistributedToon):
         if self.rolledOverTag:
             base.playSfx(DGG.getDefaultClickSound())
             avatar = self.cr.doId2do.get(self.rolledOverTag)
-            avatar.getNameTag().setPickerState('down')
+            avatar.nameTag.setPickerState('down')
 
     def pickedSomething_up(self):
         if self.rolledOverTag:
             avatar = self.cr.doId2do.get(self.rolledOverTag)
-            avatar.getNameTag().setPickerState('up')
+            avatar.nameTag.setPickerState('up')
             self.panel.makePanel(self.rolledOverTag)
 
     def __travMousePicker(self, task):
@@ -191,22 +191,23 @@ class LocalToon(DistributedToon):
                 for do in self.cr.doId2do.values():
                     if do.__class__.__name__ == "DistributedToon":
                         if do.doId == avatarId:
-                            if do.getNameTag().getClickable() == 1:
-                                if (do.getNameTag().fsm.getCurrentState().getName() != "rollover" and
-                                do.getNameTag().fsm.getCurrentState().getName() != "down"):
-                                    do.getNameTag().setPickerState('rollover')
+                            if do.nameTag.getClickable() == 1:
+                                if (do.nameTag.fsm.getCurrentState().getName() != "rollover" and
+                                do.nameTag.fsm.getCurrentState().getName() != "down"):
+                                    do.nameTag.setPickerState('rollover')
                                     base.playSfx(DGG.getDefaultRolloverSound())
                                     self.rolledOverTag = avatarId
+                                    break
                     else:
                         if do.__class__.__name__ == "DistributedToon":
-                            if do.getNameTag().fsm.getCurrentState().getName() != "up":
-                                do.getNameTag().setPickerState('up')
+                            if do.nameTag.fsm.getCurrentState().getName() != "up":
+                                do.nameTag.setPickerState('up')
             else:
                 if self.rolledOverTag:
                     avatar = self.cr.doId2do.get(self.rolledOverTag)
                     if avatar:
-                        if avatar.getNameTag().fsm.getCurrentState().getName() != "up":
-                            avatar.getNameTag().setPickerState('up')
+                        if avatar.nameTag.fsm.getCurrentState().getName() != "up":
+                            avatar.nameTag.setPickerState('up')
                     self.rolledOverTag = None
 
         return task.cont
@@ -307,8 +308,8 @@ class LocalToon(DistributedToon):
 
     def setupNameTag(self, tempName = None):
         DistributedToon.setupNameTag(self, tempName)
-        if self.getNameTag():
-            self.getNameTag().setColorLocal()
+        if self.nameTag:
+            self.nameTag.setColorLocal()
 
     def d_broadcastPositionNow(self):
         self.d_clearSmoothing()
@@ -627,7 +628,10 @@ class LocalToon(DistributedToon):
                 self.b_gagRelease(self.backpack.getActiveGag().getID())
             else:
                 self.b_gagThrow()
-            if not self.backpack.getActiveGag().doesAutoRelease():
+            activeGag = self.backpack.getActiveGag()
+            if not activeGag:
+                activeGag = self.backpack.getCurrentGag()
+            if not activeGag.doesAutoRelease():
                 Sequence(Wait(0.75), Func(self.releaseGag), Wait(0.3), Func(self.enablePieKeys)).start()
 
     def releaseGag(self):
@@ -636,7 +640,7 @@ class LocalToon(DistributedToon):
         if self.backpack.getSupply() > 0:
             gag = self.backpack.getActiveGag()
             if not gag:
-                return
+                gag = self.backpack.getCurrentGag()
             gagName = gag.getName()
             self.b_gagRelease(GagGlobals.getIDByName(gagName))
 
@@ -803,7 +807,7 @@ class LocalToon(DistributedToon):
         DistributedToon.announceGenerate(self)
         self.setupPicker()
         self.setupControls()
-        self.createChatInput()
+        #self.createChatInput()
         self.startLookAround()
         self.friendRequestManager.watch()
         #posBtn = DirectButton(text = "Get Pos", scale = 0.08, pos = (0.3, 0, 0), parent = base.a2dLeftCenter, command = self.printAvPos)

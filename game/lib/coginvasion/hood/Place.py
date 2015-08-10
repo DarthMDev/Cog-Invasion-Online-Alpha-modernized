@@ -56,6 +56,14 @@ class Place(StateData):
     def exitFinal(self):
         pass
 
+    def enter(self):
+        StateData.enter(self)
+        base.localAvatar.createChatInput()
+
+    def exit(self):
+        base.localAvatar.disableChatInput()
+        StateData.exit(self)
+
     def enterDoorIn(self, distDoor):
         base.localAvatar.attachCamera()
         requestStatus = {}
