@@ -3,14 +3,14 @@ class: DistributedToon
 fields:
   setName: ("Ducky")
   setMaxHealth: (15)
-  setHealth: (12)
+  setHealth: (9)
   ACCOUNT: 100000000
   setDNAStrand: ("00/08/00/10/01/12/01/10/18/18/07/00/00/00/00")
   setMoney: (490451)
   setBackpack: (0)
-  setBackpackAmmo: ([6, 7, 1, 0], [3, 10, 10, 6])
-  setQuests: ([1, 0], [0, 1], [1, 0])
-  setQuestHistory: ([1, 0])
+  setBackpackAmmo: ([0, 1, 7, 6], [0, 0, 0, 0])
+  setQuests: ([1], [0], [1])
+  setQuestHistory: ([1])
   setTier: (13)
   setFriendsList: ([])
   setAdminToken: (0)
