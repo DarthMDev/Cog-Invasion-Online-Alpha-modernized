@@ -8,3 +8,8 @@
 *.pyc
 
 !*.lib
+game/safe_test.py
+game/.pydevproject
+game/.project
+.project
+.pydevproject
