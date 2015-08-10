@@ -36,7 +36,6 @@ class SoundGag(Gag):
         Sequence(Wait(1.5), Func(self.cleanupGag)).start()
         if self.isLocal():
             base.localAvatar.enablePieKeys()
-            base.localAvatar.sendUpdate('gagRelease', [self.getID()])
 
     def unEquip(self):
         Gag.unEquip(self)
@@ -94,5 +93,6 @@ class SoundGag(Gag):
     def cleanupGag(self):
         Gag.cleanupGag(self)
         if self.megaphone:
+            base.localAvatar.sendUpdate('gagRelease', [self.getID()])
             self.megaphone.removeNode()
             self.megaphone = None

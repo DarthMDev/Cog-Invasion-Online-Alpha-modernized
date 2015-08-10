@@ -7,7 +7,7 @@
 
 from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
-from direct.interval.IntervalGlobal import Sequence, SoundInterval, Wait, Parallel, LerpScaleInterval, ActorInterval
+from direct.interval.IntervalGlobal import ActorInterval
 from panda3d.core import Point3
 import random
 
@@ -48,14 +48,15 @@ class ToonUpGag(Gag):
             ActorInterval(avatar, anim).start()
         avatar.sendUpdate('toonUp', [self.healAmount, 1, 1])
 
-    def getClosestAvatar(self):
+    def getClosestAvatar(self, radius):
         avatars = {}
         distances = []
         for obj in base.cr.doId2do.values():
             if obj.__class__.__name__ == "DistributedToon":
                 distance = self.avatar.getDistance(obj)
                 if distance > 0:
-                    avatars.update({obj : distance})
+                    if radius > 0 and distance <= radius or radius == 0:
+                        avatars.update({obj : distance})
         for dist in avatars.values():
             distances.append(dist)
         distances.sort()

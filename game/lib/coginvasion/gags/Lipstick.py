@@ -28,7 +28,7 @@ class Lipstick(ToonUpGag):
         self.setupHandJoints()
         self.build()
         if self.isLocal():
-            self.doLipstick(self.getClosestAvatar())
+            self.doLipstick(self.getClosestAvatar(self.radius))
         
     def doLipstick(self, target):
         dScale = 0.5

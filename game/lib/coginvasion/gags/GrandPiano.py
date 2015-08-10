@@ -10,7 +10,7 @@ from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.globals import CIGlobals
 from direct.interval.IntervalGlobal import Sequence, LerpPosInterval, LerpScaleInterval, Func, Wait, Parallel
 from direct.showutil import Effects
-from panda3d.core import OmniBoundingVolume, Point3
+from panda3d.core import OmniBoundingVolume, Point3, CollisionSphere, CollisionNode, BitMask32, CollisionHandlerEvent
 
 class GrandPiano(DropGag):
 
@@ -43,3 +43,16 @@ class GrandPiano(DropGag):
                                 startScale=Point3(0.01, 0.01, 0.01)), Wait(0.3), Func(dropShadow.removeNode))
             Parallel(Sequence(Wait(self.fallDuration), Func(self.completeDrop), Wait(4), Func(self.cleanupGag)), objectTrack, shadowTrack).start()
             self.dropLoc = None
+            
+    def buildCollisions(self):
+        gagSph = CollisionSphere(0, 1.5, 0, 2)
+        gagSensor = CollisionNode('gagSensor')
+        gagSensor.addSolid(gagSph)
+        sensorNP = self.gag.attachNewNode(gagSensor)
+        sensorNP.setCollideMask(BitMask32(0))
+        sensorNP.node().setFromCollideMask(CIGlobals.WallBitmask | CIGlobals.FloorBitmask)
+        event = CollisionHandlerEvent()
+        event.set_in_pattern("%fn-into")
+        event.set_out_pattern("%fn-out")
+        base.cTrav.addCollider(sensorNP, event)
+        self.avatar.acceptOnce('gagSensor-into', self.onCollision)

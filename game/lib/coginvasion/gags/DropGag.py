@@ -53,17 +53,7 @@ class DropGag(Gag, LocationGag):
             self.completeDrop()
 
     def buildCollisions(self):
-        gagSph = CollisionSphere(0, 1.5, 0, 2)
-        gagSensor = CollisionNode('gagSensor')
-        gagSensor.addSolid(gagSph)
-        sensorNP = self.gag.attachNewNode(gagSensor)
-        sensorNP.setCollideMask(BitMask32(0))
-        sensorNP.node().setFromCollideMask(CIGlobals.WallBitmask | CIGlobals.FloorBitmask)
-        event = CollisionHandlerEvent()
-        event.set_in_pattern("%fn-into")
-        event.set_out_pattern("%fn-out")
-        base.cTrav.add_collider(sensorNP, event)
-        self.avatar.acceptOnce('gagSensor-into', self.onCollision)
+        pass
 
     def onCollision(self, entry):
         if not self.gag:
