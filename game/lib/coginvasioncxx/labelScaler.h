@@ -6,18 +6,28 @@
 
 #include "nodePath.h"
 #include "pandabase.h"
+#include "asyncTaskManager.h"
+#include "genericAsyncTask.h"
 
 class LabelScaler : public TypedObject {
 PUBLISHED:
   LabelScaler(const float scaling_factor = 0.06);
   ~LabelScaler();
 
+  void set_node(NodePath& node);
+  void set_camera(NodePath& camera);
+
   void resize();
 
 private:
-  NodePath& m_node;
-  const float m_scaling_factor;
-  PT(AsyncTaskManager) task_mgr;
+  NodePath& _node;
+  NodePath& _cam;
+  const float _scaling_factor;
+  PT(AsyncTaskManager) _task_mgr;
+  const float _max_distance;
+  const float _min_distance;
+
+  static AsyncTask::DoneStatus resize_task(GenericAsyncTask* task, void* data);
 
 public:
   static TypeHandle get_class_type() {
@@ -41,7 +51,5 @@ public:
 private:
   static TypeHandle _type_handle;
 };
-
-#include "labelScaler.I"
 
 #endif
