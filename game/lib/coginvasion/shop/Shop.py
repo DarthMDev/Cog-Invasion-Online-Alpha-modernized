@@ -12,6 +12,7 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.shop.ItemType import ItemType
 from panda3d.core import Vec4, TransparencyAttrib
+from direct.task.Task import Task
 
 GRAYED_OUT_COLOR = Vec4(0.25, 0.25, 0.25, 1)
 NORMAL_COLOR = Vec4(1, 1, 1, 1)
@@ -22,11 +23,19 @@ class Shop(StateData):
     def __init__(self, distShop, doneEvent):
         StateData.__init__(self, doneEvent)
         self.distShop = distShop
+        self.destroyEvent = self.distShop.destroyEvent
         self.avMoney = base.localAvatar.getMoney()
+        self.healCooldownDoneSoundPath = 'phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3'
+        self.healCooldownDoneSfx = None
         self.newHealth = None
         self.pages = 1
         self.window = None
         self.upgradesPurchased = False
+        
+        # This handles heal cooldowns.
+        self.healCooldowns = {}
+        self.newHealCooldowns = {}
+        self.acceptOnce(self.destroyEvent, self.destroy)
 
     def confirmPurchase(self):
         if self.newHealth != None:
@@ -36,6 +45,9 @@ class Shop(StateData):
     def cancelPurchase(self):
         messenger.send(self.doneEvent)
         base.localAvatar.setMoney(self.avMoney)
+        
+        for healCooldown in self.newHealCooldowns.keys():
+            del self.healCooldowns[healCooldown]
         
     def __purchaseUpgradeItem(self, values):
         upgradeID = values.get('upgradeID')
@@ -67,7 +79,7 @@ class Shop(StateData):
             base.localAvatar.setBackpackAmmo(gagIds, ammoList)
             base.localAvatar.updateBackpackAmmo()
             
-    def __purchaseHealItem(self, values):
+    def __purchaseHealItem(self, item, values):
         health = base.localAvatar.getHealth()
         maxHealth = base.localAvatar.getMaxHealth()
         healAmt = health + values.get('heal')
@@ -76,6 +88,33 @@ class Shop(StateData):
                 healAmt = maxHealth
             self.newHealth = healAmt
             base.localAvatar.setHealth(healAmt)
+            healDict = {item : [0, values.get('healCooldown')]}
+            self.healCooldowns.update(healDict)
+            self.newHealCooldowns.update(healDict)
+            base.taskMgr.doMethodLater(1, self.__doHealCooldown, item, extraArgs = [item], appendTask = True)
+            
+    def __doHealCooldown(self, item, task):
+        cooldownData = self.getCooldown(item)
+        if cooldownData:
+            cooldownTime = cooldownData[0]
+            maxCooldownTime = cooldownData[1]
+            cooldownTime += 1
+            self.healCooldowns[item] = [cooldownTime, maxCooldownTime]
+            if cooldownTime == maxCooldownTime:
+                del self.healCooldowns[item]
+                if self.window:
+                    self.healCooldownDoneSfx.play()
+                self.update()
+                return Task.done
+            return Task.again
+        return Task.done
+        
+    def getCooldown(self, item):
+        if self.hasCooldown(item):
+            return self.healCooldowns.get(item)
+        
+    def hasCooldown(self, item):
+        return item in self.healCooldowns.keys()
 
     def purchaseItem(self, item):
         items = self.items
@@ -94,7 +133,7 @@ class Shop(StateData):
             elif itemType == ItemType.UPGRADE:
                 self.__purchaseUpgradeItem(values)
             elif itemType == ItemType.HEAL:
-                self.__purchaseHealItem(values)
+                self.__purchaseHealItem(item, values)
         self.update()
 
     def update(self):
@@ -125,17 +164,28 @@ class Shop(StateData):
         self.window.setCancelCommand(self.cancelPurchase)
         self.window.makePages(self.distShop.getItems())
         self.window.setPage(0)
+        
+        # Load the rejection sfx.
+        self.healCooldownDoneSfx = base.loadSfx(self.healCooldownDoneSoundPath)
 
     def exit(self):
         StateData.exit(self)
         if self.window: 
             self.window.delete()
             self.newHealth = None
+            self.healCooldownDoneSfx = None
+            
+    def destroy(self):
+        self.exit()
+        for cooldown in self.healCooldowns.keys():
+            base.taskMgr.removeTask(cooldown)
+            del self.healCooldowns[cooldown]
 
 class Page(DirectFrame):
 
-    def __init__(self, window):
+    def __init__(self, shop, window):
         DirectFrame.__init__(self, parent = window, sortOrder = 1)
+        self.shop = shop
         self.itemEntries = {}
         self.items = {}
 
@@ -170,7 +220,7 @@ class Page(DirectFrame):
                     button.setColorScale(GRAYED_OUT_COLOR)
                 label['text'] = '%s\n%s/%s\n%s JBS' % (item, str(supply), str(maxSupply), str(price))
             elif itemType == ItemType.HEAL:
-                if base.localAvatar.getHealth() == base.localAvatar.getMaxHealth():
+                if base.localAvatar.getHealth() == base.localAvatar.getMaxHealth() or self.shop.hasCooldown(item):
                     button.setColorScale(GRAYED_OUT_COLOR)
 
     def addItemEntry(self, item, entry):
@@ -307,7 +357,7 @@ class ShopWindow(DirectFrame):
         itemIndex = 0
         index = 1
         for _ in range(self.nPages):
-            page = Page(self)
+            page = Page(self.shop, self)
             self.pages.append(page)
         for item, values in newItems.iteritems():
             pos = itemPos[itemIndex]

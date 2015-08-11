@@ -6,7 +6,6 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.online.OnlineGlobals import *
 from direct.actor.Actor import *
 from panda3d.core import *
 from pandac.PandaModules import *

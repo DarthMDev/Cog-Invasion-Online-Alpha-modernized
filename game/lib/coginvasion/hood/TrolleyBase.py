@@ -6,7 +6,6 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.online.OnlineGlobals import *
 from direct.directnotify.DirectNotify import DirectNotify
 from direct.showbase.DirectObject import DirectObject
 from lib.coginvasion.distributed.DistributedTrolley import DistributedTrolley

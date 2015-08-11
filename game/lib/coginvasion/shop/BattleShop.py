@@ -18,7 +18,7 @@ class BattleShop(Shop):
         self.distShop.addItem('Whole Fruit \nPie', ItemType.UPGRADE, 150, 'phase_3.5/maps/cannon-icon.png', upgradeID = 1, maxUpgrades = 1)
         self.distShop.addItem('Birthday Cake', ItemType.UPGRADE, 500, 'phase_3.5/maps/cannon-icon.png', upgradeID = 2, maxUpgrades = 1)
         self.distShop.addItem('Wedding Cake', ItemType.UPGRADE, 750, 'phase_3.5/maps/cannon-icon.png', upgradeID = 3, maxUpgrades = 1)
-        self.distShop.addItem('+20 Laff', ItemType.HEAL, 100, 'phase_3.5/maps/ice-cream-cone.png', heal = 20, showTitle = True)
+        self.distShop.addItem('+20 Laff', ItemType.HEAL, 100, 'phase_3.5/maps/ice-cream-cone.png', heal = 20, healCooldown = 5, showTitle = True)
         self.items = self.distShop.getItems()
 
     def confirmPurchase(self):

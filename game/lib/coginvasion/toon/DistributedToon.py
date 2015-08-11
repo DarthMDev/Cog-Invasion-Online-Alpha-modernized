@@ -5,7 +5,6 @@
 
 """
 
-from lib.coginvasion.online.OnlineGlobals import DirectNotify
 from lib.coginvasion.toon import Toon
 from lib.coginvasion.avatar.DistributedAvatar import DistributedAvatar
 from lib.coginvasion.gags.backpack import BackpackManager
@@ -19,6 +18,7 @@ from direct.distributed.DelayDeletable import DelayDeletable
 from direct.distributed import DelayDelete
 from direct.interval.SoundInterval import SoundInterval
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
+from direct.directnotify.DirectNotify import DirectNotify
 from panda3d.core import Point3
 import random
 import numbers

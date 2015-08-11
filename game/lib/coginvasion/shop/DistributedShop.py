@@ -10,7 +10,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.shop.ItemType import ItemType
 from panda3d.core import NodePath, CollisionSphere, CollisionNode
-import abc
+import abc, random
 
 class DistributedShop(DistributedNode):
     notify = directNotify.newCategory('DistributedShop')
@@ -20,15 +20,16 @@ class DistributedShop(DistributedNode):
         NodePath.__init__(self, 'shop')
         self.cr = cr
         self.items = {}
+        self.destroyEvent = 'destroyShop-' + str(random.randint(0, 1000))
         self.inShop = False
         self.clerk = None
         self.shopNP = None
 
-    def addItem(self, item, itemType, price, itemImage, upgradeID = None, maxUpgrades = None, heal = 0, showTitle = False):
+    def addItem(self, item, itemType, price, itemImage, upgradeID = None, maxUpgrades = None, heal = 0, healCooldown = 0, showTitle = False):
         if itemType != ItemType.HEAL:
             data = {item : {'type' : itemType, 'image' : itemImage, 'price' : price, 'upgradeID' : upgradeID, 'maxUpgrades' : maxUpgrades}}
         else:
-            data = {item : {'type' : itemType, 'image' : itemImage, 'price' : price, 'heal' : heal, 'showTitle' : showTitle}}
+            data = {item : {'type' : itemType, 'image' : itemImage, 'price' : price, 'heal' : heal, 'healCooldown' : healCooldown, 'showTitle' : showTitle}}
         self.items.update(data)
 
     def removeItem(self, item):
@@ -93,6 +94,7 @@ class DistributedShop(DistributedNode):
         self.setParent(CIGlobals.SPRender)
 
     def destroy(self):
+        messenger.send(self.destroyEvent)
         self.deleteClerk()
         self.inShop = False
         self.shopNP = None

@@ -79,7 +79,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.backpack = -1
         self.gagMgr = GagManager()
         self.setupGags = False
-        self.makeTopToons()
         self.quests = [[], [], []]
         self.questHistory = []
         self.tier = -1

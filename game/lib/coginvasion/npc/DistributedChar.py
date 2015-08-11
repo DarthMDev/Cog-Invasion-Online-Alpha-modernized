@@ -6,7 +6,6 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.online.OnlineGlobals import *
 from direct.distributed.DistributedObject import DistributedObject
 from lib.coginvasion.npc import Char
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
@@ -16,6 +15,7 @@ from direct.gui.DirectGui import *
 from direct.actor.Actor import Actor
 from direct.interval.ProjectileInterval import ProjectileInterval
 from direct.showbase.ShadowPlacer import ShadowPlacer
+from direct.directnotify.DirectNotify import DirectNotify
 from panda3d.core import *
 from pandac.PandaModules import *
 import random

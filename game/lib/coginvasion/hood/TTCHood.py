@@ -6,7 +6,6 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.online.OnlineGlobals import *
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.dna.DNAParser import *
 from lib.coginvasion.hood.TrolleyBase import TrolleyBase

@@ -6,7 +6,6 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.online.OnlineGlobals import *
 from direct.gui.DirectGui import *
 from direct.directnotify.DirectNotify import DirectNotify
 from pandac.PandaModules import *
