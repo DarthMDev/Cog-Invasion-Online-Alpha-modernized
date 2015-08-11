@@ -1,26 +1,26 @@
-"""
+# Filename: DistributedPieTurret.py
+# Created by:  blach (14Jun15)
+# Updated by:  DecodedLogic (10Aug15)
 
-  Filename: DistributedPieTurret.py
-  Created by: blach (14Jun15)
-  Updated by: DecodedLogic (10Aug15)
-
-"""
+from panda3d.core import Point3, Vec3, Vec4, CollisionSphere, CollisionNode
 
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
-from lib.coginvasion.avatar.DistributedAvatar import DistributedAvatar
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.battle.TurretGag import TurretGag
-from direct.interval.IntervalGlobal import Sequence, Parallel, LerpScaleInterval, LerpPosInterval, LerpColorScaleInterval, LerpQuatInterval, Func, Wait
+from direct.interval.IntervalGlobal import Sequence, Parallel, LerpScaleInterval, LerpPosInterval
+from direct.interval.IntervalGlobal import LerpColorScaleInterval, LerpQuatInterval, Func, Wait
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.distributed.ClockDelta import globalClockDelta
-from panda3d.core import Point3, Vec3, Vec4, CollisionSphere, CollisionNode
+
+from lib.coginvasion.avatar.DistributedAvatar import DistributedAvatar
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.battle.TurretGag import TurretGag
+
 import random
 
 class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
     notify = directNotify.newCategory('DistributedPieTurret')
-    
+
     def __init__(self, cr):
         DistributedAvatar.__init__(self, cr)
         DistributedSmoothNode.__init__(self, cr)
@@ -48,31 +48,31 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         self.suit = None
         self.eventId = None
         self.entities = []
-        
+
     def setOwner(self, avatar):
         self.owner = avatar
-        
+
     def getOwner(self):
         return self.owner
-        
+
     def setGag(self, name):
         self.gag = name
         if not self.readyGag:
             self.loadGagInTurret()
-        
+
     def getGag(self):
         return self.gag
-        
+
     def generate(self):
         DistributedAvatar.generate(self)
         DistributedSmoothNode.generate(self)
-        
+
     def announceGenerate(self):
         DistributedAvatar.announceGenerate(self)
         DistributedSmoothNode.announceGenerate(self)
         self.healthLabel.setScale(1.1)
         self.makeTurret()
-        
+
     def disable(self):
         self.fsm.requestFinalState()
         del self.fsm
@@ -85,7 +85,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         self.removeTurret()
         DistributedSmoothNode.disable(self)
         DistributedAvatar.disable(self)
-        
+
     def showAndMoveHealthLabel(self):
         self.unstashHpLabel()
         self.stopMovingHealthLabel()
@@ -96,9 +96,9 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
                                 blendType = 'easeOut')
         self.healthLabelTrack = Sequence(moveTrack, Wait(1.0), Func(self.stashHpLabel))
         self.healthLabelTrack.start()
-        
+
     """ BEGIN STATES """
-    
+
     def enterShoot(self, suitId):
         if self.cannon:
             smoke = loader.loadModel("phase_4/models/props/test_clouds.bam")
@@ -113,13 +113,13 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             track = Sequence(Parallel(LerpScaleInterval(smoke, 0.5, 3), LerpColorScaleInterval(smoke, 0.5, Vec4(2, 2, 2, 0))), Func(smoke.removeNode))
             track.start()
             self.createAndShootGag()
-            
+
     def exitShoot(self):
         del self.suit
-        
+
     def shoot(self, suitId):
         self.fsm.request('shoot', [suitId])
-        
+
     def scan(self, timestamp = None, afterShooting = 0):
         if timestamp == None:
             ts = 0.0
@@ -127,7 +127,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             ts = globalClockDelta.localElapsedTime(timestamp)
 
         self.fsm.request('scan', [ts, afterShooting])
-        
+
     def enterScan(self, ts = 0, afterShooting = 0):
         if afterShooting:
             self.track = Parallel(
@@ -156,21 +156,21 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
                 )
             )
             self.track.loop(ts)
-            
+
     def exitScan(self):
         if self.track:
             self.ignore(self.track.getDoneEvent())
             self.track.finish()
             self.track = None
-    
+
     def enterOff(self):
         pass
-    
+
     def exitOff(self):
         pass
-    
+
     """ END STATES """
-    
+
     def _afterShootTrackDone(self):
         self.track = None
         self.track = Parallel(
@@ -188,7 +188,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             )
         )
         self.track.loop()
-    
+
     def makeTurret(self):
         self.cannon = loader.loadModel('phase_4/models/minigames/toon_cannon.bam')
         self.cannon.reparentTo(self)
@@ -196,17 +196,17 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         self.setupWallSphere()
         if self.isLocal():
             self.setupEventSphere()
-            
+
     def removeTurret(self):
         self.removeWallSphere()
         self.removeGagInTurret()
         if self.cannon:
             self.cannon.removeNode()
             self.cannon = None
-            
+
     def getCannon(self):
         return self.cannon.find('**/cannon')
-            
+
     def setupWallSphere(self):
         sphere = CollisionSphere(0.0, 0.0, 0.0, 3.0)
         node = CollisionNode('DistributedPieTurret.WallSphere')
@@ -215,12 +215,12 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         self.wallCollNode = self.cannon.attachNewNode(node)
         self.wallCollNode.setZ(2)
         self.wallCollNode.setY(1.0)
-        
+
     def removeWallSphere(self):
         if self.wallCollNode:
             self.wallCollNode.removeNode()
             self.wallCollNode = None
-            
+
     def createAndShootGag(self):
         if not self.readyGag:
             self.loadGagInTurret()
@@ -231,7 +231,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         if self.isLocal():
             self.acceptOnce(collideEventName, self.handleGagCollision)
         Sequence(Wait(self.reloadTime), Func(self.loadGagInTurret)).start()
-        
+
     def loadGagInTurret(self):
         if self.cannon and self.gag:
             if self.readyGag:
@@ -240,7 +240,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             self.eventId = random.uniform(0, 100000000)
             self.readyGag = TurretGag(self, self.uniqueName('pieTurretCollision') + str(self.eventId), self.gag)
             self.readyGag.build()
-            
+
     def makeSplat(self, pos):
         gagClass = self.hitGag.gagClass
         splat = gagClass.buildSplat(gagClass.splatScale, gagClass.splatColor)
@@ -250,14 +250,14 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         gagClass.hitSfx.play()
         Sequence(Wait(0.5), Func(splat.cleanup)).start()
         self.hitGag = None
-            
+
     def d_makeSplat(self, pos):
         self.sendUpdate('makeSplat', [pos])
-        
+
     def b_makeSplat(self, pos):
         self.d_makeSplat(pos)
         self.makeSplat(pos)
-            
+
     def handleGagCollision(self, entry, ent):
         x, y, z = ent.getGag().getPos(render)
         self.hitGag = ent
@@ -272,12 +272,12 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
                         if obj.getHealth() > 0:
                             base.localAvatar.sendUpdate('suitHitByPie', [obj.doId, ent.getID()])
         ent.cleanup()
-        
+
     def setHealth(self, hp):
         DistributedAvatar.setHealth(self, hp)
         if self.isLocal():
             base.localAvatar.getMyBattle().getTurretManager().updateTurretGui()
-            
+
     def die(self):
         self.fsm.requestFinalState()
         turretPos = self.cannon.getPos(render)
@@ -290,6 +290,6 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         sfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
         base.audio3d.attachSoundToObject(sfx, self)
         base.playSfx(sfx)
-        
+
     def isLocal(self):
         return self.getOwner() == base.localAvatar.doId

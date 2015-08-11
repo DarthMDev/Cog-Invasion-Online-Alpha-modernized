@@ -1,9 +1,6 @@
-"""
-
-  Filename: DistributedPieTurretManagerAI.py
-  Created by: DecodedLogic (10Aug15)
-
-"""
+# Filename: DistributedPieTurretManagerAI.py
+# Created by:  blach (14Jun15)
+# Updated by:  DecodedLogic (10Aug15)
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -12,17 +9,17 @@ from lib.coginvasion.battle.DistributedPieTurretAI import DistributedPieTurretAI
 
 class DistributedPieTurretManagerAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedPieTurretManagerAI')
-    
+
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
         self.turretId2turret = {}
-        
+
     def killTurret(self, turretId):
         turret = self.turretId2turret[turretId]
         turret.disable()
         turret.requestDelete()
         del self.turretId2turret[turretId]
-        
+
     def requestPlace(self, posHpr):
         avId = self.air.getAvatarIdFromSender()
         turret = DistributedPieTurretAI(self.air)
@@ -37,7 +34,7 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
         turret.startScanning()
         self.turretId2turret[turret.doId] = turret
         self.sendUpdateToAvatarId(avId, 'turretPlaced', [turret.doId])
-        
+
     def disable(self):
         for turret in self.turretId2turret.values():
             turret.requestDelete()

@@ -1,46 +1,44 @@
-"""
+# Filename: DistributedPieTurretAI.py
+# Created by:  blach (14Jun15)
+# Updated by:  DecodedLogic (10Aug15)
 
-  Filename: DistributedPieTurretAI.py
-  Created by: DecodedLogic (10Aug15)
-
-"""
-
-from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
 from direct.distributed.DistributedSmoothNodeAI import DistributedSmoothNodeAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.task.Task import Task
 
+from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
+
 class DistributedPieTurretAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     notify = directNotify.newCategory('DistributedPieTurretAI')
     maximumRange = 40
-    
+
     def __init__(self, air):
         DistributedAvatarAI.__init__(self, air)
         DistributedSmoothNodeAI.__init__(self, air)
         self.owner = 0
         self.mgr = None
-        
+
     def setManager(self, mgr):
         self.mgr = mgr
-        
+
     def getManager(self):
         return self.mgr
-    
+
     def setHealth(self, hp):
         DistributedAvatarAI.setHealth(self, hp)
         if hp < 1:
             self.getManager().sendUpdateToAvatarId(self.getOwner(), 'yourTurretIsDead', [])
             self.sendUpdate('die', [])
             Sequence(Wait(2.0), Func(self.getManager().killTurret, self.doId)).start()
-            
+
     def startScanning(self, afterShoot = 0):
         if self.getHealth() > 0:
             timestamp = globalClockDelta.getFrameNetworkTime()
             self.sendUpdate('scan', [timestamp, afterShoot])
             base.taskMgr.add(self.__scan, self.uniqueName('DistributedPieTurretAI-scan'))
-            
+
     def __scan(self, task):
         try:
             if self.getHealth() < 1:
@@ -70,24 +68,23 @@ class DistributedPieTurretAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             return Task.again
         except:
             return Task.done
-        
+
     def setOwner(self, avId):
         self.owner = avId
-        
+
     def d_setOwner(self, avId):
         self.sendUpdate('setOwner', [avId])
-    
+
     def b_setOwner(self, avId):
         self.d_setOwner(avId)
         self.setOwner(avId)
-        
+
     def getOwner(self):
         return self.owner
-    
+
     def disable(self):
         base.taskMgr.remove(self.uniqueName('DistributedPieTurretAI-scan'))
         self.owner = None
         self.mgr = None
         DistributedSmoothNodeAI.disable(self)
         DistributedAvatarAI.disable(self)
-            

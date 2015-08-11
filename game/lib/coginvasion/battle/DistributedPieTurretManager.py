@@ -1,19 +1,17 @@
-"""
-
-  Filename: DistributedPieTurretManager.py
-  Created by: DecodedLogic (10Aug15)
-
-"""
+# Filename: DistributedPieTurretManager.py
+# Created by:  blach (14Jun15)
+# Updated by:  DecodedLogic (10Aug15)
 
 from direct.distributed.DistributedObject import DistributedObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import DirectButton, DirectFrame, DirectLabel, DirectWaitBar, OnscreenImage
 from direct.task.Task import Task
+
 from lib.coginvasion.globals import CIGlobals
 
 class DistributedPieTurretManager(DistributedObject):
     notify = directNotify.newCategory('DistributedPieTurretManager')
-    
+
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
         self.myTurret = None
@@ -22,7 +20,7 @@ class DistributedPieTurretManager(DistributedObject):
         self.guiBar = None
         self.guiBg = None
         self.turretGag = None
-        
+
     def announceGenerate(self):
         DistributedObject.announceGenerate(self)
         base.taskMgr.add(self.__pollMyBattle, '__pollMyBattle')
@@ -38,7 +36,7 @@ class DistributedPieTurretManager(DistributedObject):
         if base.localAvatar.getMyBattle():
             base.localAvatar.getMyBattle().setTurretManager(None)
         DistributedObject.disable(self)
-        
+
     def __pollTurret(self, turretId, task):
         turret = self.cr.doId2do.get(turretId)
         if turret != None:
@@ -47,23 +45,22 @@ class DistributedPieTurretManager(DistributedObject):
             self.makeGui()
             return Task.done
         return Task.cont
-    
+
     def d_requestPlace(self, posHpr):
         self.sendUpdate('requestPlace', [posHpr])
-        
+
     def turretPlaced(self, turretId):
         turret = self.cr.doId2do.get(turretId)
         turret.setGag(self.turretGag)
-        print self.turretGag
         base.taskMgr.add(self.__pollTurret, 'DPTM.pollTurret', extraArgs = [turretId], appendTask = True)
-        
+
     def yourTurretIsDead(self):
         base.taskMgr.remove('DPTM.pollTurret')
         self.destroyGui()
         self.myTurret = None
         if base.localAvatar.getPUInventory()[0] > 0:
             self.createTurretButton()
-            
+
     def makeGui(self):
         self.destroyGui()
         self.guiFrame = DirectFrame(parent = base.a2dBottomRight, pos=(-0.55, 0, 0.15))
@@ -71,11 +68,11 @@ class DistributedPieTurretManager(DistributedObject):
         self.guiBg.setTransparency(True)
         self.guiLabel = DirectLabel(text = "Turret", text_fg = (1, 0, 0, 1), relief = None, text_scale = 0.05, text_font = loader.loadFont("phase_3/models/fonts/ImpressBT.ttf"), pos = (0, 0, 0.025), parent = self.guiFrame)
         self.guiBar = DirectWaitBar(range = self.myTurret.getMaxHealth(), value = self.myTurret.getHealth(), scale = 0.125, parent = self.guiFrame, pos = (0, 0, -0.01))
-        
+
     def setGag(self, upgradeId):
         gags = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.WholeFruitPie, 2 : CIGlobals.BirthdayCake, 3 : CIGlobals.WeddingCake}
         self.turretGag = gags.get(upgradeId)
-        
+
     def getGag(self):
         return self.turretGag
 
@@ -108,7 +105,7 @@ class DistributedPieTurretManager(DistributedObject):
                 self.setGag(base.localAvatar.getPUInventory()[1])
             return Task.done
         return Task.cont
-    
+
     def destroyGui(self):
         if self.guiBar:
             self.guiBar.destroy()
@@ -121,8 +118,8 @@ class DistributedPieTurretManager(DistributedObject):
             self.guiBg = None
         if self.guiFrame:
             self.guiFrame.destroy()
-            self.guiFrame = None    
-    
+            self.guiFrame = None
+
     def updateTurretGui(self):
         if self.guiBar:
             self.guiBar.update(self.myTurret.getHealth())
