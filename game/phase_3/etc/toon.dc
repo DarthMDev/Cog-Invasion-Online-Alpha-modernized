@@ -38,8 +38,6 @@ from lib.coginvasion.suit import DistributedDroppableCollectableHealth/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableIceCream/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableBackpack/AI
 from lib.coginvasion.suit import DistributedVicePresident/AI
-from lib.coginvasion.suit import DistributedPieTurretManager/AI
-from lib.coginvasion.suit import DistributedPieTurret/AI
 from lib.coginvasion.suit import DistributedCogStation/AI
 from lib.coginvasion.suit import DistributedCogBattle/AI
 from lib.coginvasion.hood import DistributedTreasure/AI
@@ -54,6 +52,8 @@ from lib.coginvasion.hood import DistributedCinemaInterior/AI
 from lib.coginvasion.hood import DistributedToonHQInterior/AI
 from lib.coginvasion.hood import DistributedBoat/AI
 from lib.coginvasion.hood import DistributedDoor/AI
+from lib.coginvasion.battle import DistributedPieTurretManager/AI
+from lib.coginvasion.battle import DistributedPieTurret/AI
 from lib.coginvasion.friends import FriendsManager/UD
 
 struct AvChoice {
@@ -469,7 +469,7 @@ dclass DistributedPieTurretManager : DistributedObject {
 };
 
 dclass DistributedPieTurret : DistributedAvatar {
-  setAvatar(uint32) required broadcast ram;
+  setOwner(uint32) required broadcast ram;
   scan(int16, int8) broadcast ram;
   shoot(uint32) broadcast;
   makeSplat(float64[]) broadcast clsend;

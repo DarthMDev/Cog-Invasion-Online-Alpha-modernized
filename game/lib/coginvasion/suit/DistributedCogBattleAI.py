@@ -8,8 +8,7 @@ from lib.coginvasion.distributed.HoodMgr import HoodMgr
 from lib.coginvasion.suit.DistributedSuitManagerAI import DistributedSuitManagerAI
 from lib.coginvasion.shop.DistributedGagShopAI import DistributedGagShopAI
 from lib.coginvasion.shop.DistributedBattleShopAI import DistributedBattleShopAI
-from lib.coginvasion.suit.DistributedPieTurretManagerAI import DistributedPieTurretManagerAI
-from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.battle.DistributedPieTurretManagerAI import DistributedPieTurretManagerAI
 import CogBattleGlobals
 
 class DistributedCogBattleAI(DistributedObjectAI):
@@ -117,7 +116,7 @@ class DistributedCogBattleAI(DistributedObjectAI):
                 self.notify.warning("Removing avatar {0} from DistributedCogBattleAI-{1}...".format(avId, self.doId))
                 # Check if this avatar had a turret.
                 for turret in self.turretMgr.turretId2turret.values():
-                    if turret.getAvatar() == avId:
+                    if turret.getOwner() == avId:
                         # We won't keep the turret of an avatar that has
                         # left because it will raise issues.
                         self.turretMgr.killTurret(turret.doId)

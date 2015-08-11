@@ -39,7 +39,7 @@ class Shop(StateData):
         
     def __purchaseUpgradeItem(self, values):
         upgradeID = values.get('upgradeID')
-        upgrades = base.localAvatar.getPUInventory()[upgradeID]
+        upgrades = base.localAvatar.getPUInventory()[0]
         maxUpgrades = values.get('maxUpgrades')
         if upgrades < maxUpgrades:
             if upgrades < 0:
@@ -47,7 +47,8 @@ class Shop(StateData):
             else:
                 upgrades += 1
             self.upgradesPurchased = True
-            base.localAvatar.setPUInventory([upgrades])
+            base.localAvatar.getMyBattle().getTurretManager().setGag(upgradeID)
+            base.localAvatar.setPUInventory([upgrades, upgradeID])
             
     def __purchaseGagItem(self, gag, values):
         name = gag.getName()
@@ -161,14 +162,13 @@ class Page(DirectFrame):
                 maxSupply = base.localAvatar.getBackpack().getMaxSupply(name)
                 label['text'] = '%s/%s\n%s JBS' % (str(supply), str(maxSupply), str(price))
             elif itemType == ItemType.UPGRADE:
-                upgradeID = values.get('upgradeID')
                 maxSupply = values.get('maxUpgrades')
-                supply = base.localAvatar.getPUInventory()[upgradeID]
+                supply = base.localAvatar.getPUInventory()[0]
                 if supply < 0:
                     supply = 0
                 if supply >= maxSupply:
                     button.setColorScale(GRAYED_OUT_COLOR)
-                label['text'] = '%s/%s\n%s JBS' % (str(supply), str(maxSupply), str(price))
+                label['text'] = '%s\n%s/%s\n%s JBS' % (item, str(supply), str(maxSupply), str(price))
             elif itemType == ItemType.HEAL:
                 if base.localAvatar.getHealth() == base.localAvatar.getMaxHealth():
                     button.setColorScale(GRAYED_OUT_COLOR)
@@ -256,16 +256,16 @@ class ShopWindow(DirectFrame):
         )
         button.setTransparency(TransparencyAttrib.MAlpha)
         upgradeID = values.get('upgradeID')
-        supply = base.localAvatar.getPUInventory()[upgradeID]
+        supply = base.localAvatar.getPUInventory()[0]
         if supply < 0:
             supply = 0
         maxSupply = values.get('maxUpgrades')
         if upgradeID == 0 and base.localAvatar.getMyBattle().getTurretManager().myTurret:
             supply = 1
         buttonLabel = DirectLabel(
-                 text = '%s/%s\n%s JBS' % (str(supply), str(maxSupply),
+                 text = '%s\n%s/%s\n%s JBS' % (item, str(supply), str(maxSupply),
                  str(values.get('price'))), relief = None,
-                 parent = button, text_scale = 0.5, pos = (0, 0, -1.2)
+                 parent = button, text_scale = 0.3, pos = (0, 0, -1.2)
         )
         self.addEntryToPage(page, item, values, button, buttonLabel)
         
@@ -282,7 +282,7 @@ class ShopWindow(DirectFrame):
         button.setTransparency(TransparencyAttrib.MAlpha)
         buttonLabel = DirectLabel(
                   text = label, relief = None, parent = button,
-                  text_scale = 0.75, pos = (0, 0, -1.6)
+                  text_scale = 0.55, pos = (0, 0, -1.6)
         )
         self.addEntryToPage(page, item, values, button, buttonLabel)
         

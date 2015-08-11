@@ -124,7 +124,8 @@ class Gag(object):
         self.gag.setName(self.getName())
 
     def setHandJoint(self):
-        self.handJoint = self.avatar.find('**/def_joint_right_hold')
+        if self.avatar:
+            self.handJoint = self.avatar.find('**/def_joint_right_hold')
 
     def equip(self):
         if not self.avatar or not self.avatar.getBackpack() or self.avatar.getBackpack() and self.avatar.getBackpack().getSupply(self.getName()) == 0:
