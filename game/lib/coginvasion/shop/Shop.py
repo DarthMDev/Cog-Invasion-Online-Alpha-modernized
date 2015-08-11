@@ -24,6 +24,7 @@ class Shop(StateData):
         StateData.__init__(self, doneEvent)
         self.distShop = distShop
         self.destroyEvent = self.distShop.destroyEvent
+        self.origHealth = base.localAvatar.getHealth()
         self.avMoney = base.localAvatar.getMoney()
         self.healCooldownDoneSoundPath = 'phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3'
         self.healCooldownDoneSfx = None
@@ -45,6 +46,7 @@ class Shop(StateData):
     def cancelPurchase(self):
         messenger.send(self.doneEvent)
         base.localAvatar.setMoney(self.avMoney)
+        base.localAvatar.setHealth(self.origHealth)
         
         for healCooldown in self.newHealCooldowns.keys():
             del self.healCooldowns[healCooldown]
