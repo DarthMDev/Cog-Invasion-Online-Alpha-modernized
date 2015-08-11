@@ -14,7 +14,8 @@ gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobal
           7 : CIGlobals.FruitPieSlice, 8 : CIGlobals.GrandPiano, 9 : CIGlobals.Safe, 10 : CIGlobals.BambooCane,
           11 : CIGlobals.JugglingBalls, 12 : CIGlobals.Megaphone, 13 : CIGlobals.Cupcake, 14 : CIGlobals.TrapDoor,
           15 : CIGlobals.Quicksand, 16 : CIGlobals.BananaPeel, 17 : CIGlobals.Lipstick, 18 : CIGlobals.Foghorn,
-          19 : CIGlobals.Aoogah, 20 : CIGlobals.ElephantHorn, 21 : CIGlobals.Opera}
+          19 : CIGlobals.Aoogah, 20 : CIGlobals.ElephantHorn, 21 : CIGlobals.Opera, 22 : CIGlobals.BikeHorn,
+          23 : CIGlobals.Whistle, 24 : CIGlobals.Bugle}
 
 # These are the splat scales
 splatSizes = {
@@ -53,6 +54,12 @@ AOOGAH_APPEAR_SFX = "phase_5/audio/sfx/TL_step_on_rake.mp3"
 AOOGAH_SFX = "phase_5/audio/sfx/AA_sound_aoogah.mp3"
 OPERA_SFX = "phase_5/audio/sfx/AA_sound_Opera_Singer.mp3"
 OPERA_HIT_SFX = "phase_5/audio/sfx/AA_sound_Opera_Singer_Cog_Glass.mp3"
+BIKE_HORN_APPEAR_SFX = "phase_5/audio/sfx/MG_tag_1.mp3"
+BIKE_HORN_SFX = "phase_5/audio/sfx/AA_sound_bikehorn.mp3"
+WHISTLE_APPEAR_SFX = "phase_5/audio/sfx/LB_receive_evidence.mp3"
+WHISTLE_SFX = "phase_4/audio/sfx/AA_sound_whistle.mp3"
+BUGLE_APPEAR_SFX = "phase_4/audio/sfx/m_match_trumpet.mp3"
+BUGLE_SFX = "phase_5/audio/sfx/AA_sound_bugle.mp3"
 
 # These are globals for splats.
 SPLAT_MDL = "phase_3.5/models/props/splat-mod.bam"

@@ -262,7 +262,7 @@ class Gag(object):
         return Task.done
 
     def getAudio3D(self):
-        return audio3d
+        return base.audio3d
 
     def doesAutoRelease(self):
         return self.autoRelease

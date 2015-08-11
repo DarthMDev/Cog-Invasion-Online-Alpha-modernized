@@ -8,6 +8,7 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
+from lib.coginvasion.gags.GagState import GagState
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, SoundInterval
 from direct.particles.ParticleEffect import ParticleEffect
 from panda3d.core import Point3
@@ -91,8 +92,9 @@ class SoundGag(Gag):
         self.megaphone = loader.loadModel(self.megaphonePath)
 
     def cleanupGag(self):
-        Gag.cleanupGag(self)
-        if self.megaphone:
-            base.localAvatar.sendUpdate('gagRelease', [self.getID()])
-            self.megaphone.removeNode()
-            self.megaphone = None
+        if self.state == GagState.LOADED:
+            Gag.cleanupGag(self)
+            if self.megaphone:
+                base.localAvatar.sendUpdate('gagRelease', [self.getID()])
+                self.megaphone.removeNode()
+                self.megaphone = None

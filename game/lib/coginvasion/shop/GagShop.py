@@ -30,6 +30,9 @@ from lib.coginvasion.gags.Foghorn import Foghorn
 from lib.coginvasion.gags.Aoogah import Aoogah
 from lib.coginvasion.gags.ElephantHorn import ElephantHorn
 from lib.coginvasion.gags.Opera import Opera
+from lib.coginvasion.gags.BikeHorn import BikeHorn
+from lib.coginvasion.gags.Whistle import Whistle
+from lib.coginvasion.gags.Bugle import Bugle
 
 class GagShop(Shop):
     notify = directNotify.newCategory('GagShop')
@@ -57,7 +60,6 @@ class GagShop(Shop):
         self.distShop.addItem(Safe, ItemType.GAG, 20, invIcons.find('**/inventory_safe_box'))
         self.distShop.addItem(Megaphone, ItemType.GAG, 15, invIcons.find('**/inventory_megaphone'))
         self.distShop.addItem(Cupcake, ItemType.GAG, 1, invIcons.find('**/inventory_tart'))
-        self.distShop.addItem(Cupcake, ItemType.GAG, 1, invIcons.find('**/inventory_tart'))
         self.distShop.addItem(TrapDoor, ItemType.GAG, 5, invIcons.find('**/inventory_trapdoor'))
         self.distShop.addItem(Quicksand, ItemType.GAG, 3, invIcons.find('**/inventory_quicksand_icon'))
         self.distShop.addItem(Lipstick, ItemType.GAG, 12, invIcons.find('**/inventory_lipstick'))
@@ -65,6 +67,9 @@ class GagShop(Shop):
         self.distShop.addItem(Aoogah, ItemType.GAG, 3, invIcons.find('**/inventory_aoogah'))
         self.distShop.addItem(ElephantHorn, ItemType.GAG, 5, invIcons.find('**/inventory_elephant'))
         self.distShop.addItem(Opera, ItemType.GAG, 200, invIcons.find('**/inventory_opera_singer'))
+        self.distShop.addItem(BikeHorn, ItemType.GAG, 2, invIcons.find('**/inventory_bikehorn'))
+        self.distShop.addItem(Whistle, ItemType.GAG, 4, invIcons.find('**/inventory_whistle'))
+        self.distShop.addItem(Bugle, ItemType.GAG, 8, invIcons.find('**/inventory_bugle'))
         self.items = self.distShop.getItems()
         Shop.setup(self)
         invIcons.removeNode()
