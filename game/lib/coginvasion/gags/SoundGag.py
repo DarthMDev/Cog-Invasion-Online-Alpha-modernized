@@ -96,5 +96,7 @@ class SoundGag(Gag):
             Gag.cleanupGag(self)
             if self.megaphone:
                 base.localAvatar.sendUpdate('gagRelease', [self.getID()])
-                self.megaphone.removeNode()
-                self.megaphone = None
+                copies = self.avatar.findAllMatches('**/%s' % self.megaphone.getName())
+                for copy in copies:
+                    copy.removeNode()
+            self.megaphone = None

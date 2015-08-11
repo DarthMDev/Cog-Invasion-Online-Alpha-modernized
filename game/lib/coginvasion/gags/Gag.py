@@ -186,9 +186,15 @@ class Gag(object):
             self.track.pause()
         except: pass
         if self.gag and self.state == GagState.LOADED:
+            name = self.gag.getName()
             if self.anim:
                 self.gag.cleanup()
-            self.gag.removeNode()
+            if self.avatar:
+                copies = self.avatar.findAllMatches('**/%s' % name)
+                for copy in copies:
+                    copy.removeNode()
+            if self.gag and not self.gag.isEmpty():
+                self.gag.removeNode()
             self.gag = None
 
     def getGag(self):

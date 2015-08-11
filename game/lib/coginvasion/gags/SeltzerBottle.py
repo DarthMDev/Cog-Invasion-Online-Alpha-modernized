@@ -19,7 +19,7 @@ class SeltzerBottle(SquirtGag):
         self.setHealth(GagGlobals.SELTZER_HEAL)
         self.setImage('phase_3.5/maps/seltzer_bottle.png')
         self.anim = 'hold-bottle'
-        self.holdTime = 3
+        self.holdTime = 2
         self.sprayScale = 0.2
 
     def start(self):

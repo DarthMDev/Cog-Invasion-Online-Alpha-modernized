@@ -41,7 +41,9 @@ class SquirtGag(Gag):
         super(SquirtGag, self).start()
         self.build()
         self.equip()
-        Sequence(ActorInterval(self.avatar, self.anim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate), Func(self.setSquirtEnabled, True)).start()
+        duration = base.localAvatar.getDuration(self.anim, toFrame = self.enableReleaseFrame)
+        Parallel(ActorInterval(self.avatar, self.anim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate), 
+                 Wait(duration - 0.15), Func(self.setSquirtEnabled, True)).start()
 
     def startSquirt(self, sprayScale, containerHold):
         def startSpray():
@@ -64,13 +66,14 @@ class SquirtGag(Gag):
         finishSeq = Sequence()
         finishSeq.append(Wait(0.5))
         finishSeq.append(Func(self.avatar.play, self.toonAnim, fromFrame = self.completeSquirtFrame, toFrame = numFrames))
-        finishSeq.append(Wait(1))
         finishSeq.append(Func(self.reset))
         finishSeq.append(Func(self.avatar.play, 'neutral'))
         finishSeq.append(Func(self.cleanupSpray))
         finishSeq.start()
         if self.avatar == base.localAvatar:
             base.localAvatar.enablePieKeys()
+            if base.localAvatar.getBackpack().getSupply() == 0:
+                self.cleanupGag()
 
     def onCollision(self, entry):
         self.hitSomething = True
