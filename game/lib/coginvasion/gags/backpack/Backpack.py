@@ -36,7 +36,8 @@ class Backpack:
         CIGlobals.Opera : 1,
         CIGlobals.BikeHorn : 15,
         CIGlobals.Whistle : 10,
-        CIGlobals.Bugle : 10}
+        CIGlobals.Bugle : 10,
+        CIGlobals.PixieDust : 5}
 
     def __init__(self):
         __metaclass__ = ABCMeta

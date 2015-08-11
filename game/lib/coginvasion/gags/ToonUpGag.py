@@ -46,6 +46,8 @@ class ToonUpGag(Gag):
     def healAvatar(self, avatar, anim = None):
         if anim:
             ActorInterval(avatar, anim).start()
+        if not self.healAmount:
+            self.setHealAmount()
         avatar.sendUpdate('toonUp', [self.healAmount, 1, 1])
 
     def getClosestAvatar(self, radius):
@@ -54,8 +56,8 @@ class ToonUpGag(Gag):
         for obj in base.cr.doId2do.values():
             if obj.__class__.__name__ == "DistributedToon":
                 distance = self.avatar.getDistance(obj)
-                if distance > 0:
-                    if radius > 0 and distance <= radius or radius == 0:
+                if obj != self.avatar:
+                    if distance <= radius:
                         avatars.update({obj : distance})
         for dist in avatars.values():
             distances.append(dist)

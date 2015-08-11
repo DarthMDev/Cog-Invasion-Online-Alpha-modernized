@@ -1134,6 +1134,7 @@ Opera = "Opera Singer"
 BikeHorn = "Bike Horn"
 Whistle = "Whistle"
 Bugle = "Bugle"
+PixieDust = "Pixie Dust"
 
 ToonHealJokes = [['What goes TICK-TICK-TICK-WOOF?', 'A watchdog! '],
  ['Why do male deer need braces?', "Because they have 'buck teeth'!"],

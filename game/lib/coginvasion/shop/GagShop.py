@@ -33,6 +33,7 @@ from lib.coginvasion.gags.Opera import Opera
 from lib.coginvasion.gags.BikeHorn import BikeHorn
 from lib.coginvasion.gags.Whistle import Whistle
 from lib.coginvasion.gags.Bugle import Bugle
+from lib.coginvasion.gags.PixieDust import PixieDust
 
 class GagShop(Shop):
     notify = directNotify.newCategory('GagShop')
@@ -70,6 +71,7 @@ class GagShop(Shop):
         self.distShop.addItem(BikeHorn, ItemType.GAG, 2, invIcons.find('**/inventory_bikehorn'))
         self.distShop.addItem(Whistle, ItemType.GAG, 4, invIcons.find('**/inventory_whistle'))
         self.distShop.addItem(Bugle, ItemType.GAG, 8, invIcons.find('**/inventory_bugle'))
+        self.distShop.addItem(PixieDust, ItemType.GAG, 25, invIcons.find('**/inventory_pixiedust'))
         self.items = self.distShop.getItems()
         Shop.setup(self)
         invIcons.removeNode()
