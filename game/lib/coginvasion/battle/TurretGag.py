@@ -38,6 +38,9 @@ class TurretGag(DirectObject):
         self.gag.reparentTo(self.turret.getCannon())
         self.gag.setY(5.2)
         self.gag.setHpr(90, -90, 90)
+        
+        if isinstance(self.gag, Actor):
+            self.gag.loop('chan')
 
     def shoot(self, rangeVector):
         if not self.gag:
@@ -107,7 +110,7 @@ class TurretGag(DirectObject):
             self.track.finish()
             self.track = None
         if self.turret:
-            if self.turret.entities:
+            if self.turret.entities and self in self.turret.entities:
                 self.turret.entities.remove(self)
             self.turret = None
         self.ignore(self.eventName)

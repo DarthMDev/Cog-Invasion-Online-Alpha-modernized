@@ -23,3 +23,4 @@ class DistributedBattleShopAI(DistributedShopAI):
                 return
         obj = self.air.doId2do.get(avId)
         obj.b_setPUInventory(upgrades)
+        print upgrades

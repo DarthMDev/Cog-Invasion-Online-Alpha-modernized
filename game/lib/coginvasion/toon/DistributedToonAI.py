@@ -16,10 +16,8 @@ from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags.backpack import BackpackManager
 from lib.coginvasion.quests.QuestManagerAI import QuestManagerAI
-from lib.coginvasion.quests import Quests
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 import ToonDNA
-import json
 
 class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.ToonDNA):
     notify = DirectNotify().newCategory("DistributedToonAI")
@@ -152,11 +150,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def getQuests(self):
         return self.quests
 
-    def makeTopToons(self):
-        data = {'mostJellybeans' : [0, None], 'mostCogsDefeated' : [0, None]}
-        with open('astron/top_toons.json', 'w') as toptoons:
-            json.dump(data, toptoons)
-
     def setBackpack(self, backpack):
         self.backpack = BackpackManager.getBackpack(backpack)
 
@@ -178,6 +171,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
 
     def usedPU(self, index):
         self.puInventory[index] = 0
+        self.puInventory[1] = 0
         self.b_setPUInventory(self.puInventory)
 
     def requestEquipPU(self, index):

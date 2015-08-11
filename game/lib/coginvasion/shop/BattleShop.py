@@ -22,7 +22,7 @@ class BattleShop(Shop):
         self.items = self.distShop.getItems()
 
     def confirmPurchase(self):
-        self.distShop.sendUpdate('confirmPurchase', [[base.localAvatar.getPUInventory()[0]], base.localAvatar.getMoney()])
+        self.distShop.sendUpdate('confirmPurchase', [[base.localAvatar.getPUInventory()[0], base.localAvatar.getPUInventory()[1]], base.localAvatar.getMoney()])
         if self.upgradesPurchased:
             if base.localAvatar.getPUInventory()[0] > 0:
                 if base.localAvatar.getMyBattle():

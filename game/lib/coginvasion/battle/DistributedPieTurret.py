@@ -234,12 +234,15 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
 
     def loadGagInTurret(self):
         if self.cannon and self.gag:
-            if self.readyGag:
-                self.readyGag.cleanup()
-                self.readyGag = None
+            self.removeGagInTurret()
             self.eventId = random.uniform(0, 100000000)
             self.readyGag = TurretGag(self, self.uniqueName('pieTurretCollision') + str(self.eventId), self.gag)
             self.readyGag.build()
+            
+    def removeGagInTurret(self):
+        if self.readyGag:
+            self.readyGag.cleanup()
+            self.readyGag = None
 
     def makeSplat(self, pos):
         gagClass = self.hitGag.gagClass
