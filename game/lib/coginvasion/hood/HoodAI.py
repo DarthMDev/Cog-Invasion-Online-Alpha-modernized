@@ -15,6 +15,7 @@ import DistributedDoorAI
 import DistributedToonInteriorAI
 import DistributedCinemaInteriorAI
 import DistributedToonHQInteriorAI
+import DistributedTailorInteriorAI
 import CinemaGlobals
 
 class HoodAI:
@@ -80,6 +81,13 @@ class HoodAI:
                     door1.generateWithRequired(exteriorZone)
                     self.exteriorDoors.append(door0)
                     self.exteriorDoors.append(door1)
+                    self.interiors.append(interior)
+                elif dnaStore.blockBuildingTypes.get(block) == 'clotheshop':
+                    interior = DistributedTailorInteriorAI.DistributedTailorInteriorAI(self.air, block, exteriorZone)
+                    interior.generateWithRequired(interiorZone)
+                    door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
+                    door.generateWithRequired(exteriorZone)
+                    self.exteriorDoors.append(door)
                     self.interiors.append(interior)
         del self.dnaFiles
 

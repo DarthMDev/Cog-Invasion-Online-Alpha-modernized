@@ -5,7 +5,7 @@
 
 """
 
-from panda3d.core import CollisionNode, CollisionRay, CollisionSphere, CollisionHandlerQueue, CollisionHandlerFloor, CollisionHandlerPusher
+from panda3d.core import CollisionNode, CollisionRay, CollisionHandlerQueue
 from lib.coginvasion.globals import CIGlobals
 from direct.task.Task import Task
 
@@ -24,9 +24,11 @@ class LocationSeeker:
         self.cameraRay = None
         self.cameraNP = None
         self.shadowNP = None
+        self.shadowRay = None
         self.minDistance = minDistance
         self.maxDistance = maxDistance
-        self.legacyMode = True
+        self.legacyMode = False
+        self.collHdlFl = CollisionHandlerQueue()
         
     def startSeeking(self):
         if not self.avatar: return
@@ -49,20 +51,11 @@ class LocationSeeker:
         if not self.legacyMode:
             # Let's setup the collisions for the shadow.
             shadowNode = CollisionNode('coll_shadow')
-            shadowRay = CollisionRay(0, 0, -2, 0, 0, -1)
-            shadowNode.addSolid(shadowRay)
+            self.shadowRay = CollisionRay(0, 0, 6, 0, 0, -1)
+            shadowNode.addSolid(self.shadowRay)
             shadowNode.setFromCollideMask(CIGlobals.FloorBitmask)
             self.shadowNP = self.dropShadow.attachNewNode(shadowNode)
-            base.cTrav.addCollider(self.shadowNP, CollisionHandlerFloor())
-            
-            # Let's fix the shadow going underneath the terrain.
-            sphereNode = CollisionNode('coll_shadow_sph')
-            sphereObj = CollisionSphere(0, 0, -2.5, 2)
-            sphereNode.addSolid(sphereObj)
-            sphereNode.setFromCollideMask(CIGlobals.FloorBitmask)
-            self.shadowSphNP = self.dropShadow.attachNewNode(sphereNode)
-            self.shadowSphNP.show()
-            base.cTrav.addCollider(self.shadowSphNP, CollisionHandlerPusher())
+            base.cTrav.addCollider(self.shadowNP, self.collHdlFl)
         
         # Finally, let's start moving the shadow with the mouse and accept left mouse clicks.
         base.taskMgr.add(self.__moveShadow, self.moveShadowTaskName)
@@ -82,6 +75,9 @@ class LocationSeeker:
             self.dropShadow.setPos(PointAtZ(.5, nearPoint, nearVec))
             if self.legacyMode:
                 self.dropShadow.setZ(base.localAvatar.getZ(render) + 0.5)
+            else:
+                if self.collHdlFl.getNumEntries() > 0:
+                    self.dropShadow.setZ(self.collHdlFl.getEntry(0).getSurfacePoint(render).getZ() + 0.5)
         return Task.cont
         
     def locationChosen(self):
@@ -117,6 +113,8 @@ class LocationSeeker:
                 self.cameraNP = None
                 self.cameraNode = None
                 self.cameraRay = None
+                self.shadowNP.removeNode()
+                self.shadowRay = None
                 self.shadowNP = None
                 self.shadowSphNP = None
             
