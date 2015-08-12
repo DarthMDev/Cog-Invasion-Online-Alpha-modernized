@@ -49,6 +49,9 @@ class SuitTournament:
         taskMgr.doMethodLater(random_waitTime, self.startTournament, self.suitMgr.uniqueName("startTournament"))
 
     def startTournament(self, task):
+        if not self.suitMgr:
+            self.cleanup()
+            return task.done
         self.suitMgr.sendSysMessage("This is it, the Tournament has started! Good luck!")
         self.startRound(None, 1)
 
@@ -83,6 +86,7 @@ class SuitTournament:
         taskMgr.doMethodLater(random_waitTime, self.startRound, self.suitMgr.uniqueName("startRoundTask"), extraArgs=[None, self.getRound() + 1])
 
     def cleanup(self):
+        taskMgr.remove(self.suitMgr.uniqueName("startTournament"))
         taskMgr.remove(self.suitMgr.uniqueName("startRoundTask"))
         taskMgr.remove(self.suitMgr.uniqueName("callBackup"))
         taskMgr.remove(self.suitMgr.uniqueName("sendInBackup"))
