@@ -22,7 +22,8 @@ class ThrowGag(Gag):
 
     def start(self):
         super(ThrowGag, self).start()
-        self.avatar.b_gagBuild(self.getID())
+        if self.isLocal():
+            self.avatar.b_gagBuild(self.getID())
         self.equip()
         self.avatar.setPlayRate(self.playRate, 'pie')
         self.avatar.play('pie', fromFrame = 0, toFrame = 45)
