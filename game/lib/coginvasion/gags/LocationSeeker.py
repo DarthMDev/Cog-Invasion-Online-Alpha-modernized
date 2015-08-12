@@ -84,7 +84,8 @@ class LocationSeeker:
         distance = self.avatar.getDistance(self.dropShadow)
         x, y, z = self.getLocation()
         if distance >= self.minDistance and distance <= self.maxDistance:
-            self.avatar.sendUpdate('setDropLoc', [x, y, z])
+            gag = self.avatar.getBackpack().getActiveGag()
+            self.avatar.sendUpdate('setDropLoc', [gag.getID(), x, y, z])
             messenger.send(self.locationSelectedName)
         else:
             self.rejectSfx.play()

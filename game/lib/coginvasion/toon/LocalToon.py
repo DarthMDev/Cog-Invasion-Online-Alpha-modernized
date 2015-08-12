@@ -23,7 +23,6 @@ from direct.showbase.InputStateGlobal import inputState
 from direct.gui.DirectGui import DGG
 from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.gags.GagType import GagType
-from lib.coginvasion.quests import QuestManager
 from lib.coginvasion.gui.ToonPanel import ToonPanel
 from lib.coginvasion.friends.FriendRequestManager import FriendRequestManager
 from lib.coginvasion.base.PositionExaminer import PositionExaminer
@@ -615,7 +614,7 @@ class LocalToon(DistributedToon):
             self.ignore("delete")
             self.backpack.getCurrentGag().setAvatar(self)
             self.resetHeadHpr()
-            self.b_gagStart()
+            self.b_gagStart(self.backpack.getCurrentGag().getID())
 
     def throwGag(self, start = True):
         if not self.backpack or not self.backpack.getCurrentGag() or not self.backpack.getActiveGag():
@@ -627,7 +626,7 @@ class LocalToon(DistributedToon):
             if self.backpack.getActiveGag().getType() == GagType.SQUIRT:
                 self.b_gagRelease(self.backpack.getActiveGag().getID())
             else:
-                self.b_gagThrow()
+                self.b_gagThrow(self.backpack.getActiveGag().getID())
             activeGag = self.backpack.getActiveGag()
             if not activeGag:
                 activeGag = self.backpack.getCurrentGag()

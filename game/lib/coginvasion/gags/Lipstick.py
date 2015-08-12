@@ -40,7 +40,7 @@ class Lipstick(ToonUpGag):
             return
         
         if self.isLocal():
-            self.avatar.sendUpdate('setTarget', [target.doId])
+            self.avatar.sendUpdate('setTarget', [self.getID(), target.doId])
             
         def doHeal():
             if self.isLocal():

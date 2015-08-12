@@ -26,6 +26,7 @@ class PixieDust(ToonUpGag):
     
     def doPixieDust(self, target):
         if not target:
+            self.reset()
             return
         sprayEffect = self.createParticle('pixieSpray')
         dropEffect = self.createParticle('pixieDrop')
@@ -74,7 +75,7 @@ class PixieDust(ToonUpGag):
             target = self.getClosestAvatar(self.radius)
             if target:
                 self.doPixieDust(target)
-                self.avatar.sendUpdate('setTarget', [target.doId])
+                self.avatar.sendUpdate('setTarget', [self.getID(), target.doId])
         
     def setTarget(self, target):
         ToonUpGag.setTarget(self, target)

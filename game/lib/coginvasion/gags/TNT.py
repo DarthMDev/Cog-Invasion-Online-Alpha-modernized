@@ -62,9 +62,8 @@ class TNT(TossTrapGag):
         if self.track:
             self.track.pause()
             self.track = None
-        x, y, z = self.entity.getPos(render)
         if self.isLocal():
-            Sequence(Wait(2), Func(self.avatar.b_gagActivate)).start()
+            Sequence(Wait(2), Func(self.avatar.b_gagActivate, self.getID())).start()
 
     def explode(self):
         self.explosion = Actor("phase_5/models/props/kapow-mod.bam", {"chan": "phase_5/models/props/kapow-chan.bam"})

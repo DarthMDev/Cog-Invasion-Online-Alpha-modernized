@@ -245,119 +245,97 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
     def setChat(self, chat):
         Toon.Toon.setChat(self, chat)
 
-    def setTarget(self, targetId):
-        gag = self.backpack.getActiveGag()
-        if not gag:
-            gag = self.backpack.getCurrentGag()
+    def setTarget(self, gagId, targetId):
+        gag = self.backpack.getGagByID(gagId)
         target = self.cr.doId2do.get(targetId, None)
         gag.setTarget(target)
 
-    def trapActivate(self, avId, entityId, suitId):
+    def trapActivate(self, gagId, avId, entityId, suitId):
         sender = self.cr.doId2do.get(avId, None)
         suit = self.cr.doId2do.get(suitId, None)
         if sender:
             backpack = sender.getBackpack()
-            if backpack and backpack.getActiveGag():
-                trapGag = backpack.getActiveGag()
+            trapGag = backpack.getGagByID(gagId)
+            if backpack and trapGag:
+                trapGag = backpack.getGagByID(gagId)
                 entity = trapGag.getEntities()[entityId]
                 trapGag.onActivate(entity, suit)
 
-    def b_trapActivate(self, avId, entityId, suitId):
-        self.trapActivate(avId, entityId, suitId)
-        self.sendUpdate('trapActivate', [avId, entityId, suitId])
+    def b_trapActivate(self, gagId, avId, entityId, suitId):
+        self.trapActivate(gagId, avId, entityId, suitId)
+        self.sendUpdate('trapActivate', [gagId, avId, entityId, suitId])
 
-    def gagCollision(self):
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getActiveGag()
+    def gagCollision(self, gagId):
+        gag = self.backpack.getGagByID(gagId)
         gag.doCollision()
 
-    def b_gagCollision(self):
-        self.sendUpdate("gagCollision", [])
-        self.gagCollision()
+    def b_gagCollision(self, gagId):
+        self.sendUpdate("gagCollision", [gagId])
+        self.gagCollision(gagId)
 
-    def gagActivate(self):
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getActiveGag()
+    def gagActivate(self, gagId):
+        gag = self.backpack.getGagByID(gagId)
         if hasattr(gag, 'activate'):
             gag.activate()
 
-    def b_gagActivate(self):
-        self.sendUpdate("gagActivate", [])
-        self.gagActivate()
+    def b_gagActivate(self, gagId):
+        self.sendUpdate("gagActivate", [gagId])
+        self.gagActivate(gagId)
 
-    def setDropLoc(self, x, y, z):
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getActiveGag()
+    def setDropLoc(self, gagId, x, y, z):
+        gag = self.backpack.getGagByID(gagId)
         gag.setEndPos(x, y, z)
 
-    def setGagPos(self, x, y, z):
+    def setGagPos(self, gagId, x, y, z):
         pos = Point3(x, y, z)
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getActiveGag()
+        gag = self.backpack.getGagByID(gagId)
         ent = gag.getGag()
         if ent:
             ent.setPos(pos)
 
-    def gagStart(self):
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getActiveGag()
+    def gagStart(self, gagId):
+        gag = self.backpack.getGagByID(gagId)
         if gag:
             gag.start()
 
-    def b_gagStart(self):
-        self.sendUpdate("gagStart", [])
-        self.gagStart()
+    def b_gagStart(self, gagId):
+        self.sendUpdate("gagStart", [gagId])
+        self.gagStart(gagId)
 
-    def gagThrow(self):
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getActiveGag()
+    def gagThrow(self, gagId):
+        gag = self.backpack.getGagByID(gagId)
         if gag:
             gag.throw()
 
-    def b_gagThrow(self):
-        self.sendUpdate("gagThrow", [])
-        self.gagThrow()
+    def b_gagThrow(self, gagId):
+        self.sendUpdate("gagThrow", [gagId])
+        self.gagThrow(gagId)
 
-    def gagRelease(self, gag_id):
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getActiveGag()
+    def gagRelease(self, gagId):
+        gag = self.backpack.getGagByID(gagId)
         if gag:
             gag.release()
 
-    def b_gagRelease(self, gag_id):
-        self.sendUpdate("gagRelease", [gag_id])
-        self.gagRelease(gag_id)
+    def b_gagRelease(self, gagId):
+        self.sendUpdate("gagRelease", [gagId])
+        self.gagRelease(gagId)
 
-    def setSplatPos(self, index, x, y, z):
-        splatGag = None
-        keys = self.backpack.getGags().keys()
-        for gag in keys:
-            gIndex = keys.index(gag)
-            if gIndex == index:
-                splatGag = gag
+    def setSplatPos(self, gagId, x, y, z):
+        splatGag = self.backpack.getGagByID(gagId)
         if splatGag:
             splatGag.setSplatPos(x, y, z)
 
-    def d_setSplatPos(self, index, x, y, z):
-        self.sendUpdate('setSplatPos', [index, x, y, z])
+    def d_setSplatPos(self, gagId, x, y, z):
+        self.sendUpdate('setSplatPos', [gagId, x, y, z])
 
-    def gagBuild(self):
-        gag = self.backpack.getCurrentGag()
-        if self.backpack.getActiveGag():
-            gag = self.backpack.getCurrentGag()
+    def gagBuild(self, gagId):
+        gag = self.backpack.getGagByID(gagId)
         if gag:
             gag.build()
 
-    def b_gagBuild(self):
-        self.gagBuild()
-        self.sendUpdate('gagBuild', [])
+    def b_gagBuild(self, gagId):
+        self.gagBuild(gagId)
+        self.sendUpdate('gagBuild', [gagId])
 
     def handleSuitAttack(self, attack_id, suit_id):
         attack = CIGlobals.SuitAttacks[attack_id]

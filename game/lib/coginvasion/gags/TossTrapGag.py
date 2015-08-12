@@ -14,7 +14,7 @@ from panda3d.core import NodePath, BitMask32, CollisionSphere, CollisionNode, Co
 class TossTrapGag(TrapGag):
 
     def __init__(self, name, model, damage, hitSfx, idleSfx = None, particlesFx = None, anim = None, wantParticles = True):
-        TrapGag.__init__(self, name, model, damage, idleSfx, hitSfx, anim)
+        TrapGag.__init__(self, name, model, damage, hitSfx, anim)
         self.wantParticles = wantParticles
         self.particles = None
         self.particlesFx = particlesFx
@@ -67,7 +67,7 @@ class TossTrapGag(TrapGag):
         if not gag:
             gag = self.entity
         x, y, z = gag.getPos(render)
-        self.avatar.sendUpdate('setGagPos', [x, y, z])
+        self.avatar.sendUpdate('setGagPos', [self.getID(), x, y, z])
 
     def release(self):
         TrapGag.release(self)

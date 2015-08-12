@@ -54,7 +54,7 @@ class SoundGag(Gag):
                             suits.append(obj)
         def shouldContinue(suit, track):
             if suit.isDead():
-                track.stop()
+                track.finish()
         for suit in suits:
             if self.name != CIGlobals.Opera:
                 self.avatar.sendUpdate('suitHitByPie', [suit.doId, self.getID()])

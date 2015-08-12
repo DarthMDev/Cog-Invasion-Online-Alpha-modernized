@@ -120,7 +120,6 @@ class Shop(StateData):
 
     def purchaseItem(self, item):
         items = self.items
-        price = 0
         itemType = None
         values = None
         for iItem, iValues in items.iteritems():
@@ -128,6 +127,7 @@ class Shop(StateData):
                 values = iValues
                 itemType = values.get('type')
                 break
+        price = values.get('price')
         if self.isAffordable(price):
             base.localAvatar.setMoney(base.localAvatar.getMoney() - price)
             if itemType == ItemType.GAG:

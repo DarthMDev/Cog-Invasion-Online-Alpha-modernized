@@ -104,7 +104,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
 
     def onProjCollision(self, entry):
         x, y, z = self.gag.getPos(render)
-        self.avatar.sendUpdate('setGagPos', [x, y, z])
+        self.avatar.sendUpdate('setGagPos', [self.getID(), x, y, z])
         self.avatar.b_gagRelease(self.getID())
 
     def onCollision(self, entry):
@@ -118,7 +118,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
                         if obj.getHealth() > 0:
                             index = self.getEntityIndex(entry.getFromNodePath().getParent())
                             if not index == None:
-                                self.avatar.b_trapActivate(self.avatar.doId, index, obj.doId)
+                                self.avatar.b_trapActivate(self.getID(), self.avatar.doId, index, obj.doId)
 
     def buildDust(self):
         dust = Actor('phase_5/models/props/dust-mod.bam', {'chan' : 'phase_5/models/props/dust-chan.bam'})
@@ -158,7 +158,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
     def startEntity(self):
         if self.getLocation():
             x, y, z = self.getLocation()
-            self.gag.setPos(x, y, z - 0.5)
+            self.gag.setPos(x, y, z - 0.45)
         self.gag.setScale(GagGlobals.PNT3NEAR0)
         self.gag.reparentTo(render)
         LerpScaleInterval(self.gag, 1.2, Point3(1.7, 1.7, 1.7)).start()
@@ -232,7 +232,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
             if actorTrack:
                 LocationGag.getSoundTrack(self).start()
                 if self.isLocal():
-                    actorTrack.append(Func(self.avatar.b_gagThrow))
+                    actorTrack.append(Func(self.avatar.b_gagThrow, self.getID()))
                 actorTrack.start()
         elif self.trapMode == 1:
             self.startEntity()

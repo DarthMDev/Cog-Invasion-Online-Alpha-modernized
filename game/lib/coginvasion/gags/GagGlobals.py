@@ -78,7 +78,7 @@ PNT3NEAR0 = Point3(0.01, 0.01, 0.01)
 PNT3NORMAL = Point3(1, 1, 1)
 
 # The range these gags extend.
-TNT_RANGE = 25
+TNT_RANGE = 35
 SELTZER_RANGE = 25
 
 # How much gags heal.
