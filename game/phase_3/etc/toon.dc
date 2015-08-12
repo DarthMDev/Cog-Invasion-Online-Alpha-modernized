@@ -477,8 +477,9 @@ dclass DistributedPieTurretManager : DistributedObject {
 dclass DistributedPieTurret : DistributedAvatar {
   setOwner(uint32) required broadcast ram;
   scan(int16, int8) broadcast ram;
+  setGag(uint8 upgradeId) broadcast ram clsend;
   shoot(uint32) broadcast;
-  makeSplat(float64[]) broadcast clsend;
+  makeSplat(uint8 entId, float64[]) broadcast clsend;
   die() broadcast;
 };
 

@@ -54,11 +54,16 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
 
     def getOwner(self):
         return self.owner
-
-    def setGag(self, name):
-        self.gag = name
+    
+    def setGag(self, upgradeId):
+        gags = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.WholeFruitPie, 2 : CIGlobals.BirthdayCake, 3 : CIGlobals.WeddingCake}
+        self.gag = gags.get(upgradeId)
         if not self.readyGag:
             self.loadGagInTurret()
+            
+    def b_setGag(self, upgradeId):
+        self.sendUpdate('setGag', [upgradeId])
+        self.setGag(upgradeId)
 
     def getGag(self):
         return self.gag
@@ -244,8 +249,9 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             self.readyGag.cleanup()
             self.readyGag = None
 
-    def makeSplat(self, pos):
-        gagClass = self.hitGag.gagClass
+    def makeSplat(self, index, pos):
+        ent = self.entities[index]
+        gagClass = ent.gagClass
         splat = gagClass.buildSplat(gagClass.splatScale, gagClass.splatColor)
         base.audio3d.attachSoundToObject(gagClass.hitSfx, splat)
         splat.reparentTo(render)
@@ -254,17 +260,16 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         Sequence(Wait(0.5), Func(splat.cleanup)).start()
         self.hitGag = None
 
-    def d_makeSplat(self, pos):
-        self.sendUpdate('makeSplat', [pos])
+    def d_makeSplat(self, index, pos):
+        self.sendUpdate('makeSplat', [index, pos])
 
-    def b_makeSplat(self, pos):
-        self.d_makeSplat(pos)
-        self.makeSplat(pos)
+    def b_makeSplat(self, index, pos):
+        self.d_makeSplat(index, pos)
+        self.makeSplat(index, pos)
 
     def handleGagCollision(self, entry, ent):
         x, y, z = ent.getGag().getPos(render)
-        self.hitGag = ent
-        self.b_makeSplat([x, y, z])
+        self.b_makeSplat(self.entities.index(ent), [x, y, z])
         if self.isLocal():
             intoNP = entry.getIntoNodePath()
             avNP = intoNP.getParent()

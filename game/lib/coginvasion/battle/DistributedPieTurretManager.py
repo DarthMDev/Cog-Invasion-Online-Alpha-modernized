@@ -45,13 +45,17 @@ class DistributedPieTurretManager(DistributedObject):
             self.makeGui()
             return Task.done
         return Task.cont
+    
+    def setGag(self, upgradeId):
+        self.turretGag = upgradeId
 
     def d_requestPlace(self, posHpr):
         self.sendUpdate('requestPlace', [posHpr])
 
     def turretPlaced(self, turretId):
         turret = self.cr.doId2do.get(turretId)
-        turret.setGag(self.turretGag)
+        turret.b_setGag(self.turretGag)
+        self.turretGag = None
         base.taskMgr.add(self.__pollTurret, 'DPTM.pollTurret', extraArgs = [turretId], appendTask = True)
 
     def yourTurretIsDead(self):
@@ -68,13 +72,6 @@ class DistributedPieTurretManager(DistributedObject):
         self.guiBg.setTransparency(True)
         self.guiLabel = DirectLabel(text = "Turret", text_fg = (1, 0, 0, 1), relief = None, text_scale = 0.05, text_font = loader.loadFont("phase_3/models/fonts/ImpressBT.ttf"), pos = (0, 0, 0.025), parent = self.guiFrame)
         self.guiBar = DirectWaitBar(range = self.myTurret.getMaxHealth(), value = self.myTurret.getHealth(), scale = 0.125, parent = self.guiFrame, pos = (0, 0, -0.01))
-
-    def setGag(self, upgradeId):
-        gags = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.WholeFruitPie, 2 : CIGlobals.BirthdayCake, 3 : CIGlobals.WeddingCake}
-        self.turretGag = gags.get(upgradeId)
-
-    def getGag(self):
-        return self.turretGag
 
     def createTurretButton(self):
         self.makeTurretBtn = DirectButton(
@@ -102,7 +99,6 @@ class DistributedPieTurretManager(DistributedObject):
             base.localAvatar.getMyBattle().setTurretManager(self)
             if base.localAvatar.getPUInventory()[0] > 0:
                 self.createTurretButton()
-                self.setGag(base.localAvatar.getPUInventory()[1])
             return Task.done
         return Task.cont
 
