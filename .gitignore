@@ -12,6 +12,12 @@ game/safe_test.py
 game/.pydevproject
 game/.project
 game/astron/databases
+game/tools/libcoginvasion.pyd
+game/tools/libcoginvasion.c
+game/tools/libcoginvasion.lib
+game/tools/libcoginvasion.exp
+game/file_info.txt
+game/libcoginvasion.pyd
 *.yaml
 *.bat
 .project
