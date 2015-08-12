@@ -1,27 +1,26 @@
 // Filename: config_ccoginvasion.cxx
-// Created by:  blach (10Aug15)
+// Created by:  blach (11Aug15)
 
 #include "labelScaler.h"
 
-#include <pandabase.h>
-#include <dconfig.h>
+#include "pandabase.h"
+#include "dconfig.h"
 
 void init_libccoginvasion();
 
 Configure(config_ccoginvasion);
 
 ConfigureFn(config_ccoginvasion) {
-  init_libccoginvasion();
+	init_libccoginvasion();
 }
 
-void
-init_libccoginvasion() {
-  static bool initialized = false;
-  if (initialized) {
-    return;
-  }
+void init_libccoginvasion() {
+	static bool initialized = false;
+	if (initialized) {
+		return;
+	}
 
-  initialized = true;
+	initialized = true;
 
-  LabelScaler::init_type();
+	LabelScaler::init_type();
 }
