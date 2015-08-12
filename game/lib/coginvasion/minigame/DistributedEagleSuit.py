@@ -12,7 +12,6 @@ from FlightProjectileInterval import FlightProjectileInterval
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit.DistributedSuit import DistributedSuit
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
-from DistributedEagleGame import DistributedEagleGame
 import EagleGameGlobals as EGG
 
 import random
@@ -25,12 +24,12 @@ class DistributedEagleSuit(DistributedSuit):
         self.suitFSM.addState(State('eagleFly', self.enterEagleFly, self.exitEagleFly))
         self.suitFSM.addState(State('eagleFall', self.enterEagleFall, self.exitEagleFall))
         self.makeStateDict()
-        self.eagleCry = self.audio3d.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_eagleCry.mp3')
-        self.audio3d.attachSoundToObject(self.eagleCry, self)
-        self.fallWhistle = self.audio3d.loadSfx('phase_5/audio/sfx/incoming_whistleALT.mp3')
-        self.audio3d.attachSoundToObject(self.fallWhistle, self)
-        self.explode = self.audio3d.loadSfx('phase_3.5/audio/sfx/ENC_cogfall_apart.mp3')
-        self.audio3d.attachSoundToObject(self.explode, self)
+        self.eagleCry = base.audio3d.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_eagleCry.mp3')
+        base.audio3d.attachSoundToObject(self.eagleCry, self)
+        self.fallWhistle = base.audio3d.loadSfx('phase_5/audio/sfx/incoming_whistleALT.mp3')
+        base.audio3d.attachSoundToObject(self.fallWhistle, self)
+        self.explode = base.audio3d.loadSfx('phase_3.5/audio/sfx/ENC_cogfall_apart.mp3')
+        base.audio3d.attachSoundToObject(self.explode, self)
         self.eventSphereNodePath = None
         self.fallingPropeller = None
         self.fallingPropProjectile = None
@@ -169,11 +168,11 @@ class DistributedEagleSuit(DistributedSuit):
         if self.fallingPropeller:
             self.fallingPropeller.cleanup()
             self.fallingPropeller = None
-        self.audio3d.detachSound(self.fallWhistle)
+        base.audio3d.detachSound(self.fallWhistle)
         del self.fallWhistle
-        self.audio3d.detachSound(self.explode)
+        base.audio3d.detachSound(self.explode)
         del self.explode
-        self.audio3d.detachSound(self.eagleCry)
+        base.audio3d.detachSound(self.eagleCry)
         del self.eagleCry
         self.mg = None
         DistributedSuit.disable(self)
