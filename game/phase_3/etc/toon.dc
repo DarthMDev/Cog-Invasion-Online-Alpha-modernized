@@ -165,7 +165,7 @@ dclass DistributedToon : DistributedAvatar {
   announceHealthAndPlaySound(int8, int16) broadcast;
   requestEject(uint32, int8 = 0) ownsend airecv;
   setGhost(int8) required broadcast ram ownsend airecv;
-  setPUInventory(int8[] = [0]) required broadcast ownrecv db;
+  setPUInventory(int8[] = [0, 0]) required broadcast ownrecv db;
   setEquippedPU(int8) required broadcast ownrecv db;
   requestEquipPU(int8) ownsend airecv;
   usedPU(int8) ownsend airecv;
