@@ -49,9 +49,9 @@ typedef struct _FILTERKEYS FILTERKEYS;
 
 #define WINAPI
 
-//union LARGE_INTEGER {
-//  long long QuadPart;
-//};
+union LARGE_INTEGER {
+  long long QuadPart;
+};
 
 class IGraphBuilder;
 class ICaptureGraphBuilder2;

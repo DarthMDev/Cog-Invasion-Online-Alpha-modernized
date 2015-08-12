@@ -12,7 +12,7 @@ game/safe_test.py
 game/.pydevproject
 game/.project
 game/astron/databases
-game/screenshots
+*.yaml
 *.bat
 .project
 .pydevproject

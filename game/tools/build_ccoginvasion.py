@@ -24,6 +24,9 @@ def compile(filename):
     cmd = "cl /nologo /c /EHsc"
     cmd += " /I" + os.path.join(panda3d_dir, "include")
     cmd += " /I" + os.path.join(panda3d_dir, "python", "include")
+    cmd += " /Isrc/nametag"
+    cmd += " /Isrc/margins"
+    cmd += " /Isrc/etc"
     cmd += " /Fo%s %s" % (output, filename)
 
     run_command(cmd)
