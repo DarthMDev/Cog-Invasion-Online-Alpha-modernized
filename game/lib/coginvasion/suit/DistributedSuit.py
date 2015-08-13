@@ -63,9 +63,11 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.level = None
         return
 
-    def d_disableMovement(self):
+    def d_disableMovement(self, wantRay = False):
         self.sendUpdate('disableMovement', [])
-        Suit.disableRay(self)
+        self.interruptAttack()
+        if not wantRay:
+            Suit.disableRay(self)
 
     def d_enableMovement(self):
         self.sendUpdate('enableMovement', [])

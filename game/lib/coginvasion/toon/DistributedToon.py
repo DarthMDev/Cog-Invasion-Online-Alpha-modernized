@@ -257,8 +257,9 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             backpack = sender.getBackpack()
             trapGag = backpack.getGagByID(gagId)
             if backpack and trapGag:
-                trapGag = backpack.getGagByID(gagId)
-                entity = trapGag.getEntities()[entityId]
+                entity = None
+                if hasattr(trapGag, 'getEntities'):
+                    entity = trapGag.getEntities()[entityId]
                 trapGag.onActivate(entity, suit)
 
     def b_trapActivate(self, gagId, avId, entityId, suitId):

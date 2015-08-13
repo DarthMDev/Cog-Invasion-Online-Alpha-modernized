@@ -40,7 +40,6 @@ class DistributedToonInteriorAI(DistributedObjectAI.DistributedObjectAI):
                 npcClass = DistributedHQNPCToonAI.DistributedHQNPCToonAI
             elif npcData[3] == CIGlobals.NPC_TAILOR:
                 npcClass = DistributedTailorNPCToonAI.DistributedTailorNPCToonAI
-                print npcId
             npc = npcClass(self.air, npcId, len(self.npcs))
             npc.generateWithRequired(self.zoneId)
             self.npcs.append(npc)

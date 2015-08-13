@@ -8,6 +8,7 @@
 from panda3d.core import CollisionNode, CollisionRay, CollisionHandlerQueue
 from lib.coginvasion.globals import CIGlobals
 from direct.task.Task import Task
+import math
 
 class LocationSeeker:
     
@@ -34,6 +35,11 @@ class LocationSeeker:
         if not self.avatar: return
         self.cleanupShadow()
         self.buildShadow()
+        
+        # Let's increase the distance if the shadow is smaller than expected.
+        scale = self.dropShadow.getScale()
+        if scale < 1.0:
+            self.maxDistance += 40
             
         # Let's setup the drop shadow's initial position.
         x, y, z = self.avatar.getPos(render)
@@ -96,6 +102,13 @@ class LocationSeeker:
         if not self.dropShadowPath or not self.avatar: return
         self.dropShadow = loader.loadModel(self.dropShadowPath)
         self.dropShadow.setScale(self.shadowScale)
+        
+    def setShadowType(self, isCircle = False, scale = 1):
+        if not isCircle:
+            self.dropShadowPath = 'phase_3/models/props/square_drop_shadow.bam'
+        else:
+            self.dropShadowPath = 'phase_3/models/props/drop_shadow.bam'
+        self.shadowScale = scale
         
     def getLocation(self):
         if self.dropShadow:

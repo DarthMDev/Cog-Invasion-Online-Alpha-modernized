@@ -94,6 +94,7 @@ class Suit(Avatar.Avatar):
                                 State('flyNeutral', self.enterFlyNeutral, self.exitFlyNeutral),
                                 State('flail', self.enterFlail, self.exitFlail),
                                 State('drop', self.enterDrop, self.exitDrop),
+                                State('drop-react', self.enterDropReact, self.exitDropReact),
                                 State('squirt-large', self.enterLSquirt, self.exitLSquirt),
                                 State('squirt-small', self.enterSSquirt, self.exitSSquirt)], 'off', 'off')
         animStateList = self.animFSM.getStates()
@@ -212,6 +213,7 @@ class Suit(Avatar.Avatar):
                             "phone": "phase_5/models/char/suitA-phone.bam",
                             "flail": "phase_4/models/char/suitA-flailing.bam",
                             "drop" : "phase_5/models/char/suitA-drop.bam",
+                            "drop-react" : "phase_5/models/char/suitA-anvil-drop.bam",
                             "squirt-large" : "phase_5/models/char/suitA-squirt-large.bam",
                             "squirt-small" : "phase_4/models/char/suitA-squirt-small.bam",
                             "slip-forward" : "phase_4/models/char/suitA-slip-forward.bam"}, "body")
@@ -234,6 +236,7 @@ class Suit(Avatar.Avatar):
                             "phone": "phase_5/models/char/suitB-phone.bam",
                             "flail": "phase_4/models/char/suitB-flailing.bam",
                             "drop" : "phase_5/models/char/suitB-drop.bam",
+                            "drop-react" : "phase_5/models/char/suitB-anvil-drop.bam",
                             "squirt-large" : "phase_5/models/char/suitB-squirt-large.bam",
                             "squirt-small" : "phase_4/models/char/suitB-squirt-small.bam",
                             "slip-forward" : "phase_4/models/char/suitB-slip-forward.bam"}, "body")
@@ -255,6 +258,7 @@ class Suit(Avatar.Avatar):
                         "phone": "phase_3.5/models/char/suitC-phone.bam",
                         "flail": "phase_4/models/char/suitC-flailing.bam",
                         "drop" : "phase_5/models/char/suitC-drop.bam",
+                        "drop-react" : "phase_5/models/char/suitC-anvil-drop.bam",
                         "squirt-large" : "phase_5/models/char/suitC-squirt-large.bam",
                         "squirt-small" : "phase_3.5/models/char/suitC-squirt-small.bam",
                         "slip-forward" : "phase_4/models/char/suitC-slip-forward.bam"}, "body")
@@ -538,6 +542,12 @@ class Suit(Avatar.Avatar):
         if self.suitTrack:
             self.suitTrack.finish()
             self.suitTrack = None
+            
+    def enterDropReact(self, ts = 0):
+        self.play('drop-react')
+        
+    def exitDropReact(self):
+        self.stop()
 
     def enterSSquirt(self, ts = 0):
         self.play('squirt-small')

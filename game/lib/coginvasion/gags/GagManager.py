@@ -32,6 +32,9 @@ from lib.coginvasion.gags.BikeHorn import BikeHorn
 from lib.coginvasion.gags.Whistle import Whistle
 from lib.coginvasion.gags.Bugle import Bugle
 from lib.coginvasion.gags.PixieDust import PixieDust
+from lib.coginvasion.gags.Anvil import Anvil
+from lib.coginvasion.gags.FlowerPot import FlowerPot
+from lib.coginvasion.gags.Sandbag import Sandbag
 
 class GagManager:
 
@@ -61,7 +64,10 @@ class GagManager:
                      CIGlobals.BikeHorn : BikeHorn,
                      CIGlobals.Whistle : Whistle,
                      CIGlobals.Bugle : Bugle,
-                     CIGlobals.PixieDust : PixieDust}
+                     CIGlobals.PixieDust : PixieDust,
+                     CIGlobals.FlowerPot : FlowerPot,
+                     CIGlobals.Sandbag : Sandbag,
+                     CIGlobals.Anvil : Anvil}
 
     def getGagByName(self, name):
         for gName in self.gags.keys():

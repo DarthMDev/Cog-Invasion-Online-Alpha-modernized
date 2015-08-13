@@ -8,11 +8,10 @@
 from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags.GagState import GagState
-from lib.coginvasion.globals import CIGlobals
 from LocationGag import LocationGag
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Func, SoundInterval, Wait, LerpScaleInterval
-from panda3d.core import CollisionNode, CollisionHandlerEvent, CollisionHandlerFloor, CollisionSphere, BitMask32, Point3
+from panda3d.core import CollisionHandlerFloor, Point3
 import abc
 
 class DropGag(Gag, LocationGag):
@@ -71,15 +70,20 @@ class DropGag(Gag, LocationGag):
                     if obj.getKey() == avNP.getKey():
                         if obj.getHealth() > 0:
                             self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
+                            self.avatar.b_trapActivate(self.getID(), self.avatar.doId, 0, obj.doId)
                             hitCog = True
         if hitCog:
             SoundInterval(self.hitSfx, node = self.gag).start()
             shrinkTrack.append(Wait(0.5))
         else:
             SoundInterval(self.missSfx, node = self.gag).start()
+        shrinkTrack.append(Wait(0.25))
         shrinkTrack.append(LerpScaleInterval(self.gag, 0.3, Point3(0.01, 0.01, 0.01), startScale = self.gag.getScale()))
         shrinkTrack.append(Func(self.cleanupGag))
         shrinkTrack.start()
+        
+    def onSuitHit(self, suit):
+        pass
 
     @abc.abstractmethod
     def startDrop(self):

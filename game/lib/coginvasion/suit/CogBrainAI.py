@@ -304,8 +304,6 @@ class CogBrain(DirectObject):
         if self.suit.getAttacking():
             task.delayTime = 1.0
             return task.again
-        if not self.numAttacksThrown:
-            return task.done
         if self.numAttacksThrown >= self.Difficulty2MaxAttackThrows[self.suit.getLevel()]:
             self.numAttacksThrown = 0
             if not self.suit.isWalking():

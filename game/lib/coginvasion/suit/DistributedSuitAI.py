@@ -75,6 +75,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             'flyNeutral': 14,
             'flail': 0,
             'drop': 5,
+            'drop-react' : 15,
             'squirt-large': 7,
             'squirt-small': 10
         }
@@ -244,6 +245,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if self.suitHealTrack:
             self.suitHealTrack.pause()
             self.suitHealTrack = None
+        self.brain.end()
         self.b_setSuitState(3, -1, -1)
         if self.head != "vp":
             if self.walkTrack:
@@ -251,7 +253,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 self.walkTrack.clearToInitial()
                 self.walkTrack = None
         self.d_interruptAttack()
-        self.brain.end()
 
     def chooseVictim(self):
         toons = []
@@ -416,6 +417,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             anim2WaitTime = {
                 'pie': 2.0,
                 'drop': 6.0,
+                'drop-react' : 3.5,
                 'squirt-small': 4.0,
                 'squirt-large': 4.9,
                 'neutral': 0.0,

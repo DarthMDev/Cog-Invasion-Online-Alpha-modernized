@@ -26,6 +26,15 @@ class LocationGag:
         self.buttonHold = 0.6
         self.actorTrack = None
         self.soundTrack = None
+        self.isCircle = False
+        self.shadowScale = 1
+        
+    def setShadowData(self, isCircle, shadowScale):
+        self.isCircle = isCircle
+        self.shadowScale = shadowScale
+        
+    def getShadowScale(self):
+        return self.shadowScale
         
     def start(self, avatar):
         self.avatar = avatar
@@ -36,6 +45,7 @@ class LocationGag:
                                        playRate = self.playRate))
         if self.avatar == base.localAvatar:
             self.locationSeeker = LocationSeeker(self.avatar, self.minDistance, self.maxDistance)
+            self.locationSeeker.setShadowType(self.isCircle, self.shadowScale)
             self.avatar.acceptOnce(self.locationSeeker.getLocationSelectedName(), base.localAvatar.releaseGag)
             track.append(Func(self.locationSeeker.startSeeking))
         track.start()

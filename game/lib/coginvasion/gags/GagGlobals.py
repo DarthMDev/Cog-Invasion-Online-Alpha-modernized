@@ -15,7 +15,8 @@ gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobal
           11 : CIGlobals.JugglingBalls, 12 : CIGlobals.Megaphone, 13 : CIGlobals.Cupcake, 14 : CIGlobals.TrapDoor,
           15 : CIGlobals.Quicksand, 16 : CIGlobals.BananaPeel, 17 : CIGlobals.Lipstick, 18 : CIGlobals.Foghorn,
           19 : CIGlobals.Aoogah, 20 : CIGlobals.ElephantHorn, 21 : CIGlobals.Opera, 22 : CIGlobals.BikeHorn,
-          23 : CIGlobals.Whistle, 24 : CIGlobals.Bugle, 25 : CIGlobals.PixieDust}
+          23 : CIGlobals.Whistle, 24 : CIGlobals.Bugle, 25 : CIGlobals.PixieDust, 26 : CIGlobals.FlowerPot,
+          27 : CIGlobals.Sandbag, 28 : CIGlobals.Anvil}
 
 # These are the splat scales
 splatSizes = {
@@ -38,6 +39,12 @@ PIANO_DROP_SFX = "phase_5/audio/sfx/AA_drop_piano.mp3"
 PIANO_MISS_SFX = "phase_5/audio/sfx/AA_drop_piano_miss.mp3"
 SAFE_DROP_SFX = "phase_5/audio/sfx/AA_drop_safe.mp3"
 SAFE_MISS_SFX = "phase_5/audio/sfx/AA_drop_safe_miss.mp3"
+ANVIL_DROP_SFX = "phase_5/audio/sfx/AA_drop_anvil.mp3"
+ANVIL_MISS_SFX = "phase_4/audio/sfx/AA_drop_anvil_miss.mp3"
+BAG_DROP_SFX = "phase_5/audio/sfx/AA_drop_sandbag.mp3"
+BAG_MISS_SFX = "phase_5/audio/sfx/AA_drop_sandbag_miss.mp3"
+POT_DROP_SFX = "phase_5/audio/sfx/AA_drop_flowerpot.mp3"
+POT_MISS_SFX = "phase_5/audio/sfx/AA_drop_flowerpot_miss.mp3"
 BAMBOO_CANE_SFX = "phase_5/audio/sfx/AA_heal_happydance.mp3"
 JUGGLE_SFX = "phase_5/audio/sfx/AA_heal_juggle.mp3"
 SMOOCH_SFX = "phase_5/audio/sfx/AA_heal_smooch.mp3"

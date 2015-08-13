@@ -384,7 +384,11 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                     if gag.getType() == GagType.THROW or gag.getName() == CIGlobals.TNT:
                         obj.b_setAnimState('pie')
                     elif gag.getType() == GagType.DROP:
-                        obj.b_setAnimState('drop')
+                        majorDrops = [CIGlobals.GrandPiano, CIGlobals.Safe]
+                        if gag.getName() in majorDrops:
+                            obj.b_setAnimState('drop')
+                        else:
+                            obj.b_setAnimState('drop-react')
                     elif gag.getType() == GagType.SQUIRT or gag.getType() == GagType.SOUND:
                         obj.b_setAnimState('squirt-small')
 
