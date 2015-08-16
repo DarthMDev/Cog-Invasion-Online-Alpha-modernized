@@ -167,8 +167,11 @@ class Hood(StateData):
     def createNormalSky(self):
         self.deleteCurrentSky()
         self.sky = loader.loadModel(self.skyFilename)
-        self.sky.setScale(1.0)
-        self.sky.setFogOff()
+        if self.__class__.__name__ != 'CTHood':
+            self.sky.setScale(1.0)
+            self.sky.setFogOff()
+        else:
+            self.sky.setScale(5.0)
 
     def createSpookySky(self):
         self.deleteCurrentSky()

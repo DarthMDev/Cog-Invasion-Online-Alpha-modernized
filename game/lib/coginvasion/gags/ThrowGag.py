@@ -46,7 +46,7 @@ class ThrowGag(Gag):
         throwPath.setHpr(90, -90, 90)
 
         self.gag.setScale(self.gag.getScale(render))
-        self.gag.reparentTo(render)
+        self.gag.wrtReparentTo(render)
         self.gag.setHpr(throwPath.getHpr(render))
 
         if not self.handJoint:

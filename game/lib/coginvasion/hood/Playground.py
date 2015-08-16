@@ -48,7 +48,11 @@ class Playground(Place.Place):
         self.fsm.enterInitialState()
         messenger.send('enterPlayground')
         if self.loader.music:
-            base.playMusic(self.loader.music, looping = 1, volume = 0.8)
+            if self.__class__.__name__ == 'CTPlayground':
+                volume = 2.0
+            else:
+                volume = 0.8
+            base.playMusic(self.loader.music, looping = 1, volume = volume)
         self.loader.geom.reparentTo(render)
         self.loader.hood.startSky()
         self.zoneId = requestStatus['zoneId']

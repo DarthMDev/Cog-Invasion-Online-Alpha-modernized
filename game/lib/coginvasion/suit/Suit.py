@@ -216,7 +216,8 @@ class Suit(Avatar.Avatar):
                             "drop-react" : "phase_5/models/char/suitA-anvil-drop.bam",
                             "squirt-large" : "phase_5/models/char/suitA-squirt-large.bam",
                             "squirt-small" : "phase_4/models/char/suitA-squirt-small.bam",
-                            "slip-forward" : "phase_4/models/char/suitA-slip-forward.bam"}, "body")
+                            "slip-forward" : "phase_4/models/char/suitA-slip-forward.bam",
+                            "sit": "phase_12/models/char/suitA-sit.bam"}, "body")
         if suitType == "B":
             if skeleton:
                 self.loadModel("phase_5/models/char/cogB_robot-zero.bam", "body")
@@ -261,7 +262,8 @@ class Suit(Avatar.Avatar):
                         "drop-react" : "phase_5/models/char/suitC-anvil-drop.bam",
                         "squirt-large" : "phase_5/models/char/suitC-squirt-large.bam",
                         "squirt-small" : "phase_3.5/models/char/suitC-squirt-small.bam",
-                        "slip-forward" : "phase_4/models/char/suitC-slip-forward.bam"}, "body")
+                        "slip-forward" : "phase_4/models/char/suitC-slip-forward.bam",
+                        "sit": "phase_12/models/char/suitC-sit.bam"}, "body")
         if skeleton:
             self.setTwoSided(1)
 
@@ -542,10 +544,10 @@ class Suit(Avatar.Avatar):
         if self.suitTrack:
             self.suitTrack.finish()
             self.suitTrack = None
-            
+
     def enterDropReact(self, ts = 0):
         self.play('drop-react')
-        
+
     def exitDropReact(self):
         self.stop()
 

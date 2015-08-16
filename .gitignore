@@ -18,6 +18,12 @@ game/tools/libcoginvasion.lib
 game/tools/libcoginvasion.exp
 game/file_info.txt
 game/libcoginvasion.pyd
+game/new-cog-area
+game/screenshots
+game/settings.json
+game/uno_test.py
+game/mss'.py
+game/ct-test.py
 *.yaml
 *.bat
 .project

@@ -758,6 +758,19 @@ class LocalToon(DistributedToon):
         ## Then, log out and notify the client that they're dead.
         # self.cr.gameFSM.request("closeShard", ['died'])
 
+    def teleportToCT(self):
+        toZone = CIGlobals.CogTropolisId
+        hood = CIGlobals.CogTropolis
+        requestStatus = {'zoneId': toZone,
+                'hoodId': hood,
+                'where': ZoneUtil.getWhereName(toZone),
+                'avId': self.doId,
+                'loader': ZoneUtil.getLoaderName(toZone),
+                'shardId': None,
+                'wantLaffMeter': 1,
+                'how': 'teleportIn'}
+        self.cr.playGame.getPlace().fsm.request('teleportOut', [requestStatus])
+
     def createChatInput(self):
         self.chatInput.load()
         self.chatInput.enter()
@@ -809,6 +822,7 @@ class LocalToon(DistributedToon):
         #self.createChatInput()
         self.startLookAround()
         self.friendRequestManager.watch()
+        self.accept('c', self.teleportToCT)
         #posBtn = DirectButton(text = "Get Pos", scale = 0.08, pos = (0.3, 0, 0), parent = base.a2dLeftCenter, command = self.printAvPos)
         self.accept("gotLookSpot", self.handleLookSpot)
 

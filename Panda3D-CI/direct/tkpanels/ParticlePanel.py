@@ -2785,4 +2785,5 @@ if __name__ == '__main__':
     base.pp=pp
     #ve = VectorEntry(Toplevel(), relief = GROOVE)
     #ve.pack()
+    base.enableMouse()
     run()
