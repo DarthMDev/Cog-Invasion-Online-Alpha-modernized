@@ -122,14 +122,14 @@ class CTSafeZoneLoader(SafeZoneLoader):
         SafeZoneLoader.unload(self)
 
     def createSafeZone(self, foo):
-        self.geom = loader.loadModel('new-cog-area/cogtropolis.egg')
+        self.geom = loader.loadModel('phase_14/models/neighborhoods/cogtropolis.egg')
         self.geom.reparentTo(hidden)
         for i in range(2):
             bldgSectionNode = render.attachNewNode('bldgSection' + str(i))
             bldgSectionNode.setPos(self.bldgSectionData[i][0])
             bldgSectionNode.setHpr(self.bldgSectionData[i][1])
             for point in self.bldgPoints:
-                bldg = loader.loadModel('cogtropolis_big_building_1.egg')
+                bldg = loader.loadModel('phase_14/models/props/cogtropolis_big_building_1.egg')
                 bldg.reparentTo(bldgSectionNode)
                 bldg.setPos(point)
             self.buildingSectionNodes.append(bldgSectionNode)
