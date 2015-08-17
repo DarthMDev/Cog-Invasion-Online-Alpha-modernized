@@ -5,7 +5,7 @@
 
 """
 
-from pandac.PandaModules import *
+from panda3d.core import *
 import __builtin__
 
 import Logger
@@ -32,9 +32,9 @@ import random
 import __builtin__
 
 print "CIStart: Starting the game."
-from pandac.PandaModules import *
+from panda3d.core import *
 print "CIStart: Using Panda3D version {0}".format(PandaSystem.getVersionString())
-loadPrcFile("config/Confauto.prc")
+loadPrcFile('config/Confauto.prc')
 loadPrcFile("config/config_client.prc")
 print ConfigPageManager.getGlobalPtr()
 from direct.showbase.ShowBaseWide import ShowBase

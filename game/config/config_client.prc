@@ -17,6 +17,8 @@ default-model-extension .egg
 model-cache-model #t
 model-cache-textures #t
 
+model-path .
+
 # Audio...
 
 # Woo-hoo!!!! Miles!!

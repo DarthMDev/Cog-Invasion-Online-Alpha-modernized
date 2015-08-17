@@ -23,7 +23,7 @@ from pandac.PandaModules import *
 
 class AIBase:
 	notify = directNotify.newCategory("AIBase")
-	
+
 	def __init__(self):
 		self.config = getConfigShowbase()
 		vfs = VirtualFileSystem.getGlobalPtr()
@@ -66,7 +66,7 @@ class AIBase:
 	def __igLoop(self, state):
 		self.graphicsEngine.renderFrame()
 		return Task.cont
-		
+
 	def destroy(self):
 		self.shutdown()
 
