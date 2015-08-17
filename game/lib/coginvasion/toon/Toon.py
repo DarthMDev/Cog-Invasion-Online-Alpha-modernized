@@ -414,7 +414,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         sleeves.setTexture(loader.loadTexture(sleeve), 1)
         torsot.setColor(shirtcolor)
         sleeves.setColor(sleevecolor)
-        torsob.setColor(shortcolor)
+        torsob.setColor(shortcolor)            
 
     def generateLegs(self):
         legtype = self.getLegs()
