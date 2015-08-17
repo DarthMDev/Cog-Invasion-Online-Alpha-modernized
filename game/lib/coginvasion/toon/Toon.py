@@ -114,7 +114,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             LerpScaleInterval(node, lerpTime, VBase3(1.4, 1.4, 1.4), blendType='easeInOut'),
             LerpScaleInterval(node, lerpTime / 2.0, VBase3(0.8, 0.8, 0.8), blendType='easeInOut'),
             LerpScaleInterval(node, lerpTime / 3.0, origScale, blendType='easeInOut')),
-            ActorInterval(self, 'jump', startTime=0.2), SoundInterval(sound)), name = name)
+            ActorInterval(self, 'happy', startTime=0.2), SoundInterval(sound)), name = name)
         self.track.setDoneEvent(self.track.getName())
         self.acceptOnce(self.track.getDoneEvent(), self.squishDone, [callback, extraArgs])
         self.track.delayDelete = DelayDelete.DelayDelete(self, name)
@@ -446,7 +446,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         sleeves.setTexture(loader.loadTexture(sleeve), 1)
         torsot.setColor(shirtcolor)
         sleeves.setColor(sleevecolor)
-        torsob.setColor(shortcolor)            
+        torsob.setColor(shortcolor)
 
     def generateLegs(self):
         legtype = self.getLegs()
