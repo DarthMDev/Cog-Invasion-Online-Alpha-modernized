@@ -25,11 +25,7 @@ roles:
     - type: clientagent
       bind: 0.0.0.0:7032
       version: "ver-0.9.8"
-<<<<<<< HEAD
       manual_dc_hash: 0xc6fb1221
-=======
-      manual_dc_hash: 0xe8768847
->>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
       client:
        relocate: true
        add_interest: enabled
