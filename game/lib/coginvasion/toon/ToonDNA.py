@@ -79,7 +79,11 @@ class ToonDNA:
         VBase4(0.447058, 0.0, 0.90196, 1.0),
         VBase4(0.3, 0.3, 0.35, 1.0)
     ]
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     clothesColorDNA2clothesColor = {
        '00' : LVecBase4f(0.933594, 0.265625, 0.28125, 1),
        '01' : LVecBase4f(0.863281, 0.40625, 0.417969, 1),
@@ -347,7 +351,11 @@ class ToonDNA:
        '146' : 'phase_4/maps/tt_t_chr_avt_shirt_saveBuilding05.jpg',
        '147' : 'phase_4/maps/tt_t_chr_avt_shirt_anniversary.jpg'
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     sleeveDNA2sleeve = {
        '00' : 'phase_3/maps/desat_sleeve_1.jpg',
        '01' : 'phase_3/maps/desat_sleeve_2.jpg',
@@ -485,7 +493,11 @@ class ToonDNA:
        '133' : 'phase_4/maps/tt_t_chr_avt_shirtSleeve_saveBuilding05.jpg',
        '134' : 'phase_4/maps/tt_t_chr_avt_shirtSleeve_anniversary.jpg'
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     shortDNA2short = {
        '00' : 'phase_3/maps/desat_shorts_1.jpg',
        '01' : 'phase_3/maps/desat_shorts_2.jpg',
@@ -545,7 +557,11 @@ class ToonDNA:
        '55' : 'phase_4/maps/tt_t_chr_avt_shorts_racing04.jpg',
        '56' : 'phase_4/maps/tt_t_chr_avt_shorts_racing05.jpg',
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     skirtDNA2skirt = {
         '00' : ('phase_3/maps/desat_skirt_1.jpg', 1),
         '01' : ('phase_3/maps/desat_skirt_2.jpg', 1),
@@ -610,7 +626,11 @@ class ToonDNA:
         '60' : ('phase_4/maps/tt_t_chr_avt_skirt_racing04.jpg', 1),
         '61' : ('phase_4/maps/tt_t_chr_avt_skirt_racing05.jpg', 1)
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     BoyShorts = ['phase_3/maps/desat_shorts_1.jpg',
      'phase_3/maps/desat_shorts_2.jpg',
      'phase_3/maps/desat_shorts_4.jpg',
@@ -669,10 +689,17 @@ class ToonDNA:
      'phase_4/maps/tt_t_chr_avt_shorts_golf05.jpg',
      'phase_4/maps/tt_t_chr_avt_shorts_racing04.jpg',
      'phase_4/maps/tt_t_chr_avt_shorts_racing05.jpg']
+<<<<<<< HEAD
     
     SHORTS = 0
     SKIRT = 1
     
+=======
+
+    SHORTS = 0
+    SKIRT = 1
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     GirlBottoms = [
      ('phase_3/maps/desat_skirt_1.jpg', SKIRT),
      ('phase_3/maps/desat_skirt_2.jpg', SKIRT),
@@ -736,7 +763,11 @@ class ToonDNA:
      ('phase_4/maps/tt_t_chr_avt_skirt_golf04.jpg', SKIRT),
      ('phase_4/maps/tt_t_chr_avt_skirt_racing04.jpg', SKIRT),
      ('phase_4/maps/tt_t_chr_avt_skirt_racing05.jpg', SKIRT)]
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     BottomStyles = {'bbs1': [0, [0,
               1,
               2,
@@ -1163,7 +1194,11 @@ class ToonDNA:
     'hw_gs6': [55, [27]],
     'hw_gs7': [56, [27]],
     'hw_gsk1': [53, [27]]}
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     MAKE_A_TOON = 1
     TAMMY_TAILOR = 2004
     LONGJOHN_LEROY = 1007
@@ -1173,7 +1208,11 @@ class ToonDNA:
     WORNOUT_WAYLON = 9010
     BOY_SHORTS = 2
     GIRL_BOTTOMS = 3
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     TailorCollections = {MAKE_A_TOON: [['bss1', 'bss2'],
                    ['gss1', 'gss2'],
                    ['bbs1', 'bbs2'],
@@ -1212,7 +1251,11 @@ class ToonDNA:
     shirt2shirtDNA = {v: k for k, v in shirtDNA2shirt.items()}
     sleeve2sleeveDNA = {v: k for k, v in sleeveDNA2sleeve.items()}
     short2shortDNA = {v: k for k, v in shortDNA2short.items()}
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     def getRandomBottom(self, gender, tailorId = MAKE_A_TOON, generator = None, girlBottomType = None):
         if generator == None:
             generator = random
@@ -1232,14 +1275,22 @@ class ToonDNA:
         styleList = self.BottomStyles[style]
         color = generator.choice(styleList[1])
         return (styleList[0], color)
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     def getBottomFromTexture(self, bottomTex, skirt = None):
         texIndex = 0
         if skirt == True:
             for tex, isShorts in self.skirtDNA2skirt.values():
                 if tex == bottomTex:
                     texIndex = self.skirtDNA2skirt.values().index((tex, isShorts))
+<<<<<<< HEAD
         elif skirt == False: 
+=======
+        elif skirt == False:
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
             texIndex = self.BoyShorts.index(bottomTex)
         else:
             bottom = self.getBottom(bottomTex)
@@ -1251,12 +1302,20 @@ class ToonDNA:
             tex = values[0]
             if tex == texIndex:
                 return key
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     def getBottom(self, bottomTex):
         bottoms = []
         bottoms.append(self.GirlBottoms)
         bottoms.append(self.BoyShorts)
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
         for i in range(len(bottoms)):
             bottom = bottoms[i]
             if isinstance(bottom, list):
@@ -1264,7 +1323,11 @@ class ToonDNA:
                     return bottom
             elif bottom == bottomTex:
                 return bottom
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
     def __init__(self):
         self.dnaStrand = "00/00/00/00/00/00/00/00/00/00/00/00/00/00/00"
         self.gender = ""
@@ -1285,6 +1348,12 @@ class ToonDNA:
         self.parseDNAStrand(self.dnaStrand)
         return
     
+    def parseClothesColorIndexToString(self, index):
+        if index < 10:
+            index = '0' + str(index)
+        index = str(index)
+        return index
+
     def parseClothesColorIndexToString(self, index):
         if index < 10:
             index = '0' + str(index)
@@ -1428,6 +1497,13 @@ class ToonDNA:
         except ValueError:
             return False
 
+    def canBeInteger(self, string):
+        try:
+            int(string)
+            return True
+        except ValueError:
+            return False
+
     def parseDNAStrand(self, dnaStrand):
         dnaParts = dnaStrand.split('/')
         strandLength = len(dnaParts) * 2
@@ -1445,7 +1521,11 @@ class ToonDNA:
             self.sleeve = self.sleeveDNA2sleeve[dnaParts[9]]
             if dnaParts[0] == '00':
                 self.shorts = self.shortDNA2short[dnaParts[10]]
+<<<<<<< HEAD
             else:          
+=======
+            else:
+>>>>>>> cd9a9550eeb52159c18367828b7523bf570dec39
                 self.shorts = self.skirtDNA2skirt[dnaParts[10]][0]
             #bottoms = self.BottomStyles.get(self.getBottomFromTexture(self.shorts))
             self.shirtColor = self.clothesColorDNA2clothesColor[dnaParts[11]]

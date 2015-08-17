@@ -90,13 +90,45 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             State('win', self.enterWin, self.exitWin),
             State('walkBack', self.enterWalkBack, self.exitWalkBack),
             State('deadNeutral', self.enterDeadNeutral, self.exitDeadNeutral),
-            State('deadWalk', self.enterDeadWalk, self.exitDeadWalk)],
+            State('deadWalk', self.enterDeadWalk, self.exitDeadWalk),
+            State('squish', self.enterSquish, self.exitSquish)],
             'off', 'off')
         animStateList = self.animFSM.getStates()
         self.animFSM.enterInitialState()
 
         if not hasattr(base, 'localAvatar') or not base.localAvatar == self:
             Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 3, 1)
+
+    def enterSquish(self, ts = 0, callback = None, extraArgs = []):
+        sound = loader.loadSfx('phase_9/audio/sfx/toon_decompress.mp3')
+        lerpTime = 0.1
+        node = self.getGeomNode().getChild(0)
+        origScale = node.getScale()
+        if hasattr(self, 'uniqueName'):
+            name = self.uniqueName('getSquished')
+        else:
+            name = 'getSquished'
+        self.track = Sequence(LerpScaleInterval(node, lerpTime, VBase3(2, 2, 0.025), blendType='easeInOut'),
+            Wait(1.0),
+            Parallel(Sequence(Wait(0.4),
+            LerpScaleInterval(node, lerpTime, VBase3(1.4, 1.4, 1.4), blendType='easeInOut'),
+            LerpScaleInterval(node, lerpTime / 2.0, VBase3(0.8, 0.8, 0.8), blendType='easeInOut'),
+            LerpScaleInterval(node, lerpTime / 3.0, origScale, blendType='easeInOut')),
+            ActorInterval(self, 'jump', startTime=0.2), SoundInterval(sound)), name = name)
+        self.track.setDoneEvent(self.track.getName())
+        self.acceptOnce(self.track.getDoneEvent(), self.squishDone, [callback, extraArgs])
+        self.track.delayDelete = DelayDelete.DelayDelete(self, name)
+        self.track.start(ts)
+
+    def squishDone(self, callback = None, extraArgs = []):
+        self.__doCallback(callback, extraArgs)
+
+    def exitSquish(self):
+        if self.track:
+            self.ignore(self.track.getName())
+            DelayDelete.cleanupDelayDeletes(self.track)
+            self.track.finish()
+            self.track = None
 
     def enterDeadNeutral(self, ts = 0, callback = None, extraArgs = []):
         self.loop('dneutral')

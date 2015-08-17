@@ -15,6 +15,7 @@ from lib.coginvasion.hood.DLHoodAI import DLHoodAI
 from lib.coginvasion.hood.MLHoodAI import MLHoodAI
 from lib.coginvasion.hood.DGHoodAI import DGHoodAI
 from lib.coginvasion.hood.DDHoodAI import DDHoodAI
+from lib.coginvasion.cogtropolis.CTHoodAI import CTHoodAI
 from lib.coginvasion.hood.RecoverHoodAI import RecoverHoodAI
 from panda3d.core import *
 from lib.coginvasion.globals import CIGlobals
@@ -86,6 +87,7 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
         MLHoodAI(self)
         DGHoodAI(self)
         DDHoodAI(self)
+        CTHoodAI(self)
 
         self.notify.info("Setting shard available.")
         self.district.b_setAvailable(1)

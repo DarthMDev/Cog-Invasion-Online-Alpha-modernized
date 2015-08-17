@@ -56,3 +56,5 @@ want-pies #t
 want-chat #t
 
 want-pstats 0
+
+egg-load-old-curves 0

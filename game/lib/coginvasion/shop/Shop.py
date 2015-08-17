@@ -62,6 +62,7 @@ class Shop(StateData):
                 upgrades += 1
             self.upgradesPurchased = True
             base.localAvatar.getMyBattle().getTurretManager().setGag(upgradeID)
+            base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
             base.localAvatar.setPUInventory([upgrades, upgradeID])
             
     def __purchaseGagItem(self, gag, values):
@@ -78,6 +79,7 @@ class Shop(StateData):
                     ammoList.append(supply + 1)
                 else: ammoList.append(bpSupply)
             self.window.showInfo('Purchased a %s' % (name), duration = 3)
+            base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
             base.localAvatar.setBackpackAmmo(gagIds, ammoList)
             base.localAvatar.updateBackpackAmmo()
             
@@ -94,6 +96,7 @@ class Shop(StateData):
             self.healCooldowns.update(healDict)
             self.newHealCooldowns.update(healDict)
             base.taskMgr.doMethodLater(1, self.__doHealCooldown, item, extraArgs = [item], appendTask = True)
+            base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
             
     def __doHealCooldown(self, item, task):
         cooldownData = self.getCooldown(item)
@@ -103,7 +106,8 @@ class Shop(StateData):
             cooldownTime += 1
             self.healCooldowns[item] = [cooldownTime, maxCooldownTime]
             if cooldownTime == maxCooldownTime:
-                del self.healCooldowns[item]
+                if item in self.healCooldowns:
+                    del self.healCooldowns[item]
                 if self.window:
                     self.healCooldownDoneSfx.play()
                 self.update()
@@ -129,13 +133,13 @@ class Shop(StateData):
                 break
         price = values.get('price')
         if self.isAffordable(price):
-            base.localAvatar.setMoney(base.localAvatar.getMoney() - price)
             if itemType == ItemType.GAG:
                 self.__purchaseGagItem(item(), values)
             elif itemType == ItemType.UPGRADE:
                 self.__purchaseUpgradeItem(values)
             elif itemType == ItemType.HEAL:
                 self.__purchaseHealItem(item, values)
+            base.localAvatar.setMoney(base.localAvatar.getMoney() - price)
         self.update()
 
     def update(self):
@@ -181,7 +185,8 @@ class Shop(StateData):
         self.exit()
         for cooldown in self.healCooldowns.keys():
             base.taskMgr.removeTask(cooldown)
-            del self.healCooldowns[cooldown]
+            if cooldown in self.healCooldowns:
+                del self.healCooldowns[cooldown]
 
 class Page(DirectFrame):
 

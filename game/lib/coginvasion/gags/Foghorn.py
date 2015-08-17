@@ -41,7 +41,7 @@ class Foghorn(SoundGag):
         backInstr = self.getScaleBlendIntervals(self.gag, duration=1.0, startScale=instrStretch, endScale=instrMin, blendType='easeIn')
         spinInstr = LerpHprInterval(self.gag, duration=1.5, startHpr=Vec3(145, 0, 0), hpr=Vec3(145, 0, 90), blendType='easeInOut')
         attackTrack = Parallel(Sequence(Wait(0.2), spinInstr), Sequence(stretchInstr, Wait(0.5), backInstr))
-        megaphoneTrack = Sequence(megaphoneSh, Wait(delayTime - 0.75), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
+        megaphoneTrack = Sequence(megaphoneSh, Wait(delayTime - 1), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
         tracks.append(megaphoneTrack)
         tracks.append(ActorInterval(self.avatar, 'sound'))
         soundTrack = Sequence(Wait(delayTime), Parallel(attackTrack, SoundInterval(self.soundSfx, node=self.avatar), Func(self.damageCogsNearby), Wait(0.4), Func(self.finish)))

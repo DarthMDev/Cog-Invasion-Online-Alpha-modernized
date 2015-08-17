@@ -25,9 +25,6 @@ class PixieDust(ToonUpGag):
         return particle
     
     def doPixieDust(self, target):
-        if not target:
-            self.reset()
-            return
         sprayEffect = self.createParticle('pixieSpray')
         dropEffect = self.createParticle('pixieDrop')
         explodeEffect = self.createParticle('pixieExplode')
@@ -46,6 +43,7 @@ class PixieDust(ToonUpGag):
         def doHeal():
             if self.isLocal():
                 self.healAvatar(target, 'conked')
+                base.localAvatar.sendUpdate('gagRelease', [self.getID()])
     
         delay = 2.5
         track = Sequence()
@@ -76,6 +74,8 @@ class PixieDust(ToonUpGag):
             if target:
                 self.doPixieDust(target)
                 self.avatar.sendUpdate('setTarget', [self.getID(), target.doId])
+            else:
+                self.reset()
         
     def setTarget(self, target):
         ToonUpGag.setTarget(self, target)

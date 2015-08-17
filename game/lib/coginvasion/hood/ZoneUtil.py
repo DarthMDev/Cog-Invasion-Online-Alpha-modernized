@@ -4,7 +4,7 @@ def isInInterior(zoneId):
 	return int(str(zoneId)[1:]) >= 500 and int(str(zoneId)[1:]) <= 999
 
 def getWhereName(zoneId):
-	if int(str(zoneId)[1]) == 0:
+	if str(zoneId)[-3:] == '000':
 		return 'playground'
 	elif int(str(zoneId)[1:]) < 400:
 		return 'street'
@@ -57,8 +57,10 @@ def getHoodId(zoneId, street = 0):
 	if street:
 		if str(zoneId)[0] == '1' and len(str(zoneId)) == 4:
 			return DonaldsDock
-		elif str(zoneId)[0] == '1' and len(str(zoneId)) == 5:
+		elif str(zoneId)[:2] == '11' and len(str(zoneId)) == 5:
 			return MinigameArea
+		elif str(zoneId)[:2] == '12' and len(str(zoneId)) == 5:
+			return CogTropolis
 		elif str(zoneId)[0] == '2':
 			return ToontownCentral
 		elif str(zoneId)[0] == '3':
@@ -86,6 +88,8 @@ def getHoodId(zoneId, street = 0):
 			return DaisyGardens
 		elif zoneId == DonaldsDockId:
 			return DonaldsDock
+		elif zoneId == CogTropolisId:
+			return CogTropolis
 
 def getZoneId(hoodId):
 	if hoodId == ToontownCentral:
@@ -104,3 +108,5 @@ def getZoneId(hoodId):
 		return DaisyGardensId
 	elif hoodId == DonaldsDock:
 		return DonaldsDockId
+	elif hoodId == CogTropolis:
+		return CogTropolisId

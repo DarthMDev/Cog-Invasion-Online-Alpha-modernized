@@ -50,6 +50,9 @@ class DropGag(Gag, LocationGag):
         super(DropGag, self).unEquip()
         if self.state != GagState.LOADED:
             self.completeDrop()
+            
+    def onActivate(self, ignore, suit):
+        pass
 
     def buildCollisions(self):
         pass

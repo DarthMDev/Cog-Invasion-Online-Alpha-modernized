@@ -40,7 +40,7 @@ class Aoogah(SoundGag):
         stretchInstr = self.getScaleBlendIntervals(self.gag, duration=0.2, startScale=instrMax, endScale=instrStretch, blendType='easeOut')
         backInstr = self.getScaleBlendIntervals(self.gag, duration=0.2, startScale=instrStretch, endScale=instrMax, blendType='easeInOut')
         attackTrack = Sequence(stretchInstr, Wait(1), backInstr)
-        megaphoneTrack = Sequence(megaphoneSh, Wait(delayTime - 0.5), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
+        megaphoneTrack = Sequence(megaphoneSh, Wait(delayTime - 0.75), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
         tracks.append(megaphoneTrack)
         tracks.append(ActorInterval(self.avatar, 'sound'))
         instrumentshrink = self.getScaleIntervals(self.gag, duration=0.1, startScale=instrMax, endScale=instrMin)

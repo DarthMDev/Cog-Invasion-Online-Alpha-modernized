@@ -9,6 +9,8 @@ import ToonHoodAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.globals import CIGlobals
 
+from lib.coginvasion.cogtropolis import DistributedCityCartAI
+
 class TTHoodAI(ToonHoodAI.ToonHoodAI):
     notify = directNotify.newCategory("TTHoodAI")
     notify.setInfo(True)

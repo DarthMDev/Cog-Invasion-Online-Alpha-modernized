@@ -28,19 +28,18 @@ class Lipstick(ToonUpGag):
         self.setupHandJoints()
         self.build()
         if self.isLocal():
-            self.doLipstick(self.getClosestAvatar(self.radius))
+            target = self.getClosestAvatar(self.radius)
+            if target:
+                self.doLipstick(target)
+                self.avatar.sendUpdate('setTarget', [self.getID(), target.doId])
+            else:
+                self.reset()
         
     def doLipstick(self, target):
         dScale = 0.5
         tLips = 2.5
         animDuration = base.localAvatar.getDuration(self.avAnim)
         tThrow = 115.0 / base.localAvatar.getFrameRate(self.avAnim)
-        
-        if not target:
-            return
-        
-        if self.isLocal():
-            self.avatar.sendUpdate('setTarget', [self.getID(), target.doId])
             
         def doHeal():
             if self.isLocal():

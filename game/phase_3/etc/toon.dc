@@ -57,6 +57,7 @@ from lib.coginvasion.hood import DistributedDoor/AI
 from lib.coginvasion.battle import DistributedPieTurretManager/AI
 from lib.coginvasion.battle import DistributedPieTurret/AI
 from lib.coginvasion.friends import FriendsManager/UD
+from lib.coginvasion.cogtropolis import DistributedCityCart/AI
 
 struct AvChoice {
   uint32 avId;
@@ -509,4 +510,11 @@ dclass FriendsManager : DistributedObject {
   teleportNotify(string);
   requestFriendsList() clsend;
   friendsList(uint32[], string[], int8[]);
+};
+
+dclass DistributedCityCart : DistributedNode {
+  setPathIndex(int8) required broadcast ram;
+  setIvalTDisplace(uint8) required broadcast ram;
+  setState(string, int16) required broadcast ram;
+  hitByCar() clsend airecv;
 };

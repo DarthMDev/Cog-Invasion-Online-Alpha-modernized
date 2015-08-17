@@ -50,7 +50,6 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         hq.find('**/doorFrameHoleRight_0').stash()
         hq.find('**/doorFrameHoleLeft_1').stash()
         hq.find('**/doorFrameHoleRight_1').stash()
-        self.hood.dnaStore.blockDoors['13'].ls()
 
     def unload(self):
         self.telescope.cleanup()

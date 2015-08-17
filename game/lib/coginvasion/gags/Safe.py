@@ -37,7 +37,7 @@ class Safe(DropGag):
             dropShadow = loader.loadModel('phase_3/models/props/drop_shadow.bam')
             dropShadow.reparentTo(render)
             dropShadow.setPos(endPos)
-            shadowTrack = Sequence(LerpScaleInterval(dropShadow, self.fallDuration + 0.1, dropShadow.getScale()*3,
+            shadowTrack = Sequence(LerpScaleInterval(dropShadow, self.fallDuration + 0.1, dropShadow.getScale()*2,
                                 startScale=Point3(0.01, 0.01, 0.01)), Wait(0.3), Func(dropShadow.removeNode))
             Parallel(Sequence(Wait(self.fallDuration), Func(self.completeDrop)), objectTrack, shadowTrack).start()
             self.dropLoc = None

@@ -78,7 +78,7 @@ class TossTrapGag(TrapGag):
         throwPath.setHpr(0, 90, 0)
 
         self.gag.setScale(self.gag.getScale(render))
-        self.gag.reparentTo(render)
+        self.gag.wrtReparentTo(render)
         self.gag.setHpr(throwPath.getHpr(render))
 
         self.setHandJoint()
