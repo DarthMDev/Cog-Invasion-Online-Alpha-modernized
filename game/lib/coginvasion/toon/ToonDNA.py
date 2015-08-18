@@ -1383,7 +1383,7 @@ class ToonDNA:
         legcolor = self.color2colorDNA[self.legcolor]
         shirt = self.shirt2shirtDNA[self.shirt]
         sleeve = self.sleeve2sleeveDNA[self.sleeve]
-        if self.gender[1] != str(1):
+        if gender == 'boy':
             shorts = self.short2shortDNA[self.shorts]
         else:
             shorts = self.skirtDNA2skirt[self.shorts][0]
