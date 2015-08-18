@@ -21,9 +21,9 @@ class ChargeUpSpot(LocationSeeker):
         self.chargedCancelName = 'Charge Canceled'
         self.mouseDownName = 'mouse1-down'
         self.chargingSfxPath = 'phase_4/audio/sfx/MG_sfx_ice_scoring_1.mp3'
-        self.chargingSfx = base.audio3d.loadSfx(self.chargingSfxPath)
+        self.chargingSfx = None
         self.tickSfxPath = 'phase_13/audio/sfx/tick_counter_short.mp3'
-        self.tickSfx = base.audio3d.loadSfx(self.tickSfxPath)
+        self.tickSfx = None
         self.lMouseDn = None
         self.isCharging = False
         self.shadowTrack = None
@@ -31,6 +31,11 @@ class ChargeUpSpot(LocationSeeker):
         self.selectionRadius = selectionRadius
         self.maxCogs = maxCogs
         self.selectedCogs = []
+        self.cleanedUp = False
+        
+        if game.process == 'client':
+            self.chargingSfx = base.audio3d.loadSfx(self.chargingSfxPath)
+            self.tickSfx = base.audio3d.loadSfx(self.tickSfxPath)
 
     def buildShadow(self):
         self.cleanupShadow()
@@ -106,50 +111,53 @@ class ChargeUpSpot(LocationSeeker):
         self.isCharging = True
 
     def onFullCharge(self):
-        LocationSeeker.cleanupShadow(self)
         if self.shadowTrack:
             self.shadowTrack.finish()
             self.shadowTrack = None
-        messenger.send(self.chargedUpName)
+        if len(self.selectedCogs) > 0:
+            messenger.send(self.chargedUpName)
+        else:
+            messenger.send(self.chargedCancelName)
 
     def stopCharging(self):
         self.isCharging = False
         if self.shadowTrack:
             self.shadowTrack.pause()
-        if hasattr(self, 'selectedCogs'):
-            for cog in self.selectedCogs:
-                cog.clearColorScale()
+        for cog in self.selectedCogs:
+            cog.clearColorScale()
         base.taskMgr.remove(self.pollMouseTaskName)
         messenger.send(self.chargedCancelName)
         if hasattr(self, 'lMouseDn'):
             if self.lMouseDn:
                 self.lMouseDn.release()
-        LocationSeeker.cleanupShadow(self)
 
     def cleanup(self):
-        base.audio3d.detachSound(self.chargingSfx)
-        base.audio3d.detachSound(self.tickSfx)
-        self.chargingSfx.stop()
-        self.tickSfx.stop()
-        if self.isCharging:
-            self.stopCharging()
-        if self.shadowTrack:
-            self.shadowTrack.pause()
-            self.shadowTrack = None
-        del self.isCharging
-        del self.mouseDownName
-        del self.pollMouseTaskName
-        del self.chargedUpName
-        del self.chargedCancelName
-        del self.lMouseDn
-        del self.chargingSfx
-        del self.chargingSfxPath
-        del self.tickSfx
-        del self.tickSfxPath
-        del self.selectionRadius
-        del self.selectedCogs
-        del self.maxCogs
-        LocationSeeker.cleanup(self)
+        if hasattr(self, 'maxCogs') and not self.cleanedUp:
+            self.cleanedUp = True
+            LocationSeeker.cleanup(self)
+            if self.chargingSfx and self.tickSfx:
+                base.audio3d.detachSound(self.chargingSfx)
+                base.audio3d.detachSound(self.tickSfx)
+                self.chargingSfx.stop()
+                self.tickSfx.stop()
+            if self.shadowTrack:
+                self.shadowTrack.pause()
+                self.shadowTrack = None
+            if self.isCharging:
+                self.stopCharging()
+            del self.mouseDownName
+            del self.pollMouseTaskName
+            del self.chargedUpName
+            del self.chargedCancelName
+            del self.lMouseDn
+            del self.chargingSfx
+            del self.chargingSfxPath
+            del self.tickSfx
+            del self.tickSfxPath
+            del self.selectionRadius
+            del self.selectedCogs
+            del self.maxCogs
+            print 'Cleaned up'
 
     def __pollMouseHeldDown(self, task):
         if not hasattr(self, 'mouseDownName'):
@@ -157,8 +165,7 @@ class ChargeUpSpot(LocationSeeker):
         if inputState.isSet(self.mouseDownName) and not self.isCharging:
             self.startCharging()
         elif not inputState.isSet(self.mouseDownName) and self.isCharging:
-            if self.selectedCogs == 0:
-                self.stopCharging()
+            self.stopCharging()
         return Task.cont
 
     def getSelectedCogs(self):

@@ -32,7 +32,6 @@ class ChargeUpGag:
         self.selectedCogs = []
         
     def start(self, avatar):
-        self.cleanupChargeUpSpot()
         self.avatar = avatar
         self.buildButton()
         self.button.reparentTo(self.avatar.find('**/def_joint_left_hold'))
@@ -46,9 +45,10 @@ class ChargeUpGag:
             track.append(Func(self.chargeUpSpot.startSeeking))
         track.start()
         
-    def resetGag(self):
+    def resetGag(self, wantButton = 0):
         self.cleanupChargeUpSpot()
-        self.cleanupButton()
+        if not wantButton:
+            self.cleanupButton()
         self.reset()
         if self.isLocal():
             base.localAvatar.enablePieKeys()
@@ -58,14 +58,17 @@ class ChargeUpGag:
         
     def release(self):
         if self.avatar:
-            if not self.chargeUpSpot:
-                return
+            self.avatar.ignore(self.chargeUpSpot.getChargedCanceledName())
             self.selectedCogs = self.chargeUpSpot.getSelectedCogs()
             self.cleanupChargeUpSpot()
             self.buildTracks()
             
     def handleStopCharging(self):
-        self.resetGag()
+        if self.avatar.getBackpack().getSupply(self.getName()) > 0:
+            self.resetGag(wantButton = 1)
+            self.buildTracks()
+        else:
+            self.resetGag(wantButton = 0)
         
     def complete(self):
         numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
@@ -110,13 +113,13 @@ class ChargeUpGag:
             self.button = None
         
     def cleanupChargeUpSpot(self):
-        if self.chargeUpSpot:
-            self.chargeUpSpot.cleanup()
-            self.chargeUpSpot = None
+        if hasattr(self, 'chargeUpSpot'):
+            if self.chargeUpSpot:
+                self.chargeUpSpot.cleanup()
+                self.chargeUpSpot = None
             
     def cleanup(self):
         self.cleanupButton()
-        self.cleanupChargeUpSpot()
         self.buttonSfx.stop()
         del self.buttonSfxPath
         del self.buttonSfx

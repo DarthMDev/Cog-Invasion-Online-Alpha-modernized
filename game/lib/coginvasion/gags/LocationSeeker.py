@@ -137,15 +137,16 @@ class LocationSeeker:
                 self.shadowSphNP = None
             
     def cleanup(self):
-        base.taskMgr.remove(self.moveShadowTaskName)
-        self.avatar.ignore('mouse1')
-        self.cleanupShadow()
-        self.rejectSfx.stop()
-        self.rejectSfx = None
-        self.avatar = None
-        self.dropShadowPath = None
-        self.rejectSoundPath = None
-        self.locationSelectedName = None
-        self.moveShadowTaskName = None
-        del self.shadowScale
+        if self.avatar:
+            base.taskMgr.remove(self.moveShadowTaskName)
+            self.avatar.ignore('mouse1')
+            self.cleanupShadow()
+            self.rejectSfx.stop()
+            self.rejectSfx = None
+            self.avatar = None
+            self.dropShadowPath = None
+            self.rejectSoundPath = None
+            self.locationSelectedName = None
+            self.moveShadowTaskName = None
+            del self.shadowScale
         
