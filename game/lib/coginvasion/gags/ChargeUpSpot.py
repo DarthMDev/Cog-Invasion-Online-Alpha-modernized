@@ -121,7 +121,9 @@ class ChargeUpSpot(LocationSeeker):
                 cog.clearColorScale()
         base.taskMgr.remove(self.pollMouseTaskName)
         messenger.send(self.chargedCancelName)
-        self.lMouseDn.release()
+        if hasattr(self, 'lMouseDn'):
+            if self.lMouseDn:
+                self.lMouseDn.release()
         LocationSeeker.cleanupShadow(self)
         
     def cleanup(self):
