@@ -301,6 +301,8 @@ class CogBrain(DirectObject):
     def __lookForToons(self, task):
         # This is so we wont't have to do a bunch of calculations
         # when we won't even be attacking if we already are.
+        if self.suit.isBackup() or not hasattr(self, 'numAttacksThrown'):
+            return task.done
         if self.suit.getAttacking():
             task.delayTime = 1.0
             return task.again
