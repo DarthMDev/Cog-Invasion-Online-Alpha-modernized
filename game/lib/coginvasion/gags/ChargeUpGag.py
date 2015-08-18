@@ -45,6 +45,12 @@ class ChargeUpGag:
             track.append(Func(self.chargeUpSpot.startSeeking))
         track.start()
         
+    def unEquip(self):
+        self.cleanupButton()
+        self.reset()
+        if self.isLocal():
+            base.localAvatar.enablePieKeys()
+        
     def release(self):
         if self.avatar:
             if not self.chargeUpSpot:
