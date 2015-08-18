@@ -104,6 +104,7 @@ class Geyser(SquirtGag, ChargeUpGag):
                 Wait(0.5),
                 Parallel( 
                      ActorInterval(cog, 'slip-backward', playRate=1.0, startFrame=endFlailFrame),
+                     Func(cog.startRay),
                      Func(handleHit)
                 )
             )
@@ -133,8 +134,4 @@ class Geyser(SquirtGag, ChargeUpGag):
                 self.startEntity(geyser, cog)
                 self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
             base.localAvatar.enablePieKeys()
-        
-    def unEquip(self):
-        ChargeUpGag.cleanupChargeUpSpot(self)
-        SquirtGag.unEquip(self)
         

@@ -123,7 +123,6 @@ class ChargeUpSpot(LocationSeeker):
         messenger.send(self.chargedCancelName)
         self.lMouseDn.release()
         LocationSeeker.cleanupShadow(self)
-        self.handleStopCharging()
         
     def cleanup(self):
         base.audio3d.detachSound(self.chargingSfx)
@@ -156,7 +155,8 @@ class ChargeUpSpot(LocationSeeker):
         if inputState.isSet(self.mouseDownName) and not self.isCharging:
             self.startCharging()
         elif not inputState.isSet(self.mouseDownName) and self.isCharging:
-            self.stopCharging()
+            if self.selectedCogs == 0:
+                self.stopCharging()
         return Task.cont
     
     def getSelectedCogs(self):

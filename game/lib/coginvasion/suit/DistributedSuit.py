@@ -72,6 +72,9 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def d_enableMovement(self):
         self.sendUpdate('enableMovement', [])
         Suit.initializeRay(self, self.avatarType, 2)
+        
+    def startRay(self):
+        Suit.initializeRay(self, self.avatarType, 2)
 
     def setLevel(self, level):
         self.level = level

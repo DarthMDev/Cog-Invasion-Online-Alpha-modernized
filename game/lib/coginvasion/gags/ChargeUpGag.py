@@ -47,6 +47,7 @@ class ChargeUpGag:
         track.start()
         
     def resetGag(self):
+        self.cleanupChargeUpSpot()
         self.cleanupButton()
         self.reset()
         if self.isLocal():
