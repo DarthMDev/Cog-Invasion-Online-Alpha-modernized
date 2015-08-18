@@ -1280,12 +1280,6 @@ class ToonDNA:
         index = str(index)
         return index
 
-    def parseClothesColorIndexToString(self, index):
-        if index < 10:
-            index = '0' + str(index)
-        index = str(index)
-        return index
-
     def getColorByName(self, name):
         name = name.lower()
         color = None
@@ -1379,8 +1373,6 @@ class ToonDNA:
         return 'phase_3.5/audio/dial/AV_' + self.getAnimal() + '_' + noise + '.mp3'
 
     def generateDNAStrandWithCurrentStyle(self):
-        if self.short2shortDNA.index(self.shorts) > 55:
-            self.shorts = self.shorts[0]
         gender = self.gender2genderDNA[self.gender]
         animal = self.animal2animalDNA[self.animal]
         head = self.head2headDNA[self.head]
@@ -1395,16 +1387,6 @@ class ToonDNA:
             shorts = self.short2shortDNA[self.shorts]
         else:
             shorts = self.skirtDNA2skirt[self.shorts][0]
-        """
-        bottoms = self.getBottoms(shorts)
-        torsos = ['dgs_shorts', 'dgs_skirt', 'dgm_shorts', 'dgm_skirt', 'dgl_shorts', 'dgl_skirt']
-        if isinstance(bottoms, list):
-            isSkirt = bottoms[1]
-            if isSkirt and not 'skirt' in torso:
-                torso = torsos.index(torso) + 1
-            elif not isSkirt and not 'shorts' in torso:
-                torso = torsos.index(torso) - 1
-        """
         shirtColor = self.parseClothesColorIndexToString(self.shirtColor)
         sleeveColor = self.parseClothesColorIndexToString(self.sleeveColor)
         shortColor = self.parseClothesColorIndexToString(self.shortColor)
@@ -1415,13 +1397,6 @@ class ToonDNA:
             shorts, shirtColor, sleeveColor, shortColor, gloveColor
             )
         self.setDNAStrand(strand)
-
-    def canBeInteger(self, string):
-        try:
-            int(string)
-            return True
-        except ValueError:
-            return False
 
     def canBeInteger(self, string):
         try:
@@ -1449,18 +1424,9 @@ class ToonDNA:
                 self.shorts = self.shortDNA2short[dnaParts[10]]
             else:
                 self.shorts = self.skirtDNA2skirt[dnaParts[10]][0]
-            #bottoms = self.BottomStyles.get(self.getBottomFromTexture(self.shorts))
             self.shirtColor = self.clothesColorDNA2clothesColor[dnaParts[11]]
             self.sleeveColor = self.clothesColorDNA2clothesColor[dnaParts[12]]
             self.shortColor = self.clothesColorDNA2clothesColor[dnaParts[13]]
             self.gloveColor = self.colorDNA2color[dnaParts[14]]
-            """
-            if len(bottoms[1]) == 1:
-                color = bottoms[1][0]
-                colorStr = str(color)
-                if color < 10:
-                    colorStr = '0' + str(color)
-                self.shortColor = self.clothesColorDNA2clothesColor[colorStr]
-            """
         else:
             self.notify.error("The DNA strand %s is formatted incorrectly." % dnaStrand)
