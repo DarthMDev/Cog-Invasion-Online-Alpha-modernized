@@ -18,6 +18,7 @@ class ChargeUpSpot(LocationSeeker):
         LocationSeeker.__init__(self, avatar, minDistance, maxDistance, shadowScale)
         self.pollMouseTaskName = 'Poll Mouse Hold Downs'
         self.chargedUpName = 'Charged Up'
+        self.chargedCancelName = 'Charge Canceled'
         self.mouseDownName = 'mouse1-down'
         self.chargingSfxPath = 'phase_4/audio/sfx/MG_sfx_ice_scoring_1.mp3'
         self.chargingSfx = base.audio3d.loadSfx(self.chargingSfxPath)
@@ -119,7 +120,10 @@ class ChargeUpSpot(LocationSeeker):
             for cog in self.selectedCogs:
                 cog.clearColorScale()
         base.taskMgr.remove(self.pollMouseTaskName)
+        messenger.send(self.chargedCancelName)
         self.lMouseDn.release()
+        LocationSeeker.cleanupShadow(self)
+        self.handleStopCharging()
         
     def cleanup(self):
         base.audio3d.detachSound(self.chargingSfx)
@@ -135,6 +139,7 @@ class ChargeUpSpot(LocationSeeker):
         del self.mouseDownName
         del self.pollMouseTaskName
         del self.chargedUpName
+        del self.chargedCancelName
         del self.lMouseDn
         del self.chargingSfx
         del self.chargingSfxPath
@@ -159,3 +164,6 @@ class ChargeUpSpot(LocationSeeker):
     
     def getChargedUpName(self):
         return self.chargedUpName
+    
+    def getChargedCanceledName(self):
+        return self.chargedCancelName

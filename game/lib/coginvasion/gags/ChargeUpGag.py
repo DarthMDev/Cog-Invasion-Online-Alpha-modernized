@@ -42,14 +42,18 @@ class ChargeUpGag:
             self.chargeUpSpot = ChargeUpSpot(self.avatar, self.selectionRadius,
                                               self.minDistance, self.maxDistance, self.shadowScale, self.maxCogs)
             self.avatar.acceptOnce(self.chargeUpSpot.getChargedUpName(), base.localAvatar.releaseGag)
+            self.avatar.acceptOnce(self.chargeUpSpot.getChargedCanceledName(), self.handleStopCharging)
             track.append(Func(self.chargeUpSpot.startSeeking))
         track.start()
         
-    def unEquip(self):
+    def resetGag(self):
         self.cleanupButton()
         self.reset()
         if self.isLocal():
             base.localAvatar.enablePieKeys()
+        
+    def unEquip(self):
+        self.resetGag()
         
     def release(self):
         if self.avatar:
@@ -58,6 +62,9 @@ class ChargeUpGag:
             self.selectedCogs = self.chargeUpSpot.getSelectedCogs()
             self.cleanupChargeUpSpot()
             self.buildTracks()
+            
+    def handleStopCharging(self):
+        self.resetGag()
         
     def complete(self):
         numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
