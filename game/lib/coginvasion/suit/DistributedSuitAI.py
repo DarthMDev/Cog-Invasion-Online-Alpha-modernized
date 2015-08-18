@@ -61,6 +61,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.track = None
         self.lateX = 0
         self.lateY = 0
+        self.stateTimestamp = 0
         self.animState2animId = {
             'off': 12,
             'neutral': 9,
@@ -111,15 +112,15 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.endPoint = endPoint
 
     def d_setSuitState(self, index, startPoint, endPoint):
-        timestamp = globalClockDelta.getFrameNetworkTime()
-        self.sendUpdate('setSuitState', [index, startPoint, endPoint, timestamp])
+        self.stateTimestamp = globalClockDelta.getFrameNetworkTime()
+        self.sendUpdate('setSuitState', [index, startPoint, endPoint, self.stateTimestamp])
 
     def b_setSuitState(self, index, startPoint, endPoint):
         self.d_setSuitState(index, startPoint, endPoint)
         self.setSuitState(index, startPoint, endPoint)
 
     def getSuitState(self):
-        return [self.suitState, self.startPoint, self.endPoint]
+        return [self.suitState, self.startPoint, self.endPoint, self.stateTimestamp]
 
 
 

@@ -16,6 +16,7 @@ class DistributedEagleSuitAI(DistributedSuitAI):
 
     def __init__(self, air):
         DistributedSuitAI.__init__(self, air)
+        self.suitState = 1
         self.type = "A"
         self.team = "l"
         self.head = "legaleagle"

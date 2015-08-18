@@ -93,6 +93,13 @@ class DistributedEagleGame(DistributedMinigame):
 		self.fog = None
 		self.platforms = []
 		self.round = 0
+		self.world = None
+		self.worldModelPath = 'phase_5/models/cogdominium/tt_m_ara_cfg_quadrant2.bam'
+		self.nodesToStash = ['lights', 'streamers', 'tt_m_ara_cfg_girders2b:Rwall_col',
+			'tt_m_ara_cfg_girders2b:Lwall_col', 'tt_m_ara_cfg_clump2:col_clump2',
+			'tt_m_ara_cfg_clump4:col_clump4', 'tt_m_ara_cfg_clump5:col_clump5',
+			'tt_m_ara_cfg_clump6:col_clump6', 'tt_m_ara_cfg_clump7:col_clump7',
+			'tt_m_ara_cfg_base:ceiling_collision']
 
 	def allRoundsEnded(self):
 		self.fsm.request('finalScores')
@@ -313,6 +320,15 @@ class DistributedEagleGame(DistributedMinigame):
 		self.setWinnerPrize(60)
 		self.setLoserPrize(20)
 		base.setBackgroundColor(*self.bgColor)
+		self.world = loader.loadModel(self.worldModelPath)
+		for nodeName in self.nodesToStash:
+			node = self.world.find('**/' + nodeName)
+			node.removeNode()
+		self.world.find('**/tt_m_ara_cfg_clump7:clump7').setY(30.0)
+		self.world.find('**/tt_m_ara_cfg_eagleNest:eagleNest_mesh').setY(30.0)
+		self.world.setColorScale(0.75, 0.75, 0.75, 1.0)
+		self.world.reparentTo(base.render)
+		self.world.setZ(-5.0)
 		for i in range(len(self.platformPositions.keys())):
 			platform = loader.loadModel("phase_9/models/cogHQ/platform1.bam")
 			platform.find('**/platformcollision').removeNode()
@@ -343,6 +359,11 @@ class DistributedEagleGame(DistributedMinigame):
 		self.hitEagleSfx = None
 		self.cannonMoveSfx = None
 		self.fallSfx = None
+		if self.world:
+			self.world.removeNode()
+			self.world = None
+		self.worldModelPath = None
+		self.nodesToStash = None
 		self.fog = None
 		self.round = None
 		for platform in self.platforms:

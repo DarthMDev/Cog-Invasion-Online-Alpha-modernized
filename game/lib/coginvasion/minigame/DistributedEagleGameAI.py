@@ -95,6 +95,8 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 		taskMgr.add(self.__eagleSpawner, self.uniqueName("DEagleGameAI-eagleSpawner"))
 
 	def __makeEagle(self):
+		if not self.air:
+			return
 		eagle = DistributedEagleSuitAI(self.air)
 		eagle.setMinigame(self)
 		eagle.generateWithRequired(self.zoneId)
