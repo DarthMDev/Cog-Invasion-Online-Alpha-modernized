@@ -124,7 +124,7 @@ class Geyser(SquirtGag, ChargeUpGag):
             for cog in cogs:
                 geyser = self.buildGeyser()
                 self.startEntity(geyser, cog)
-                self.avatar.b_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
+                self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
             base.localAvatar.enablePieKeys()
         
     def unEquip(self):

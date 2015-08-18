@@ -264,6 +264,9 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
 
     def b_trapActivate(self, gagId, avId, entityId, suitId):
         self.trapActivate(gagId, avId, entityId, suitId)
+        self.d_trapActivate(gagId, avId, entityId, suitId)
+    
+    def d_trapActivate(self, gagId, avId, entityId, suitId):
         self.sendUpdate('trapActivate', [gagId, avId, entityId, suitId])
 
     def gagCollision(self, gagId):
