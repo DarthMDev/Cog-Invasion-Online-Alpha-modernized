@@ -1241,10 +1241,11 @@ class ToonDNA:
             tex = values[0]
             if tex == texIndex:
                 return key
+
     def getBottom(self, bottomTex):
         bottoms = []
-        bottoms.append(self.GirlBottoms)
-        bottoms.append(self.BoyShorts)
+        bottoms.extend(self.GirlBottoms)
+        bottoms.extend(self.BoyShorts)
 
         for i in range(len(bottoms)):
             bottom = bottoms[i]
@@ -1386,7 +1387,7 @@ class ToonDNA:
         if gender == 'boy':
             shorts = self.short2shortDNA[self.shorts]
         else:
-            shorts = self.skirtDNA2skirt[self.shorts][0]
+            shorts = self.getBottom(self.shorts)[0]
         shirtColor = self.parseClothesColorIndexToString(self.shirtColor)
         sleeveColor = self.parseClothesColorIndexToString(self.sleeveColor)
         shortColor = self.parseClothesColorIndexToString(self.shortColor)
