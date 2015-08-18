@@ -96,7 +96,8 @@ class DistributedEagleGame(DistributedMinigame):
 		self.world = None
 		self.worldModelPath = 'phase_5/models/cogdominium/tt_m_ara_cfg_quadrant2.bam'
 		self.nodesToStash = ['lights', 'streamers', 'tt_m_ara_cfg_girders2b:Rwall_col',
-			'tt_m_ara_cfg_girders2b:Lwall_col', 'tt_m_ara_cfg_clump2:col_clump2',
+			'tt_m_ara_cfg_girders2b:Lwall_col']
+		self.triggers = ['tt_m_ara_cfg_clump2:col_clump2',
 			'tt_m_ara_cfg_clump4:col_clump4', 'tt_m_ara_cfg_clump5:col_clump5',
 			'tt_m_ara_cfg_clump6:col_clump6', 'tt_m_ara_cfg_clump7:col_clump7',
 			'tt_m_ara_cfg_base:ceiling_collision']
@@ -335,11 +336,20 @@ class DistributedEagleGame(DistributedMinigame):
 			platform.reparentTo(render)
 			platform.setPos(*self.platformPositions[i])
 			self.platforms.append(platform)
+		for triggerName in self.triggers:
+			trigger = self.world.find('**/' + triggerName)
+			trigger.setCollideMask(CIGlobals.WallBitmask)
+			self.accept('enter' + triggerName, self.__handleHitWall)
 		self.fog = Fog("DEagleGame-sceneFog")
 		self.fog.setColor(*self.bgColor)
 		self.fog.setExpDensity(0.01)
 		render.setFog(self.fog)
 		DistributedMinigame.load(self)
+
+	def __handleHitWall(self, entry):
+		self.toonOof.play()
+		self.hitEagleSfx.play()
+		self.sendUpdate('missedEagle')
 
 	def playMinigameMusic(self):
 		DistributedMinigame.playMinigameMusic(self)
@@ -351,10 +361,13 @@ class DistributedEagleGame(DistributedMinigame):
 		self.load()
 
 	def disable(self):
+		for triggerName in self.triggers:
+			self.ignore('enter' + triggerName)
 		base.localAvatar.createChatInput()
 		camera.reparentTo(render)
 		camera.setPosHpr(0, 0, 0, 0, 0, 0)
 		render.clearFog()
+		self.triggers = None
 		self.toonOof = None
 		self.hitEagleSfx = None
 		self.cannonMoveSfx = None
