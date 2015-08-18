@@ -27,7 +27,6 @@ class Geyser(SquirtGag, ChargeUpGag):
         SquirtGag.start(self)
         ChargeUpGag.start(self, self.avatar)
         
-    @abc.abstractmethod
     def unEquip(self):
         SquirtGag.unEquip(self)
         ChargeUpGag.unEquip(self)
