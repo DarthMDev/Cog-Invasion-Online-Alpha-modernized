@@ -24,6 +24,11 @@ game/settings.json
 game/uno_test.py
 game/mss'.py
 game/ct-test.py
+game/lib/coginvasioncxx/*.obj
+game/lib/coginvasioncxx/*.pyd
+game/lib/coginvasioncxx/*.dll
+game/lib/coginvasioncxx/*.lib
+game/lib/coginvasioncxx/*.exp
 *.yaml
 *.bat
 .project

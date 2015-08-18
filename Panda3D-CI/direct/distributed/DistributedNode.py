@@ -1,6 +1,6 @@
 """DistributedNode module: contains the DistributedNode class"""
 
-from pandac.PandaModules import NodePath, ModelPool, TexturePool
+from pandac.PandaModules import NodePath
 from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
 import GridParent
@@ -38,8 +38,6 @@ class DistributedNode(DistributedObject.DistributedObject, NodePath):
                 self.removeNode()
             if self.gridParent:
                 self.gridParent.delete()
-            ModelPool.garbageCollect()
-            TexturePool.garbageCollect()
             DistributedObject.DistributedObject.delete(self)
 
     def generate(self):

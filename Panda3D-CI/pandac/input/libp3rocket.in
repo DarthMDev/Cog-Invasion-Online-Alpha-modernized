@@ -1,4 +1,4 @@
-1428765693
+1439924882
 2 3
 11 libp3rocket 4 KHbU 14 panda3d.rocket 
 11
@@ -8,8 +8,8 @@
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-68
-RocketInputHandler::RocketInputHandler(string const &name = ((())));
+70
+RocketInputHandler::RocketInputHandler(string const &name = string());
 
 14 14 get_rocket_key 0 4 24 34 RocketInputHandler::get_rocket_key 0 1 2 352
 ////////////////////////////////////////////////////////////////////

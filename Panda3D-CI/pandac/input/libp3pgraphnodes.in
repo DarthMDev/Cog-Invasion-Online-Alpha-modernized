@@ -1,4 +1,4 @@
-1428718647
+1439923842
 2 3
 16 libp3pgraphnodes 4 Bgt0 12 panda3d.core 
 164
@@ -40,8 +40,8 @@ virtual void LightNode::output(ostream &out) const;
 //       Access: Public, Virtual
 //  Description:
 ////////////////////////////////////////////////////////////////////
-74
-virtual void LightNode::write(ostream &out, int indent_level = (0)) const;
+72
+virtual void LightNode::write(ostream &out, int indent_level = 0) const;
 
 159 14 get_class_type 0 4 317 25 LightNode::get_class_type 0 1 3 0
 50
@@ -339,9 +339,9 @@ inline bool LightLensNode::is_shadow_caster(void);
 //               Note that enabling shadows will require the shader
 //               generator to be enabled on the scene.
 ////////////////////////////////////////////////////////////////////
-171
+169
 inline void LightLensNode::set_shadow_caster(bool caster);
-inline void LightLensNode::set_shadow_caster(bool caster, int buffer_xsize, int buffer_ysize, int sort = (-10));
+inline void LightLensNode::set_shadow_caster(bool caster, int buffer_xsize, int buffer_ysize, int sort = -10);
 
 187 17 get_shadow_buffer 0 4 324 32 LightLensNode::get_shadow_buffer 0 1 28 497
 ////////////////////////////////////////////////////////////////////
@@ -374,8 +374,8 @@ virtual void LightLensNode::output(ostream &out) const;
 //       Access: Public, Virtual
 //  Description:
 ////////////////////////////////////////////////////////////////////
-78
-virtual void LightLensNode::write(ostream &out, int indent_level = (0)) const;
+76
+virtual void LightLensNode::write(ostream &out, int indent_level = 0) const;
 
 190 14 get_class_type 0 4 324 29 LightLensNode::get_class_type 0 1 31 0
 54
@@ -1046,7 +1046,7 @@ SequenceNode::~SequenceNode(void);
 91
 ShaderGenerator::ShaderGenerator(GraphicsStateGuardianBase *gsg, GraphicsOutputBase *host);
 
-257 17 synthesize_shader 0 6 335 34 ShaderGenerator::synthesize_shader 0 1 96 1419
+257 17 synthesize_shader 0 6 335 34 ShaderGenerator::synthesize_shader 0 1 96 1448
 ////////////////////////////////////////////////////////////////////
 //     Function: ShaderGenerator::synthesize_shader
 //       Access: Published, Virtual
@@ -1072,6 +1072,7 @@ ShaderGenerator::ShaderGenerator(GraphicsStateGuardianBase *gsg, GraphicsOutputB
 //               - texmatrix
 //               - 1D/2D/3D textures, cube textures, 2D tex arrays
 //               - linear/exp/exp2 fog
+//               - animation
 //
 //               Not yet supported:
 //               - dot3_rgb and dot3_rgba combine modes
@@ -1080,8 +1081,8 @@ ShaderGenerator::ShaderGenerator(GraphicsStateGuardianBase *gsg, GraphicsOutputB
 //               - omit attenuation calculations if attenuation off
 //
 ////////////////////////////////////////////////////////////////////
-97
-virtual ConstPointerTo< ShaderAttrib > ShaderGenerator::synthesize_shader(RenderState const *rs);
+134
+virtual ConstPointerTo< ShaderAttrib > ShaderGenerator::synthesize_shader(RenderState const *rs, GeomVertexAnimationSpec const &anim);
 
 258 14 get_class_type 0 4 335 31 ShaderGenerator::get_class_type 0 1 97 0
 56
@@ -1380,8 +1381,8 @@ void SceneGraphAnalyzer::add_node(PandaNode *node);
 //       Access: Published
 //  Description: Describes all the data collected.
 ////////////////////////////////////////////////////////////////////
-75
-void SceneGraphAnalyzer::write(ostream &out, int indent_level = (0)) const;
+73
+void SceneGraphAnalyzer::write(ostream &out, int indent_level = 0) const;
 
 289 13 get_num_nodes 0 4 340 33 SceneGraphAnalyzer::get_num_nodes 0 1 125 233
 ////////////////////////////////////////////////////////////////////
@@ -2196,7 +2197,7 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               The parameter that must be passed is the GSG to
 //               which the shader generator belongs.
 //////////////////////////////////////////////////////////////////// 2 3 gsg 1 369  4 host 1 371  
-96 0 0 7 125 424 0 0 1419 ////////////////////////////////////////////////////////////////////
+96 0 0 7 125 427 0 0 1448 ////////////////////////////////////////////////////////////////////
 //     Function: ShaderGenerator::synthesize_shader
 //       Access: Published, Virtual
 //  Description: This is the routine that implements the next-gen
@@ -2221,6 +2222,7 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               - texmatrix
 //               - 1D/2D/3D textures, cube textures, 2D tex arrays
 //               - linear/exp/exp2 fog
+//               - animation
 //
 //               Not yet supported:
 //               - dot3_rgb and dot3_rgba combine modes
@@ -2228,9 +2230,9 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               Potential optimizations
 //               - omit attenuation calculations if attenuation off
 //
-//////////////////////////////////////////////////////////////////// 2 4 this 3 418  2 rs 1 421  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 418  2 rs 1 421  4 anim 1 424  
 97 0 0 7 126 349 0 0 0 0 
-98 0 0 7 128 425 265 0 221 ////////////////////////////////////////////////////////////////////
+98 0 0 7 128 428 265 0 221 ////////////////////////////////////////////////////////////////////
 //     Function: Spotlight::Constructor
 //       Access: Published
 //  Description:
@@ -2245,13 +2247,13 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               being lighted, raised to the power of this exponent.
 //               Thus, higher exponents result in a more focused light
 //               source, regardless of the field-of-view of the lens.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 425  8 exponent 1 392  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 428  8 exponent 1 392  
 100 0 0 4 130 346 0 0 304 ////////////////////////////////////////////////////////////////////
 //     Function: Spotlight::set_specular_color
 //       Access: Public
 //  Description: Sets the color of specular highlights generated by
 //               the light.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 425  5 color 1 376  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 428  5 color 1 376  
 101 0 0 4 131 346 0 0 447 ////////////////////////////////////////////////////////////////////
 //     Function: Spotlight::set_attenuation
 //       Access: Public
@@ -2259,8 +2261,8 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               light.  These are, in order, the constant, linear,
 //               and quadratic terms based on the distance from the
 //               point to the vertex.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 425  11 attenuation 1 406  
-102 0 0 7 132 428 0 0 1015 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 2 4 this 3 428  11 attenuation 1 406  
+102 0 0 7 132 431 0 0 1015 ////////////////////////////////////////////////////////////////////
 //     Function: Spotlight::make_spot
 //       Access: Published, Static
 //  Description: Returns a newly-generated Texture that renders a
@@ -2277,9 +2279,9 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               fully bright center spot, and fg and bg are the
 //               colors of the interior and exterior of the spot,
 //               respectively.
-//////////////////////////////////////////////////////////////////// 4 11 pixel_width 1 347  11 full_radius 1 392  2 fg 1 427  2 bg 1 427  
+//////////////////////////////////////////////////////////////////// 4 11 pixel_width 1 347  11 full_radius 1 392  2 fg 1 430  2 bg 1 430  
 103 0 0 7 133 349 0 0 0 0 
-104 0 0 7 136 429 270 0 222 ////////////////////////////////////////////////////////////////////
+104 0 0 7 136 432 270 0 222 ////////////////////////////////////////////////////////////////////
 //     Function: SwitchNode::Constructor
 //       Access: Published
 //  Description:
@@ -2289,19 +2291,19 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //       Access: Published
 //  Description: Specifies the particular child of this node, by
 //               index, that will be visible.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 429  5 index 1 347  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 432  5 index 1 347  
 106 0 0 6 138 347 0 0 292 ////////////////////////////////////////////////////////////////////
 //     Function: SwitchNode::get_visible_child
 //       Access: Published, Virtual
 //  Description: Returns the index of the child that should be visible.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 430  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 433  
 107 0 0 7 139 349 0 0 0 0 
-108 0 0 7 142 432 281 0 221 ////////////////////////////////////////////////////////////////////
+108 0 0 7 142 435 281 0 221 ////////////////////////////////////////////////////////////////////
 //     Function: UvScrollNode::Constructor
 //       Access: Public
 //  Description:
 //////////////////////////////////////////////////////////////////// 1 4 name 1 353  
-109 0 0 7 142 432 281 0 221 ////////////////////////////////////////////////////////////////////
+109 0 0 7 142 435 281 0 221 ////////////////////////////////////////////////////////////////////
 //     Function: UvScrollNode::Constructor
 //       Access: Public
 //  Description:
@@ -2310,44 +2312,44 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //     Function: UvScrollNode::set_u_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 4 this 3 432  7 u_speed 1 392  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 435  7 u_speed 1 392  
 111 0 0 4 144 346 0 0 224 ////////////////////////////////////////////////////////////////////
 //     Function: UvScrollNode::set_v_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 4 this 3 432  7 v_speed 1 392  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 435  7 v_speed 1 392  
 112 0 0 4 145 346 0 0 224 ////////////////////////////////////////////////////////////////////
 //     Function: UvScrollNode::set_w_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 4 this 3 432  7 w_speed 1 392  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 435  7 w_speed 1 392  
 113 0 0 4 146 346 0 0 224 ////////////////////////////////////////////////////////////////////
 //     Function: UvScrollNode::set_r_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 4 this 3 432  7 r_speed 1 392  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 435  7 r_speed 1 392  
 114 0 0 6 147 392 0 0 225 ////////////////////////////////////////////////////////////////////
 //     Function: UvSctrollNode::get_u_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 4 this 3 433  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
 115 0 0 6 148 392 0 0 224 ////////////////////////////////////////////////////////////////////
 //     Function: UvScrollNode::get_v_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 4 this 3 433  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
 116 0 0 6 149 392 0 0 224 ////////////////////////////////////////////////////////////////////
 //     Function: UvScrollNode::get_w_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 4 this 3 433  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
 117 0 0 6 150 392 0 0 225 ////////////////////////////////////////////////////////////////////
 //     Function: UvSctrollNode::get_r_speed
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 4 this 3 433  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
 118 0 0 7 151 349 0 0 0 0 
-119 0 0 7 154 435 283 0 230 ////////////////////////////////////////////////////////////////////
+119 0 0 7 154 438 283 0 230 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::Constructor
 //       Access: Published
 //  Description:
@@ -2356,18 +2358,18 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //     Function: SceneGraphAnalyzer::set_lod_mode
 //       Access: Published
 //  Description: Specifies the mode in which LODNodes are analyzed.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 435  8 lod_mode 1 341  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 438  8 lod_mode 1 341  
 121 0 0 6 158 341 0 0 280 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_lod_mode
 //       Access: Published
 //  Description: Returns the mode in which LODNodes are analyzed.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 436  8 lod_mode 1 341  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 439  8 lod_mode 1 341  
 122 0 0 4 159 346 0 0 310 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::clear
 //       Access: Published
 //  Description: Resets all of the data in the analyzer in preparation
 //               for a new run.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 435  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 438  
 123 0 0 4 160 346 0 0 522 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::add_node
 //       Access: Published
@@ -2376,153 +2378,153 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               the top of the scene graph, but it's possible to
 //               repeatedly pass in subgraphs to get an analysis of
 //               all the graphs together.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 435  4 node 1 352  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 438  4 node 1 352  
 124 0 0 4 161 346 0 0 258 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::write
 //       Access: Published
 //  Description: Describes all the data collected.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 436  3 out 1 344  12 indent_level 1 347  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 439  3 out 1 344  12 indent_level 1 347  
 125 0 0 6 162 347 0 0 233 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_nodes
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 126 0 0 6 163 347 0 0 237 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_instances
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 127 0 0 6 164 347 0 0 238 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_transforms
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 128 0 0 6 165 347 0 0 246 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_nodes_with_attribs
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 129 0 0 6 166 347 0 0 237 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_lod_nodes
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 130 0 0 6 167 347 0 0 238 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_geom_nodes
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 131 0 0 6 168 347 0 0 233 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_geoms
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 132 0 0 6 169 347 0 0 245 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_geom_vertex_datas
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 133 0 0 6 170 347 0 0 247 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_geom_vertex_formats
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 134 0 0 6 171 347 0 0 240 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_vertex_data_size
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 135 0 0 6 172 347 0 0 236 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_vertices
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 136 0 0 6 173 347 0 0 235 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_normals
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 137 0 0 6 174 347 0 0 234 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_colors
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 138 0 0 6 175 347 0 0 237 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_texcoords
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 139 0 0 6 176 347 0 0 232 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_tris
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 140 0 0 6 177 347 0 0 233 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_lines
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 141 0 0 6 178 347 0 0 234 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_points
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 142 0 0 6 179 347 0 0 235 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_patches
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 143 0 0 6 180 347 0 0 243 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_individual_tris
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 144 0 0 6 181 347 0 0 237 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_tristrips
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 145 0 0 6 182 347 0 0 247 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_triangles_in_strips
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 146 0 0 6 183 347 0 0 235 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_trifans
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 147 0 0 6 184 347 0 0 245 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_triangles_in_fans
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 148 0 0 6 185 347 0 0 247 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_vertices_in_patches
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 149 0 0 6 186 347 0 0 237 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_texture_bytes
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 150 0 0 6 187 347 0 0 240 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_long_normals
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 151 0 0 6 188 347 0 0 241 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_num_short_normals
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
 152 0 0 6 189 392 0 0 243 ////////////////////////////////////////////////////////////////////
 //     Function: SceneGraphAnalyzer::get_total_normal_length
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 436  
-121
+//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
+124
 317 9 LightNode 0 141313 9 LightNode 9 LightNode 0 0 0 0 160 0 3 157 158 159 0 0 2 3 318 153 154 3 319 155 156 0 0 360
 ////////////////////////////////////////////////////////////////////
 //       Class : LightNode
@@ -2541,7 +2543,7 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               effect.
 ////////////////////////////////////////////////////////////////////
 
-319 9 PandaNode 0 2049 9 PandaNode 9 PandaNode 0 0 0 0 0 0 0 3 438 439 440 0 0 0 0 374
+319 9 PandaNode 0 2049 9 PandaNode 9 PandaNode 0 0 0 0 0 0 0 3 441 442 443 0 0 0 0 374
 ////////////////////////////////////////////////////////////////////
 //       Class : PandaNode
 // Description : A basic node of the scene graph or data graph.  This
@@ -2565,7 +2567,7 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               user code, either during the cull or draw traversals.
 ////////////////////////////////////////////////////////////////////
 
-322 11 ComputeNode 0 141313 11 ComputeNode 11 ComputeNode 0 0 0 1 173 179 0 5 174 175 176 177 178 1 441 0 1 0 319 0 0 0 0 325
+322 11 ComputeNode 0 141313 11 ComputeNode 11 ComputeNode 0 0 0 1 173 179 0 5 174 175 176 177 178 1 444 0 1 0 319 0 0 0 0 325
 ////////////////////////////////////////////////////////////////////
 //       Class : ComputeNode
 // Description : A special node, the sole purpose of which is to
@@ -2586,7 +2588,7 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               serves no purpose unless shadows are enabled.
 ////////////////////////////////////////////////////////////////////
 
-325 6 Camera 0 2049 6 Camera 6 Camera 0 0 0 0 0 0 0 1 442 0 0 0 0 320
+325 6 Camera 0 2049 6 Camera 6 Camera 0 0 0 0 0 0 0 1 445 0 0 0 0 320
 ////////////////////////////////////////////////////////////////////
 //       Class : Camera
 // Description : A node that can be positioned around in the scene
@@ -2601,7 +2603,7 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               particular direction, like sunlight.
 ////////////////////////////////////////////////////////////////////
 
-327 7 LODNode 0 141313 7 LODNode 7 LODNode 0 0 0 1 199 222 0 22 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 2 443 444 0 1 0 319 0 0 0 0 404
+327 7 LODNode 0 141313 7 LODNode 7 LODNode 0 0 0 1 199 222 0 22 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 2 446 447 0 1 0 319 0 0 0 0 404
 ////////////////////////////////////////////////////////////////////
 //       Class : LODNode
 // Description : A Level-of-Detail node.  This selects only one of its
@@ -2853,7 +2855,7 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 
 369 27 GraphicsStateGuardianBase * 0 8576 27 GraphicsStateGuardianBase * 27 GraphicsStateGuardianBase * 0 0 370 0 0 0 0 0 0 0 0 0 0
 
-370 25 GraphicsStateGuardianBase 0 2048 25 GraphicsStateGuardianBase 25 GraphicsStateGuardianBase 0 0 0 0 0 0 0 1 445 0 0 0 0 957
+370 25 GraphicsStateGuardianBase 0 2048 25 GraphicsStateGuardianBase 25 GraphicsStateGuardianBase 0 0 0 0 0 0 0 1 448 0 0 0 0 957
 ////////////////////////////////////////////////////////////////////
 //       Class : GraphicsStateGuardianBase
 // Description : This is a base class for the GraphicsStateGuardian
@@ -3045,11 +3047,33 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               new one.
 ////////////////////////////////////////////////////////////////////
 
-424 20 ShaderAttrib const * 0 8576 20 ShaderAttrib const * 20 ShaderAttrib const * 0 0 419 0 0 0 0 0 0 0 0 0 0
+424 31 GeomVertexAnimationSpec const * 0 8576 31 GeomVertexAnimationSpec const * 31 GeomVertexAnimationSpec const * 0 0 425 0 0 0 0 0 0 0 0 0 0
 
-425 11 Spotlight * 0 8576 11 Spotlight * 11 Spotlight * 0 0 337 0 0 0 0 0 0 0 0 0 0
+425 29 GeomVertexAnimationSpec const 0 8832 29 GeomVertexAnimationSpec const 29 GeomVertexAnimationSpec const 0 0 426 0 0 0 0 0 0 0 0 0 0
 
-426 7 Texture 0 2048 7 Texture 7 Texture 0 0 0 0 0 0 0 0 0 0 0 0 1051
+426 23 GeomVertexAnimationSpec 0 2048 23 GeomVertexAnimationSpec 23 GeomVertexAnimationSpec 0 0 0 0 0 0 0 0 0 0 0 0 881
+////////////////////////////////////////////////////////////////////
+//       Class : GeomVertexAnimationSpec
+// Description : This object describes how the vertex animation, if
+//               any, represented in a GeomVertexData is encoded.
+//
+//               Vertex animation includes soft-skinned skeleton
+//               animation and morphs (blend shapes), and might be
+//               performed on the CPU by Panda, or passed down to the
+//               graphics backed to be performed on the hardware
+//               (depending on the hardware's advertised
+//               capabilities).
+//
+//               Changing this setting doesn't by itself change the
+//               way the animation is actually performed; this just
+//               specifies how the vertices are set up to be animated.
+////////////////////////////////////////////////////////////////////
+
+427 20 ShaderAttrib const * 0 8576 20 ShaderAttrib const * 20 ShaderAttrib const * 0 0 419 0 0 0 0 0 0 0 0 0 0
+
+428 11 Spotlight * 0 8576 11 Spotlight * 11 Spotlight * 0 0 337 0 0 0 0 0 0 0 0 0 0
+
+429 7 Texture 0 2048 7 Texture 7 Texture 0 0 0 0 0 0 0 0 0 0 0 0 1051
 ////////////////////////////////////////////////////////////////////
 //       Class : Texture
 // Description : Represents a texture object, which is typically a
@@ -3069,36 +3093,36 @@ inline PN_stdfloat SceneGraphAnalyzer::get_total_normal_length(void) const;
 //               system RAM image is automatically freed.
 ////////////////////////////////////////////////////////////////////
 
-427 8 LColor * 0 8576 8 LColor * 8 LColor * 0 0 378 0 0 0 0 0 0 0 0 0 0
+430 8 LColor * 0 8576 8 LColor * 8 LColor * 0 0 378 0 0 0 0 0 0 0 0 0 0
 
-428 9 Texture * 0 8576 9 Texture * 9 Texture * 0 0 426 0 0 0 0 0 0 0 0 0 0
+431 9 Texture * 0 8576 9 Texture * 9 Texture * 0 0 429 0 0 0 0 0 0 0 0 0 0
 
-429 12 SwitchNode * 0 8576 12 SwitchNode * 12 SwitchNode * 0 0 338 0 0 0 0 0 0 0 0 0 0
+432 12 SwitchNode * 0 8576 12 SwitchNode * 12 SwitchNode * 0 0 338 0 0 0 0 0 0 0 0 0 0
 
-430 18 SwitchNode const * 0 8576 18 SwitchNode const * 18 SwitchNode const * 0 0 431 0 0 0 0 0 0 0 0 0 0
+433 18 SwitchNode const * 0 8576 18 SwitchNode const * 18 SwitchNode const * 0 0 434 0 0 0 0 0 0 0 0 0 0
 
-431 16 SwitchNode const 0 8832 16 SwitchNode const 16 SwitchNode const 0 0 338 0 0 0 0 0 0 0 0 0 0
+434 16 SwitchNode const 0 8832 16 SwitchNode const 16 SwitchNode const 0 0 338 0 0 0 0 0 0 0 0 0 0
 
-432 14 UvScrollNode * 0 8576 14 UvScrollNode * 14 UvScrollNode * 0 0 339 0 0 0 0 0 0 0 0 0 0
+435 14 UvScrollNode * 0 8576 14 UvScrollNode * 14 UvScrollNode * 0 0 339 0 0 0 0 0 0 0 0 0 0
 
-433 20 UvScrollNode const * 0 8576 20 UvScrollNode const * 20 UvScrollNode const * 0 0 434 0 0 0 0 0 0 0 0 0 0
+436 20 UvScrollNode const * 0 8576 20 UvScrollNode const * 20 UvScrollNode const * 0 0 437 0 0 0 0 0 0 0 0 0 0
 
-434 18 UvScrollNode const 0 8832 18 UvScrollNode const 18 UvScrollNode const 0 0 339 0 0 0 0 0 0 0 0 0 0
+437 18 UvScrollNode const 0 8832 18 UvScrollNode const 18 UvScrollNode const 0 0 339 0 0 0 0 0 0 0 0 0 0
 
-435 20 SceneGraphAnalyzer * 0 8576 20 SceneGraphAnalyzer * 20 SceneGraphAnalyzer * 0 0 340 0 0 0 0 0 0 0 0 0 0
+438 20 SceneGraphAnalyzer * 0 8576 20 SceneGraphAnalyzer * 20 SceneGraphAnalyzer * 0 0 340 0 0 0 0 0 0 0 0 0 0
 
-436 26 SceneGraphAnalyzer const * 0 8576 26 SceneGraphAnalyzer const * 26 SceneGraphAnalyzer const * 0 0 437 0 0 0 0 0 0 0 0 0 0
+439 26 SceneGraphAnalyzer const * 0 8576 26 SceneGraphAnalyzer const * 26 SceneGraphAnalyzer const * 0 0 440 0 0 0 0 0 0 0 0 0 0
 
-437 24 SceneGraphAnalyzer const 0 8832 24 SceneGraphAnalyzer const 24 SceneGraphAnalyzer const 0 0 340 0 0 0 0 0 0 0 0 0 0
+440 24 SceneGraphAnalyzer const 0 8832 24 SceneGraphAnalyzer const 24 SceneGraphAnalyzer const 0 0 340 0 0 0 0 0 0 0 0 0 0
 
 0
 0
 8
-438 0 0 5 11 get_parents 15 get_num_parents 10 get_parent 
-439 0 0 5 12 get_children 16 get_num_children 9 get_child 
-440 0 0 5 11 get_stashed 15 get_num_stashed 11 get_stashed 
-441 0 0 26 14 get_dispatches 18 get_num_dispatches 12 get_dispatch 
-442 0 0 38 19 get_display_regions 23 get_num_display_regions 18 get_display_region 
-443 0 0 57 7 get_ins 16 get_num_switches 6 get_in 
-444 0 0 57 8 get_outs 16 get_num_switches 7 get_out 
-445 0 0 250 8 get_gsgs 12 get_num_gsgs 7 get_gsg 
+441 0 0 5 11 get_parents 15 get_num_parents 10 get_parent 
+442 0 0 5 12 get_children 16 get_num_children 9 get_child 
+443 0 0 5 11 get_stashed 15 get_num_stashed 11 get_stashed 
+444 0 0 26 14 get_dispatches 18 get_num_dispatches 12 get_dispatch 
+445 0 0 38 19 get_display_regions 23 get_num_display_regions 18 get_display_region 
+446 0 0 57 7 get_ins 16 get_num_switches 6 get_in 
+447 0 0 57 8 get_outs 16 get_num_switches 7 get_out 
+448 0 0 250 8 get_gsgs 12 get_num_gsgs 7 get_gsg 

@@ -1,4 +1,4 @@
-1428762566
+1439924408
 2 3
 9 libp3text 4 z_GL 12 panda3d.core 
 361
@@ -354,8 +354,8 @@ DynamicTextFont *FreetypeFont::downcast_to_DynamicTextFont(void);
 //       Access: Published
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-239
-DynamicTextFont::DynamicTextFont(Filename const &font_filename, int face_index = (0));
+237
+DynamicTextFont::DynamicTextFont(Filename const &font_filename, int face_index = 0);
 DynamicTextFont::DynamicTextFont(char const *font_data, int data_length, int face_index);
 DynamicTextFont::DynamicTextFont(DynamicTextFont const &copy);
 
@@ -1052,8 +1052,8 @@ static TypeHandle GeomTextGlyph::get_class_type(void);
 //               was generated.  "up" in this coordinate system will
 //               be the direction of the top of the letters.
 ////////////////////////////////////////////////////////////////////
-90
-StaticTextFont::StaticTextFont(PandaNode *font_def, CoordinateSystem cs = (::CS_default));
+88
+StaticTextFont::StaticTextFont(PandaNode *font_def, CoordinateSystem cs = ::CS_default);
 
 478 14 get_class_type 0 4 753 30 StaticTextFont::get_class_type 0 1 99 0
 55
@@ -1960,8 +1960,8 @@ void TextProperties::add_properties(TextProperties const &other);
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-71
-void TextProperties::write(ostream &out, int indent_level = (0)) const;
+69
+void TextProperties::write(ostream &out, int indent_level = 0) const;
 
 566 14 get_class_type 0 4 754 30 TextProperties::get_class_type 0 1 190 0
 55
@@ -2213,8 +2213,8 @@ void TextPropertiesManager::clear_graphic(string const &name);
 //       Access: Published
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-78
-void TextPropertiesManager::write(ostream &out, int indent_level = (0)) const;
+76
+void TextPropertiesManager::write(ostream &out, int indent_level = 0) const;
 
 585 14 get_global_ptr 0 4 757 37 TextPropertiesManager::get_global_ptr 0 1 211 325
 ////////////////////////////////////////////////////////////////////
@@ -4024,8 +4024,8 @@ virtual void TextNode::output(ostream &out) const;
 //       Access: Published, Virtual
 //  Description:
 ////////////////////////////////////////////////////////////////////
-73
-virtual void TextNode::write(ostream &out, int indent_level = (0)) const;
+71
+virtual void TextNode::write(ostream &out, int indent_level = 0) const;
 
 725 8 get_left 0 4 759 18 TextNode::get_left 0 1 358 472
 // The following functions return information about the text that
@@ -7325,7 +7325,7 @@ static TypeHandle TextNode::get_class_type(void);
 //               vectors and points.
 ////////////////////////////////////////////////////////////////////
 
-804 6 Format 0 794624 15 Texture::Format 15 Texture::Format 747 0 0 0 0 0 0 0 0 0 41 15 F_depth_stencil 24 Texture::F_depth_stencil 0
+804 6 Format 0 794624 15 Texture::Format 15 Texture::Format 747 0 0 0 0 0 0 0 0 0 42 15 F_depth_stencil 24 Texture::F_depth_stencil 0
 1 13 F_color_index 22 Texture::F_color_index 0
 2 5 F_red 14 Texture::F_red 0
 3 7 F_green 16 Texture::F_green 0
@@ -7388,7 +7388,9 @@ static TypeHandle TextNode::get_class_type(void);
 // 8 integer bits per R,G,B channel
 40 8 F_rgba8i 17 Texture::F_rgba8i 37
 // 8 integer bits per R,G,B,A channel
-41 0 0
+41 13 F_r11_g11_b10 22 Texture::F_r11_g11_b10 58
+// unsigned floating-point, 11 Red, 11 Green, 10 Blue Bits
+42 0 0
 
 805 14 FreetypeFont * 0 8576 14 FreetypeFont * 14 FreetypeFont * 0 0 749 0 0 0 0 0 0 0 0 0 0
 

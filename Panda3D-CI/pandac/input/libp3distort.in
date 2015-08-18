@@ -1,4 +1,4 @@
-1428765815
+1439924915
 2 3
 12 libp3distort 4 2YN4 10 panda3d.fx 
 65
@@ -60,8 +60,8 @@ FisheyeLens::~FisheyeLens(void);
 //       Access: Protected
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-62
-ProjectionScreen::ProjectionScreen(string const &name = (""));
+60
+ProjectionScreen::ProjectionScreen(string const &name = "");
 
 70 13 set_projector 0 4 131 31 ProjectionScreen::set_projector 0 1 6 681
 ////////////////////////////////////////////////////////////////////

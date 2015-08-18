@@ -1,4 +1,4 @@
-1428725043
+1439924178
 2 3
 9 libp3char 4 uMZI 12 panda3d.core 
 45
@@ -526,8 +526,8 @@ static TypeHandle Character::get_class_type(void);
 //               CharacterJointBundle directly.  The Character node
 //               will automatically create one for itself.
 ////////////////////////////////////////////////////////////////////
-70
-CharacterJointBundle::CharacterJointBundle(string const &name = (""));
+68
+CharacterJointBundle::CharacterJointBundle(string const &name = "");
 
 86 8 get_node 0 4 102 30 CharacterJointBundle::get_node 0 1 42 302
 ////////////////////////////////////////////////////////////////////

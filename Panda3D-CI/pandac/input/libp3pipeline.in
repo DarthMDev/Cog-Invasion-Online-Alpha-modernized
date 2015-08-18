@@ -1,4 +1,4 @@
-1428711289
+1439923551
 2 3
 13 libp3pipeline 4 kd_i 12 panda3d.core 
 116
@@ -1396,8 +1396,8 @@ static TypeHandle PythonThread::get_class_type(void);
 //       Access: Private
 //  Description: Do not attempt to copy semaphores.
 ////////////////////////////////////////////////////////////////////
-53
-inline Semaphore::Semaphore(int initial_count = (1));
+51
+inline Semaphore::Semaphore(int initial_count = 1);
 
 223 10 ~Semaphore 0 4 249 21 Semaphore::~Semaphore 0 0 221
 ////////////////////////////////////////////////////////////////////

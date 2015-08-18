@@ -1,4 +1,4 @@
-1428714297
+1439923666
 2 3
 12 libp3gsgbase 4 Oe1b 12 panda3d.core 
 23
@@ -15,8 +15,8 @@ static TypeHandle DisplayRegionBase::get_class_type(void);
 virtual void GraphicsOutputBase::set_sort(int sort) = 0;
 
 25 11 get_texture 0 6 47 31 GraphicsOutputBase::get_texture 0 1 4 0
-72
-virtual Texture *GraphicsOutputBase::get_texture(int i = (0)) const = 0;
+70
+virtual Texture *GraphicsOutputBase::get_texture(int i = 0) const = 0;
 
 26 14 get_class_type 0 4 47 34 GraphicsOutputBase::get_class_type 0 1 5 0
 59

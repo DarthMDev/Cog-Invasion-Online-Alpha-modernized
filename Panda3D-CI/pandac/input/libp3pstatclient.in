@@ -1,4 +1,4 @@
-1428717776
+1439923709
 2 3
 16 libp3pstatclient 4 __OL 12 panda3d.core 
 69
@@ -220,7 +220,7 @@ inline double PStatClient::get_real_time(void) const;
 //               failure.
 ////////////////////////////////////////////////////////////////////
 90
-static inline bool PStatClient::connect(string const &hostname = ((())), int port = (-1));
+static inline bool PStatClient::connect(string const &hostname = string(), int port = -1);
 
 104 10 disconnect 0 4 150 23 PStatClient::disconnect 0 1 19 276
 ////////////////////////////////////////////////////////////////////
@@ -376,9 +376,9 @@ static PStatClient *PStatClient::get_global_pstats(void);
 //       Access: Public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-198
+196
 inline PStatThread::PStatThread(PStatClient *client, int index);
-inline PStatThread::PStatThread(Thread *thread, PStatClient *client = (0));
+inline PStatThread::PStatThread(Thread *thread, PStatClient *client = 0);
 inline PStatThread::PStatThread(PStatThread const &copy);
 
 117 10 operator = 0 4 154 23 PStatThread::operator = 0 1 38 0
@@ -503,8 +503,8 @@ PStatThread::~PStatThread(void);
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-241
-inline PStatCollector::PStatCollector(string const &name, PStatClient *client = (0));
+239
+inline PStatCollector::PStatCollector(string const &name, PStatClient *client = 0);
 inline PStatCollector::PStatCollector(PStatCollector const &parent, string const &name);
 inline PStatCollector::PStatCollector(PStatCollector const &copy);
 

@@ -19,6 +19,7 @@
 #include "typedReferenceCount.h"
 #include "typeHandle.h"
 #include "eggTable.h"
+#include "epvector.h"
 
 #include "pre_fcollada_include.h"
 #include "FCollada.h"

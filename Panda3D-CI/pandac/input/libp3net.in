@@ -1,4 +1,4 @@
-1428717703
+1439923698
 2 3
 8 libp3net 4 7xrj 12 panda3d.core 
 173
@@ -11,8 +11,8 @@ inline void PointerToBase< Connection >::clear(void);
 void PointerToBase< Connection >::output(ostream &out) const;
 
 177 9 PointerTo 0 4 348 34 PointerTo< Connection >::PointerTo 0 2 1 2 0
-161
-inline PointerTo< Connection >::PointerTo(Connection *ptr = ((Connection *)(0)));
+159
+inline PointerTo< Connection >::PointerTo(Connection *ptr = (Connection *)(0));
 inline PointerTo< Connection >::PointerTo(PointerTo< Connection > const &copy);
 
 178 10 ~PointerTo 0 4 348 35 PointerTo< Connection >::~PointerTo 0 0 0
@@ -728,9 +728,9 @@ virtual ConnectionManager::~ConnectionManager(void);
 //               Use a ConnectionReader and ConnectionWriter to handle
 //               the actual communication.
 ////////////////////////////////////////////////////////////////////
-203
-PointerTo< Connection > ConnectionManager::open_UDP_connection(int port = (0));
-PointerTo< Connection > ConnectionManager::open_UDP_connection(string const &hostname, int port, bool for_broadcast = (0));
+199
+PointerTo< Connection > ConnectionManager::open_UDP_connection(int port = 0);
+PointerTo< Connection > ConnectionManager::open_UDP_connection(string const &hostname, int port, bool for_broadcast = 0);
 
 244 26 open_TCP_server_rendezvous 0 4 358 45 ConnectionManager::open_TCP_server_rendezvous 0 3 71 72 73 2577
 ////////////////////////////////////////////////////////////////////
@@ -971,8 +971,8 @@ ConnectionManager::Interface const &ConnectionManager::get_interface(int n);
 //               immediately instead of queueing for later
 //               transmission by a thread.
 ////////////////////////////////////////////////////////////////////
-116
-ConnectionWriter::ConnectionWriter(ConnectionManager *manager, int num_threads, string const &thread_name = ((())));
+118
+ConnectionWriter::ConnectionWriter(ConnectionManager *manager, int num_threads, string const &thread_name = string());
 
 265 17 ~ConnectionWriter 0 4 360 35 ConnectionWriter::~ConnectionWriter 0 0 224
 ////////////////////////////////////////////////////////////////////
@@ -1054,9 +1054,9 @@ int ConnectionWriter::get_current_queue_size(void) const;
 //               send queue is filled; instead, it will wait until
 //               there is space available.
 ////////////////////////////////////////////////////////////////////
-258
-bool ConnectionWriter::send(Datagram const &datagram, PointerTo< Connection > const &connection, bool block = (0));
-bool ConnectionWriter::send(Datagram const &datagram, PointerTo< Connection > const &connection, NetAddress const &address, bool block = (0));
+254
+bool ConnectionWriter::send(Datagram const &datagram, PointerTo< Connection > const &connection, bool block = 0);
+bool ConnectionWriter::send(Datagram const &datagram, PointerTo< Connection > const &connection, NetAddress const &address, bool block = 0);
 
 270 16 is_valid_for_udp 0 4 360 34 ConnectionWriter::is_valid_for_udp 0 1 99 339
 ////////////////////////////////////////////////////////////////////
@@ -1825,25 +1825,25 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               should not be used directly by user code; use one of
 //               the methods in ConnectionManager to make a new
 //               connection.
-//////////////////////////////////////////////////////////////////// 2 7 manager 1 397  6 socket 1 398  
+//////////////////////////////////////////////////////////////////// 2 7 manager 1 398  6 socket 1 399  
 28 0 0 7 33 384 199 0 312 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::get_address
 //       Access: Published
 //  Description: Returns the address bound to this connection, if it
 //               is a TCP connection.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 400  
-29 0 0 6 34 397 0 0 318 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 401  
+29 0 0 6 34 398 0 0 318 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::get_manager
 //       Access: Published
 //  Description: Returns a pointer to the ConnectionManager object
 //               that serves this connection.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 400  
-30 0 0 6 35 398 0 0 298 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 401  
+30 0 0 6 35 399 0 0 298 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::get_socket
 //       Access: Published
 //  Description: Returns the internal Socket_IP that defines the
 //               connection.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 400  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 401  
 31 0 0 4 36 378 0 0 1146 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::set_collect_tcp
 //       Access: Published
@@ -1870,7 +1870,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //       Access: Published
 //  Description: Returns the current setting of "collect-tcp" mode.
 //               See set_collect_tcp().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 400  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 401  
 33 0 0 4 38 378 0 0 518 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::set_collect_tcp_interval
 //       Access: Published
@@ -1879,8 +1879,8 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               recently received packets at once.  This only has
 //               meaning if "collect-tcp" mode is enabled; see
 //               set_collect_tcp().
-//////////////////////////////////////////////////////////////////// 2 4 this 3 373  8 interval 1 402  
-34 0 0 6 39 402 0 0 516 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 2 4 this 3 373  8 interval 1 403  
+34 0 0 6 39 403 0 0 516 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::get_collect_tcp_interval
 //       Access: Published
 //  Description: Returns the interval in time, in seconds, for which
@@ -1888,7 +1888,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               recently received packets at once.  This only has
 //               meaning if "collect-tcp" mode is enabled; see
 //               set_collect_tcp().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 400  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 401  
 35 0 0 6 40 377 0 0 400 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::consider_flush
 //       Access: Published
@@ -1914,7 +1914,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               data when you close the socket.  If flag is false but
 //               time is nonzero, the system waits up to time seconds
 //               to deliver the data.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 373  4 flag 1 377  4 time 1 402  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 373  4 flag 1 377  4 time 1 403  
 38 0 0 4 43 378 0 0 270 ////////////////////////////////////////////////////////////////////
 //     Function: Connection::set_reuse_addr
 //       Access: Published
@@ -1973,7 +1973,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               add_connection() is thread-safe, and may be called at
 //               will by any thread.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 403  10 connection 1 373  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 404  10 connection 1 373  
 47 0 0 6 54 377 0 0 561 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::remove_connection
 //       Access: Published
@@ -1984,7 +1984,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               remove_connection() is thread-safe, and may be called
 //               at will by any thread.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 403  10 connection 1 373  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 404  10 connection 1 373  
 48 0 0 6 55 377 0 0 658 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::is_connection_ok
 //       Access: Published
@@ -1995,7 +1995,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               there was an error condition, normally the
 //               ConnectionManager would have been informed and closed
 //               the connection.)
-//////////////////////////////////////////////////////////////////// 2 4 this 3 403  10 connection 1 373  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 404  10 connection 1 373  
 49 0 0 4 56 378 0 0 628 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::poll
 //       Access: Published
@@ -2007,25 +2007,25 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               It is not necessary to call this explicitly for a
 //               QueuedConnectionReader.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 403  
-50 0 0 6 57 397 0 0 330 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 404  
+50 0 0 6 57 398 0 0 330 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::get_manager
 //       Access: Published
 //  Description: Returns a pointer to the ConnectionManager object
 //               that serves this ConnectionReader.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 404  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 405  
 51 0 0 6 58 377 0 0 316 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::is_polling
 //       Access: Published
 //  Description: Returns true if the reader is a polling reader,
 //               i.e. it has no threads.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 404  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 405  
 52 0 0 6 59 388 0 0 323 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::get_num_threads
 //       Access: Published
 //  Description: Returns the number of threads the ConnectionReader
 //               has been created with.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 404  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 405  
 53 0 0 4 60 378 0 0 606 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::set_raw_mode
 //       Access: Published
@@ -2036,13 +2036,13 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               This is similar to set_tcp_header_size(0), except that it
 //               also turns off headers for UDP packets.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 403  4 mode 1 377  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 404  4 mode 1 377  
 54 0 0 6 61 377 0 0 316 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::get_raw_mode
 //       Access: Published
 //  Description: Returns the current setting of the raw mode flag.
 //               See set_raw_mode().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 404  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 405  
 55 0 0 4 62 378 0 0 555 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::set_tcp_header_size
 //       Access: Published
@@ -2051,63 +2051,63 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               the number of bytes to use encode the datagram length
 //               at the start of each TCP datagram.  Sender and
 //               receiver must independently agree on this.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 403  15 tcp_header_size 1 388  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 404  15 tcp_header_size 1 388  
 56 0 0 6 63 388 0 0 328 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::get_tcp_header_size
 //       Access: Published
 //  Description: Returns the current setting of TCP header size.
 //               See set_tcp_header_size().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 404  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 405  
 57 0 0 4 64 378 0 0 392 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionReader::shutdown
 //       Access: Published
 //  Description: Terminates all threads cleanly.  Normally this is
 //               only called by the destructor, but it may be called
 //               explicitly before destruction.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 403  
-58 0 0 7 69 406 240 0 250 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 404  
+58 0 0 7 69 407 240 0 250 ////////////////////////////////////////////////////////////////////
 //     Function: NetDatagram::Constructor
 //       Access: Public
 //  Description: Constructs an empty datagram.
 //////////////////////////////////////////////////////////////////// 0 
-59 0 0 7 69 406 240 0 225 ////////////////////////////////////////////////////////////////////
+59 0 0 7 69 407 240 0 225 ////////////////////////////////////////////////////////////////////
 //     Function: NetDatagram::Copy Constructor
 //       Access: Public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 407  
-60 0 0 7 69 406 240 0 225 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 408  
+60 0 0 7 69 407 240 0 225 ////////////////////////////////////////////////////////////////////
 //     Function: NetDatagram::Copy Constructor
 //       Access: Public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 409  
-61 0 0 6 70 406 0 0 0 2 4 this 3 406  4 copy 1 407  
-62 0 0 6 70 406 0 0 0 2 4 this 3 406  4 copy 1 409  
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 410  
+61 0 0 6 70 407 0 0 0 2 4 this 3 407  4 copy 1 408  
+62 0 0 6 70 407 0 0 0 2 4 this 3 407  4 copy 1 410  
 63 0 0 4 71 378 0 0 302 ////////////////////////////////////////////////////////////////////
 //     Function: NetDatagram::set_connection
 //       Access: Public
 //  Description: Specifies the socket to which the datagram should be
 //               written.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 406  10 connection 1 373  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 407  10 connection 1 373  
 64 0 0 7 72 373 0 0 338 ////////////////////////////////////////////////////////////////////
 //     Function: NetDatagram::set_connection
 //       Access: Public
 //  Description: Retrieves the socket from which the datagram was
 //               read, or to which it is scheduled to be written.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 409  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 410  
 65 0 0 4 73 378 0 0 294 ////////////////////////////////////////////////////////////////////
 //     Function: NetDatagram::set_address
 //       Access: Public
 //  Description: Specifies the host to which the datagram should be
 //               sent.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 406  7 address 1 390  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 407  7 address 1 390  
 66 0 0 6 74 390 0 0 330 ////////////////////////////////////////////////////////////////////
 //     Function: NetDatagram::set_address
 //       Access: Public
 //  Description: Retrieves the host from which the datagram was
 //               read, or to which it is scheduled to be sent.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 409  
-67 0 0 7 75 412 0 0 0 0 
-68 0 0 7 78 397 242 0 229 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 410  
+67 0 0 7 75 413 0 0 0 0 
+68 0 0 7 78 398 242 0 229 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::Constructor
 //       Access: Published
 //  Description:
@@ -2123,7 +2123,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               Use a ConnectionReader and ConnectionWriter to handle
 //               the actual communication.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 397  4 port 1 388  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 398  4 port 1 388  
 70 0 0 7 80 373 0 0 1115 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::open_UDP_connection
 //       Access: Published
@@ -2144,7 +2144,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               Use a ConnectionReader and ConnectionWriter to handle
 //               the actual communication.
-//////////////////////////////////////////////////////////////////// 4 4 this 3 397  8 hostname 1 389  4 port 1 388  13 for_broadcast 1 377  
+//////////////////////////////////////////////////////////////////// 4 4 this 3 398  8 hostname 1 389  4 port 1 388  13 for_broadcast 1 377  
 71 0 0 7 81 373 0 0 794 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::open_TCP_server_rendezvous
 //       Access: Published
@@ -2160,7 +2160,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               backlog is the maximum length of the queue of pending
 //               connections.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 397  7 address 1 390  7 backlog 1 388  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 398  7 address 1 390  7 backlog 1 388  
 72 0 0 7 81 373 0 0 790 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::open_TCP_server_rendezvous
 //       Access: Published
@@ -2176,7 +2176,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               backlog is the maximum length of the queue of pending
 //               connections.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 397  4 port 1 388  7 backlog 1 388  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 398  4 port 1 388  7 backlog 1 388  
 73 0 0 7 81 373 0 0 989 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::open_TCP_server_rendezvous
 //       Access: Published
@@ -2195,7 +2195,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 //               backlog is the maximum length of the queue of pending
 //               connections.
-//////////////////////////////////////////////////////////////////// 4 4 this 3 397  8 hostname 1 389  4 port 1 388  7 backlog 1 388  
+//////////////////////////////////////////////////////////////////// 4 4 this 3 398  8 hostname 1 389  4 port 1 388  7 backlog 1 388  
 74 0 0 7 82 373 0 0 480 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::open_TCP_client_connection
 //       Access: Published
@@ -2203,14 +2203,14 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               server at the indicated address.  If the connection
 //               is not established within timeout_ms milliseconds, a
 //               null connection is returned.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 397  7 address 1 390  10 timeout_ms 1 388  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 398  7 address 1 390  10 timeout_ms 1 388  
 75 0 0 7 82 373 0 0 385 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::open_TCP_client_connection
 //       Access: Published
 //  Description: This is a shorthand version of the function to
 //               directly establish communications to a named host and
 //               port.
-//////////////////////////////////////////////////////////////////// 4 4 this 3 397  8 hostname 1 389  4 port 1 388  10 timeout_ms 1 388  
+//////////////////////////////////////////////////////////////////// 4 4 this 3 398  8 hostname 1 389  4 port 1 388  10 timeout_ms 1 388  
 76 0 0 6 83 377 0 0 1093 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::close_connection
 //       Access: Published
@@ -2229,7 +2229,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               to this ConnectionManager).  In neither case can you
 //               infer anything about whether the connection has
 //               *actually* been closed yet based on the return value.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 397  10 connection 1 373  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 398  10 connection 1 373  
 77 0 0 6 84 377 0 0 1081 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::wait_for_readers
 //       Access: Published
@@ -2249,7 +2249,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               threaded ConnectionReaders are part of the
 //               ConnectionManager, the timeout value is implicitly
 //               treated as 0.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 397  7 timeout 1 402  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 398  7 timeout 1 403  
 78 0 0 6 85 389 0 0 405 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::get_host_name
 //       Access: Published, Static
@@ -2265,7 +2265,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               necessary to call this explicitly, unless you want to
 //               re-determine the connected interfaces (for instance,
 //               if you suspect the hardware has recently changed).
-//////////////////////////////////////////////////////////////////// 1 4 this 3 397  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 398  
 80 0 0 6 100 388 0 0 463 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::get_num_interfaces
 //       Access: Published
@@ -2273,31 +2273,31 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               detected on this machine.  (Currently, only IPv4
 //               interfaces are reported.)  See scan_interfaces() to
 //               repopulate this list.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 397  
-81 0 0 6 101 413 0 0 446 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 398  
+81 0 0 6 101 414 0 0 446 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::get_interface
 //       Access: Published
 //  Description: Returns the nth usable network interface detected on
 //               this machine.  (Currently, only IPv4 interfaces are
 //               reported.)  See scan_interfaces() to repopulate this
 //               list.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 397  1 n 1 388  
-82 0 0 6 87 389 0 0 0 1 4 this 3 413  
-83 0 0 6 88 389 0 0 0 1 4 this 3 413  
-84 0 0 6 89 377 0 0 0 1 4 this 3 413  
-85 0 0 6 90 390 0 0 0 1 4 this 3 413  
-86 0 0 6 91 377 0 0 0 1 4 this 3 413  
-87 0 0 6 92 390 0 0 0 1 4 this 3 413  
-88 0 0 6 93 377 0 0 0 1 4 this 3 413  
-89 0 0 6 94 390 0 0 0 1 4 this 3 413  
-90 0 0 6 95 377 0 0 0 1 4 this 3 413  
-91 0 0 6 96 390 0 0 0 1 4 this 3 413  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 398  1 n 1 388  
+82 0 0 6 87 389 0 0 0 1 4 this 3 414  
+83 0 0 6 88 389 0 0 0 1 4 this 3 414  
+84 0 0 6 89 377 0 0 0 1 4 this 3 414  
+85 0 0 6 90 390 0 0 0 1 4 this 3 414  
+86 0 0 6 91 377 0 0 0 1 4 this 3 414  
+87 0 0 6 92 390 0 0 0 1 4 this 3 414  
+88 0 0 6 93 377 0 0 0 1 4 this 3 414  
+89 0 0 6 94 390 0 0 0 1 4 this 3 414  
+90 0 0 6 95 377 0 0 0 1 4 this 3 414  
+91 0 0 6 96 390 0 0 0 1 4 this 3 414  
 92 0 0 4 97 378 0 0 236 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionManager::Interface::Output
 //       Access: Published
 //  Description: 
-//////////////////////////////////////////////////////////////////// 2 4 this 3 413  3 out 1 382  
-93 0 0 7 103 415 265 0 498 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 2 4 this 3 414  3 out 1 382  
+93 0 0 7 103 416 265 0 498 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::Constructor
 //       Access: Public
 //  Description: Creates a new ConnectionWriter with the indicated
@@ -2306,7 +2306,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               If num_threads is 0, all datagrams will be sent
 //               immediately instead of queueing for later
 //               transmission by a thread.
-//////////////////////////////////////////////////////////////////// 3 7 manager 1 397  11 num_threads 1 388  11 thread_name 1 389  
+//////////////////////////////////////////////////////////////////// 3 7 manager 1 398  11 num_threads 1 388  11 thread_name 1 389  
 94 0 0 4 105 378 0 0 460 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::set_max_queue_size
 //       Access: Public
@@ -2314,18 +2314,18 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               the outbound queue.  This only has an effect when
 //               using threads; if num_threads is 0, then all packets
 //               are sent immediately.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 415  8 max_size 1 388  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 416  8 max_size 1 388  
 95 0 0 6 106 388 0 0 334 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::get_max_queue_size
 //       Access: Public
 //  Description: Returns the maximum size the queue is allowed to grow
 //               to.  See set_max_queue_size().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 417  
 96 0 0 6 107 388 0 0 287 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::get_current_queue_size
 //       Access: Public
 //  Description: Returns the current number of things in the queue.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 417  
 97 0 0 6 108 377 0 0 1005 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::send
 //       Access: Public
@@ -2344,7 +2344,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               If block is true, this will not return false if the
 //               send queue is filled; instead, it will wait until
 //               there is space available.
-//////////////////////////////////////////////////////////////////// 5 4 this 3 415  8 datagram 1 407  10 connection 1 373  7 address 1 390  5 block 1 377  
+//////////////////////////////////////////////////////////////////// 5 4 this 3 416  8 datagram 1 408  10 connection 1 373  7 address 1 390  5 block 1 377  
 98 0 0 6 108 377 0 0 999 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::send
 //       Access: Public
@@ -2363,31 +2363,31 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               If block is true, this will not return false if the
 //               send queue is filled; instead, it will wait until
 //               there is space available.
-//////////////////////////////////////////////////////////////////// 4 4 this 3 415  8 datagram 1 407  10 connection 1 373  5 block 1 377  
+//////////////////////////////////////////////////////////////////// 4 4 this 3 416  8 datagram 1 408  10 connection 1 373  5 block 1 377  
 99 0 0 6 109 377 0 0 339 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::is_valid_for_udp
 //       Access: Public
 //  Description: Returns true if the datagram is small enough to be
 //               sent over a UDP packet, false otherwise.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 416  8 datagram 1 407  
-100 0 0 6 110 397 0 0 327 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 2 4 this 3 417  8 datagram 1 408  
+100 0 0 6 110 398 0 0 327 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::get_manager
 //       Access: Public
 //  Description: Returns a pointer to the ConnectionManager object
 //               that serves this ConnectionWriter.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 417  
 101 0 0 6 111 377 0 0 318 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::is_immediate
 //       Access: Public
 //  Description: Returns true if the writer is an immediate writer,
 //               i.e. it has no threads.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 417  
 102 0 0 6 112 388 0 0 320 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::get_num_threads
 //       Access: Public
 //  Description: Returns the number of threads the ConnectionWriter
 //               has been created with.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 417  
 103 0 0 4 113 378 0 0 789 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::set_raw_mode
 //       Access: Public
@@ -2401,13 +2401,13 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               ConnectionReader is also set to raw mode, or when the
 //               ConnectionWriter is communicating to a process that
 //               does not expect datagrams.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 415  4 mode 1 377  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 416  4 mode 1 377  
 104 0 0 6 114 377 0 0 313 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::get_raw_mode
 //       Access: Public
 //  Description: Returns the current setting of the raw mode flag.
 //               See set_raw_mode().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 417  
 105 0 0 4 115 378 0 0 552 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::set_tcp_header_size
 //       Access: Public
@@ -2416,21 +2416,21 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               the number of bytes to use encode the datagram length
 //               at the start of each TCP datagram.  Sender and
 //               receiver must independently agree on this.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 415  15 tcp_header_size 1 388  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 416  15 tcp_header_size 1 388  
 106 0 0 6 116 388 0 0 325 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::get_tcp_header_size
 //       Access: Public
 //  Description: Returns the current setting of TCP header size.
 //               See set_tcp_header_size().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 417  
 107 0 0 4 117 378 0 0 402 ////////////////////////////////////////////////////////////////////
 //     Function: ConnectionWriter::shutdown
 //       Access: Published
 //  Description: Stops all the threads and cleans them up.  This is
 //               called automatically by the destructor, but it may be
 //               called explicitly before destruction.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 415  
-108 0 0 7 132 418 291 0 527 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 416  
+108 0 0 7 132 419 291 0 527 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramGeneratorNet::Constructor
 //       Access: Published
 //  Description: Creates a new DatagramGeneratorNet with the indicated
@@ -2438,38 +2438,38 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               num_threads should be either 0 or 1 to guarantee that
 //               datagrams are generated in the same order in which
 //               they were received.
-//////////////////////////////////////////////////////////////////// 2 7 manager 1 397  11 num_threads 1 388  
+//////////////////////////////////////////////////////////////////// 2 7 manager 1 398  11 num_threads 1 388  
 109 0 0 6 134 377 0 0 415 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramGeneratorNet::get_datagram
 //       Access: Published, Virtual
 //  Description: Reads the next datagram from the stream.  Blocks
 //               until a datagram is available.  Returns true on
 //               success, false on stream closed or error.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 418  4 data 1 419  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 419  4 data 1 420  
 110 0 0 6 135 377 0 0 393 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramGeneratorNet::is_eof
 //       Access: Published, Virtual
 //  Description: Returns true if the stream has been closed normally.
 //               This test may only be made after a call to
 //               get_datagram() has failed.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 418  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 419  
 111 0 0 6 136 377 0 0 289 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramGeneratorNet::is_error
 //       Access: Published, Virtual
 //  Description: Returns true if the stream has an error condition.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 418  
-112 0 0 6 120 420 0 0 0 1 4 this 3 418  
-113 0 0 6 121 418 0 0 0 1 4 this 3 420  
-114 0 0 6 122 403 0 0 0 1 4 this 3 418  
-115 0 0 6 123 418 0 0 0 1 4 this 3 403  
-116 0 0 6 130 421 0 0 0 1 4 this 3 418  
-117 0 0 6 131 418 0 0 0 1 4 this 3 421  
-118 0 0 4 125 378 0 0 0 2 4 this 3 421  8 max_size 1 388  
-119 0 0 6 126 388 0 0 0 1 4 this 3 422  
-120 0 0 6 127 388 0 0 0 1 4 this 3 422  
-121 0 0 6 128 377 0 0 0 1 4 this 3 422  
-122 0 0 4 129 378 0 0 0 1 4 this 3 421  
-123 0 0 7 143 424 305 0 512 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 419  
+112 0 0 6 120 421 0 0 0 1 4 this 3 419  
+113 0 0 6 121 419 0 0 0 1 4 this 3 421  
+114 0 0 6 122 404 0 0 0 1 4 this 3 419  
+115 0 0 6 123 419 0 0 0 1 4 this 3 404  
+116 0 0 6 130 422 0 0 0 1 4 this 3 419  
+117 0 0 6 131 419 0 0 0 1 4 this 3 422  
+118 0 0 4 125 378 0 0 0 2 4 this 3 422  8 max_size 1 388  
+119 0 0 6 126 388 0 0 0 1 4 this 3 423  
+120 0 0 6 127 388 0 0 0 1 4 this 3 423  
+121 0 0 6 128 377 0 0 0 1 4 this 3 423  
+122 0 0 4 129 378 0 0 0 1 4 this 3 422  
+123 0 0 7 143 425 305 0 512 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramSinkNet::Constructor
 //       Access: Published
 //  Description: Creates a new DatagramSinkNet with the indicated
@@ -2477,54 +2477,54 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               num_threads should be either 0 or 1 to guarantee that
 //               datagrams are delivered in the same order in which
 //               they were sent.
-//////////////////////////////////////////////////////////////////// 2 7 manager 1 397  11 num_threads 1 388  
+//////////////////////////////////////////////////////////////////// 2 7 manager 1 398  11 num_threads 1 388  
 124 0 0 4 144 378 0 0 313 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramSinkNet::set_target
 //       Access: Published
 //  Description: Specifies the Connection that will receive all future
 //               Datagrams sent.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 424  10 connection 1 373  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 425  10 connection 1 373  
 125 0 0 7 145 373 0 0 345 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramSinkNet::get_target
 //       Access: Published
 //  Description: Returns the current target Connection, or NULL if the
 //               target has not yet been set.  See set_target().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 425  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 426  
 126 0 0 6 146 377 0 0 413 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramSinkNet::put_datagram
 //       Access: Published, Virtual
 //  Description: Sends the given datagram to the target.  Returns true
 //               on success, false if there is an error.  Blocks if
 //               necessary until the target is ready.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 424  4 data 1 407  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 425  4 data 1 408  
 127 0 0 6 147 377 0 0 347 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramSinkNet::is_error
 //       Access: Published, Virtual
 //  Description: Returns true if there is an error on the target
 //               connection, or if the target has never been set.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 424  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 425  
 128 0 0 4 148 378 0 0 321 ////////////////////////////////////////////////////////////////////
 //     Function: DatagramSinkNet::flush
 //       Access: Public, Virtual
 //  Description: Ensures that all datagrams previously written will be
 //               visible on the stream.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 424  
-129 0 0 6 139 427 0 0 0 1 4 this 3 424  
-130 0 0 6 140 424 0 0 0 1 4 this 3 427  
-131 0 0 6 141 415 0 0 0 1 4 this 3 424  
-132 0 0 6 142 424 0 0 0 1 4 this 3 415  
-133 0 0 7 161 428 316 0 233 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 425  
+129 0 0 6 139 428 0 0 0 1 4 this 3 425  
+130 0 0 6 140 425 0 0 0 1 4 this 3 428  
+131 0 0 6 141 416 0 0 0 1 4 this 3 425  
+132 0 0 6 142 425 0 0 0 1 4 this 3 416  
+133 0 0 7 161 429 316 0 233 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionListener::Constructor
 //       Access: Public
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 7 manager 1 397  11 num_threads 1 388  
+//////////////////////////////////////////////////////////////////// 2 7 manager 1 398  11 num_threads 1 388  
 134 0 0 6 163 377 0 0 414 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionListener::new_connection_available
 //       Access: Public
 //  Description: Returns true if a new connection was recently
 //               established; the connection information may then be
 //               retrieved via get_new_connection().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 428  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 429  
 135 0 0 6 164 377 0 0 467 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionListener::get_new_connection
 //       Access: Public
@@ -2532,7 +2532,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               new connection, assuming the user doesn't care about
 //               the rendezvous socket that originated it or the
 //               address it came from.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 428  14 new_connection 1 374  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 429  14 new_connection 1 374  
 136 0 0 6 164 377 0 0 1182 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionListener::get_new_connection
 //       Access: Public
@@ -2553,17 +2553,17 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               fact, no new connection.  (This may happen if there
 //               are multiple threads accessing the
 //               QueuedConnectionListener).
-//////////////////////////////////////////////////////////////////// 4 4 this 3 428  10 rendezvous 1 374  7 address 1 384  14 new_connection 1 374  
-137 0 0 6 151 429 0 0 0 1 4 this 3 428  
-138 0 0 6 152 428 0 0 0 1 4 this 3 429  
-139 0 0 6 159 430 0 0 0 1 4 this 3 428  
-140 0 0 6 160 428 0 0 0 1 4 this 3 430  
-141 0 0 4 154 378 0 0 0 2 4 this 3 430  8 max_size 1 388  
-142 0 0 6 155 388 0 0 0 1 4 this 3 431  
-143 0 0 6 156 388 0 0 0 1 4 this 3 431  
-144 0 0 6 157 377 0 0 0 1 4 this 3 431  
-145 0 0 4 158 378 0 0 0 1 4 this 3 430  
-146 0 0 7 176 433 329 0 232 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 4 4 this 3 429  10 rendezvous 1 374  7 address 1 384  14 new_connection 1 374  
+137 0 0 6 151 430 0 0 0 1 4 this 3 429  
+138 0 0 6 152 429 0 0 0 1 4 this 3 430  
+139 0 0 6 159 431 0 0 0 1 4 this 3 429  
+140 0 0 6 160 429 0 0 0 1 4 this 3 431  
+141 0 0 4 154 378 0 0 0 2 4 this 3 431  8 max_size 1 388  
+142 0 0 6 155 388 0 0 0 1 4 this 3 432  
+143 0 0 6 156 388 0 0 0 1 4 this 3 432  
+144 0 0 6 157 377 0 0 0 1 4 this 3 432  
+145 0 0 4 158 378 0 0 0 1 4 this 3 431  
+146 0 0 7 176 434 329 0 232 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionManager::Constructor
 //       Access: Public
 //  Description:
@@ -2584,7 +2584,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               close_connection() with any connection reported reset
 //               by this call.  (There is no harm in calling
 //               close_connection() more than once on a given socket.)
-//////////////////////////////////////////////////////////////////// 1 4 this 3 434  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 435  
 148 0 0 6 179 377 0 0 1253 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionManager::get_reset_connection
 //       Access: Public
@@ -2606,27 +2606,27 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               fact, no reset connection.  (This may happen if
 //               there are multiple threads accessing the
 //               QueuedConnectionManager).
-//////////////////////////////////////////////////////////////////// 2 4 this 3 433  10 connection 1 374  
-149 0 0 6 166 397 0 0 0 1 4 this 3 433  
-150 0 0 6 167 433 0 0 0 1 4 this 3 397  
-151 0 0 6 174 436 0 0 0 1 4 this 3 433  
-152 0 0 6 175 433 0 0 0 1 4 this 3 436  
-153 0 0 4 169 378 0 0 0 2 4 this 3 436  8 max_size 1 388  
-154 0 0 6 170 388 0 0 0 1 4 this 3 437  
-155 0 0 6 171 388 0 0 0 1 4 this 3 437  
-156 0 0 6 172 377 0 0 0 1 4 this 3 437  
-157 0 0 4 173 378 0 0 0 1 4 this 3 436  
-158 0 0 7 191 439 342 0 234 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 2 4 this 3 434  10 connection 1 374  
+149 0 0 6 166 398 0 0 0 1 4 this 3 434  
+150 0 0 6 167 434 0 0 0 1 4 this 3 398  
+151 0 0 6 174 437 0 0 0 1 4 this 3 434  
+152 0 0 6 175 434 0 0 0 1 4 this 3 437  
+153 0 0 4 169 378 0 0 0 2 4 this 3 437  8 max_size 1 388  
+154 0 0 6 170 388 0 0 0 1 4 this 3 438  
+155 0 0 6 171 388 0 0 0 1 4 this 3 438  
+156 0 0 6 172 377 0 0 0 1 4 this 3 438  
+157 0 0 4 173 378 0 0 0 1 4 this 3 437  
+158 0 0 7 191 440 342 0 234 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionReader::Constructor
 //       Access: Published
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 7 manager 1 397  11 num_threads 1 388  
+//////////////////////////////////////////////////////////////////// 2 7 manager 1 398  11 num_threads 1 388  
 159 0 0 6 193 377 0 0 349 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionReader::data_available
 //       Access: Published
 //  Description: Returns true if a datagram is available on the queue;
 //               call get_data() to extract the datagram.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 439  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 440  
 160 0 0 6 194 377 0 0 593 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionReader::get_data
 //       Access: Published
@@ -2636,7 +2636,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               means that the Datagram cannot be queried for its
 //               source Connection and/or NetAddress, but it is useful
 //               in all other respects.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 439  6 result 1 419  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 440  6 result 1 420  
 161 0 0 6 194 377 0 0 681 ////////////////////////////////////////////////////////////////////
 //     Function: QueuedConnectionReader::get_data
 //       Access: Published
@@ -2649,27 +2649,27 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               fact, no datagram available.  (This may happen if
 //               there are multiple threads accessing the
 //               QueuedConnectionReader).
-//////////////////////////////////////////////////////////////////// 2 4 this 3 439  6 result 1 406  
-162 0 0 6 181 403 0 0 0 1 4 this 3 439  
-163 0 0 6 182 439 0 0 0 1 4 this 3 403  
-164 0 0 6 189 440 0 0 0 1 4 this 3 439  
-165 0 0 6 190 439 0 0 0 1 4 this 3 440  
-166 0 0 4 184 378 0 0 0 2 4 this 3 440  8 max_size 1 388  
-167 0 0 6 185 388 0 0 0 1 4 this 3 441  
-168 0 0 6 186 388 0 0 0 1 4 this 3 441  
-169 0 0 6 187 377 0 0 0 1 4 this 3 441  
-170 0 0 4 188 378 0 0 0 1 4 this 3 440  
-171 0 0 7 196 443 219 0 231 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 2 4 this 3 440  6 result 1 407  
+162 0 0 6 181 404 0 0 0 1 4 this 3 440  
+163 0 0 6 182 440 0 0 0 1 4 this 3 404  
+164 0 0 6 189 441 0 0 0 1 4 this 3 440  
+165 0 0 6 190 440 0 0 0 1 4 this 3 441  
+166 0 0 4 184 378 0 0 0 2 4 this 3 441  8 max_size 1 388  
+167 0 0 6 185 388 0 0 0 1 4 this 3 442  
+168 0 0 6 186 388 0 0 0 1 4 this 3 442  
+169 0 0 6 187 377 0 0 0 1 4 this 3 442  
+170 0 0 4 188 378 0 0 0 1 4 this 3 441  
+171 0 0 7 196 444 219 0 231 ////////////////////////////////////////////////////////////////////
 //     Function: RecentConnectionReader::Constructor
 //       Access: Public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 7 manager 1 397  
+//////////////////////////////////////////////////////////////////// 1 7 manager 1 398  
 172 0 0 6 197 377 0 0 346 ////////////////////////////////////////////////////////////////////
 //     Function: RecentConnectionReader::data_available
 //       Access: Public
 //  Description: Returns true if a datagram is available on the queue;
 //               call get_data() to extract the datagram.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 443  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 444  
 173 0 0 6 198 377 0 0 590 ////////////////////////////////////////////////////////////////////
 //     Function: RecentConnectionReader::get_data
 //       Access: Public
@@ -2679,7 +2679,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               means that the Datagram cannot be queried for its
 //               source Connection and/or NetAddress, but it is useful
 //               in all other respects.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 443  6 result 1 419  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 444  6 result 1 420  
 174 0 0 6 198 377 0 0 678 ////////////////////////////////////////////////////////////////////
 //     Function: RecentConnectionReader::get_data
 //       Access: Public
@@ -2692,8 +2692,8 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               fact, no datagram available.  (This may happen if
 //               there are multiple threads accessing the
 //               RecentConnectionReader).
-//////////////////////////////////////////////////////////////////// 2 4 this 3 443  6 result 1 406  
-96
+//////////////////////////////////////////////////////////////////// 2 4 this 3 444  6 result 1 407  
+97
 348 23 PointerTo< Connection > 0 26625 23 PointerTo< Connection > 23 PointerTo< Connection > 0 0 0 1 177 178 0 4 179 180 181 182 0 0 1 0 349 0 0 0 0 0
 
 349 27 PointerToBase< Connection > 0 43009 27 PointerToBase< Connection > 27 PointerToBase< Connection > 0 0 0 0 0 0 2 175 176 0 0 1 0 350 0 0 0 0 0
@@ -2794,7 +2794,7 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               collection of data elements.
 ////////////////////////////////////////////////////////////////////
 
-358 17 ConnectionManager 0 26625 17 ConnectionManager 17 ConnectionManager 0 0 0 1 241 242 0 9 243 244 245 246 247 248 261 262 263 1 444 0 0 0 1 359 918
+358 17 ConnectionManager 0 26625 17 ConnectionManager 17 ConnectionManager 0 0 0 1 241 242 0 9 243 244 245 246 247 248 261 262 263 1 445 0 0 0 1 359 918
 ////////////////////////////////////////////////////////////////////
 //       Class : ConnectionManager
 // Description : The primary interface to the low-level networking
@@ -2960,13 +2960,15 @@ bool RecentConnectionReader::get_data(Datagram &result);
 
 395 13 unsigned char 0 8198 13 unsigned char 13 unsigned char 0 5 0 0 0 0 0 0 0 0 0 0 0
 
-396 6 size_t 0 2105344 6 size_t 6 size_t 0 0 393 0 0 0 0 0 0 0 0 0 0
+396 6 size_t 0 2105344 6 size_t 6 size_t 0 0 397 0 0 0 0 0 0 0 0 0 0
 
-397 19 ConnectionManager * 0 8576 19 ConnectionManager * 19 ConnectionManager * 0 0 358 0 0 0 0 0 0 0 0 0 0
+397 17 unsigned long int 0 8214 17 unsigned long int 17 unsigned long int 0 1 0 0 0 0 0 0 0 0 0 0 0
 
-398 11 Socket_IP * 0 8576 11 Socket_IP * 11 Socket_IP * 0 0 399 0 0 0 0 0 0 0 0 0 0
+398 19 ConnectionManager * 0 8576 19 ConnectionManager * 19 ConnectionManager * 0 0 358 0 0 0 0 0 0 0 0 0 0
 
-399 9 Socket_IP 0 2048 9 Socket_IP 9 Socket_IP 0 0 0 0 0 0 0 0 0 0 0 0 676
+399 11 Socket_IP * 0 8576 11 Socket_IP * 11 Socket_IP * 0 0 400 0 0 0 0 0 0 0 0 0 0
+
+400 9 Socket_IP 0 2048 9 Socket_IP 9 Socket_IP 0 0 0 0 0 0 0 0 0 0 0 0 676
 /////////////////////////////////////////////////////////////////////
 // Class : Socket_IP
 //
@@ -2987,29 +2989,29 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //
 /////////////////////////////////////////////////////////////////////
 
-400 18 Connection const * 0 8576 18 Connection const * 18 Connection const * 0 0 401 0 0 0 0 0 0 0 0 0 0
+401 18 Connection const * 0 8576 18 Connection const * 18 Connection const * 0 0 402 0 0 0 0 0 0 0 0 0 0
 
-401 16 Connection const 0 8832 16 Connection const 16 Connection const 0 0 352 0 0 0 0 0 0 0 0 0 0
+402 16 Connection const 0 8832 16 Connection const 16 Connection const 0 0 352 0 0 0 0 0 0 0 0 0 0
 
-402 6 double 0 8194 6 double 6 double 0 3 0 0 0 0 0 0 0 0 0 0 0
+403 6 double 0 8194 6 double 6 double 0 3 0 0 0 0 0 0 0 0 0 0 0
 
-403 18 ConnectionReader * 0 8576 18 ConnectionReader * 18 ConnectionReader * 0 0 354 0 0 0 0 0 0 0 0 0 0
+404 18 ConnectionReader * 0 8576 18 ConnectionReader * 18 ConnectionReader * 0 0 354 0 0 0 0 0 0 0 0 0 0
 
-404 24 ConnectionReader const * 0 8576 24 ConnectionReader const * 24 ConnectionReader const * 0 0 405 0 0 0 0 0 0 0 0 0 0
+405 24 ConnectionReader const * 0 8576 24 ConnectionReader const * 24 ConnectionReader const * 0 0 406 0 0 0 0 0 0 0 0 0 0
 
-405 22 ConnectionReader const 0 8832 22 ConnectionReader const 22 ConnectionReader const 0 0 354 0 0 0 0 0 0 0 0 0 0
+406 22 ConnectionReader const 0 8832 22 ConnectionReader const 22 ConnectionReader const 0 0 354 0 0 0 0 0 0 0 0 0 0
 
-406 13 NetDatagram * 0 8576 13 NetDatagram * 13 NetDatagram * 0 0 356 0 0 0 0 0 0 0 0 0 0
+407 13 NetDatagram * 0 8576 13 NetDatagram * 13 NetDatagram * 0 0 356 0 0 0 0 0 0 0 0 0 0
 
-407 16 Datagram const * 0 8576 16 Datagram const * 16 Datagram const * 0 0 408 0 0 0 0 0 0 0 0 0 0
+408 16 Datagram const * 0 8576 16 Datagram const * 16 Datagram const * 0 0 409 0 0 0 0 0 0 0 0 0 0
 
-408 14 Datagram const 0 8832 14 Datagram const 14 Datagram const 0 0 357 0 0 0 0 0 0 0 0 0 0
+409 14 Datagram const 0 8832 14 Datagram const 14 Datagram const 0 0 357 0 0 0 0 0 0 0 0 0 0
 
-409 19 NetDatagram const * 0 8576 19 NetDatagram const * 19 NetDatagram const * 0 0 410 0 0 0 0 0 0 0 0 0 0
+410 19 NetDatagram const * 0 8576 19 NetDatagram const * 19 NetDatagram const * 0 0 411 0 0 0 0 0 0 0 0 0 0
 
-410 17 NetDatagram const 0 8832 17 NetDatagram const 17 NetDatagram const 0 0 356 0 0 0 0 0 0 0 0 0 0
+411 17 NetDatagram const 0 8832 17 NetDatagram const 17 NetDatagram const 0 0 356 0 0 0 0 0 0 0 0 0 0
 
-411 10 TypeHandle 0 2048 10 TypeHandle 10 TypeHandle 0 0 0 0 0 0 0 0 0 0 0 0 1098
+412 10 TypeHandle 0 2048 10 TypeHandle 10 TypeHandle 0 0 0 0 0 0 0 0 0 0 0 0 1098
 ////////////////////////////////////////////////////////////////////
 //       Class : TypeHandle
 // Description : TypeHandle is the identifier used to differentiate
@@ -3029,71 +3031,71 @@ bool RecentConnectionReader::get_data(Datagram &result);
 //               type name may be retrieved for run-time display.
 ////////////////////////////////////////////////////////////////////
 
-412 12 TypeHandle * 0 8576 12 TypeHandle * 12 TypeHandle * 0 0 411 0 0 0 0 0 0 0 0 0 0
+413 12 TypeHandle * 0 8576 12 TypeHandle * 12 TypeHandle * 0 0 412 0 0 0 0 0 0 0 0 0 0
 
-413 17 Interface const * 0 8576 36 ConnectionManager::Interface const * 36 ConnectionManager::Interface const * 0 0 414 0 0 0 0 0 0 0 0 0 0
+414 17 Interface const * 0 8576 36 ConnectionManager::Interface const * 36 ConnectionManager::Interface const * 0 0 415 0 0 0 0 0 0 0 0 0 0
 
-414 15 Interface const 0 8832 34 ConnectionManager::Interface const 34 ConnectionManager::Interface const 0 0 359 0 0 0 0 0 0 0 0 0 0
+415 15 Interface const 0 8832 34 ConnectionManager::Interface const 34 ConnectionManager::Interface const 0 0 359 0 0 0 0 0 0 0 0 0 0
 
-415 18 ConnectionWriter * 0 8576 18 ConnectionWriter * 18 ConnectionWriter * 0 0 360 0 0 0 0 0 0 0 0 0 0
+416 18 ConnectionWriter * 0 8576 18 ConnectionWriter * 18 ConnectionWriter * 0 0 360 0 0 0 0 0 0 0 0 0 0
 
-416 24 ConnectionWriter const * 0 8576 24 ConnectionWriter const * 24 ConnectionWriter const * 0 0 417 0 0 0 0 0 0 0 0 0 0
+417 24 ConnectionWriter const * 0 8576 24 ConnectionWriter const * 24 ConnectionWriter const * 0 0 418 0 0 0 0 0 0 0 0 0 0
 
-417 22 ConnectionWriter const 0 8832 22 ConnectionWriter const 22 ConnectionWriter const 0 0 360 0 0 0 0 0 0 0 0 0 0
+418 22 ConnectionWriter const 0 8832 22 ConnectionWriter const 22 ConnectionWriter const 0 0 360 0 0 0 0 0 0 0 0 0 0
 
-418 22 DatagramGeneratorNet * 0 8576 22 DatagramGeneratorNet * 22 DatagramGeneratorNet * 0 0 361 0 0 0 0 0 0 0 0 0 0
+419 22 DatagramGeneratorNet * 0 8576 22 DatagramGeneratorNet * 22 DatagramGeneratorNet * 0 0 361 0 0 0 0 0 0 0 0 0 0
 
-419 10 Datagram * 0 8576 10 Datagram * 10 Datagram * 0 0 357 0 0 0 0 0 0 0 0 0 0
+420 10 Datagram * 0 8576 10 Datagram * 10 Datagram * 0 0 357 0 0 0 0 0 0 0 0 0 0
 
-420 19 DatagramGenerator * 0 8576 19 DatagramGenerator * 19 DatagramGenerator * 0 0 362 0 0 0 0 0 0 0 0 0 0
+421 19 DatagramGenerator * 0 8576 19 DatagramGenerator * 19 DatagramGenerator * 0 0 362 0 0 0 0 0 0 0 0 0 0
 
-421 26 QueuedReturn< Datagram > * 0 8576 26 QueuedReturn< Datagram > * 26 QueuedReturn< Datagram > * 0 0 363 0 0 0 0 0 0 0 0 0 0
+422 26 QueuedReturn< Datagram > * 0 8576 26 QueuedReturn< Datagram > * 26 QueuedReturn< Datagram > * 0 0 363 0 0 0 0 0 0 0 0 0 0
 
-422 32 QueuedReturn< Datagram > const * 0 8576 32 QueuedReturn< Datagram > const * 32 QueuedReturn< Datagram > const * 0 0 423 0 0 0 0 0 0 0 0 0 0
+423 32 QueuedReturn< Datagram > const * 0 8576 32 QueuedReturn< Datagram > const * 32 QueuedReturn< Datagram > const * 0 0 424 0 0 0 0 0 0 0 0 0 0
 
-423 30 QueuedReturn< Datagram > const 0 8832 30 QueuedReturn< Datagram > const 30 QueuedReturn< Datagram > const 0 0 363 0 0 0 0 0 0 0 0 0 0
+424 30 QueuedReturn< Datagram > const 0 8832 30 QueuedReturn< Datagram > const 30 QueuedReturn< Datagram > const 0 0 363 0 0 0 0 0 0 0 0 0 0
 
-424 17 DatagramSinkNet * 0 8576 17 DatagramSinkNet * 17 DatagramSinkNet * 0 0 364 0 0 0 0 0 0 0 0 0 0
+425 17 DatagramSinkNet * 0 8576 17 DatagramSinkNet * 17 DatagramSinkNet * 0 0 364 0 0 0 0 0 0 0 0 0 0
 
-425 23 DatagramSinkNet const * 0 8576 23 DatagramSinkNet const * 23 DatagramSinkNet const * 0 0 426 0 0 0 0 0 0 0 0 0 0
+426 23 DatagramSinkNet const * 0 8576 23 DatagramSinkNet const * 23 DatagramSinkNet const * 0 0 427 0 0 0 0 0 0 0 0 0 0
 
-426 21 DatagramSinkNet const 0 8832 21 DatagramSinkNet const 21 DatagramSinkNet const 0 0 364 0 0 0 0 0 0 0 0 0 0
+427 21 DatagramSinkNet const 0 8832 21 DatagramSinkNet const 21 DatagramSinkNet const 0 0 364 0 0 0 0 0 0 0 0 0 0
 
-427 14 DatagramSink * 0 8576 14 DatagramSink * 14 DatagramSink * 0 0 365 0 0 0 0 0 0 0 0 0 0
+428 14 DatagramSink * 0 8576 14 DatagramSink * 14 DatagramSink * 0 0 365 0 0 0 0 0 0 0 0 0 0
 
-428 26 QueuedConnectionListener * 0 8576 26 QueuedConnectionListener * 26 QueuedConnectionListener * 0 0 366 0 0 0 0 0 0 0 0 0 0
+429 26 QueuedConnectionListener * 0 8576 26 QueuedConnectionListener * 26 QueuedConnectionListener * 0 0 366 0 0 0 0 0 0 0 0 0 0
 
-429 20 ConnectionListener * 0 8576 20 ConnectionListener * 20 ConnectionListener * 0 0 355 0 0 0 0 0 0 0 0 0 0
+430 20 ConnectionListener * 0 8576 20 ConnectionListener * 20 ConnectionListener * 0 0 355 0 0 0 0 0 0 0 0 0 0
 
-430 40 QueuedReturn< ConnectionListenerData > * 0 8576 40 QueuedReturn< ConnectionListenerData > * 40 QueuedReturn< ConnectionListenerData > * 0 0 367 0 0 0 0 0 0 0 0 0 0
+431 40 QueuedReturn< ConnectionListenerData > * 0 8576 40 QueuedReturn< ConnectionListenerData > * 40 QueuedReturn< ConnectionListenerData > * 0 0 367 0 0 0 0 0 0 0 0 0 0
 
-431 46 QueuedReturn< ConnectionListenerData > const * 0 8576 46 QueuedReturn< ConnectionListenerData > const * 46 QueuedReturn< ConnectionListenerData > const * 0 0 432 0 0 0 0 0 0 0 0 0 0
+432 46 QueuedReturn< ConnectionListenerData > const * 0 8576 46 QueuedReturn< ConnectionListenerData > const * 46 QueuedReturn< ConnectionListenerData > const * 0 0 433 0 0 0 0 0 0 0 0 0 0
 
-432 44 QueuedReturn< ConnectionListenerData > const 0 8832 44 QueuedReturn< ConnectionListenerData > const 44 QueuedReturn< ConnectionListenerData > const 0 0 367 0 0 0 0 0 0 0 0 0 0
+433 44 QueuedReturn< ConnectionListenerData > const 0 8832 44 QueuedReturn< ConnectionListenerData > const 44 QueuedReturn< ConnectionListenerData > const 0 0 367 0 0 0 0 0 0 0 0 0 0
 
-433 25 QueuedConnectionManager * 0 8576 25 QueuedConnectionManager * 25 QueuedConnectionManager * 0 0 368 0 0 0 0 0 0 0 0 0 0
+434 25 QueuedConnectionManager * 0 8576 25 QueuedConnectionManager * 25 QueuedConnectionManager * 0 0 368 0 0 0 0 0 0 0 0 0 0
 
-434 31 QueuedConnectionManager const * 0 8576 31 QueuedConnectionManager const * 31 QueuedConnectionManager const * 0 0 435 0 0 0 0 0 0 0 0 0 0
+435 31 QueuedConnectionManager const * 0 8576 31 QueuedConnectionManager const * 31 QueuedConnectionManager const * 0 0 436 0 0 0 0 0 0 0 0 0 0
 
-435 29 QueuedConnectionManager const 0 8832 29 QueuedConnectionManager const 29 QueuedConnectionManager const 0 0 368 0 0 0 0 0 0 0 0 0 0
+436 29 QueuedConnectionManager const 0 8832 29 QueuedConnectionManager const 29 QueuedConnectionManager const 0 0 368 0 0 0 0 0 0 0 0 0 0
 
-436 41 QueuedReturn< PointerTo< Connection > > * 0 8576 41 QueuedReturn< PointerTo< Connection > > * 41 QueuedReturn< PointerTo< Connection > > * 0 0 369 0 0 0 0 0 0 0 0 0 0
+437 41 QueuedReturn< PointerTo< Connection > > * 0 8576 41 QueuedReturn< PointerTo< Connection > > * 41 QueuedReturn< PointerTo< Connection > > * 0 0 369 0 0 0 0 0 0 0 0 0 0
 
-437 47 QueuedReturn< PointerTo< Connection > > const * 0 8576 47 QueuedReturn< PointerTo< Connection > > const * 47 QueuedReturn< PointerTo< Connection > > const * 0 0 438 0 0 0 0 0 0 0 0 0 0
+438 47 QueuedReturn< PointerTo< Connection > > const * 0 8576 47 QueuedReturn< PointerTo< Connection > > const * 47 QueuedReturn< PointerTo< Connection > > const * 0 0 439 0 0 0 0 0 0 0 0 0 0
 
-438 45 QueuedReturn< PointerTo< Connection > > const 0 8832 45 QueuedReturn< PointerTo< Connection > > const 45 QueuedReturn< PointerTo< Connection > > const 0 0 369 0 0 0 0 0 0 0 0 0 0
+439 45 QueuedReturn< PointerTo< Connection > > const 0 8832 45 QueuedReturn< PointerTo< Connection > > const 45 QueuedReturn< PointerTo< Connection > > const 0 0 369 0 0 0 0 0 0 0 0 0 0
 
-439 24 QueuedConnectionReader * 0 8576 24 QueuedConnectionReader * 24 QueuedConnectionReader * 0 0 370 0 0 0 0 0 0 0 0 0 0
+440 24 QueuedConnectionReader * 0 8576 24 QueuedConnectionReader * 24 QueuedConnectionReader * 0 0 370 0 0 0 0 0 0 0 0 0 0
 
-440 29 QueuedReturn< NetDatagram > * 0 8576 29 QueuedReturn< NetDatagram > * 29 QueuedReturn< NetDatagram > * 0 0 371 0 0 0 0 0 0 0 0 0 0
+441 29 QueuedReturn< NetDatagram > * 0 8576 29 QueuedReturn< NetDatagram > * 29 QueuedReturn< NetDatagram > * 0 0 371 0 0 0 0 0 0 0 0 0 0
 
-441 35 QueuedReturn< NetDatagram > const * 0 8576 35 QueuedReturn< NetDatagram > const * 35 QueuedReturn< NetDatagram > const * 0 0 442 0 0 0 0 0 0 0 0 0 0
+442 35 QueuedReturn< NetDatagram > const * 0 8576 35 QueuedReturn< NetDatagram > const * 35 QueuedReturn< NetDatagram > const * 0 0 443 0 0 0 0 0 0 0 0 0 0
 
-442 33 QueuedReturn< NetDatagram > const 0 8832 33 QueuedReturn< NetDatagram > const 33 QueuedReturn< NetDatagram > const 0 0 371 0 0 0 0 0 0 0 0 0 0
+443 33 QueuedReturn< NetDatagram > const 0 8832 33 QueuedReturn< NetDatagram > const 33 QueuedReturn< NetDatagram > const 0 0 371 0 0 0 0 0 0 0 0 0 0
 
-443 24 RecentConnectionReader * 0 8576 24 RecentConnectionReader * 24 RecentConnectionReader * 0 0 372 0 0 0 0 0 0 0 0 0 0
+444 24 RecentConnectionReader * 0 8576 24 RecentConnectionReader * 24 RecentConnectionReader * 0 0 372 0 0 0 0 0 0 0 0 0 0
 
 0
 0
 1
-444 0 0 77 14 get_interfaces 18 get_num_interfaces 13 get_interface 
+445 0 0 77 14 get_interfaces 18 get_num_interfaces 13 get_interface 

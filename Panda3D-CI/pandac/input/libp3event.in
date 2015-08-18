@@ -1,4 +1,4 @@
-1428713941
+1439923634
 2 3
 10 libp3event 4 _0BP 12 panda3d.core 
 230
@@ -592,8 +592,8 @@ void AsyncTaskCollection::output(ostream &out) const;
 //  Description: Writes a complete multi-line description of the
 //               AsyncTaskCollection to the indicated output stream.
 ////////////////////////////////////////////////////////////////////
-76
-void AsyncTaskCollection::write(ostream &out, int indent_level = (0)) const;
+74
+void AsyncTaskCollection::write(ostream &out, int indent_level = 0) const;
 
 279 29 upcast_to_TypedReferenceCount 0 12 462 45 AsyncTaskChain::upcast_to_TypedReferenceCount 0 1 81 49
 upcast from AsyncTaskChain to TypedReferenceCount
@@ -938,8 +938,8 @@ virtual void AsyncTaskChain::output(ostream &out) const;
 //       Access: Published, Virtual
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-79
-virtual void AsyncTaskChain::write(ostream &out, int indent_level = (0)) const;
+77
+virtual void AsyncTaskChain::write(ostream &out, int indent_level = 0) const;
 
 310 14 get_class_type 0 4 462 30 AsyncTaskChain::get_class_type 0 1 80 0
 55
@@ -1258,8 +1258,8 @@ virtual void AsyncTaskManager::output(ostream &out) const;
 //       Access: Published, Virtual
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-81
-virtual void AsyncTaskManager::write(ostream &out, int indent_level = (0)) const;
+79
+virtual void AsyncTaskManager::write(ostream &out, int indent_level = 0) const;
 
 342 14 get_global_ptr 0 4 465 32 AsyncTaskManager::get_global_ptr 0 1 112 403
 ////////////////////////////////////////////////////////////////////
@@ -1652,8 +1652,8 @@ void EventParameter::output(ostream &out) const;
 //       Access: Public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-103
-Event::Event(string const &event_name, EventReceiver *receiver = (0));
+101
+Event::Event(string const &event_name, EventReceiver *receiver = 0);
 Event::Event(Event const &copy);
 
 380 10 operator = 0 4 469 17 Event::operator = 0 1 155 0
@@ -1821,8 +1821,8 @@ void EventHandler::write(ostream &out) const;
 //               object.  If the global object has not yet been
 //               created, this will create it.
 ////////////////////////////////////////////////////////////////////
-92
-static inline EventHandler *EventHandler::get_global_event_handler(EventQueue *queue = (0));
+90
+static inline EventHandler *EventHandler::get_global_event_handler(EventQueue *queue = 0);
 
 399 14 get_class_type 0 4 470 28 EventHandler::get_class_type 0 1 174 0
 53
@@ -2104,7 +2104,7 @@ PointerEventList::~PointerEventList(void);
 
 429 10 PythonTask 0 4 475 22 PythonTask::PythonTask 0 1 201 0
 97
-PythonTask::PythonTask(PyObject *function = ((& ::_Py_NoneStruct)), string const &name = ((())));
+PythonTask::PythonTask(PyObject *function = (& ::_Py_NoneStruct), string const &name = string());
 
 430 12 operator new 0 4 475 24 PythonTask::operator new 0 1 202 0
 114
@@ -4026,7 +4026,7 @@ static TypeHandle PythonTask::get_class_type(void);
 
 512 6 size_t 0 2105344 6 size_t 6 size_t 0 0 513 0 0 0 0 0 0 0 0 0 0
 
-513 12 unsigned int 0 8198 12 unsigned int 12 unsigned int 0 1 0 0 0 0 0 0 0 0 0 0 0
+513 17 unsigned long int 0 8214 17 unsigned long int 17 unsigned long int 0 1 0 0 0 0 0 0 0 0 0 0 0
 
 514 19 AsyncTaskSequence * 0 8576 19 AsyncTaskSequence * 19 AsyncTaskSequence * 0 0 467 0 0 0 0 0 0 0 0 0 0
 

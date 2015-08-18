@@ -1,4 +1,4 @@
-1428713773
+1439923610
 2 3
 10 libp3audio 4 M_1l 12 panda3d.core 
 93
@@ -102,8 +102,8 @@ inline void FilterProperties::add_chorus(PN_stdfloat drymix, PN_stdfloat wet1, P
 //      Access: Published
 // Description: Add a reverb filter to the end of the DSP chain.
 ////////////////////////////////////////////////////////////////////
-488
-inline void FilterProperties::add_sfxreverb(PN_stdfloat drylevel = (0), PN_stdfloat room = (-10000), PN_stdfloat roomhf = (0), PN_stdfloat decaytime = (1), PN_stdfloat decayhfratio = (0.5), PN_stdfloat reflectionslevel = (-10000), PN_stdfloat reflectionsdelay = (0.02), PN_stdfloat reverblevel = (0), PN_stdfloat reverbdelay = (0.04), PN_stdfloat diffusion = (100), PN_stdfloat density = (100), PN_stdfloat hfreference = (5000), PN_stdfloat roomlf = (0), PN_stdfloat lfreference = (250));
+491
+inline void FilterProperties::add_sfxreverb(PN_stdfloat drylevel = 0, PN_stdfloat room = -10000, PN_stdfloat roomhf = 0, PN_stdfloat decaytime = 1, PN_stdfloat decayhfratio = 0.5, PN_stdfloat reflectionslevel = -10000, PN_stdfloat reflectionsdelay = 0.020000000000000005, PN_stdfloat reverblevel = 0, PN_stdfloat reverbdelay = 0.04000000000000001, PN_stdfloat diffusion = 100, PN_stdfloat density = 100, PN_stdfloat hfreference = 5000, PN_stdfloat roomlf = 0, PN_stdfloat lfreference = 250);
 
 104 12 add_compress 0 4 185 30 FilterProperties::add_compress 0 1 13 277
 ////////////////////////////////////////////////////////////////////
@@ -136,8 +136,8 @@ virtual void AudioSound::stop(void) = 0;
 108 8 set_loop 0 6 187 20 AudioSound::set_loop 0 1 17 67
 // loop: false = play once; true = play forever.
 // inits to false.
-55
-virtual void AudioSound::set_loop(bool loop = (1)) = 0;
+53
+virtual void AudioSound::set_loop(bool loop = 1) = 0;
 
 109 8 get_loop 0 6 187 20 AudioSound::get_loop 0 1 18 0
 50
@@ -146,8 +146,8 @@ virtual bool AudioSound::get_loop(void) const = 0;
 110 14 set_loop_count 0 6 187 26 AudioSound::set_loop_count 0 1 19 75
 // loop_count: 0 = forever; 1 = play once; n = play n times.
 // inits to 1.
-80
-virtual void AudioSound::set_loop_count(unsigned long int loop_count = (1)) = 0;
+78
+virtual void AudioSound::set_loop_count(unsigned long int loop_count = 1) = 0;
 
 111 14 get_loop_count 0 6 187 26 AudioSound::get_loop_count 0 1 20 0
 69
@@ -169,7 +169,7 @@ virtual unsigned long int AudioSound::get_loop_count(void) const = 0;
 //   return different results over time.  e.g.:
 //   PN_stdfloat percent_complete = s.get_time() / s.length();
 68
-virtual void AudioSound::set_time(PN_stdfloat start_time = (0)) = 0;
+virtual void AudioSound::set_time(PN_stdfloat start_time = 0.0) = 0;
 
 113 8 get_time 0 6 187 20 AudioSound::get_time 0 1 22 0
 57
@@ -179,7 +179,7 @@ virtual PN_stdfloat AudioSound::get_time(void) const = 0;
 // 0 = minimum; 1.0 = maximum.
 // inits to 1.0.
 66
-virtual void AudioSound::set_volume(PN_stdfloat volume = (1)) = 0;
+virtual void AudioSound::set_volume(PN_stdfloat volume = 1.0) = 0;
 
 115 10 get_volume 0 6 187 22 AudioSound::get_volume 0 1 24 0
 59
@@ -191,7 +191,7 @@ virtual PN_stdfloat AudioSound::get_volume(void) const = 0;
 // 1.0 is hard right
 // inits to 0.0.
 74
-virtual void AudioSound::set_balance(PN_stdfloat balance_right = (0)) = 0;
+virtual void AudioSound::set_balance(PN_stdfloat balance_right = 0.0) = 0;
 
 117 11 get_balance 0 6 187 23 AudioSound::get_balance 0 1 26 0
 60
@@ -201,7 +201,7 @@ virtual PN_stdfloat AudioSound::get_balance(void) const = 0;
 // play_rate is any positive PN_stdfloat value.
 // inits to 1.0.
 72
-virtual void AudioSound::set_play_rate(PN_stdfloat play_rate = (1)) = 0;
+virtual void AudioSound::set_play_rate(PN_stdfloat play_rate = 1.0) = 0;
 
 119 13 get_play_rate 0 6 187 25 AudioSound::get_play_rate 0 1 28 0
 62
@@ -209,8 +209,8 @@ virtual PN_stdfloat AudioSound::get_play_rate(void) const = 0;
 
 120 10 set_active 0 6 187 22 AudioSound::set_active 0 1 29 28
 // inits to manager's state.
-57
-virtual void AudioSound::set_active(bool flag = (1)) = 0;
+55
+virtual void AudioSound::set_active(bool flag = 1) = 0;
 
 121 10 get_active 0 6 187 22 AudioSound::get_active 0 1 30 0
 52
@@ -292,7 +292,7 @@ virtual PN_stdfloat AudioSound::get_speaker_level(int index);
 
 135 18 set_speaker_levels 0 6 187 30 AudioSound::set_speaker_levels 0 1 43 0
 280
-virtual void AudioSound::set_speaker_levels(PN_stdfloat level1, PN_stdfloat level2 = (-1), PN_stdfloat level3 = (-1), PN_stdfloat level4 = (-1), PN_stdfloat level5 = (-1), PN_stdfloat level6 = (-1), PN_stdfloat level7 = (-1), PN_stdfloat level8 = (-1), PN_stdfloat level9 = (-1));
+virtual void AudioSound::set_speaker_levels(PN_stdfloat level1, PN_stdfloat level2 = -1.0, PN_stdfloat level3 = -1.0, PN_stdfloat level4 = -1.0, PN_stdfloat level5 = -1.0, PN_stdfloat level6 = -1.0, PN_stdfloat level7 = -1.0, PN_stdfloat level8 = -1.0, PN_stdfloat level9 = -1.0);
 
 136 12 get_priority 0 6 187 24 AudioSound::get_priority 0 1 44 0
 43
@@ -355,9 +355,9 @@ virtual bool AudioManager::is_valid(void) = 0;
 
 149 9 get_sound 0 6 189 23 AudioManager::get_sound 0 2 57 58 15
 // Get a sound:
-298
-virtual PointerTo< AudioSound > AudioManager::get_sound(string const &file_name, bool positional = (0), int mode = (::AudioManager::SM_heuristic)) = 0;
-virtual PointerTo< AudioSound > AudioManager::get_sound(MovieAudio *source, bool positional = (0), int mode = (::AudioManager::SM_heuristic)) = 0;
+290
+virtual PointerTo< AudioSound > AudioManager::get_sound(string const &file_name, bool positional = 0, int mode = ::AudioManager::SM_heuristic) = 0;
+virtual PointerTo< AudioSound > AudioManager::get_sound(MovieAudio *source, bool positional = 0, int mode = ::AudioManager::SM_heuristic) = 0;
 
 150 14 get_null_sound 0 4 189 28 AudioManager::get_null_sound 0 1 59 0
 59
@@ -422,8 +422,8 @@ virtual bool AudioManager::get_active(void) const = 0;
 // 0 == unlimited.
 // 1 == mutually exclusive (one sound at a time).  Which is an example of:
 // n == allow n sounds to be playing at the same time.
-84
-virtual void AudioManager::set_concurrent_sound_limit(unsigned int limit = (0)) = 0;
+82
+virtual void AudioManager::set_concurrent_sound_limit(unsigned int limit = 0) = 0;
 
 160 26 get_concurrent_sound_limit 0 6 189 40 AudioManager::get_concurrent_sound_limit 0 1 69 0
 78
@@ -514,8 +514,8 @@ virtual void AudioManager::write(ostream &out) const;
 
 175 25 set_speaker_configuration 0 6 189 39 AudioManager::set_speaker_configuration 0 1 83 52
 // set_speaker_configuration is a Miles only method.
-290
-virtual void AudioManager::set_speaker_configuration(LVecBase3 *speaker1, LVecBase3 *speaker2 = (0), LVecBase3 *speaker3 = (0), LVecBase3 *speaker4 = (0), LVecBase3 *speaker5 = (0), LVecBase3 *speaker6 = (0), LVecBase3 *speaker7 = (0), LVecBase3 *speaker8 = (0), LVecBase3 *speaker9 = (0));
+274
+virtual void AudioManager::set_speaker_configuration(LVecBase3 *speaker1, LVecBase3 *speaker2 = 0, LVecBase3 *speaker3 = 0, LVecBase3 *speaker4 = 0, LVecBase3 *speaker5 = 0, LVecBase3 *speaker6 = 0, LVecBase3 *speaker7 = 0, LVecBase3 *speaker8 = 0, LVecBase3 *speaker9 = 0);
 
 176 14 get_class_type 0 4 189 28 AudioManager::get_class_type 0 1 84 0
 53

@@ -1,4 +1,4 @@
-1428725268
+1439924209
 2 3
 11 libp3dgraph 4 YJkp 12 panda3d.core 
 12
@@ -8,8 +8,8 @@
 //       Access: Public
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-90
-DataGraphTraverser::DataGraphTraverser(Thread *current_thread = ((get_current_thread())));
+88
+DataGraphTraverser::DataGraphTraverser(Thread *current_thread = (get_current_thread()));
 
 12 19 ~DataGraphTraverser 0 4 23 39 DataGraphTraverser::~DataGraphTraverser 0 0 227
 ////////////////////////////////////////////////////////////////////

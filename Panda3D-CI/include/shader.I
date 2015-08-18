@@ -20,7 +20,7 @@
 //               type.
 ////////////////////////////////////////////////////////////////////
 INLINE Filename Shader::
-get_filename(const ShaderType &type) const {
+get_filename(ShaderType type) const {
   if (_filename._separate && type != ST_none) {
     switch (type) {
       case ST_vertex:
@@ -49,7 +49,7 @@ get_filename(const ShaderType &type) const {
 
   } else {
     // Um, better than nothing?
-    return _filename._vertex;
+    return _filename._fragment;
   }
 }
 
@@ -59,7 +59,7 @@ get_filename(const ShaderType &type) const {
 //  Description: Return the Shader's text for the given shader type.
 ////////////////////////////////////////////////////////////////////
 INLINE const string &Shader::
-get_text(const ShaderType &type) const {
+get_text(ShaderType type) const {
   if (_text._separate) {
     nassertr(type != ST_none || !_text._shared.empty(), _text._shared);
     switch (type) {
@@ -865,7 +865,7 @@ get_filename_from_index(int index, ShaderType type) const {
     if (!fn.empty()) {
       return fn;
     }
-  } else if (glsl_preprocess && index > 2048 &&
+  } else if (glsl_preprocess && index >= 2048 &&
              (index - 2048) < (int)_included_files.size()) {
     return _included_files[index - 2048];
   }

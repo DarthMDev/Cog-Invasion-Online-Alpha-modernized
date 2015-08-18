@@ -1,4 +1,4 @@
-1428767505
+1439925251
 2 3
 12 libp3physics 4 1Scs 15 panda3d.physics 
 218
@@ -374,8 +374,8 @@ virtual void PhysicsObject::output(ostream &out) const;
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-81
-virtual void PhysicsObject::write(ostream &out, unsigned int indent = (0)) const;
+79
+virtual void PhysicsObject::write(ostream &out, unsigned int indent = 0) const;
 
 276 14 get_class_type 0 4 458 29 PhysicsObject::get_class_type 0 1 40 0
 54
@@ -552,8 +552,8 @@ void PhysicsObjectCollection::output(ostream &out) const;
 //  Description: Writes a complete multi-line description of the
 //               PhysicsObjectCollection to the indicated output stream.
 ////////////////////////////////////////////////////////////////////
-80
-void PhysicsObjectCollection::write(ostream &out, int indent_level = (0)) const;
+78
+void PhysicsObjectCollection::write(ostream &out, int indent_level = 0) const;
 
 296 10 get_active 0 4 461 21 BaseForce::get_active 0 1 60 189
 ////////////////////////////////////////////////////////////////////
@@ -608,8 +608,8 @@ virtual void BaseForce::output(ostream &out) const;
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-74
-virtual void BaseForce::write(ostream &out, int indent_level = (0)) const;
+72
+virtual void BaseForce::write(ostream &out, int indent_level = 0) const;
 
 303 14 get_class_type 0 4 461 25 BaseForce::get_class_type 0 1 67 0
 50
@@ -682,8 +682,8 @@ virtual LinearForce *LinearForce::make_copy(void) = 0;
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-79
-virtual void LinearForce::write(ostream &out, unsigned int indent = (0)) const;
+77
+virtual void LinearForce::write(ostream &out, unsigned int indent = 0) const;
 
 313 14 get_class_type 0 4 462 27 LinearForce::get_class_type 0 1 77 0
 52
@@ -709,8 +709,8 @@ LRotation AngularForce::get_quat(PhysicsObject const *po);
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-80
-virtual void AngularForce::write(ostream &out, unsigned int indent = (0)) const;
+78
+virtual void AngularForce::write(ostream &out, unsigned int indent = 0) const;
 
 317 14 get_class_type 0 4 463 28 AngularForce::get_class_type 0 1 81 0
 53
@@ -743,8 +743,8 @@ static TypeHandle AngularForce::get_class_type(void);
 //                but does NOT attach itself to its template's
 //                physicsmanager.
 ////////////////////////////////////////////////////////////////////
-108
-Physical::Physical(int total_objects = (1), bool pre_alloc = (0));
+104
+Physical::Physical(int total_objects = 1, bool pre_alloc = 0);
 Physical::Physical(Physical const &copy);
 
 319 19 get_physics_manager 0 4 464 29 Physical::get_physics_manager 0 1 84 210
@@ -918,8 +918,8 @@ PhysicsObjectCollection const Physical::get_objects(void) const;
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-61
-virtual void Physical::output(ostream &out = (::cout)) const;
+59
+virtual void Physical::output(ostream &out = ::cout) const;
 
 339 21 write_physics_objects 0 6 464 31 Physical::write_physics_objects 0 1 104 295
 ////////////////////////////////////////////////////////////////////
@@ -928,8 +928,8 @@ virtual void Physical::output(ostream &out = (::cout)) const;
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-103
-virtual void Physical::write_physics_objects(ostream &out = (::cout), unsigned int indent = (0)) const;
+99
+virtual void Physical::write_physics_objects(ostream &out = ::cout, unsigned int indent = 0) const;
 
 340 19 write_linear_forces 0 6 464 29 Physical::write_linear_forces 0 1 105 293
 ////////////////////////////////////////////////////////////////////
@@ -938,8 +938,8 @@ virtual void Physical::write_physics_objects(ostream &out = (::cout), unsigned i
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-101
-virtual void Physical::write_linear_forces(ostream &out = (::cout), unsigned int indent = (0)) const;
+97
+virtual void Physical::write_linear_forces(ostream &out = ::cout, unsigned int indent = 0) const;
 
 341 20 write_angular_forces 0 6 464 30 Physical::write_angular_forces 0 1 106 294
 ////////////////////////////////////////////////////////////////////
@@ -948,8 +948,8 @@ virtual void Physical::write_linear_forces(ostream &out = (::cout), unsigned int
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-102
-virtual void Physical::write_angular_forces(ostream &out = (::cout), unsigned int indent = (0)) const;
+98
+virtual void Physical::write_angular_forces(ostream &out = ::cout, unsigned int indent = 0) const;
 
 342 5 write 0 6 464 15 Physical::write 0 1 107 279
 ////////////////////////////////////////////////////////////////////
@@ -958,8 +958,8 @@ virtual void Physical::write_angular_forces(ostream &out = (::cout), unsigned in
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-87
-virtual void Physical::write(ostream &out = (::cout), unsigned int indent = (0)) const;
+83
+virtual void Physical::write(ostream &out = ::cout, unsigned int indent = 0) const;
 
 343 14 get_class_type 0 4 464 24 Physical::get_class_type 0 1 108 0
 49
@@ -1044,8 +1044,8 @@ void PhysicalNode::remove_physical(int index);
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-80
-virtual void PhysicalNode::write(ostream &out, unsigned int indent = (0)) const;
+78
+virtual void PhysicalNode::write(ostream &out, unsigned int indent = 0) const;
 
 352 14 get_class_type 0 4 465 28 PhysicalNode::get_class_type 0 1 118 0
 53
@@ -1063,8 +1063,8 @@ static TypeHandle PhysicalNode::get_class_type(void);
 //       Access : public
 //  Description : Copy Constructor.
 ////////////////////////////////////////////////////////////////////
-93
-ActorNode::ActorNode(string const &name = (""));
+91
+ActorNode::ActorNode(string const &name = "");
 ActorNode::ActorNode(ActorNode const &copy);
 
 354 18 get_physics_object 0 4 467 29 ActorNode::get_physics_object 0 1 121 0
@@ -1128,8 +1128,8 @@ virtual void BaseIntegrator::output(ostream &out) const;
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-110
-virtual void BaseIntegrator::write_precomputed_linear_matrices(ostream &out, unsigned int indent = (0)) const;
+108
+virtual void BaseIntegrator::write_precomputed_linear_matrices(ostream &out, unsigned int indent = 0) const;
 
 362 34 write_precomputed_angular_matrices 0 6 468 50 BaseIntegrator::write_precomputed_angular_matrices 0 1 129 308
 ////////////////////////////////////////////////////////////////////
@@ -1138,8 +1138,8 @@ virtual void BaseIntegrator::write_precomputed_linear_matrices(ostream &out, uns
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-111
-virtual void BaseIntegrator::write_precomputed_angular_matrices(ostream &out, unsigned int indent = (0)) const;
+109
+virtual void BaseIntegrator::write_precomputed_angular_matrices(ostream &out, unsigned int indent = 0) const;
 
 363 5 write 0 6 468 21 BaseIntegrator::write 0 1 130 279
 ////////////////////////////////////////////////////////////////////
@@ -1148,8 +1148,8 @@ virtual void BaseIntegrator::write_precomputed_angular_matrices(ostream &out, un
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-82
-virtual void BaseIntegrator::write(ostream &out, unsigned int indent = (0)) const;
+80
+virtual void BaseIntegrator::write(ostream &out, unsigned int indent = 0) const;
 
 364 22 AngularEulerIntegrator 0 4 471 46 AngularEulerIntegrator::AngularEulerIntegrator 0 1 131 233
 ////////////////////////////////////////////////////////////////////
@@ -1290,8 +1290,8 @@ void ForceNode::remove_force(int index);
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-84
-virtual void ForceNode::write_forces(ostream &out, unsigned int indent = (0)) const;
+82
+virtual void ForceNode::write_forces(ostream &out, unsigned int indent = 0) const;
 
 378 5 write 0 6 473 16 ForceNode::write 0 1 148 279
 ////////////////////////////////////////////////////////////////////
@@ -1300,8 +1300,8 @@ virtual void ForceNode::write_forces(ostream &out, unsigned int indent = (0)) co
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-77
-virtual void ForceNode::write(ostream &out, unsigned int indent = (0)) const;
+75
+virtual void ForceNode::write(ostream &out, unsigned int indent = 0) const;
 
 379 14 get_class_type 0 4 473 25 ForceNode::get_class_type 0 1 149 0
 50
@@ -1319,8 +1319,8 @@ static TypeHandle ForceNode::get_class_type(void);
 //       Access : Public
 //  Description : Copy Constructor
 ////////////////////////////////////////////////////////////////////
-180
-LinearControlForce::LinearControlForce(PhysicsObject const *po = (0), PN_stdfloat a = (1), bool mass = (0));
+176
+LinearControlForce::LinearControlForce(PhysicsObject const *po = 0, PN_stdfloat a = 1.0, bool mass = 0);
 LinearControlForce::LinearControlForce(LinearControlForce const &copy);
 
 381 20 clear_physics_object 0 4 474 40 LinearControlForce::clear_physics_object 0 1 152 238
@@ -1391,8 +1391,8 @@ static TypeHandle LinearControlForce::get_class_type(void);
 //      Access : public
 // Description : copy Constructor
 ////////////////////////////////////////////////////////////////////
-258
-LinearCylinderVortexForce::LinearCylinderVortexForce(PN_stdfloat radius = (1), PN_stdfloat length = (0), PN_stdfloat coef = (1), PN_stdfloat a = (1), bool md = (0));
+256
+LinearCylinderVortexForce::LinearCylinderVortexForce(PN_stdfloat radius = 1.0, PN_stdfloat length = 0.0, PN_stdfloat coef = 1.0, PN_stdfloat a = 1.0, bool md = 0);
 LinearCylinderVortexForce::LinearCylinderVortexForce(LinearCylinderVortexForce const &copy);
 
 388 8 set_coef 0 4 475 35 LinearCylinderVortexForce::set_coef 0 1 161 181
@@ -1535,8 +1535,8 @@ LinearEulerIntegrator::LinearEulerIntegrator(void);
 //      Access : Public
 // Description : copy constructor
 ////////////////////////////////////////////////////////////////////
-175
-LinearFrictionForce::LinearFrictionForce(PN_stdfloat coef = (1), PN_stdfloat a = (1), bool m = (0));
+173
+LinearFrictionForce::LinearFrictionForce(PN_stdfloat coef = 1.0, PN_stdfloat a = 1.0, bool m = 0);
 LinearFrictionForce::LinearFrictionForce(LinearFrictionForce const &copy);
 
 405 8 set_coef 0 4 480 29 LinearFrictionForce::set_coef 0 1 179 181
@@ -1575,8 +1575,8 @@ static TypeHandle LinearRandomForce::get_class_type(void);
 //      Access : Public
 // Description : copy constructor
 ////////////////////////////////////////////////////////////////////
-141
-LinearJitterForce::LinearJitterForce(PN_stdfloat a = (1), bool m = (0));
+139
+LinearJitterForce::LinearJitterForce(PN_stdfloat a = 1.0, bool m = 0);
 LinearJitterForce::LinearJitterForce(LinearJitterForce const &copy);
 
 410 14 get_class_type 0 4 482 33 LinearJitterForce::get_class_type 0 1 185 0
@@ -1595,8 +1595,8 @@ static TypeHandle LinearJitterForce::get_class_type(void);
 //       Access : Public
 //  Description : copy constructor
 ////////////////////////////////////////////////////////////////////
-136
-LinearNoiseForce::LinearNoiseForce(PN_stdfloat a = (1), bool m = (0));
+134
+LinearNoiseForce::LinearNoiseForce(PN_stdfloat a = 1.0, bool m = 0);
 LinearNoiseForce::LinearNoiseForce(LinearNoiseForce const &copy);
 
 412 14 get_class_type 0 4 483 32 LinearNoiseForce::get_class_type 0 1 188 0
@@ -1621,8 +1621,8 @@ static TypeHandle LinearNoiseForce::get_class_type(void);
 //      Access : Public
 // Description : copy constructor
 ////////////////////////////////////////////////////////////////////
-240
-LinearSinkForce::LinearSinkForce(LPoint3 const &p, LinearDistanceForce::FalloffType f, PN_stdfloat r, PN_stdfloat a = (1), bool m = (1));
+238
+LinearSinkForce::LinearSinkForce(LPoint3 const &p, LinearDistanceForce::FalloffType f, PN_stdfloat r, PN_stdfloat a = 1.0, bool m = 1);
 LinearSinkForce::LinearSinkForce(void);
 LinearSinkForce::LinearSinkForce(LinearSinkForce const &copy);
 
@@ -1648,8 +1648,8 @@ static TypeHandle LinearSinkForce::get_class_type(void);
 //      Access : Public
 // Description : copy constructor
 ////////////////////////////////////////////////////////////////////
-257
-LinearSourceForce::LinearSourceForce(LPoint3 const &p, LinearDistanceForce::FalloffType f, PN_stdfloat r, PN_stdfloat a = (1), bool mass = (1));
+255
+LinearSourceForce::LinearSourceForce(LPoint3 const &p, LinearDistanceForce::FalloffType f, PN_stdfloat r, PN_stdfloat a = 1.0, bool mass = 1);
 LinearSourceForce::LinearSourceForce(void);
 LinearSourceForce::LinearSourceForce(LinearSourceForce const &copy);
 
@@ -1669,8 +1669,8 @@ static TypeHandle LinearSourceForce::get_class_type(void);
 //      Access : public
 // Description : copy constructor
 ////////////////////////////////////////////////////////////////////
-214
-LinearUserDefinedForce::LinearUserDefinedForce(LVector3 (*proc)(PhysicsObject const *) = (0), PN_stdfloat a = (1), bool md = (0));
+210
+LinearUserDefinedForce::LinearUserDefinedForce(LVector3 (*proc)(PhysicsObject const *) = 0, PN_stdfloat a = 1.0, bool md = 0);
 LinearUserDefinedForce::LinearUserDefinedForce(LinearUserDefinedForce const &copy);
 
 418 8 set_proc 0 4 486 32 LinearUserDefinedForce::set_proc 0 0 181
@@ -1703,10 +1703,10 @@ static TypeHandle LinearUserDefinedForce::get_class_type(void);
 //       Access : Public
 //  Description : Copy Constructor
 ////////////////////////////////////////////////////////////////////
-304
-LinearVectorForce::LinearVectorForce(LVector3 const &vec, PN_stdfloat a = (1), bool mass = (0));
+300
+LinearVectorForce::LinearVectorForce(LVector3 const &vec, PN_stdfloat a = 1.0, bool mass = 0);
 LinearVectorForce::LinearVectorForce(LinearVectorForce const &copy);
-LinearVectorForce::LinearVectorForce(PN_stdfloat x = (0), PN_stdfloat y = (0), PN_stdfloat z = (0), PN_stdfloat a = (1), bool mass = (0));
+LinearVectorForce::LinearVectorForce(PN_stdfloat x = 0.0, PN_stdfloat y = 0.0, PN_stdfloat z = 0.0, PN_stdfloat a = 1.0, bool mass = 0);
 
 421 10 set_vector 0 4 487 29 LinearVectorForce::set_vector 0 2 202 203 468
 ////////////////////////////////////////////////////////////////////
@@ -1989,8 +1989,8 @@ virtual void PhysicsManager::output(ostream &out) const;
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-92
-virtual void PhysicsManager::write_physicals(ostream &out, unsigned int indent = (0)) const;
+90
+virtual void PhysicsManager::write_physicals(ostream &out, unsigned int indent = 0) const;
 
 454 19 write_linear_forces 0 6 490 35 PhysicsManager::write_linear_forces 0 1 236 286
 ////////////////////////////////////////////////////////////////////
@@ -1999,8 +1999,8 @@ virtual void PhysicsManager::write_physicals(ostream &out, unsigned int indent =
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-96
-virtual void PhysicsManager::write_linear_forces(ostream &out, unsigned int indent = (0)) const;
+94
+virtual void PhysicsManager::write_linear_forces(ostream &out, unsigned int indent = 0) const;
 
 455 20 write_angular_forces 0 6 490 36 PhysicsManager::write_angular_forces 0 1 237 294
 ////////////////////////////////////////////////////////////////////
@@ -2009,8 +2009,8 @@ virtual void PhysicsManager::write_linear_forces(ostream &out, unsigned int inde
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-97
-virtual void PhysicsManager::write_angular_forces(ostream &out, unsigned int indent = (0)) const;
+95
+virtual void PhysicsManager::write_angular_forces(ostream &out, unsigned int indent = 0) const;
 
 456 5 write 0 6 490 21 PhysicsManager::write 0 1 238 279
 ////////////////////////////////////////////////////////////////////
@@ -2019,8 +2019,8 @@ virtual void PhysicsManager::write_angular_forces(ostream &out, unsigned int ind
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-82
-virtual void PhysicsManager::write(ostream &out, unsigned int indent = (0)) const;
+80
+virtual void PhysicsManager::write(ostream &out, unsigned int indent = 0) const;
 
 457 12 debug_output 0 6 490 28 PhysicsManager::debug_output 0 1 239 279
 ////////////////////////////////////////////////////////////////////
@@ -2029,8 +2029,8 @@ virtual void PhysicsManager::write(ostream &out, unsigned int indent = (0)) cons
 //  Description : Write a string representation of this instance to
 //                <out>.
 ////////////////////////////////////////////////////////////////////
-89
-virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0)) const;
+87
+virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = 0) const;
 
 239
 1 0 0 7 3 491 0 0 232 ////////////////////////////////////////////////////////////////////
@@ -2380,7 +2380,7 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //                <out>.
 //////////////////////////////////////////////////////////////////// 3 4 this 3 531  3 out 1 522  12 indent_level 1 530  
 67 0 0 7 68 526 0 0 0 0 
-68 0 0 4 70 495 0 0 0 2 4 this 3 537  1 a 1 496  
+68 0 0 4 70 495 0 0 0 2 4 this 3 537  1 a 1 538  
 69 0 0 4 71 495 0 0 197 ////////////////////////////////////////////////////////////////////
 //    Function : set_mass_Dependent
 //      Access : Public
@@ -2388,11 +2388,11 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 70 0 0 6 72 496 0 0 192 ////////////////////////////////////////////////////////////////////
 //    Function : get_amplitude
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 538  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 539  
 71 0 0 6 73 494 0 0 197 ////////////////////////////////////////////////////////////////////
 //    Function : get_mass_dependent
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 538  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 539  
 72 0 0 4 74 495 0 0 195 ////////////////////////////////////////////////////////////////////
 //    Function : set_vector_masks
 //      Access : Public
@@ -2411,29 +2411,29 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 538  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 539  3 out 1 522  6 indent 1 524  
 77 0 0 7 79 526 0 0 0 0 
-78 0 0 7 81 542 0 0 0 1 4 this 3 540  
+78 0 0 7 81 543 0 0 0 1 4 this 3 541  
 79 0 0 7 82 517 0 0 217 ////////////////////////////////////////////////////////////////////
 //    Function : get_quat
 //      Access : public
 // Description : access query
-//////////////////////////////////////////////////////////////////// 2 4 this 3 542  2 po 1 492  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 543  2 po 1 492  
 80 0 0 4 83 495 0 0 279 ////////////////////////////////////////////////////////////////////
 //     Function : write
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 540  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 541  3 out 1 522  6 indent 1 524  
 81 0 0 7 84 526 0 0 0 0 
-82 0 0 7 86 545 0 0 352 ////////////////////////////////////////////////////////////////////
+82 0 0 7 86 546 0 0 352 ////////////////////////////////////////////////////////////////////
 //     Function : Physical
 //       Access : Public
 //  Description : copy constructor (note- does deep copy of pn's)
 //                but does NOT attach itself to its template's
 //                physicsmanager.
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 543  
-83 0 0 7 86 545 0 0 903 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 544  
+83 0 0 7 86 546 0 0 903 ////////////////////////////////////////////////////////////////////
 //     Function : Physical
 //       Access : Public
 //  Description : Default Constructor
@@ -2451,124 +2451,124 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //                with dead nodes, pre-allocating for the speed
 //                end of the speed-vs-overhead deal.
 //////////////////////////////////////////////////////////////////// 2 13 total_objects 1 530  9 pre_alloc 1 494  
-84 0 0 6 87 546 0 0 198 ////////////////////////////////////////////////////////////////////
+84 0 0 6 87 547 0 0 198 ////////////////////////////////////////////////////////////////////
 //    Function : get_physics_manager
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
-85 0 0 7 88 547 0 0 196 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
+85 0 0 7 88 548 0 0 196 ////////////////////////////////////////////////////////////////////
 //    Function : get_physical_node
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
 86 0 0 7 89 536 0 0 201 ////////////////////////////////////////////////////////////////////
 //    Function : get_physical_node_path
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
 87 0 0 7 90 491 0 0 192 ////////////////////////////////////////////////////////////////////
 //    Function : get_phys_body
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
 88 0 0 4 91 495 0 0 244 ////////////////////////////////////////////////////////////////////
 //    Function : clear_linear_forces
 //      Access : Public
 // Description : Erases the linear force list
-//////////////////////////////////////////////////////////////////// 1 4 this 3 545  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 546  
 89 0 0 4 92 495 0 0 246 ////////////////////////////////////////////////////////////////////
 //    Function : clear_angular_forces
 //      Access : Public
 // Description : Erases the angular force list
-//////////////////////////////////////////////////////////////////// 1 4 this 3 545  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 546  
 90 0 0 4 93 495 0 0 240 ////////////////////////////////////////////////////////////////////
 //    Function : clear_physics_objects
 //      Access : Public
 // Description : Erases the object list
-//////////////////////////////////////////////////////////////////// 1 4 this 3 545  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 546  
 91 0 0 4 94 495 0 0 250 ////////////////////////////////////////////////////////////////////
 //    Function : add_linear_force
 //      Access : Public
 // Description : Adds a linear force to the force list
-//////////////////////////////////////////////////////////////////// 2 4 this 3 545  1 f 1 537  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 537  
 92 0 0 4 95 495 0 0 253 ////////////////////////////////////////////////////////////////////
 //    Function : add_angular_force
 //      Access : Public
 // Description : Adds an angular force to the force list
-//////////////////////////////////////////////////////////////////// 2 4 this 3 545  1 f 1 542  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 543  
 93 0 0 4 96 495 0 0 258 ////////////////////////////////////////////////////////////////////
 //    Function : add_physics_object
 //      Access : Public
 // Description : Adds an object to the physics object vector
-//////////////////////////////////////////////////////////////////// 2 4 this 3 545  2 po 1 491  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 546  2 po 1 491  
 94 0 0 4 97 495 0 0 258 ////////////////////////////////////////////////////////////////////
 //    Function : remove_linear_force
 //      Access : Public
 // Description : removes a linear force from the force list
-//////////////////////////////////////////////////////////////////// 2 4 this 3 545  1 f 1 537  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 537  
 95 0 0 4 98 495 0 0 261 ////////////////////////////////////////////////////////////////////
 //    Function : remove_angular_force
 //      Access : Public
 // Description : removes an angular force from the force list
-//////////////////////////////////////////////////////////////////// 2 4 this 3 545  1 f 1 542  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 543  
 96 0 0 6 99 530 0 0 200 ////////////////////////////////////////////////////////////////////
 //    Function : get_num_linear_forces
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
 97 0 0 7 100 537 0 0 195 ////////////////////////////////////////////////////////////////////
 //    Function : get_linear_force
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 543  5 index 1 530  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 544  5 index 1 530  
 98 0 0 6 101 530 0 0 201 ////////////////////////////////////////////////////////////////////
 //    Function : get_num_angular_forces
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
-99 0 0 7 102 542 0 0 196 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
+99 0 0 7 102 543 0 0 196 ////////////////////////////////////////////////////////////////////
 //    Function : get_angular_force
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 543  5 index 1 530  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 544  5 index 1 530  
 100 0 0 4 103 495 0 0 234 ////////////////////////////////////////////////////////////////////
 //    Function : set_viscosity
 //      Access : Public
 // Description : Set the local viscosity.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 545  9 viscosity 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 546  9 viscosity 1 496  
 101 0 0 6 104 496 0 0 234 ////////////////////////////////////////////////////////////////////
 //    Function : get_viscosity
 //      Access : Public
 // Description : Get the local viscosity.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
 102 0 0 7 105 528 0 0 190 ////////////////////////////////////////////////////////////////////
 //    Function : get_objects
 //      Access : Public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 543  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 544  
 103 0 0 4 106 495 0 0 280 ////////////////////////////////////////////////////////////////////
 //     Function : output
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 543  3 out 1 522  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 544  3 out 1 522  
 104 0 0 4 107 495 0 0 295 ////////////////////////////////////////////////////////////////////
 //     Function : write_physics_objects
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 543  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 544  3 out 1 522  6 indent 1 524  
 105 0 0 4 108 495 0 0 293 ////////////////////////////////////////////////////////////////////
 //     Function : write_linear_forces
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 543  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 544  3 out 1 522  6 indent 1 524  
 106 0 0 4 109 495 0 0 294 ////////////////////////////////////////////////////////////////////
 //     Function : write_angular_forces
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 543  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 544  3 out 1 522  6 indent 1 524  
 107 0 0 4 110 495 0 0 279 ////////////////////////////////////////////////////////////////////
 //     Function : write
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 543  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 544  3 out 1 522  6 indent 1 524  
 108 0 0 7 111 526 0 0 0 0 
-109 0 0 7 114 547 0 0 231 ////////////////////////////////////////////////////////////////////
+109 0 0 7 114 548 0 0 231 ////////////////////////////////////////////////////////////////////
 //     Function : PhysicalNode
 //       Access : public
 //  Description : default constructor
@@ -2576,111 +2576,111 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 110 0 0 4 115 495 0 0 180 ////////////////////////////////////////////////////////////////////
 //  Function : clear
 //    Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 547  
-111 0 0 7 116 545 0 0 187 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 548  
+111 0 0 7 116 546 0 0 187 ////////////////////////////////////////////////////////////////////
 //  Function : get_physical
 //    Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 548  5 index 1 530  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 549  5 index 1 530  
 112 0 0 6 117 530 0 0 192 ////////////////////////////////////////////////////////////////////
 //  Function : get_num_physicals
 //    Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 548  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 549  
 113 0 0 4 118 495 0 0 187 ////////////////////////////////////////////////////////////////////
 //  Function : add_physical
 //    Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 547  8 physical 1 545  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 548  8 physical 1 546  
 114 0 0 4 119 495 0 0 234 ////////////////////////////////////////////////////////////////////
 //     Function : add_physicals_from
 //       Access : public
 //  Description : append operation
-//////////////////////////////////////////////////////////////////// 2 4 this 3 547  5 other 1 548  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 548  5 other 1 549  
 115 0 0 4 120 495 0 0 231 ////////////////////////////////////////////////////////////////////
 //     Function : remove_physical
 //       Access : public
 //  Description : remove operation
-//////////////////////////////////////////////////////////////////// 2 4 this 3 547  8 physical 1 545  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 548  8 physical 1 546  
 116 0 0 4 120 495 0 0 231 ////////////////////////////////////////////////////////////////////
 //     Function : remove_physical
 //       Access : public
 //  Description : remove operation
-//////////////////////////////////////////////////////////////////// 2 4 this 3 547  5 index 1 530  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 548  5 index 1 530  
 117 0 0 4 121 495 0 0 279 ////////////////////////////////////////////////////////////////////
 //     Function : write
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 548  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 549  3 out 1 522  6 indent 1 524  
 118 0 0 7 122 526 0 0 0 0 
-119 0 0 7 124 552 0 0 226 ////////////////////////////////////////////////////////////////////
+119 0 0 7 124 553 0 0 226 ////////////////////////////////////////////////////////////////////
 //     Function : ActorNode
 //       Access : public
 //  Description : Copy Constructor.
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 550  
-120 0 0 7 124 552 0 0 220 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 551  
+120 0 0 7 124 553 0 0 220 ////////////////////////////////////////////////////////////////////
 //     Function : ActorNode
 //       Access : public
 //  Description : Constructor
 //////////////////////////////////////////////////////////////////// 1 4 name 1 521  
-121 0 0 7 125 491 0 0 0 1 4 this 3 552  
+121 0 0 7 125 491 0 0 0 1 4 this 3 553  
 122 0 0 4 126 495 0 0 215 ////////////////////////////////////////////////////////////////////
 //    Function : set_contact_vector
 //      Access : Public
 // Description : 
-//////////////////////////////////////////////////////////////////// 2 4 this 3 552  14 contact_vector 1 503  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 553  14 contact_vector 1 503  
 123 0 0 6 127 503 0 0 215 ////////////////////////////////////////////////////////////////////
 //    Function : get_contact_vector
 //      Access : Public
 // Description : 
-//////////////////////////////////////////////////////////////////// 1 4 this 3 550  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 551  
 124 0 0 4 128 495 0 0 395 ////////////////////////////////////////////////////////////////////
 //     Function : update_transform
 //       Access : public
 //  Description : this sets the transform generated by the contained
 //                Physical, moving the node and subsequent geometry.
 //                i.e. copy from PhysicsObject to PandaNode
-//////////////////////////////////////////////////////////////////// 1 4 this 3 552  
-125 0 0 4 129 495 0 0 0 2 4 this 3 552  5 limit 1 496  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 553  
+125 0 0 4 129 495 0 0 0 2 4 this 3 553  5 limit 1 496  
 126 0 0 7 130 526 0 0 0 0 
 127 0 0 4 133 495 0 0 280 ////////////////////////////////////////////////////////////////////
 //     Function : output
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 553  3 out 1 522  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 554  3 out 1 522  
 128 0 0 4 134 495 0 0 307 ////////////////////////////////////////////////////////////////////
 //     Function : write_precomputed_linear_matrices
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 553  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 554  3 out 1 522  6 indent 1 524  
 129 0 0 4 135 495 0 0 308 ////////////////////////////////////////////////////////////////////
 //     Function : write_precomputed_angular_matrices
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 553  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 554  3 out 1 522  6 indent 1 524  
 130 0 0 4 136 495 0 0 279 ////////////////////////////////////////////////////////////////////
 //     Function : write
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 553  3 out 1 522  6 indent 1 524  
-131 0 0 7 139 555 0 0 233 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 3 4 this 3 554  3 out 1 522  6 indent 1 524  
+131 0 0 7 139 556 0 0 233 ////////////////////////////////////////////////////////////////////
 //     Function : AngularEulerIntegrator
 //       Access : Public
 //  Description : constructor
 //////////////////////////////////////////////////////////////////// 0 
-132 0 0 7 141 558 0 0 231 ////////////////////////////////////////////////////////////////////
+132 0 0 7 141 559 0 0 231 ////////////////////////////////////////////////////////////////////
 //    Function : AngularVectorForce
 //      Access : public
 // Description : copy constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 556  
-133 0 0 7 141 558 0 0 226 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 557  
+133 0 0 7 141 559 0 0 226 ////////////////////////////////////////////////////////////////////
 //    Function : AngularVectorForce
 //      Access : public
 // Description : constructor
 //////////////////////////////////////////////////////////////////// 1 4 quat 1 508  
-134 0 0 7 141 558 0 0 226 ////////////////////////////////////////////////////////////////////
+134 0 0 7 141 559 0 0 226 ////////////////////////////////////////////////////////////////////
 //    Function : AngularVectorForce
 //      Access : public
 // Description : constructor
@@ -2688,15 +2688,15 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 135 0 0 4 142 495 0 0 181 ////////////////////////////////////////////////////////////////////
 // Function : set_quat
 //   Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 558  4 quat 1 508  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 559  4 quat 1 508  
 136 0 0 4 143 495 0 0 180 ////////////////////////////////////////////////////////////////////
 // Function : set_hpr
 //   Access : public
-//////////////////////////////////////////////////////////////////// 4 4 this 3 558  1 h 1 496  1 p 1 496  1 r 1 496  
+//////////////////////////////////////////////////////////////////// 4 4 this 3 559  1 h 1 496  1 p 1 496  1 r 1 496  
 137 0 0 7 144 517 0 0 187 ////////////////////////////////////////////////////////////////////
 // Function : get_local_quat
 //   Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 556  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 557  
 138 0 0 7 145 526 0 0 0 0 
 139 0 0 7 147 534 0 0 228 ////////////////////////////////////////////////////////////////////
 //     Function : ForceNode
@@ -2710,11 +2710,11 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 141 0 0 7 149 533 0 0 184 ////////////////////////////////////////////////////////////////////
 //  Function : get_force
 //    Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 559  5 index 1 530  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 560  5 index 1 530  
 142 0 0 6 150 530 0 0 189 ////////////////////////////////////////////////////////////////////
 //  Function : get_num_forces
 //    Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 559  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 560  
 143 0 0 4 151 495 0 0 184 ////////////////////////////////////////////////////////////////////
 //  Function : add_force
 //    Access : public
@@ -2723,7 +2723,7 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //     Function : add_forces_from
 //       Access : public
 //  Description : append operation
-//////////////////////////////////////////////////////////////////// 2 4 this 3 534  5 other 1 559  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 534  5 other 1 560  
 145 0 0 4 153 495 0 0 228 ////////////////////////////////////////////////////////////////////
 //     Function : remove_force
 //       Access : public
@@ -2739,20 +2739,20 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 559  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 560  3 out 1 522  6 indent 1 524  
 148 0 0 4 155 495 0 0 279 ////////////////////////////////////////////////////////////////////
 //     Function : write
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 559  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 560  3 out 1 522  6 indent 1 524  
 149 0 0 7 156 526 0 0 0 0 
-150 0 0 7 158 563 0 0 234 ////////////////////////////////////////////////////////////////////
+150 0 0 7 158 564 0 0 234 ////////////////////////////////////////////////////////////////////
 //     Function : LinearControlForce
 //       Access : Public
 //  Description : Copy Constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 561  
-151 0 0 7 158 563 0 0 236 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 562  
+151 0 0 7 158 564 0 0 236 ////////////////////////////////////////////////////////////////////
 //     Function : LinearControlForce
 //       Access : Public
 //  Description : Vector Constructor
@@ -2761,39 +2761,39 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //    Function : clear_physics_object
 //      Access : Public
 // Description : encapsulating wrapper
-//////////////////////////////////////////////////////////////////// 1 4 this 3 563  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 564  
 153 0 0 4 160 495 0 0 236 ////////////////////////////////////////////////////////////////////
 //    Function : set_physics_object
 //      Access : Public
 // Description : encapsulating wrapper
-//////////////////////////////////////////////////////////////////// 2 4 this 3 563  2 po 1 492  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 564  2 po 1 492  
 154 0 0 7 161 492 0 0 246 ////////////////////////////////////////////////////////////////////
 //    Function : get_physics_object
 //      Access : Public
 // Description : piecewise encapsulating wrapper
-//////////////////////////////////////////////////////////////////// 1 4 this 3 561  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 562  
 155 0 0 4 162 495 0 0 228 ////////////////////////////////////////////////////////////////////
 //    Function : set_vector
 //      Access : Public
 // Description : encapsulating wrapper
-//////////////////////////////////////////////////////////////////// 2 4 this 3 563  1 v 1 503  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 564  1 v 1 503  
 156 0 0 4 162 495 0 0 238 ////////////////////////////////////////////////////////////////////
 //    Function : set_vector
 //      Access : Public
 // Description : piecewise encapsulating wrapper
-//////////////////////////////////////////////////////////////////// 4 4 this 3 563  1 x 1 496  1 y 1 496  1 z 1 496  
+//////////////////////////////////////////////////////////////////// 4 4 this 3 564  1 x 1 496  1 y 1 496  1 z 1 496  
 157 0 0 7 163 507 0 0 212 ////////////////////////////////////////////////////////////////////
 //    Function : get_local_vector
 //      Access : Public
 // Description :
-//////////////////////////////////////////////////////////////////// 1 4 this 3 561  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 562  
 158 0 0 7 164 526 0 0 0 0 
-159 0 0 7 166 566 0 0 238 ////////////////////////////////////////////////////////////////////
+159 0 0 7 166 567 0 0 238 ////////////////////////////////////////////////////////////////////
 //    Function : LinearCylinderVortexForce
 //      Access : public
 // Description : copy Constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 564  
-160 0 0 7 166 566 0 0 240 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 565  
+160 0 0 7 166 567 0 0 240 ////////////////////////////////////////////////////////////////////
 //    Function : LinearCylinderVortexForce
 //      Access : public
 // Description : Simple Constructor
@@ -2801,75 +2801,75 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 161 0 0 4 167 495 0 0 181 ////////////////////////////////////////////////////////////////////
 // Function : set_coef
 //   Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 566  4 coef 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 567  4 coef 1 496  
 162 0 0 6 168 496 0 0 181 ////////////////////////////////////////////////////////////////////
 // Function : get_coef
 //   Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 564  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 565  
 163 0 0 4 169 495 0 0 183 ////////////////////////////////////////////////////////////////////
 // Function : set_radius
 //   Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 566  6 radius 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 567  6 radius 1 496  
 164 0 0 6 170 496 0 0 183 ////////////////////////////////////////////////////////////////////
 // Function : get_radius
 //   Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 564  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 565  
 165 0 0 4 171 495 0 0 183 ////////////////////////////////////////////////////////////////////
 // Function : set_length
 //   Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 566  6 length 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 567  6 length 1 496  
 166 0 0 6 172 496 0 0 183 ////////////////////////////////////////////////////////////////////
 // Function : get_length
 //   Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 564  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 565  
 167 0 0 7 173 526 0 0 0 0 
 168 0 0 4 176 495 0 0 221 ////////////////////////////////////////////////////////////////////
 //    Function : set_radius
 //      Access : Public
 // Description : set the radius
-//////////////////////////////////////////////////////////////////// 2 4 this 3 567  1 r 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 568  1 r 1 496  
 169 0 0 4 177 495 0 0 244 ////////////////////////////////////////////////////////////////////
 //    Function : set_falloff_type
 //      Access : Public
 // Description : falloff_type encapsulating wrap
-//////////////////////////////////////////////////////////////////// 2 4 this 3 567  2 ft 1 477  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 568  2 ft 1 477  
 170 0 0 4 178 495 0 0 233 ////////////////////////////////////////////////////////////////////
 //    Function : set_force_center
 //      Access : Public
 // Description : set the force center
-//////////////////////////////////////////////////////////////////// 2 4 this 3 567  1 p 1 498  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 568  1 p 1 498  
 171 0 0 6 179 496 0 0 219 ////////////////////////////////////////////////////////////////////
 //    Function : get_radius
 //      Access : public
 // Description : radius query
-//////////////////////////////////////////////////////////////////// 1 4 this 3 568  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 569  
 172 0 0 6 180 477 0 0 231 ////////////////////////////////////////////////////////////////////
 //    Function : get_falloff_type
 //      Access : public
 // Description : falloff_type query
-//////////////////////////////////////////////////////////////////// 1 4 this 3 568  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 569  
 173 0 0 7 181 502 0 0 231 ////////////////////////////////////////////////////////////////////
 //    Function : get_force_center
 //      Access : public
 // Description : force_center query
-//////////////////////////////////////////////////////////////////// 1 4 this 3 568  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 569  
 174 0 0 6 182 496 0 0 248 ////////////////////////////////////////////////////////////////////
 //    Function : get_scalar_term
 //      Access : private
 // Description : calculate the term based on falloff
-//////////////////////////////////////////////////////////////////// 1 4 this 3 568  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 569  
 175 0 0 7 183 526 0 0 0 0 
-176 0 0 7 186 570 0 0 232 ////////////////////////////////////////////////////////////////////
+176 0 0 7 186 571 0 0 232 ////////////////////////////////////////////////////////////////////
 //     Function : LinearEulerIntegrator
 //       Access : Public
 //  Description : constructor
 //////////////////////////////////////////////////////////////////// 0 
-177 0 0 7 188 573 0 0 232 ////////////////////////////////////////////////////////////////////
+177 0 0 7 188 574 0 0 232 ////////////////////////////////////////////////////////////////////
 //    Function : LinearFrictionForce
 //      Access : Public
 // Description : copy constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 571  
-178 0 0 7 188 573 0 0 227 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 572  
+178 0 0 7 188 574 0 0 227 ////////////////////////////////////////////////////////////////////
 //    Function : LinearFrictionForce
 //      Access : Public
 // Description : Constructor
@@ -2877,84 +2877,84 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 179 0 0 4 189 495 0 0 181 ////////////////////////////////////////////////////////////////////
 // Function : set_coef
 //   Access : public
-//////////////////////////////////////////////////////////////////// 2 4 this 3 573  4 coef 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 574  4 coef 1 496  
 180 0 0 6 190 496 0 0 181 ////////////////////////////////////////////////////////////////////
 // Function : get_coef
 //   Access : public
-//////////////////////////////////////////////////////////////////// 1 4 this 3 571  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 572  
 181 0 0 7 191 526 0 0 0 0 
 182 0 0 7 193 526 0 0 0 0 
-183 0 0 7 195 576 0 0 230 ////////////////////////////////////////////////////////////////////
+183 0 0 7 195 577 0 0 230 ////////////////////////////////////////////////////////////////////
 //    Function : LinearJitterForce
 //      Access : Public
 // Description : copy constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 574  
-184 0 0 7 195 576 0 0 225 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 575  
+184 0 0 7 195 577 0 0 225 ////////////////////////////////////////////////////////////////////
 //    Function : LinearJitterForce
 //      Access : Public
 // Description : constructor
 //////////////////////////////////////////////////////////////////// 2 1 a 1 496  1 m 1 494  
 185 0 0 7 196 526 0 0 0 0 
-186 0 0 7 198 579 0 0 232 ////////////////////////////////////////////////////////////////////
+186 0 0 7 198 580 0 0 232 ////////////////////////////////////////////////////////////////////
 //     Function : LinearNoiseForce
 //       Access : Public
 //  Description : copy constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 577  
-187 0 0 7 198 579 0 0 227 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 578  
+187 0 0 7 198 580 0 0 227 ////////////////////////////////////////////////////////////////////
 //     Function : LinearNoiseForce
 //       Access : Public
 //  Description : constructor
 //////////////////////////////////////////////////////////////////// 2 1 a 1 496  1 m 1 494  
 188 0 0 7 199 526 0 0 0 0 
-189 0 0 7 201 580 0 0 230 ////////////////////////////////////////////////////////////////////
+189 0 0 7 201 581 0 0 230 ////////////////////////////////////////////////////////////////////
 //    Function : LinearSinkForce
 //      Access : Public
 // Description : Simple constructor
 //////////////////////////////////////////////////////////////////// 0 
-190 0 0 7 201 580 0 0 230 ////////////////////////////////////////////////////////////////////
+190 0 0 7 201 581 0 0 230 ////////////////////////////////////////////////////////////////////
 //    Function : LinearSinkForce
 //      Access : Public
 // Description : Simple constructor
 //////////////////////////////////////////////////////////////////// 5 1 p 1 498  1 f 1 477  1 r 1 496  1 a 1 496  1 m 1 494  
-191 0 0 7 201 580 0 0 228 ////////////////////////////////////////////////////////////////////
+191 0 0 7 201 581 0 0 228 ////////////////////////////////////////////////////////////////////
 //    Function : LinearSinkForce
 //      Access : Public
 // Description : copy constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 581  
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 582  
 192 0 0 7 202 526 0 0 0 0 
-193 0 0 7 204 583 0 0 232 ////////////////////////////////////////////////////////////////////
+193 0 0 7 204 584 0 0 232 ////////////////////////////////////////////////////////////////////
 //    Function : LinearSourceForce
 //      Access : Public
 // Description : Simple constructor
 //////////////////////////////////////////////////////////////////// 0 
-194 0 0 7 204 583 0 0 232 ////////////////////////////////////////////////////////////////////
+194 0 0 7 204 584 0 0 232 ////////////////////////////////////////////////////////////////////
 //    Function : LinearSourceForce
 //      Access : Public
 // Description : Simple constructor
 //////////////////////////////////////////////////////////////////// 5 1 p 1 498  1 f 1 477  1 r 1 496  1 a 1 496  4 mass 1 494  
-195 0 0 7 204 583 0 0 230 ////////////////////////////////////////////////////////////////////
+195 0 0 7 204 584 0 0 230 ////////////////////////////////////////////////////////////////////
 //    Function : LinearSourceForce
 //      Access : Public
 // Description : copy constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 584  
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 585  
 196 0 0 7 205 526 0 0 0 0 
-197 0 0 7 207 588 0 0 235 ////////////////////////////////////////////////////////////////////
+197 0 0 7 207 589 0 0 235 ////////////////////////////////////////////////////////////////////
 //    Function : LinearUserDefinedForce
 //      Access : public
 // Description : copy constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 586  
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 587  
 198 0 0 7 209 526 0 0 0 0 
-199 0 0 7 211 589 0 0 235 ////////////////////////////////////////////////////////////////////
+199 0 0 7 211 590 0 0 235 ////////////////////////////////////////////////////////////////////
 //     Function : LinearVectorForce
 //       Access : Public
 //  Description : Vector Constructor
 //////////////////////////////////////////////////////////////////// 3 3 vec 1 503  1 a 1 496  4 mass 1 494  
-200 0 0 7 211 589 0 0 233 ////////////////////////////////////////////////////////////////////
+200 0 0 7 211 590 0 0 233 ////////////////////////////////////////////////////////////////////
 //     Function : LinearVectorForce
 //       Access : Public
 //  Description : Copy Constructor
-//////////////////////////////////////////////////////////////////// 1 4 copy 1 590  
-201 0 0 7 211 589 0 0 246 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 copy 1 591  
+201 0 0 7 211 590 0 0 246 ////////////////////////////////////////////////////////////////////
 //     Function : LinearVectorForce
 //       Access : Public
 //  Description : Default/Piecewise constructor
@@ -2963,31 +2963,31 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //    Function : set_vector
 //      Access : Public
 // Description : encapsulating wrapper
-//////////////////////////////////////////////////////////////////// 2 4 this 3 589  1 v 1 503  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 590  1 v 1 503  
 203 0 0 4 212 495 0 0 238 ////////////////////////////////////////////////////////////////////
 //    Function : set_vector
 //      Access : Public
 // Description : piecewise encapsulating wrapper
-//////////////////////////////////////////////////////////////////// 4 4 this 3 589  1 x 1 496  1 y 1 496  1 z 1 496  
+//////////////////////////////////////////////////////////////////// 4 4 this 3 590  1 x 1 496  1 y 1 496  1 z 1 496  
 204 0 0 7 213 507 0 0 212 ////////////////////////////////////////////////////////////////////
 //    Function : get_local_vector
 //      Access : Public
 // Description :
-//////////////////////////////////////////////////////////////////// 1 4 this 3 590  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 591  
 205 0 0 7 214 526 0 0 0 0 
-206 0 0 7 217 592 0 0 232 ////////////////////////////////////////////////////////////////////
+206 0 0 7 217 593 0 0 232 ////////////////////////////////////////////////////////////////////
 //     Function: PhysicsCollisionHandler::Constructor
 //       Access: Public
 //  Description:
 //////////////////////////////////////////////////////////////////// 0 
-207 0 0 4 218 495 0 0 48 // These setters and getter are a bit of a hack: 2 4 this 3 592  5 speed 1 496  
-208 0 0 6 219 496 0 0 0 1 4 this 3 592  
-209 0 0 4 220 495 0 0 0 2 4 this 3 592  4 coef 1 496  
-210 0 0 6 221 496 0 0 0 1 4 this 3 592  
-211 0 0 4 222 495 0 0 0 2 4 this 3 592  4 coef 1 496  
-212 0 0 6 223 496 0 0 0 1 4 this 3 592  
+207 0 0 4 218 495 0 0 48 // These setters and getter are a bit of a hack: 2 4 this 3 593  5 speed 1 496  
+208 0 0 6 219 496 0 0 0 1 4 this 3 593  
+209 0 0 4 220 495 0 0 0 2 4 this 3 593  4 coef 1 496  
+210 0 0 6 221 496 0 0 0 1 4 this 3 593  
+211 0 0 4 222 495 0 0 0 2 4 this 3 593  4 coef 1 496  
+212 0 0 6 223 496 0 0 0 1 4 this 3 593  
 213 0 0 7 224 526 0 0 0 0 
-214 0 0 7 226 546 433 0 300 ////////////////////////////////////////////////////////////////////
+214 0 0 7 226 547 433 0 300 ////////////////////////////////////////////////////////////////////
 //     Function : PhysicsManager
 //       Access : Public
 //  Description : Default Constructor.  NOTE: EulerIntegrator is
@@ -2997,139 +2997,139 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //    Function : attach_linear_integrator
 //      Access : Public
 // Description : Hooks a linear integrator into the manager
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 i 1 593  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 i 1 594  
 216 0 0 4 229 495 0 0 266 ////////////////////////////////////////////////////////////////////
 //    Function : attach_angular_integrator
 //      Access : Public
 // Description : Hooks an angular integrator into the manager
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 i 1 594  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 i 1 595  
 217 0 0 4 230 495 0 0 255 ////////////////////////////////////////////////////////////////////
 //    Function : attach_physical
 //      Access : Public
 // Description : Registers a Physical class with the manager
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 p 1 545  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 p 1 546  
 218 0 0 4 231 495 0 0 257 ////////////////////////////////////////////////////////////////////
 //    Function : attach_physicalnode
 //      Access : Public
 // Description : Please call attach_physical_node instead.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 p 1 547  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 p 1 548  
 219 0 0 4 232 495 0 0 258 ////////////////////////////////////////////////////////////////////
 //    Function : attach_physical_node
 //      Access : Public
 // Description : Registers a physicalnode with the manager
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 p 1 547  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 p 1 548  
 220 0 0 4 233 495 0 0 265 ////////////////////////////////////////////////////////////////////
 //    Function : attach_linear_force
 //      Access : Public
 // Description : Adds a global linear force to the physics manager
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 537  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 f 1 537  
 221 0 0 4 234 495 0 0 267 ////////////////////////////////////////////////////////////////////
 //    Function : attach_angular_force
 //      Access : Public
 // Description : Adds a global angular force to the physics manager
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 542  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 f 1 543  
 222 0 0 4 235 495 0 0 255 ////////////////////////////////////////////////////////////////////
 //    Function : clear_linear_forces
 //      Access : Public
 // Description : Resets the physics manager force vector
-//////////////////////////////////////////////////////////////////// 1 4 this 3 546  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 547  
 223 0 0 4 236 495 0 0 256 ////////////////////////////////////////////////////////////////////
 //    Function : clear_angular_forces
 //      Access : Public
 // Description : Resets the physics manager force vector
-//////////////////////////////////////////////////////////////////// 1 4 this 3 546  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 547  
 224 0 0 4 237 495 0 0 253 ////////////////////////////////////////////////////////////////////
 //    Function : clear_physicals
 //      Access : Public
 // Description : Resets the physics manager objects vector
-//////////////////////////////////////////////////////////////////// 1 4 this 3 546  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 547  
 225 0 0 4 238 495 0 0 235 ////////////////////////////////////////////////////////////////////
 //    Function : set_viscosity
 //      Access : Public
 // Description : Set the global viscosity.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  9 viscosity 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  9 viscosity 1 496  
 226 0 0 6 239 496 0 0 235 ////////////////////////////////////////////////////////////////////
 //    Function : get_viscosity
 //      Access : Public
 // Description : Get the global viscosity.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 595  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 596  
 227 0 0 4 240 495 0 0 254 ////////////////////////////////////////////////////////////////////
 //     Function : remove_physical
 //       Access : Public
 //  Description : takes a physical out of the object list
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 p 1 545  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 p 1 546  
 228 0 0 4 241 495 0 0 256 ////////////////////////////////////////////////////////////////////
 //    Function : remove_physical_node
 //      Access : Public
 // Description : Removes a physicalnode from the manager
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 p 1 547  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 p 1 548  
 229 0 0 4 242 495 0 0 263 ////////////////////////////////////////////////////////////////////
 //     Function : remove_linear_force
 //       Access : Public
 //  Description : takes a linear force out of the physics list
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 537  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 f 1 537  
 230 0 0 4 243 495 0 0 266 ////////////////////////////////////////////////////////////////////
 //     Function : remove_angular_force
 //       Access : Public
 //  Description : takes an angular force out of the physics list
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  1 f 1 542  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  1 f 1 543  
 231 0 0 4 244 495 0 0 314 ////////////////////////////////////////////////////////////////////
 //     Function : DoPhysics
 //       Access : Public
 //  Description : This is the main high-level API call.  Performs
 //                integration on every attached Physical.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 546  2 dt 1 496  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 547  2 dt 1 496  
 232 0 0 4 244 495 0 0 372 ////////////////////////////////////////////////////////////////////
 //     Function : DoPhysics
 //       Access : Public
 //  Description : This is the main high-level API call.  Performs
 //                integration on a single physical.  Make sure its 
 //                associated forces are active.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 546  2 dt 1 496  1 p 1 545  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 547  2 dt 1 496  1 p 1 546  
 233 0 0 4 245 495 0 0 388 ////////////////////////////////////////////////////////////////////
 //     Function : InitRandomSeed
 //       Access : Public
 //  Description : One-time config function, sets up the random seed
 //                used by the physics and particle systems.
 //                For synchronizing across distributed computers
-//////////////////////////////////////////////////////////////////// 1 4 this 3 546  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 547  
 234 0 0 4 246 495 0 0 280 ////////////////////////////////////////////////////////////////////
 //     Function : output
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 595  3 out 1 522  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 596  3 out 1 522  
 235 0 0 4 247 495 0 0 289 ////////////////////////////////////////////////////////////////////
 //     Function : write_physicals
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 595  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 596  3 out 1 522  6 indent 1 524  
 236 0 0 4 248 495 0 0 286 ////////////////////////////////////////////////////////////////////
 //     Function : write_forces
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 595  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 596  3 out 1 522  6 indent 1 524  
 237 0 0 4 249 495 0 0 294 ////////////////////////////////////////////////////////////////////
 //     Function : write_angular_forces
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 595  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 596  3 out 1 522  6 indent 1 524  
 238 0 0 4 250 495 0 0 279 ////////////////////////////////////////////////////////////////////
 //     Function : write
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 595  3 out 1 522  6 indent 1 524  
+//////////////////////////////////////////////////////////////////// 3 4 this 3 596  3 out 1 522  6 indent 1 524  
 239 0 0 4 251 495 0 0 279 ////////////////////////////////////////////////////////////////////
 //     Function : write
 //       Access : Public
 //  Description : Write a string representation of this instance to
 //                <out>.
-//////////////////////////////////////////////////////////////////// 3 4 this 3 595  3 out 1 522  6 indent 1 524  
-139
+//////////////////////////////////////////////////////////////////// 3 4 this 3 596  3 out 1 522  6 indent 1 524  
+140
 458 13 PhysicsObject 0 75777 13 PhysicsObject 13 PhysicsObject 0 0 0 1 240 0 0 36 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 276 0 0 1 0 459 0 0 0 0 373
 ////////////////////////////////////////////////////////////////////
 //       Class : PhysicsObject
@@ -3152,7 +3152,7 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //               See also TypedObject for detailed instructions.
 ////////////////////////////////////////////////////////////////////
 
-460 23 PhysicsObjectCollection 0 26625 23 PhysicsObjectCollection 23 PhysicsObjectCollection 0 0 0 1 277 279 0 17 278 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 1 597 0 0 0 0 361
+460 23 PhysicsObjectCollection 0 26625 23 PhysicsObjectCollection 23 PhysicsObjectCollection 0 0 0 1 277 279 0 17 278 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 1 598 0 0 0 0 361
 ////////////////////////////////////////////////////////////////////
 //       Class : PhysicsObjectCollection
 // Description : This is a set of zero or more PhysicsObjects.  It's handy
@@ -3175,7 +3175,7 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 // Description : pure virtual parent of all quat-based forces.
 ////////////////////////////////////////////////////////////////////
 
-464 8 Physical 0 75777 8 Physical 8 Physical 0 0 0 1 318 0 0 25 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333 334 335 336 337 338 339 340 341 342 343 2 598 599 0 1 0 459 0 0 0 0 326
+464 8 Physical 0 75777 8 Physical 8 Physical 0 0 0 1 318 0 0 25 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333 334 335 336 337 338 339 340 341 342 343 2 599 600 0 1 0 459 0 0 0 0 326
 ////////////////////////////////////////////////////////////////////
 //       Class : Physical
 // Description : Defines a set of physically modeled attributes.
@@ -3183,9 +3183,9 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //               it from this.
 ////////////////////////////////////////////////////////////////////
 
-465 12 PhysicalNode 0 75777 12 PhysicalNode 12 PhysicalNode 0 0 0 1 344 0 0 8 345 346 347 348 349 350 351 352 1 600 0 1 0 466 0 0 0 0 0
+465 12 PhysicalNode 0 75777 12 PhysicalNode 12 PhysicalNode 0 0 0 1 344 0 0 8 345 346 347 348 349 350 351 352 1 601 0 1 0 466 0 0 0 0 0
 
-466 9 PandaNode 0 2049 9 PandaNode 9 PandaNode 0 0 0 0 0 0 0 3 601 602 603 0 0 0 0 374
+466 9 PandaNode 0 2049 9 PandaNode 9 PandaNode 0 0 0 0 0 0 0 3 602 603 604 0 0 0 0 374
 ////////////////////////////////////////////////////////////////////
 //       Class : PandaNode
 // Description : A basic node of the scene graph or data graph.  This
@@ -3229,7 +3229,7 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 //               equivalent of simple vector force.
 ////////////////////////////////////////////////////////////////////
 
-473 9 ForceNode 0 75777 9 ForceNode 9 ForceNode 0 0 0 1 370 0 0 9 371 372 373 374 375 376 377 378 379 1 604 0 1 0 466 0 0 0 0 420
+473 9 ForceNode 0 75777 9 ForceNode 9 ForceNode 0 0 0 1 370 0 0 9 371 372 373 374 375 376 377 378 379 1 605 0 1 0 466 0 0 0 0 420
 ////////////////////////////////////////////////////////////////////
 //        Class : ForceNode
 //  Description : A force that lives in the scene graph and is
@@ -3442,7 +3442,7 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 
 518 8 LMatrix4 0 2105344 8 LMatrix4 8 LMatrix4 0 0 519 0 0 0 0 0 0 0 0 0 0
 
-519 9 LMatrix4f 0 2048 9 LMatrix4f 9 LMatrix4f 0 0 0 0 0 0 0 3 605 606 607 0 0 0 0 215
+519 9 LMatrix4f 0 2048 9 LMatrix4f 9 LMatrix4f 0 0 0 0 0 0 0 3 606 607 608 0 0 0 0 215
 ////////////////////////////////////////////////////////////////////
 //       Class : LMatrix4
 // Description : This is a 4-by-4 transform matrix.
@@ -3496,7 +3496,7 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 
 534 11 ForceNode * 0 8576 11 ForceNode * 11 ForceNode * 0 0 473 0 0 0 0 0 0 0 0 0 0
 
-535 8 NodePath 0 2048 8 NodePath 8 NodePath 0 0 0 0 0 0 0 2 608 609 0 0 0 0 1139
+535 8 NodePath 0 2048 8 NodePath 8 NodePath 0 0 0 0 0 0 0 2 609 610 0 0 0 0 1139
 ////////////////////////////////////////////////////////////////////
 //       Class : NodePath
 // Description : NodePath is the fundamental system for disambiguating
@@ -3522,137 +3522,139 @@ virtual void PhysicsManager::debug_output(ostream &out, unsigned int indent = (0
 
 537 13 LinearForce * 0 8576 13 LinearForce * 13 LinearForce * 0 0 462 0 0 0 0 0 0 0 0 0 0
 
-538 19 LinearForce const * 0 8576 19 LinearForce const * 19 LinearForce const * 0 0 539 0 0 0 0 0 0 0 0 0 0
+538 17 PN_stdfloat const 0 8832 17 PN_stdfloat const 17 PN_stdfloat const 0 0 496 0 0 0 0 0 0 0 0 0 0
 
-539 17 LinearForce const 0 8832 17 LinearForce const 17 LinearForce const 0 0 462 0 0 0 0 0 0 0 0 0 0
+539 19 LinearForce const * 0 8576 19 LinearForce const * 19 LinearForce const * 0 0 540 0 0 0 0 0 0 0 0 0 0
 
-540 20 AngularForce const * 0 8576 20 AngularForce const * 20 AngularForce const * 0 0 541 0 0 0 0 0 0 0 0 0 0
+540 17 LinearForce const 0 8832 17 LinearForce const 17 LinearForce const 0 0 462 0 0 0 0 0 0 0 0 0 0
 
-541 18 AngularForce const 0 8832 18 AngularForce const 18 AngularForce const 0 0 463 0 0 0 0 0 0 0 0 0 0
+541 20 AngularForce const * 0 8576 20 AngularForce const * 20 AngularForce const * 0 0 542 0 0 0 0 0 0 0 0 0 0
 
-542 14 AngularForce * 0 8576 14 AngularForce * 14 AngularForce * 0 0 463 0 0 0 0 0 0 0 0 0 0
+542 18 AngularForce const 0 8832 18 AngularForce const 18 AngularForce const 0 0 463 0 0 0 0 0 0 0 0 0 0
 
-543 16 Physical const * 0 8576 16 Physical const * 16 Physical const * 0 0 544 0 0 0 0 0 0 0 0 0 0
+543 14 AngularForce * 0 8576 14 AngularForce * 14 AngularForce * 0 0 463 0 0 0 0 0 0 0 0 0 0
 
-544 14 Physical const 0 8832 14 Physical const 14 Physical const 0 0 464 0 0 0 0 0 0 0 0 0 0
+544 16 Physical const * 0 8576 16 Physical const * 16 Physical const * 0 0 545 0 0 0 0 0 0 0 0 0 0
 
-545 10 Physical * 0 8576 10 Physical * 10 Physical * 0 0 464 0 0 0 0 0 0 0 0 0 0
+545 14 Physical const 0 8832 14 Physical const 14 Physical const 0 0 464 0 0 0 0 0 0 0 0 0 0
 
-546 16 PhysicsManager * 0 8576 16 PhysicsManager * 16 PhysicsManager * 0 0 490 0 0 0 0 0 0 0 0 0 0
+546 10 Physical * 0 8576 10 Physical * 10 Physical * 0 0 464 0 0 0 0 0 0 0 0 0 0
 
-547 14 PhysicalNode * 0 8576 14 PhysicalNode * 14 PhysicalNode * 0 0 465 0 0 0 0 0 0 0 0 0 0
+547 16 PhysicsManager * 0 8576 16 PhysicsManager * 16 PhysicsManager * 0 0 490 0 0 0 0 0 0 0 0 0 0
 
-548 20 PhysicalNode const * 0 8576 20 PhysicalNode const * 20 PhysicalNode const * 0 0 549 0 0 0 0 0 0 0 0 0 0
+548 14 PhysicalNode * 0 8576 14 PhysicalNode * 14 PhysicalNode * 0 0 465 0 0 0 0 0 0 0 0 0 0
 
-549 18 PhysicalNode const 0 8832 18 PhysicalNode const 18 PhysicalNode const 0 0 465 0 0 0 0 0 0 0 0 0 0
+549 20 PhysicalNode const * 0 8576 20 PhysicalNode const * 20 PhysicalNode const * 0 0 550 0 0 0 0 0 0 0 0 0 0
 
-550 17 ActorNode const * 0 8576 17 ActorNode const * 17 ActorNode const * 0 0 551 0 0 0 0 0 0 0 0 0 0
+550 18 PhysicalNode const 0 8832 18 PhysicalNode const 18 PhysicalNode const 0 0 465 0 0 0 0 0 0 0 0 0 0
 
-551 15 ActorNode const 0 8832 15 ActorNode const 15 ActorNode const 0 0 467 0 0 0 0 0 0 0 0 0 0
+551 17 ActorNode const * 0 8576 17 ActorNode const * 17 ActorNode const * 0 0 552 0 0 0 0 0 0 0 0 0 0
 
-552 11 ActorNode * 0 8576 11 ActorNode * 11 ActorNode * 0 0 467 0 0 0 0 0 0 0 0 0 0
+552 15 ActorNode const 0 8832 15 ActorNode const 15 ActorNode const 0 0 467 0 0 0 0 0 0 0 0 0 0
 
-553 22 BaseIntegrator const * 0 8576 22 BaseIntegrator const * 22 BaseIntegrator const * 0 0 554 0 0 0 0 0 0 0 0 0 0
+553 11 ActorNode * 0 8576 11 ActorNode * 11 ActorNode * 0 0 467 0 0 0 0 0 0 0 0 0 0
 
-554 20 BaseIntegrator const 0 8832 20 BaseIntegrator const 20 BaseIntegrator const 0 0 468 0 0 0 0 0 0 0 0 0 0
+554 22 BaseIntegrator const * 0 8576 22 BaseIntegrator const * 22 BaseIntegrator const * 0 0 555 0 0 0 0 0 0 0 0 0 0
 
-555 24 AngularEulerIntegrator * 0 8576 24 AngularEulerIntegrator * 24 AngularEulerIntegrator * 0 0 471 0 0 0 0 0 0 0 0 0 0
+555 20 BaseIntegrator const 0 8832 20 BaseIntegrator const 20 BaseIntegrator const 0 0 468 0 0 0 0 0 0 0 0 0 0
 
-556 26 AngularVectorForce const * 0 8576 26 AngularVectorForce const * 26 AngularVectorForce const * 0 0 557 0 0 0 0 0 0 0 0 0 0
+556 24 AngularEulerIntegrator * 0 8576 24 AngularEulerIntegrator * 24 AngularEulerIntegrator * 0 0 471 0 0 0 0 0 0 0 0 0 0
 
-557 24 AngularVectorForce const 0 8832 24 AngularVectorForce const 24 AngularVectorForce const 0 0 472 0 0 0 0 0 0 0 0 0 0
+557 26 AngularVectorForce const * 0 8576 26 AngularVectorForce const * 26 AngularVectorForce const * 0 0 558 0 0 0 0 0 0 0 0 0 0
 
-558 20 AngularVectorForce * 0 8576 20 AngularVectorForce * 20 AngularVectorForce * 0 0 472 0 0 0 0 0 0 0 0 0 0
+558 24 AngularVectorForce const 0 8832 24 AngularVectorForce const 24 AngularVectorForce const 0 0 472 0 0 0 0 0 0 0 0 0 0
 
-559 17 ForceNode const * 0 8576 17 ForceNode const * 17 ForceNode const * 0 0 560 0 0 0 0 0 0 0 0 0 0
+559 20 AngularVectorForce * 0 8576 20 AngularVectorForce * 20 AngularVectorForce * 0 0 472 0 0 0 0 0 0 0 0 0 0
 
-560 15 ForceNode const 0 8832 15 ForceNode const 15 ForceNode const 0 0 473 0 0 0 0 0 0 0 0 0 0
+560 17 ForceNode const * 0 8576 17 ForceNode const * 17 ForceNode const * 0 0 561 0 0 0 0 0 0 0 0 0 0
 
-561 26 LinearControlForce const * 0 8576 26 LinearControlForce const * 26 LinearControlForce const * 0 0 562 0 0 0 0 0 0 0 0 0 0
+561 15 ForceNode const 0 8832 15 ForceNode const 15 ForceNode const 0 0 473 0 0 0 0 0 0 0 0 0 0
 
-562 24 LinearControlForce const 0 8832 24 LinearControlForce const 24 LinearControlForce const 0 0 474 0 0 0 0 0 0 0 0 0 0
+562 26 LinearControlForce const * 0 8576 26 LinearControlForce const * 26 LinearControlForce const * 0 0 563 0 0 0 0 0 0 0 0 0 0
 
-563 20 LinearControlForce * 0 8576 20 LinearControlForce * 20 LinearControlForce * 0 0 474 0 0 0 0 0 0 0 0 0 0
+563 24 LinearControlForce const 0 8832 24 LinearControlForce const 24 LinearControlForce const 0 0 474 0 0 0 0 0 0 0 0 0 0
 
-564 33 LinearCylinderVortexForce const * 0 8576 33 LinearCylinderVortexForce const * 33 LinearCylinderVortexForce const * 0 0 565 0 0 0 0 0 0 0 0 0 0
+564 20 LinearControlForce * 0 8576 20 LinearControlForce * 20 LinearControlForce * 0 0 474 0 0 0 0 0 0 0 0 0 0
 
-565 31 LinearCylinderVortexForce const 0 8832 31 LinearCylinderVortexForce const 31 LinearCylinderVortexForce const 0 0 475 0 0 0 0 0 0 0 0 0 0
+565 33 LinearCylinderVortexForce const * 0 8576 33 LinearCylinderVortexForce const * 33 LinearCylinderVortexForce const * 0 0 566 0 0 0 0 0 0 0 0 0 0
 
-566 27 LinearCylinderVortexForce * 0 8576 27 LinearCylinderVortexForce * 27 LinearCylinderVortexForce * 0 0 475 0 0 0 0 0 0 0 0 0 0
+566 31 LinearCylinderVortexForce const 0 8832 31 LinearCylinderVortexForce const 31 LinearCylinderVortexForce const 0 0 475 0 0 0 0 0 0 0 0 0 0
 
-567 21 LinearDistanceForce * 0 8576 21 LinearDistanceForce * 21 LinearDistanceForce * 0 0 476 0 0 0 0 0 0 0 0 0 0
+567 27 LinearCylinderVortexForce * 0 8576 27 LinearCylinderVortexForce * 27 LinearCylinderVortexForce * 0 0 475 0 0 0 0 0 0 0 0 0 0
 
-568 27 LinearDistanceForce const * 0 8576 27 LinearDistanceForce const * 27 LinearDistanceForce const * 0 0 569 0 0 0 0 0 0 0 0 0 0
+568 21 LinearDistanceForce * 0 8576 21 LinearDistanceForce * 21 LinearDistanceForce * 0 0 476 0 0 0 0 0 0 0 0 0 0
 
-569 25 LinearDistanceForce const 0 8832 25 LinearDistanceForce const 25 LinearDistanceForce const 0 0 476 0 0 0 0 0 0 0 0 0 0
+569 27 LinearDistanceForce const * 0 8576 27 LinearDistanceForce const * 27 LinearDistanceForce const * 0 0 570 0 0 0 0 0 0 0 0 0 0
 
-570 23 LinearEulerIntegrator * 0 8576 23 LinearEulerIntegrator * 23 LinearEulerIntegrator * 0 0 479 0 0 0 0 0 0 0 0 0 0
+570 25 LinearDistanceForce const 0 8832 25 LinearDistanceForce const 25 LinearDistanceForce const 0 0 476 0 0 0 0 0 0 0 0 0 0
 
-571 27 LinearFrictionForce const * 0 8576 27 LinearFrictionForce const * 27 LinearFrictionForce const * 0 0 572 0 0 0 0 0 0 0 0 0 0
+571 23 LinearEulerIntegrator * 0 8576 23 LinearEulerIntegrator * 23 LinearEulerIntegrator * 0 0 479 0 0 0 0 0 0 0 0 0 0
 
-572 25 LinearFrictionForce const 0 8832 25 LinearFrictionForce const 25 LinearFrictionForce const 0 0 480 0 0 0 0 0 0 0 0 0 0
+572 27 LinearFrictionForce const * 0 8576 27 LinearFrictionForce const * 27 LinearFrictionForce const * 0 0 573 0 0 0 0 0 0 0 0 0 0
 
-573 21 LinearFrictionForce * 0 8576 21 LinearFrictionForce * 21 LinearFrictionForce * 0 0 480 0 0 0 0 0 0 0 0 0 0
+573 25 LinearFrictionForce const 0 8832 25 LinearFrictionForce const 25 LinearFrictionForce const 0 0 480 0 0 0 0 0 0 0 0 0 0
 
-574 25 LinearJitterForce const * 0 8576 25 LinearJitterForce const * 25 LinearJitterForce const * 0 0 575 0 0 0 0 0 0 0 0 0 0
+574 21 LinearFrictionForce * 0 8576 21 LinearFrictionForce * 21 LinearFrictionForce * 0 0 480 0 0 0 0 0 0 0 0 0 0
 
-575 23 LinearJitterForce const 0 8832 23 LinearJitterForce const 23 LinearJitterForce const 0 0 482 0 0 0 0 0 0 0 0 0 0
+575 25 LinearJitterForce const * 0 8576 25 LinearJitterForce const * 25 LinearJitterForce const * 0 0 576 0 0 0 0 0 0 0 0 0 0
 
-576 19 LinearJitterForce * 0 8576 19 LinearJitterForce * 19 LinearJitterForce * 0 0 482 0 0 0 0 0 0 0 0 0 0
+576 23 LinearJitterForce const 0 8832 23 LinearJitterForce const 23 LinearJitterForce const 0 0 482 0 0 0 0 0 0 0 0 0 0
 
-577 24 LinearNoiseForce const * 0 8576 24 LinearNoiseForce const * 24 LinearNoiseForce const * 0 0 578 0 0 0 0 0 0 0 0 0 0
+577 19 LinearJitterForce * 0 8576 19 LinearJitterForce * 19 LinearJitterForce * 0 0 482 0 0 0 0 0 0 0 0 0 0
 
-578 22 LinearNoiseForce const 0 8832 22 LinearNoiseForce const 22 LinearNoiseForce const 0 0 483 0 0 0 0 0 0 0 0 0 0
+578 24 LinearNoiseForce const * 0 8576 24 LinearNoiseForce const * 24 LinearNoiseForce const * 0 0 579 0 0 0 0 0 0 0 0 0 0
 
-579 18 LinearNoiseForce * 0 8576 18 LinearNoiseForce * 18 LinearNoiseForce * 0 0 483 0 0 0 0 0 0 0 0 0 0
+579 22 LinearNoiseForce const 0 8832 22 LinearNoiseForce const 22 LinearNoiseForce const 0 0 483 0 0 0 0 0 0 0 0 0 0
 
-580 17 LinearSinkForce * 0 8576 17 LinearSinkForce * 17 LinearSinkForce * 0 0 484 0 0 0 0 0 0 0 0 0 0
+580 18 LinearNoiseForce * 0 8576 18 LinearNoiseForce * 18 LinearNoiseForce * 0 0 483 0 0 0 0 0 0 0 0 0 0
 
-581 23 LinearSinkForce const * 0 8576 23 LinearSinkForce const * 23 LinearSinkForce const * 0 0 582 0 0 0 0 0 0 0 0 0 0
+581 17 LinearSinkForce * 0 8576 17 LinearSinkForce * 17 LinearSinkForce * 0 0 484 0 0 0 0 0 0 0 0 0 0
 
-582 21 LinearSinkForce const 0 8832 21 LinearSinkForce const 21 LinearSinkForce const 0 0 484 0 0 0 0 0 0 0 0 0 0
+582 23 LinearSinkForce const * 0 8576 23 LinearSinkForce const * 23 LinearSinkForce const * 0 0 583 0 0 0 0 0 0 0 0 0 0
 
-583 19 LinearSourceForce * 0 8576 19 LinearSourceForce * 19 LinearSourceForce * 0 0 485 0 0 0 0 0 0 0 0 0 0
+583 21 LinearSinkForce const 0 8832 21 LinearSinkForce const 21 LinearSinkForce const 0 0 484 0 0 0 0 0 0 0 0 0 0
 
-584 25 LinearSourceForce const * 0 8576 25 LinearSourceForce const * 25 LinearSourceForce const * 0 0 585 0 0 0 0 0 0 0 0 0 0
+584 19 LinearSourceForce * 0 8576 19 LinearSourceForce * 19 LinearSourceForce * 0 0 485 0 0 0 0 0 0 0 0 0 0
 
-585 23 LinearSourceForce const 0 8832 23 LinearSourceForce const 23 LinearSourceForce const 0 0 485 0 0 0 0 0 0 0 0 0 0
+585 25 LinearSourceForce const * 0 8576 25 LinearSourceForce const * 25 LinearSourceForce const * 0 0 586 0 0 0 0 0 0 0 0 0 0
 
-586 30 LinearUserDefinedForce const * 0 8576 30 LinearUserDefinedForce const * 30 LinearUserDefinedForce const * 0 0 587 0 0 0 0 0 0 0 0 0 0
+586 23 LinearSourceForce const 0 8832 23 LinearSourceForce const 23 LinearSourceForce const 0 0 485 0 0 0 0 0 0 0 0 0 0
 
-587 28 LinearUserDefinedForce const 0 8832 28 LinearUserDefinedForce const 28 LinearUserDefinedForce const 0 0 486 0 0 0 0 0 0 0 0 0 0
+587 30 LinearUserDefinedForce const * 0 8576 30 LinearUserDefinedForce const * 30 LinearUserDefinedForce const * 0 0 588 0 0 0 0 0 0 0 0 0 0
 
-588 24 LinearUserDefinedForce * 0 8576 24 LinearUserDefinedForce * 24 LinearUserDefinedForce * 0 0 486 0 0 0 0 0 0 0 0 0 0
+588 28 LinearUserDefinedForce const 0 8832 28 LinearUserDefinedForce const 28 LinearUserDefinedForce const 0 0 486 0 0 0 0 0 0 0 0 0 0
 
-589 19 LinearVectorForce * 0 8576 19 LinearVectorForce * 19 LinearVectorForce * 0 0 487 0 0 0 0 0 0 0 0 0 0
+589 24 LinearUserDefinedForce * 0 8576 24 LinearUserDefinedForce * 24 LinearUserDefinedForce * 0 0 486 0 0 0 0 0 0 0 0 0 0
 
-590 25 LinearVectorForce const * 0 8576 25 LinearVectorForce const * 25 LinearVectorForce const * 0 0 591 0 0 0 0 0 0 0 0 0 0
+590 19 LinearVectorForce * 0 8576 19 LinearVectorForce * 19 LinearVectorForce * 0 0 487 0 0 0 0 0 0 0 0 0 0
 
-591 23 LinearVectorForce const 0 8832 23 LinearVectorForce const 23 LinearVectorForce const 0 0 487 0 0 0 0 0 0 0 0 0 0
+591 25 LinearVectorForce const * 0 8576 25 LinearVectorForce const * 25 LinearVectorForce const * 0 0 592 0 0 0 0 0 0 0 0 0 0
 
-592 25 PhysicsCollisionHandler * 0 8576 25 PhysicsCollisionHandler * 25 PhysicsCollisionHandler * 0 0 488 0 0 0 0 0 0 0 0 0 0
+592 23 LinearVectorForce const 0 8832 23 LinearVectorForce const 23 LinearVectorForce const 0 0 487 0 0 0 0 0 0 0 0 0 0
 
-593 18 LinearIntegrator * 0 8576 18 LinearIntegrator * 18 LinearIntegrator * 0 0 478 0 0 0 0 0 0 0 0 0 0
+593 25 PhysicsCollisionHandler * 0 8576 25 PhysicsCollisionHandler * 25 PhysicsCollisionHandler * 0 0 488 0 0 0 0 0 0 0 0 0 0
 
-594 19 AngularIntegrator * 0 8576 19 AngularIntegrator * 19 AngularIntegrator * 0 0 470 0 0 0 0 0 0 0 0 0 0
+594 18 LinearIntegrator * 0 8576 18 LinearIntegrator * 18 LinearIntegrator * 0 0 478 0 0 0 0 0 0 0 0 0 0
 
-595 22 PhysicsManager const * 0 8576 22 PhysicsManager const * 22 PhysicsManager const * 0 0 596 0 0 0 0 0 0 0 0 0 0
+595 19 AngularIntegrator * 0 8576 19 AngularIntegrator * 19 AngularIntegrator * 0 0 470 0 0 0 0 0 0 0 0 0 0
 
-596 20 PhysicsManager const 0 8832 20 PhysicsManager const 20 PhysicsManager const 0 0 490 0 0 0 0 0 0 0 0 0 0
+596 22 PhysicsManager const * 0 8576 22 PhysicsManager const * 22 PhysicsManager const * 0 0 597 0 0 0 0 0 0 0 0 0 0
+
+597 20 PhysicsManager const 0 8832 20 PhysicsManager const 20 PhysicsManager const 0 0 490 0 0 0 0 0 0 0 0 0 0
 
 0
 0
 13
-597 0 0 40 19 get_physics_objects 23 get_num_physics_objects 18 get_physics_object 
-598 0 0 85 17 get_linear_forces 21 get_num_linear_forces 16 get_linear_force 
-599 0 0 85 18 get_angular_forces 22 get_num_angular_forces 17 get_angular_force 
-600 0 0 112 13 get_physicals 17 get_num_physicals 12 get_physical 
-601 0 0 113 11 get_parents 15 get_num_parents 10 get_parent 
-602 0 0 113 12 get_children 16 get_num_children 9 get_child 
-603 0 0 113 11 get_stashed 15 get_num_stashed 11 get_stashed 
-604 0 0 146 10 get_forces 14 get_num_forces 9 get_force 
-605 0 0 312 8 get_rows 4 size 7 get_row 
-606 0 0 312 8 get_cols 4 size 7 get_col 
-607 0 0 312 9 get_row3s 4 size 8 get_row3 
-608 0 0 360 9 get_nodes 13 get_num_nodes 8 get_node 
-609 0 0 360 13 get_ancestors 13 get_num_nodes 12 get_ancestor 
+598 0 0 40 19 get_physics_objects 23 get_num_physics_objects 18 get_physics_object 
+599 0 0 85 17 get_linear_forces 21 get_num_linear_forces 16 get_linear_force 
+600 0 0 85 18 get_angular_forces 22 get_num_angular_forces 17 get_angular_force 
+601 0 0 112 13 get_physicals 17 get_num_physicals 12 get_physical 
+602 0 0 113 11 get_parents 15 get_num_parents 10 get_parent 
+603 0 0 113 12 get_children 16 get_num_children 9 get_child 
+604 0 0 113 11 get_stashed 15 get_num_stashed 11 get_stashed 
+605 0 0 146 10 get_forces 14 get_num_forces 9 get_force 
+606 0 0 312 8 get_rows 4 size 7 get_row 
+607 0 0 312 8 get_cols 4 size 7 get_col 
+608 0 0 312 9 get_row3s 4 size 8 get_row3 
+609 0 0 360 9 get_nodes 13 get_num_nodes 8 get_node 
+610 0 0 360 13 get_ancestors 13 get_num_nodes 12 get_ancestor 

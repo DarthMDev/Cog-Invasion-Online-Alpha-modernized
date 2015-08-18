@@ -1,4 +1,4 @@
-1428765624
+1439924863
 2 3
 11 libp3vision 4 nRMq 14 panda3d.vision 
 17
@@ -74,8 +74,8 @@ void ARToolKit::detach_patterns(void);
 //               a texture that's upside-down, however, you should
 //               set it to false.
 ////////////////////////////////////////////////////////////////////
-66
-void ARToolKit::analyze(Texture *tex, bool do_flip_texture = (1));
+64
+void ARToolKit::analyze(Texture *tex, bool do_flip_texture = 1);
 
 23 13 OpenCVTexture 0 4 35 28 OpenCVTexture::OpenCVTexture 0 1 6 609
 ////////////////////////////////////////////////////////////////////
@@ -90,8 +90,8 @@ void ARToolKit::analyze(Texture *tex, bool do_flip_texture = (1));
 //  Description: Use OpenCVTexture::make_copy() to make a duplicate copy of
 //               an existing OpenCVTexture.
 ////////////////////////////////////////////////////////////////////
-58
-OpenCVTexture::OpenCVTexture(string const &name = ((())));
+60
+OpenCVTexture::OpenCVTexture(string const &name = string());
 
 24 11 from_camera 0 4 35 26 OpenCVTexture::from_camera 0 1 7 738
 ////////////////////////////////////////////////////////////////////
@@ -107,8 +107,8 @@ OpenCVTexture::OpenCVTexture(string const &name = ((())));
 //               then the camera image becomes an alpha texture, using
 //               the indicated channel of the source.
 ////////////////////////////////////////////////////////////////////
-139
-bool OpenCVTexture::from_camera(int camera_index = (-1), int z = (0), int alpha_file_channel = (0), LoaderOptions const &options = ((())));
+142
+bool OpenCVTexture::from_camera(int camera_index = -1, int z = 0, int alpha_file_channel = 0, LoaderOptions const &options = LoaderOptions());
 
 25 14 get_class_type 0 4 35 29 OpenCVTexture::get_class_type 0 1 8 0
 54

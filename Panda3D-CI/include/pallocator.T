@@ -51,12 +51,12 @@ allocate(TYPENAME pallocator_array<Type>::size_type n, TYPENAME allocator<void>:
   size_t alloc_size = n * sizeof(Type);
   // We also need to store the total number of bytes we allocated.
   alloc_size += header_reserved_bytes;
-  _type_handle.inc_memory_usage(TypeHandle::MC_array, (int)alloc_size);
+  _type_handle.inc_memory_usage(TypeHandle::MC_array, alloc_size);
   void *ptr = (TYPENAME pallocator_array<Type>::pointer)PANDA_MALLOC_ARRAY(alloc_size);
   *((size_t *)ptr) = alloc_size;
   return (TYPENAME pallocator_array<Type>::pointer)(((char *)ptr) + header_reserved_bytes);
 #else
-  return (TYPENAME pallocator_array<Type>::pointer)malloc(n * sizeof(Type));
+  return (TYPENAME pallocator_array<Type>::pointer)PANDA_MALLOC_ARRAY(n * sizeof(Type));
 #endif  // DO_MEMORY_USAGE
 }
 
@@ -69,9 +69,9 @@ deallocate(TYPENAME pallocator_array<Type>::pointer p, TYPENAME pallocator_array
   const size_t header_reserved_bytes = MemoryHook::get_header_reserved_bytes();
   void *ptr = (void *)((char *)p - header_reserved_bytes);
   size_t alloc_size = *((size_t *)ptr);
-  _type_handle.dec_memory_usage(TypeHandle::MC_array, (int)alloc_size);
+  _type_handle.dec_memory_usage(TypeHandle::MC_array, alloc_size);
   PANDA_FREE_ARRAY(ptr);
 #else
-  free(p);
+  PANDA_FREE_ARRAY(p);
 #endif  // DO_MEMORY_USAGE
 }

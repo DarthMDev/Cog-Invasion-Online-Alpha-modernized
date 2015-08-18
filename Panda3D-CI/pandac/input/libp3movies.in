@@ -1,4 +1,4 @@
-1428762667
+1439924426
 2 3
 11 libp3movies 4 Aas2 12 panda3d.core 
 83
@@ -31,8 +31,8 @@ MovieVideo *Namable::downcast_to_MovieVideo(void);
 //               second each. To get more interesting video, you need
 //               to construct a subclass of this class.
 ////////////////////////////////////////////////////////////////////
-61
-MovieVideo::MovieVideo(string const &name = ("Blank Video"));
+59
+MovieVideo::MovieVideo(string const &name = "Blank Video");
 
 89 11 ~MovieVideo 0 6 167 23 MovieVideo::~MovieVideo 0 0 228
 ////////////////////////////////////////////////////////////////////
@@ -409,8 +409,8 @@ MovieAudio *Namable::downcast_to_MovieAudio(void);
 //               To get more interesting audio, you need to construct
 //               a subclass of this class.
 ////////////////////////////////////////////////////////////////////
-61
-MovieAudio::MovieAudio(string const &name = ("Blank Audio"));
+59
+MovieAudio::MovieAudio(string const &name = "Blank Audio");
 
 124 11 ~MovieAudio 0 6 175 23 MovieAudio::~MovieAudio 0 0 228
 ////////////////////////////////////////////////////////////////////
@@ -725,8 +725,8 @@ static TypeHandle MovieAudioCursor::get_class_type(void);
 //  Description: This constructor returns a UserDataAudio --- 
 //               a means to supply raw audio samples manually.
 ////////////////////////////////////////////////////////////////////
-83
-UserDataAudio::UserDataAudio(int rate, int channels, bool remove_after_read = (1));
+81
+UserDataAudio::UserDataAudio(int rate, int channels, bool remove_after_read = 1);
 
 149 4 open 0 6 178 19 UserDataAudio::open 0 1 65 374
 ////////////////////////////////////////////////////////////////////
@@ -763,9 +763,9 @@ virtual PointerTo< MovieAudioCursor > UserDataAudio::open(void);
 //               but it may be convenient to deal with samples in
 //               python.
 ////////////////////////////////////////////////////////////////////
-172
+170
 void UserDataAudio::append(PN_int16 *data, int n);
-void UserDataAudio::append(DatagramIterator *src, int len = (1073741824));
+void UserDataAudio::append(DatagramIterator *src, int len = 1073741824);
 void UserDataAudio::append(string const &str);
 
 151 4 done 0 4 178 19 UserDataAudio::done 0 1 68 365

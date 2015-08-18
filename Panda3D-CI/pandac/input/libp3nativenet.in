@@ -1,4 +1,4 @@
-1428717695
+1439923691
 2 3
 14 libp3nativenet 4 5qEC 12 panda3d.core 
 90
@@ -20,8 +20,8 @@
 //       Access: Public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-138
-inline Socket_Address::Socket_Address(unsigned short int port = (0));
+136
+inline Socket_Address::Socket_Address(unsigned short int port = 0);
 inline Socket_Address::Socket_Address(Socket_Address const &inaddr);
 
 92 15 ~Socket_Address 0 6 181 31 Socket_Address::~Socket_Address 0 0 244
@@ -204,8 +204,8 @@ inline int Socket_IP::SetBlocking(void);
 // Function name :  SetReuseAddress
 // Description     :  Informs a socket to reuse IP address as needed
 ////////////////////////////////////////////////////////////////////
-56
-inline bool Socket_IP::SetReuseAddress(bool flag = (1));
+54
+inline bool Socket_IP::SetReuseAddress(bool flag = 1);
 
 112 6 Active 0 4 182 17 Socket_IP::Active 0 1 25 231
 ////////////////////////////////////////////////////////////////////
@@ -275,16 +275,16 @@ inline Socket_TCP::Socket_TCP(void);
 // Function name : SetNoDelay
 // Description   : Disable Nagle algorithm. Don't delay send to coalesce packets
 ////////////////////////////////////////////////////////////////////
-51
-inline int Socket_TCP::SetNoDelay(bool flag = (1));
+49
+inline int Socket_TCP::SetNoDelay(bool flag = 1);
 
 121 9 SetLinger 0 4 184 21 Socket_TCP::SetLinger 0 1 36 241
 ////////////////////////////////////////////////////////////////////
 // Function name : SetLinger
 // Description   : will control the behavior of SO_LINGER for a TCP socket
 ////////////////////////////////////////////////////////////////////
-61
-inline int Socket_TCP::SetLinger(int interval_seconds = (0));
+59
+inline int Socket_TCP::SetLinger(int interval_seconds = 0);
 
 122 10 DontLinger 0 4 184 22 Socket_TCP::DontLinger 0 1 37 427
 ////////////////////////////////////////////////////////////////////
@@ -388,8 +388,8 @@ Socket_TCP_Listen::Socket_TCP_Listen(void);
 // Function name : OpenForListen
 // Description   : This function will initialize a listening Socket
 ////////////////////////////////////////////////////////////////////
-104
-inline bool Socket_TCP_Listen::OpenForListen(Socket_Address const &Inaddess, int backlog_size = (1024));
+102
+inline bool Socket_TCP_Listen::OpenForListen(Socket_Address const &Inaddess, int backlog_size = 1024);
 
 134 21 GetIncomingConnection 0 4 185 40 Socket_TCP_Listen::GetIncomingConnection 0 1 48 245
 ////////////////////////////////////////////////////////////////////
@@ -610,8 +610,8 @@ inline bool Socket_fdset::IsSetFor(Socket_IP const &incon) const;
 // Function name :  Socket_fdset::WaitForRead
 // Description   :
 //////////////////////////////////////////////////////////////
-166
-inline int Socket_fdset::WaitForRead(bool zeroFds, PN_uint32 sleep_time = (2147483647));
+164
+inline int Socket_fdset::WaitForRead(bool zeroFds, PN_uint32 sleep_time = 2147483647);
 inline int Socket_fdset::WaitForRead(bool zeroFds, Time_Span const &timeout);
 
 157 12 WaitForWrite 0 4 188 26 Socket_fdset::WaitForWrite 0 1 69 324
@@ -621,8 +621,8 @@ inline int Socket_fdset::WaitForRead(bool zeroFds, Time_Span const &timeout);
 // Description   : This is the function that will wait till
 //      one of the sockets is ready for writing
 ////////////////////////////////////////////////////////////////////
-89
-inline int Socket_fdset::WaitForWrite(bool zeroFds, PN_uint32 sleep_time = (2147483647));
+87
+inline int Socket_fdset::WaitForWrite(bool zeroFds, PN_uint32 sleep_time = 2147483647);
 
 158 12 WaitForError 0 4 188 26 Socket_fdset::WaitForError 0 1 70 276
 //////////////////////////////////////////////////////////////
@@ -630,8 +630,8 @@ inline int Socket_fdset::WaitForWrite(bool zeroFds, PN_uint32 sleep_time = (2147
 // Description   : This is the function that will wait till
 //      one of the sockets is in error state
 //////////////////////////////////////////////////////////////
-89
-inline int Socket_fdset::WaitForError(bool zeroFds, PN_uint32 sleep_time = (2147483647));
+87
+inline int Socket_fdset::WaitForError(bool zeroFds, PN_uint32 sleep_time = 2147483647);
 
 159 5 clear 0 4 188 19 Socket_fdset::clear 0 1 71 226
 ////////////////////////////////////////////////////////////////////
@@ -1489,7 +1489,7 @@ Socket_UDP::~Socket_UDP(void);
 
 224 5 float 0 8194 5 float 5 float 0 2 0 0 0 0 0 0 0 0 0 0 0
 
-225 6 size_t 0 2105344 6 size_t 6 size_t 0 0 198 0 0 0 0 0 0 0 0 0 0
+225 6 size_t 0 2105344 6 size_t 6 size_t 0 0 200 0 0 0 0 0 0 0 0 0 0
 
 226 12 Socket_UDP * 0 8576 12 Socket_UDP * 12 Socket_UDP * 0 0 190 0 0 0 0 0 0 0 0 0 0
 

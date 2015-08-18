@@ -1,4 +1,4 @@
-1428764006
+1439924655
 2 3
 12 libp3collide 4 dlaq 12 panda3d.core 
 261
@@ -136,8 +136,8 @@ virtual void CollisionSolid::output(ostream &out) const;
 //       Access: Public, Virtual
 //  Description:
 ////////////////////////////////////////////////////////////////////
-79
-virtual void CollisionSolid::write(ostream &out, int indent_level = (0)) const;
+77
+virtual void CollisionSolid::write(ostream &out, int indent_level = 0) const;
 
 283 14 get_class_type 0 4 531 30 CollisionSolid::get_class_type 0 1 14 0
 55
@@ -471,8 +471,8 @@ static TypeHandle CollisionNode::get_class_type(void);
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-71
-CollisionTraverser::CollisionTraverser(string const &name = ("ctrav"));
+69
+CollisionTraverser::CollisionTraverser(string const &name = "ctrav");
 
 316 19 ~CollisionTraverser 0 4 538 39 CollisionTraverser::~CollisionTraverser 0 0 229
 ////////////////////////////////////////////////////////////////////
@@ -1108,8 +1108,8 @@ void CollisionEntry::output(ostream &out) const;
 //       Access: Published
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-71
-void CollisionEntry::write(ostream &out, int indent_level = (0)) const;
+69
+void CollisionEntry::write(ostream &out, int indent_level = 0) const;
 
 369 14 get_class_type 0 4 542 30 CollisionEntry::get_class_type 0 1 99 0
 55
@@ -2164,8 +2164,8 @@ void CollisionHandlerQueue::output(ostream &out) const;
 //       Access: Published
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-78
-void CollisionHandlerQueue::write(ostream &out, int indent_level = (0)) const;
+76
+void CollisionHandlerQueue::write(ostream &out, int indent_level = 0) const;
 
 470 14 get_class_type 0 4 554 37 CollisionHandlerQueue::get_class_type 0 1 199 0
 62

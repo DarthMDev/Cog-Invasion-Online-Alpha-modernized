@@ -1,4 +1,4 @@
-1428711427
+1439923561
 2 3
 12 libp3linmath 4 Ns0b 12 panda3d.core 
 1507
@@ -117,8 +117,8 @@ inline LVecBase2f::~LVecBase2f(void);
 inline PyObject *LVecBase2f::__reduce__(PyObject *self) const;
 
 1948 11 __getattr__ 0 4 3443 23 LVecBase2f::__getattr__ 0 1 12 0
-72
-inline PyObject *LVecBase2f::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase2f::__getattr__(PyObject *self, string const &attr_name) const;
 
 1949 11 __setattr__ 0 4 3443 23 LVecBase2f::__setattr__ 0 1 13 0
 94
@@ -664,8 +664,8 @@ inline LVecBase2d::~LVecBase2d(void);
 inline PyObject *LVecBase2d::__reduce__(PyObject *self) const;
 
 2010 11 __getattr__ 0 4 3445 23 LVecBase2d::__getattr__ 0 1 81 0
-72
-inline PyObject *LVecBase2d::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase2d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2011 11 __setattr__ 0 4 3445 23 LVecBase2d::__setattr__ 0 1 82 0
 94
@@ -1211,8 +1211,8 @@ inline LVecBase2i::~LVecBase2i(void);
 inline PyObject *LVecBase2i::__reduce__(PyObject *self) const;
 
 2072 11 __getattr__ 0 4 3447 23 LVecBase2i::__getattr__ 0 1 150 0
-72
-inline PyObject *LVecBase2i::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase2i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2073 11 __setattr__ 0 4 3447 23 LVecBase2i::__setattr__ 0 1 151 0
 94
@@ -1640,8 +1640,8 @@ inline LVector2f &LVector2f::operator =(LVecBase2f const &copy);
 inline LVector2f &LVector2f::operator =(float fill_value);
 
 2123 11 __getattr__ 0 4 3449 22 LVector2f::__getattr__ 0 1 207 0
-71
-inline PyObject *LVector2f::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector2f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2124 11 __setattr__ 0 4 3449 22 LVector2f::__setattr__ 0 1 208 0
 93
@@ -1786,8 +1786,8 @@ inline LVector2d &LVector2d::operator =(LVecBase2d const &copy);
 inline LVector2d &LVector2d::operator =(double fill_value);
 
 2141 11 __getattr__ 0 4 3450 22 LVector2d::__getattr__ 0 1 230 0
-71
-inline PyObject *LVector2d::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector2d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2142 11 __setattr__ 0 4 3450 22 LVector2d::__setattr__ 0 1 231 0
 93
@@ -1932,8 +1932,8 @@ inline LVector2i &LVector2i::operator =(LVecBase2i const &copy);
 inline LVector2i &LVector2i::operator =(int fill_value);
 
 2159 11 __getattr__ 0 4 3451 22 LVector2i::__getattr__ 0 1 253 0
-71
-inline PyObject *LVector2i::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector2i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2160 11 __setattr__ 0 4 3451 22 LVector2i::__setattr__ 0 1 254 0
 93
@@ -2047,8 +2047,8 @@ inline LPoint2f &LPoint2f::operator =(LVecBase2f const &copy);
 inline LPoint2f &LPoint2f::operator =(float fill_value);
 
 2174 11 __getattr__ 0 4 3452 21 LPoint2f::__getattr__ 0 1 273 0
-70
-inline PyObject *LPoint2f::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint2f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2175 11 __setattr__ 0 4 3452 21 LPoint2f::__setattr__ 0 1 274 0
 92
@@ -2174,8 +2174,8 @@ inline LPoint2d &LPoint2d::operator =(LVecBase2d const &copy);
 inline LPoint2d &LPoint2d::operator =(double fill_value);
 
 2190 11 __getattr__ 0 4 3453 21 LPoint2d::__getattr__ 0 1 295 0
-70
-inline PyObject *LPoint2d::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint2d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2191 11 __setattr__ 0 4 3453 21 LPoint2d::__setattr__ 0 1 296 0
 92
@@ -2301,8 +2301,8 @@ inline LPoint2i &LPoint2i::operator =(LVecBase2i const &copy);
 inline LPoint2i &LPoint2i::operator =(int fill_value);
 
 2206 11 __getattr__ 0 4 3454 21 LPoint2i::__getattr__ 0 1 317 0
-70
-inline PyObject *LPoint2i::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint2i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2207 11 __setattr__ 0 4 3454 21 LPoint2i::__setattr__ 0 1 318 0
 92
@@ -2487,8 +2487,8 @@ inline LVecBase3f::~LVecBase3f(void);
 inline PyObject *LVecBase3f::__reduce__(PyObject *self) const;
 
 2230 11 __getattr__ 0 4 3455 23 LVecBase3f::__getattr__ 0 1 345 0
-72
-inline PyObject *LVecBase3f::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase3f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2231 11 __setattr__ 0 4 3455 23 LVecBase3f::__setattr__ 0 1 346 0
 94
@@ -3148,8 +3148,8 @@ inline LVecBase3d::~LVecBase3d(void);
 inline PyObject *LVecBase3d::__reduce__(PyObject *self) const;
 
 2302 11 __getattr__ 0 4 3457 23 LVecBase3d::__getattr__ 0 1 425 0
-72
-inline PyObject *LVecBase3d::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase3d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2303 11 __setattr__ 0 4 3457 23 LVecBase3d::__setattr__ 0 1 426 0
 94
@@ -3809,8 +3809,8 @@ inline LVecBase3i::~LVecBase3i(void);
 inline PyObject *LVecBase3i::__reduce__(PyObject *self) const;
 
 2374 11 __getattr__ 0 4 3459 23 LVecBase3i::__getattr__ 0 1 505 0
-72
-inline PyObject *LVecBase3i::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase3i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2375 11 __setattr__ 0 4 3459 23 LVecBase3i::__setattr__ 0 1 506 0
 94
@@ -4302,8 +4302,8 @@ CoordinateSystem parse_coordinate_system_string(string const &str);
 string format_coordinate_system(CoordinateSystem cs);
 
 2435 15 is_right_handed 0 1 0 15 is_right_handed 0 1 1828 0
-59
-bool is_right_handed(CoordinateSystem cs = (::CS_default));
+57
+bool is_right_handed(CoordinateSystem cs = ::CS_default);
 
 2436 9 LVector3f 0 4 3462 20 LVector3f::LVector3f 0 5 565 566 567 568 569 1121
 ////////////////////////////////////////////////////////////////////
@@ -4359,8 +4359,8 @@ inline LVector3f &LVector3f::operator =(LVecBase3f const &copy);
 inline LVector3f &LVector3f::operator =(float fill_value);
 
 2438 11 __getattr__ 0 4 3462 22 LVector3f::__getattr__ 0 1 572 0
-71
-inline PyObject *LVector3f::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector3f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2439 11 __setattr__ 0 4 3462 22 LVector3f::__setattr__ 0 1 573 0
 93
@@ -4551,8 +4551,8 @@ inline LVector3f LVector3f::operator /(float scalar) const;
 //  Description: Returns the up vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-76
-static inline LVector3f LVector3f::up(CoordinateSystem cs = (::CS_default));
+74
+static inline LVector3f LVector3f::up(CoordinateSystem cs = ::CS_default);
 
 2461 5 right 0 4 3462 16 LVector3f::right 0 1 597 297
 ////////////////////////////////////////////////////////////////////
@@ -4561,8 +4561,8 @@ static inline LVector3f LVector3f::up(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the right vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-79
-static inline LVector3f LVector3f::right(CoordinateSystem cs = (::CS_default));
+77
+static inline LVector3f LVector3f::right(CoordinateSystem cs = ::CS_default);
 
 2462 7 forward 0 4 3462 18 LVector3f::forward 0 1 598 301
 ////////////////////////////////////////////////////////////////////
@@ -4571,8 +4571,8 @@ static inline LVector3f LVector3f::right(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the forward vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-81
-static inline LVector3f LVector3f::forward(CoordinateSystem cs = (::CS_default));
+79
+static inline LVector3f LVector3f::forward(CoordinateSystem cs = ::CS_default);
 
 2463 4 down 0 4 3462 15 LVector3f::down 0 1 599 295
 ////////////////////////////////////////////////////////////////////
@@ -4581,8 +4581,8 @@ static inline LVector3f LVector3f::forward(CoordinateSystem cs = (::CS_default))
 //  Description: Returns the down vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3f LVector3f::down(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3f LVector3f::down(CoordinateSystem cs = ::CS_default);
 
 2464 4 left 0 4 3462 15 LVector3f::left 0 1 600 295
 ////////////////////////////////////////////////////////////////////
@@ -4591,8 +4591,8 @@ static inline LVector3f LVector3f::down(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the left vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3f LVector3f::left(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3f LVector3f::left(CoordinateSystem cs = ::CS_default);
 
 2465 4 back 0 4 3462 15 LVector3f::back 0 1 601 295
 ////////////////////////////////////////////////////////////////////
@@ -4601,8 +4601,8 @@ static inline LVector3f LVector3f::left(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the back vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3f LVector3f::back(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3f LVector3f::back(CoordinateSystem cs = ::CS_default);
 
 2466 3 rfu 0 4 3462 14 LVector3f::rfu 0 1 602 523
 //  INLINE_LINMATH static FLOATNAME(LVector3) & rfu(FLOATTYPE right,
@@ -4615,8 +4615,8 @@ static inline LVector3f LVector3f::back(CoordinateSystem cs = (::CS_default));
 //               coordinate system represents that vector.
 ////////////////////////////////////////////////////////////////////
 //INLINE_LINMATH FLOATNAME(LVector3) &FLOATNAME(LVector3)::
-111
-static inline LVector3f LVector3f::rfu(float right, float fwd, float up, CoordinateSystem cs = (::CS_default));
+109
+static inline LVector3f LVector3f::rfu(float right, float fwd, float up, CoordinateSystem cs = ::CS_default);
 
 2467 8 __repr__ 0 4 3462 19 LVector3f::__repr__ 0 1 603 0
 46
@@ -4684,8 +4684,8 @@ inline LVector3d &LVector3d::operator =(LVecBase3d const &copy);
 inline LVector3d &LVector3d::operator =(double fill_value);
 
 2472 11 __getattr__ 0 4 3463 22 LVector3d::__getattr__ 0 1 612 0
-71
-inline PyObject *LVector3d::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector3d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2473 11 __setattr__ 0 4 3463 22 LVector3d::__setattr__ 0 1 613 0
 93
@@ -4876,8 +4876,8 @@ inline LVector3d LVector3d::operator /(double scalar) const;
 //  Description: Returns the up vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-76
-static inline LVector3d LVector3d::up(CoordinateSystem cs = (::CS_default));
+74
+static inline LVector3d LVector3d::up(CoordinateSystem cs = ::CS_default);
 
 2495 5 right 0 4 3463 16 LVector3d::right 0 1 637 297
 ////////////////////////////////////////////////////////////////////
@@ -4886,8 +4886,8 @@ static inline LVector3d LVector3d::up(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the right vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-79
-static inline LVector3d LVector3d::right(CoordinateSystem cs = (::CS_default));
+77
+static inline LVector3d LVector3d::right(CoordinateSystem cs = ::CS_default);
 
 2496 7 forward 0 4 3463 18 LVector3d::forward 0 1 638 301
 ////////////////////////////////////////////////////////////////////
@@ -4896,8 +4896,8 @@ static inline LVector3d LVector3d::right(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the forward vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-81
-static inline LVector3d LVector3d::forward(CoordinateSystem cs = (::CS_default));
+79
+static inline LVector3d LVector3d::forward(CoordinateSystem cs = ::CS_default);
 
 2497 4 down 0 4 3463 15 LVector3d::down 0 1 639 295
 ////////////////////////////////////////////////////////////////////
@@ -4906,8 +4906,8 @@ static inline LVector3d LVector3d::forward(CoordinateSystem cs = (::CS_default))
 //  Description: Returns the down vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3d LVector3d::down(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3d LVector3d::down(CoordinateSystem cs = ::CS_default);
 
 2498 4 left 0 4 3463 15 LVector3d::left 0 1 640 295
 ////////////////////////////////////////////////////////////////////
@@ -4916,8 +4916,8 @@ static inline LVector3d LVector3d::down(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the left vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3d LVector3d::left(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3d LVector3d::left(CoordinateSystem cs = ::CS_default);
 
 2499 4 back 0 4 3463 15 LVector3d::back 0 1 641 295
 ////////////////////////////////////////////////////////////////////
@@ -4926,8 +4926,8 @@ static inline LVector3d LVector3d::left(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the back vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3d LVector3d::back(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3d LVector3d::back(CoordinateSystem cs = ::CS_default);
 
 2500 3 rfu 0 4 3463 14 LVector3d::rfu 0 1 642 523
 //  INLINE_LINMATH static FLOATNAME(LVector3) & rfu(FLOATTYPE right,
@@ -4940,8 +4940,8 @@ static inline LVector3d LVector3d::back(CoordinateSystem cs = (::CS_default));
 //               coordinate system represents that vector.
 ////////////////////////////////////////////////////////////////////
 //INLINE_LINMATH FLOATNAME(LVector3) &FLOATNAME(LVector3)::
-114
-static inline LVector3d LVector3d::rfu(double right, double fwd, double up, CoordinateSystem cs = (::CS_default));
+112
+static inline LVector3d LVector3d::rfu(double right, double fwd, double up, CoordinateSystem cs = ::CS_default);
 
 2501 8 __repr__ 0 4 3463 19 LVector3d::__repr__ 0 1 643 0
 46
@@ -5009,8 +5009,8 @@ inline LVector3i &LVector3i::operator =(LVecBase3i const &copy);
 inline LVector3i &LVector3i::operator =(int fill_value);
 
 2506 11 __getattr__ 0 4 3464 22 LVector3i::__getattr__ 0 1 652 0
-71
-inline PyObject *LVector3i::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector3i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2507 11 __setattr__ 0 4 3464 22 LVector3i::__setattr__ 0 1 653 0
 93
@@ -5120,8 +5120,8 @@ inline LVector3i LVector3i::operator /(int scalar) const;
 //  Description: Returns the up vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-76
-static inline LVector3i LVector3i::up(CoordinateSystem cs = (::CS_default));
+74
+static inline LVector3i LVector3i::up(CoordinateSystem cs = ::CS_default);
 
 2522 5 right 0 4 3464 16 LVector3i::right 0 1 670 297
 ////////////////////////////////////////////////////////////////////
@@ -5130,8 +5130,8 @@ static inline LVector3i LVector3i::up(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the right vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-79
-static inline LVector3i LVector3i::right(CoordinateSystem cs = (::CS_default));
+77
+static inline LVector3i LVector3i::right(CoordinateSystem cs = ::CS_default);
 
 2523 7 forward 0 4 3464 18 LVector3i::forward 0 1 671 301
 ////////////////////////////////////////////////////////////////////
@@ -5140,8 +5140,8 @@ static inline LVector3i LVector3i::right(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the forward vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-81
-static inline LVector3i LVector3i::forward(CoordinateSystem cs = (::CS_default));
+79
+static inline LVector3i LVector3i::forward(CoordinateSystem cs = ::CS_default);
 
 2524 4 down 0 4 3464 15 LVector3i::down 0 1 672 295
 ////////////////////////////////////////////////////////////////////
@@ -5150,8 +5150,8 @@ static inline LVector3i LVector3i::forward(CoordinateSystem cs = (::CS_default))
 //  Description: Returns the down vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3i LVector3i::down(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3i LVector3i::down(CoordinateSystem cs = ::CS_default);
 
 2525 4 left 0 4 3464 15 LVector3i::left 0 1 673 295
 ////////////////////////////////////////////////////////////////////
@@ -5160,8 +5160,8 @@ static inline LVector3i LVector3i::down(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the left vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3i LVector3i::left(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3i LVector3i::left(CoordinateSystem cs = ::CS_default);
 
 2526 4 back 0 4 3464 15 LVector3i::back 0 1 674 295
 ////////////////////////////////////////////////////////////////////
@@ -5170,8 +5170,8 @@ static inline LVector3i LVector3i::left(CoordinateSystem cs = (::CS_default));
 //  Description: Returns the back vector for the given coordinate
 //               system.
 ////////////////////////////////////////////////////////////////////
-78
-static inline LVector3i LVector3i::back(CoordinateSystem cs = (::CS_default));
+76
+static inline LVector3i LVector3i::back(CoordinateSystem cs = ::CS_default);
 
 2527 3 rfu 0 4 3464 14 LVector3i::rfu 0 1 675 523
 //  INLINE_LINMATH static FLOATNAME(LVector3) & rfu(FLOATTYPE right,
@@ -5184,8 +5184,8 @@ static inline LVector3i LVector3i::back(CoordinateSystem cs = (::CS_default));
 //               coordinate system represents that vector.
 ////////////////////////////////////////////////////////////////////
 //INLINE_LINMATH FLOATNAME(LVector3) &FLOATNAME(LVector3)::
-105
-static inline LVector3i LVector3i::rfu(int right, int fwd, int up, CoordinateSystem cs = (::CS_default));
+103
+static inline LVector3i LVector3i::rfu(int right, int fwd, int up, CoordinateSystem cs = ::CS_default);
 
 2528 8 __repr__ 0 4 3464 19 LVector3i::__repr__ 0 1 676 0
 46
@@ -5253,8 +5253,8 @@ inline LPoint3f &LPoint3f::operator =(LVecBase3f const &copy);
 inline LPoint3f &LPoint3f::operator =(float fill_value);
 
 2533 11 __getattr__ 0 4 3465 21 LPoint3f::__getattr__ 0 1 685 0
-70
-inline PyObject *LPoint3f::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint3f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2534 11 __setattr__ 0 4 3465 21 LPoint3f::__setattr__ 0 1 686 0
 92
@@ -5378,8 +5378,8 @@ inline LPoint3f LPoint3f::operator /(float scalar) const;
 //               existing coordinate systems; it's hard to imagine it
 //               ever being different.
 ////////////////////////////////////////////////////////////////////
-85
-static inline LPoint3f const &LPoint3f::origin(CoordinateSystem cs = (::CS_default));
+83
+static inline LPoint3f const &LPoint3f::origin(CoordinateSystem cs = ::CS_default);
 
 2550 3 rfu 0 4 3465 13 LPoint3f::rfu 0 1 705 383
 ////////////////////////////////////////////////////////////////////
@@ -5389,8 +5389,8 @@ static inline LPoint3f const &LPoint3f::origin(CoordinateSystem cs = (::CS_defau
 //               displacements from the origin, wherever that maps to
 //               in the given coordinate system.
 ////////////////////////////////////////////////////////////////////
-109
-static inline LPoint3f LPoint3f::rfu(float right, float fwd, float up, CoordinateSystem cs = (::CS_default));
+107
+static inline LPoint3f LPoint3f::rfu(float right, float fwd, float up, CoordinateSystem cs = ::CS_default);
 
 2551 8 __repr__ 0 4 3465 18 LPoint3f::__repr__ 0 1 706 0
 45
@@ -5458,8 +5458,8 @@ inline LPoint3d &LPoint3d::operator =(LVecBase3d const &copy);
 inline LPoint3d &LPoint3d::operator =(double fill_value);
 
 2556 11 __getattr__ 0 4 3466 21 LPoint3d::__getattr__ 0 1 715 0
-70
-inline PyObject *LPoint3d::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint3d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2557 11 __setattr__ 0 4 3466 21 LPoint3d::__setattr__ 0 1 716 0
 92
@@ -5583,8 +5583,8 @@ inline LPoint3d LPoint3d::operator /(double scalar) const;
 //               existing coordinate systems; it's hard to imagine it
 //               ever being different.
 ////////////////////////////////////////////////////////////////////
-85
-static inline LPoint3d const &LPoint3d::origin(CoordinateSystem cs = (::CS_default));
+83
+static inline LPoint3d const &LPoint3d::origin(CoordinateSystem cs = ::CS_default);
 
 2573 3 rfu 0 4 3466 13 LPoint3d::rfu 0 1 735 383
 ////////////////////////////////////////////////////////////////////
@@ -5594,8 +5594,8 @@ static inline LPoint3d const &LPoint3d::origin(CoordinateSystem cs = (::CS_defau
 //               displacements from the origin, wherever that maps to
 //               in the given coordinate system.
 ////////////////////////////////////////////////////////////////////
-112
-static inline LPoint3d LPoint3d::rfu(double right, double fwd, double up, CoordinateSystem cs = (::CS_default));
+110
+static inline LPoint3d LPoint3d::rfu(double right, double fwd, double up, CoordinateSystem cs = ::CS_default);
 
 2574 8 __repr__ 0 4 3466 18 LPoint3d::__repr__ 0 1 736 0
 45
@@ -5663,8 +5663,8 @@ inline LPoint3i &LPoint3i::operator =(LVecBase3i const &copy);
 inline LPoint3i &LPoint3i::operator =(int fill_value);
 
 2579 11 __getattr__ 0 4 3467 21 LPoint3i::__getattr__ 0 1 745 0
-70
-inline PyObject *LPoint3i::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint3i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2580 11 __setattr__ 0 4 3467 21 LPoint3i::__setattr__ 0 1 746 0
 92
@@ -5777,8 +5777,8 @@ inline LPoint3i LPoint3i::operator /(int scalar) const;
 //               existing coordinate systems; it's hard to imagine it
 //               ever being different.
 ////////////////////////////////////////////////////////////////////
-85
-static inline LPoint3i const &LPoint3i::origin(CoordinateSystem cs = (::CS_default));
+83
+static inline LPoint3i const &LPoint3i::origin(CoordinateSystem cs = ::CS_default);
 
 2595 3 rfu 0 4 3467 13 LPoint3i::rfu 0 1 764 383
 ////////////////////////////////////////////////////////////////////
@@ -5788,8 +5788,8 @@ static inline LPoint3i const &LPoint3i::origin(CoordinateSystem cs = (::CS_defau
 //               displacements from the origin, wherever that maps to
 //               in the given coordinate system.
 ////////////////////////////////////////////////////////////////////
-103
-static inline LPoint3i LPoint3i::rfu(int right, int fwd, int up, CoordinateSystem cs = (::CS_default));
+101
+static inline LPoint3i LPoint3i::rfu(int right, int fwd, int up, CoordinateSystem cs = ::CS_default);
 
 2596 8 __repr__ 0 4 3467 18 LPoint3i::__repr__ 0 1 765 0
 45
@@ -5959,8 +5959,8 @@ inline LVecBase4f::~LVecBase4f(void);
 inline PyObject *LVecBase4f::__reduce__(PyObject *self) const;
 
 2611 11 __getattr__ 0 4 3468 23 LVecBase4f::__getattr__ 0 1 785 0
-72
-inline PyObject *LVecBase4f::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase4f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2612 11 __setattr__ 0 4 3468 23 LVecBase4f::__setattr__ 0 1 786 0
 94
@@ -6721,8 +6721,8 @@ inline LVecBase4d::~LVecBase4d(void);
 inline PyObject *LVecBase4d::__reduce__(PyObject *self) const;
 
 2691 11 __getattr__ 0 4 3472 23 LVecBase4d::__getattr__ 0 1 880 0
-72
-inline PyObject *LVecBase4d::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase4d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2692 11 __setattr__ 0 4 3472 23 LVecBase4d::__setattr__ 0 1 881 0
 94
@@ -7483,8 +7483,8 @@ inline LVecBase4i::~LVecBase4i(void);
 inline PyObject *LVecBase4i::__reduce__(PyObject *self) const;
 
 2771 11 __getattr__ 0 4 3476 23 LVecBase4i::__getattr__ 0 1 975 0
-72
-inline PyObject *LVecBase4i::__getattr__(string const &attr_name) const;
+88
+inline PyObject *LVecBase4i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2772 11 __setattr__ 0 4 3476 23 LVecBase4i::__setattr__ 0 1 976 0
 94
@@ -8079,8 +8079,8 @@ inline LVector4f &LVector4f::operator =(LVecBase4f const &copy);
 inline LVector4f &LVector4f::operator =(float fill_value);
 
 2838 11 __getattr__ 0 4 3480 22 LVector4f::__getattr__ 0 1 1052 0
-71
-inline PyObject *LVector4f::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector4f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2839 11 __setattr__ 0 4 3480 22 LVector4f::__setattr__ 0 1 1053 0
 93
@@ -8230,8 +8230,8 @@ inline LVector4d &LVector4d::operator =(LVecBase4d const &copy);
 inline LVector4d &LVector4d::operator =(double fill_value);
 
 2856 11 __getattr__ 0 4 3481 22 LVector4d::__getattr__ 0 1 1076 0
-71
-inline PyObject *LVector4d::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector4d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2857 11 __setattr__ 0 4 3481 22 LVector4d::__setattr__ 0 1 1077 0
 93
@@ -8381,8 +8381,8 @@ inline LVector4i &LVector4i::operator =(LVecBase4i const &copy);
 inline LVector4i &LVector4i::operator =(int fill_value);
 
 2874 11 __getattr__ 0 4 3482 22 LVector4i::__getattr__ 0 1 1100 0
-71
-inline PyObject *LVector4i::__getattr__(string const &attr_name) const;
+87
+inline PyObject *LVector4i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2875 11 __setattr__ 0 4 3482 22 LVector4i::__setattr__ 0 1 1101 0
 93
@@ -8521,8 +8521,8 @@ inline LPoint4f &LPoint4f::operator =(LVecBase4f const &copy);
 inline LPoint4f &LPoint4f::operator =(float fill_value);
 
 2891 11 __getattr__ 0 4 3483 21 LPoint4f::__getattr__ 0 1 1123 0
-70
-inline PyObject *LPoint4f::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint4f::__getattr__(PyObject *self, string const &attr_name) const;
 
 2892 11 __setattr__ 0 4 3483 21 LPoint4f::__setattr__ 0 1 1124 0
 92
@@ -8673,8 +8673,8 @@ inline LPoint4d &LPoint4d::operator =(LVecBase4d const &copy);
 inline LPoint4d &LPoint4d::operator =(double fill_value);
 
 2909 11 __getattr__ 0 4 3484 21 LPoint4d::__getattr__ 0 1 1148 0
-70
-inline PyObject *LPoint4d::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint4d::__getattr__(PyObject *self, string const &attr_name) const;
 
 2910 11 __setattr__ 0 4 3484 21 LPoint4d::__setattr__ 0 1 1149 0
 92
@@ -8825,8 +8825,8 @@ inline LPoint4i &LPoint4i::operator =(LVecBase4i const &copy);
 inline LPoint4i &LPoint4i::operator =(int fill_value);
 
 2927 11 __getattr__ 0 4 3485 21 LPoint4i::__getattr__ 0 1 1173 0
-70
-inline PyObject *LPoint4i::__getattr__(string const &attr_name) const;
+86
+inline PyObject *LPoint4i::__getattr__(PyObject *self, string const &attr_name) const;
 
 2928 11 __setattr__ 0 4 3485 21 LPoint4i::__setattr__ 0 1 1174 0
 92
@@ -9547,9 +9547,9 @@ inline void LMatrix3f::set_translate_mat(LVecBase2f const &trans);
 //               angle in degrees counterclockwise about the indicated
 //               vector.
 ////////////////////////////////////////////////////////////////////
-158
+156
 inline void LMatrix3f::set_rotate_mat(float angle);
-void LMatrix3f::set_rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+void LMatrix3f::set_rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3002 13 set_scale_mat 0 4 3486 24 LMatrix3f::set_scale_mat 0 2 1259 1260 644
 ////////////////////////////////////////////////////////////////////
@@ -9601,9 +9601,9 @@ static inline LMatrix3f LMatrix3f::translate_mat(float tx, float ty);
 //  Description: Returns a matrix that rotates by the given angle in
 //               degrees counterclockwise about the indicated vector.
 ////////////////////////////////////////////////////////////////////
-181
+179
 static inline LMatrix3f LMatrix3f::rotate_mat(float angle);
-static inline LMatrix3f LMatrix3f::rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+static inline LMatrix3f LMatrix3f::rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3005 9 scale_mat 0 4 3486 20 LMatrix3f::scale_mat 0 4 1265 1266 1267 1268 1278
 ////////////////////////////////////////////////////////////////////
@@ -9647,8 +9647,8 @@ static inline LMatrix3f LMatrix3f::scale_mat(float sx, float sy, float sz);
 //               angle in degrees counterclockwise about the indicated
 //               vector.  Assumes axis has been normalized.
 ////////////////////////////////////////////////////////////////////
-115
-void LMatrix3f::set_rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+113
+void LMatrix3f::set_rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3007 19 rotate_mat_normaxis 0 4 3486 30 LMatrix3f::rotate_mat_normaxis 0 1 1270 408
 ////////////////////////////////////////////////////////////////////
@@ -9658,8 +9658,8 @@ void LMatrix3f::set_rotate_mat_normaxis(float angle, LVecBase3f const &axis, Coo
 //               degrees counterclockwise about the indicated vector.
 //               Assumes axis has been normalized.
 ////////////////////////////////////////////////////////////////////
-130
-static inline LMatrix3f LMatrix3f::rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+128
+static inline LMatrix3f LMatrix3f::rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3008 13 set_shear_mat 0 4 3486 24 LMatrix3f::set_shear_mat 0 1 1271 324
 ////////////////////////////////////////////////////////////////////
@@ -9668,8 +9668,8 @@ static inline LMatrix3f LMatrix3f::rotate_mat_normaxis(float angle, LVecBase3f c
 //  Description: Fills mat with a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-100
-inline void LMatrix3f::set_shear_mat(LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
+98
+inline void LMatrix3f::set_shear_mat(LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
 
 3009 9 shear_mat 0 4 3486 20 LMatrix3f::shear_mat 0 2 1272 1273 644
 ////////////////////////////////////////////////////////////////////
@@ -9685,9 +9685,9 @@ inline void LMatrix3f::set_shear_mat(LVecBase3f const &shear, CoordinateSystem c
 //  Description: Returns a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-228
-static inline LMatrix3f LMatrix3f::shear_mat(LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix3f LMatrix3f::shear_mat(float shxy, float shxz, float shyz, CoordinateSystem cs = (::CS_default));
+224
+static inline LMatrix3f LMatrix3f::shear_mat(LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix3f LMatrix3f::shear_mat(float shxy, float shxz, float shyz, CoordinateSystem cs = ::CS_default);
 
 3010 19 set_scale_shear_mat 0 4 3486 30 LMatrix3f::set_scale_shear_mat 0 1 1274 312
 ////////////////////////////////////////////////////////////////////
@@ -9696,8 +9696,8 @@ static inline LMatrix3f LMatrix3f::shear_mat(float shxy, float shxz, float shyz,
 //  Description: Fills mat with a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-124
-void LMatrix3f::set_scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
+122
+void LMatrix3f::set_scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
 
 3011 15 scale_shear_mat 0 4 3486 26 LMatrix3f::scale_shear_mat 0 2 1275 1276 620
 ////////////////////////////////////////////////////////////////////
@@ -9713,9 +9713,9 @@ void LMatrix3f::set_scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &s
 //  Description: Returns a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-295
-static inline LMatrix3f LMatrix3f::scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix3f LMatrix3f::scale_shear_mat(float sx, float sy, float sz, float shxy, float shxz, float shyz, CoordinateSystem cs = (::CS_default));
+291
+static inline LMatrix3f LMatrix3f::scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix3f LMatrix3f::scale_shear_mat(float sx, float sy, float sz, float shxy, float shxz, float shyz, CoordinateSystem cs = ::CS_default);
 
 3012 11 convert_mat 0 4 3486 22 LMatrix3f::convert_mat 0 1 1277 350
 ////////////////////////////////////////////////////////////////////
@@ -9760,8 +9760,8 @@ void LMatrix3f::output(ostream &out) const;
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-66
-void LMatrix3f::write(ostream &out, int indent_level = (0)) const;
+64
+void LMatrix3f::write(ostream &out, int indent_level = 0) const;
 
 3016 8 __repr__ 0 4 3486 19 LMatrix3f::__repr__ 0 1 1282 0
 46
@@ -10584,8 +10584,8 @@ inline void LMatrix4f::set_translate_mat(LVecBase3f const &trans);
 //               in degrees counterclockwise about the indicated
 //               vector.
 ////////////////////////////////////////////////////////////////////
-106
-void LMatrix4f::set_rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+104
+void LMatrix4f::set_rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3094 23 set_rotate_mat_normaxis 0 4 3490 34 LMatrix4f::set_rotate_mat_normaxis 0 1 1375 412
 ////////////////////////////////////////////////////////////////////
@@ -10595,8 +10595,8 @@ void LMatrix4f::set_rotate_mat(float angle, LVecBase3f const &axis, CoordinateSy
 //               angle in degrees counterclockwise about the indicated
 //               vector.  Assumes axis has been prenormalized.
 ////////////////////////////////////////////////////////////////////
-115
-void LMatrix4f::set_rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+113
+void LMatrix4f::set_rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3095 13 set_scale_mat 0 4 3490 24 LMatrix4f::set_scale_mat 0 1 1376 319
 ////////////////////////////////////////////////////////////////////
@@ -10615,8 +10615,8 @@ inline void LMatrix4f::set_scale_mat(LVecBase3f const &scale);
 //  Description: Fills mat with a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-100
-inline void LMatrix4f::set_shear_mat(LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
+98
+inline void LMatrix4f::set_shear_mat(LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
 
 3097 19 set_scale_shear_mat 0 4 3490 30 LMatrix4f::set_scale_shear_mat 0 1 1378 317
 ////////////////////////////////////////////////////////////////////
@@ -10625,8 +10625,8 @@ inline void LMatrix4f::set_shear_mat(LVecBase3f const &shear, CoordinateSystem c
 //  Description: Fills mat with a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-131
-inline void LMatrix4f::set_scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
+129
+inline void LMatrix4f::set_scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
 
 3098 13 translate_mat 0 4 3490 24 LMatrix4f::translate_mat 0 2 1379 1380 602
 ////////////////////////////////////////////////////////////////////
@@ -10653,8 +10653,8 @@ static inline LMatrix4f LMatrix4f::translate_mat(float tx, float ty, float tz);
 //  Description: Returns a matrix that rotates by the given angle in
 //               degrees counterclockwise about the indicated vector.
 ////////////////////////////////////////////////////////////////////
-121
-static inline LMatrix4f LMatrix4f::rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+119
+static inline LMatrix4f LMatrix4f::rotate_mat(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3100 19 rotate_mat_normaxis 0 4 3490 30 LMatrix4f::rotate_mat_normaxis 0 1 1382 408
 ////////////////////////////////////////////////////////////////////
@@ -10664,8 +10664,8 @@ static inline LMatrix4f LMatrix4f::rotate_mat(float angle, LVecBase3f const &axi
 //               degrees counterclockwise about the indicated vector.
 //               Assumes axis has been prenormalized.
 ////////////////////////////////////////////////////////////////////
-130
-static inline LMatrix4f LMatrix4f::rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = (::CS_default));
+128
+static inline LMatrix4f LMatrix4f::rotate_mat_normaxis(float angle, LVecBase3f const &axis, CoordinateSystem cs = ::CS_default);
 
 3101 9 scale_mat 0 4 3490 20 LMatrix4f::scale_mat 0 3 1383 1384 1385 934
 ////////////////////////////////////////////////////////////////////
@@ -10707,9 +10707,9 @@ static inline LMatrix4f LMatrix4f::scale_mat(float scale);
 //  Description: Returns a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-228
-static inline LMatrix4f LMatrix4f::shear_mat(LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix4f LMatrix4f::shear_mat(float shxy, float shxz, float shyz, CoordinateSystem cs = (::CS_default));
+224
+static inline LMatrix4f LMatrix4f::shear_mat(LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix4f LMatrix4f::shear_mat(float shxy, float shxz, float shyz, CoordinateSystem cs = ::CS_default);
 
 3103 15 scale_shear_mat 0 4 3490 26 LMatrix4f::scale_shear_mat 0 2 1388 1389 614
 ////////////////////////////////////////////////////////////////////
@@ -10725,9 +10725,9 @@ static inline LMatrix4f LMatrix4f::shear_mat(float shxy, float shxz, float shyz,
 //  Description: Returns a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-295
-static inline LMatrix4f LMatrix4f::scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix4f LMatrix4f::scale_shear_mat(float sx, float sy, float sz, float shxy, float shxz, float shyz, CoordinateSystem cs = (::CS_default));
+291
+static inline LMatrix4f LMatrix4f::scale_shear_mat(LVecBase3f const &scale, LVecBase3f const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix4f LMatrix4f::scale_shear_mat(float sx, float sy, float sz, float shxy, float shxz, float shyz, CoordinateSystem cs = ::CS_default);
 
 3104 13 y_to_z_up_mat 0 4 3490 24 LMatrix4f::y_to_z_up_mat 0 1 1390 339
 ////////////////////////////////////////////////////////////////////
@@ -10794,8 +10794,8 @@ void LMatrix4f::output(ostream &out) const;
 //       Access: Public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-66
-void LMatrix4f::write(ostream &out, int indent_level = (0)) const;
+64
+void LMatrix4f::write(ostream &out, int indent_level = 0) const;
 
 3110 8 __repr__ 0 4 3490 19 LMatrix4f::__repr__ 0 1 1397 0
 46
@@ -11599,9 +11599,9 @@ inline void LMatrix3d::set_translate_mat(LVecBase2d const &trans);
 //               angle in degrees counterclockwise about the indicated
 //               vector.
 ////////////////////////////////////////////////////////////////////
-160
+158
 inline void LMatrix3d::set_rotate_mat(double angle);
-void LMatrix3d::set_rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+void LMatrix3d::set_rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3186 13 set_scale_mat 0 4 3496 24 LMatrix3d::set_scale_mat 0 2 1491 1492 644
 ////////////////////////////////////////////////////////////////////
@@ -11653,9 +11653,9 @@ static inline LMatrix3d LMatrix3d::translate_mat(double tx, double ty);
 //  Description: Returns a matrix that rotates by the given angle in
 //               degrees counterclockwise about the indicated vector.
 ////////////////////////////////////////////////////////////////////
-183
+181
 static inline LMatrix3d LMatrix3d::rotate_mat(double angle);
-static inline LMatrix3d LMatrix3d::rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+static inline LMatrix3d LMatrix3d::rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3189 9 scale_mat 0 4 3496 20 LMatrix3d::scale_mat 0 4 1497 1498 1499 1500 1278
 ////////////////////////////////////////////////////////////////////
@@ -11699,8 +11699,8 @@ static inline LMatrix3d LMatrix3d::scale_mat(double sx, double sy, double sz);
 //               angle in degrees counterclockwise about the indicated
 //               vector.  Assumes axis has been normalized.
 ////////////////////////////////////////////////////////////////////
-116
-void LMatrix3d::set_rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+114
+void LMatrix3d::set_rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3191 19 rotate_mat_normaxis 0 4 3496 30 LMatrix3d::rotate_mat_normaxis 0 1 1502 408
 ////////////////////////////////////////////////////////////////////
@@ -11710,8 +11710,8 @@ void LMatrix3d::set_rotate_mat_normaxis(double angle, LVecBase3d const &axis, Co
 //               degrees counterclockwise about the indicated vector.
 //               Assumes axis has been normalized.
 ////////////////////////////////////////////////////////////////////
-131
-static inline LMatrix3d LMatrix3d::rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+129
+static inline LMatrix3d LMatrix3d::rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3192 13 set_shear_mat 0 4 3496 24 LMatrix3d::set_shear_mat 0 1 1503 324
 ////////////////////////////////////////////////////////////////////
@@ -11720,8 +11720,8 @@ static inline LMatrix3d LMatrix3d::rotate_mat_normaxis(double angle, LVecBase3d 
 //  Description: Fills mat with a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-100
-inline void LMatrix3d::set_shear_mat(LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
+98
+inline void LMatrix3d::set_shear_mat(LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
 
 3193 9 shear_mat 0 4 3496 20 LMatrix3d::shear_mat 0 2 1504 1505 644
 ////////////////////////////////////////////////////////////////////
@@ -11737,9 +11737,9 @@ inline void LMatrix3d::set_shear_mat(LVecBase3d const &shear, CoordinateSystem c
 //  Description: Returns a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-231
-static inline LMatrix3d LMatrix3d::shear_mat(LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix3d LMatrix3d::shear_mat(double shxy, double shxz, double shyz, CoordinateSystem cs = (::CS_default));
+227
+static inline LMatrix3d LMatrix3d::shear_mat(LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix3d LMatrix3d::shear_mat(double shxy, double shxz, double shyz, CoordinateSystem cs = ::CS_default);
 
 3194 19 set_scale_shear_mat 0 4 3496 30 LMatrix3d::set_scale_shear_mat 0 1 1506 312
 ////////////////////////////////////////////////////////////////////
@@ -11748,8 +11748,8 @@ static inline LMatrix3d LMatrix3d::shear_mat(double shxy, double shxz, double sh
 //  Description: Fills mat with a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-124
-void LMatrix3d::set_scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
+122
+void LMatrix3d::set_scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
 
 3195 15 scale_shear_mat 0 4 3496 26 LMatrix3d::scale_shear_mat 0 2 1507 1508 620
 ////////////////////////////////////////////////////////////////////
@@ -11765,9 +11765,9 @@ void LMatrix3d::set_scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &s
 //  Description: Returns a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-301
-static inline LMatrix3d LMatrix3d::scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix3d LMatrix3d::scale_shear_mat(double sx, double sy, double sz, double shxy, double shxz, double shyz, CoordinateSystem cs = (::CS_default));
+297
+static inline LMatrix3d LMatrix3d::scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix3d LMatrix3d::scale_shear_mat(double sx, double sy, double sz, double shxy, double shxz, double shyz, CoordinateSystem cs = ::CS_default);
 
 3196 11 convert_mat 0 4 3496 22 LMatrix3d::convert_mat 0 1 1509 350
 ////////////////////////////////////////////////////////////////////
@@ -11812,8 +11812,8 @@ void LMatrix3d::output(ostream &out) const;
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-66
-void LMatrix3d::write(ostream &out, int indent_level = (0)) const;
+64
+void LMatrix3d::write(ostream &out, int indent_level = 0) const;
 
 3200 8 __repr__ 0 4 3496 19 LMatrix3d::__repr__ 0 1 1514 0
 46
@@ -12620,8 +12620,8 @@ inline void LMatrix4d::set_translate_mat(LVecBase3d const &trans);
 //               in degrees counterclockwise about the indicated
 //               vector.
 ////////////////////////////////////////////////////////////////////
-107
-void LMatrix4d::set_rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+105
+void LMatrix4d::set_rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3276 23 set_rotate_mat_normaxis 0 4 3500 34 LMatrix4d::set_rotate_mat_normaxis 0 1 1607 412
 ////////////////////////////////////////////////////////////////////
@@ -12631,8 +12631,8 @@ void LMatrix4d::set_rotate_mat(double angle, LVecBase3d const &axis, CoordinateS
 //               angle in degrees counterclockwise about the indicated
 //               vector.  Assumes axis has been prenormalized.
 ////////////////////////////////////////////////////////////////////
-116
-void LMatrix4d::set_rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+114
+void LMatrix4d::set_rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3277 13 set_scale_mat 0 4 3500 24 LMatrix4d::set_scale_mat 0 1 1608 319
 ////////////////////////////////////////////////////////////////////
@@ -12651,8 +12651,8 @@ inline void LMatrix4d::set_scale_mat(LVecBase3d const &scale);
 //  Description: Fills mat with a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-100
-inline void LMatrix4d::set_shear_mat(LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
+98
+inline void LMatrix4d::set_shear_mat(LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
 
 3279 19 set_scale_shear_mat 0 4 3500 30 LMatrix4d::set_scale_shear_mat 0 1 1610 317
 ////////////////////////////////////////////////////////////////////
@@ -12661,8 +12661,8 @@ inline void LMatrix4d::set_shear_mat(LVecBase3d const &shear, CoordinateSystem c
 //  Description: Fills mat with a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-131
-inline void LMatrix4d::set_scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
+129
+inline void LMatrix4d::set_scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
 
 3280 13 translate_mat 0 4 3500 24 LMatrix4d::translate_mat 0 2 1611 1612 602
 ////////////////////////////////////////////////////////////////////
@@ -12689,8 +12689,8 @@ static inline LMatrix4d LMatrix4d::translate_mat(double tx, double ty, double tz
 //  Description: Returns a matrix that rotates by the given angle in
 //               degrees counterclockwise about the indicated vector.
 ////////////////////////////////////////////////////////////////////
-122
-static inline LMatrix4d LMatrix4d::rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+120
+static inline LMatrix4d LMatrix4d::rotate_mat(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3282 19 rotate_mat_normaxis 0 4 3500 30 LMatrix4d::rotate_mat_normaxis 0 1 1614 408
 ////////////////////////////////////////////////////////////////////
@@ -12700,8 +12700,8 @@ static inline LMatrix4d LMatrix4d::rotate_mat(double angle, LVecBase3d const &ax
 //               degrees counterclockwise about the indicated vector.
 //               Assumes axis has been prenormalized.
 ////////////////////////////////////////////////////////////////////
-131
-static inline LMatrix4d LMatrix4d::rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = (::CS_default));
+129
+static inline LMatrix4d LMatrix4d::rotate_mat_normaxis(double angle, LVecBase3d const &axis, CoordinateSystem cs = ::CS_default);
 
 3283 9 scale_mat 0 4 3500 20 LMatrix4d::scale_mat 0 3 1615 1616 1617 934
 ////////////////////////////////////////////////////////////////////
@@ -12743,9 +12743,9 @@ static inline LMatrix4d LMatrix4d::scale_mat(double scale);
 //  Description: Returns a matrix that applies the indicated
 //               shear in each of the three planes.
 ////////////////////////////////////////////////////////////////////
-231
-static inline LMatrix4d LMatrix4d::shear_mat(LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix4d LMatrix4d::shear_mat(double shxy, double shxz, double shyz, CoordinateSystem cs = (::CS_default));
+227
+static inline LMatrix4d LMatrix4d::shear_mat(LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix4d LMatrix4d::shear_mat(double shxy, double shxz, double shyz, CoordinateSystem cs = ::CS_default);
 
 3285 15 scale_shear_mat 0 4 3500 26 LMatrix4d::scale_shear_mat 0 2 1620 1621 614
 ////////////////////////////////////////////////////////////////////
@@ -12761,9 +12761,9 @@ static inline LMatrix4d LMatrix4d::shear_mat(double shxy, double shxz, double sh
 //  Description: Returns a matrix that applies the indicated
 //               scale and shear.
 ////////////////////////////////////////////////////////////////////
-301
-static inline LMatrix4d LMatrix4d::scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = (::CS_default));
-static inline LMatrix4d LMatrix4d::scale_shear_mat(double sx, double sy, double sz, double shxy, double shxz, double shyz, CoordinateSystem cs = (::CS_default));
+297
+static inline LMatrix4d LMatrix4d::scale_shear_mat(LVecBase3d const &scale, LVecBase3d const &shear, CoordinateSystem cs = ::CS_default);
+static inline LMatrix4d LMatrix4d::scale_shear_mat(double sx, double sy, double sz, double shxy, double shxz, double shyz, CoordinateSystem cs = ::CS_default);
 
 3286 13 y_to_z_up_mat 0 4 3500 24 LMatrix4d::y_to_z_up_mat 0 1 1622 339
 ////////////////////////////////////////////////////////////////////
@@ -12830,8 +12830,8 @@ void LMatrix4d::output(ostream &out) const;
 //       Access: Public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-66
-void LMatrix4d::write(ostream &out, int indent_level = (0)) const;
+64
+void LMatrix4d::write(ostream &out, int indent_level = 0) const;
 
 3292 8 __repr__ 0 4 3500 19 LMatrix4d::__repr__ 0 1 1629 0
 46
@@ -13061,66 +13061,66 @@ inline void generic_read_datagram(LMatrix3d &result, DatagramIterator &source);
 inline void generic_read_datagram(LMatrix4d &result, DatagramIterator &source);
 
 3312 14 compose_matrix 0 1 0 14 compose_matrix 0 10 1887 1888 1889 1890 1891 1892 1893 1894 1895 1896 0
-1518
-inline void compose_matrix(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix4f &mat, float const components[::num_matrix_components], CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix4d &mat, double const components[::num_matrix_components], CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = (::CS_default));
+1498
+inline void compose_matrix(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix4f &mat, float const components[::num_matrix_components], CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix4d &mat, double const components[::num_matrix_components], CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = ::CS_default);
 
 3313 16 decompose_matrix 0 1 0 16 decompose_matrix 0 10 1897 1898 1899 1900 1901 1902 1903 1904 1905 1906 0
-1442
-inline bool decompose_matrix(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix(LMatrix4f const &mat, float components[::num_matrix_components], CoordinateSystem CS = (::CS_default));
-inline bool decompose_matrix(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix(LMatrix4d const &mat, double components[::num_matrix_components], CoordinateSystem CS = (::CS_default));
-inline bool decompose_matrix(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = (::CS_default));
+1422
+inline bool decompose_matrix(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix(LMatrix4f const &mat, float components[::num_matrix_components], CoordinateSystem CS = ::CS_default);
+inline bool decompose_matrix(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix(LMatrix4d const &mat, double components[::num_matrix_components], CoordinateSystem CS = ::CS_default);
+inline bool decompose_matrix(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = ::CS_default);
 
 3314 22 compose_matrix_old_hpr 0 1 0 22 compose_matrix_old_hpr 0 6 1907 1908 1909 1910 1911 1912 0
-974
-void compose_matrix_old_hpr(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_old_hpr(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_old_hpr(LMatrix4f &mat, float const components[::num_matrix_components], CoordinateSystem cs = (::CS_default));
-void compose_matrix_old_hpr(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_old_hpr(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_old_hpr(LMatrix4d &mat, double const components[::num_matrix_components], CoordinateSystem cs = (::CS_default));
+962
+void compose_matrix_old_hpr(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_old_hpr(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_old_hpr(LMatrix4f &mat, float const components[::num_matrix_components], CoordinateSystem cs = ::CS_default);
+void compose_matrix_old_hpr(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_old_hpr(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_old_hpr(LMatrix4d &mat, double const components[::num_matrix_components], CoordinateSystem cs = ::CS_default);
 
 3315 24 decompose_matrix_old_hpr 0 1 0 24 decompose_matrix_old_hpr 0 6 1913 1914 1915 1916 1917 1918 0
-926
-bool decompose_matrix_old_hpr(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_old_hpr(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_old_hpr(LMatrix4f const &mat, float components[::num_matrix_components], CoordinateSystem CS = (::CS_default));
-bool decompose_matrix_old_hpr(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_old_hpr(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_old_hpr(LMatrix4d const &mat, double components[::num_matrix_components], CoordinateSystem CS = (::CS_default));
+914
+bool decompose_matrix_old_hpr(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_old_hpr(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_old_hpr(LMatrix4f const &mat, float components[::num_matrix_components], CoordinateSystem CS = ::CS_default);
+bool decompose_matrix_old_hpr(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_old_hpr(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_old_hpr(LMatrix4d const &mat, double components[::num_matrix_components], CoordinateSystem CS = ::CS_default);
 
 3316 22 compose_matrix_new_hpr 0 1 0 22 compose_matrix_new_hpr 0 6 1919 1920 1921 1922 1923 1924 0
-974
-void compose_matrix_new_hpr(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_new_hpr(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_new_hpr(LMatrix4f &mat, float const components[::num_matrix_components], CoordinateSystem cs = (::CS_default));
-void compose_matrix_new_hpr(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_new_hpr(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = (::CS_default));
-inline void compose_matrix_new_hpr(LMatrix4d &mat, double const components[::num_matrix_components], CoordinateSystem cs = (::CS_default));
+962
+void compose_matrix_new_hpr(LMatrix3f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_new_hpr(LMatrix4f &mat, LVecBase3f const &scale, LVecBase3f const &shear, LVecBase3f const &hpr, LVecBase3f const &translate, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_new_hpr(LMatrix4f &mat, float const components[::num_matrix_components], CoordinateSystem cs = ::CS_default);
+void compose_matrix_new_hpr(LMatrix3d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_new_hpr(LMatrix4d &mat, LVecBase3d const &scale, LVecBase3d const &shear, LVecBase3d const &hpr, LVecBase3d const &translate, CoordinateSystem cs = ::CS_default);
+inline void compose_matrix_new_hpr(LMatrix4d &mat, double const components[::num_matrix_components], CoordinateSystem cs = ::CS_default);
 
 3317 24 decompose_matrix_new_hpr 0 1 0 24 decompose_matrix_new_hpr 0 6 1925 1926 1927 1928 1929 1930 0
-926
-bool decompose_matrix_new_hpr(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_new_hpr(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_new_hpr(LMatrix4f const &mat, float components[::num_matrix_components], CoordinateSystem CS = (::CS_default));
-bool decompose_matrix_new_hpr(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_new_hpr(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = (::CS_default));
-inline bool decompose_matrix_new_hpr(LMatrix4d const &mat, double components[::num_matrix_components], CoordinateSystem CS = (::CS_default));
+914
+bool decompose_matrix_new_hpr(LMatrix3f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_new_hpr(LMatrix4f const &mat, LVecBase3f &scale, LVecBase3f &shear, LVecBase3f &hpr, LVecBase3f &translate, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_new_hpr(LMatrix4f const &mat, float components[::num_matrix_components], CoordinateSystem CS = ::CS_default);
+bool decompose_matrix_new_hpr(LMatrix3d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_new_hpr(LMatrix4d const &mat, LVecBase3d &scale, LVecBase3d &shear, LVecBase3d &hpr, LVecBase3d &translate, CoordinateSystem cs = ::CS_default);
+inline bool decompose_matrix_new_hpr(LMatrix4d const &mat, double components[::num_matrix_components], CoordinateSystem CS = ::CS_default);
 
 3318 14 old_to_new_hpr 0 1 0 14 old_to_new_hpr 0 2 1931 1932 0
 107
@@ -13156,11 +13156,11 @@ LVecBase3d new_to_old_hpr(LVecBase3d const &new_hpr);
 //       Access: public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-233
+238
 inline LQuaternionf::LQuaternionf(void);
 inline LQuaternionf::LQuaternionf(LVecBase4f const &copy);
-inline LQuaternionf::LQuaternionf(float , LVecBase3f const &copy);
-inline LQuaternionf::LQuaternionf(float , float , float , float );
+inline LQuaternionf::LQuaternionf(float r, LVecBase3f const &copy);
+inline LQuaternionf::LQuaternionf(float r, float i, float j, float k);
 
 3321 14 pure_imaginary 0 4 3506 28 LQuaternionf::pure_imaginary 0 1 1658 228
 ////////////////////////////////////////////////////////////////////
@@ -13168,8 +13168,8 @@ inline LQuaternionf::LQuaternionf(float , float , float , float );
 //       Access: public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-68
-static LQuaternionf LQuaternionf::pure_imaginary(LVector3f const &);
+69
+static LQuaternionf LQuaternionf::pure_imaginary(LVector3f const &v);
 
 3322 9 conjugate 0 4 3506 23 LQuaternionf::conjugate 0 1 1659 265
 ////////////////////////////////////////////////////////////////////
@@ -13351,8 +13351,8 @@ inline void LQuaternionf::set_from_matrix(LMatrix4f const &m);
 //               is equivalent to these Euler angles.
 //               (from Real-time Rendering, p.49)
 ////////////////////////////////////////////////////////////////////
-88
-void LQuaternionf::set_hpr(LVecBase3f const &hpr, CoordinateSystem cs = (::CS_default));
+86
+void LQuaternionf::set_hpr(LVecBase3f const &hpr, CoordinateSystem cs = ::CS_default);
 
 3340 7 get_hpr 0 4 3506 21 LQuaternionf::get_hpr 0 1 1684 296
 ////////////////////////////////////////////////////////////////////
@@ -13361,8 +13361,8 @@ void LQuaternionf::set_hpr(LVecBase3f const &hpr, CoordinateSystem cs = (::CS_de
 //  Description: Extracts the equivalent Euler angles from the unit
 //               quaternion.
 ////////////////////////////////////////////////////////////////////
-77
-LVecBase3f LQuaternionf::get_hpr(CoordinateSystem cs = (::CS_default)) const;
+75
+LVecBase3f LQuaternionf::get_hpr(CoordinateSystem cs = ::CS_default) const;
 
 3341 8 get_axis 0 4 3506 22 LQuaternionf::get_axis 0 1 1685 432
 ////////////////////////////////////////////////////////////////////
@@ -13446,8 +13446,8 @@ inline void LQuaternionf::set_from_axis_angle(float angle_deg, LVector3f const &
 //  Description: Returns the orientation represented by this
 //               quaternion, expressed as an up vector.
 ////////////////////////////////////////////////////////////////////
-82
-inline LVector3f LQuaternionf::get_up(CoordinateSystem cs = (::CS_default)) const;
+80
+inline LVector3f LQuaternionf::get_up(CoordinateSystem cs = ::CS_default) const;
 
 3348 9 get_right 0 4 3506 23 LQuaternionf::get_right 0 1 1692 320
 ////////////////////////////////////////////////////////////////////
@@ -13456,8 +13456,8 @@ inline LVector3f LQuaternionf::get_up(CoordinateSystem cs = (::CS_default)) cons
 //  Description: Returns the orientation represented by this
 //               quaternion, expressed as a right vector.
 ////////////////////////////////////////////////////////////////////
-85
-inline LVector3f LQuaternionf::get_right(CoordinateSystem cs = (::CS_default)) const;
+83
+inline LVector3f LQuaternionf::get_right(CoordinateSystem cs = ::CS_default) const;
 
 3349 11 get_forward 0 4 3506 25 LQuaternionf::get_forward 0 1 1693 324
 ////////////////////////////////////////////////////////////////////
@@ -13466,8 +13466,8 @@ inline LVector3f LQuaternionf::get_right(CoordinateSystem cs = (::CS_default)) c
 //  Description: Returns the orientation represented by this
 //               quaternion, expressed as a forward vector.
 ////////////////////////////////////////////////////////////////////
-87
-inline LVector3f LQuaternionf::get_forward(CoordinateSystem cs = (::CS_default)) const;
+85
+inline LVector3f LQuaternionf::get_forward(CoordinateSystem cs = ::CS_default) const;
 
 3350 5 get_r 0 4 3506 19 LQuaternionf::get_r 0 1 1694 214
 ////////////////////////////////////////////////////////////////////
@@ -13673,11 +13673,11 @@ LQuaternionf::~LQuaternionf(void);
 //       Access: public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-238
+243
 inline LQuaterniond::LQuaterniond(void);
 inline LQuaterniond::LQuaterniond(LVecBase4d const &copy);
-inline LQuaterniond::LQuaterniond(double , LVecBase3d const &copy);
-inline LQuaterniond::LQuaterniond(double , double , double , double );
+inline LQuaterniond::LQuaterniond(double r, LVecBase3d const &copy);
+inline LQuaterniond::LQuaterniond(double r, double i, double j, double k);
 
 3369 14 pure_imaginary 0 4 3507 28 LQuaterniond::pure_imaginary 0 1 1715 228
 ////////////////////////////////////////////////////////////////////
@@ -13685,8 +13685,8 @@ inline LQuaterniond::LQuaterniond(double , double , double , double );
 //       Access: public
 //  Description:
 ////////////////////////////////////////////////////////////////////
-68
-static LQuaterniond LQuaterniond::pure_imaginary(LVector3d const &);
+69
+static LQuaterniond LQuaterniond::pure_imaginary(LVector3d const &v);
 
 3370 9 conjugate 0 4 3507 23 LQuaterniond::conjugate 0 1 1716 265
 ////////////////////////////////////////////////////////////////////
@@ -13868,8 +13868,8 @@ inline void LQuaterniond::set_from_matrix(LMatrix4d const &m);
 //               is equivalent to these Euler angles.
 //               (from Real-time Rendering, p.49)
 ////////////////////////////////////////////////////////////////////
-88
-void LQuaterniond::set_hpr(LVecBase3d const &hpr, CoordinateSystem cs = (::CS_default));
+86
+void LQuaterniond::set_hpr(LVecBase3d const &hpr, CoordinateSystem cs = ::CS_default);
 
 3388 7 get_hpr 0 4 3507 21 LQuaterniond::get_hpr 0 1 1741 296
 ////////////////////////////////////////////////////////////////////
@@ -13878,8 +13878,8 @@ void LQuaterniond::set_hpr(LVecBase3d const &hpr, CoordinateSystem cs = (::CS_de
 //  Description: Extracts the equivalent Euler angles from the unit
 //               quaternion.
 ////////////////////////////////////////////////////////////////////
-77
-LVecBase3d LQuaterniond::get_hpr(CoordinateSystem cs = (::CS_default)) const;
+75
+LVecBase3d LQuaterniond::get_hpr(CoordinateSystem cs = ::CS_default) const;
 
 3389 8 get_axis 0 4 3507 22 LQuaterniond::get_axis 0 1 1742 432
 ////////////////////////////////////////////////////////////////////
@@ -13963,8 +13963,8 @@ inline void LQuaterniond::set_from_axis_angle(double angle_deg, LVector3d const 
 //  Description: Returns the orientation represented by this
 //               quaternion, expressed as an up vector.
 ////////////////////////////////////////////////////////////////////
-82
-inline LVector3d LQuaterniond::get_up(CoordinateSystem cs = (::CS_default)) const;
+80
+inline LVector3d LQuaterniond::get_up(CoordinateSystem cs = ::CS_default) const;
 
 3396 9 get_right 0 4 3507 23 LQuaterniond::get_right 0 1 1749 320
 ////////////////////////////////////////////////////////////////////
@@ -13973,8 +13973,8 @@ inline LVector3d LQuaterniond::get_up(CoordinateSystem cs = (::CS_default)) cons
 //  Description: Returns the orientation represented by this
 //               quaternion, expressed as a right vector.
 ////////////////////////////////////////////////////////////////////
-85
-inline LVector3d LQuaterniond::get_right(CoordinateSystem cs = (::CS_default)) const;
+83
+inline LVector3d LQuaterniond::get_right(CoordinateSystem cs = ::CS_default) const;
 
 3397 11 get_forward 0 4 3507 25 LQuaterniond::get_forward 0 1 1750 324
 ////////////////////////////////////////////////////////////////////
@@ -13983,8 +13983,8 @@ inline LVector3d LQuaterniond::get_right(CoordinateSystem cs = (::CS_default)) c
 //  Description: Returns the orientation represented by this
 //               quaternion, expressed as a forward vector.
 ////////////////////////////////////////////////////////////////////
-87
-inline LVector3d LQuaterniond::get_forward(CoordinateSystem cs = (::CS_default)) const;
+85
+inline LVector3d LQuaterniond::get_forward(CoordinateSystem cs = ::CS_default) const;
 
 3398 5 get_r 0 4 3507 19 LQuaterniond::get_r 0 1 1751 214
 ////////////////////////////////////////////////////////////////////
@@ -14214,15 +14214,15 @@ LQuaterniond::~LQuaterniond(void);
 //       Access: public
 //  Description: Sets the rotation from the given Euler angles.
 ////////////////////////////////////////////////////////////////////
-420
+439
 inline LRotationf::LRotationf(void);
-inline LRotationf::LRotationf(LQuaternionf const &);
+inline LRotationf::LRotationf(LQuaternionf const &c);
 inline LRotationf::LRotationf(LVecBase4f const &copy);
-inline LRotationf::LRotationf(float , float , float , float );
-inline LRotationf::LRotationf(LVector3f const &, float );
-inline LRotationf::LRotationf(LMatrix3f const &);
-inline LRotationf::LRotationf(LMatrix4f const &);
-inline LRotationf::LRotationf(float , float , float );
+inline LRotationf::LRotationf(float r, float i, float j, float k);
+inline LRotationf::LRotationf(LVector3f const &axis, float angle);
+inline LRotationf::LRotationf(LMatrix3f const &m);
+inline LRotationf::LRotationf(LMatrix4f const &m);
+inline LRotationf::LRotationf(float h, float p, float r);
 
 3417 10 operator * 0 4 3508 22 LRotationf::operator * 0 3 1776 1777 1778 0
 211
@@ -14290,15 +14290,15 @@ LRotationf::~LRotationf(void);
 //       Access: public
 //  Description: Sets the rotation from the given Euler angles.
 ////////////////////////////////////////////////////////////////////
-428
+447
 inline LRotationd::LRotationd(void);
-inline LRotationd::LRotationd(LQuaterniond const &);
+inline LRotationd::LRotationd(LQuaterniond const &c);
 inline LRotationd::LRotationd(LVecBase4d const &copy);
-inline LRotationd::LRotationd(double , double , double , double );
-inline LRotationd::LRotationd(LVector3d const &, double );
-inline LRotationd::LRotationd(LMatrix3d const &);
-inline LRotationd::LRotationd(LMatrix4d const &);
-inline LRotationd::LRotationd(double , double , double );
+inline LRotationd::LRotationd(double r, double i, double j, double k);
+inline LRotationd::LRotationd(LVector3d const &axis, double angle);
+inline LRotationd::LRotationd(LMatrix3d const &m);
+inline LRotationd::LRotationd(LMatrix4d const &m);
+inline LRotationd::LRotationd(double h, double p, double r);
 
 3422 10 operator * 0 4 3509 22 LRotationd::operator * 0 3 1789 1790 1791 0
 212
@@ -14354,13 +14354,13 @@ LRotationd::~LRotationd(void);
 //       Access: public
 //  Description: matrix4
 ////////////////////////////////////////////////////////////////////
-346
+366
 inline LOrientationf::LOrientationf(void);
-inline LOrientationf::LOrientationf(LQuaternionf const &);
-inline LOrientationf::LOrientationf(float , float , float , float );
-inline LOrientationf::LOrientationf(LVector3f const &, float );
-inline LOrientationf::LOrientationf(LMatrix3f const &);
-inline LOrientationf::LOrientationf(LMatrix4f const &);
+inline LOrientationf::LOrientationf(LQuaternionf const &c);
+inline LOrientationf::LOrientationf(float r, float i, float j, float k);
+inline LOrientationf::LOrientationf(LVector3f const &point_at, float twist);
+inline LOrientationf::LOrientationf(LMatrix3f const &m);
+inline LOrientationf::LOrientationf(LMatrix4f const &m);
 
 3427 10 operator * 0 4 3510 25 LOrientationf::operator * 0 2 1800 1801 0
 159
@@ -14411,13 +14411,13 @@ LOrientationf::~LOrientationf(void);
 //       Access: public
 //  Description: matrix4
 ////////////////////////////////////////////////////////////////////
-350
+370
 inline LOrientationd::LOrientationd(void);
-inline LOrientationd::LOrientationd(LQuaterniond const &);
-inline LOrientationd::LOrientationd(double , double , double , double );
-inline LOrientationd::LOrientationd(LVector3d const &, float );
-inline LOrientationd::LOrientationd(LMatrix3d const &);
-inline LOrientationd::LOrientationd(LMatrix4d const &);
+inline LOrientationd::LOrientationd(LQuaterniond const &c);
+inline LOrientationd::LOrientationd(double r, double i, double j, double k);
+inline LOrientationd::LOrientationd(LVector3d const &point_at, float twist);
+inline LOrientationd::LOrientationd(LMatrix3d const &m);
+inline LOrientationd::LOrientationd(LMatrix4d const &m);
 
 3431 10 operator * 0 4 3511 25 LOrientationd::operator * 0 2 1809 1810 0
 159
@@ -14452,8 +14452,8 @@ LOrientationd::~LOrientationd(void);
 ////////////////////////////////////////////////////////////////////
 370
 inline ConfigVariableColor::ConfigVariableColor(string const &name);
-inline ConfigVariableColor::ConfigVariableColor(string const &name, LColor const &default_value, string const &description = ((())), int flags = (0));
-inline ConfigVariableColor::ConfigVariableColor(string const &name, string const &default_value, string const &description = ((())), int flags = (0));
+inline ConfigVariableColor::ConfigVariableColor(string const &name, LColor const &default_value, string const &description = string(), int flags = 0);
+inline ConfigVariableColor::ConfigVariableColor(string const &name, string const &default_value, string const &description = string(), int flags = 0);
 
 3435 10 operator = 0 4 3582 31 ConfigVariableColor::operator = 0 1 1815 0
 65
@@ -21678,17 +21678,17 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LQuaternion::Copy Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 6 param0 0 3587  4 copy 1 3633  
+//////////////////////////////////////////////////////////////////// 2 1 r 1 3587  4 copy 1 3633  
 1657 0 0 7 1451 3737 3367 0 220 ////////////////////////////////////////////////////////////////////
 //     Function: LQuaternion::Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 4 6 param0 0 3587  6 param1 0 3587  6 param2 0 3587  6 param3 0 3587  
+//////////////////////////////////////////////////////////////////// 4 1 r 1 3587  1 i 1 3587  1 j 1 3587  1 k 1 3587  
 1658 0 0 7 1452 3737 3367 0 228 ////////////////////////////////////////////////////////////////////
 //     Function: LQuaternion::pure_imaginary_quat
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3642  
+//////////////////////////////////////////////////////////////////// 1 1 v 1 3642  
 1659 0 0 7 1453 3737 3367 0 265 ////////////////////////////////////////////////////////////////////
 //     Function: LQuaternion::conjugate
 //       Access: Published
@@ -21995,17 +21995,17 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LQuaternion::Copy Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 2 6 param0 0 3610  4 copy 1 3636  
+//////////////////////////////////////////////////////////////////// 2 1 r 1 3610  4 copy 1 3636  
 1714 0 0 7 1500 3740 3415 0 220 ////////////////////////////////////////////////////////////////////
 //     Function: LQuaternion::Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 4 6 param0 0 3610  6 param1 0 3610  6 param2 0 3610  6 param3 0 3610  
+//////////////////////////////////////////////////////////////////// 4 1 r 1 3610  1 i 1 3610  1 j 1 3610  1 k 1 3610  
 1715 0 0 7 1501 3740 3415 0 228 ////////////////////////////////////////////////////////////////////
 //     Function: LQuaternion::pure_imaginary_quat
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3645  
+//////////////////////////////////////////////////////////////////// 1 1 v 1 3645  
 1716 0 0 7 1502 3740 3415 0 265 ////////////////////////////////////////////////////////////////////
 //     Function: LQuaternion::conjugate
 //       Access: Published
@@ -22307,17 +22307,17 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: lmatrix3
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3696  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3696  
 1770 0 0 7 1549 3743 3420 0 227 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: lmatrix4
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3700  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3700  
 1771 0 0 7 1549 3743 3420 0 223 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Copy Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3738  
+//////////////////////////////////////////////////////////////////// 1 1 c 1 3738  
 1772 0 0 7 1549 3743 3420 0 223 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Copy Constructor
 //       Access: public
@@ -22327,17 +22327,17 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: axis + angle (in degrees)
-//////////////////////////////////////////////////////////////////// 2 6 param0 0 3642  6 param1 0 3587  
+//////////////////////////////////////////////////////////////////// 2 4 axis 1 3642  5 angle 1 3587  
 1774 0 0 7 1549 3743 3420 0 265 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: Sets the rotation from the given Euler angles.
-//////////////////////////////////////////////////////////////////// 3 6 param0 0 3587  6 param1 0 3587  6 param2 0 3587  
+//////////////////////////////////////////////////////////////////// 3 1 h 1 3587  1 p 1 3587  1 r 1 3587  
 1775 0 0 7 1549 3743 3420 0 218 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 4 6 param0 0 3587  6 param1 0 3587  6 param2 0 3587  6 param3 0 3587  
+//////////////////////////////////////////////////////////////////// 4 1 r 1 3587  1 i 1 3587  1 j 1 3587  1 k 1 3587  
 1776 0 0 7 1550 3737 3367 0 0 2 4 this 3 3744  5 other 1 3738  
 1777 0 0 7 1550 3743 3420 0 0 2 4 this 3 3744  5 other 1 3744  
 1778 0 0 7 1550 3743 3420 0 0 2 4 this 3 3744  6 scalar 1 3587  
@@ -22352,17 +22352,17 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: lmatrix3
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3717  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3717  
 1783 0 0 7 1555 3746 3425 0 227 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: lmatrix4
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3721  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3721  
 1784 0 0 7 1555 3746 3425 0 223 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Copy Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3741  
+//////////////////////////////////////////////////////////////////// 1 1 c 1 3741  
 1785 0 0 7 1555 3746 3425 0 223 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Copy Constructor
 //       Access: public
@@ -22372,17 +22372,17 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: axis + angle (in degrees)
-//////////////////////////////////////////////////////////////////// 2 6 param0 0 3645  6 param1 0 3610  
+//////////////////////////////////////////////////////////////////// 2 4 axis 1 3645  5 angle 1 3610  
 1787 0 0 7 1555 3746 3425 0 265 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description: Sets the rotation from the given Euler angles.
-//////////////////////////////////////////////////////////////////// 3 6 param0 0 3610  6 param1 0 3610  6 param2 0 3610  
+//////////////////////////////////////////////////////////////////// 3 1 h 1 3610  1 p 1 3610  1 r 1 3610  
 1788 0 0 7 1555 3746 3425 0 218 ////////////////////////////////////////////////////////////////////
 //     Function: LRotation::Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 4 6 param0 0 3610  6 param1 0 3610  6 param2 0 3610  6 param3 0 3610  
+//////////////////////////////////////////////////////////////////// 4 1 r 1 3610  1 i 1 3610  1 j 1 3610  1 k 1 3610  
 1789 0 0 7 1556 3740 3415 0 0 2 4 this 3 3747  5 other 1 3741  
 1790 0 0 7 1556 3746 3425 0 0 2 4 this 3 3747  5 other 1 3747  
 1791 0 0 7 1556 3746 3425 0 0 2 4 this 3 3747  6 scalar 1 3610  
@@ -22397,27 +22397,27 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description: matrix3
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3696  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3696  
 1796 0 0 7 1561 3749 3429 0 229 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description: matrix4
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3700  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3700  
 1797 0 0 7 1561 3749 3429 0 226 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Copy Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3738  
+//////////////////////////////////////////////////////////////////// 1 1 c 1 3738  
 1798 0 0 7 1561 3749 3429 0 236 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description: vector + twist
-//////////////////////////////////////////////////////////////////// 2 6 param0 0 3642  6 param1 0 3587  
+//////////////////////////////////////////////////////////////////// 2 8 point_at 1 3642  5 twist 1 3587  
 1799 0 0 7 1561 3749 3429 0 221 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 4 6 param0 0 3587  6 param1 0 3587  6 param2 0 3587  6 param3 0 3587  
+//////////////////////////////////////////////////////////////////// 4 1 r 1 3587  1 i 1 3587  1 j 1 3587  1 k 1 3587  
 1800 0 0 7 1562 3749 3429 0 0 2 4 this 3 3750  5 other 1 3738  
 1801 0 0 7 1562 3749 3429 0 0 2 4 this 3 3750  5 other 1 3744  
 1802 0 0 7 1563 3606 0 0 0 0 
@@ -22430,27 +22430,27 @@ ConfigVariableColor::~ConfigVariableColor(void);
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description: matrix3
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3717  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3717  
 1805 0 0 7 1566 3752 3433 0 229 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description: matrix4
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3721  
+//////////////////////////////////////////////////////////////////// 1 1 m 1 3721  
 1806 0 0 7 1566 3752 3433 0 226 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Copy Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 1 6 param0 0 3741  
+//////////////////////////////////////////////////////////////////// 1 1 c 1 3741  
 1807 0 0 7 1566 3752 3433 0 236 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description: vector + twist
-//////////////////////////////////////////////////////////////////// 2 6 param0 0 3645  6 param1 0 3587  
+//////////////////////////////////////////////////////////////////// 2 8 point_at 1 3645  5 twist 1 3587  
 1808 0 0 7 1566 3752 3433 0 221 ////////////////////////////////////////////////////////////////////
 //     Function: LOrientation::Constructor
 //       Access: public
 //  Description:
-//////////////////////////////////////////////////////////////////// 4 6 param0 0 3610  6 param1 0 3610  6 param2 0 3610  6 param3 0 3610  
+//////////////////////////////////////////////////////////////////// 4 1 r 1 3610  1 i 1 3610  1 j 1 3610  1 k 1 3610  
 1809 0 0 7 1567 3752 3433 0 0 2 4 this 3 3753  5 other 1 3741  
 1810 0 0 7 1567 3752 3433 0 0 2 4 this 3 3753  5 other 1 3747  
 1811 0 0 7 1568 3606 0 0 0 0 
@@ -23237,7 +23237,7 @@ ConfigVariableColor::~ConfigVariableColor(void);
 
 3588 6 size_t 0 2105344 6 size_t 6 size_t 0 0 3589 0 0 0 0 0 0 0 0 0 0
 
-3589 12 unsigned int 0 8198 12 unsigned int 12 unsigned int 0 1 0 0 0 0 0 0 0 0 0 0 0
+3589 17 unsigned long int 0 8214 17 unsigned long int 17 unsigned long int 0 1 0 0 0 0 0 0 0 0 0 0 0
 
 3590 4 void 0 8194 4 void 4 void 0 6 0 0 0 0 0 0 0 0 0 0 0
 

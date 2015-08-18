@@ -1,4 +1,4 @@
-1428768346
+1439925719
 2 3
 13 libp3interval 4 ceEZ 14 panda3d.direct 
 161
@@ -216,7 +216,7 @@ inline CIntervalManager *CInterval::get_manager(void) const;
 //               the interval.
 ////////////////////////////////////////////////////////////////////
 89
-void CInterval::start(double start_t = (0), double end_t = (-1), double play_rate = (1));
+void CInterval::start(double start_t = 0.0, double end_t = -1.0, double play_rate = 1.0);
 
 173 4 loop 0 4 316 15 CInterval::loop 0 1 19 587
 ////////////////////////////////////////////////////////////////////
@@ -232,7 +232,7 @@ void CInterval::start(double start_t = (0), double end_t = (-1), double play_rat
 //               the interval.
 ////////////////////////////////////////////////////////////////////
 88
-void CInterval::loop(double start_t = (0), double end_t = (-1), double play_rate = (1));
+void CInterval::loop(double start_t = 0.0, double end_t = -1.0, double play_rate = 1.0);
 
 174 5 pause 0 4 316 16 CInterval::pause 0 1 20 379
 ////////////////////////////////////////////////////////////////////
@@ -555,8 +555,8 @@ CConstraintInterval::~CConstraintInterval(void);
 //               before being copied.  If wrt is false, the target
 //               node's local orientation will be copied unaltered.
 ////////////////////////////////////////////////////////////////////
-178
-CConstrainHprInterval::CConstrainHprInterval(string const &name, double duration, NodePath const &node, NodePath const &target, bool wrt, LVecBase3 const hprOffset = ((zero())));
+176
+CConstrainHprInterval::CConstrainHprInterval(string const &name, double duration, NodePath const &node, NodePath const &target, bool wrt, LVecBase3 const hprOffset = (zero()));
 
 203 8 get_node 0 4 322 31 CConstrainHprInterval::get_node 0 1 49 257
 ////////////////////////////////////////////////////////////////////
@@ -598,8 +598,8 @@ CConstrainHprInterval::~CConstrainHprInterval(void);
 //               target node's local position and orientation will be
 //               copied unaltered.
 ////////////////////////////////////////////////////////////////////
-224
-CConstrainPosHprInterval::CConstrainPosHprInterval(string const &name, double duration, NodePath const &node, NodePath const &target, bool wrt, LVecBase3 const posOffset = ((zero())), LVecBase3 const hprOffset = ((zero())));
+220
+CConstrainPosHprInterval::CConstrainPosHprInterval(string const &name, double duration, NodePath const &node, NodePath const &target, bool wrt, LVecBase3 const posOffset = (zero()), LVecBase3 const hprOffset = (zero()));
 
 208 8 get_node 0 4 323 34 CConstrainPosHprInterval::get_node 0 1 53 260
 ////////////////////////////////////////////////////////////////////
@@ -639,8 +639,8 @@ CConstrainPosHprInterval::~CConstrainPosHprInterval(void);
 //               before being copied.  If wrt is false, the target
 //               node's local position will be copied unaltered.
 ////////////////////////////////////////////////////////////////////
-178
-CConstrainPosInterval::CConstrainPosInterval(string const &name, double duration, NodePath const &node, NodePath const &target, bool wrt, LVecBase3 const posOffset = ((zero())));
+176
+CConstrainPosInterval::CConstrainPosInterval(string const &name, double duration, NodePath const &node, NodePath const &target, bool wrt, LVecBase3 const posOffset = (zero()));
 
 213 8 get_node 0 4 324 31 CConstrainPosInterval::get_node 0 1 57 257
 ////////////////////////////////////////////////////////////////////
@@ -1487,8 +1487,8 @@ int CMetaInterval::push_level(string const &name, double rel_time, CMetaInterval
 //               The return value is the index of the def entry
 //               representing the new interval.
 ////////////////////////////////////////////////////////////////////
-154
-int CMetaInterval::add_c_interval(CInterval *c_interval, double rel_time = (0), CMetaInterval::RelativeStart rel_to = (::CMetaInterval::RS_previous_end));
+152
+int CMetaInterval::add_c_interval(CInterval *c_interval, double rel_time = 0.0, CMetaInterval::RelativeStart rel_to = ::CMetaInterval::RS_previous_end);
 
 281 13 add_ext_index 0 4 331 28 CMetaInterval::add_ext_index 0 1 123 1156
 ////////////////////////////////////////////////////////////////////
@@ -1530,7 +1530,7 @@ int CMetaInterval::add_ext_index(int ext_index, string const &name, double durat
 //               intervals within the level.
 ////////////////////////////////////////////////////////////////////
 53
-int CMetaInterval::pop_level(double duration = (-1));
+int CMetaInterval::pop_level(double duration = -1.0);
 
 283 23 set_interval_start_time 0 4 331 38 CMetaInterval::set_interval_start_time 0 1 125 824
 ////////////////////////////////////////////////////////////////////
@@ -1548,8 +1548,8 @@ int CMetaInterval::pop_level(double duration = (-1));
 //               interval is not found, nothing is changed and false
 //               is returned.
 ////////////////////////////////////////////////////////////////////
-154
-bool CMetaInterval::set_interval_start_time(string const &name, double rel_time, CMetaInterval::RelativeStart rel_to = (::CMetaInterval::RS_level_begin));
+152
+bool CMetaInterval::set_interval_start_time(string const &name, double rel_time, CMetaInterval::RelativeStart rel_to = ::CMetaInterval::RS_level_begin);
 
 284 23 get_interval_start_time 0 4 331 38 CMetaInterval::get_interval_start_time 0 1 126 451
 ////////////////////////////////////////////////////////////////////
@@ -1699,8 +1699,8 @@ static TypeHandle CMetaInterval::get_class_type(void);
 //       Access: Published
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-78
-HideInterval::HideInterval(NodePath const &node, string const &name = ((())));
+80
+HideInterval::HideInterval(NodePath const &node, string const &name = string());
 
 298 14 get_class_type 0 4 334 28 HideInterval::get_class_type 0 1 140 0
 53
@@ -1761,8 +1761,8 @@ static TypeHandle NoBlendType::get_class_type(void);
 //       Access: Published
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-78
-ShowInterval::ShowInterval(NodePath const &node, string const &name = ((())));
+80
+ShowInterval::ShowInterval(NodePath const &node, string const &name = string());
 
 311 14 get_class_type 0 4 340 28 ShowInterval::get_class_type 0 1 152 0
 53

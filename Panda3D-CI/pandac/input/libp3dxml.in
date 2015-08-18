@@ -1,4 +1,4 @@
-1428765419
+1439924815
 2 3
 9 libp3dxml 4 uZHm 12 panda3d.core 
 149
@@ -484,11 +484,11 @@ void TiXmlDocument::operator =(TiXmlDocument const &copy);
     */
 
 ///< STL std::string version.
-385
-bool TiXmlDocument::LoadFile(TiXmlEncoding encoding = (::TIXML_DEFAULT_ENCODING));
-bool TiXmlDocument::LoadFile(char const *filename, TiXmlEncoding encoding = (::TIXML_DEFAULT_ENCODING));
-bool TiXmlDocument::LoadFile(FILE *, TiXmlEncoding encoding = (::TIXML_DEFAULT_ENCODING));
-bool TiXmlDocument::LoadFile(string const &filename, TiXmlEncoding encoding = (::TIXML_DEFAULT_ENCODING));
+377
+bool TiXmlDocument::LoadFile(TiXmlEncoding encoding = ::TIXML_DEFAULT_ENCODING);
+bool TiXmlDocument::LoadFile(char const *filename, TiXmlEncoding encoding = ::TIXML_DEFAULT_ENCODING);
+bool TiXmlDocument::LoadFile(FILE *, TiXmlEncoding encoding = ::TIXML_DEFAULT_ENCODING);
+bool TiXmlDocument::LoadFile(string const &filename, TiXmlEncoding encoding = ::TIXML_DEFAULT_ENCODING);
 
 282 8 SaveFile 0 4 388 23 TiXmlDocument::SaveFile 0 4 101 102 103 104 247
 /// Save a file using the current document value. Returns true if successful.
@@ -2056,7 +2056,7 @@ TiXmlPrinter::~TiXmlPrinter(void);
 
 448 6 size_t 0 2105344 6 size_t 6 size_t 0 0 449 0 0 0 0 0 0 0 0 0 0
 
-449 12 unsigned int 0 8198 12 unsigned int 12 unsigned int 0 1 0 0 0 0 0 0 0 0 0 0 0
+449 17 unsigned long int 0 8214 17 unsigned long int 17 unsigned long int 0 1 0 0 0 0 0 0 0 0 0 0 0
 
 450 9 istream * 0 8576 9 istream * 9 istream * 0 0 451 0 0 0 0 0 0 0 0 0 0
 
@@ -2090,8 +2090,8 @@ TiXmlPrinter::~TiXmlPrinter(void);
 5
 457 16 TINYXML_INCLUDED 0 0 0 0 0 0 
 458 10 TIXML_SAFE 0 0 0 0 0 0 
-459 14 TIXML_SNPRINTF 0 0 0 0 0 11 _snprintf_s 
-460 12 TIXML_SSCANF 0 0 0 0 0 8 sscanf_s 
+459 14 TIXML_SNPRINTF 0 5 0 390 0 11 _snprintf_s 
+460 12 TIXML_SSCANF 0 5 0 390 0 8 sscanf_s 
 461 12 TIXML_STRING 0 0 0 0 0 11 std::string 
 4
 462 19 TIXML_MAJOR_VERSION 0 3 390 312 0 19 TIXML_MAJOR_VERSION 0

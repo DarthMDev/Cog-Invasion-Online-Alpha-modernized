@@ -1,4 +1,4 @@
-1428768026
+1439925685
 2 3
 12 libp3deadrec 4 FP4V 14 panda3d.direct 
 54
@@ -223,8 +223,8 @@ inline LVecBase3 const &SmoothMover::get_sample_hpr(void) const;
 //               position reports for which we're not sure of the
 //               actual receipt time.
 ////////////////////////////////////////////////////////////////////
-95
-inline void SmoothMover::set_phony_timestamp(double timestamp = (0), bool period_adjust = (0));
+93
+inline void SmoothMover::set_phony_timestamp(double timestamp = 0.0, bool period_adjust = 0);
 
 72 13 set_timestamp 0 4 112 26 SmoothMover::set_timestamp 0 1 17 414
 ////////////////////////////////////////////////////////////////////

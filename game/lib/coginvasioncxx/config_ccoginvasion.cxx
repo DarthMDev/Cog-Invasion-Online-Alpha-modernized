@@ -1,7 +1,5 @@
 // Filename: config_ccoginvasion.cxx
-// Created by:  blach (10Aug15)
-
-#include "labelScaler.h"
+// Created by:  blach (18Aug15)
 
 #include <pandabase.h>
 #include <dconfig.h>
@@ -17,11 +15,10 @@ ConfigureFn(config_ccoginvasion) {
 void
 init_libccoginvasion() {
   static bool initialized = false;
+
   if (initialized) {
     return;
   }
 
   initialized = true;
-
-  LabelScaler::init_type();
 }

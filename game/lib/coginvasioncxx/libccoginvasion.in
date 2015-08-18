@@ -1,0 +1,59 @@
+1439933143
+2 3
+15 libccoginvasion 4 I4nc 15 libccoginvasion 
+3
+3 11 LabelScaler 0 4 6 24 LabelScaler::LabelScaler 0 1 1 0
+108
+LabelScaler::LabelScaler(NodePath node, NodePath &camera, float const scaling_factor = 0.06000000000000001);
+
+4 12 ~LabelScaler 0 4 6 25 LabelScaler::~LabelScaler 0 0 0
+32
+LabelScaler::~LabelScaler(void);
+
+5 6 resize 0 4 6 19 LabelScaler::resize 0 1 2 0
+31
+void LabelScaler::resize(void);
+
+2
+1 0 0 7 2 11 4 0 0 3 4 node 1 7  6 camera 1 7  14 scaling_factor 1 9  
+2 0 0 4 4 12 0 0 0 1 4 this 3 11  
+7
+6 11 LabelScaler 0 26625 11 LabelScaler 11 LabelScaler 0 0 0 1 3 4 0 1 5 0 0 0 0 0 0
+
+7 10 NodePath * 0 8576 10 NodePath * 10 NodePath * 0 0 8 0 0 0 0 0 0 0 0 0 0
+
+8 8 NodePath 0 2048 8 NodePath 8 NodePath 0 0 0 0 0 0 0 2 13 14 0 0 0 0 1139
+////////////////////////////////////////////////////////////////////
+//       Class : NodePath
+// Description : NodePath is the fundamental system for disambiguating
+//               instances, and also provides a higher-level interface
+//               for manipulating the scene graph.
+//
+//               A NodePath is a list of connected nodes from the root
+//               of the graph to any sub-node.  Each NodePath
+//               therefore uniquely describes one instance of a node.
+//
+//               NodePaths themselves are lightweight objects that may
+//               easily be copied and passed by value.  Their data is
+//               stored as a series of NodePathComponents that are
+//               stored on the nodes.  Holding a NodePath will keep a
+//               reference count to all the nodes in the path.
+//               However, if any node in the path is removed or
+//               reparented (perhaps through a different NodePath),
+//               the NodePath will automatically be updated to reflect
+//               the changes.
+////////////////////////////////////////////////////////////////////
+
+9 11 float const 0 8832 11 float const 11 float const 0 0 10 0 0 0 0 0 0 0 0 0 0
+
+10 5 float 0 8194 5 float 5 float 0 2 0 0 0 0 0 0 0 0 0 0 0
+
+11 13 LabelScaler * 0 8576 13 LabelScaler * 13 LabelScaler * 0 0 6 0 0 0 0 0 0 0 0 0 0
+
+12 4 void 0 8194 4 void 4 void 0 6 0 0 0 0 0 0 0 0 0 0 0
+
+0
+0
+2
+13 0 0 7 9 get_nodes 13 get_num_nodes 8 get_node 
+14 0 0 7 13 get_ancestors 13 get_num_nodes 12 get_ancestor 

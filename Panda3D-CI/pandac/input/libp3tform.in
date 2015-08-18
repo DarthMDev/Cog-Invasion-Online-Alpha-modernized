@@ -1,4 +1,4 @@
-1428763627
+1439924589
 2 3
 10 libp3tform 4 v_mB 12 panda3d.core 
 251
@@ -519,8 +519,8 @@ static TypeHandle MouseInterfaceNode::get_class_type(void);
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-58
-DriveInterface::DriveInterface(string const &name = (""));
+56
+DriveInterface::DriveInterface(string const &name = "");
 
 300 17 set_forward_speed 0 4 514 33 DriveInterface::set_forward_speed 0 1 42 396
 ////////////////////////////////////////////////////////////////////
@@ -1219,8 +1219,8 @@ void MouseWatcherRegion::output(ostream &out) const;
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-75
-void MouseWatcherRegion::write(ostream &out, int indent_level = (0)) const;
+73
+void MouseWatcherRegion::write(ostream &out, int indent_level = 0) const;
 
 373 14 get_class_type 0 4 516 34 MouseWatcherRegion::get_class_type 0 1 115 0
 59
@@ -1347,8 +1347,8 @@ void MouseWatcherBase::output(ostream &out) const;
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-73
-void MouseWatcherBase::write(ostream &out, int indent_level = (0)) const;
+71
+void MouseWatcherBase::write(ostream &out, int indent_level = 0) const;
 
 387 12 show_regions 0 4 520 30 MouseWatcherBase::show_regions 0 1 131 443
 ////////////////////////////////////////////////////////////////////
@@ -1423,8 +1423,8 @@ MouseWatcher *MouseWatcherBase::downcast_to_MouseWatcher(void);
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-54
-MouseWatcher::MouseWatcher(string const &name = (""));
+52
+MouseWatcher::MouseWatcher(string const &name = "");
 
 397 13 ~MouseWatcher 0 6 521 27 MouseWatcher::~MouseWatcher 0 0 223
 ////////////////////////////////////////////////////////////////////
@@ -4880,7 +4880,7 @@ Transform2SG::~Transform2SG(void);
 
 615 6 size_t 0 2105344 6 size_t 6 size_t 0 0 616 0 0 0 0 0 0 0 0 0 0
 
-616 12 unsigned int 0 8198 12 unsigned int 12 unsigned int 0 1 0 0 0 0 0 0 0 0 0 0 0
+616 17 unsigned long int 0 8214 17 unsigned long int 17 unsigned long int 0 1 0 0 0 0 0 0 0 0 0 0 0
 
 617 11 Trackball * 0 8576 11 Trackball * 11 Trackball * 0 0 523 0 0 0 0 0 0 0 0 0 0
 

@@ -1,14 +1,14 @@
-1428766857
+1439925089
 2 3
 11 libp3egg2pg 4 KLrJ 11 panda3d.egg 
 2
 3 13 load_egg_file 0 1 0 13 load_egg_file 0 1 1 0
-131
-PointerTo< PandaNode > load_egg_file(Filename const &filename, CoordinateSystem cs = (::CS_default), BamCacheRecord *record = (0));
+127
+PointerTo< PandaNode > load_egg_file(Filename const &filename, CoordinateSystem cs = ::CS_default, BamCacheRecord *record = 0);
 
 4 13 load_egg_data 0 1 0 13 load_egg_data 0 1 2 0
-90
-PointerTo< PandaNode > load_egg_data(EggData *data, CoordinateSystem cs = (::CS_default));
+88
+PointerTo< PandaNode > load_egg_data(EggData *data, CoordinateSystem cs = ::CS_default);
 
 2
 1 0 0 7 1 12 0 0 0 3 8 filename 1 6  2 cs 1 9  6 record 1 10  
@@ -60,7 +60,15 @@ PointerTo< PandaNode > load_egg_data(EggData *data, CoordinateSystem cs = (::CS_
 
 10 16 BamCacheRecord * 0 8576 16 BamCacheRecord * 16 BamCacheRecord * 0 0 11 0 0 0 0 0 0 0 0 0 0
 
-11 14 BamCacheRecord 0 2048 14 BamCacheRecord 14 BamCacheRecord 0 0 0 0 0 0 0 0 0 0 0 0 0
+11 14 BamCacheRecord 0 2048 14 BamCacheRecord 14 BamCacheRecord 0 0 0 0 0 0 0 0 0 0 0 0 469
+////////////////////////////////////////////////////////////////////
+//       Class : BamCacheRecord
+// Description : An instance of this class is written to the front of
+//               a Bam or Txo file to make the file a cached instance
+//               of some other loadable resource.  This record
+//               contains information needed to test the validity of
+//               the cache.
+////////////////////////////////////////////////////////////////////
 
 12 11 PandaNode * 0 8576 11 PandaNode * 11 PandaNode * 0 0 5 0 0 0 0 0 0 0 0 0 0
 

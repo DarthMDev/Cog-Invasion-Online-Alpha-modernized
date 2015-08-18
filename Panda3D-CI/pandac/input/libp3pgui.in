@@ -1,4 +1,4 @@
-1428765128
+1439924768
 2 3
 9 libp3pgui 4 Q2_k 12 panda3d.core 
 238
@@ -917,8 +917,8 @@ PGButton::PGButton(string const &name);
 //  Description: Sets up the button using the indicated NodePath as
 //               arbitrary geometry.
 ////////////////////////////////////////////////////////////////////
-429
-void PGButton::setup(string const &label, PN_stdfloat bevel = (0.1));
+427
+void PGButton::setup(string const &label, PN_stdfloat bevel = 0.1);
 inline void PGButton::setup(NodePath const &ready);
 inline void PGButton::setup(NodePath const &ready, NodePath const &depressed);
 inline void PGButton::setup(NodePath const &ready, NodePath const &depressed, NodePath const &rollover);
@@ -1774,8 +1774,8 @@ static TypeHandle PGMouseWatcherBackground::get_class_type(void);
 //       Access: Protected
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-58
-PGVirtualFrame::PGVirtualFrame(string const &name = (""));
+56
+PGVirtualFrame::PGVirtualFrame(string const &name = "");
 
 396 5 setup 0 4 495 21 PGVirtualFrame::setup 0 1 162 294
 ////////////////////////////////////////////////////////////////////
@@ -1922,8 +1922,8 @@ PGSliderBar *PGButtonNotify::downcast_to_PGSliderBar(void);
 //       Access: Protected
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-52
-PGSliderBar::PGSliderBar(string const &name = (""));
+50
+PGSliderBar::PGSliderBar(string const &name = "");
 
 411 12 ~PGSliderBar 0 6 496 25 PGSliderBar::~PGSliderBar 0 0 229
 ////////////////////////////////////////////////////////////////////
@@ -2370,8 +2370,8 @@ PGScrollFrame *PGSliderBarNotify::downcast_to_PGScrollFrame(void);
 //       Access: Protected
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-56
-PGScrollFrame::PGScrollFrame(string const &name = (""));
+54
+PGScrollFrame::PGScrollFrame(string const &name = "");
 
 452 14 ~PGScrollFrame 0 6 498 29 PGScrollFrame::~PGScrollFrame 0 0 231
 ////////////////////////////////////////////////////////////////////
@@ -2600,8 +2600,8 @@ static TypeHandle PGScrollFrame::get_class_type(void);
 //       Access: Protected
 //  Description: 
 ////////////////////////////////////////////////////////////////////
-48
-PGWaitBar::PGWaitBar(string const &name = (""));
+46
+PGWaitBar::PGWaitBar(string const &name = "");
 
 472 5 setup 0 4 500 16 PGWaitBar::setup 0 1 234 317
 ////////////////////////////////////////////////////////////////////

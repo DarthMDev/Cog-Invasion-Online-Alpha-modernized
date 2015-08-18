@@ -1,58 +1,57 @@
 // Filename: labelScaler.cxx
 // Created by:  blach (09Aug15)
 
-#include <math.h>
-
-#include "nodePath.h"
-#include "asyncTaskManager.h"
-#include "genericAsyncTask.h"
-
 #include "labelScaler.h"
 
 LabelScaler::
-LabelScaler(const float scaling_factor) :
-  _task_mgr(AsyncTaskManager::get_global_ptr()),
-  _scaling_factor(scaling_factor),
-  _cam(NULL),
-  _node(NULL),
-  _max_distance(50.0),
-  _min_distance(1.0)
-{
+LabelScaler(NodePath node, NodePath& camera, const float scaling_factor) :
+_scaling_factor(scaling_factor), _node(node), _cam(camera), _task_mgr(AsyncTaskManager::get_global_ptr()) {
 
 }
 
-void LabelScaler::
-set_node(NodePath& node) {
-  _node = node;
+LabelScaler::
+~LabelScaler(){
+
 }
 
-void LabelScaler::
-set_camera(NodePath& camera) {
-  _cam = camera;
+AsyncTask::DoneStatus LabelScaler::
+do_resize_task() {
+
+	if (_node == NULL) {
+		std::cout << "It's NULL?!!?!?" << std::endl;
+	}
+
+	if (_cam == NULL) {
+		std::cout << "CAM IS NULL?!?!?" << std::endl;
+	}
+
+	if (_node.is_empty()) {
+		return AsyncTask::DS_done;
+	}
+
+	const float max_distance = 50.0;
+	const float min_distance = 1.0;
+
+	double distance = _node.get_pos(_cam).length();
+	if (distance > max_distance) {
+		distance = max_distance;
+	}
+	else if (distance < min_distance) {
+		distance = min_distance;
+	}
+
+	_node.set_scale(sqrt(distance) * _scaling_factor);
+
+	return AsyncTask::DS_cont;
 }
 
 AsyncTask::DoneStatus LabelScaler::
 resize_task(GenericAsyncTask* task, void* data) {
-  if (_node.is_empty()) {
-    return AsyncTask::DS_done;
-  }
-
-  float distance = _node.get_distance(_cam);
-  if (distance > _max_distance) {
-    distance = _max_distance;
-  }
-  else if (distance < _min_distance) {
-    distance = _min_distance;
-  }
-
-  float scale = sqrt(distance) * _scaling_factor;
-  _node.set_scale(scale);
-
-  return AsyncTask::DS_cont;
+	return ((LabelScaler*)data)->do_resize_task();
 }
 
 void LabelScaler::
 resize() {
-  PT(GenericAsyncTask) task = new GenericAsyncTask("labelScalingAsyncTask", &LabelScaler::resize_task, (void*) NULL);
-  _task_mgr->add(task);
+	PT(GenericAsyncTask) task = new GenericAsyncTask("LabelScaler_resize_task", &LabelScaler::resize_task, (void*) this);
+	_task_mgr->add(task);
 }

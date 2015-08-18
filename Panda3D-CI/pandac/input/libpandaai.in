@@ -1,4 +1,4 @@
-1428770735
+1439926046
 2 3
 10 libpandaai 4 s1eG 10 panda3d.ai 
 51
@@ -8,37 +8,37 @@ AIBehaviors::~AIBehaviors(void);
 
 51 4 seek 0 4 101 17 AIBehaviors::seek 0 2 1 2 0
 128
-void AIBehaviors::seek(NodePath target_object, float seek_wt = (1));
-void AIBehaviors::seek(LVecBase3 pos, float seek_wt = (1));
+void AIBehaviors::seek(NodePath target_object, float seek_wt = 1.0);
+void AIBehaviors::seek(LVecBase3 pos, float seek_wt = 1.0);
 
 52 4 flee 0 4 101 17 AIBehaviors::flee 0 2 3 4 0
 248
-void AIBehaviors::flee(NodePath target_object, double panic_distance = (10), double relax_distance = (10), float flee_wt = (1));
-void AIBehaviors::flee(LVecBase3 pos, double panic_distance = (10), double relax_distance = (10), float flee_wt = (1));
+void AIBehaviors::flee(NodePath target_object, double panic_distance = 10.0, double relax_distance = 10.0, float flee_wt = 1.0);
+void AIBehaviors::flee(LVecBase3 pos, double panic_distance = 10.0, double relax_distance = 10.0, float flee_wt = 1.0);
 
 53 6 pursue 0 4 101 19 AIBehaviors::pursue 0 1 5 0
 72
-void AIBehaviors::pursue(NodePath target_object, float pursue_wt = (1));
+void AIBehaviors::pursue(NodePath target_object, float pursue_wt = 1.0);
 
 54 5 evade 0 4 101 18 AIBehaviors::evade 0 1 6 0
 130
-void AIBehaviors::evade(NodePath target_object, double panic_distance = (10), double relax_distance = (10), float evade_wt = (1));
+void AIBehaviors::evade(NodePath target_object, double panic_distance = 10.0, double relax_distance = 10.0, float evade_wt = 1.0);
 
 55 7 arrival 0 4 101 20 AIBehaviors::arrival 0 1 7 0
 50
-void AIBehaviors::arrival(double distance = (10));
+void AIBehaviors::arrival(double distance = 10.0);
 
 56 5 flock 0 4 101 18 AIBehaviors::flock 0 1 8 0
 40
 void AIBehaviors::flock(float flock_wt);
 
 57 6 wander 0 4 101 19 AIBehaviors::wander 0 1 9 0
-114
-void AIBehaviors::wander(double wander_radius = (5), int flag = (0), double aoe = (0), float wander_weight = (1));
+112
+void AIBehaviors::wander(double wander_radius = 5.0, int flag = 0, double aoe = 0.0, float wander_weight = 1.0);
 
 58 18 obstacle_avoidance 0 4 101 31 AIBehaviors::obstacle_avoidance 0 1 10 0
 64
-void AIBehaviors::obstacle_avoidance(float feeler_length = (1));
+void AIBehaviors::obstacle_avoidance(float feeler_length = 1.0);
 
 59 11 path_follow 0 4 101 24 AIBehaviors::path_follow 0 1 11 0
 47
@@ -49,8 +49,8 @@ void AIBehaviors::path_follow(float follow_wt);
 void AIBehaviors::add_to_path(LVecBase3 pos);
 
 61 12 start_follow 0 4 101 25 AIBehaviors::start_follow 0 1 13 0
-57
-void AIBehaviors::start_follow(string type = ("normal"));
+55
+void AIBehaviors::start_follow(string type = "normal");
 
 62 14 init_path_find 0 4 101 27 AIBehaviors::init_path_find 0 1 14 40
 // should have different function names.
@@ -58,9 +58,9 @@ void AIBehaviors::start_follow(string type = ("normal"));
 void AIBehaviors::init_path_find(char const *navmesh_filename);
 
 63 12 path_find_to 0 4 101 25 AIBehaviors::path_find_to 0 2 15 16 0
-147
-void AIBehaviors::path_find_to(LVecBase3 pos, string type = ("normal"));
-void AIBehaviors::path_find_to(NodePath target, string type = ("normal"));
+143
+void AIBehaviors::path_find_to(LVecBase3 pos, string type = "normal");
+void AIBehaviors::path_find_to(NodePath target, string type = "normal");
 
 64 19 add_static_obstacle 0 4 101 32 AIBehaviors::add_static_obstacle 0 1 17 0
 57
@@ -151,8 +151,8 @@ AINode::~AINode(void);
 bool AINode::contains(float x, float y);
 
 84 5 Flock 0 4 104 12 Flock::Flock 0 1 35 0
-176
-Flock::Flock(unsigned int flock_id, double vcone_angle, double vcone_radius, unsigned int separation_wt = (2), unsigned int cohesion_wt = (4), unsigned int alignment_wt = (1));
+170
+Flock::Flock(unsigned int flock_id, double vcone_angle, double vcone_radius, unsigned int separation_wt = 2, unsigned int cohesion_wt = 4, unsigned int alignment_wt = 1);
 
 85 6 ~Flock 0 4 104 13 Flock::~Flock 0 0 0
 20

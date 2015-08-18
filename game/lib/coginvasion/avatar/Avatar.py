@@ -5,8 +5,8 @@
 
 """
 
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.toon import ToonTalker
+#from libccoginvasion import LabelScaler
+
 from direct.actor.Actor import Actor
 from direct.showbase.ShadowDemo import ShadowCaster, arbitraryShadow
 from panda3d.core import *
@@ -16,6 +16,8 @@ from lib.coginvasion.toon.ChatBalloon import ChatBalloon
 from lib.coginvasion.toon.LabelScaler import LabelScaler
 from lib.coginvasion.toon.NameTag import NameTag
 from lib.coginvasion.base.ShadowPlacer import ShadowPlacer
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.toon import ToonTalker
 from direct.controls.ControlManager import CollisionHandlerRayStart
 import random
 
@@ -124,7 +126,6 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             name = self.name
         tag = NameTag(name, self.avatarType)
         tag.setTextColor(tag.NameTagColors[self.avatarType]["fg"])
-        tag.setCardColor(tag.NameTagColors[self.avatarType]["bg"])
 
         self.nameTag = tag
         np = tag.getNodePath()
@@ -144,7 +145,8 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         else:
             self.nameTag.setFont(CIGlobals.getToonFont())
 
-        LabelScaler().resize(np)
+        ls = LabelScaler()
+        ls.resize(np)
 
     def getAirborneHeight(self):
         height = self.getPos(self.shadowPlacer.shadowNodePath)

@@ -4,10 +4,9 @@ __all__ = ['Interval']
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.DirectObject import DirectObject
-from pandac.PandaModules import *
 from direct.task.Task import Task, TaskManager
-from direct.showbase import PythonUtil
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.direct import *
 import math
 
 class Interval(DirectObject):
@@ -43,12 +42,6 @@ class Interval(DirectObject):
         # completely skipped over during initialize or finalize, false
         # if it should be ignored in this case.
         self.openEnded = openEnded
-
-    def getStartT(self):
-        return self.__startT
-
-    def getEndT(self):
-        return self.__endT
 
     def getName(self):
         return self.name
@@ -186,7 +179,7 @@ class Interval(DirectObject):
         already started, this changes its speed on-the-fly.  Note that
         since playRate is a parameter to start() and loop(), the next
         call to start() or loop() will reset this parameter. """
-
+        
         if self.isPlaying():
             self.pause()
             self.__playRate = playRate

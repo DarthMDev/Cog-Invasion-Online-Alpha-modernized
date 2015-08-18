@@ -1,4 +1,4 @@
-1428767206
+1439925162
 2 3
 11 libpandaode 4 sTqO 11 panda3d.ode 
 584
@@ -250,9 +250,9 @@ inline int OdeJoint::get_joint_type(void) const;
 OdeBody OdeJoint::get_body(int index) const;
 
 723 12 set_feedback 0 4 1265 22 OdeJoint::set_feedback 0 2 57 58 0
-108
+106
 inline void OdeJoint::set_feedback(OdeJointFeedback *);
-inline void OdeJoint::set_feedback(bool flag = (1));
+inline void OdeJoint::set_feedback(bool flag = 1);
 
 724 12 get_feedback 0 4 1265 22 OdeJoint::get_feedback 0 1 59 0
 54
@@ -292,8 +292,8 @@ void OdeJoint::attach_body(OdeBody const &body, int index);
 void OdeJoint::detach(void);
 
 729 5 write 0 6 1265 15 OdeJoint::write 0 1 64 0
-87
-virtual void OdeJoint::write(ostream &out = (::cout), unsigned int indent = (0)) const;
+83
+virtual void OdeJoint::write(ostream &out = ::cout, unsigned int indent = 0) const;
 
 730 10 compare_to 0 4 1265 20 OdeJoint::compare_to 0 1 65 0
 61
@@ -594,8 +594,8 @@ inline LPoint3f OdeMass::get_center(void) const;
 inline LMatrix3f OdeMass::get_inertial_tensor(void) const;
 
 802 5 write 0 6 1269 14 OdeMass::write 0 1 147 0
-86
-virtual void OdeMass::write(ostream &out = (::cout), unsigned int indent = (0)) const;
+82
+virtual void OdeMass::write(ostream &out = ::cout, unsigned int indent = 0) const;
 
 803 14 get_class_type 0 4 1269 23 OdeMass::get_class_type 0 1 148 0
 48
@@ -864,8 +864,8 @@ inline void OdeBody::set_gravity_mode(int mode);
 inline int OdeBody::get_gravity_mode(void) const;
 
 861 5 write 0 6 1271 14 OdeBody::write 0 1 226 0
-86
-virtual void OdeBody::write(ostream &out = (::cout), unsigned int indent = (0)) const;
+82
+virtual void OdeBody::write(ostream &out = ::cout, unsigned int indent = 0) const;
 
 862 22 operator typecast bool 0 132 1271 31 OdeBody::operator typecast bool 0 1 229 0
 49
@@ -987,8 +987,8 @@ OdeGeom OdeSpace::get_geom(int i);
 inline OdeSpace OdeSpace::get_space(void) const;
 
 889 5 write 0 6 1272 15 OdeSpace::write 0 1 257 0
-87
-virtual void OdeSpace::write(ostream &out = (::cout), unsigned int indent = (0)) const;
+83
+virtual void OdeSpace::write(ostream &out = ::cout, unsigned int indent = 0) const;
 
 890 22 operator typecast bool 0 132 1272 32 OdeSpace::operator typecast bool 0 1 277 0
 50
@@ -1220,8 +1220,8 @@ OdeSpace OdeGeom::get_space(void) const;
 inline PyObject *OdeGeom::get_converted_space(void) const;
 
 942 5 write 0 6 1273 14 OdeGeom::write 0 1 317 0
-86
-virtual void OdeGeom::write(ostream &out = (::cout), unsigned int indent = (0)) const;
+82
+virtual void OdeGeom::write(ostream &out = ::cout, unsigned int indent = 0) const;
 
 943 22 operator typecast bool 0 132 1273 31 OdeGeom::operator typecast bool 0 1 331 0
 49
@@ -1479,8 +1479,8 @@ inline bool OdeCollisionEntry::is_empty(void) const;
 static TypeHandle OdeCollisionEntry::get_class_type(void);
 
 994 20 OdeSurfaceParameters 0 4 1279 42 OdeSurfaceParameters::OdeSurfaceParameters 0 1 375 0
-75
-OdeSurfaceParameters::OdeSurfaceParameters(int mode = (0), dReal mu = (0));
+71
+OdeSurfaceParameters::OdeSurfaceParameters(int mode = 0, dReal mu = 0);
 
 995 8 set_mode 0 4 1279 30 OdeSurfaceParameters::set_mode 0 1 376 0
 53
@@ -2317,16 +2317,16 @@ static TypeHandle OdeSphereGeom::get_class_type(void);
 
 1192 14 OdeTriMeshData 0 4 1298 30 OdeTriMeshData::OdeTriMeshData 0 1 603 63
 // Private copy constructor, shouldn't be copying these objects
-78
-OdeTriMeshData::OdeTriMeshData(NodePath const &model, bool use_normals = (0));
+76
+OdeTriMeshData::OdeTriMeshData(NodePath const &model, bool use_normals = 0);
 
 1193 7 destroy 0 4 1298 23 OdeTriMeshData::destroy 0 1 604 0
 35
 void OdeTriMeshData::destroy(void);
 
 1194 5 write 0 6 1298 21 OdeTriMeshData::write 0 1 605 0
-93
-virtual void OdeTriMeshData::write(ostream &out = (::cout), unsigned int indent = (0)) const;
+89
+virtual void OdeTriMeshData::write(ostream &out = ::cout, unsigned int indent = 0) const;
 
 1195 11 write_faces 0 4 1298 27 OdeTriMeshData::write_faces 0 1 606 0
 53
@@ -2576,8 +2576,8 @@ static int OdeUtil::are_connected_excluding(OdeBody const &body1, OdeBody const 
 //               (geom1 and geom2), generate contact information
 //               for them. Returns an OdeCollisionEntry.
 ////////////////////////////////////////////////////////////////////
-137
-static PointerTo< OdeCollisionEntry > OdeUtil::collide(OdeGeom const &geom1, OdeGeom const &geom2, short int const max_contacts = (150));
+135
+static PointerTo< OdeCollisionEntry > OdeUtil::collide(OdeGeom const &geom1, OdeGeom const &geom2, short int const max_contacts = 150);
 
 1247 8 collide2 0 4 1302 17 OdeUtil::collide2 0 1 664 0
 108
@@ -3030,7 +3030,7 @@ OdeUtil::~OdeUtil(void);
 357 0 0 6 333 1315 0 0 0 1 4 this 3 1407  
 358 0 0 4 334 1306 0 0 0 2 4 this 3 1406  3 pos 1 1310  
 359 0 0 4 335 1306 0 0 0 2 4 this 3 1406  6 normal 1 1310  
-360 0 0 4 336 1306 0 0 0 2 4 this 3 1406  5 depth 1 1313  
+360 0 0 4 336 1306 0 0 0 2 4 this 3 1406  5 depth 1 1409  
 361 0 0 4 337 1306 0 0 0 2 4 this 3 1406  4 geom 1 1380  
 362 0 0 4 338 1306 0 0 0 2 4 this 3 1406  4 geom 1 1380  
 363 0 0 7 339 1321 0 0 0 0 
@@ -3038,88 +3038,88 @@ OdeUtil::~OdeUtil(void);
 //     Function: OdeCollisionEntry::get_geom1
 //       Access: Published
 //  Description: Returns the first geom in the collision.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 1409  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 1410  
 365 0 0 7 342 1387 0 0 269 ////////////////////////////////////////////////////////////////////
 //     Function: OdeCollisionEntry::get_geom2
 //       Access: Published
 //  Description: Returns the second geom in the collision.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 1409  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 1410  
 366 0 0 7 343 1319 0 0 268 ////////////////////////////////////////////////////////////////////
 //     Function: OdeCollisionEntry::get_body1
 //       Access: Published
 //  Description: Returns the first body in the collision.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 1409  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 1410  
 367 0 0 7 344 1319 0 0 269 ////////////////////////////////////////////////////////////////////
 //     Function: OdeCollisionEntry::get_body2
 //       Access: Published
 //  Description: Returns the second body in the collision.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 1409  
-368 0 0 6 345 1411 0 0 283 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 1 4 this 3 1410  
+368 0 0 6 345 1412 0 0 283 ////////////////////////////////////////////////////////////////////
 //     Function: OdeCollisionEntry::get_num_contacts
 //       Access: Published
 //  Description: Returns the number of contacts in the collision.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 1409  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 1410  
 369 0 0 7 346 1368 0 0 378 ////////////////////////////////////////////////////////////////////
 //     Function: OdeCollisionEntry::get_contact_point
 //       Access: Published
 //  Description: Returns the nth contact point in the collision.
 //               This does exactly the same as
 //               get_contact_geom(n).get_pos().
-//////////////////////////////////////////////////////////////////// 2 4 this 3 1409  1 n 1 1411  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 1410  1 n 1 1412  
 370 0 0 7 347 1406 0 0 281 ////////////////////////////////////////////////////////////////////
 //     Function: OdeCollisionEntry::get_contact_geom
 //       Access: Published
 //  Description: Returns the nth contact geom in the collision.
-//////////////////////////////////////////////////////////////////// 2 4 this 3 1409  1 n 1 1411  
-371 0 0 7 348 1406 0 0 0 2 4 this 3 1409  1 n 1 1411  
+//////////////////////////////////////////////////////////////////// 2 4 this 3 1410  1 n 1 1412  
+371 0 0 7 348 1406 0 0 0 2 4 this 3 1410  1 n 1 1412  
 372 0 0 6 350 1307 0 0 271 ////////////////////////////////////////////////////////////////////
 //     Function: OdeCollisionEntry::is_empty
 //       Access: Published
 //  Description: Returns true if the entry holds no contacts.
-//////////////////////////////////////////////////////////////////// 1 4 this 3 1409  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 1410  
 373 0 0 7 351 1321 0 0 0 0 
-374 0 0 6 349 1307 0 0 0 1 4 this 3 1409  
-375 0 0 7 354 1412 0 0 0 2 4 mode 1 1315  2 mu 1 1313  
-376 0 0 4 355 1306 0 0 0 2 4 this 3 1412  4 mode 1 1315  
-377 0 0 4 356 1306 0 0 0 2 4 this 3 1412  2 mu 1 1313  
-378 0 0 4 357 1306 0 0 0 2 4 this 3 1412  3 mu2 1 1313  
-379 0 0 4 358 1306 0 0 0 2 4 this 3 1412  6 bounce 1 1313  
-380 0 0 4 359 1306 0 0 0 2 4 this 3 1412  10 bounce_vel 1 1313  
-381 0 0 4 360 1306 0 0 0 2 4 this 3 1412  8 soft_erp 1 1313  
-382 0 0 4 361 1306 0 0 0 2 4 this 3 1412  8 soft_cfm 1 1313  
-383 0 0 4 362 1306 0 0 0 2 4 this 3 1412  6 motion 1 1313  
-384 0 0 4 363 1306 0 0 0 2 4 this 3 1412  6 motion 1 1313  
-385 0 0 4 364 1306 0 0 0 2 4 this 3 1412  4 slip 1 1313  
-386 0 0 4 365 1306 0 0 0 2 4 this 3 1412  4 slip 1 1313  
-387 0 0 6 366 1315 0 0 0 1 4 this 3 1413  
-388 0 0 6 367 1313 0 0 0 1 4 this 3 1413  
-389 0 0 6 368 1313 0 0 0 1 4 this 3 1413  
-390 0 0 6 369 1313 0 0 0 1 4 this 3 1413  
-391 0 0 6 370 1313 0 0 0 1 4 this 3 1413  
-392 0 0 6 371 1313 0 0 0 1 4 this 3 1413  
-393 0 0 6 372 1313 0 0 0 1 4 this 3 1413  
-394 0 0 6 373 1313 0 0 0 1 4 this 3 1413  
-395 0 0 6 374 1313 0 0 0 1 4 this 3 1413  
-396 0 0 6 375 1313 0 0 0 1 4 this 3 1413  
-397 0 0 6 376 1313 0 0 0 1 4 this 3 1413  
+374 0 0 6 349 1307 0 0 0 1 4 this 3 1410  
+375 0 0 7 354 1414 0 0 0 2 4 mode 1 1315  2 mu 1 1313  
+376 0 0 4 355 1306 0 0 0 2 4 this 3 1414  4 mode 1 1315  
+377 0 0 4 356 1306 0 0 0 2 4 this 3 1414  2 mu 1 1313  
+378 0 0 4 357 1306 0 0 0 2 4 this 3 1414  3 mu2 1 1313  
+379 0 0 4 358 1306 0 0 0 2 4 this 3 1414  6 bounce 1 1313  
+380 0 0 4 359 1306 0 0 0 2 4 this 3 1414  10 bounce_vel 1 1313  
+381 0 0 4 360 1306 0 0 0 2 4 this 3 1414  8 soft_erp 1 1313  
+382 0 0 4 361 1306 0 0 0 2 4 this 3 1414  8 soft_cfm 1 1313  
+383 0 0 4 362 1306 0 0 0 2 4 this 3 1414  6 motion 1 1313  
+384 0 0 4 363 1306 0 0 0 2 4 this 3 1414  6 motion 1 1313  
+385 0 0 4 364 1306 0 0 0 2 4 this 3 1414  4 slip 1 1313  
+386 0 0 4 365 1306 0 0 0 2 4 this 3 1414  4 slip 1 1313  
+387 0 0 6 366 1315 0 0 0 1 4 this 3 1415  
+388 0 0 6 367 1313 0 0 0 1 4 this 3 1415  
+389 0 0 6 368 1313 0 0 0 1 4 this 3 1415  
+390 0 0 6 369 1313 0 0 0 1 4 this 3 1415  
+391 0 0 6 370 1313 0 0 0 1 4 this 3 1415  
+392 0 0 6 371 1313 0 0 0 1 4 this 3 1415  
+393 0 0 6 372 1313 0 0 0 1 4 this 3 1415  
+394 0 0 6 373 1313 0 0 0 1 4 this 3 1415  
+395 0 0 6 374 1313 0 0 0 1 4 this 3 1415  
+396 0 0 6 375 1313 0 0 0 1 4 this 3 1415  
+397 0 0 6 376 1313 0 0 0 1 4 this 3 1415  
 398 0 0 7 377 1321 0 0 0 0 
-399 0 0 7 379 1415 0 0 0 0 
-400 0 0 7 379 1415 0 0 38 // OdeContact(const OdeContact &copy); 1 7 contact 1 1416  
-401 0 0 7 380 1412 0 0 0 1 4 this 3 1419  
-402 0 0 7 381 1406 0 0 0 1 4 this 3 1415  
-403 0 0 7 382 1316 0 0 0 1 4 this 3 1419  
-404 0 0 4 383 1306 0 0 0 2 4 this 3 1415  18 surface_parameters 1 1413  
-405 0 0 4 384 1306 0 0 0 2 4 this 3 1415  12 contact_geom 1 1407  
-406 0 0 4 385 1306 0 0 0 2 4 this 3 1415  5 fdir1 1 1310  
+399 0 0 7 379 1417 0 0 0 0 
+400 0 0 7 379 1417 0 0 38 // OdeContact(const OdeContact &copy); 1 7 contact 1 1418  
+401 0 0 7 380 1414 0 0 0 1 4 this 3 1421  
+402 0 0 7 381 1406 0 0 0 1 4 this 3 1417  
+403 0 0 7 382 1316 0 0 0 1 4 this 3 1421  
+404 0 0 4 383 1306 0 0 0 2 4 this 3 1417  18 surface_parameters 1 1415  
+405 0 0 4 384 1306 0 0 0 2 4 this 3 1417  12 contact_geom 1 1407  
+406 0 0 4 385 1306 0 0 0 2 4 this 3 1417  5 fdir1 1 1310  
 407 0 0 7 386 1321 0 0 0 0 
-408 0 0 7 388 1349 0 0 0 2 5 world 1 1303  7 contact 1 1419  
-409 0 0 7 388 1349 0 0 0 3 5 world 1 1303  11 joint_group 1 1322  7 contact 1 1419  
+408 0 0 7 388 1349 0 0 0 2 5 world 1 1303  7 contact 1 1421  
+409 0 0 7 388 1349 0 0 0 3 5 world 1 1303  11 joint_group 1 1322  7 contact 1 1421  
 410 0 0 7 389 1321 0 0 0 0 
 411 0 0 7 391 1397 0 0 0 3 5 space 1 1377  6 radius 1 1313  6 length 1 1313  
 412 0 0 7 391 1397 0 0 0 2 6 radius 1 1313  6 length 1 1313  
 413 0 0 4 392 1306 0 0 0 3 4 this 3 1397  6 radius 1 1313  6 length 1 1313  
-414 0 0 6 394 1313 0 0 0 1 4 this 3 1421  
-415 0 0 6 395 1313 0 0 0 1 4 this 3 1421  
+414 0 0 6 394 1313 0 0 0 1 4 this 3 1423  
+415 0 0 6 395 1313 0 0 0 1 4 this 3 1423  
 416 0 0 7 396 1321 0 0 0 0 
 417 0 0 7 398 1352 0 0 0 1 5 world 1 1303  
 418 0 0 7 398 1352 0 0 0 2 5 world 1 1303  11 joint_group 1 1322  
@@ -3128,8 +3128,8 @@ OdeUtil::~OdeUtil(void);
 421 0 0 7 402 1389 0 0 0 0 
 422 0 0 7 402 1389 0 0 0 1 5 space 1 1377  
 423 0 0 4 403 1306 0 0 0 3 4 this 3 1389  8 minlevel 1 1315  8 maxlevel 1 1315  
-424 0 0 6 404 1315 0 0 0 1 4 this 3 1423  
-425 0 0 6 405 1315 0 0 0 1 4 this 3 1423  
+424 0 0 6 404 1315 0 0 0 1 4 this 3 1425  
+425 0 0 6 405 1315 0 0 0 1 4 this 3 1425  
 426 0 0 7 406 1321 0 0 0 0 
 427 0 0 7 408 1351 0 0 0 1 5 world 1 1303  
 428 0 0 7 408 1351 0 0 0 2 5 world 1 1303  11 joint_group 1 1322  
@@ -3140,13 +3140,13 @@ OdeUtil::~OdeUtil(void);
 433 0 0 4 411 1306 0 0 0 2 4 this 3 1351  4 axis 1 1310  
 434 0 0 4 411 1306 0 0 0 4 4 this 3 1351  1 x 1 1313  1 y 1 1313  1 z 1 1313  
 435 0 0 4 412 1306 0 0 0 3 4 this 3 1351  7 torque1 1 1313  7 torque2 1 1313  
-436 0 0 7 413 1316 0 0 0 1 4 this 3 1425  
-437 0 0 7 414 1316 0 0 0 1 4 this 3 1425  
-438 0 0 7 415 1316 0 0 0 1 4 this 3 1425  
-439 0 0 7 416 1316 0 0 0 1 4 this 3 1425  
-440 0 0 6 417 1313 0 0 0 1 4 this 3 1425  
-441 0 0 6 418 1313 0 0 0 1 4 this 3 1425  
-442 0 0 6 419 1313 0 0 0 1 4 this 3 1425  
+436 0 0 7 413 1316 0 0 0 1 4 this 3 1427  
+437 0 0 7 414 1316 0 0 0 1 4 this 3 1427  
+438 0 0 7 415 1316 0 0 0 1 4 this 3 1427  
+439 0 0 7 416 1316 0 0 0 1 4 this 3 1427  
+440 0 0 6 417 1313 0 0 0 1 4 this 3 1427  
+441 0 0 6 418 1313 0 0 0 1 4 this 3 1427  
+442 0 0 6 419 1313 0 0 0 1 4 this 3 1427  
 443 0 0 4 420 1306 0 0 0 3 4 this 3 1351  4 axis 1 1315  3 val 1 1313  
 444 0 0 4 421 1306 0 0 0 3 4 this 3 1351  4 axis 1 1315  3 val 1 1313  
 445 0 0 4 422 1306 0 0 0 3 4 this 3 1351  4 axis 1 1315  3 val 1 1313  
@@ -3158,17 +3158,17 @@ OdeUtil::~OdeUtil(void);
 451 0 0 4 428 1306 0 0 0 3 4 this 3 1351  4 axis 1 1315  3 val 1 1313  
 452 0 0 4 429 1306 0 0 0 3 4 this 3 1351  4 axis 1 1315  3 val 1 1313  
 453 0 0 4 430 1306 0 0 0 3 4 this 3 1351  4 axis 1 1315  3 val 1 1313  
-454 0 0 6 431 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-455 0 0 6 432 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-456 0 0 6 433 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-457 0 0 6 434 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-458 0 0 6 435 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-459 0 0 6 436 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-460 0 0 6 437 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-461 0 0 6 438 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-462 0 0 6 439 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-463 0 0 6 440 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
-464 0 0 6 441 1313 0 0 0 2 4 this 3 1425  4 axis 1 1315  
+454 0 0 6 431 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+455 0 0 6 432 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+456 0 0 6 433 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+457 0 0 6 434 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+458 0 0 6 435 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+459 0 0 6 436 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+460 0 0 6 437 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+461 0 0 6 438 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+462 0 0 6 439 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+463 0 0 6 440 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
+464 0 0 6 441 1313 0 0 0 2 4 this 3 1427  4 axis 1 1315  
 465 0 0 7 442 1321 0 0 0 0 
 466 0 0 7 444 1347 0 0 0 1 5 world 1 1303  
 467 0 0 7 444 1347 0 0 0 2 5 world 1 1303  11 joint_group 1 1322  
@@ -3179,11 +3179,11 @@ OdeUtil::~OdeUtil(void);
 472 0 0 4 447 1306 0 0 0 2 4 this 3 1347  4 axis 1 1310  
 473 0 0 4 447 1306 0 0 0 4 4 this 3 1347  1 x 1 1313  1 y 1 1313  1 z 1 1313  
 474 0 0 4 448 1306 0 0 0 2 4 this 3 1347  6 torque 1 1313  
-475 0 0 7 449 1316 0 0 0 1 4 this 3 1427  
-476 0 0 7 450 1316 0 0 0 1 4 this 3 1427  
-477 0 0 7 451 1316 0 0 0 1 4 this 3 1427  
-478 0 0 6 452 1313 0 0 0 1 4 this 3 1427  
-479 0 0 6 453 1313 0 0 0 1 4 this 3 1427  
+475 0 0 7 449 1316 0 0 0 1 4 this 3 1429  
+476 0 0 7 450 1316 0 0 0 1 4 this 3 1429  
+477 0 0 7 451 1316 0 0 0 1 4 this 3 1429  
+478 0 0 6 452 1313 0 0 0 1 4 this 3 1429  
+479 0 0 6 453 1313 0 0 0 1 4 this 3 1429  
 480 0 0 4 454 1306 0 0 0 2 4 this 3 1347  3 val 1 1313  
 481 0 0 4 455 1306 0 0 0 2 4 this 3 1347  3 val 1 1313  
 482 0 0 4 456 1306 0 0 0 2 4 this 3 1347  3 val 1 1313  
@@ -3193,47 +3193,47 @@ OdeUtil::~OdeUtil(void);
 486 0 0 4 460 1306 0 0 0 2 4 this 3 1347  3 val 1 1313  
 487 0 0 4 461 1306 0 0 0 2 4 this 3 1347  3 val 1 1313  
 488 0 0 4 462 1306 0 0 0 2 4 this 3 1347  3 val 1 1313  
-489 0 0 6 463 1313 0 0 0 1 4 this 3 1427  
-490 0 0 6 464 1313 0 0 0 1 4 this 3 1427  
-491 0 0 6 465 1313 0 0 0 1 4 this 3 1427  
-492 0 0 6 466 1313 0 0 0 1 4 this 3 1427  
-493 0 0 6 467 1313 0 0 0 1 4 this 3 1427  
-494 0 0 6 468 1313 0 0 0 1 4 this 3 1427  
-495 0 0 6 469 1313 0 0 0 1 4 this 3 1427  
-496 0 0 6 470 1313 0 0 0 1 4 this 3 1427  
-497 0 0 6 471 1313 0 0 0 1 4 this 3 1427  
+489 0 0 6 463 1313 0 0 0 1 4 this 3 1429  
+490 0 0 6 464 1313 0 0 0 1 4 this 3 1429  
+491 0 0 6 465 1313 0 0 0 1 4 this 3 1429  
+492 0 0 6 466 1313 0 0 0 1 4 this 3 1429  
+493 0 0 6 467 1313 0 0 0 1 4 this 3 1429  
+494 0 0 6 468 1313 0 0 0 1 4 this 3 1429  
+495 0 0 6 469 1313 0 0 0 1 4 this 3 1429  
+496 0 0 6 470 1313 0 0 0 1 4 this 3 1429  
+497 0 0 6 471 1313 0 0 0 1 4 this 3 1429  
 498 0 0 7 472 1321 0 0 0 0 
-499 0 0 7 474 1429 1108 0 0 0 
-500 0 0 7 474 1429 1108 0 0 1 4 copy 1 1430  
-501 0 0 6 475 1429 0 0 0 2 4 this 3 1429  4 copy 1 1430  
-502 0 0 4 477 1306 0 0 0 2 4 this 3 1429  5 joint 1 1333  
-503 0 0 6 478 1307 0 0 0 2 4 this 3 1429  5 joint 1 1333  
-504 0 0 4 479 1306 0 0 0 2 4 this 3 1429  5 other 1 1430  
-505 0 0 4 480 1306 0 0 0 2 4 this 3 1429  5 other 1 1430  
-506 0 0 4 481 1306 0 0 0 1 4 this 3 1429  
-507 0 0 6 482 1307 0 0 0 2 4 this 3 1430  5 joint 1 1333  
-508 0 0 4 483 1306 0 0 0 1 4 this 3 1429  
-509 0 0 6 484 1307 0 0 0 1 4 this 3 1430  
-510 0 0 6 485 1315 0 0 0 1 4 this 3 1430  
-511 0 0 7 486 1332 0 0 0 2 4 this 3 1430  5 index 1 1315  
-512 0 0 7 487 1332 0 0 0 2 4 this 3 1430  5 index 1 1315  
+499 0 0 7 474 1431 1108 0 0 0 
+500 0 0 7 474 1431 1108 0 0 1 4 copy 1 1432  
+501 0 0 6 475 1431 0 0 0 2 4 this 3 1431  4 copy 1 1432  
+502 0 0 4 477 1306 0 0 0 2 4 this 3 1431  5 joint 1 1333  
+503 0 0 6 478 1307 0 0 0 2 4 this 3 1431  5 joint 1 1333  
+504 0 0 4 479 1306 0 0 0 2 4 this 3 1431  5 other 1 1432  
+505 0 0 4 480 1306 0 0 0 2 4 this 3 1431  5 other 1 1432  
+506 0 0 4 481 1306 0 0 0 1 4 this 3 1431  
+507 0 0 6 482 1307 0 0 0 2 4 this 3 1432  5 joint 1 1333  
+508 0 0 4 483 1306 0 0 0 1 4 this 3 1431  
+509 0 0 6 484 1307 0 0 0 1 4 this 3 1432  
+510 0 0 6 485 1315 0 0 0 1 4 this 3 1432  
+511 0 0 7 486 1332 0 0 0 2 4 this 3 1432  5 index 1 1315  
+512 0 0 7 487 1332 0 0 0 2 4 this 3 1432  5 index 1 1315  
 513 0 0 6 488 1315 0 0 333 ////////////////////////////////////////////////////////////////////
 //     Function: OdeJointCollection::size
 //       Access: Published
 //  Description: Returns the number of joints in the collection.  This
 //               is the same thing as get_num_joints().
-//////////////////////////////////////////////////////////////////// 1 4 this 3 1430  
-514 0 0 6 489 1429 0 0 0 2 4 this 3 1429  5 other 1 1430  
-515 0 0 7 490 1429 1108 0 0 2 4 this 3 1430  5 other 1 1430  
+//////////////////////////////////////////////////////////////////// 1 4 this 3 1432  
+514 0 0 6 489 1431 0 0 0 2 4 this 3 1431  5 other 1 1432  
+515 0 0 7 490 1431 1108 0 0 2 4 this 3 1432  5 other 1 1432  
 516 0 0 7 492 1355 0 0 0 1 5 world 1 1303  
 517 0 0 7 492 1355 0 0 0 2 5 world 1 1303  11 joint_group 1 1322  
 518 0 0 4 493 1306 0 0 0 2 4 this 3 1355  3 num 1 1315  
 519 0 0 4 494 1306 0 0 0 4 4 this 3 1355  4 anum 1 1315  3 rel 1 1315  4 axis 1 1310  
 520 0 0 4 494 1306 0 0 0 6 4 this 3 1355  4 anum 1 1315  3 rel 1 1315  1 x 1 1313  1 y 1 1313  1 z 1 1313  
 521 0 0 4 495 1306 0 0 0 3 4 this 3 1355  9 parameter 1 1315  5 value 1 1313  
-522 0 0 6 496 1315 0 0 0 1 4 this 3 1432  
-523 0 0 7 497 1316 0 0 0 2 4 this 3 1432  4 anum 1 1315  
-524 0 0 6 498 1313 0 0 0 2 4 this 3 1432  9 parameter 1 1315  
+522 0 0 6 496 1315 0 0 0 1 4 this 3 1434  
+523 0 0 7 497 1316 0 0 0 2 4 this 3 1434  4 anum 1 1315  
+524 0 0 6 498 1313 0 0 0 2 4 this 3 1434  9 parameter 1 1315  
 525 0 0 7 499 1321 0 0 0 0 
 526 0 0 7 501 1353 0 0 0 1 5 world 1 1303  
 527 0 0 7 501 1353 0 0 0 2 5 world 1 1303  11 joint_group 1 1322  
@@ -3244,18 +3244,18 @@ OdeUtil::~OdeUtil(void);
 532 0 0 4 506 1306 0 0 0 3 4 this 3 1356  9 parameter 1 1315  5 value 1 1313  
 533 0 0 4 507 1306 0 0 0 3 4 this 3 1356  9 parameter 1 1315  5 value 1 1313  
 534 0 0 7 508 1321 0 0 0 0 
-535 0 0 7 510 1398 0 0 0 1 6 params 1 1434  
-536 0 0 7 510 1398 0 0 0 2 5 space 1 1377  6 params 1 1434  
+535 0 0 7 510 1398 0 0 0 1 6 params 1 1436  
+536 0 0 7 510 1398 0 0 0 2 5 space 1 1377  6 params 1 1436  
 537 0 0 7 510 1398 0 0 0 5 5 space 1 1377  1 a 1 1313  1 b 1 1313  1 c 1 1313  1 d 1 1313  
 538 0 0 7 510 1398 0 0 0 4 1 a 1 1313  1 b 1 1313  1 c 1 1313  1 d 1 1313  
-539 0 0 4 511 1306 0 0 0 2 4 this 3 1398  6 params 1 1434  
+539 0 0 4 511 1306 0 0 0 2 4 this 3 1398  6 params 1 1436  
 540 0 0 4 511 1306 0 0 0 5 4 this 3 1398  1 a 1 1313  1 b 1 1313  1 c 1 1313  1 d 1 1313  
-541 0 0 7 512 1376 0 0 0 1 4 this 3 1436  
-542 0 0 6 513 1313 0 0 0 2 4 this 3 1436  1 p 1 1402  
-543 0 0 6 513 1313 0 0 0 4 4 this 3 1436  1 x 1 1313  1 y 1 1313  1 z 1 1313  
+541 0 0 7 512 1376 0 0 0 1 4 this 3 1438  
+542 0 0 6 513 1313 0 0 0 2 4 this 3 1438  1 p 1 1402  
+543 0 0 6 513 1313 0 0 0 4 4 this 3 1438  1 x 1 1313  1 y 1 1313  1 z 1 1313  
 544 0 0 7 514 1321 0 0 0 0 
-545 0 0 7 516 1390 0 0 0 3 6 center 1 1402  7 extents 1 1310  5 depth 1 1315  
-546 0 0 7 516 1390 0 0 0 4 5 space 1 1377  6 center 1 1402  7 extents 1 1310  5 depth 1 1315  
+545 0 0 7 516 1390 0 0 0 3 6 center 1 1402  7 extents 1 1310  5 depth 1 1440  
+546 0 0 7 516 1390 0 0 0 4 5 space 1 1377  6 center 1 1402  7 extents 1 1310  5 depth 1 1440  
 547 0 0 7 517 1321 0 0 0 0 
 548 0 0 7 519 1399 0 0 0 2 5 space 1 1377  6 length 1 1313  
 549 0 0 7 519 1399 0 0 0 1 6 length 1 1313  
@@ -3263,12 +3263,12 @@ OdeUtil::~OdeUtil(void);
 551 0 0 6 521 1313 0 0 0 1 4 this 3 1399  
 552 0 0 4 522 1306 0 0 0 3 4 this 3 1399  5 start 1 1310  3 dir 1 1310  
 553 0 0 4 522 1306 0 0 0 7 4 this 3 1399  2 px 1 1313  2 py 1 1313  2 pz 1 1313  2 dx 1 1313  2 dy 1 1313  2 dz 1 1313  
-554 0 0 4 523 1306 0 0 0 3 4 this 3 1438  5 start 1 1316  3 dir 1 1316  
-555 0 0 7 524 1316 0 0 0 1 4 this 3 1438  
-556 0 0 7 525 1316 0 0 0 1 4 this 3 1438  
+554 0 0 4 523 1306 0 0 0 3 4 this 3 1441  5 start 1 1316  3 dir 1 1316  
+555 0 0 7 524 1316 0 0 0 1 4 this 3 1441  
+556 0 0 7 525 1316 0 0 0 1 4 this 3 1441  
 557 0 0 4 526 1306 0 0 0 3 4 this 3 1399  13 first_contact 1 1315  13 backface_cull 1 1315  
-558 0 0 6 528 1315 0 0 0 1 4 this 3 1438  
-559 0 0 6 529 1315 0 0 0 1 4 this 3 1438  
+558 0 0 6 528 1315 0 0 0 1 4 this 3 1441  
+559 0 0 6 529 1315 0 0 0 1 4 this 3 1441  
 560 0 0 4 530 1306 0 0 0 2 4 this 3 1399  11 closest_hit 1 1315  
 561 0 0 6 531 1315 0 0 0 1 4 this 3 1399  
 562 0 0 7 532 1321 0 0 0 0 
@@ -3282,9 +3282,9 @@ OdeUtil::~OdeUtil(void);
 570 0 0 4 539 1306 0 0 0 3 4 this 3 1348  4 axis 1 1310  3 vec 1 1310  
 571 0 0 4 539 1306 0 0 0 7 4 this 3 1348  1 x 1 1313  1 y 1 1313  1 z 1 1313  2 ax 1 1313  2 ay 1 1313  2 az 1 1313  
 572 0 0 4 540 1306 0 0 0 2 4 this 3 1348  5 force 1 1313  
-573 0 0 6 541 1313 0 0 0 1 4 this 3 1440  
-574 0 0 6 542 1313 0 0 0 1 4 this 3 1440  
-575 0 0 7 543 1316 0 0 0 1 4 this 3 1440  
+573 0 0 6 541 1313 0 0 0 1 4 this 3 1443  
+574 0 0 6 542 1313 0 0 0 1 4 this 3 1443  
+575 0 0 7 543 1316 0 0 0 1 4 this 3 1443  
 576 0 0 4 544 1306 0 0 0 2 4 this 3 1348  3 val 1 1313  
 577 0 0 4 545 1306 0 0 0 2 4 this 3 1348  3 val 1 1313  
 578 0 0 4 546 1306 0 0 0 2 4 this 3 1348  3 val 1 1313  
@@ -3294,43 +3294,43 @@ OdeUtil::~OdeUtil(void);
 582 0 0 4 550 1306 0 0 0 2 4 this 3 1348  3 val 1 1313  
 583 0 0 4 551 1306 0 0 0 2 4 this 3 1348  3 val 1 1313  
 584 0 0 4 552 1306 0 0 0 2 4 this 3 1348  3 val 1 1313  
-585 0 0 6 553 1313 0 0 0 1 4 this 3 1440  
-586 0 0 6 554 1313 0 0 0 1 4 this 3 1440  
-587 0 0 6 555 1313 0 0 0 1 4 this 3 1440  
-588 0 0 6 556 1313 0 0 0 1 4 this 3 1440  
-589 0 0 6 557 1313 0 0 0 1 4 this 3 1440  
-590 0 0 6 558 1313 0 0 0 1 4 this 3 1440  
-591 0 0 6 559 1313 0 0 0 1 4 this 3 1440  
-592 0 0 6 560 1313 0 0 0 1 4 this 3 1440  
-593 0 0 6 561 1313 0 0 0 1 4 this 3 1440  
+585 0 0 6 553 1313 0 0 0 1 4 this 3 1443  
+586 0 0 6 554 1313 0 0 0 1 4 this 3 1443  
+587 0 0 6 555 1313 0 0 0 1 4 this 3 1443  
+588 0 0 6 556 1313 0 0 0 1 4 this 3 1443  
+589 0 0 6 557 1313 0 0 0 1 4 this 3 1443  
+590 0 0 6 558 1313 0 0 0 1 4 this 3 1443  
+591 0 0 6 559 1313 0 0 0 1 4 this 3 1443  
+592 0 0 6 560 1313 0 0 0 1 4 this 3 1443  
+593 0 0 6 561 1313 0 0 0 1 4 this 3 1443  
 594 0 0 7 562 1321 0 0 0 0 
 595 0 0 7 564 1400 0 0 0 1 4 geom 1 1387  
 596 0 0 7 564 1400 0 0 0 2 5 space 1 1377  6 radius 1 1313  
 597 0 0 7 564 1400 0 0 0 1 6 radius 1 1313  
 598 0 0 4 565 1306 0 0 0 2 4 this 3 1400  6 radius 1 1313  
-599 0 0 6 566 1313 0 0 0 1 4 this 3 1442  
-600 0 0 6 567 1313 0 0 0 2 4 this 3 1442  1 p 1 1402  
-601 0 0 6 567 1313 0 0 0 4 4 this 3 1442  1 x 1 1313  1 y 1 1313  1 z 1 1313  
+599 0 0 6 566 1313 0 0 0 1 4 this 3 1445  
+600 0 0 6 567 1313 0 0 0 2 4 this 3 1445  1 p 1 1402  
+601 0 0 6 567 1313 0 0 0 4 4 this 3 1445  1 x 1 1313  1 y 1 1313  1 z 1 1313  
 602 0 0 7 568 1321 0 0 0 0 
-603 0 0 7 571 1447 0 0 0 2 5 model 1 1444  11 use_normals 1 1307  
-604 0 0 4 572 1306 0 0 0 1 4 this 3 1447  
-605 0 0 4 573 1306 0 0 0 3 4 this 3 1448  3 out 1 1340  6 indent 1 1342  
-606 0 0 4 574 1306 0 0 0 2 4 this 3 1448  3 out 1 1340  
+603 0 0 7 571 1450 0 0 0 2 5 model 1 1447  11 use_normals 1 1307  
+604 0 0 4 572 1306 0 0 0 1 4 this 3 1450  
+605 0 0 4 573 1306 0 0 0 3 4 this 3 1451  3 out 1 1340  6 indent 1 1342  
+606 0 0 4 574 1306 0 0 0 2 4 this 3 1451  3 out 1 1340  
 607 0 0 7 575 1321 0 0 0 0 
-608 0 0 7 577 1401 0 0 0 2 5 space 1 1377  4 data 1 1447  
-609 0 0 7 577 1401 0 0 162 /* ODE_API dGeomID dCreateTriMesh(dSpaceID space, dTriMeshDataID Data, dTriCallback* Callback, dTriArrayCallback* ArrayCallback, dTriRayCallback* RayCallback); */ 1 4 data 1 1447  
-610 0 0 7 577 1401 0 0 0 1 4 copy 1 1450  
+608 0 0 7 577 1401 0 0 0 2 5 space 1 1377  4 data 1 1450  
+609 0 0 7 577 1401 0 0 162 /* ODE_API dGeomID dCreateTriMesh(dSpaceID space, dTriMeshDataID Data, dTriCallback* Callback, dTriArrayCallback* ArrayCallback, dTriRayCallback* RayCallback); */ 1 4 data 1 1450  
+610 0 0 7 577 1401 0 0 0 1 4 copy 1 1453  
 611 0 0 4 578 1306 0 0 0 1 4 this 3 1401  
-612 0 0 4 579 1306 0 0 0 2 4 this 3 1401  4 data 1 1447  
-613 0 0 7 580 1447 0 0 0 1 4 this 3 1450  
-614 0 0 4 581 1306 0 0 0 2 4 this 3 1401  4 data 1 1447  
-615 0 0 7 582 1447 0 0 0 1 4 this 3 1450  
+612 0 0 4 579 1306 0 0 0 2 4 this 3 1401  4 data 1 1450  
+613 0 0 7 580 1450 0 0 0 1 4 this 3 1453  
+614 0 0 4 581 1306 0 0 0 2 4 this 3 1401  4 data 1 1450  
+615 0 0 7 582 1450 0 0 0 1 4 this 3 1453  
 616 0 0 4 583 1306 0 0 0 3 4 this 3 1401  10 geom_class 1 1315  6 enable 1 1315  
-617 0 0 6 584 1315 0 0 0 2 4 this 3 1450  10 geom_class 1 1315  
+617 0 0 6 584 1315 0 0 0 2 4 this 3 1453  10 geom_class 1 1315  
 618 0 0 4 585 1306 0 0 0 2 4 this 3 1401  4 geom 1 1380  
-619 0 0 4 586 1306 0 0 0 5 4 this 3 1450  10 face_index 1 1315  2 v0 1 1368  2 v1 1 1368  2 v2 1 1368  
-620 0 0 7 587 1368 0 0 0 4 4 this 3 1450  10 face_index 1 1315  1 u 1 1313  1 v 1 1313  
-621 0 0 6 588 1315 0 0 0 1 4 this 3 1450  
+619 0 0 4 586 1306 0 0 0 5 4 this 3 1453  10 face_index 1 1315  2 v0 1 1368  2 v1 1 1368  2 v2 1 1368  
+620 0 0 7 587 1368 0 0 0 4 4 this 3 1453  10 face_index 1 1315  1 u 1 1313  1 v 1 1313  
+621 0 0 6 588 1315 0 0 0 1 4 this 3 1453  
 622 0 0 7 589 1321 0 0 0 0 
 623 0 0 7 591 1350 0 0 0 1 5 world 1 1303  
 624 0 0 7 591 1350 0 0 0 2 5 world 1 1303  11 joint_group 1 1322  
@@ -3341,14 +3341,14 @@ OdeUtil::~OdeUtil(void);
 629 0 0 4 594 1306 0 0 0 2 4 this 3 1350  4 axis 1 1310  
 630 0 0 4 594 1306 0 0 0 4 4 this 3 1350  1 x 1 1313  1 y 1 1313  1 z 1 1313  
 631 0 0 4 595 1306 0 0 0 3 4 this 3 1350  7 torque1 1 1313  7 torque2 1 1313  
-632 0 0 7 596 1316 0 0 0 1 4 this 3 1452  
-633 0 0 7 597 1316 0 0 0 1 4 this 3 1452  
-634 0 0 7 598 1316 0 0 0 1 4 this 3 1452  
-635 0 0 7 599 1316 0 0 0 1 4 this 3 1452  
-636 0 0 6 600 1313 0 0 0 1 4 this 3 1452  
-637 0 0 6 601 1313 0 0 0 1 4 this 3 1452  
-638 0 0 6 602 1313 0 0 0 1 4 this 3 1452  
-639 0 0 6 603 1313 0 0 0 1 4 this 3 1452  
+632 0 0 7 596 1316 0 0 0 1 4 this 3 1455  
+633 0 0 7 597 1316 0 0 0 1 4 this 3 1455  
+634 0 0 7 598 1316 0 0 0 1 4 this 3 1455  
+635 0 0 7 599 1316 0 0 0 1 4 this 3 1455  
+636 0 0 6 600 1313 0 0 0 1 4 this 3 1455  
+637 0 0 6 601 1313 0 0 0 1 4 this 3 1455  
+638 0 0 6 602 1313 0 0 0 1 4 this 3 1455  
+639 0 0 6 603 1313 0 0 0 1 4 this 3 1455  
 640 0 0 4 604 1306 0 0 0 3 4 this 3 1350  4 axis 1 1315  3 val 1 1313  
 641 0 0 4 605 1306 0 0 0 3 4 this 3 1350  4 axis 1 1315  3 val 1 1313  
 642 0 0 4 606 1306 0 0 0 3 4 this 3 1350  4 axis 1 1315  3 val 1 1313  
@@ -3358,22 +3358,22 @@ OdeUtil::~OdeUtil(void);
 646 0 0 4 610 1306 0 0 0 3 4 this 3 1350  4 axis 1 1315  3 val 1 1313  
 647 0 0 4 611 1306 0 0 0 3 4 this 3 1350  4 axis 1 1315  3 val 1 1313  
 648 0 0 4 612 1306 0 0 0 3 4 this 3 1350  4 axis 1 1315  3 val 1 1313  
-649 0 0 6 613 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-650 0 0 6 614 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-651 0 0 6 615 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-652 0 0 6 616 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-653 0 0 6 617 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-654 0 0 6 618 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-655 0 0 6 619 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-656 0 0 6 620 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
-657 0 0 6 621 1313 0 0 0 2 4 this 3 1452  4 axis 1 1315  
+649 0 0 6 613 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+650 0 0 6 614 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+651 0 0 6 615 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+652 0 0 6 616 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+653 0 0 6 617 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+654 0 0 6 618 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+655 0 0 6 619 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+656 0 0 6 620 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
+657 0 0 6 621 1313 0 0 0 2 4 this 3 1455  4 axis 1 1315  
 658 0 0 7 622 1321 0 0 0 0 
 659 0 0 7 624 1332 0 0 283 ////////////////////////////////////////////////////////////////////
 //     Function: OdeUtil::get_connecting_joint
 //       Access: Public, Static
 //  Description: Returns the joint that connects the given bodies.
 //////////////////////////////////////////////////////////////////// 2 5 body1 1 1338  5 body2 1 1338  
-660 0 0 7 625 1429 1108 0 319 ////////////////////////////////////////////////////////////////////
+660 0 0 7 625 1431 1108 0 319 ////////////////////////////////////////////////////////////////////
 //     Function: OdeUtil::get_connecting_joint_list
 //       Access: Public, Static
 //  Description: Returns a collection of joints connecting the
@@ -3396,20 +3396,20 @@ OdeUtil::~OdeUtil(void);
 //               non-contact joints then it may not be appropriate
 //               to add contacts, however it is okay to add more
 //               contact between bodies that already have contacts.
-//////////////////////////////////////////////////////////////////// 3 5 body1 1 1338  5 body2 1 1338  10 joint_type 1 1315  
-663 0 0 7 628 1455 0 0 392 ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////// 3 5 body1 1 1338  5 body2 1 1338  10 joint_type 1 1440  
+663 0 0 7 628 1459 0 0 392 ////////////////////////////////////////////////////////////////////
 //     Function: OdeUtil::collide
 //       Access: Public, Static
 //  Description: Given two geometry objects that potentially touch
 //               (geom1 and geom2), generate contact information
 //               for them. Returns an OdeCollisionEntry.
-//////////////////////////////////////////////////////////////////// 3 5 geom1 1 1380  5 geom2 1 1380  12 max_contacts 1 1454  
+//////////////////////////////////////////////////////////////////// 3 5 geom1 1 1380  5 geom2 1 1380  12 max_contacts 1 1457  
 664 0 0 6 629 1315 0 0 0 4 5 geom1 1 1380  5 geom2 1 1380  3 arg 1 1343  8 callback 1 1343  
 665 0 0 7 630 1387 0 0 0 1 5 space 1 1378  
 666 0 0 6 631 1313 0 0 73 // RAU we can't access OC_infinity as constants are not exposed in python 0 
 667 0 0 6 632 1315 0 0 0 0 
 668 0 0 4 633 1306 0 0 0 1 1 s 1 1315  
-203
+207
 1253 6 dxBody 0 1025 6 dxBody 6 dxBody 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 1254 6 dxGeom 0 1025 6 dxGeom 6 dxGeom 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -3536,7 +3536,7 @@ OdeUtil::~OdeUtil(void);
 11 0 18
 /* or "unknown" */
 
-1267 14 OdeAMotorJoint 0 75777 14 OdeAMotorJoint 14 OdeAMotorJoint 0 0 0 1 746 0 0 30 747 748 749 750 751 752 753 754 755 756 757 758 759 760 761 762 763 764 765 766 767 768 769 770 771 772 773 774 775 776 1 1456 0 1 0 1265 0 0 0 0 187
+1267 14 OdeAMotorJoint 0 75777 14 OdeAMotorJoint 14 OdeAMotorJoint 0 0 0 1 746 0 0 30 747 748 749 750 751 752 753 754 755 756 757 758 759 760 761 762 763 764 765 766 767 768 769 770 771 772 773 774 775 776 1 1460 0 1 0 1265 0 0 0 0 187
 ////////////////////////////////////////////////////////////////////
 //       Class : OdeAMotorJoint
 // Description : 
@@ -3568,7 +3568,7 @@ OdeUtil::~OdeUtil(void);
 //               See also TypedObject for detailed instructions.
 ////////////////////////////////////////////////////////////////////
 
-1271 7 OdeBody 0 75777 7 OdeBody 7 OdeBody 0 0 0 1 804 0 0 59 805 806 807 808 809 810 811 812 813 814 815 816 817 818 819 820 821 822 823 824 825 826 827 828 829 830 831 832 833 834 835 836 837 838 839 840 841 842 843 844 845 846 847 848 849 850 851 852 853 854 855 856 857 858 859 860 861 863 864 1 1457 1 862 1 0 1261 0 0 0 0 180
+1271 7 OdeBody 0 75777 7 OdeBody 7 OdeBody 0 0 0 1 804 0 0 59 805 806 807 808 809 810 811 812 813 814 815 816 817 818 819 820 821 822 823 824 825 826 827 828 829 830 831 832 833 834 835 836 837 838 839 840 841 842 843 844 845 846 847 848 849 850 851 852 853 854 855 856 857 858 859 860 861 863 864 1 1461 1 862 1 0 1261 0 0 0 0 180
 ////////////////////////////////////////////////////////////////////
 //       Class : OdeBody
 // Description : 
@@ -3618,7 +3618,7 @@ OdeUtil::~OdeUtil(void);
 // Description : 
 ////////////////////////////////////////////////////////////////////
 
-1278 17 OdeCollisionEntry 0 75777 17 OdeCollisionEntry 17 OdeCollisionEntry 0 0 0 0 0 0 10 983 984 985 986 987 988 989 990 992 993 2 1458 1459 1 991 1 0 1270 0 0 0 0 276
+1278 17 OdeCollisionEntry 0 75777 17 OdeCollisionEntry 17 OdeCollisionEntry 0 0 0 0 0 0 10 983 984 985 986 987 988 989 990 992 993 2 1462 1463 1 991 1 0 1270 0 0 0 0 276
 ////////////////////////////////////////////////////////////////////
 //       Class : OdeCollisionEntry
 // Description : A class used to hold information about a collision
@@ -3688,13 +3688,13 @@ OdeUtil::~OdeUtil(void);
 // Description : 
 ////////////////////////////////////////////////////////////////////
 
-1288 18 OdeJointCollection 0 26625 18 OdeJointCollection 18 OdeJointCollection 0 0 0 1 1106 1108 0 15 1107 1109 1110 1111 1112 1113 1114 1115 1116 1117 1118 1119 1120 1121 1122 1 1460 0 0 0 0 191
+1288 18 OdeJointCollection 0 26625 18 OdeJointCollection 18 OdeJointCollection 0 0 0 1 1106 1108 0 15 1107 1109 1110 1111 1112 1113 1114 1115 1116 1117 1118 1119 1120 1121 1122 1 1464 0 0 0 0 191
 ////////////////////////////////////////////////////////////////////
 //       Class : OdeJointCollection
 // Description : 
 ////////////////////////////////////////////////////////////////////
 
-1289 14 OdeLMotorJoint 0 75777 14 OdeLMotorJoint 14 OdeLMotorJoint 0 0 0 1 1123 0 0 7 1124 1125 1126 1127 1128 1129 1130 1 1461 0 1 0 1265 0 0 0 0 187
+1289 14 OdeLMotorJoint 0 75777 14 OdeLMotorJoint 14 OdeLMotorJoint 0 0 0 1 1123 0 0 7 1124 1125 1126 1127 1128 1129 1130 1 1465 0 1 0 1265 0 0 0 0 187
 ////////////////////////////////////////////////////////////////////
 //       Class : OdeLMotorJoint
 // Description : 
@@ -3935,7 +3935,7 @@ OdeUtil::~OdeUtil(void);
 
 1365 15 LMatrix3f const 0 8832 15 LMatrix3f const 15 LMatrix3f const 0 0 1366 0 0 0 0 0 0 0 0 0 0
 
-1366 9 LMatrix3f 0 2048 9 LMatrix3f 9 LMatrix3f 0 0 0 0 0 0 0 4 1462 1463 1464 1465 0 0 0 0 462
+1366 9 LMatrix3f 0 2048 9 LMatrix3f 9 LMatrix3f 0 0 0 0 0 0 0 4 1466 1467 1468 1469 0 0 0 0 462
 ////////////////////////////////////////////////////////////////////
 //       Class : LMatrix3
 // Description : This is a 3-by-3 transform matrix.  It typically will
@@ -4048,81 +4048,87 @@ OdeUtil::~OdeUtil(void);
 
 1408 20 OdeContactGeom const 0 8832 20 OdeContactGeom const 20 OdeContactGeom const 0 0 1277 0 0 0 0 0 0 0 0 0 0
 
-1409 25 OdeCollisionEntry const * 0 8576 25 OdeCollisionEntry const * 25 OdeCollisionEntry const * 0 0 1410 0 0 0 0 0 0 0 0 0 0
+1409 11 dReal const 0 8832 11 dReal const 11 dReal const 0 0 1313 0 0 0 0 0 0 0 0 0 0
 
-1410 23 OdeCollisionEntry const 0 8832 23 OdeCollisionEntry const 23 OdeCollisionEntry const 0 0 1278 0 0 0 0 0 0 0 0 0 0
+1410 25 OdeCollisionEntry const * 0 8576 25 OdeCollisionEntry const * 25 OdeCollisionEntry const * 0 0 1411 0 0 0 0 0 0 0 0 0 0
 
-1411 6 size_t 0 2105344 6 size_t 6 size_t 0 0 1342 0 0 0 0 0 0 0 0 0 0
+1411 23 OdeCollisionEntry const 0 8832 23 OdeCollisionEntry const 23 OdeCollisionEntry const 0 0 1278 0 0 0 0 0 0 0 0 0 0
 
-1412 22 OdeSurfaceParameters * 0 8576 22 OdeSurfaceParameters * 22 OdeSurfaceParameters * 0 0 1279 0 0 0 0 0 0 0 0 0 0
+1412 6 size_t 0 2105344 6 size_t 6 size_t 0 0 1413 0 0 0 0 0 0 0 0 0 0
 
-1413 28 OdeSurfaceParameters const * 0 8576 28 OdeSurfaceParameters const * 28 OdeSurfaceParameters const * 0 0 1414 0 0 0 0 0 0 0 0 0 0
+1413 17 unsigned long int 0 8214 17 unsigned long int 17 unsigned long int 0 1 0 0 0 0 0 0 0 0 0 0 0
 
-1414 26 OdeSurfaceParameters const 0 8832 26 OdeSurfaceParameters const 26 OdeSurfaceParameters const 0 0 1279 0 0 0 0 0 0 0 0 0 0
+1414 22 OdeSurfaceParameters * 0 8576 22 OdeSurfaceParameters * 22 OdeSurfaceParameters * 0 0 1279 0 0 0 0 0 0 0 0 0 0
 
-1415 12 OdeContact * 0 8576 12 OdeContact * 12 OdeContact * 0 0 1281 0 0 0 0 0 0 0 0 0 0
+1415 28 OdeSurfaceParameters const * 0 8576 28 OdeSurfaceParameters const * 28 OdeSurfaceParameters const * 0 0 1416 0 0 0 0 0 0 0 0 0 0
 
-1416 16 dContact const * 0 8576 16 dContact const * 16 dContact const * 0 0 1417 0 0 0 0 0 0 0 0 0 0
+1416 26 OdeSurfaceParameters const 0 8832 26 OdeSurfaceParameters const 26 OdeSurfaceParameters const 0 0 1279 0 0 0 0 0 0 0 0 0 0
 
-1417 14 dContact const 0 8832 14 dContact const 14 dContact const 0 0 1418 0 0 0 0 0 0 0 0 0 0
+1417 12 OdeContact * 0 8576 12 OdeContact * 12 OdeContact * 0 0 1281 0 0 0 0 0 0 0 0 0 0
 
-1418 8 dContact 0 1024 8 dContact 8 dContact 0 0 0 0 0 0 0 0 0 0 0 0 0
+1418 16 dContact const * 0 8576 16 dContact const * 16 dContact const * 0 0 1419 0 0 0 0 0 0 0 0 0 0
 
-1419 18 OdeContact const * 0 8576 18 OdeContact const * 18 OdeContact const * 0 0 1420 0 0 0 0 0 0 0 0 0 0
+1419 14 dContact const 0 8832 14 dContact const 14 dContact const 0 0 1420 0 0 0 0 0 0 0 0 0 0
 
-1420 16 OdeContact const 0 8832 16 OdeContact const 16 OdeContact const 0 0 1281 0 0 0 0 0 0 0 0 0 0
+1420 8 dContact 0 1024 8 dContact 8 dContact 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-1421 23 OdeCylinderGeom const * 0 8576 23 OdeCylinderGeom const * 23 OdeCylinderGeom const * 0 0 1422 0 0 0 0 0 0 0 0 0 0
+1421 18 OdeContact const * 0 8576 18 OdeContact const * 18 OdeContact const * 0 0 1422 0 0 0 0 0 0 0 0 0 0
 
-1422 21 OdeCylinderGeom const 0 8832 21 OdeCylinderGeom const 21 OdeCylinderGeom const 0 0 1283 0 0 0 0 0 0 0 0 0 0
+1422 16 OdeContact const 0 8832 16 OdeContact const 16 OdeContact const 0 0 1281 0 0 0 0 0 0 0 0 0 0
 
-1423 20 OdeHashSpace const * 0 8576 20 OdeHashSpace const * 20 OdeHashSpace const * 0 0 1424 0 0 0 0 0 0 0 0 0 0
+1423 23 OdeCylinderGeom const * 0 8576 23 OdeCylinderGeom const * 23 OdeCylinderGeom const * 0 0 1424 0 0 0 0 0 0 0 0 0 0
 
-1424 18 OdeHashSpace const 0 8832 18 OdeHashSpace const 18 OdeHashSpace const 0 0 1285 0 0 0 0 0 0 0 0 0 0
+1424 21 OdeCylinderGeom const 0 8832 21 OdeCylinderGeom const 21 OdeCylinderGeom const 0 0 1283 0 0 0 0 0 0 0 0 0 0
 
-1425 22 OdeHinge2Joint const * 0 8576 22 OdeHinge2Joint const * 22 OdeHinge2Joint const * 0 0 1426 0 0 0 0 0 0 0 0 0 0
+1425 20 OdeHashSpace const * 0 8576 20 OdeHashSpace const * 20 OdeHashSpace const * 0 0 1426 0 0 0 0 0 0 0 0 0 0
 
-1426 20 OdeHinge2Joint const 0 8832 20 OdeHinge2Joint const 20 OdeHinge2Joint const 0 0 1286 0 0 0 0 0 0 0 0 0 0
+1426 18 OdeHashSpace const 0 8832 18 OdeHashSpace const 18 OdeHashSpace const 0 0 1285 0 0 0 0 0 0 0 0 0 0
 
-1427 21 OdeHingeJoint const * 0 8576 21 OdeHingeJoint const * 21 OdeHingeJoint const * 0 0 1428 0 0 0 0 0 0 0 0 0 0
+1427 22 OdeHinge2Joint const * 0 8576 22 OdeHinge2Joint const * 22 OdeHinge2Joint const * 0 0 1428 0 0 0 0 0 0 0 0 0 0
 
-1428 19 OdeHingeJoint const 0 8832 19 OdeHingeJoint const 19 OdeHingeJoint const 0 0 1287 0 0 0 0 0 0 0 0 0 0
+1428 20 OdeHinge2Joint const 0 8832 20 OdeHinge2Joint const 20 OdeHinge2Joint const 0 0 1286 0 0 0 0 0 0 0 0 0 0
 
-1429 20 OdeJointCollection * 0 8576 20 OdeJointCollection * 20 OdeJointCollection * 0 0 1288 0 0 0 0 0 0 0 0 0 0
+1429 21 OdeHingeJoint const * 0 8576 21 OdeHingeJoint const * 21 OdeHingeJoint const * 0 0 1430 0 0 0 0 0 0 0 0 0 0
 
-1430 26 OdeJointCollection const * 0 8576 26 OdeJointCollection const * 26 OdeJointCollection const * 0 0 1431 0 0 0 0 0 0 0 0 0 0
+1430 19 OdeHingeJoint const 0 8832 19 OdeHingeJoint const 19 OdeHingeJoint const 0 0 1287 0 0 0 0 0 0 0 0 0 0
 
-1431 24 OdeJointCollection const 0 8832 24 OdeJointCollection const 24 OdeJointCollection const 0 0 1288 0 0 0 0 0 0 0 0 0 0
+1431 20 OdeJointCollection * 0 8576 20 OdeJointCollection * 20 OdeJointCollection * 0 0 1288 0 0 0 0 0 0 0 0 0 0
 
-1432 22 OdeLMotorJoint const * 0 8576 22 OdeLMotorJoint const * 22 OdeLMotorJoint const * 0 0 1433 0 0 0 0 0 0 0 0 0 0
+1432 26 OdeJointCollection const * 0 8576 26 OdeJointCollection const * 26 OdeJointCollection const * 0 0 1433 0 0 0 0 0 0 0 0 0 0
 
-1433 20 OdeLMotorJoint const 0 8832 20 OdeLMotorJoint const 20 OdeLMotorJoint const 0 0 1289 0 0 0 0 0 0 0 0 0 0
+1433 24 OdeJointCollection const 0 8832 24 OdeJointCollection const 24 OdeJointCollection const 0 0 1288 0 0 0 0 0 0 0 0 0 0
 
-1434 18 LVecBase4f const * 0 8576 18 LVecBase4f const * 18 LVecBase4f const * 0 0 1435 0 0 0 0 0 0 0 0 0 0
+1434 22 OdeLMotorJoint const * 0 8576 22 OdeLMotorJoint const * 22 OdeLMotorJoint const * 0 0 1435 0 0 0 0 0 0 0 0 0 0
 
-1435 16 LVecBase4f const 0 8832 16 LVecBase4f const 16 LVecBase4f const 0 0 1375 0 0 0 0 0 0 0 0 0 0
+1435 20 OdeLMotorJoint const 0 8832 20 OdeLMotorJoint const 20 OdeLMotorJoint const 0 0 1289 0 0 0 0 0 0 0 0 0 0
 
-1436 20 OdePlaneGeom const * 0 8576 20 OdePlaneGeom const * 20 OdePlaneGeom const * 0 0 1437 0 0 0 0 0 0 0 0 0 0
+1436 18 LVecBase4f const * 0 8576 18 LVecBase4f const * 18 LVecBase4f const * 0 0 1437 0 0 0 0 0 0 0 0 0 0
 
-1437 18 OdePlaneGeom const 0 8832 18 OdePlaneGeom const 18 OdePlaneGeom const 0 0 1292 0 0 0 0 0 0 0 0 0 0
+1437 16 LVecBase4f const 0 8832 16 LVecBase4f const 16 LVecBase4f const 0 0 1375 0 0 0 0 0 0 0 0 0 0
 
-1438 18 OdeRayGeom const * 0 8576 18 OdeRayGeom const * 18 OdeRayGeom const * 0 0 1439 0 0 0 0 0 0 0 0 0 0
+1438 20 OdePlaneGeom const * 0 8576 20 OdePlaneGeom const * 20 OdePlaneGeom const * 0 0 1439 0 0 0 0 0 0 0 0 0 0
 
-1439 16 OdeRayGeom const 0 8832 16 OdeRayGeom const 16 OdeRayGeom const 0 0 1294 0 0 0 0 0 0 0 0 0 0
+1439 18 OdePlaneGeom const 0 8832 18 OdePlaneGeom const 18 OdePlaneGeom const 0 0 1292 0 0 0 0 0 0 0 0 0 0
 
-1440 22 OdeSliderJoint const * 0 8576 22 OdeSliderJoint const * 22 OdeSliderJoint const * 0 0 1441 0 0 0 0 0 0 0 0 0 0
+1440 9 int const 0 8832 9 int const 9 int const 0 0 1315 0 0 0 0 0 0 0 0 0 0
 
-1441 20 OdeSliderJoint const 0 8832 20 OdeSliderJoint const 20 OdeSliderJoint const 0 0 1296 0 0 0 0 0 0 0 0 0 0
+1441 18 OdeRayGeom const * 0 8576 18 OdeRayGeom const * 18 OdeRayGeom const * 0 0 1442 0 0 0 0 0 0 0 0 0 0
 
-1442 21 OdeSphereGeom const * 0 8576 21 OdeSphereGeom const * 21 OdeSphereGeom const * 0 0 1443 0 0 0 0 0 0 0 0 0 0
+1442 16 OdeRayGeom const 0 8832 16 OdeRayGeom const 16 OdeRayGeom const 0 0 1294 0 0 0 0 0 0 0 0 0 0
 
-1443 19 OdeSphereGeom const 0 8832 19 OdeSphereGeom const 19 OdeSphereGeom const 0 0 1297 0 0 0 0 0 0 0 0 0 0
+1443 22 OdeSliderJoint const * 0 8576 22 OdeSliderJoint const * 22 OdeSliderJoint const * 0 0 1444 0 0 0 0 0 0 0 0 0 0
 
-1444 16 NodePath const * 0 8576 16 NodePath const * 16 NodePath const * 0 0 1445 0 0 0 0 0 0 0 0 0 0
+1444 20 OdeSliderJoint const 0 8832 20 OdeSliderJoint const 20 OdeSliderJoint const 0 0 1296 0 0 0 0 0 0 0 0 0 0
 
-1445 14 NodePath const 0 8832 14 NodePath const 14 NodePath const 0 0 1446 0 0 0 0 0 0 0 0 0 0
+1445 21 OdeSphereGeom const * 0 8576 21 OdeSphereGeom const * 21 OdeSphereGeom const * 0 0 1446 0 0 0 0 0 0 0 0 0 0
 
-1446 8 NodePath 0 2048 8 NodePath 8 NodePath 0 0 0 0 0 0 0 2 1466 1467 0 0 0 0 1139
+1446 19 OdeSphereGeom const 0 8832 19 OdeSphereGeom const 19 OdeSphereGeom const 0 0 1297 0 0 0 0 0 0 0 0 0 0
+
+1447 16 NodePath const * 0 8576 16 NodePath const * 16 NodePath const * 0 0 1448 0 0 0 0 0 0 0 0 0 0
+
+1448 14 NodePath const 0 8832 14 NodePath const 14 NodePath const 0 0 1449 0 0 0 0 0 0 0 0 0 0
+
+1449 8 NodePath 0 2048 8 NodePath 8 NodePath 0 0 0 0 0 0 0 2 1470 1471 0 0 0 0 1139
 ////////////////////////////////////////////////////////////////////
 //       Class : NodePath
 // Description : NodePath is the fundamental system for disambiguating
@@ -4144,36 +4150,38 @@ OdeUtil::~OdeUtil(void);
 //               the changes.
 ////////////////////////////////////////////////////////////////////
 
-1447 16 OdeTriMeshData * 0 8576 16 OdeTriMeshData * 16 OdeTriMeshData * 0 0 1298 0 0 0 0 0 0 0 0 0 0
+1450 16 OdeTriMeshData * 0 8576 16 OdeTriMeshData * 16 OdeTriMeshData * 0 0 1298 0 0 0 0 0 0 0 0 0 0
 
-1448 22 OdeTriMeshData const * 0 8576 22 OdeTriMeshData const * 22 OdeTriMeshData const * 0 0 1449 0 0 0 0 0 0 0 0 0 0
+1451 22 OdeTriMeshData const * 0 8576 22 OdeTriMeshData const * 22 OdeTriMeshData const * 0 0 1452 0 0 0 0 0 0 0 0 0 0
 
-1449 20 OdeTriMeshData const 0 8832 20 OdeTriMeshData const 20 OdeTriMeshData const 0 0 1298 0 0 0 0 0 0 0 0 0 0
+1452 20 OdeTriMeshData const 0 8832 20 OdeTriMeshData const 20 OdeTriMeshData const 0 0 1298 0 0 0 0 0 0 0 0 0 0
 
-1450 22 OdeTriMeshGeom const * 0 8576 22 OdeTriMeshGeom const * 22 OdeTriMeshGeom const * 0 0 1451 0 0 0 0 0 0 0 0 0 0
+1453 22 OdeTriMeshGeom const * 0 8576 22 OdeTriMeshGeom const * 22 OdeTriMeshGeom const * 0 0 1454 0 0 0 0 0 0 0 0 0 0
 
-1451 20 OdeTriMeshGeom const 0 8832 20 OdeTriMeshGeom const 20 OdeTriMeshGeom const 0 0 1300 0 0 0 0 0 0 0 0 0 0
+1454 20 OdeTriMeshGeom const 0 8832 20 OdeTriMeshGeom const 20 OdeTriMeshGeom const 0 0 1300 0 0 0 0 0 0 0 0 0 0
 
-1452 25 OdeUniversalJoint const * 0 8576 25 OdeUniversalJoint const * 25 OdeUniversalJoint const * 0 0 1453 0 0 0 0 0 0 0 0 0 0
+1455 25 OdeUniversalJoint const * 0 8576 25 OdeUniversalJoint const * 25 OdeUniversalJoint const * 0 0 1456 0 0 0 0 0 0 0 0 0 0
 
-1453 23 OdeUniversalJoint const 0 8832 23 OdeUniversalJoint const 23 OdeUniversalJoint const 0 0 1301 0 0 0 0 0 0 0 0 0 0
+1456 23 OdeUniversalJoint const 0 8832 23 OdeUniversalJoint const 23 OdeUniversalJoint const 0 0 1301 0 0 0 0 0 0 0 0 0 0
 
-1454 9 short int 0 8258 9 short int 9 short int 0 1 0 0 0 0 0 0 0 0 0 0 0
+1457 15 short int const 0 8832 15 short int const 15 short int const 0 0 1458 0 0 0 0 0 0 0 0 0 0
 
-1455 19 OdeCollisionEntry * 0 8576 19 OdeCollisionEntry * 19 OdeCollisionEntry * 0 0 1278 0 0 0 0 0 0 0 0 0 0
+1458 9 short int 0 8258 9 short int 9 short int 0 1 0 0 0 0 0 0 0 0 0 0 0
+
+1459 19 OdeCollisionEntry * 0 8576 19 OdeCollisionEntry * 19 OdeCollisionEntry * 0 0 1278 0 0 0 0 0 0 0 0 0 0
 
 0
 0
 12
-1456 0 0 92 8 get_axes 12 get_num_axes 8 get_axis 
-1457 0 0 154 10 get_joints 14 get_num_joints 9 get_joint 
-1458 0 0 340 18 get_contact_points 16 get_num_contacts 17 get_contact_point 
-1459 0 0 340 17 get_contact_geoms 16 get_num_contacts 16 get_contact_geom 
-1460 0 0 473 10 get_joints 14 get_num_joints 9 get_joint 
-1461 0 0 491 8 get_axes 12 get_num_axes 8 get_axis 
-1462 0 0 826 8 get_rows 4 size 7 get_row 
-1463 0 0 826 8 get_cols 4 size 7 get_col 
-1464 0 0 826 9 get_col2s 4 size 8 get_col2 
-1465 0 0 826 9 get_row2s 4 size 8 get_row2 
-1466 0 0 1387 9 get_nodes 13 get_num_nodes 8 get_node 
-1467 0 0 1387 13 get_ancestors 13 get_num_nodes 12 get_ancestor 
+1460 0 0 92 8 get_axes 12 get_num_axes 8 get_axis 
+1461 0 0 154 10 get_joints 14 get_num_joints 9 get_joint 
+1462 0 0 340 18 get_contact_points 16 get_num_contacts 17 get_contact_point 
+1463 0 0 340 17 get_contact_geoms 16 get_num_contacts 16 get_contact_geom 
+1464 0 0 473 10 get_joints 14 get_num_joints 9 get_joint 
+1465 0 0 491 8 get_axes 12 get_num_axes 8 get_axis 
+1466 0 0 826 8 get_rows 4 size 7 get_row 
+1467 0 0 826 8 get_cols 4 size 7 get_col 
+1468 0 0 826 9 get_col2s 4 size 8 get_col2 
+1469 0 0 826 9 get_row2s 4 size 8 get_row2 
+1470 0 0 1390 9 get_nodes 13 get_num_nodes 8 get_node 
+1471 0 0 1390 13 get_ancestors 13 get_num_nodes 12 get_ancestor 

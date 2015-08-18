@@ -336,9 +336,6 @@ class DistributedObjectAI(DistributedObjectBase):
         assert self.notify.debugStateCall(self)
         if self.air:
             self.air.sendUpdate(self, fieldName, args)
-    
-    def GetAccountIDFromOriginalChannel(self, doId):
-	return (doId >> 32) & 0xFFFFFFFF
 
     def GetPuppetConnectionChannel(self, doId):
         return doId + (1001L << 32)

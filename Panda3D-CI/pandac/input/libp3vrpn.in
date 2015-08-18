@@ -1,4 +1,4 @@
-1428765877
+1439924929
 2 3
 9 libp3vrpn 4 lPJY 12 panda3d.vrpn 
 6
@@ -49,8 +49,8 @@ inline bool VrpnClient::is_connected(void) const;
 //  Description: Writes a list of the active devices that the
 //               VrpnClient is currently polling each frame.
 ////////////////////////////////////////////////////////////////////
-67
-void VrpnClient::write(ostream &out, int indent_level = (0)) const;
+65
+void VrpnClient::write(ostream &out, int indent_level = 0) const;
 
 12 14 get_class_type 0 4 13 26 VrpnClient::get_class_type 0 1 6 0
 51

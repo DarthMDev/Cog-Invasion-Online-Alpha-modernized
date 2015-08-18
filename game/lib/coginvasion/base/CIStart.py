@@ -36,17 +36,26 @@ from panda3d.core import *
 print "CIStart: Using Panda3D version {0}".format(PandaSystem.getVersionString())
 loadPrcFile('config/Confauto.prc')
 loadPrcFile("config/config_client.prc")
-print ConfigPageManager.getGlobalPtr()
+
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
+
+if base.config.GetString('load-display') == 'pandagl':
+    print "CIStart: Using OpenGL graphics library."
+elif base.config.GetString('load-display') == 'pandadx9':
+    print "CIStart: Using DirectX 9 graphics library."
+else:
+    print "CIStart: Using an unknown graphics library."
+
 if base.config.GetString('audio-library-name') == 'p3miles_audio':
-    print "CIStart: Using RAD Game Tools, Miles Sound System."
+    print "CIStart: Using Miles audio library."
 elif base.config.GetString('audio-library-name') == 'p3fmod_audio':
     print "CIStart: Using FMOD audio library."
 elif base.config.GetString('audio-library-name') == 'p3openal_audio':
     print "CIStart: Using OpenAL audio library."
 else:
     print "CIStart: Using no or an unknown audio library."
+
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.filter.CommonFilters import CommonFilters
@@ -95,13 +104,10 @@ else:
 ConfigVariableDouble('decompressor-step-time').setValue(0.01)
 ConfigVariableDouble('extractor-step-time').setValue(0.01)
 
-print "CIStart: Setting default font..."
 DirectGuiGlobals.setDefaultFontFunc(CIGlobals.getToonFont)
 DirectGuiGlobals.setDefaultFont(CIGlobals.getToonFont())
-print "CIStart: Setting default GUI sounds..."
 DirectGuiGlobals.setDefaultRolloverSound(loader.loadSfx("phase_3/audio/sfx/GUI_rollover.mp3"))
 DirectGuiGlobals.setDefaultClickSound(loader.loadSfx("phase_3/audio/sfx/GUI_create_toon_fwd.mp3"))
-print "CIStart: Setting default Dialog geometry..."
 DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialog_box_gui.bam"))
 
 def maybeDoSomethingWithMusic(condition):

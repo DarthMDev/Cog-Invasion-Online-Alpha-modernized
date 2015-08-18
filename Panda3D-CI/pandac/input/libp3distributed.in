@@ -1,4 +1,4 @@
-1428768115
+1439925704
 2 3
 16 libp3distributed 4 nqI8 14 panda3d.direct 
 60
@@ -8,8 +8,8 @@
 //       Access: Published
 //  Description:
 ////////////////////////////////////////////////////////////////////
-97
-CConnectionRepository::CConnectionRepository(bool has_owner_view = (0), bool threaded_net = (0));
+93
+CConnectionRepository::CConnectionRepository(bool has_owner_view = 0, bool threaded_net = 0);
 
 60 22 ~CConnectionRepository 0 4 119 45 CConnectionRepository::~CConnectionRepository 0 0 232
 ////////////////////////////////////////////////////////////////////
@@ -253,8 +253,8 @@ inline void CConnectionRepository::get_datagram_iterator(DatagramIterator &di);
 //               was sent, according to the datagram headers.  This
 //               information is not available to the client.
 ////////////////////////////////////////////////////////////////////
-83
-inline CHANNEL_TYPE CConnectionRepository::get_msg_channel(int offset = (0)) const;
+81
+inline CHANNEL_TYPE CConnectionRepository::get_msg_channel(int offset = 0) const;
 
 82 21 get_msg_channel_count 0 4 119 44 CConnectionRepository::get_msg_channel_count 0 1 23 0
 68
