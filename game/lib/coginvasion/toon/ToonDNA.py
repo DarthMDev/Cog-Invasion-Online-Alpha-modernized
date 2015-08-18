@@ -1202,6 +1202,11 @@ class ToonDNA:
     shirt2shirtDNA = {v: k for k, v in shirtDNA2shirt.items()}
     sleeve2sleeveDNA = {v: k for k, v in sleeveDNA2sleeve.items()}
     short2shortDNA = {v: k for k, v in shortDNA2short.items()}
+    skirt2skirtDNA = {}
+    for k, v in skirtDNA2skirt.items():
+        skirt2skirtDNA[v[0]] = k
+
+    clothesColor2clothesColorDNA = {v: k for k, v in clothesColorDNA2clothesColor.items()}
 
     def getRandomBottom(self, gender, tailorId = MAKE_A_TOON, generator = None, girlBottomType = None):
         if generator == None:
@@ -1243,17 +1248,13 @@ class ToonDNA:
                 return key
 
     def getBottom(self, bottomTex):
-        bottoms = []
-        bottoms.extend(self.GirlBottoms)
-        bottoms.extend(self.BoyShorts)
+        print bottomTex
 
-        for i in range(len(bottoms)):
-            bottom = bottoms[i]
-            if isinstance(bottom, list):
-                if bottom[0] == bottomTex:
-                    return bottom
-            elif bottom == bottomTex:
-                return bottom
+        skirtValues = self.skirtDNA2skirt.values()
+        if isinstance(skirtValues[0], tuple):
+            return self.skirt2skirtDNA[bottomTex]
+        else:
+            return self.short2shortDNA[bottomTex]
 
     def __init__(self):
         self.dnaStrand = "00/00/00/00/00/00/00/00/00/00/00/00/00/00/00"
@@ -1386,17 +1387,24 @@ class ToonDNA:
         sleeve = self.sleeve2sleeveDNA[self.sleeve]
         if gender == 'boy':
             shorts = self.short2shortDNA[self.shorts]
+            print 'Using dict'
         else:
-            shorts = self.getBottom(self.shorts)[0]
-        shirtColor = self.parseClothesColorIndexToString(self.shirtColor)
-        sleeveColor = self.parseClothesColorIndexToString(self.sleeveColor)
-        shortColor = self.parseClothesColorIndexToString(self.shortColor)
-        gloveColor = self.colorDNA2color[self.gloveColor]
+            shorts = self.getBottom(self.shorts)
+            print 'Using getBottom'
+        print shorts
+        shirtColorIndex = self.clothesColor2clothesColorDNA[self.shirtColor]
+        sleeveColorIndex = self.clothesColor2clothesColorDNA[self.sleeveColor]
+        shortColorIndex = self.clothesColor2clothesColorDNA[self.shortColor]
+        shirtColor = self.parseClothesColorIndexToString(shirtColorIndex)
+        sleeveColor = self.parseClothesColorIndexToString(sleeveColorIndex)
+        shortColor = self.parseClothesColorIndexToString(shortColorIndex)
+        gloveColor = "00"
         strand = "%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s" % (
             gender, animal, head, headcolor, torso,
             torsocolor, legs, legcolor, shirt, sleeve,
             shorts, shirtColor, sleeveColor, shortColor, gloveColor
             )
+        print strand
         self.setDNAStrand(strand)
 
     def canBeInteger(self, string):
