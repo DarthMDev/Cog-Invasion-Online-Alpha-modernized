@@ -4,7 +4,6 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from lib.coginvasion.hood import ToonHood
-from lib.coginvasion.hood import SafeZoneLoader
 from lib.coginvasion.globals import CIGlobals
 import CTSafeZoneLoader
 

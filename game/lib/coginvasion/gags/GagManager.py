@@ -35,6 +35,7 @@ from lib.coginvasion.gags.PixieDust import PixieDust
 from lib.coginvasion.gags.Anvil import Anvil
 from lib.coginvasion.gags.FlowerPot import FlowerPot
 from lib.coginvasion.gags.Sandbag import Sandbag
+from lib.coginvasion.gags.Geyser import Geyser
 
 class GagManager:
 
@@ -67,7 +68,8 @@ class GagManager:
                      CIGlobals.PixieDust : PixieDust,
                      CIGlobals.FlowerPot : FlowerPot,
                      CIGlobals.Sandbag : Sandbag,
-                     CIGlobals.Anvil : Anvil}
+                     CIGlobals.Anvil : Anvil,
+                     CIGlobals.Geyser : Geyser}
 
     def getGagByName(self, name):
         for gName in self.gags.keys():

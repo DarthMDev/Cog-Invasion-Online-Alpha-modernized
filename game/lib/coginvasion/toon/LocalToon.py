@@ -623,7 +623,7 @@ class LocalToon(DistributedToon):
             if self.pieThrowBtn:
                 self.pieThrowBtn.unbind(DGG.B1RELEASE)
             self.ignore("delete-up")
-            if self.backpack.getActiveGag().getType() == GagType.SQUIRT:
+            if self.backpack.getActiveGag().getType() == GagType.SQUIRT and self.backpack.getActiveGag().getName() == CIGlobals.SeltzerBottle:
                 self.b_gagRelease(self.backpack.getActiveGag().getID())
             else:
                 self.b_gagThrow(self.backpack.getActiveGag().getID())

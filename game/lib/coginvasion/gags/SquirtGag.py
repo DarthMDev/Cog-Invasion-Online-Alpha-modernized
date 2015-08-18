@@ -34,16 +34,19 @@ class SquirtGag(Gag):
         self.lastFrame = 0
 
         if game.process == 'client':
-            self.spraySfx = base.audio3d.loadSfx(spraySfx)
-            self.missSfx = base.audio3d.loadSfx(missSfx)
+            if spraySfx:
+                self.spraySfx = base.audio3d.loadSfx(spraySfx)
+            if missSfx:
+                self.missSfx = base.audio3d.loadSfx(missSfx)
 
     def start(self):
-        super(SquirtGag, self).start()
-        self.build()
-        self.equip()
-        duration = base.localAvatar.getDuration(self.anim, toFrame = self.enableReleaseFrame)
-        Parallel(ActorInterval(self.avatar, self.anim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate), 
-                 Wait(duration - 0.15), Func(self.setSquirtEnabled, True)).start()
+        Gag.start(self)
+        if self.anim:
+            self.build()
+            self.equip()
+            duration = base.localAvatar.getDuration(self.anim, toFrame = self.enableReleaseFrame)
+            Parallel(ActorInterval(self.avatar, self.anim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate), 
+                     Wait(duration - 0.15), Func(self.setSquirtEnabled, True)).start()
 
     def startSquirt(self, sprayScale, containerHold):
         def startSpray():

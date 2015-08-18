@@ -8,7 +8,6 @@
 from panda3d.core import CollisionNode, CollisionRay, CollisionHandlerQueue
 from lib.coginvasion.globals import CIGlobals
 from direct.task.Task import Task
-import math
 
 class LocationSeeker:
     
@@ -67,6 +66,9 @@ class LocationSeeker:
         base.taskMgr.add(self.__moveShadow, self.moveShadowTaskName)
         self.avatar.acceptOnce('mouse1', self.locationChosen)
         
+    def stopSeeking(self):
+        base.taskMgr.remove(self.moveShadowTaskName)
+        
     def __moveShadow(self, task):
         if base.mouseWatcherNode.hasMouse():
             def PointAtZ(z, point, vec):
@@ -87,6 +89,7 @@ class LocationSeeker:
         return Task.cont
         
     def locationChosen(self):
+        base.taskMgr.remove(self.moveShadowTaskName)
         distance = self.avatar.getDistance(self.dropShadow)
         x, y, z = self.getLocation()
         if distance >= self.minDistance and distance <= self.maxDistance:
@@ -96,6 +99,7 @@ class LocationSeeker:
         else:
             self.rejectSfx.play()
             self.avatar.acceptOnce('mouse1', self.locationChosen)
+            base.taskMgr.add(self.__moveShadow, self.moveShadowTaskName)
         
     def buildShadow(self):
         self.cleanupShadow()
