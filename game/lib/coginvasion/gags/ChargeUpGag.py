@@ -47,6 +47,8 @@ class ChargeUpGag:
         
     def release(self):
         if self.avatar:
+            if not self.chargeUpSpot:
+                return
             self.selectedCogs = self.chargeUpSpot.getSelectedCogs()
             self.cleanupChargeUpSpot()
             self.buildTracks()

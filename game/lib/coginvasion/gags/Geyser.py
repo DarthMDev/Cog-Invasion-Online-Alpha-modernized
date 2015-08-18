@@ -50,6 +50,9 @@ class Geyser(SquirtGag, ChargeUpGag):
         for iEntity in self.entities:
             if iEntity == entity:
                 self.entities.remove(iEntity)
+                
+    def onActivate(self, ignore, cog):
+        self.startEntity(self.buildGeyser(), cog)
     
     def startEntity(self, entity, cog):
         geyserHold = 1.5
@@ -115,12 +118,13 @@ class Geyser(SquirtGag, ChargeUpGag):
         
     def release(self):
         ChargeUpGag.release(self)
-        cogs = ChargeUpGag.getSelectedCogs(self)
-        for cog in cogs:
-            geyser = self.buildGeyser()
-            self.startEntity(geyser, cog)
         self.reset()
         if self.isLocal():
+            cogs = ChargeUpGag.getSelectedCogs(self)
+            for cog in cogs:
+                geyser = self.buildGeyser()
+                self.startEntity(geyser, cog)
+                self.avatar.b_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
             base.localAvatar.enablePieKeys()
         
     def unEquip(self):

@@ -71,9 +71,6 @@ class ChargeUpSpot(LocationSeeker):
         tickDuration = 0.4
         
         for cog in self.selectedCogs:
-            if cog.isEmpty():
-                self.selectedCogs.remove(cog)
-                continue
             base.audio3d.attachSoundToObject(self.tickSfx, cog)
             tickTrack.append(Parallel(Sequence(
                 LerpColorScaleInterval(cog, tickDuration, VBase4(1, 0, 0, 1)),
@@ -102,8 +99,8 @@ class ChargeUpSpot(LocationSeeker):
             SoundInterval(self.chargingSfx, duration = self.chargeDuration)
         )
         self.shadowTrack.append(chargeTrack)
-        self.shadowTrack.append(Func(self.onFullCharge))
         self.shadowTrack.append(self.__tickNearbyCogs())
+        self.shadowTrack.append(Func(self.onFullCharge))
         self.shadowTrack.start()
         self.isCharging = True
         
