@@ -25,7 +25,7 @@ class SuitTournament:
                     4: {"start": "You've fought off all of the " + CIGlobals.Suits + ". However, the " + CIGlobals.Suit + " who defeated the most Toons won the prize of Vice President of " + CIGlobals.Suits + "!",
                             "end": "Wow, great job fighting off the Vice President! I don't think we'll be seeing him again."}}
     BACKUP_INTERVAL = 150.0
-    INITIAL_BACKUP_INTERVAL = 40.0
+    INITIAL_BACKUP_INTERVAL = 10.0 # 40.0
     backup_levels = {1: range(1, 4 + 1),
                     2: range(5, 8 + 1),
                     3: range(9, 12 + 1)}
@@ -53,7 +53,7 @@ class SuitTournament:
             self.cleanup()
             return task.done
         self.suitMgr.sendSysMessage("This is it, the Tournament has started! Good luck!")
-        self.startRound(None, 1)
+        self.startRound(None, 4) # 1
 
     def startRound(self, task, round):
         self.setRound(round)

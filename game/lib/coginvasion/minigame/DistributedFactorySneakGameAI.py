@@ -1,23 +1,9 @@
-"""
+# Filename: DistributedFactorySneakGameAI.py
+# Created by:  blach (21Aug15)
 
-  Filename: DistributedFactorySneakGameAI.py
-  Created by: mliberty (30Mar15)
-    
-"""
-
-import DistributedMinigameAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-class DistributedFactorySneakGameAI(DistributedMinigameAI.DistributedMinigameAI):
+from DistributedToonFPSGameAI import DistributedToonFPSGameAI
+
+class DistributedFactorySneakGameAI(DistributedToonFPSGameAI):
     notify = directNotify.newCategory("DistributedFactorySneakGameAI")
-    
-    def __init__(self, air):
-        try:
-            self.DistributedFactorySneakGameAI_initalized
-            return
-        except:
-            self.DistributedFactorySneakGameAI_initalized = 1
-        DistributedMinigameAI.DistributedMinigameAI.__init__(self, air)
-            
-        
-    

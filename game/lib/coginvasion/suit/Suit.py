@@ -641,7 +641,8 @@ class Suit(Avatar.Avatar):
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
         Sequence(Wait(0.8), SoundInterval(deathSound)).start()
         self.acceptOnce(self.suitTrack.getName(), self.exitDie)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, trackName)
+        if "Distributed" in self.__class__.__name__:
+            self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, trackName)
         self.suitTrack.start(ts)
         del deathSound
 
@@ -662,6 +663,7 @@ class Suit(Avatar.Avatar):
         self.explosion.setScale(0.5)
         self.explosion.reparentTo(render)
         self.explosion.setBillboardPointEye()
+        self.explosion.setDepthWrite(False)
         if self.isSkele:
             self.explosion.setPos(self.getPart("body").find('**/joint_head').getPos(render) + (0, 0, 2))
         else:
@@ -748,14 +750,11 @@ class Suit(Avatar.Avatar):
         fadeIn.start()
 
     def initializeLocalCollisions(self, name):
-        self.notify.info('Initializing Local Collisions!')
         Avatar.Avatar.initializeLocalCollisions(self, 1, 3, name)
 
     def initializeBodyCollisions(self):
-        self.notify.info('Initializing Body Collisions!')
         Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 6, 2)
         self.initializeRay(self.avatarType, 2)
-        #self.collTube.setTangible(0)
 
     def exitFlyDown(self):
         self.initializeRay(self.avatarType, 2)
@@ -809,91 +808,6 @@ class Suit(Avatar.Avatar):
 
     def enterAttack(self, attack, ts = 0):
         self.show()
-        """
-        self.attack = attack
-
-        self.weapon_state = 'start'
-
-        if attack == "canned":
-            self.weapon = loader.loadModel("phase_5/models/props/can.bam")
-            self.weapon.setScale(15)
-            self.weapon.setR(180)
-            self.wss = CollisionSphere(0,0,0,0.05)
-        elif attack == "clipontie":
-            self.weapon = loader.loadModel("phase_5/models/props/power-tie.bam")
-            self.weapon.setScale(4)
-            self.weapon.setR(180)
-            self.wss = CollisionSphere(0,0,0,0.2)
-        elif attack == "sacked":
-            self.weapon = loader.loadModel("phase_5/models/props/sandbag-mod.bam")
-            self.weapon.setScale(2)
-            self.weapon.setR(180)
-            self.weapon.setP(90)
-            self.weapon.setY(-2.8)
-            self.weapon.setZ(-0.3)
-            self.wss = CollisionSphere(0,0,0,1)
-        elif attack == "playhardball":
-            self.weapon = loader.loadModel("phase_5/models/props/baseball.bam")
-            self.weapon.setScale(10)
-            self.wss = CollisionSphere(0,0,0,0.1)
-            self.weapon.setZ(-0.5)
-        elif attack == "marketcrash":
-            self.weapon = loader.loadModel("phase_5/models/props/newspaper.bam")
-            self.weapon.setScale(3)
-            self.weapon.setPos(0.41, -0.06, -0.06)
-            self.weapon.setHpr(90, 0, 270)
-            self.wss = CollisionSphere(0,0,0,0.35)
-        elif attack == "glowerpower":
-            self.weapon = loader.loadModel("phase_5/models/props/dagger.bam")
-            self.wss = CollisionSphere(0,0,0,1)
-        else:
-            notify.error("unknown attack!")
-        self.wss.setTangible(0)
-
-        self.throwObjectId = random.uniform(0, 101010101010)
-        if hasattr(self, 'uniqueName'):
-            name = self.uniqueName('enterAttack')
-        else:
-            name = 'enterAttack'
-        self.suitTrack = Sequence(name = name)
-
-        if attack == "canned" or attack == "playhardball":
-            self.weapon.reparentTo(self.find('**/joint_Rhold'))
-            if self.type == "C":
-                self.suitTrack.append(Wait(2.3))
-            else:
-                self.suitTrack.append(Wait(3))
-            self.play("throw-object")
-        elif attack == "clipontie" or attack == "marketcrash" or attack == "sacked":
-            self.weapon.reparentTo(self.find('**/joint_Rhold'))
-            if self.type == "C":
-                self.suitTrack.append(Wait(2.3))
-            else:
-                self.suitTrack.append(Wait(3))
-            self.play("throw-paper")
-        elif attack == "glowerpower":
-            self.suitTrack.append(Wait(1))
-            self.play("glower")
-        self.suitTrack.append(Func(self.throwObject))
-        if attack == "glowerpower":
-            self.suitTrack.append(Wait(0.5))
-        else:
-            self.suitTrack.append(Wait(1.0))
-        self.suitTrack.append(Func(self.delWeapon))
-        self.weaponSensorId = random.uniform(0, 1010101010101001)
-        wsnode = CollisionNode('weaponSensor' + str(self.weaponSensorId))
-        wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
-        self.wsnp = self.weapon.attachNewNode(wsnode)
-        if attack == "sacked":
-            self.wsnp.setZ(1)
-        elif attack == "marketcrash":
-            self.wsnp.setPos(-0.25, 0.3, 0)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.exitAttack)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, 'enterAttack')
-        self.suitTrack.start()
-        """
 
         if hasattr(self, 'uniqueName'):
             doneEvent = self.uniqueName('suitAttackDone')
@@ -919,14 +833,6 @@ class Suit(Avatar.Avatar):
         if hasattr(self, 'suitAttackState'):
             del self.suitAttackState
 
-    def delWeapon(self):
-        if self.wtrajectory:
-            self.wtrajectory.pause()
-            self.wtrajectory = None
-        if self.weapon:
-            self.weapon.removeNode()
-            self.weapon = None
-
     def interruptAttack(self):
         if hasattr(self, 'suitAttackState'):
             self.suitAttackState.currentAttack.interruptAttack()
@@ -934,82 +840,6 @@ class Suit(Avatar.Avatar):
     def handleWeaponTouch(self):
         if hasattr(self, 'suitAttackState'):
             self.suitAttackState.currentAttack.handleWeaponTouch()
-
-    def weaponCollisions(self):
-        self.wsnp.setCollideMask(BitMask32(0))
-        self.wsnp.node().setFromCollideMask(CIGlobals.EventBitmask)
-
-        event = CollisionHandlerEvent()
-        event.setInPattern("%fn-into")
-        event.setOutPattern("%fn-out")
-        base.cTrav.addCollider(self.wsnp, event)
-
-    def throwObject(self):
-        self.playWeaponSound()
-
-        self.weaponNP = NodePath("weaponNP")
-        try: self.weaponNP.reparentTo(self)
-        except: return
-        self.weaponNP.setScale(render, 1.0)
-        self.weaponNP.setPos(0, 50, 0)
-        self.weaponNP.setHpr(0, 0, 0)
-
-        if self.weapon:
-            self.weapon.setScale(self.weapon.getScale(render))
-        try: self.weapon.reparentTo(render)
-        except: return
-
-        self.weapon.setPos(0,0,0)
-        self.weapon.setHpr(0,0,0)
-
-        if self.attack == "glowerpower":
-            self.weapon.setH(self.weaponNP.getH(render))
-            self.wtrajectory = self.weapon.posInterval(0.5,
-                                        Point3(self.weaponNP.getPos(render)),
-                                        startPos=(self.getX(render), self.getY(render) + 3, self.find('**/joint_head').getZ(render)))
-            self.wtrajectory.start()
-        else:
-            self.wtrajectory = ProjectileInterval(self.weapon,
-                                        startPos = (self.find('**/joint_Rhold').getPos(render)),
-                                        endPos = self.weaponNP.getPos(render),
-                                        gravityMult = 0.7, duration = 1)
-            self.wtrajectory.start()
-        self.weapon_state = 'released'
-
-    def playWeaponSound(self):
-        if self.attack == "glowerpower":
-            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.mp3")
-        elif self.attack == "canned":
-            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.mp3")
-        elif self.attack == "clipontie":
-            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
-        elif self.attack == "sacked":
-            self.weapon_sfx = None
-        elif self.attack == "playhardball":
-            self.weapon_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.mp3")
-        elif self.attack == "marketcrash":
-            self.weapon_sfx = None
-        if self.weapon and self.weapon_sfx:
-            base.audio3d.attachSoundToObject(self.weapon_sfx, self.weapon)
-            self.weapon_sfx.play()
-
-    """
-    def exitAttack(self):
-        if self.suitTrack != None:
-            self.ignore(self.suitTrack.getDoneEvent())
-            self.suitTrack.finish()
-            DelayDelete.cleanupDelayDeletes(self.suitTrack)
-            self.suitTrack = None
-        if self.wtrajectory:
-            self.wtrajectory.pause()
-            self.wtrajectory = None
-        if self.weapon:
-            self.weapon.removeNode()
-            self.weapon = None
-        if hasattr(self, 'weaponNP'):
-            self.weaponNP.removeNode()
-            del self.weaponNP
-    """
 
     def enterPie(self, ts = 0):
         self.show()

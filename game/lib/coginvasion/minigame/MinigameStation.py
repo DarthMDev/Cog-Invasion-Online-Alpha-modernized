@@ -2,7 +2,7 @@
 
   Filename: MinigameStation.py
   Created by: blach (04Oct14)
-  
+
 """
 
 from panda3d.core import *
@@ -22,8 +22,9 @@ class MinigameStation(GroupStation):
 		CIGlobals.RaceGame: "October 7, 2014",
 		CIGlobals.GunGame: "January 19, 2015",
 		CIGlobals.CameraShyGame: "April 26, 2015",
-		CIGlobals.EagleGame: "July 4, 2015"}
-	
+		CIGlobals.EagleGame: "July 4, 2015",
+        CIGlobals.FactoryGame: "August 21, 2015"}
+
 	def __init__(self):
 		try:
 			self.MinigameStation_initialized
@@ -36,14 +37,16 @@ class MinigameStation(GroupStation):
 								1: (0.00, 100.00, 0.00),
 								2: (100.0, -8.00, 0.00),
                                 3: (0.00, -100.00, 0.00),
-                                4: (-82.85, -71.97, 0.00)},
+                                4: (-82.85, -71.97, 0.00),
+                                5: (82.85, -71.97, 0.0)},
 						"hpr": {0: (255.00, 0.00, 0.00),
 								1: (180.00, 0.00, 0.00),
 								2: (-255.00, 0.00, 0.00),
                                 3: (0.00, 0.00, 0.00),
-                                4: (310.00, 0.00, 0.00)}}
+                                4: (310.00, 0.00, 0.00),
+                                5: (355.00, 0, 0)}}
 		return
-		
+
 	def delete(self):
 		try:
 			self.MinigameStation_deleted
@@ -52,7 +55,7 @@ class MinigameStation(GroupStation):
 			self.removeStation()
 			self.game = None
 			GroupStation.delete(self)
-		
+
 	def generateStation(self, game):
 		self.game = game
 		numSlots = self.game2maxPlayers[game]
@@ -62,4 +65,3 @@ class MinigameStation(GroupStation):
 							parent=self.sign.find('**/signText_locator'), text_scale=0.3,
 							text_wordwrap=7.0)
 		title.setBillboardAxis(2)
-		

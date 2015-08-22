@@ -11,9 +11,6 @@ from direct.distributed.ClockDelta import globalClockDelta
 
 class GunGameToonFPS(ToonFPS.ToonFPS):
 
-    WeaponName2DamageData = {"pistol": (36.0, 10.0, 150.0, 0.25),
-        "shotgun": (40.0, 15.0, 155.0, 0.5)}
-
     def __init__(self, mg, weaponName = "pistol"):
         self.kills = 0
         self.deaths = 0
@@ -92,29 +89,14 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
         self.mg.d_gunShot()
-        self.mg.makeSmokeEffect(self.weapon.find('**/joint_nozzle').getPos(render))
-        self.traverse()
 
     def traverse(self):
-        mpos = base.mouseWatcherNode.getMouse()
-        self.shooterRay.setFromLens(base.camNode, mpos.getX(), mpos.getY())
-
-        self.shooterTrav.traverse(render)
+        ToonFPS.ToonFPS.traverse(self)
         if self.shooterHandler.getNumEntries() > 0:
             self.shooterHandler.sortEntries()
             hitObj = self.shooterHandler.getEntry(0).getIntoNodePath()
             avId = hitObj.getParent().getPythonTag('player')
             avatar = self.mg.cr.doId2do.get(avId)
             if avatar:
-                dmgData = self.WeaponName2DamageData[self.weaponName]
-                maxDamage = dmgData[0]
-                minDistance = dmgData[1]
-                maxDistance = dmgData[2]
-                factor = dmgData[3]
-                distance = base.localAvatar.getDistance(avatar)
-                if distance < minDistance:
-                    distance = minDistance
-                elif distance > maxDistance:
-                    distance = maxDistance
-                damage = maxDamage - ((distance - minDistance) * factor)
+                damage = self.calcDamage(avatar)
                 self.mg.sendUpdate('avatarHitByBullet', [avatar.doId, damage])

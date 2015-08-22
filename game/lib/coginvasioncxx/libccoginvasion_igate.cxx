@@ -56,6 +56,25 @@ static struct Dtool_PyTypedObject *Dtool_Ptr_NodePath;
 extern struct Dtool_PyTypedObject Dtool_NodePath;
 static struct Dtool_PyTypedObject *const Dtool_Ptr_NodePath = &Dtool_NodePath;
 #endif
+// AsyncTaskManager
+#ifndef LINK_ALL_STATIC
+static struct Dtool_PyTypedObject *Dtool_Ptr_AsyncTaskManager;
+inline static bool Dtool_ConstCoerce_AsyncTaskManager(PyObject *args, CPT(AsyncTaskManager) &coerced) {
+  nassertr(Dtool_Ptr_AsyncTaskManager != NULL, false);
+  nassertr(Dtool_Ptr_AsyncTaskManager->_Dtool_ConstCoerce != NULL, false);
+  return ((bool (*)(PyObject *, CPT(AsyncTaskManager) &))Dtool_Ptr_AsyncTaskManager->_Dtool_ConstCoerce)(args, coerced);
+}
+inline static bool Dtool_Coerce_AsyncTaskManager(PyObject *args, PT(AsyncTaskManager) &coerced) {
+  nassertr(Dtool_Ptr_AsyncTaskManager != NULL, false);
+  nassertr(Dtool_Ptr_AsyncTaskManager->_Dtool_Coerce != NULL, false);
+  return ((bool (*)(PyObject *, PT(AsyncTaskManager) &))Dtool_Ptr_AsyncTaskManager->_Dtool_Coerce)(args, coerced);
+}
+#else
+extern struct Dtool_PyTypedObject Dtool_AsyncTaskManager;
+static struct Dtool_PyTypedObject *const Dtool_Ptr_AsyncTaskManager = &Dtool_AsyncTaskManager;
+extern bool Dtool_ConstCoerce_AsyncTaskManager(PyObject *args, CPT(AsyncTaskManager) &coerced);
+extern bool Dtool_Coerce_AsyncTaskManager(PyObject *args, PT(AsyncTaskManager) &coerced);
+#endif
 
 //********************************************************************
 //*** Functions for .. Global
@@ -87,19 +106,129 @@ static const char *Dtool_LabelScaler_resize_4_comment = NULL;
 
 /******************************************************************
  * Python type method wrapper for
- * LabelScaler::LabelScaler(NodePath node, NodePath &camera, float const scaling_factor = 0.06000000000000001)
+ * float LabelScaler::get_scaling_factor(void)
+ *******************************************************************/
+static PyObject *Dtool_LabelScaler_get_scaling_factor_5(PyObject *self, PyObject *) {
+  LabelScaler *local_this = NULL;
+  if (!Dtool_Call_ExtractThisPointer_NonConst(self, Dtool_LabelScaler, (void **)&local_this, "LabelScaler.get_scaling_factor")) {
+    return NULL;
+  }
+  // 1-float LabelScaler::get_scaling_factor(void)
+  float return_value = local_this->get_scaling_factor();
+  if (Dtool_CheckErrorOccurred()) {
+    return NULL;
+  }
+  return PyFloat_FromDouble(return_value);
+}
+
+#ifndef NDEBUG
+static const char *Dtool_LabelScaler_get_scaling_factor_5_comment =
+  "C++ Interface:\n"
+  "get_scaling_factor(const LabelScaler self)\n";
+#else
+static const char *Dtool_LabelScaler_get_scaling_factor_5_comment = NULL;
+#endif
+
+/******************************************************************
+ * Python type method wrapper for
+ * NodePath &LabelScaler::get_np(void)
+ *******************************************************************/
+static PyObject *Dtool_LabelScaler_get_np_6(PyObject *self, PyObject *) {
+  LabelScaler *local_this = NULL;
+  if (!Dtool_Call_ExtractThisPointer_NonConst(self, Dtool_LabelScaler, (void **)&local_this, "LabelScaler.get_np")) {
+    return NULL;
+  }
+  // 1-NodePath &LabelScaler::get_np(void)
+  NodePath *return_value = &(local_this->get_np());
+  if (Dtool_CheckErrorOccurred()) {
+    return NULL;
+  }
+  return DTool_CreatePyInstance((void *)return_value, *Dtool_Ptr_NodePath, false, false);
+}
+
+#ifndef NDEBUG
+static const char *Dtool_LabelScaler_get_np_6_comment =
+  "C++ Interface:\n"
+  "get_np(const LabelScaler self)\n";
+#else
+static const char *Dtool_LabelScaler_get_np_6_comment = NULL;
+#endif
+
+/******************************************************************
+ * Python type method wrapper for
+ * NodePath &LabelScaler::get_cam(void)
+ *******************************************************************/
+static PyObject *Dtool_LabelScaler_get_cam_7(PyObject *self, PyObject *) {
+  LabelScaler *local_this = NULL;
+  if (!Dtool_Call_ExtractThisPointer_NonConst(self, Dtool_LabelScaler, (void **)&local_this, "LabelScaler.get_cam")) {
+    return NULL;
+  }
+  // 1-NodePath &LabelScaler::get_cam(void)
+  NodePath *return_value = &(local_this->get_cam());
+  if (Dtool_CheckErrorOccurred()) {
+    return NULL;
+  }
+  return DTool_CreatePyInstance((void *)return_value, *Dtool_Ptr_NodePath, false, false);
+}
+
+#ifndef NDEBUG
+static const char *Dtool_LabelScaler_get_cam_7_comment =
+  "C++ Interface:\n"
+  "get_cam(const LabelScaler self)\n";
+#else
+static const char *Dtool_LabelScaler_get_cam_7_comment = NULL;
+#endif
+
+/******************************************************************
+ * Python type method wrapper for
+ * AsyncTaskManager *LabelScaler::get_task_mgr(void)
+ *******************************************************************/
+static PyObject *Dtool_LabelScaler_get_task_mgr_8(PyObject *self, PyObject *) {
+  LabelScaler *local_this = NULL;
+  if (!Dtool_Call_ExtractThisPointer_NonConst(self, Dtool_LabelScaler, (void **)&local_this, "LabelScaler.get_task_mgr")) {
+    return NULL;
+  }
+  // 1-AsyncTaskManager *LabelScaler::get_task_mgr(void)
+  AsyncTaskManager *return_value = local_this->get_task_mgr();
+  if (return_value != (AsyncTaskManager *)NULL) {
+    return_value->ref();
+  }
+  if (Dtool_CheckErrorOccurred()) {
+    if (return_value != (AsyncTaskManager *)NULL) {
+      unref_delete(return_value);
+    }
+    return NULL;
+  }
+  if (return_value == NULL) {
+    Py_INCREF(Py_None);
+    return Py_None;
+  } else {
+    return DTool_CreatePyInstanceTyped((void *)return_value, *Dtool_Ptr_AsyncTaskManager, true, false, return_value->as_typed_object()->get_type_index());
+  }
+}
+
+#ifndef NDEBUG
+static const char *Dtool_LabelScaler_get_task_mgr_8_comment =
+  "C++ Interface:\n"
+  "get_task_mgr(const LabelScaler self)\n";
+#else
+static const char *Dtool_LabelScaler_get_task_mgr_8_comment = NULL;
+#endif
+
+/******************************************************************
+ * Python type method wrapper for
+ * LabelScaler::LabelScaler(NodePath &node, NodePath &camera)
  *******************************************************************/
 static int Dtool_Init_LabelScaler(PyObject *self, PyObject *args, PyObject *kwds) {
-  // 1-LabelScaler::LabelScaler(NodePath node, NodePath &camera, float const scaling_factor = 0.06000000000000001)
+  // 1-LabelScaler::LabelScaler(NodePath &node, NodePath &camera)
   PyObject *param0;
   PyObject *param1;
-  float param2 = 0.06000000000000001;
-  static const char *keyword_list[] = {"node", "camera", "scaling_factor", NULL};
-  if (PyArg_ParseTupleAndKeywords(args, kwds, "OO|f:LabelScaler", (char **)keyword_list, &param0, &param1, &param2)) {
-    NodePath *param0_this = (NodePath *)DTOOL_Call_GetPointerThisClass(param0, Dtool_Ptr_NodePath, 0, "LabelScaler.LabelScaler", true, true);
+  static const char *keyword_list[] = {"node", "camera", NULL};
+  if (PyArg_ParseTupleAndKeywords(args, kwds, "OO:LabelScaler", (char **)keyword_list, &param0, &param1)) {
+    NodePath *param0_this = (NodePath *)DTOOL_Call_GetPointerThisClass(param0, Dtool_Ptr_NodePath, 0, "LabelScaler.LabelScaler", false, true);
     NodePath *param1_this = (NodePath *)DTOOL_Call_GetPointerThisClass(param1, Dtool_Ptr_NodePath, 1, "LabelScaler.LabelScaler", false, true);
     if (param0_this != NULL && param1_this != NULL) {
-      LabelScaler *return_value = new LabelScaler(*param0_this, *param1_this, (float const)param2);
+      LabelScaler *return_value = new LabelScaler(*param0_this, *param1_this);
       if (return_value == NULL) {
         PyErr_NoMemory();
         return -1;
@@ -113,7 +242,7 @@ static int Dtool_Init_LabelScaler(PyObject *self, PyObject *args, PyObject *kwds
   }
   if (!_PyErr_OCCURRED()) {
     Dtool_Raise_BadArgumentsError(
-      "LabelScaler(NodePath node, NodePath camera, float scaling_factor)\n");
+      "LabelScaler(NodePath node, NodePath camera)\n");
   }
   return -1;
 }
@@ -125,18 +254,15 @@ bool Dtool_ConstCoerce_LabelScaler(PyObject *args, LabelScaler const *&coerced, 
   }
 
   if (PyTuple_Check(args)) {
-    Py_ssize_t size = PyTuple_GET_SIZE(args);
-    if (size >= 2 && size <= 3) {
-      // 1-LabelScaler::LabelScaler(NodePath node, NodePath &camera, float const scaling_factor = 0.06000000000000001)
+    if (PyTuple_GET_SIZE(args) == 2) {
+      // 1-LabelScaler::LabelScaler(NodePath &node, NodePath &camera)
       PyObject *param0;
       PyObject *param1;
-      float param2 = 0.06000000000000001;
-      if (PyArg_ParseTuple(args, "OO|f:LabelScaler", &param0, &param1, &param2)) {
-        NodePath *param0_this;
-        DTOOL_Call_ExtractThisPointerForType(param0, Dtool_Ptr_NodePath, (void **)&param0_this);
+      if (PyArg_UnpackTuple(args, "LabelScaler", 2, 2, &param0, &param1)) {
+        NodePath *param0_this = (NodePath *)DTOOL_Call_GetPointerThisClass(param0, Dtool_Ptr_NodePath, 0, "LabelScaler.LabelScaler", false, false);
         NodePath *param1_this = (NodePath *)DTOOL_Call_GetPointerThisClass(param1, Dtool_Ptr_NodePath, 1, "LabelScaler.LabelScaler", false, false);
         if (param0_this != NULL && param1_this != NULL) {
-          LabelScaler *return_value = new LabelScaler(*param0_this, *param1_this, (float const)param2);
+          LabelScaler *return_value = new LabelScaler(*param0_this, *param1_this);
           if (return_value == NULL) {
             PyErr_NoMemory();
             return false;
@@ -168,18 +294,15 @@ bool Dtool_Coerce_LabelScaler(PyObject *args, LabelScaler *&coerced, bool &manag
   }
 
   if (PyTuple_Check(args)) {
-    Py_ssize_t size = PyTuple_GET_SIZE(args);
-    if (size >= 2 && size <= 3) {
-      // 1-LabelScaler::LabelScaler(NodePath node, NodePath &camera, float const scaling_factor = 0.06000000000000001)
+    if (PyTuple_GET_SIZE(args) == 2) {
+      // 1-LabelScaler::LabelScaler(NodePath &node, NodePath &camera)
       PyObject *param0;
       PyObject *param1;
-      float param2 = 0.06000000000000001;
-      if (PyArg_ParseTuple(args, "OO|f:LabelScaler", &param0, &param1, &param2)) {
-        NodePath *param0_this;
-        DTOOL_Call_ExtractThisPointerForType(param0, Dtool_Ptr_NodePath, (void **)&param0_this);
+      if (PyArg_UnpackTuple(args, "LabelScaler", 2, 2, &param0, &param1)) {
+        NodePath *param0_this = (NodePath *)DTOOL_Call_GetPointerThisClass(param0, Dtool_Ptr_NodePath, 0, "LabelScaler.LabelScaler", false, false);
         NodePath *param1_this = (NodePath *)DTOOL_Call_GetPointerThisClass(param1, Dtool_Ptr_NodePath, 1, "LabelScaler.LabelScaler", false, false);
         if (param0_this != NULL && param1_this != NULL) {
-          LabelScaler *return_value = new LabelScaler(*param0_this, *param1_this, (float const)param2);
+          LabelScaler *return_value = new LabelScaler(*param0_this, *param1_this);
           if (return_value == NULL) {
             PyErr_NoMemory();
             return false;
@@ -230,6 +353,14 @@ static void *Dtool_DowncastInterface_LabelScaler(void *from_this, Dtool_PyTypedO
 //********************************************************************
 static PyMethodDef Dtool_Methods_LabelScaler[] = {
   {"resize", &Dtool_LabelScaler_resize_4, METH_NOARGS, (const char *)Dtool_LabelScaler_resize_4_comment},
+  {"get_scaling_factor", &Dtool_LabelScaler_get_scaling_factor_5, METH_NOARGS, (const char *)Dtool_LabelScaler_get_scaling_factor_5_comment},
+  {"getScalingFactor", &Dtool_LabelScaler_get_scaling_factor_5, METH_NOARGS, (const char *)Dtool_LabelScaler_get_scaling_factor_5_comment},
+  {"get_np", &Dtool_LabelScaler_get_np_6, METH_NOARGS, (const char *)Dtool_LabelScaler_get_np_6_comment},
+  {"getNp", &Dtool_LabelScaler_get_np_6, METH_NOARGS, (const char *)Dtool_LabelScaler_get_np_6_comment},
+  {"get_cam", &Dtool_LabelScaler_get_cam_7, METH_NOARGS, (const char *)Dtool_LabelScaler_get_cam_7_comment},
+  {"getCam", &Dtool_LabelScaler_get_cam_7, METH_NOARGS, (const char *)Dtool_LabelScaler_get_cam_7_comment},
+  {"get_task_mgr", &Dtool_LabelScaler_get_task_mgr_8, METH_NOARGS, (const char *)Dtool_LabelScaler_get_task_mgr_8_comment},
+  {"getTaskMgr", &Dtool_LabelScaler_get_task_mgr_8, METH_NOARGS, (const char *)Dtool_LabelScaler_get_task_mgr_8_comment},
   {NULL, NULL, 0, NULL}
 };
 
@@ -383,6 +514,7 @@ void Dtool_libccoginvasion_ResolveExternals() {
 #ifndef LINK_ALL_STATIC
   // Resolve externally imported types.
   Dtool_Ptr_NodePath = LookupRuntimeTypedClass(NodePath::get_class_type());
+  Dtool_Ptr_AsyncTaskManager = LookupRuntimeTypedClass(AsyncTaskManager::get_class_type());
 #endif
 }
 
@@ -406,7 +538,7 @@ static PyMethodDef python_simple_funcs[] = {
 
 struct LibraryDef libccoginvasion_moddef = {python_simple_funcs};
 static InterrogateModuleDef _in_module_def = {
-  1439933143,  /* file_identifier */
+  1439946891,  /* file_identifier */
   "libccoginvasion",  /* library_name */
   "I4nc",  /* library_hash_name */
   "libccoginvasion",  /* module_name */
@@ -416,7 +548,7 @@ static InterrogateModuleDef _in_module_def = {
   (void **)0,  /* fptrs */
   0,  /* num_fptrs */
   1,  /* first_index */
-  15  /* next_index */
+  25  /* next_index */
 };
 
 Configure(_in_configure_libccoginvasion);

@@ -12,12 +12,13 @@ from lib.coginvasion.minigame.DistributedMinigameStationAI import DistributedMin
 
 class MGHoodAI(HoodAI.HoodAI):
     notify = directNotify.newCategory("MGHoodAI")
+    notify.setInfo(True)
     minigames = [CIGlobals.RaceGame,
                 CIGlobals.UnoGame,
                 CIGlobals.GunGame,
-                CIGlobals.FactoryGame,
                 CIGlobals.CameraShyGame,
-                CIGlobals.EagleGame]
+                CIGlobals.EagleGame,
+                CIGlobals.FactoryGame]
 
     def __init__(self, air):
         HoodAI.HoodAI.__init__(self, air, CIGlobals.MinigameAreaId,

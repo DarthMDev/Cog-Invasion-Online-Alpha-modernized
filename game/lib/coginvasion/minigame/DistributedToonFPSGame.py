@@ -1,13 +1,13 @@
-"""
+# Filename: DistributedToonFPSGame.py
+# Created by:  blach (30Mar15)
 
-  Filename: DistributedToonFPSGame.py
-  Created by: blach (30Mar15)
+from panda3d.core import Vec4
 
-"""
-
-from DistributedMinigame import DistributedMinigame
+from direct.interval.IntervalGlobal import Sequence, Func, LerpScaleInterval, LerpColorScaleInterval, Parallel
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import globalClockDelta
+
+from DistributedMinigame import DistributedMinigame
 
 class DistributedToonFPSGame(DistributedMinigame):
     notify = directNotify.newCategory("DistributedToonFPSGame")
@@ -21,6 +21,20 @@ class DistributedToonFPSGame(DistributedMinigame):
         DistributedMinigame.__init__(self, cr)
         self.remoteAvatars = []
         self.myRemoteAvatar = None
+
+    def makeSmokeEffect(self, pos):
+        smoke = loader.loadModel("phase_4/models/props/test_clouds.bam")
+        smoke.setBillboardAxis()
+        smoke.reparentTo(render)
+        smoke.setPos(pos)
+        smoke.setScale(0.05, 0.05, 0.05)
+        smoke.setDepthWrite(False)
+        track = Sequence(
+            Parallel(
+                LerpScaleInterval(smoke, 0.5, (0.1, 0.15, 0.15)),
+                LerpColorScaleInterval(smoke, 0.5, Vec4(2, 2, 2, 0))),
+            Func(smoke.removeNode))
+        track.start()
 
     def avatarHitByBullet(self, avId, damage):
         pass

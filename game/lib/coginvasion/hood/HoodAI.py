@@ -89,6 +89,7 @@ class HoodAI:
                     door.generateWithRequired(exteriorZone)
                     self.exteriorDoors.append(door)
                     self.interiors.append(interior)
+        
         del self.dnaFiles
 
     def createTreasurePlanner(self):

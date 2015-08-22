@@ -12,12 +12,12 @@ from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, Sound
 from panda3d.core import Vec3
 
 class ElephantHorn(SoundGag):
-    
+
     def __init__(self):
-        SoundGag.__init__(self, CIGlobals.ElephantHorn, 'phase_5/models/props/elephant.bam', 21, 
-                          GagGlobals.ELEPHANT_APPEAR_SFX, GagGlobals.ELEPHANT_SFX, soundRange = 50, hitSfx = None)
+        SoundGag.__init__(self, CIGlobals.ElephantHorn, 'phase_5/models/props/elephant.bam', 21,
+                          GagGlobals.ELEPHANT_APPEAR_SFX, GagGlobals.ELEPHANT_SFX, soundRange = 35, hitSfx = None)
         self.setImage('phase_3.5/maps/elephant-horn.png')
-        
+
     def start(self):
         SoundGag.start(self)
         tracks = Parallel()
@@ -31,12 +31,12 @@ class ElephantHorn(SoundGag):
         instrStretch1 *= INSTRUMENT_SCALE_MODIFIER
         instrStretch2 = Vec3(0.3, 0.7, 0.3)
         instrStretch2 *= INSTRUMENT_SCALE_MODIFIER
-    
+
         def setInstrumentStats():
             self.gag.setPos(-0.6, -0.9, 0.15)
             self.gag.setHpr(145, 0, 85)
             self.gag.setScale(instrMin)
-    
+
         megaphoneShow = Sequence(Func(self.placeProp, self.handJoint, self.megaphone), Func(self.placeProp, self.handJoint, self.gag), Func(setInstrumentStats))
         grow1 = self.getScaleIntervals(self.gag, duration=0.3, startScale=instrMin, endScale=instrMax1)
         grow2 = self.getScaleIntervals(self.gag, duration=0.3, startScale=instrMax1, endScale=instrMax2)
@@ -47,7 +47,8 @@ class ElephantHorn(SoundGag):
         backInstr = self.getScaleBlendIntervals(self.gag, duration=0.1, startScale=instrStretch2, endScale=instrMax2, blendType='easeOut')
         attackTrack = Sequence(stretchInstr, Wait(1), backInstr)
         delayTime = 2.45
-        megaphoneTrack = Sequence(megaphoneShow, Wait(delayTime - 0.8), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
+        delayUntilAppearSound = 1.0
+        megaphoneTrack = Sequence(megaphoneShow, Wait(delayUntilAppearSound), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
         tracks.append(megaphoneTrack)
         tracks.append(ActorInterval(self.avatar, 'sound'))
         instrumentshrink = self.getScaleIntervals(self.gag, duration=0.1, startScale=instrMax2, endScale=instrMin)

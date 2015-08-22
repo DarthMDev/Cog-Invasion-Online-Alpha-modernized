@@ -26,6 +26,9 @@ from FirstPerson import FirstPerson
 class ToonFPS(DirectObject):
     notify = directNotify.newCategory("ToonFPS")
 
+    WeaponName2DamageData = {"pistol": (36.0, 10.0, 150.0, 0.25),
+        "shotgun": (40.0, 15.0, 155.0, 0.5)}
+
     def __init__(self, mg, weaponName = "pistol"):
         self.mg = mg
         self.weaponName = weaponName
@@ -317,7 +320,7 @@ class ToonFPS(DirectObject):
         if self.weaponName == "pistol":
             self.track = ActorInterval(self.v_model, 'pdraw', playRate = 1.6, name = 'drawTrack')
         elif self.weaponName == "shotgun":
-            self.v_model.loop("sidle")
+            self.v_model.pose('sidle', 15)
             self.track = LerpQuatInterval(self.v_model, duration = 0.5, quat = (0, 0, 0),
                 startHpr = (70, -50, 0), blendType = 'easeOut', name = 'drawTrack')
         self.track.setDoneEvent(self.track.getName())
@@ -335,7 +338,9 @@ class ToonFPS(DirectObject):
         if self.weaponName == "pistol":
             self.v_model.loop('pidle')
         elif self.weaponName == "shotgun":
-            self.v_model.loop('sidle')
+            self.track = Sequence(LerpQuatInterval(self.v_model, duration = 2.0, quat = (0, 1, 0), startHpr = (0, 0, 0), blendType = 'easeInOut'),
+                LerpQuatInterval(self.v_model, duration = 2.0, quat = (0, 0, 0), startHpr = (0, 1, 0), blendType = 'easeInOut'))
+            self.track.loop()
         self.accept('mouse1', self.requestShoot)
         if self.ammo <= 0:
             self.gui.notifyNoAmmo()
@@ -352,6 +357,9 @@ class ToonFPS(DirectObject):
 
     def exitIdle(self):
         self.v_model.stop()
+        if self.track:
+            self.track.finish()
+            self.track = None
         self.ignore('mouse1')
         self.ignore('r')
 
@@ -360,12 +368,44 @@ class ToonFPS(DirectObject):
         if self.weaponName == "pistol":
             self.track = ActorInterval(self.v_model, 'pshoot', playRate = 2, name = 'shootTrack')
         elif self.weaponName == "shotgun":
-            self.track = Sequence(ActorInterval(self.v_model, 'sshoot', playRate = 1.5), Wait(0.1), name = 'shootTrack')
+            self.track = Parallel(
+                Sequence(
+                    LerpQuatInterval(self.v_model, duration = 0.05, quat = (0, 3, 0), startHpr = (0, 0, 0)),
+                    LerpQuatInterval(self.v_model, duration = 0.1, quat = (0, 0, 0), startHpr = (0, 3, 0))
+                ),
+                Sequence(
+                    LerpPosInterval(self.v_model, duration = 0.05, pos = (0, -0.3, 0), startPos = (0, 0, 0)),
+                    LerpPosInterval(self.v_model, duration = 0.1, pos = (0, 0, 0), startPos = (0, -0.3, 0)),
+                    Wait(0.1)
+                ),
+            )
         self.track.setDoneEvent('shootTrack')
         self.acceptOnce(self.track.getDoneEvent(), self.aliveFSM.request, ['idle'])
         self.track.start()
         self.ammo -= 1
         self.gui.adjustAmmoGui()
+        self.mg.makeSmokeEffect(self.weapon.find('**/joint_nozzle').getPos(render))
+        self.traverse()
+
+    def traverse(self):
+        mpos = base.mouseWatcherNode.getMouse()
+        self.shooterRay.setFromLens(base.camNode, mpos.getX(), mpos.getY())
+
+        self.shooterTrav.traverse(render)
+
+    def calcDamage(self, avatar):
+        dmgData = self.WeaponName2DamageData[self.weaponName]
+        maxDamage = dmgData[0]
+        minDistance = dmgData[1]
+        maxDistance = dmgData[2]
+        factor = dmgData[3]
+        distance = base.localAvatar.getDistance(avatar)
+        if distance < minDistance:
+            distance = minDistance
+        elif distance > maxDistance:
+            distance = maxDistance
+        damage = maxDamage - ((distance - minDistance) * factor)
+        return damage
 
     def exitShoot(self):
         #self.shoot.stop()

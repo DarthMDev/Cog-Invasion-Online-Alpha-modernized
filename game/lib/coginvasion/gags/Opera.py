@@ -13,12 +13,12 @@ from panda3d.core import Vec3, Point3
 from direct.particles.ParticleEffect import ParticleEffect
 
 class Opera(SoundGag):
-    
+
     def __init__(self):
-        SoundGag.__init__(self, CIGlobals.Opera, 'phase_5/models/props/singing.bam', 90, appearSfx = GagGlobals.FOG_APPEAR_SFX, 
+        SoundGag.__init__(self, CIGlobals.Opera, 'phase_5/models/props/singing.bam', 90, appearSfx = GagGlobals.FOG_APPEAR_SFX,
                           soundSfx = GagGlobals.OPERA_SFX, soundRange = 50, hitSfx = GagGlobals.OPERA_HIT_SFX)
         self.setImage('phase_3.5/maps/opera.png')
-        
+
     def __createToonInterval(self, delay):
         track = Sequence(Wait(delay))
         sprayEffect = ParticleEffect()
@@ -32,7 +32,7 @@ class Opera(SoundGag):
         track.append(self.__getPartTrack(sprayEffect, 0.0, 6.0, [sprayEffect, self.avatar, 0], softStop=-3.5))
         track.append(ActorInterval(self.avatar, 'sound', playRate=1.0, startTime=I1))
         return track
-    
+
     def __getPartTrack(self, particleEffect, startDelay, durationDelay, partExtraArgs, softStop = 0):
         pEffect = partExtraArgs[0]
         parent = partExtraArgs[1]
@@ -41,7 +41,7 @@ class Opera(SoundGag):
         else:
             worldRelative = 1
         return Sequence(Wait(startDelay), ParticleInterval(pEffect, parent, worldRelative, duration=durationDelay, cleanup=True, softStopT=softStop))
-        
+
     def start(self):
         SoundGag.start(self)
         tracks = Parallel()
@@ -56,14 +56,14 @@ class Opera(SoundGag):
         instrStretch *= INSTRUMENT_SCALE_MODIFIER
         head = self.gag.find('**/opera_singer')
         head.setPos(0, 0, 0)
-    
+
         def setInstrumentStats():
             newPos = Vec3(-0.8, -0.9, 0.2)
             newPos *= 1.3
             self.gag.setPos(newPos[0], newPos[1], newPos[2])
             self.gag.setHpr(145, 0, 90)
             self.gag.setScale(instrMin)
-    
+
         megaphoneShow = Sequence(Func(self.placeProp, self.handJoint, self.megaphone), Func(self.placeProp, self.handJoint, self.gag), Func(setInstrumentStats))
         grow1 = self.getScaleBlendIntervals(self.gag, duration=1, startScale=instrMin, endScale=instrMax1, blendType='easeOut')
         grow2 = self.getScaleBlendIntervals(self.gag, duration=1.1, startScale=instrMax1, endScale=instrMax2, blendType='easeIn')

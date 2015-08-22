@@ -126,6 +126,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             name = self.name
         tag = NameTag(name, self.avatarType)
         tag.setTextColor(tag.NameTagColors[self.avatarType]["fg"])
+        tag.setCardColor(tag.NameTagBackgrounds['up'])
 
         self.nameTag = tag
         np = tag.getNodePath()

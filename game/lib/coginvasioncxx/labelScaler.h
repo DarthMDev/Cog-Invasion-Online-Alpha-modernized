@@ -15,18 +15,23 @@
 
 class EXPCL_PANDASKEL LabelScaler {
 private:
-	NodePath _node;
+	NodePath& _node;
 	NodePath& _cam;
-	const float _scaling_factor;
+	float _scaling_factor;
 	PT(AsyncTaskManager) _task_mgr;
 
 	AsyncTask::DoneStatus do_resize_task();
 	static AsyncTask::DoneStatus resize_task(GenericAsyncTask* task, void* data);
 
 PUBLISHED:
-	LabelScaler(NodePath node, NodePath& camera, const float scaling_factor = 0.06);
+	LabelScaler(NodePath& node, NodePath& camera);
 	~LabelScaler();
 	void resize();
+
+	float get_scaling_factor();
+	NodePath& get_np();
+	NodePath& get_cam();
+	AsyncTaskManager* get_task_mgr();
 
 };
 

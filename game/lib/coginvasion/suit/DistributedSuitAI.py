@@ -82,7 +82,11 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         }
         self.animId2animState = {v: k for k, v in self.animState2animId.items()}
         self.level = 0
+        self.currentPathQueue = []
         return
+
+    def resetPathQueue(self):
+        self.currentPathQueue = []
 
     def setLevel(self, level):
         self.level = level
@@ -122,24 +126,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     def getSuitState(self):
         return [self.suitState, self.startPoint, self.endPoint, self.stateTimestamp]
 
-
-
-    #def setWalking(self, value, startPath, endPath):
-    #    self.walking = value
-    #    self.startPath = startPath
-    #    self.endPath = endPath
-
-    #def d_setWalking(self, value, startPath, endPath):
-    #    timestamp = globalClockDelta.getFrameNetworkTime()
-    #    self.sendUpdate('setWalking', [value, startPath, endPath, timestamp])
-
-    #def b_setWalking(self, value, startPath, endPath):
-    #    self.setWalking(value, startPath, endPath)
-    #    self.d_setWalking(value, startPath, endPath)
-
-    #def getWalking(self):
-    #    return [self.walking, self.startPath, self.endPath]
-
     def setDifficulty(self, difficulty):
         self.difficulty = difficulty
 
@@ -164,19 +150,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         print self.getHpr(render)
         return task.cont
 
-    def setupAI(self):
-        #self.aiChar = AICharacter(self.uniqueName('suit'), self, 60, 10, -5)
-        #base.air.aiWorld.addAiChar(self.aiChar)
-        #self.aiBehaviors = self.aiChar.getAiBehaviors()
-        pass
-
     def spawn(self):
         self.brain = CogBrainAI.CogBrain(self)
         landspot = random.choice(CIGlobals.SuitSpawnPoints[self.hood].keys())
         path = CIGlobals.SuitSpawnPoints[self.hood][landspot]
         index = CIGlobals.SuitSpawnPoints[self.hood].keys().index(landspot)
         self.b_setSuitState(2, index, index)
-        #self.b_setAnimState('flydown')
         self.currentPath = landspot
         track = self.posInterval(3,
                     path,
@@ -195,7 +174,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.b_setParent(CIGlobals.SPRender)
 
     def startRoaming(self):
-        #self.setZ(CIGlobals.SuitPathHeights[self.zoneId])
         if self.head == "vp" or self.isBackup():
             # If this is a vp or a backup cog, do the random attacks.
             self.startAttacks()
@@ -452,9 +430,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.requestDelete()
 
     def createPath(self, path_key = None, durationFactor = 0.2, fromCurPos = False):
-        if path_key == None:
+        if path_key == None and not len(self.currentPathQueue):
             path_key_list = CIGlobals.SuitPathData[self.hood][self.currentPath]
             path_key = random.choice(path_key_list)
+        elif len(self.currentPathQueue):
+            path_key = self.currentPathQueue[0]
+            self.currentPathQueue.remove(path_key)
         endIndex = CIGlobals.SuitSpawnPoints[self.hood].keys().index(path_key)
         path = CIGlobals.SuitSpawnPoints[self.hood][path_key]
         if self.walkTrack:
@@ -468,7 +449,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             startIndex = CIGlobals.SuitSpawnPoints[self.hood].keys().index(oldPath)
         self.currentPath = path_key
         pathName = self.uniqueName('suitPath')
-        self.walkTrack = NPCWalkInterval(self, path, startPos = self.getPos(render), name = pathName, durationFactor = durationFactor, fluid = 1)
+        self.walkTrack = NPCWalkInterval(self, path, startPos = self.getPos(render),
+            name = pathName, durationFactor = durationFactor, fluid = 1)
         self.walkTrack.setDoneEvent(self.walkTrack.getName())
         self.startFollow()
         self.b_setSuitState(1, startIndex, endIndex)
@@ -564,12 +546,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.track.pause()
             self.track = None
         Sequence(Wait(0.1), Func(self.spawn)).start()
-        #taskMgr.add(self.printPos, "printpos")
 
     def generate(self):
         DistributedAvatarAI.generate(self)
         DistributedSmoothNodeAI.generate(self)
-        self.setupAI()
 
     def disable(self):
         try:
@@ -618,6 +598,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.avatarType = None
             self.lateX = None
             self.lateY = None
+            self.currentPathQueue = None
             DistributedAvatarAI.disable(self)
         return
 
@@ -651,6 +632,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             del self.backup
             del self.lateX
             del self.lateY
+            del self.currentPathQueue
             DistributedAvatarAI.delete(self)
             DistributedSmoothNodeAI.delete(self)
         return

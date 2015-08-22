@@ -7,11 +7,15 @@
 
 """
 
-from pandac.PandaModules import *
+from panda3d.core import *
+
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.showbase.DirectObject import DirectObject
+
 from lib.coginvasion.globals import CIGlobals
+import SuitPathFinder
+
 import random
 
 class CogBrain(DirectObject):
@@ -390,8 +394,12 @@ class CogBrain(DirectObject):
             self.bossSpot = boss.getPos(render)
         else:
             self.bossSpot = CIGlobals.SuitSpawnPoints[self.suit.hood][self.bossSpotKey]
-        # Okay, let's walk there!
-        self.suit.createPath(path_key = self.bossSpotKey, fromCurPos = True)
+        # Let me find my way there...
+        print self.bossSpotKey
+        self.suit.currentPathQueue = SuitPathFinder.find_path(self.suit.hood, self.suit.currentPath, self.bossSpotKey)
+        self.suit.currentPathQueue.remove(self.suit.currentPathQueue[0])
+        # Okay, let's start walking the path!
+        self.suit.createPath(fromCurPos = True)
         # I want to keep a little bit of a distance from the boss...
         taskMgr.add(self.__followBoss, self.suit.uniqueName('followBoss'))
 
@@ -414,6 +422,7 @@ class CogBrain(DirectObject):
         return task.cont
 
     def exitFollowBoss(self):
+        self.suit.resetPathQueue()
         taskMgr.remove(self.suit.uniqueName('followBoss'))
         del self.boss
         del self.bossSpot

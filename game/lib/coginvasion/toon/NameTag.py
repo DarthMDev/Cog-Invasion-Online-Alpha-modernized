@@ -1,7 +1,6 @@
 # Filename: NameTag.py
 # Created by:  blach (??Jul14)
 
-
 from panda3d.core import TextNode
 from direct.fsm import ClassicFSM, State
 

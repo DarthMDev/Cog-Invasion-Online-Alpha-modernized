@@ -15,7 +15,7 @@ class SuitBoss:
     def __init__(self, suitbase):
         self.suitbase = suitbase
         self.isFlying = False
-        self.spot = None
+        self.spot = self.suitbase.currentPath
 
     def startBoss(self):
         delay = random.randint(5, 20)
@@ -35,6 +35,7 @@ class SuitBoss:
     def flyToNewSpot(self):
         path_key_list = CIGlobals.SuitSpawnPoints[self.suitbase.hood].keys()
         path_key = random.choice(path_key_list)
+        self.spot = path_key
         endIndex = CIGlobals.SuitSpawnPoints[self.suitbase.hood].keys().index(path_key)
         if not self.spot:
             startIndex = -1
@@ -45,7 +46,6 @@ class SuitBoss:
         self.setFlying(True)
 
     def flyAwayToNewSpot(self, path_key, task):
-        self.spot = path_key
         self.suitbase.headsUp(CIGlobals.SuitSpawnPoints[self.suitbase.hood][self.spot])
         suitTrack = ProjectileInterval(self.suitbase,
                                     startPos = (self.suitbase.getPos(render)),

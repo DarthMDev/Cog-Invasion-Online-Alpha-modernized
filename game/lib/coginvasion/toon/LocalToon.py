@@ -303,7 +303,7 @@ class LocalToon(DistributedToon):
 
     def setMoney(self, money):
         DistributedToon.setMoney(self, money)
-        self.moneyGui.update()
+        self.moneyGui.update(money)
 
     def setupNameTag(self, tempName = None):
         DistributedToon.setupNameTag(self, tempName)
@@ -594,7 +594,7 @@ class LocalToon(DistributedToon):
     def createMoney(self):
         self.moneyGui.createGui()
         # Automatically update incase we missed the db field.
-        self.moneyGui.update()
+        self.moneyGui.update(self.money)
 
     def handleMoneyChanged(self):
         self.moneyGui.update()

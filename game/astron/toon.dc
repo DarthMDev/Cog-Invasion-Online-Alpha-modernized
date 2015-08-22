@@ -272,7 +272,7 @@ dclass DistributedSuit : DistributedAvatar {
   // comes in while the Cog is standing still.
   setLatePos(int16 / 10, int16 / 10) required ram;
 
-  setSuitState(int8, int8, int8, int16) required broadcast ram;
+  setSuitState(int8, int8, int8, int16) broadcast ram;
   //setWalkPaused(int8) broadcast ram required;
 };
 
