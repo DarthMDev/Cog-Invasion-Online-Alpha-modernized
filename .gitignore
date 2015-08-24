@@ -29,7 +29,7 @@ game/lib/coginvasioncxx/*.pyd
 game/lib/coginvasioncxx/*.dll
 game/lib/coginvasioncxx/*.lib
 game/lib/coginvasioncxx/*.exp
-./Panda3D-CI
+Panda3D-CI
 *.yaml
 *.bat
 .project
