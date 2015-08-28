@@ -345,7 +345,7 @@ class LocalToon(DistributedToon):
 
     def handleSuitAttack(self, attack_id, suit_id):
         DistributedToon.handleSuitAttack(self, attack_id, suit_id)
-        if not self.isDead():
+        if not self.isDead() and base.config.GetBool('want-sa-reactions'):
             base.taskMgr.remove('LT.attackReactionDone')
             attack = CIGlobals.SuitAttacks[attack_id]
             suit = self.cr.doId2do.get(suit_id)

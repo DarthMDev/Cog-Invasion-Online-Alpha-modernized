@@ -320,7 +320,8 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
     def __handleWildCard(self, player, wild_card):
         colors = []
         for card in player.getCards():
-            colors.append(card[-2:])
+            if not card in [UGG.CARD_WILD, UGG.CARD_WILD_DRAW_FOUR]:
+                colors.append(card[-2:])
         counter = Counter(colors)
         set_color = counter.keys()[0]
         self.takeNewCardColor(origId = wild_card, id = set_color, doId = player.getID())
@@ -338,7 +339,9 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
             def hasPlaceableCardBeingDealt():
                 placeable = False
                 for card in player.getDealingCards():
-                    if card[:2] == currentId or card[:2] == UGG.CARD_WILD or card[:2] == UGG.CARD_WILD_DRAW_FOUR or card[-2:] == currentColor or card[-2:] == self.newColor:
+                    if (card[:2] == currentId or card[:2] == UGG.CARD_WILD or
+                        card[:2] == UGG.CARD_WILD_DRAW_FOUR or card[-2:] == currentColor or
+                        card[-2:] == self.newColor):
                         placeable = True
                         break
                 return placeable

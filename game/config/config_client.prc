@@ -56,6 +56,7 @@ game-name Cog Invasion
 want-weapons #t
 want-pies #t
 want-chat #t
+want-sa-reactions #f
 
 want-pstats 0
 
