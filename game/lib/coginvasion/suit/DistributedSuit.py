@@ -262,7 +262,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def announceHealth(self, level, hp):
         DistributedAvatar.announceHealth(self, level, hp)
         if level == 1:
-            healthSfx = base.audio3d.loadSfx("phase_3/audio/sfx/health.wav")
+            healthSfx = base.audio3d.loadSfx("phase_3/audio/sfx/health.mp3")
             base.audio3d.attachSoundToObject(healthSfx, self)
             SoundInterval(healthSfx).start()
             del healthSfx

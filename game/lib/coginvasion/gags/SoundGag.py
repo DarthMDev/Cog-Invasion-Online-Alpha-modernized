@@ -58,7 +58,6 @@ class SoundGag(Gag):
         for suit in suits:
             if self.name != CIGlobals.Opera:
                 self.avatar.sendUpdate('suitHitByPie', [suit.doId, self.getID()])
-                Sequence(Wait(0.1), Func(self.avatar.checkSuitHealth, suit)).start()
             else:
                 breakEffect = ParticleEffect()
                 breakEffect.loadConfig('phase_5/etc/soundBreak.ptf')
@@ -75,8 +74,6 @@ class SoundGag(Gag):
                 suitTrack.append(Func(self.setPosFromOther, breakEffect, suit, Point3(0, 0, 0)))
                 suitTrack.append(SoundInterval(self.hitSfx, node=suit))
                 suitTrack.append(Func(self.avatar.sendUpdate, 'suitHitByPie', [suit.doId, self.getID()]))
-                suitTrack.append(Wait(0.1))
-                suitTrack.append(Func(self.avatar.checkSuitHealth, suit))
                 suitTrack.start()
         suits = None
 

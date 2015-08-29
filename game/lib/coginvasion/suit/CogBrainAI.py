@@ -389,19 +389,22 @@ class CogBrain(DirectObject):
         # I'll follow this boss, he can protect me, or maybe I can heal him up.
         self.boss = boss
         # Let me find out where this boss is...
-        self.bossSpotKey = self.boss.boss.spot
         if boss.boss.spot == None:
             self.bossSpot = boss.getPos(render)
         else:
-            self.bossSpot = CIGlobals.SuitSpawnPoints[self.suit.hood][self.bossSpotKey]
+            self.bossSpot = CIGlobals.SuitSpawnPoints[self.suit.hood][boss.boss.spot]
         # Let me find my way there...
-        print self.bossSpotKey
-        self.suit.currentPathQueue = SuitPathFinder.find_path(self.suit.hood, self.suit.currentPath, self.bossSpotKey)
-        self.suit.currentPathQueue.remove(self.suit.currentPathQueue[0])
-        # Okay, let's start walking the path!
-        self.suit.createPath(fromCurPos = True)
+        if self.suit.currentPath == boss.boss.spot:
+            # Wait a minute, we're already here! Walk straight to the boss.
+            self.suit.createPath(path_key = boss.boss.spot, fromCurPos = True)
+        else:
+            self.suit.currentPathQueue = SuitPathFinder.find_path(self.suit.hood, self.suit.currentPath, boss.boss.spot)
+            self.suit.currentPathQueue.remove(self.suit.currentPathQueue[0])
+            # Okay, let's start walking the path!
+            self.suit.createPath(fromCurPos = True)
         # I want to keep a little bit of a distance from the boss...
         taskMgr.add(self.__followBoss, self.suit.uniqueName('followBoss'))
+        self.bossSpotKey = boss.boss.spot
 
     def __followBoss(self, task):
         if not self.boss in self.suit.getManager().suits.values():

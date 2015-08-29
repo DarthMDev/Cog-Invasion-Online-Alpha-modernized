@@ -35,12 +35,12 @@ class SuitBoss:
     def flyToNewSpot(self):
         path_key_list = CIGlobals.SuitSpawnPoints[self.suitbase.hood].keys()
         path_key = random.choice(path_key_list)
-        self.spot = path_key
         endIndex = CIGlobals.SuitSpawnPoints[self.suitbase.hood].keys().index(path_key)
         if not self.spot:
             startIndex = -1
         else:
             startIndex = CIGlobals.SuitSpawnPoints[self.suitbase.hood].keys().index(self.spot)
+        self.spot = path_key
         self.suitbase.b_setSuitState(0, startIndex, endIndex)
         taskMgr.doMethodLater(0.5, self.flyAwayToNewSpot, "fatns", extraArgs = [path_key], appendTask = True)
         self.setFlying(True)
