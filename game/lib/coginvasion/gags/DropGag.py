@@ -50,7 +50,7 @@ class DropGag(Gag, LocationGag):
         super(DropGag, self).unEquip()
         if self.state != GagState.LOADED:
             self.completeDrop()
-            
+
     def onActivate(self, ignore, suit):
         pass
 
@@ -84,7 +84,7 @@ class DropGag(Gag, LocationGag):
         shrinkTrack.append(LerpScaleInterval(self.gag, 0.3, Point3(0.01, 0.01, 0.01), startScale = self.gag.getScale()))
         shrinkTrack.append(Func(self.cleanupGag))
         shrinkTrack.start()
-        
+
     def onSuitHit(self, suit):
         pass
 
@@ -98,7 +98,7 @@ class DropGag(Gag, LocationGag):
 
     def release(self):
         LocationGag.release(self)
-        self.avatar.b_gagBuild(self.getID())
+        self.avatar.gagBuild(self.getID())
         self.isDropping = True
         self.fallSoundInterval = SoundInterval(self.fallSfx, node = self.avatar)
         actorTrack = LocationGag.getActorTrack(self)
