@@ -80,7 +80,11 @@ class ThrowGag(Gag):
                 elif obj.__class__.__name__ == "DistributedToon":
                     if obj.getKey() == avNP.getKey():
                         if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
-                            self.avatar.sendUpdate('toonHitByPie', [obj.doId, self.getID()])
+                            if obj != self.avatar:
+                                self.avatar.sendUpdate('toonHitByPie', [obj.doId, self.getID()])
+                            else:
+                                self.avatar.acceptOnce('gagSensor-into', self.onCollision)
+                                return
         if base.localAvatar == self.avatar:
             self.splatPos = self.gag.getPos(render)
             gagPos = self.gag.getPos(render)

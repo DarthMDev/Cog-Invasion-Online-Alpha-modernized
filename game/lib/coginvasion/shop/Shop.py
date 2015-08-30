@@ -76,10 +76,11 @@ class Shop(StateData):
                 gagIds.append(bpGag.getID())
                 bpSupply = self.backpack.getSupply(bpGag.getName())
                 if bpGag.getName() == name:
-                    ammoList.append(supply + 1)
+                    if bpSupply < self.backpack.getMaxSupply(bpGag.getName()):
+                        ammoList.append(supply + 1)
+                        base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
+                        self.window.showInfo('Purchased a %s' % (name), duration = 3)
                 else: ammoList.append(bpSupply)
-            self.window.showInfo('Purchased a %s' % (name), duration = 3)
-            base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
             base.localAvatar.setBackpackAmmo(gagIds, ammoList)
             base.localAvatar.updateBackpackAmmo()
             
@@ -87,7 +88,7 @@ class Shop(StateData):
         health = base.localAvatar.getHealth()
         maxHealth = base.localAvatar.getMaxHealth()
         healAmt = health + values.get('heal')
-        if health < maxHealth:
+        if health < maxHealth and not self.hasCooldown(item):
             if healAmt > maxHealth:
                 healAmt = maxHealth
             self.newHealth = healAmt
@@ -139,7 +140,6 @@ class Shop(StateData):
                 self.__purchaseUpgradeItem(values)
             elif itemType == ItemType.HEAL:
                 self.__purchaseHealItem(item, values)
-            base.localAvatar.setMoney(base.localAvatar.getMoney() - price)
         self.update()
 
     def update(self):
