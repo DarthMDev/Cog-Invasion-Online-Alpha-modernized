@@ -16,7 +16,8 @@ gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobal
           15 : CIGlobals.Quicksand, 16 : CIGlobals.BananaPeel, 17 : CIGlobals.Lipstick, 18 : CIGlobals.Foghorn,
           19 : CIGlobals.Aoogah, 20 : CIGlobals.ElephantHorn, 21 : CIGlobals.Opera, 22 : CIGlobals.BikeHorn,
           23 : CIGlobals.Whistle, 24 : CIGlobals.Bugle, 25 : CIGlobals.PixieDust, 26 : CIGlobals.FlowerPot,
-          27 : CIGlobals.Sandbag, 28 : CIGlobals.Anvil, 29 : CIGlobals.Geyser}
+          27 : CIGlobals.Sandbag, 28 : CIGlobals.Anvil, 29 : CIGlobals.Geyser, 30 : CIGlobals.BigWeight,
+          31 : CIGlobals.StormCloud}
 
 # These are the splat scales
 splatSizes = {
@@ -39,6 +40,8 @@ PIANO_DROP_SFX = "phase_5/audio/sfx/AA_drop_piano.mp3"
 PIANO_MISS_SFX = "phase_5/audio/sfx/AA_drop_piano_miss.mp3"
 SAFE_DROP_SFX = "phase_5/audio/sfx/AA_drop_safe.mp3"
 SAFE_MISS_SFX = "phase_5/audio/sfx/AA_drop_safe_miss.mp3"
+WEIGHT_DROP_SFX = "phase_5/audio/sfx/AA_drop_bigweight.mp3"
+WEIGHT_MISS_SFX = "phase_5/audio/sfx/AA_drop_bigweight_miss.mp3"
 ANVIL_DROP_SFX = "phase_5/audio/sfx/AA_drop_anvil.mp3"
 ANVIL_MISS_SFX = "phase_4/audio/sfx/AA_drop_anvil_miss.mp3"
 BAG_DROP_SFX = "phase_5/audio/sfx/AA_drop_sandbag.mp3"
@@ -66,9 +69,11 @@ BIKE_HORN_SFX = "phase_5/audio/sfx/AA_sound_bikehorn.mp3"
 WHISTLE_APPEAR_SFX = "phase_5/audio/sfx/LB_receive_evidence.mp3"
 WHISTLE_SFX = "phase_4/audio/sfx/AA_sound_whistle.mp3"
 BUGLE_APPEAR_SFX = "phase_4/audio/sfx/m_match_trumpet.mp3"
-BUGLE_SFX = "phase_5/audio/sfx/AA_sound_bugle.mp3"
+BUGLE_SFX = "phase_4/audio/sfx/AA_sound_bugle.mp3"
 PIXIE_DUST_SFX = "phase_5/audio/sfx/AA_heal_pixiedust.mp3"
 GEYSER_HIT_SFX = "phase_5/audio/sfx/AA_squirt_Geyser.mp3"
+CLOUD_HIT_SFX = "phase_5/audio/sfx/AA_throw_stormcloud.mp3"
+CLOUD_MISS_SFX = "phase_5/audio/sfx/AA_throw_stormcloud_miss.mp3"
 
 # These are globals for splats.
 SPLAT_MDL = "phase_3.5/models/props/splat-mod.bam"

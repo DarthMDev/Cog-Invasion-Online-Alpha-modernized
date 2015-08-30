@@ -217,10 +217,13 @@ class Gag(object):
             track.append(LerpScaleInterval(prop, duration, endScale, startScale = startScale))
         return track
 
-    def getSoundTrack(self, delay, node, duration):
+    def getSoundTrack(self, delay, node, duration = None):
         soundTrack = Sequence()
         soundTrack.append(Wait(delay))
-        soundTrack.append(SoundInterval(self.hitSfx, duration = duration, node = node))
+        if duration:
+            soundTrack.append(SoundInterval(self.hitSfx, duration = duration, node = node))
+        else:
+            soundTrack.append(SoundInterval(self.hitSfx, node = node))
         return soundTrack
 
     def getScaleIntervals(self, props, duration, startScale, endScale):
