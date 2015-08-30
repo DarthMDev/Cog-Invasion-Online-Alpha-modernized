@@ -157,7 +157,6 @@ class ChargeUpSpot(LocationSeeker):
             del self.selectionRadius
             del self.selectedCogs
             del self.maxCogs
-            print 'Cleaned up'
 
     def __pollMouseHeldDown(self, task):
         if not hasattr(self, 'mouseDownName'):

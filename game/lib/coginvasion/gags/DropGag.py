@@ -98,7 +98,8 @@ class DropGag(Gag, LocationGag):
 
     def release(self):
         LocationGag.release(self)
-        self.avatar.gagBuild(self.getID())
+        if self.isLocal():
+            self.avatar.b_gagBuild(self.getID())
         self.isDropping = True
         self.fallSoundInterval = SoundInterval(self.fallSfx, node = self.avatar)
         actorTrack = LocationGag.getActorTrack(self)
@@ -108,3 +109,6 @@ class DropGag(Gag, LocationGag):
             actorTrack.start()
             soundTrack.append(self.fallSoundInterval)
             soundTrack.start()
+            
+    def setEndPos(self, x, y, z):
+        LocationGag.setDropLoc(self, x, y, z)
