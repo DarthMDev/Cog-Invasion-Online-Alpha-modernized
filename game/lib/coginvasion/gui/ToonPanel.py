@@ -287,6 +287,7 @@ class ToonPanel(DirectFrame):
             self.actionFSM.request(action)
 
     def enterWaitOnAvatarInfoResponse(self):
+        self.label = OnscreenText(text = 'Retrieving Toon\ndetails...', parent = self, scale = 0.04)
         self.acceptOnce('avatarInfoResponse', self.handleAvatarInfoResponse)
         base.cr.friendsManager.d_requestAvatarInfo(self.avatarInfo[0])
 
@@ -299,6 +300,8 @@ class ToonPanel(DirectFrame):
             self.fsm.request('panel')
 
     def exitWaitOnAvatarInfoResponse(self):
+        self.label.destroy()
+        del self.label
         self.ignore('avatarInfoResponse')
 
     def makePanel(self, avId):
