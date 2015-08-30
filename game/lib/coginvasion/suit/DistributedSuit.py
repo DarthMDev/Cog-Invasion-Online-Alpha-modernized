@@ -98,11 +98,10 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.setX(x)
         self.setY(y)
 
-    def enterAttack(self, attack, avId, ts = 0):
-        Suit.enterAttack(self, attack, ts)
-        obj = self.cr.doId2do.get(avId)
-        if obj:
-            self.headsUp(obj)
+    def enterAttack(self, attack, target, ts = 0):
+        Suit.enterAttack(self, attack, target, ts)
+        if target:
+            self.headsUp(target)
 
     def setSuitState(self, index, startPoint, endPoint, timestamp = None):
         if timestamp != None:
@@ -306,7 +305,8 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         else:
             ts = globalClockDelta.localElapsedTime(timestamp)
         attackName = CIGlobals.SuitAttacks[attackId]
-        self.animFSM.request('attack', [attackName, avId, ts])
+        avatar = self.cr.doId2do.get(avId)
+        self.animFSM.request('attack', [attackName, avatar, ts])
 
     def throwObject(self):
         self.acceptOnce("enter" + self.wsnp.node().getName(), self.__handleWeaponCollision)

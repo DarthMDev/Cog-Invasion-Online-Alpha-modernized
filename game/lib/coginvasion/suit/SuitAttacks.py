@@ -63,6 +63,10 @@ class ThrowAttack(Attack):
         self.suitTrack = None
         self.weaponSfx = None
         self.throwTrajectory = None
+        self.targetX = None
+        self.targetY = None
+        self.targetZ = None
+        self.startNP = None
 
     def handleWeaponCollision(self, entry):
         if self.suit:
@@ -70,21 +74,109 @@ class ThrowAttack(Attack):
             base.localAvatar.b_handleSuitAttack(self.getAttackId(self.attack), self.suit.doId)
             self.suit.b_handleWeaponTouch()
 
-    def doAttack(self, ts = 0):
+    def doAttack(self, weapon_path, weapon_scale, track_name,
+                animation_name, collsphere_radius, weapon_coll_id,
+                weapon_h = 0, weapon_p = 0, weapon_r = 0, weapon_x = 0,
+                weapon_y = 0, weapon_z = 0, ts = 0):
         self.weapon_state = 'start'
+        if hasattr(self.suit, 'uniqueName'):
+            track_name = self.suit.uniqueName(track_name)
+            weapon_coll_id = self.suit.uniqueName(weapon_coll_id)
+        self.weapon = loader.loadModel(weapon_path)
+        self.weapon.setScale(weapon_scale)
+        self.weapon.setHpr(weapon_h, weapon_p, weapon_r)
+        self.weapon.setPos(weapon_x, weapon_y, weapon_z)
+        self.wss = CollisionSphere(0, 0, 0, collsphere_radius)
+        self.wss.setTangible(0)
+
+        self.targetX = self.attacksClass.target.getX(render)
+        self.targetY = self.attacksClass.target.getY(render)
+        self.targetZ = self.attacksClass.target.getZ(render)
+
+        self.suitTrack = Sequence(name = track_name)
+
+        if not self.attack in ['glowerpower']:
+            self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
+            self.suitTrack.append(Wait(1.2))
+            self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, animation_name))
+            if self.suit.type == "C":
+                self.suitTrack.append(Wait(0))
+            else:
+                self.suitTrack.append(Wait(0.7))
+            self.suit.setPlayRate(2.0, animation_name)
+            self.suitTrack.append(Func(self.throwObject))
+            self.suitTrack.append(Wait(1.0))
+            self.suitTrack.append(Func(self.delWeapon))
+        else:
+            self.suitTrack.append(Wait(1))
+            self.suitTrack.append(Func(self.throwObject))
+            self.suitTrack.append(Wait(0.5))
+            self.suitTrack.append(Func(self.delWeapon))
+
+        self.suit.play(animation_name)
+
+        wsnode = CollisionNode(weapon_coll_id)
+        wsnode.addSolid(self.wss)
+        wsnode.setCollideMask(CIGlobals.WallBitmask)
+        self.wsnp = self.weapon.attachNewNode(wsnode)
+        self.suitTrack.setDoneEvent(self.suitTrack.getName())
+        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
+        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self.suit, track_name)
+        self.suitTrack.start(ts)
 
     def playWeaponSound(self):
         if self.weapon and self.weaponSfx:
             base.audio3d.attachSoundToObject(self.weaponSfx, self.suit)
             self.weaponSfx.play()
 
-    def throwObject(self):
+    def throwObject(self, projectile = True):
+        if not self.weapon:
+            return
+
         self.acceptOnce("enter" + self.wsnp.node().getName(), self.handleWeaponCollision)
         self.playWeaponSound()
         if self.weapon:
-            self.weapon.setScale(self.weapon.getScale(render))
-            self.weapon.reparentTo(render)
+            self.weapon.wrtReparentTo(render)
             self.weapon.setHpr(Vec3(0, 0, 0))
+
+        if not self.attack in ['glowerpower']:
+            parent = self.suit.find('**/joint_Rhold')
+        else:
+            parent = self.suit.find('**/joint_head')
+        startNP = parent.attachNewNode('startNp')
+        startNP.lookAt(render, self.targetX, self.targetY, self.targetZ)
+        pathNP = NodePath('throwPath')
+        pathNP.reparentTo(startNP)
+        pathNP.setScale(render, 1.0)
+        pathNP.setPos(0, 50, 0)
+
+        if self.attack == 'clipontie':
+            self.weapon.setHpr(pathNP.getHpr(render))
+
+        if projectile == True:
+            self.throwTrajectory = ProjectileInterval(
+                self.weapon,
+                startPos = self.suit.find('**/joint_Rhold').getPos(render),
+                endPos = pathNP.getPos(render),
+                gravityMult = 0.7,
+                duration = 1.0
+            )
+        else:
+            self.weapon.setH(pathNP.getH(render))
+            self.throwTrajectory = LerpPosInterval(
+                self.weapon,
+                duration = 0.5,
+                pos = pathNP.getPos(render),
+                startPos = startNP.getPos(render) + (0, 3, 0)
+            )
+
+        self.throwTrajectory.start()
+        self.weapon_state = 'released'
+
+        startNP.removeNode()
+        del startNP
+        pathNP.removeNode()
+        del pathNP
 
     def interruptAttack(self):
         if self.throwTrajectory:
@@ -104,6 +196,9 @@ class ThrowAttack(Attack):
 
     def cleanup(self):
         Attack.cleanup(self)
+        self.targetX = None
+        self.targetY = None
+        self.targetZ = None
         self.weapon_state = None
         if self.weaponSfx:
             self.weaponSfx.stop()
@@ -126,65 +221,12 @@ class CannedAttack(ThrowAttack):
         self.attack = 'canned'
 
     def doAttack(self, ts = 0):
-        ThrowAttack.doAttack(self, ts)
-        self.weapon = loader.loadModel("phase_5/models/props/can.bam")
-        self.weapon.setScale(15)
-        self.weapon.setR(180)
-        self.wss = CollisionSphere(0,0,0,0.05)
-        self.wss.setTangible(0)
-        if hasattr(self.suit, 'uniqueName'):
-            name = self.suit.uniqueName("doCannedAttack")
-        else:
-            name = "doCannedAttack"
-        self.suitTrack = Sequence(name = name)
-        self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
-        self.suitTrack.append(Wait(1.2))
-        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-object'))
-        if self.suit.type == "C":
-            self.suitTrack.append(Wait(0))
-        else:
-            self.suitTrack.append(Wait(0.7))
-        self.suit.setPlayRate(2.0, 'throw-object')
-        self.suit.play('throw-object')
-        self.suitTrack.append(Func(self.throwObject))
-        self.suitTrack.append(Wait(1.0))
-        self.suitTrack.append(Func(self.delWeapon))
-        if hasattr(self.suit, 'uniqueName'):
-            weaponCollId = self.suit.uniqueName('cannedWeaponSphere')
-        else:
-            weaponCollId = 'cannedWeaponSphere'
-        wsnode = CollisionNode(weaponCollId)
-        wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
-        self.wsnp = self.weapon.attachNewNode(wsnode)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self.suit, name)
-        self.suitTrack.start(ts)
+        ThrowAttack.doAttack(self, "phase_5/models/props/can.bam", 15, 'doCannedAttack',
+                            'throw-object', 0.05, 'cannedWeaponSphere', weapon_r = 180, ts = ts)
 
     def playWeaponSound(self):
         self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.mp3")
         ThrowAttack.playWeaponSound(self)
-
-    def throwObject(self):
-        if not self.weapon:
-            return
-        ThrowAttack.throwObject(self)
-        pathNP = NodePath('throwPath')
-        pathNP.reparentTo(self.suit)
-        pathNP.setScale(render, 1.0)
-        pathNP.setPos(0, 50, 0)
-        pathNP.setHpr(0, 0, 0)
-
-        self.throwTrajectory = ProjectileInterval(
-            self.weapon,
-            startPos = self.suit.find('**/joint_Rhold').getPos(render),
-            endPos = pathNP.getPos(render),
-            gravityMult = 0.7,
-            duration = 1.0
-        )
-        self.throwTrajectory.start()
-        self.weapon_state = 'released'
 
     def handleWeaponTouch(self):
         if self.weaponSfx:
@@ -200,65 +242,12 @@ class HardballAttack(ThrowAttack):
         self.attack = 'playhardball'
 
     def doAttack(self, ts = 0):
-        ThrowAttack.doAttack(self, ts)
-        self.weapon = loader.loadModel("phase_5/models/props/baseball.bam")
-        self.weapon.setScale(10)
-        self.wss = CollisionSphere(0,0,0,0.1)
-        self.weapon.setZ(-0.5)
-        self.wss.setTangible(0)
-        if hasattr(self.suit, 'uniqueName'):
-            name = self.suit.uniqueName("doHardballAttack")
-        else:
-            name = "doHardballAttack"
-        self.suitTrack = Sequence(name = name)
-        self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
-        self.suitTrack.append(Wait(1.2))
-        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-object'))
-        if self.suit.type == "C":
-            self.suitTrack.append(Wait(0))
-        else:
-            self.suitTrack.append(Wait(0.7))
-        self.suit.setPlayRate(2.0, 'throw-object')
-        self.suit.play('throw-object')
-        self.suitTrack.append(Func(self.throwObject))
-        self.suitTrack.append(Wait(1.0))
-        self.suitTrack.append(Func(self.delWeapon))
-        if hasattr(self.suit, 'uniqueName'):
-            weaponCollId = self.suit.uniqueName('hardballWeaponSphere')
-        else:
-            weaponCollId = 'hardballWeaponSphere'
-        wsnode = CollisionNode(weaponCollId)
-        wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
-        self.wsnp = self.weapon.attachNewNode(wsnode)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self.suit, name)
-        self.suitTrack.start(ts)
+        ThrowAttack.doAttack(self, "phase_5/models/props/baseball.bam", 10, 'doHardballAttack',
+                            'throw-object', 0.1, 'hardballWeaponSphere', weapon_z = -0.5, ts = ts)
 
     def playWeaponSound(self):
         self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.mp3")
         ThrowAttack.playWeaponSound(self)
-
-    def throwObject(self):
-        if not self.weapon:
-            return
-        ThrowAttack.throwObject(self)
-        pathNP = NodePath('throwPath')
-        pathNP.reparentTo(self.suit)
-        pathNP.setScale(render, 1.0)
-        pathNP.setPos(0, 50, 0)
-        pathNP.setHpr(0, 0, 0)
-
-        self.throwTrajectory = ProjectileInterval(
-            self.weapon,
-            startPos = self.suit.find('**/joint_Rhold').getPos(render),
-            endPos = pathNP.getPos(render),
-            gravityMult = 0.7,
-            duration = 1.0
-        )
-        self.throwTrajectory.start()
-        self.weapon_state = 'released'
 
     def handleWeaponTouch(self):
         if self.weaponSfx:
@@ -274,67 +263,12 @@ class ClipOnTieAttack(ThrowAttack):
         self.attack = 'clipontie'
 
     def doAttack(self, ts = 0):
-        ThrowAttack.doAttack(self, ts)
-        self.weapon = loader.loadModel("phase_5/models/props/power-tie.bam")
-        self.weapon.setScale(4)
-        self.weapon.setR(180)
-        self.wss = CollisionSphere(0,0,0,0.2)
-        self.wss.setTangible(0)
-        if hasattr(self.suit, 'uniqueName'):
-            name = self.suit.uniqueName("doClipOnTieAttack")
-        else:
-            name = "doClipOnTieAttack"
-        self.suitTrack = Sequence(name = name)
-        self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
-        self.suitTrack.append(Wait(1.2))
-        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-paper'))
-        if self.suit.type == "C":
-            self.suitTrack.append(Wait(0))
-        else:
-            self.suitTrack.append(Wait(0.7))
-        self.suit.setPlayRate(2.0, 'throw-paper')
-        self.suit.play('throw-paper')
-        self.suitTrack.append(Func(self.throwObject))
-        self.suitTrack.append(Wait(1.0))
-        self.suitTrack.append(Func(self.delWeapon))
-        if hasattr(self.suit, 'uniqueName'):
-            weaponCollId = self.suit.uniqueName('clipOnTieWeaponSphere')
-        else:
-            weaponCollId = 'clipOnTieWeaponSphere'
-        wsnode = CollisionNode(weaponCollId)
-        wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
-        self.wsnp = self.weapon.attachNewNode(wsnode)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self.suit, name)
-        self.suitTrack.start(ts)
+        ThrowAttack.doAttack(self, "phase_5/models/props/power-tie.bam", 4, 'doClipOnTieAttack',
+                            'throw-paper', 0.2, 'clipOnTieWeaponSphere', weapon_r = 180, ts = ts)
 
     def playWeaponSound(self):
         self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
         ThrowAttack.playWeaponSound(self)
-
-    def throwObject(self):
-        if not self.weapon:
-            return
-        ThrowAttack.throwObject(self)
-        pathNP = NodePath('throwPath')
-        pathNP.reparentTo(self.suit)
-        pathNP.setScale(render, 1.0)
-        pathNP.setPos(0, 50, 0)
-        pathNP.setHpr(0, 0, 0)
-
-        self.weapon.setHpr(pathNP.getHpr(render))
-
-        self.throwTrajectory = ProjectileInterval(
-            self.weapon,
-            startPos = self.suit.find('**/joint_Rhold').getPos(render),
-            endPos = pathNP.getPos(render),
-            gravityMult = 0.7,
-            duration = 1.0
-        )
-        self.throwTrajectory.start()
-        self.weapon_state = 'released'
 
 class MarketCrashAttack(ThrowAttack):
     notify = directNotify.newCategory("MarketCrashAttack")
@@ -344,67 +278,13 @@ class MarketCrashAttack(ThrowAttack):
         self.attack = 'marketcrash'
 
     def doAttack(self, ts = 0):
-        ThrowAttack.doAttack(self, ts)
-        self.weapon = loader.loadModel("phase_5/models/props/newspaper.bam")
-        self.weapon.setScale(3)
-        self.weapon.setPos(0.41, -0.06, -0.06)
-        self.weapon.setHpr(90, 0, 270)
-        self.wss = CollisionSphere(0,0,0,0.35)
-        self.wss.setTangible(0)
-        if hasattr(self.suit, 'uniqueName'):
-            name = self.suit.uniqueName("doMarketCrashAttack")
-        else:
-            name = "doMarketCrashAttack"
-        self.suitTrack = Sequence(name = name)
-        self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
-        self.suitTrack.append(Wait(1.2))
-        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-paper'))
-        if self.suit.type == "C":
-            self.suitTrack.append(Wait(0))
-        else:
-            self.suitTrack.append(Wait(0.7))
-        self.suit.setPlayRate(2.0, 'throw-paper')
-        self.suit.play('throw-paper')
-        self.suitTrack.append(Func(self.throwObject))
-        self.suitTrack.append(Wait(1.0))
-        self.suitTrack.append(Func(self.delWeapon))
-        if hasattr(self.suit, 'uniqueName'):
-            weaponCollId = self.suit.uniqueName('marketCrashWeaponSphere')
-        else:
-            weaponCollId = 'marketCrashWeaponSphere'
-        wsnode = CollisionNode(weaponCollId)
-        wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
-        self.wsnp = self.weapon.attachNewNode(wsnode)
-        self.wsnp.setPos(-0.25, 0.3, 0)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self.suit, name)
-        self.suitTrack.start(ts)
+        ThrowAttack.doAttack(self, "phase_5/models/props/newspaper.bam", 3, 'doMarketCrashAttack',
+                            'throw-paper', 0.35, 'marketCrashWeaponSphere', weapon_x = 0.41,
+                            weapon_y = -0.06, weapon_z = -0.06, weapon_h = 90, weapon_r = 270, ts = ts)
 
     def playWeaponSound(self):
         self.weaponSfx = None
         ThrowAttack.playWeaponSound(self)
-
-    def throwObject(self):
-        if not self.weapon:
-            return
-        ThrowAttack.throwObject(self)
-        pathNP = NodePath('throwPath')
-        pathNP.reparentTo(self.suit)
-        pathNP.setScale(render, 1.0)
-        pathNP.setPos(0, 50, 0)
-        pathNP.setHpr(0, 0, 0)
-
-        self.throwTrajectory = ProjectileInterval(
-            self.weapon,
-            startPos = self.suit.find('**/joint_Rhold').getPos(render),
-            endPos = pathNP.getPos(render),
-            gravityMult = 0.7,
-            duration = 1.0
-        )
-        self.throwTrajectory.start()
-        self.weapon_state = 'released'
 
 class SackedAttack(ThrowAttack):
     notify = directNotify.newCategory("SackedAttack")
@@ -414,67 +294,13 @@ class SackedAttack(ThrowAttack):
         self.attack = 'sacked'
 
     def doAttack(self, ts = 0):
-        ThrowAttack.doAttack(self, ts)
-        self.weapon = loader.loadModel("phase_5/models/props/sandbag-mod.bam")
-        self.weapon.setScale(2)
-        self.weapon.setR(180)
-        self.weapon.setP(90)
-        self.weapon.setY(-2.8)
-        self.weapon.setZ(-0.3)
-        self.wss = CollisionSphere(0,0,0,1)
-        self.wss.setTangible(0)
-        if hasattr(self.suit, 'uniqueName'):
-            name = self.suit.uniqueName("doSackedAttack")
-        else:
-            name = "doSackedAttack"
-        self.suitTrack = Sequence(name = name)
-        self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
-        self.suitTrack.append(Wait(1.2))
-        self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, 'throw-paper'))
-        if self.suit.type == "C":
-            self.suitTrack.append(Wait(0))
-        else:
-            self.suitTrack.append(Wait(0.7))
-        self.suit.setPlayRate(2.0, 'throw-paper')
-        self.suit.play('throw-paper')
-        self.suitTrack.append(Func(self.throwObject))
-        self.suitTrack.append(Wait(1.0))
-        self.suitTrack.append(Func(self.delWeapon))
-        if hasattr(self.suit, 'uniqueName'):
-            weaponCollId = self.suit.uniqueName('sackedWeaponSphere')
-        else:
-            weaponCollId = 'sackedWeaponSphere'
-        wsnode = CollisionNode(weaponCollId)
-        wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
-        self.wsnp = self.weapon.attachNewNode(wsnode)
-        self.wsnp.setZ(1)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self.suit, name)
-        self.suitTrack.start(ts)
+        ThrowAttack.doAttack(self, "phase_5/models/props/sandbag-mod.bam", 2, 'doSackedAttack',
+                            'throw-paper', 1, 'sackedWeaponSphere', weapon_r = 180, weapon_p = 90,
+                            weapon_y = -2.8, weapon_z = -0.3, ts = ts)
 
     def playWeaponSound(self):
         self.weaponSfx = None
         ThrowAttack.playWeaponSound(self)
-
-    def throwObject(self):
-        ThrowAttack.throwObject(self)
-        pathNP = NodePath('throwPath')
-        pathNP.reparentTo(self.suit)
-        pathNP.setScale(render, 1.0)
-        pathNP.setPos(0, 50, 0)
-        pathNP.setHpr(0, 0, 0)
-
-        self.throwTrajectory = ProjectileInterval(
-            self.weapon,
-            startPos = self.suit.find('**/joint_Rhold').getPos(render),
-            endPos = pathNP.getPos(render),
-            gravityMult = 0.7,
-            duration = 1.0
-        )
-        self.throwTrajectory.start()
-        self.weapon_state = 'released'
 
 class GlowerPowerAttack(ThrowAttack):
     notify = directNotify.newCategory("GlowerPowerAttack")
@@ -484,54 +310,15 @@ class GlowerPowerAttack(ThrowAttack):
         self.attack = 'glowerpower'
 
     def doAttack(self, ts = 0):
-        ThrowAttack.doAttack(self, ts)
-        self.weapon = loader.loadModel("phase_5/models/props/dagger.bam")
-        self.wss = CollisionSphere(0,0,0,1)
-        self.wss.setTangible(0)
-        if hasattr(self.suit, 'uniqueName'):
-            name = self.suit.uniqueName("doGlowerPowerAttack")
-        else:
-            name = "doGlowerPowerAttack"
-        self.suitTrack = Sequence(name = name)
-        self.suitTrack.append(Wait(1))
-        self.suit.play("glower")
-        self.suitTrack.append(Func(self.throwObject))
-        self.suitTrack.append(Wait(0.5))
-        self.suitTrack.append(Func(self.delWeapon))
-        if hasattr(self.suit, 'uniqueName'):
-            weaponCollId = self.suit.uniqueName('glowerPowerWeaponSphere')
-        else:
-            weaponCollId = 'glowerPowerWeaponSphere'
-        wsnode = CollisionNode(weaponCollId)
-        wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
-        self.wsnp = self.weapon.attachNewNode(wsnode)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
-        self.suitTrack.delayDelete = DelayDelete.DelayDelete(self.suit, name)
-        self.suitTrack.start(ts)
+        ThrowAttack.doAttack(self, "phase_5/models/props/dagger.bam", 1, 'doGlowerPowerAttack',
+                            'glower', 1, 'glowerPowerWeaponSphere', ts = ts)
+
+    def throwObject(self):
+        ThrowAttack.throwObject(self, False)
 
     def playWeaponSound(self):
         self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.mp3")
         ThrowAttack.playWeaponSound(self)
-
-    def throwObject(self):
-        ThrowAttack.throwObject(self)
-        pathNP = NodePath('throwPath')
-        pathNP.reparentTo(self.suit)
-        pathNP.setScale(render, 1.0)
-        pathNP.setPos(0, 50, 0)
-        pathNP.setHpr(0, 0, 0)
-
-        self.weapon.setH(pathNP.getH(render))
-        self.throwTrajectory = LerpPosInterval(
-            self.weapon,
-            duration = 0.5,
-            pos = pathNP.getPos(render),
-            startPos = (self.suit.getX(render), self.suit.getY(render) + 3, self.suit.find('**/joint_head').getZ(render))
-        )
-        self.throwTrajectory.start()
-        self.weapon_state = 'released'
 
 class PickPocketAttack(Attack):
     notify = directNotify.newCategory("PickPocketAttack")
@@ -966,6 +753,28 @@ class BounceCheckAttack(ThrowAttack):
         self.bounceSound = None
         ThrowAttack.cleanup(self)
 
+class RedTapeAttack(ThrowAttack):
+    notify = directNotify.newCategory('RedTapeAttack')
+
+    def __init__(self, attacksClass, suit):
+        ThrowAttack.__init__(self, attacksClass, suit)
+        self.attack = 'redtape'
+
+    def doAttack(self, ts = 0):
+        ThrowAttack.doAttack(self, "phase_5/models/props/redtape.bam", 1, 'doRedTapeAttack',
+                            'throw-paper', 0.5, 'redTapeWeaponSphere', weapon_p = 90,
+                            weapon_y = 0.35, weapon_z = -0.5, ts = ts)
+
+    def playWeaponSound(self):
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_red_tape.mp3")
+        ThrowAttack.playWeaponSound(self)
+
+    def handleWeaponTouch(self):
+        if self.weaponSfx:
+            self.weaponSfx.stop()
+            self.weaponSfx = None
+        ThrowAttack.handleWeaponTouch(self)
+
 from direct.fsm.StateData import StateData
 
 class SuitAttacks(StateData):
@@ -981,11 +790,13 @@ class SuitAttacks(StateData):
         "hangup": HangUpAttack,
         "fountainpen": FountainPenAttack,
         'bouncecheck': BounceCheckAttack,
+        "redtape": RedTapeAttack
     }
 
-    def __init__(self, doneEvent, suit):
+    def __init__(self, doneEvent, suit, target):
         StateData.__init__(self, doneEvent)
         self.suit = suit
+        self.target = target
         self.currentAttack = None
 
     def load(self, attackName):
@@ -1008,3 +819,4 @@ class SuitAttacks(StateData):
     def cleanup(self):
         self.suit = None
         self.currentAttack = None
+        self.target = None

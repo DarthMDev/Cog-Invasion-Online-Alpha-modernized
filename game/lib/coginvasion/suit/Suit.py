@@ -806,14 +806,14 @@ class Suit(Avatar.Avatar):
             self.prop.cleanup()
             self.prop = None
 
-    def enterAttack(self, attack, ts = 0):
+    def enterAttack(self, attack, target, ts = 0):
         self.show()
 
         if hasattr(self, 'uniqueName'):
             doneEvent = self.uniqueName('suitAttackDone')
         else:
             doneEvent = 'suitAttackDone'
-        self.suitAttackState = SuitAttacks(doneEvent, self)
+        self.suitAttackState = SuitAttacks(doneEvent, self, target)
         self.suitAttackState.load(attack)
         self.suitAttackState.enter(ts)
         self.acceptOnce(doneEvent, self.handleSuitAttackDone)

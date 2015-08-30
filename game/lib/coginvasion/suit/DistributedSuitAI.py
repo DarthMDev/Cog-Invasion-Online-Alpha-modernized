@@ -260,12 +260,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     def attackToon(self, av):
         if av.__class__.__name__ in ["DistributedSuitAI", "DistributedPieTurretAI"]:
             # Why would I pick pocket my boss?
-            attack = random.randint(0, 5)
+            attack = random.randint(0, 6)
         else:
             if self.head in ['vp']:
-                attack = random.randint(0, 5)
+                attack = random.randint(0, 6)
             else:
-                attack = random.randint(0, 8)
+                attack = random.randint(0, 9)
         if attack == 0:
             attackName = "canned"
         elif attack == 1:
@@ -279,10 +279,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         elif attack == 5:
             attackName = "marketcrash"
         elif attack == 6:
-            attackName = "pickpocket"
+            attackName = "redtape"
         elif attack == 7:
-            attackName = "fountainpen"
+            attackName = "pickpocket"
         elif attack == 8:
+            attackName = "fountainpen"
+        elif attack == 9:
             attackName = "hangup"
         attackTaunt = random.randint(0, len(CIGlobals.SuitAttackTaunts[attackName]) - 1)
         timestamp = globalClockDelta.getFrameNetworkTime()

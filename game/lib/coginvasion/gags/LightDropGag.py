@@ -7,12 +7,13 @@
 
 from lib.coginvasion.gags.DropGag import DropGag
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.minigame.FlightProjectileInterval import FlightProjectileInterval
 from direct.interval.IntervalGlobal import Sequence, LerpPosInterval, LerpScaleInterval, Func, Wait, Parallel
 from direct.showutil import Effects
 from panda3d.core import OmniBoundingVolume, Point3, CollisionSphere, CollisionNode, CollisionHandlerEvent, BitMask32
 
 class LightDropGag(DropGag):
-    
+
     def __init__(self, name, model, anim, damage, hitSfx, missSfx, rotate90 = False, sphereSize = 2, sphereZ = 0):
         DropGag.__init__(self, name, model, anim, damage, hitSfx, missSfx, scale = 1, playRate = 1)
         DropGag.setShadowData(self, isCircle = True, shadowScale = 0.5)
@@ -21,7 +22,7 @@ class LightDropGag(DropGag):
         self.rotate90 = rotate90
         self.sphereSize = sphereSize
         self.sphereZ = sphereZ
-        
+
     def startDrop(self):
         if self.gag and self.dropLoc:
             x, y, z = self.dropLoc
@@ -47,20 +48,37 @@ class LightDropGag(DropGag):
             self.objTrack = Parallel(Sequence(Wait(self.fallDuration), Func(self.completeDrop)), objectTrack, shadowTrack)
             self.objTrack.start()
             self.dropLoc = None
-            
+
     def onActivate(self, ignore, suit):
         self.objTrack.finish()
         self.objTrack = None
         if not suit.isDead():
             suit.setAnimState('drop-react')
+        suit.d_disableMovement(wantRay = True)
+        self.gag.setPos(suit.find('**/joint_head').getPos(render))
+        if self.name == CIGlobals.FlowerPot:
+            self.gag.setZ(self.gag, 3)
+        bounce = Effects.createScaleZBounce(self.gag, 1, self.gag.getScale(render), 0.3, 0.75)
+        dummyNode = suit.attachNewNode('fallOffNode')
+        dummyNode.setX(2)
+        dummyNode.setY(-2)
+        flightIval = FlightProjectileInterval(
+            self.gag,
+            startPos = self.gag.getPos(render),
+            endPos = dummyNode.getPos(render),
+            duration = 0.8,
+            gravityMult = .35
+        )
         Sequence(
-            Func(suit.d_disableMovement, wantRay = True),
-            Func(self.gag.setPos, suit.find('**/joint_head').getPos(render)),
-            Effects.createZBounce(self.gag, 1, self.gag.getPos(), 0.5, 1),
+            Parallel(bounce,
+                    flightIval),
             Wait(self.stunTime),
             Func(suit.d_enableMovement)
         ).start()
-            
+
+        dummyNode.removeNode()
+        del dummyNode
+
     def buildCollisions(self):
         gagSph = CollisionSphere(0, 0, self.sphereZ, self.sphereSize)
         gagSensor = CollisionNode('gagSensor')
