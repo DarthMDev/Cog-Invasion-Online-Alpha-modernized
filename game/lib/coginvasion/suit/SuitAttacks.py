@@ -924,7 +924,6 @@ class ParticleAttack(Attack):
             self.shootOutCollNP = self.particles[0].attachNewNode(node)
         else:
             self.shootOutCollNP = self.suit.attachNewNode(node)
-        self.shootOutCollNP.show()
         if handObjPath and handObjParent:
             self.handObj = loader.loadModel(handObjPath)
             self.handObj.reparentTo(handObjParent)
