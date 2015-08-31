@@ -277,7 +277,6 @@ class Suit(Avatar.Avatar):
                         "speak": "phase_5/models/char/suitC-speak.bam",
                         "fingerwag": "phase_5/models/char/suitC-finger-wag.bam",
                         "soak" : "phase_5/models/char/suitC-soak.bam"}, "body")
->>>>>>> 9100126bbea24f5c0a9c9346e1d163de826dfeb4
         if skeleton:
             self.setTwoSided(1)
 
