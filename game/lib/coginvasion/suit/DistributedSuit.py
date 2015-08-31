@@ -17,6 +17,7 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 import random
 import types
+import SuitAttacks
 
 class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDeletable):
     notify = directNotify.newCategory("DistributedSuit")
@@ -304,7 +305,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             ts = 0.0
         else:
             ts = globalClockDelta.localElapsedTime(timestamp)
-        attackName = CIGlobals.SuitAttacks[attackId]
+        attackName = SuitAttacks.SuitAttackLengths.keys()[attackId]
         avatar = self.cr.doId2do.get(avId)
         self.animFSM.request('attack', [attackName, avatar, ts])
 

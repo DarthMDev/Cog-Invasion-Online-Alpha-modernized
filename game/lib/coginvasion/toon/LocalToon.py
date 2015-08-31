@@ -27,6 +27,7 @@ from lib.coginvasion.gui.ToonPanel import ToonPanel
 from lib.coginvasion.friends.FriendRequestManager import FriendRequestManager
 from lib.coginvasion.base.PositionExaminer import PositionExaminer
 from lib.coginvasion.friends.FriendsList import FriendsList
+from lib.coginvasion.suit import SuitAttacks
 
 import random
 
@@ -347,7 +348,7 @@ class LocalToon(DistributedToon):
         DistributedToon.handleSuitAttack(self, attack_id, suit_id)
         if not self.isDead() and base.config.GetBool('want-sa-reactions'):
             base.taskMgr.remove('LT.attackReactionDone')
-            attack = CIGlobals.SuitAttacks[attack_id]
+            attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
             suit = self.cr.doId2do.get(suit_id)
             animToPlay = None
             timeToWait = 3.0

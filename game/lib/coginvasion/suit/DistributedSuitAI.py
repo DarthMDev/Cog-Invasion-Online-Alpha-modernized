@@ -15,6 +15,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 import random
 import types
 import CogBattleGlobals
+import SuitAttacks
 
 class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     notify = directNotify.newCategory("DistributedSuitAI")
@@ -264,32 +265,13 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         else:
             if self.head in ['vp']:
                 attack = random.randint(0, 6)
+                attackName = SuitAttacks.SuitAttackLengths.keys()[attack]
             else:
-                attack = random.randint(0, 9)
-        if attack == 0:
-            attackName = "canned"
-        elif attack == 1:
-            attackName = "clipontie"
-        elif attack == 2:
-            attackName = "sacked"
-        elif attack == 3:
-            attackName = "glowerpower"
-        elif attack == 4:
-            attackName = "playhardball"
-        elif attack == 5:
-            attackName = "marketcrash"
-        elif attack == 6:
-            attackName = "redtape"
-        elif attack == 7:
-            attackName = "pickpocket"
-        elif attack == 8:
-            attackName = "fountainpen"
-        elif attack == 9:
-            attackName = "hangup"
+                attackName = random.choice(SuitAttacks.SuitAttackLengths.keys())
+                attack = SuitAttacks.SuitAttackLengths.keys().index(attackName)
         attackTaunt = random.randint(0, len(CIGlobals.SuitAttackTaunts[attackName]) - 1)
         timestamp = globalClockDelta.getFrameNetworkTime()
-        attackId = CIGlobals.SuitAttacks.index(attackName)
-        self.sendUpdate('doAttack', [attackId, av.doId, timestamp])
+        self.sendUpdate('doAttack', [attack, av.doId, timestamp])
         if av.__class__.__name__ in ["DistributedSuitAI", "DistributedPieTurretAI"]:
             distance = self.getDistance(av)
             speed = 50.0
@@ -308,7 +290,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             else:
                 timeUntilRelease = 1.0
             currentBossPos = av.getPos(render)
-            hp = int(self.maxHealth / CIGlobals.SuitAttackDamageFactors[attackName])
+            hp = int(self.maxHealth / SuitAttacks.SuitAttackDamageFactors[attackName])
             self.suitHealTrack = Sequence(
                 Wait(timeUntilRelease + timeUntilHeal),
                 Func(
@@ -321,11 +303,11 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.suitHealTrack.start()
         else:
             self.d_setChat(CIGlobals.SuitAttackTaunts[attackName][attackTaunt])
-        time = CIGlobals.SuitAttackLengths[attackName]
+        time = SuitAttacks.SuitAttackLengths[attackName]
         if self.track:
             self.track.pause()
             self.track = None
-        taskMgr.doMethodLater(CIGlobals.SuitAttackLengths[attackName],
+        taskMgr.doMethodLater(SuitAttacks.SuitAttackLengths[attackName],
                 self.continuePathTask, self.uniqueName('continueSuitRoam'))
 
     def attemptToHealBoss(self, boss, currBossPos, hp):
@@ -472,10 +454,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
     def toonHitByWeapon(self, weaponId, avId):
         sender = self.air.getMsgSender()
-        weapon = CIGlobals.SuitAttacks[weaponId]
-        if not weapon in ["pickpocket", "fountainpen", "hangup"]:
+        weapon = SuitAttacks.SuitAttackLengths.keys()[weaponId]
+        if not weapon in ["pickpocket", "fountainpen", "hangup", "buzzword", "razzledazzle"]:
             self.d_handleWeaponTouch()
-        dmg = int(self.maxHealth / CIGlobals.SuitAttackDamageFactors[weapon])
+        dmg = int(self.maxHealth / SuitAttacks.SuitAttackDamageFactors[weapon])
         toon = self.air.doId2do.get(avId, None)
         if toon:
             hp = toon.getHealth() - dmg
@@ -489,7 +471,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 taskMgr.doMethodLater(6.0, self.continuePathTask, self.uniqueName('continueSuitRoam'))
 
     def turretHitByWeapon(weaponId, avId):
-        weapon = CIGlobals.SuitAttacks[weaponId]
+        weapon = SuitAttacks.SuitAttackLengths.keys()[weaponId]
         if not weapon in ["pickpocket", "fountainpen", "hangup"]:
             self.d_handleWeaponTouch()
         dmg = int(self.maxHealth / CIGlobals.SuitAttackDamageFactors[weapon])

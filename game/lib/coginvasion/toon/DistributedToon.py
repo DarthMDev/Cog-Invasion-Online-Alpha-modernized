@@ -24,6 +24,8 @@ import random
 import numbers
 import types
 
+from lib.coginvasion.suit import SuitAttacks
+
 notify = DirectNotify().newCategory("DistributedToon")
 
 class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, DelayDeletable):
@@ -342,7 +344,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.sendUpdate('gagBuild', [gagId])
 
     def handleSuitAttack(self, attack_id, suit_id):
-        attack = CIGlobals.SuitAttacks[attack_id]
+        attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
         if attack == "canned":
             sfx = base.loadSfx("phase_5/audio/sfx/SA_canned_impact_only.mp3")
             SoundInterval(sfx, node = self).start()

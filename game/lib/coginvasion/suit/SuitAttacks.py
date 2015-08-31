@@ -11,24 +11,63 @@ from direct.interval.IntervalGlobal import ActorInterval, Parallel, LerpScaleInt
 from direct.interval.ProjectileInterval import ProjectileInterval
 from direct.showbase.DirectObject import DirectObject
 from direct.distributed import DelayDelete
-from panda3d.core import CollisionSphere, CollisionNode, CollisionHandlerEvent, NodePath, Vec3, VBase4, Point3, BitMask32
+from panda3d.core import CollisionSphere, CollisionNode, CollisionHandlerEvent, NodePath, Vec3, VBase4, Point3, BitMask32, Vec4
 from lib.coginvasion.toon import ParticleLoader
 from direct.actor.Actor import Actor
 from lib.coginvasion.globals import CIGlobals
 from direct.showutil.Rope import Rope
 from direct.task import Task
 
+import random
+
+SuitAttackLengths = {"canned": 4,
+                    "clipontie": 4,
+                    "sacked": 4,
+                    "glowerpower": 2.5,
+                    "playhardball": 4,
+                    "marketcrash": 4,
+                    "pickpocket": 3,
+                    "fountainpen": 3,
+                    "hangup": 4,
+                    'redtape': 4,
+                    'powertie': 4,
+                    'halfwindsor': 4,
+                    "bite": 4,
+                    "chomp": 4,
+                    'evictionnotice': 4,
+                    'restrainingorder': 4,
+                    'razzledazzle': 3,
+                    'buzzword': 6.0}
+SuitAttackDamageFactors = {"canned": 5.5,
+                "clipontie": 13,
+                "sacked": 7,
+                "glowerpower": 5.5,
+                "playhardball": 5.5,
+                "marketcrash": 8,
+                "pickpocket": 10,
+                "fountainpen": 9,
+                "hangup": 7,
+                'redtape': 8,
+                'powertie': 13,
+                'halfwindsor': 13,
+                "bite": 7,
+                "chomp": 5.5,
+                'evictionnotice': 9,
+                'restrainingorder': 8,
+                'razzledazzle': 9,
+                'buzzword': 10}
+
 class Attack(DirectObject):
     notify = directNotify.newCategory("Attack")
+    attack = 'attack'
 
     def __init__(self, attacksClass, suit):
         self.attacksClass = attacksClass
         self.suit = suit
-        self.attack = 'attack'
         self.suitTrack = None
         self.attackName2attackId = {}
-        for index in range(len(CIGlobals.SuitAttacks)):
-            self.attackName2attackId[CIGlobals.SuitAttacks[index]] = index
+        for index in range(len(self.attacksClass.attackName2attackClass.keys())):
+            self.attackName2attackId[SuitAttackLengths.keys()[index]] = index
 
     def getAttackId(self, attackStr):
         return self.attackName2attackId[attackStr]
@@ -52,10 +91,10 @@ class Attack(DirectObject):
 
 class ThrowAttack(Attack):
     notify = directNotify.newCategory("ThrowAttack")
+    attack = 'throw'
 
     def __init__(self, attacksClass, suit):
         Attack.__init__(self, attacksClass, suit)
-        self.attack = 'throw'
         self.weapon_state = None
         self.weapon = None
         self.wss = None
@@ -150,7 +189,7 @@ class ThrowAttack(Attack):
         pathNP.setScale(render, 1.0)
         pathNP.setPos(0, 50, 0)
 
-        if self.attack == 'clipontie':
+        if self.attack in ['clipontie', 'powertie', 'halfwindsor']:
             self.weapon.setHpr(pathNP.getHpr(render))
 
         if projectile == True:
@@ -215,10 +254,7 @@ class ThrowAttack(Attack):
 
 class CannedAttack(ThrowAttack):
     notify = directNotify.newCategory("CannedAttack")
-
-    def __init__(self, attacksClass, suit):
-        ThrowAttack.__init__(self, attacksClass, suit)
-        self.attack = 'canned'
+    attack = 'canned'
 
     def doAttack(self, ts = 0):
         ThrowAttack.doAttack(self, "phase_5/models/props/can.bam", 15, 'doCannedAttack',
@@ -236,10 +272,7 @@ class CannedAttack(ThrowAttack):
 
 class HardballAttack(ThrowAttack):
     notify = directNotify.newCategory("HardballAttack")
-
-    def __init__(self, attacksClass, suit):
-        ThrowAttack.__init__(self, attacksClass, suit)
-        self.attack = 'playhardball'
+    attack = 'playhardball'
 
     def doAttack(self, ts = 0):
         ThrowAttack.doAttack(self, "phase_5/models/props/baseball.bam", 10, 'doHardballAttack',
@@ -257,14 +290,11 @@ class HardballAttack(ThrowAttack):
 
 class ClipOnTieAttack(ThrowAttack):
     notify = directNotify.newCategory("ClipOnTieAttack")
-
-    def __init__(self, attacksClass, suit):
-        ThrowAttack.__init__(self, attacksClass, suit)
-        self.attack = 'clipontie'
+    attack = 'clipontie'
 
     def doAttack(self, ts = 0):
-        ThrowAttack.doAttack(self, "phase_5/models/props/power-tie.bam", 4, 'doClipOnTieAttack',
-                            'throw-paper', 0.2, 'clipOnTieWeaponSphere', weapon_r = 180, ts = ts)
+        ThrowAttack.doAttack(self, "phase_3.5/models/props/clip-on-tie-mod.bam", 1, 'doClipOnTieAttack',
+                            'throw-paper', 1.1, 'clipOnTieWeaponSphere', weapon_r = 180, ts = ts)
 
     def playWeaponSound(self):
         self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
@@ -272,10 +302,7 @@ class ClipOnTieAttack(ThrowAttack):
 
 class MarketCrashAttack(ThrowAttack):
     notify = directNotify.newCategory("MarketCrashAttack")
-
-    def __init__(self, attacksClass, suit):
-        ThrowAttack.__init__(self, attacksClass, suit)
-        self.attack = 'marketcrash'
+    attack = 'marketcrash'
 
     def doAttack(self, ts = 0):
         ThrowAttack.doAttack(self, "phase_5/models/props/newspaper.bam", 3, 'doMarketCrashAttack',
@@ -288,10 +315,7 @@ class MarketCrashAttack(ThrowAttack):
 
 class SackedAttack(ThrowAttack):
     notify = directNotify.newCategory("SackedAttack")
-
-    def __init__(self, attacksClass, suit):
-        ThrowAttack.__init__(self, attacksClass, suit)
-        self.attack = 'sacked'
+    attack = 'sacked'
 
     def doAttack(self, ts = 0):
         ThrowAttack.doAttack(self, "phase_5/models/props/sandbag-mod.bam", 2, 'doSackedAttack',
@@ -304,10 +328,7 @@ class SackedAttack(ThrowAttack):
 
 class GlowerPowerAttack(ThrowAttack):
     notify = directNotify.newCategory("GlowerPowerAttack")
-
-    def __init__(self, attacksClass, suit):
-        ThrowAttack.__init__(self, attacksClass, suit)
-        self.attack = 'glowerpower'
+    attack = 'glowerpower'
 
     def doAttack(self, ts = 0):
         ThrowAttack.doAttack(self, "phase_5/models/props/dagger.bam", 1, 'doGlowerPowerAttack',
@@ -322,10 +343,10 @@ class GlowerPowerAttack(ThrowAttack):
 
 class PickPocketAttack(Attack):
     notify = directNotify.newCategory("PickPocketAttack")
+    attack = 'pickpocket'
 
     def __init__(self, attacksClass, suit):
         Attack.__init__(self, attacksClass, suit)
-        self.attack = 'pickpocket'
         self.dollar = None
         self.pickSfx = None
 
@@ -373,10 +394,10 @@ class PickPocketAttack(Attack):
 
 class FountainPenAttack(Attack):
     notify = directNotify.newCategory("FountainPenAttack")
+    attack = 'fountainpen'
 
     def __init__(self, attacksClass, suit):
         Attack.__init__(self, attacksClass, suit)
-        self.attack = 'fountainpen'
         self.pen = None
         self.spray = None
         self.splat = None
@@ -490,10 +511,10 @@ class FountainPenAttack(Attack):
 
 class HangUpAttack(Attack):
     notify = directNotify.newCategory("HangUpAttack")
+    attack = 'hangup'
 
     def __init__(self, attacksClass, suit):
         Attack.__init__(self, attacksClass, suit)
-        self.attack = 'hangup'
         self.phone = None
         self.receiver = None
         self.collNP = None
@@ -755,10 +776,7 @@ class BounceCheckAttack(ThrowAttack):
 
 class RedTapeAttack(ThrowAttack):
     notify = directNotify.newCategory('RedTapeAttack')
-
-    def __init__(self, attacksClass, suit):
-        ThrowAttack.__init__(self, attacksClass, suit)
-        self.attack = 'redtape'
+    attack = 'redtape'
 
     def doAttack(self, ts = 0):
         ThrowAttack.doAttack(self, "phase_5/models/props/redtape.bam", 1, 'doRedTapeAttack',
@@ -775,22 +793,282 @@ class RedTapeAttack(ThrowAttack):
             self.weaponSfx = None
         ThrowAttack.handleWeaponTouch(self)
 
+class PowerTieAttack(ThrowAttack):
+    notify = directNotify.newCategory('PowerTieAttack')
+    attack = 'powertie'
+
+    def doAttack(self, ts = 0):
+        ThrowAttack.doAttack(self, "phase_5/models/props/power-tie.bam", 4, 'doPowerTieAttack',
+                            'throw-paper', 0.2, 'powerTieWeaponSphere', weapon_r = 180, ts = ts)
+
+    def playWeaponSound(self):
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
+        ThrowAttack.playWeaponSound(self)
+
+class HalfWindsorAttack(ThrowAttack):
+    notify = directNotify.newCategory('HalfWindsorAttack')
+    attack = 'halfwindsor'
+
+    def doAttack(self, ts = 0):
+        ThrowAttack.doAttack(self, "phase_5/models/props/half-windsor.bam", 6, 'doHalfWindsorAttack',
+                            'throw-paper', 0.2, 'halfWindsorWeaponSphere', weapon_r = 90, weapon_p = 0,
+                            weapon_h = 90, weapon_z = -1, weapon_y = -1.6, ts = ts)
+
+    def playWeaponSound(self):
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
+        ThrowAttack.playWeaponSound(self)
+
+class BiteAttack(ThrowAttack):
+    notify = directNotify.newCategory('BiteAttack')
+    attack = 'bite'
+
+    def doAttack(self, ts = 0):
+        ThrowAttack.doAttack(self, "phase_5/models/props/teeth-mod.bam", 6, 'doBiteAttack',
+                            'throw-object', 0.2, 'biteWeaponSphere', weapon_r = 180, ts = ts)
+
+    def throwObject(self):
+        ThrowAttack.throwObject(self, False)
+        self.weapon.setH(self.weapon, -90)
+
+class ChompAttack(ThrowAttack):
+    notify = directNotify.newCategory('ChompAttack')
+    attack = 'chomp'
+
+    def doAttack(self, ts = 0):
+        ThrowAttack.doAttack(self, "phase_5/models/props/teeth-mod.bam", 6, 'doChompAttack',
+                            'throw-object', 0.2, 'chompWeaponSphere', weapon_r = 180, ts = ts)
+
+    def throwObject(self):
+        ThrowAttack.throwObject(self, False)
+        self.weapon.setH(self.weapon, -90)
+
+class EvictionNoticeAttack(ThrowAttack):
+    notify = directNotify.newCategory("EvictionNoticeAttack")
+    attack = 'evictionnotice'
+
+    def doAttack(self, ts = 0):
+        ThrowAttack.doAttack(self, "phase_3.5/models/props/shredder-paper-mod.bam", 1, 'doEvictionNoticeAttack',
+                            'throw-paper', 1, 'evictionNoticeWeaponSphere', weapon_y = -0.15, weapon_z = -0.5,
+                            weapon_x = -1.4, weapon_r = 90, weapon_h = 30, ts = ts)
+        self.wsnp.setZ(1.5)
+
+    def throwObject(self):
+        ThrowAttack.throwObject(self, False)
+
+class RestrainingOrderAttack(EvictionNoticeAttack):
+    notify = directNotify.newCategory('RestrainingOrderAttack')
+    attack = 'restrainingorder'
+
+class ParticleAttack(Attack):
+    notify = directNotify.newCategory('ParticleAttack')
+    attack = 'particleattack'
+    particleIvalDur = 1
+    shooterDistance = 50
+
+    def __init__(self, attacksClass, suit):
+        Attack.__init__(self, attacksClass, suit)
+        self.particles = []
+        self.handObj = None
+        self.shootOutCollNP = None
+        self.particleSound = None
+        self.particleMoveIval = None
+        self.targetX = None
+        self.targetY = None
+        self.targetZ = None
+
+    def handleWeaponTouch(self):
+        pass
+
+    def handleCollision(self, entry):
+        if self.suit:
+            self.suit.sendUpdate('toonHitByWeapon', [self.getAttackId(self.attack), base.localAvatar.doId])
+            base.localAvatar.b_handleSuitAttack(self.getAttackId(self.attack), self.suit.doId)
+
+    def doAttack(self, particlePaths, track_name, particleCollId, animation_name,
+                delayUntilRelease, animationSpeed = 1, handObjPath = None, handObjParent = None,
+                startRightAway = True, ts = 0):
+        for path in particlePaths:
+            particle = ParticleLoader.loadParticleEffect(path)
+            self.particles.append(particle)
+        sphere = CollisionSphere(0, 0, 0, 1)
+        sphere.setTangible(0)
+        node = CollisionNode(particleCollId)
+        node.addSolid(sphere)
+        node.setCollideMask(CIGlobals.WallBitmask)
+
+        self.targetX = self.attacksClass.target.getX(render)
+        self.targetY = self.attacksClass.target.getY(render)
+        self.targetZ = self.attacksClass.target.getZ(render)
+        if len(self.particles) == 1:
+            self.shootOutCollNP = self.particles[0].attachNewNode(node)
+        else:
+            self.shootOutCollNP = self.suit.attachNewNode(node)
+        #self.shootOutCollNP.show()
+        if handObjPath and handObjParent:
+            self.handObj = loader.loadModel(handObjPath)
+            self.handObj.reparentTo(handObjParent)
+        self.suit.setPlayRate(animationSpeed, animation_name)
+        self.suit.play(animation_name)
+        if hasattr(self.suit, 'uniqueName'):
+            track_name = self.suit.uniqueName(track_name)
+            particleCollId = self.suit.uniqueName(particleCollId)
+        self.suitTrack = Sequence(name = track_name)
+        self.suitTrack.append(Wait(delayUntilRelease))
+        self.suitTrack.append(Func(self.releaseAttack))
+        self.suitTrack.append(Wait(self.particleIvalDur))
+        self.suitTrack.setDoneEvent(self.suitTrack.getName())
+        self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
+        if startRightAway:
+            self.suitTrack.start(ts)
+
+    def releaseAttack(self, releaseFromJoint, onlyMoveColl = True, blendType = 'noBlend'):
+        startNP = releaseFromJoint.attachNewNode('startNP')
+        startNP.lookAt(render, self.targetX, self.targetY, self.targetZ + 2)
+        pathNP = NodePath('path')
+        pathNP.reparentTo(startNP)
+        pathNP.setScale(render, 1.0)
+        pathNP.setPos(0, self.shooterDistance, 0)
+
+        for particle in self.particles:
+            if not onlyMoveColl:
+                particle.start(render)
+            else:
+                particle.start(self.suit)
+            particle.lookAt(pathNP)
+            if self.attack == 'razzledazzle':
+                particle.setP(particle, 90)
+
+        if onlyMoveColl:
+            target = self.shootOutCollNP
+            target.wrtReparentTo(render)
+        else:
+            target = self.particles[0]
+        self.particleMoveIval = LerpPosInterval(
+            target, duration = self.particleIvalDur,
+            pos = pathNP.getPos(render),
+            startPos = startNP.getPos(render),
+            blendType = blendType
+        )
+        self.particleMoveIval.start()
+
+        self.acceptOnce('enter' + self.shootOutCollNP.node().getName(), self.handleCollision)
+
+        pathNP.removeNode()
+        startNP.removeNode()
+        del pathNP
+        del startNP
+
+        self.playParticleSound()
+
+    def playParticleSound(self):
+        if self.particleSound:
+            base.audio3d.attachSoundToObject(self.particleSound, self.suit)
+            base.playSfx(self.particleSound)
+
+    def cleanup(self):
+        self.ignore('enter' + self.shootOutCollNP.node().getName())
+        self.targetX = None
+        self.targetY = None
+        self.targetZ = None
+        for particle in self.particles:
+            particle.cleanup()
+        self.particles = None
+        if self.handObj:
+            self.handObj.removeNode()
+            self.handObj = None
+        if self.shootOutCollNP:
+            self.shootOutCollNP.removeNode()
+            self.shootOutCollNP = None
+        if self.particleMoveIval:
+            self.particleMoveIval.pause()
+            self.particleMoveIval = None
+        self.particleSound = None
+        self.particleIvalDur = None
+        Attack.cleanup(self)
+
+class RazzleDazzleAttack(ParticleAttack):
+    notify = directNotify.newCategory('RazzleDazzleAttack')
+    attack = 'razzledazzle'
+    particleIvalDur = 2.0
+
+    def doAttack(self, ts):
+        ParticleAttack.doAttack(
+            self, ['phase_5/etc/smile.ptf'], 'doRazzleDazzle', 'razzleDazzleSphere',
+            'glower', 1, 1, 'phase_5/models/props/smile-mod.bam', self.suit.find('**/joint_Rhold'), ts = ts
+        )
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.handObj.find('**/scale_joint_sign'), onlyMoveColl = False, blendType = 'easeIn')
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_razzle_dazzle.mp3')
+        ParticleAttack.playParticleSound(self)
+
+class BuzzWordAttack(ParticleAttack):
+    notify = directNotify.newCategory('BuzzWordAttack')
+    attack = 'buzzword'
+    particleIvalDur = 1.5
+    afterIvalDur = 1.5
+    shooterDistance = 25.0
+
+    def doAttack(self, ts):
+        texturesList = ['buzzwords-crash',
+                     'buzzwords-inc',
+                     'buzzwords-main',
+                     'buzzwords-over',
+                     'buzzwords-syn']
+        particleList = []
+        for i in xrange(0, 5):
+            particleList.append('phase_5/etc/buzzWord.ptf')
+        ParticleAttack.doAttack(
+            self, particleList, 'doBuzzWord', 'buzzWordSphere',
+            'speak', 1.5, 1.5, None, None, False, ts
+        )
+        for i in xrange(0, 5):
+            effect = self.particles[i]
+            particles = effect.getParticlesNamed('particles-1')
+            sparticles = loader.loadModel('phase_3.5/models/props/suit-particles.bam')
+            np = sparticles.find('**/' + texturesList[i])
+            if random.random() > 0.5:
+                particles.renderer.setColor(Vec4(1, 0.94, 0.02, 1))
+            else:
+                particles.renderer.setColor(Vec4(0, 0, 0, 1))
+            particles.renderer.setFromNode(np)
+        for particle in self.particles:
+            particle.setZ(self.suit.find('**/joint_head').getZ(render))
+        self.suitTrack.append(Wait(self.afterIvalDur))
+        self.suitTrack.start(ts)
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_buzz_word.mp3')
+        ParticleAttack.playParticleSound(self)
+
 from direct.fsm.StateData import StateData
 
 class SuitAttacks(StateData):
     notify = directNotify.newCategory("SuitAttacks")
     attackName2attackClass = {
         "canned": CannedAttack,
-        "playhardball": HardballAttack,
-        "glowerpower": GlowerPowerAttack,
         "clipontie": ClipOnTieAttack,
-        "marketcrash": MarketCrashAttack,
         "sacked": SackedAttack,
+        "glowerpower": GlowerPowerAttack,
+        "playhardball": HardballAttack,
+        "marketcrash": MarketCrashAttack,
         "pickpocket": PickPocketAttack,
         "hangup": HangUpAttack,
         "fountainpen": FountainPenAttack,
-        'bouncecheck': BounceCheckAttack,
-        "redtape": RedTapeAttack
+        "redtape": RedTapeAttack,
+        'powertie': PowerTieAttack,
+        'halfwindsor': HalfWindsorAttack,
+        "bite": BiteAttack,
+        "chomp": ChompAttack,
+        'evictionnotice': EvictionNoticeAttack,
+        'restrainingorder': RestrainingOrderAttack,
+        'razzledazzle': RazzleDazzleAttack,
+        'buzzword': BuzzWordAttack
     }
 
     def __init__(self, doneEvent, suit, target):

@@ -8,6 +8,7 @@ from lib.coginvasion.suit.DistributedDroppableCollectableBackpackAI import Distr
 from lib.coginvasion.suit.DistributedDroppableCollectableJellybeanAI import DistributedDroppableCollectableJellybeanAI as DJellybeanAI
 from lib.coginvasion.suit.DistributedDroppableCollectableJellybeanJarAI import DistributedDroppableCollectableJellybeanJarAI as DJellybeanJarAI
 import random
+import SuitAttacks
 
 class SuitItemDropper:
     notify = directNotify.newCategory('SuitItemDropper')
@@ -43,7 +44,7 @@ class SuitItemDropper:
                                 gags.remove(choice)
                             drop.b_setBP(backpackGags)
                     else:
-                        jellybeans = int(self.suit.getMaxHealth() / CIGlobals.SuitAttackDamageFactors['glowerpower'])
+                        jellybeans = int(self.suit.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors['glowerpower'])
                         constructor = DJellybeanAI
                         if jellybeans > self.jarMinSize:
                             constructor = DJellybeanJarAI
