@@ -43,7 +43,7 @@ class BigWeight(DropGag):
             self.dropLoc = None
             
     def buildCollisions(self):
-        gagSph = CollisionSphere(0, 0, 0.25, 0.75)
+        gagSph = CollisionSphere(0, 0, 0, 2)
         gagSensor = CollisionNode('gagSensor')
         gagSensor.addSolid(gagSph)
         sensorNP = self.gag.attachNewNode(gagSensor)

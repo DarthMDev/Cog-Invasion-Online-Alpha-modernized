@@ -79,7 +79,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             'drop': 5,
             'drop-react' : 15,
             'squirt-large': 7,
-            'squirt-small': 10
+            'squirt-small': 10,
+            'soak' : 16
         }
         self.animId2animState = {v: k for k, v in self.animState2animId.items()}
         self.level = 0
@@ -383,6 +384,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 'drop-react' : 3.5,
                 'squirt-small': 4.0,
                 'squirt-large': 4.9,
+                'soak' : 8,
                 'neutral': 0.0,
                 'walk': 0.0
             }

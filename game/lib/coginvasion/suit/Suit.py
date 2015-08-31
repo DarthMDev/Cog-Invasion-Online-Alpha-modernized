@@ -96,7 +96,8 @@ class Suit(Avatar.Avatar):
                                 State('drop', self.enterDrop, self.exitDrop),
                                 State('drop-react', self.enterDropReact, self.exitDropReact),
                                 State('squirt-large', self.enterLSquirt, self.exitLSquirt),
-                                State('squirt-small', self.enterSSquirt, self.exitSSquirt)], 'off', 'off')
+                                State('squirt-small', self.enterSSquirt, self.exitSSquirt),
+                                State('soak', self.enterSoak, self.exitSoak)], 'off', 'off')
         animStateList = self.animFSM.getStates()
         self.animFSM.enterInitialState()
 
@@ -220,7 +221,8 @@ class Suit(Avatar.Avatar):
                             "slip-backward" : "phase_4/models/char/suitA-slip-backward.bam",
                             "sit": "phase_12/models/char/suitA-sit.bam",
                             "speak": "phase_5/models/char/suitA-speak.bam",
-                            "fingerwag": "phase_5/models/char/suitA-fingerwag.bam"}, "body")
+                            "fingerwag": "phase_5/models/char/suitA-fingerwag.bam",
+                            "soak" : "phase_5/models/char/suitA-soak.bam"}, "body")
         if suitType == "B":
             if skeleton:
                 self.loadModel("phase_5/models/char/cogB_robot-zero.bam", "body")
@@ -246,7 +248,8 @@ class Suit(Avatar.Avatar):
                             "slip-forward" : "phase_4/models/char/suitB-slip-forward.bam",
                             "slip-backward" : "phase_4/models/char/suitB-slip-backward.bam",
                             "speak": "phase_5/models/char/suitB-speak.bam",
-                            "fingerwag": "phase_5/models/char/suitB-finger-wag.bam"}, "body")
+                            "fingerwag": "phase_5/models/char/suitB-finger-wag.bam",
+                            "soak" : "phase_5/models/char/suitB-soak.bam"}, "body")
         if suitType == "C":
             if skeleton:
                 self.loadModel("phase_5/models/char/cogC_robot-zero.bam", "body")
@@ -272,7 +275,9 @@ class Suit(Avatar.Avatar):
                         "slip-backward" : "phase_4/models/char/suitC-slip-backward.bam",
                         "sit": "phase_12/models/char/suitC-sit.bam",
                         "speak": "phase_5/models/char/suitC-speak.bam",
-                        "fingerwag": "phase_5/models/char/suitC-finger-wag.bam"}, "body")
+                        "fingerwag": "phase_5/models/char/suitC-finger-wag.bam",
+                        "soak" : "phase_5/models/char/suitC-soak.bam"}, "body")
+>>>>>>> 9100126bbea24f5c0a9c9346e1d163de826dfeb4
         if skeleton:
             self.setTwoSided(1)
 
@@ -570,6 +575,12 @@ class Suit(Avatar.Avatar):
         self.play('squirt-large')
 
     def exitLSquirt(self):
+        self.stop()
+
+    def enterSoak(self, ts = 0):
+        self.play('soak')
+
+    def exitSoak(self):
         self.stop()
 
     def generateLoserSuit(self):
