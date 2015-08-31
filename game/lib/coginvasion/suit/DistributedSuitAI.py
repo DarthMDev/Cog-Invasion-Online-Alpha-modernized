@@ -64,23 +64,23 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.lateY = 0
         self.stateTimestamp = 0
         self.animState2animId = {
-            'off': 12,
-            'neutral': 9,
-            'walk': 8,
-            'die': 4,
-            'attack': 6,
+            'off': 13,
+            'neutral': 10,
+            'walk': 9,
+            'die': 5,
+            'attack': 7,
             'flydown': 1,
-            'pie': 3,
-            'win': 11,
-            'flyaway': 13,
-            'rollodex': 2,
-            'flyNeutral': 14,
+            'pie': 4,
+            'win': 12,
+            'flyaway': 14,
+            'rollodex': 3,
+            'flyNeutral': 15,
             'flail': 0,
-            'drop': 5,
-            'drop-react' : 15,
-            'squirt-large': 7,
-            'squirt-small': 10,
-            'soak' : 16
+            'drop': 6,
+            'drop-react' : 16,
+            'squirt-large': 8,
+            'squirt-small': 11,
+            'soak' : 2
         }
         self.animId2animState = {v: k for k, v in self.animState2animId.items()}
         self.level = 0

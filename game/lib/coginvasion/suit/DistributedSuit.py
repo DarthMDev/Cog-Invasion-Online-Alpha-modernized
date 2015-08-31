@@ -94,6 +94,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         for index in range(len(self.animFSM.getStates())):
             self.animState2animId[self.animFSM.getStates()[index].getName()] = index
         self.animId2animState = {v: k for k, v in self.animState2animId.items()}
+        print self.animState2animId
 
     def setLatePos(self, x, y):
         self.setX(x)

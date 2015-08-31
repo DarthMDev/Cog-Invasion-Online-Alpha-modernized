@@ -51,7 +51,7 @@ class StormCloud(SquirtGag, LocationGag):
         rainDelay = 1
         effectDelay = 0.3
         cloudHold = 4.7
-        tContact = 2.9
+        tContact = 2.4
         if cog.isDead():
             cloudHold = 1.7
         cloud01, trickleFx, rainEffects, entity = self.buildEntity()
@@ -97,7 +97,7 @@ class StormCloud(SquirtGag, LocationGag):
             return track
         tracks = Parallel()
         soundTrack01 = self.getSoundTrack(1.3, self.avatar)
-        soundTrack02 = self.getSoundTrack(3.6, self.avatar)
+        soundTrack02 = self.getSoundTrack(3.4, self.avatar)
         tracks.append(soundTrack01)
         tracks.append(soundTrack02)
         cloud01Track = __getCloudTrack(cloud01)
@@ -135,7 +135,8 @@ class StormCloud(SquirtGag, LocationGag):
     def considerSquirt(self):
         cog = self.getClosestCog(self.searchRadius)
         self.startEntity(cog)
-        self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
+        if cog:
+            self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
         self.completeSquirt()
         
     def onActivate(self, ignore, cog):
