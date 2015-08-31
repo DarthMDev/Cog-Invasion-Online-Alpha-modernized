@@ -243,7 +243,6 @@ class ActivateTrapGag(TrapGag, LocationGag):
     def getClosestObject(self, entity, objects):
         distances = []
         entities = {}
-        print len(objects)
         for ent in objects:
             entities.update({ent : (ent.getDistance(entity) / 100)})
         for dist in entities.values():

@@ -75,6 +75,7 @@ class DropGag(Gag, LocationGag):
                             self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
                             self.avatar.b_trapActivate(self.getID(), self.avatar.doId, 0, obj.doId)
                             hitCog = True
+        gagObj = self.gag
         if hitCog:
             SoundInterval(self.hitSfx, node = self.gag).start()
             shrinkTrack.append(Wait(0.5))
@@ -82,6 +83,7 @@ class DropGag(Gag, LocationGag):
             SoundInterval(self.missSfx, node = self.gag).start()
         shrinkTrack.append(Wait(0.25))
         shrinkTrack.append(LerpScaleInterval(self.gag, 0.3, Point3(0.01, 0.01, 0.01), startScale = self.gag.getScale()))
+        shrinkTrack.append(Func(gagObj.removeNode))
         shrinkTrack.append(Func(self.cleanupGag))
         shrinkTrack.start()
 

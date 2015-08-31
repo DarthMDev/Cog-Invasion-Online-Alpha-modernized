@@ -923,35 +923,37 @@ class ParticleAttack(Attack):
 
     def releaseAttack(self, releaseFromJoint, onlyMoveColl = True, blendType = 'noBlend'):
         startNP = releaseFromJoint.attachNewNode('startNP')
-        startNP.lookAt(render, self.targetX, self.targetY, self.targetZ + 2)
-        pathNP = NodePath('path')
-        pathNP.reparentTo(startNP)
-        pathNP.setScale(render, 1.0)
-        pathNP.setPos(0, self.shooterDistance, 0)
-
-        for particle in self.particles:
-            if not onlyMoveColl:
-                particle.start(render)
+        
+        if None not in [self.targetX, self.targetY, self.targetZ]:
+            startNP.lookAt(render, self.targetX, self.targetY, self.targetZ + 2)
+            pathNP = NodePath('path')
+            pathNP.reparentTo(startNP)
+            pathNP.setScale(render, 1.0)
+            pathNP.setPos(0, self.shooterDistance, 0)
+    
+            for particle in self.particles:
+                if not onlyMoveColl:
+                    particle.start(render)
+                else:
+                    particle.start(self.suit)
+                particle.lookAt(pathNP)
+                if self.attack == 'razzledazzle':
+                    particle.setP(particle, 90)
+    
+            if onlyMoveColl:
+                target = self.shootOutCollNP
+                target.wrtReparentTo(render)
             else:
-                particle.start(self.suit)
-            particle.lookAt(pathNP)
-            if self.attack == 'razzledazzle':
-                particle.setP(particle, 90)
-
-        if onlyMoveColl:
-            target = self.shootOutCollNP
-            target.wrtReparentTo(render)
-        else:
-            target = self.particles[0]
-        self.particleMoveIval = LerpPosInterval(
-            target, duration = self.particleIvalDur,
-            pos = pathNP.getPos(render),
-            startPos = startNP.getPos(render),
-            blendType = blendType
-        )
-        self.particleMoveIval.start()
-
-        self.acceptOnce('enter' + self.shootOutCollNP.node().getName(), self.handleCollision)
+                target = self.particles[0]
+            self.particleMoveIval = LerpPosInterval(
+                target, duration = self.particleIvalDur,
+                pos = pathNP.getPos(render),
+                startPos = startNP.getPos(render),
+                blendType = blendType
+            )
+            self.particleMoveIval.start()
+    
+            self.acceptOnce('enter' + self.shootOutCollNP.node().getName(), self.handleCollision)
 
         pathNP.removeNode()
         startNP.removeNode()
@@ -966,7 +968,6 @@ class ParticleAttack(Attack):
             base.playSfx(self.particleSound)
 
     def cleanup(self):
-        self.ignore('enter' + self.shootOutCollNP.node().getName())
         self.targetX = None
         self.targetY = None
         self.targetZ = None
@@ -977,6 +978,7 @@ class ParticleAttack(Attack):
             self.handObj.removeNode()
             self.handObj = None
         if self.shootOutCollNP:
+            self.ignore('enter' + self.shootOutCollNP.node().getName())
             self.shootOutCollNP.removeNode()
             self.shootOutCollNP = None
         if self.particleMoveIval:

@@ -39,6 +39,7 @@ from lib.coginvasion.gags.FlowerPot import FlowerPot
 from lib.coginvasion.gags.Sandbag import Sandbag
 from lib.coginvasion.gags.Geyser import Geyser
 from lib.coginvasion.gags.BigWeight import BigWeight
+from lib.coginvasion.gags.StormCloud import StormCloud
 
 class GagShop(Shop):
     notify = directNotify.newCategory('GagShop')
@@ -82,6 +83,7 @@ class GagShop(Shop):
         self.distShop.addItem(Sandbag, ItemType.GAG, 4, invIcons.find('**/inventory_sandbag'))
         self.distShop.addItem(Geyser, ItemType.GAG, 75, invIcons.find('**/inventory_geyser'))
         self.distShop.addItem(BigWeight, ItemType.GAG, 14, invIcons.find('**/inventory_weight'))
+        self.distShop.addItem(StormCloud, ItemType.GAG, 8, invIcons.find('**/inventory_storm_cloud'))
         self.items = self.distShop.getItems()
         Shop.setup(self)
         invIcons.removeNode()

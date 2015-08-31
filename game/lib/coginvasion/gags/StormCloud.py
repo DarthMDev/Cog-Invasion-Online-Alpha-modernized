@@ -19,12 +19,13 @@ from panda3d.core import Point3
 class StormCloud(SquirtGag, LocationGag):
     
     def __init__(self):
-        SquirtGag.__init__(self, CIGlobals.StormCloud, GagGlobals.getProp(4, 'stormcloud-mod'), 80, 
+        SquirtGag.__init__(self, CIGlobals.StormCloud, GagGlobals.getProp(4, 'stormcloud-mod'), 60, 
                            GagGlobals.CLOUD_HIT_SFX, None, GagGlobals.CLOUD_MISS_SFX, None, None, None, None, 1, 1)
         LocationGag.__init__(self, 10, 50)
-        LocationGag.setShadowData(self, isCircle = True, shadowScale = 1)
+        LocationGag.setShadowData(self, isCircle = True, shadowScale = 0.75)
         self.setImage('phase_3.5/maps/storm-cloud.png')
         self.entities = []
+        self.searchRadius = 6
         
     def buildEntity(self):
         cloud = Actor(self.model, {'chan' : GagGlobals.getProp(4, 'stormcloud-chan')})
@@ -46,7 +47,7 @@ class StormCloud(SquirtGag, LocationGag):
         if not cog:
             self.completeSquirt()
             return
-        scaleUpPoint = Point3(3, 3, 3)
+        scaleUpPoint = Point3(1.5, 1.5, 1.5)
         rainDelay = 1
         effectDelay = 0.3
         cloudHold = 4.7
@@ -54,7 +55,7 @@ class StormCloud(SquirtGag, LocationGag):
         if cog.isDead():
             cloudHold = 1.7
         cloud01, trickleFx, rainEffects, entity = self.buildEntity()
-        cloud01.setZ(cog.getZ() + 3)
+        cloud01.setZ(cog.find('**/joint_head').getZ() + 3)
         cloud01.reparentTo(cog)
         cloud02 = Actor(self.model, {'chan' : GagGlobals.getProp(4, 'stormcloud-chan')})
         cloud02.reparentTo(cloud01)
@@ -68,7 +69,7 @@ class StormCloud(SquirtGag, LocationGag):
                 LerpScaleInterval(cloud, 1.5, scaleUpPoint, startScale = GagGlobals.PNT3NEAR0),
                 Wait(rainDelay)
             )
-            if useEffect:
+            if useEffect == 1:
                 pTrack = Parallel()
                 delay = trickleDuration = cloudHold * 0.25
                 trickleTrack = ParticleInterval(trickleFx, cloud, worldRelative=0, duration=trickleDuration, cleanup=True)
@@ -82,7 +83,12 @@ class StormCloud(SquirtGag, LocationGag):
                     Wait(3 * effectDelay), 
                     ActorInterval(cloud, 'chan', startTime = 1, duration = cloudHold))
                 )
-                pTrack.append(Sequence(Wait(tContact), Func(damageCog)))
+                damageTrack = Sequence(Wait(tContact))
+                if cog.getHealth() - self.getDamage() <= 0:
+                    damageTrack.append(Func(cog.d_disableMovement))
+                    damageTrack.append(Func(cog.play, 'soak'))
+                damageTrack.append(Func(damageCog))
+                pTrack.append(damageTrack)
                 track.append(pTrack)
             else:
                 track.append(ActorInterval(cloud, 'chan', startTime = 1, duration = cloudHold))
@@ -90,12 +96,14 @@ class StormCloud(SquirtGag, LocationGag):
             track.append(Func(GagUtils.destroyProp, cloud))
             return track
         tracks = Parallel()
-        soundTrack01 = self.getSoundTrack(0, self.avatar)
-        soundTrack02 = self.getSoundTrack(2.3, self.avatar)
+        soundTrack01 = self.getSoundTrack(1.3, self.avatar)
+        soundTrack02 = self.getSoundTrack(3.6, self.avatar)
         tracks.append(soundTrack01)
         tracks.append(soundTrack02)
-        tracks.append(Func(__getCloudTrack, cloud01, useEffect = 1))
-        tracks.append(Func(__getCloudTrack, cloud02, useEffect = 0))
+        cloud01Track = __getCloudTrack(cloud01)
+        cloud02Track = __getCloudTrack(cloud02, useEffect = 0)
+        tracks.append(cloud01Track)
+        tracks.append(cloud02Track)
         tracks.append(Func(self.destroyEntity, entity))
         tracks.start()
     
@@ -113,8 +121,8 @@ class StormCloud(SquirtGag, LocationGag):
         LocationGag.start(self, self.avatar)
         
     def completeSquirt(self):
-        LocationGag.complete(self)
         if game.process == 'client':
+            LocationGag.complete(self)
             self.reset()
             if self.isLocal():
                 base.localAvatar.enablePieKeys()
@@ -125,12 +133,19 @@ class StormCloud(SquirtGag, LocationGag):
         self.completeSquirt()
         
     def considerSquirt(self):
-        self.startEntity(self.getClosestCog(6))
+        cog = self.getClosestCog(self.searchRadius)
+        self.startEntity(cog)
+        self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
+        self.completeSquirt()
+        
+    def onActivate(self, ignore, cog):
+        self.startEntity(cog)
         
     def release(self):
         LocationGag.release(self)
         actorTrack = LocationGag.getActorTrack(self)
         LocationGag.getSoundTrack(self).start()
         if actorTrack:
-            actorTrack.append(Func(self.considerSquirt))
+            if self.isLocal():
+                actorTrack.append(Func(self.considerSquirt))
             actorTrack.start()
