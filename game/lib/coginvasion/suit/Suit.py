@@ -219,7 +219,8 @@ class Suit(Avatar.Avatar):
                             "slip-forward" : "phase_4/models/char/suitA-slip-forward.bam",
                             "slip-backward" : "phase_4/models/char/suitA-slip-backward.bam",
                             "sit": "phase_12/models/char/suitA-sit.bam",
-                            "speak": "phase_5/models/char/suitA-speak.bam"}, "body")
+                            "speak": "phase_5/models/char/suitA-speak.bam",
+                            "fingerwag": "phase_5/models/char/suitA-fingerwag.bam"}, "body")
         if suitType == "B":
             if skeleton:
                 self.loadModel("phase_5/models/char/cogB_robot-zero.bam", "body")
@@ -244,7 +245,8 @@ class Suit(Avatar.Avatar):
                             "squirt-small" : "phase_4/models/char/suitB-squirt-small.bam",
                             "slip-forward" : "phase_4/models/char/suitB-slip-forward.bam",
                             "slip-backward" : "phase_4/models/char/suitB-slip-backward.bam",
-                            "speak": "phase_5/models/char/suitB-speak.bam"}, "body")
+                            "speak": "phase_5/models/char/suitB-speak.bam",
+                            "fingerwag": "phase_5/models/char/suitB-finger-wag.bam"}, "body")
         if suitType == "C":
             if skeleton:
                 self.loadModel("phase_5/models/char/cogC_robot-zero.bam", "body")
@@ -269,7 +271,8 @@ class Suit(Avatar.Avatar):
                         "slip-forward" : "phase_4/models/char/suitC-slip-forward.bam",
                         "slip-backward" : "phase_4/models/char/suitC-slip-backward.bam",
                         "sit": "phase_12/models/char/suitC-sit.bam",
-                        "speak": "phase_5/models/char/suitC-speak.bam"}, "body")
+                        "speak": "phase_5/models/char/suitC-speak.bam",
+                        "fingerwag": "phase_5/models/char/suitC-finger-wag.bam"}, "body")
         if skeleton:
             self.setTwoSided(1)
 

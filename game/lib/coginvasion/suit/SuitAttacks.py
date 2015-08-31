@@ -37,7 +37,14 @@ SuitAttackLengths = {"canned": 4,
                     'evictionnotice': 4,
                     'restrainingorder': 4,
                     'razzledazzle': 3,
-                    'buzzword': 6.0}
+                    'buzzword': 6,
+                    'jargon': 6,
+                    'mumbojumbo': 6,
+                    'filibuster': 6,
+                    'doubletalk': 6,
+                    'schmooze': 6,
+                    'fingerwag': 6
+                    }
 SuitAttackDamageFactors = {"canned": 5.5,
                 "clipontie": 13,
                 "sacked": 7,
@@ -55,7 +62,21 @@ SuitAttackDamageFactors = {"canned": 5.5,
                 'evictionnotice': 9,
                 'restrainingorder': 8,
                 'razzledazzle': 9,
-                'buzzword': 10}
+                'buzzword': 10,
+                'jargon': 9,
+                'mumbojumbo': 9.5,
+                'filibuster': 9.5,
+                'doubletalk': 10,
+                'schmooze': 8,
+                'fingerwag': 8
+                }
+
+def setEffectTexture(effect, texture, color):
+    particles = effect.getParticlesNamed('particles-1')
+    sparticles = loader.loadModel('phase_3.5/models/props/suit-particles.bam')
+    np = sparticles.find('**/' + texture)
+    particles.renderer.setColor(color)
+    particles.renderer.setFromNode(np)
 
 class Attack(DirectObject):
     notify = directNotify.newCategory("Attack")
@@ -903,7 +924,7 @@ class ParticleAttack(Attack):
             self.shootOutCollNP = self.particles[0].attachNewNode(node)
         else:
             self.shootOutCollNP = self.suit.attachNewNode(node)
-        #self.shootOutCollNP.show()
+        self.shootOutCollNP.show()
         if handObjPath and handObjParent:
             self.handObj = loader.loadModel(handObjPath)
             self.handObj.reparentTo(handObjParent)
@@ -930,10 +951,9 @@ class ParticleAttack(Attack):
         pathNP.setPos(0, self.shooterDistance, 0)
 
         for particle in self.particles:
-            if not onlyMoveColl:
-                particle.start(render)
-            else:
-                particle.start(self.suit)
+            particle.start(render)
+            if onlyMoveColl:
+                particle.setPos(self.suit.find('**/joint_head').getPos(render))
             particle.lookAt(pathNP)
             if self.attack == 'razzledazzle':
                 particle.setP(particle, 90)
@@ -1009,7 +1029,7 @@ class BuzzWordAttack(ParticleAttack):
     attack = 'buzzword'
     particleIvalDur = 1.5
     afterIvalDur = 1.5
-    shooterDistance = 25.0
+    shooterDistance = 32.0
 
     def doAttack(self, ts):
         texturesList = ['buzzwords-crash',
@@ -1026,14 +1046,10 @@ class BuzzWordAttack(ParticleAttack):
         )
         for i in xrange(0, 5):
             effect = self.particles[i]
-            particles = effect.getParticlesNamed('particles-1')
-            sparticles = loader.loadModel('phase_3.5/models/props/suit-particles.bam')
-            np = sparticles.find('**/' + texturesList[i])
             if random.random() > 0.5:
-                particles.renderer.setColor(Vec4(1, 0.94, 0.02, 1))
+                setEffectTexture(effect, texturesList[i], Vec4(1, 0.94, 0.02, 1))
             else:
-                particles.renderer.setColor(Vec4(0, 0, 0, 1))
-            particles.renderer.setFromNode(np)
+                setEffectTexture(effect, texturesList[i], Vec4(0, 0, 0, 1))
         for particle in self.particles:
             particle.setZ(self.suit.find('**/joint_head').getZ(render))
         self.suitTrack.append(Wait(self.afterIvalDur))
@@ -1044,6 +1060,208 @@ class BuzzWordAttack(ParticleAttack):
 
     def playParticleSound(self):
         self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_buzz_word.mp3')
+        ParticleAttack.playParticleSound(self)
+
+class JargonAttack(ParticleAttack):
+    notify = directNotify.newCategory("JargonAttack")
+    attack = 'jargon'
+    particleIvalDur = 1.5
+    afterIvalDur = 1.5
+    shooterDistance = 31.0
+
+    def doAttack(self, ts):
+        texturesList = ['jargon-brow',
+                     'jargon-deep',
+                     'jargon-hoop',
+                     'jargon-ipo']
+        reds = [1, 0, 1, 0]
+        particleList = []
+        for i in xrange(0, 4):
+            particleList.append('phase_5/etc/jargonSpray.ptf')
+        ParticleAttack.doAttack(
+            self, particleList, 'doJargon', 'jargonSphere',
+            'speak', 1.5, 1.5, None, None, False, ts
+        )
+        for i in xrange(0, 4):
+            effect = self.particles[i]
+            setEffectTexture(effect, texturesList[i], Vec4(reds[i], 0, 0, 1))
+        for particle in self.particles:
+            particle.setZ(self.suit.find('**/joint_head').getZ(render))
+        self.suitTrack.append(Wait(self.afterIvalDur))
+        self.suitTrack.start(ts)
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_jargon.mp3')
+        self.particleSound.setLoop(True)
+        ParticleAttack.playParticleSound(self)
+
+class MumboJumboAttack(ParticleAttack):
+    notify = directNotify.newCategory('MumboJumboAttack')
+    attack = 'mumbojumbo'
+    particleIvalDur = 2.5
+    afterIvalDur = 1.5
+    shooterDistance = 25.0
+
+    def doAttack(self, ts):
+        texturesList = ['mumbojumbo-boiler',
+                     'mumbojumbo-creative',
+                     'mumbojumbo-deben',
+                     'mumbojumbo-high',
+                     'mumbojumbo-iron']
+        particleList = []
+        for i in xrange(0, 2):
+            particleList.append('phase_5/etc/mumboJumboSpray.ptf')
+        for i in xrange(0, 3):
+            particleList.append('phase_5/etc/mumboJumboSmother.ptf')
+        ParticleAttack.doAttack(
+            self, particleList, 'doMumJum', 'mumJumSphere',
+            'speak', 1.5, 1.5, None, None, False, ts
+        )
+        for i in xrange(0, 5):
+            effect = self.particles[i]
+            setEffectTexture(effect, texturesList[i], Vec4(1, 0, 0, 1))
+        for particle in self.particles:
+            particle.setZ(self.suit.find('**/joint_head').getZ(render))
+        self.suitTrack.append(Wait(self.afterIvalDur))
+        self.suitTrack.start(ts)
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'), blendType = 'easeIn')
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_mumbo_jumbo.mp3')
+        self.particleSound.setLoop(True)
+        ParticleAttack.playParticleSound(self)
+
+class FilibusterAttack(ParticleAttack):
+    notify = directNotify.newCategory("FilibusterAttack")
+    attack = 'filibuster'
+    particleIvalDur = 1.5
+    afterIvalDur = 1.5
+    shooterDistance = 20.0
+
+    def doAttack(self, ts):
+        texturesList = ['filibuster-cut',
+                     'filibuster-fiscal',
+                     'filibuster-impeach',
+                     'filibuster-inc']
+        particleList = []
+        for i in xrange(0, 4):
+            particleList.append('phase_5/etc/filibusterSpray.ptf')
+        ParticleAttack.doAttack(
+            self, particleList, 'doFili', 'filiSphere',
+            'speak', 1.5, 1.5, None, None, False, ts
+        )
+        for i in xrange(0, 4):
+            effect = self.particles[i]
+            setEffectTexture(effect, texturesList[i], Vec4(0.4, 0, 0, 1))
+        for particle in self.particles:
+            particle.setZ(self.suit.find('**/joint_head').getZ(render))
+        self.suitTrack.append(Wait(self.afterIvalDur))
+        self.suitTrack.start(ts)
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_filibuster.mp3')
+        self.particleSound.setLoop(True)
+        ParticleAttack.playParticleSound(self)
+
+class DoubleTalkAttack(ParticleAttack):
+    notify = directNotify.newCategory('DoubleTalkAttack')
+    attack = 'doubletalk'
+    particleIvalDur = 3.0
+    afterIvalDur = 1.5
+    shooterDistance = 40.0
+
+    def doAttack(self, ts):
+        texturesList = ['doubletalk-double',
+                     'doubletalk-good']
+        particleList = []
+        particleList.append('phase_5/etc/doubleTalkLeft.ptf')
+        particleList.append('phase_5/etc/doubleTalkRight.ptf')
+        ParticleAttack.doAttack(
+            self, particleList, 'doDT', 'DTSphere',
+            'speak', 1.5, 1.5, None, None, False, ts
+        )
+        for i in xrange(0, 2):
+            effect = self.particles[i]
+            setEffectTexture(effect, texturesList[i], Vec4(0, 1.0, 0, 1))
+        for particle in self.particles:
+            particle.setZ(self.suit.find('**/joint_head').getZ(render))
+        self.suitTrack.append(Wait(self.afterIvalDur))
+        self.suitTrack.start(ts)
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'), blendType = 'easeIn')
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_filibuster.mp3')
+        self.particleSound.setLoop(True)
+        ParticleAttack.playParticleSound(self)
+
+class SchmoozeAttack(ParticleAttack):
+    notify = directNotify.newCategory("SchmoozeAttack")
+    attack = 'schmooze'
+    particleIvalDur = 1.5
+    afterIvalDur = 1.5
+    shooterDistance = 23.0
+
+    def doAttack(self, ts):
+        texturesList = ['schmooze-genius',
+                     'schmooze-instant',
+                     'schmooze-master',
+                     'schmooze-viz']
+        particleList = []
+        particleList.append('phase_5/etc/schmoozeUpperSpray.ptf')
+        particleList.append('phase_5/etc/schmoozeLowerSpray.ptf')
+        ParticleAttack.doAttack(
+            self, particleList, 'doSch', 'SchSphere',
+            'speak', 1.5, 1.5, None, None, False, ts
+        )
+        for i in xrange(0, 2):
+            effect = self.particles[i]
+            setEffectTexture(effect, texturesList[i], Vec4(0, 0, 1, 1))
+        for particle in self.particles:
+            particle.setZ(self.suit.find('**/joint_head').getZ(render))
+        self.suitTrack.append(Wait(self.afterIvalDur))
+        self.suitTrack.start(ts)
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_schmooze.mp3')
+        self.particleSound.setLoop(True)
+        ParticleAttack.playParticleSound(self)
+
+class FingerWagAttack(ParticleAttack):
+    notify = directNotify.newCategory('FingerWagAttack')
+    attack = 'fingerwag'
+    particleIvalDur = 2.75
+    afterIvalDur = 1.5
+    shooterDistance = 30.0
+
+    def doAttack(self, ts):
+        ParticleAttack.doAttack(
+            self, ['phase_5/etc/fingerwag.ptf'], 'doFW', 'FWSphere',
+            'fingerwag', 1.5, 1.5, None, None, False, ts
+        )
+        setEffectTexture(self.particles[0], 'blah', Vec4(0.55, 0, 0.55, 1))
+        self.suitTrack.append(Wait(self.afterIvalDur))
+        self.suitTrack.start(ts)
+
+    def releaseAttack(self):
+        ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'), blendType = 'easeIn')
+        self.particles[0].setH(self.particles[0], 90)
+
+    def playParticleSound(self):
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_finger_wag.mp3')
+        self.particleSound.setLoop(False)
         ParticleAttack.playParticleSound(self)
 
 from direct.fsm.StateData import StateData
@@ -1068,7 +1286,13 @@ class SuitAttacks(StateData):
         'evictionnotice': EvictionNoticeAttack,
         'restrainingorder': RestrainingOrderAttack,
         'razzledazzle': RazzleDazzleAttack,
-        'buzzword': BuzzWordAttack
+        'buzzword': BuzzWordAttack,
+        'jargon': JargonAttack,
+        'mumbojumbo': MumboJumboAttack,
+        'filibuster': FilibusterAttack,
+        'doubletalk': DoubleTalkAttack,
+        'schmooze': SchmoozeAttack,
+        'fingerwag': FingerWagAttack
     }
 
     def __init__(self, doneEvent, suit, target):

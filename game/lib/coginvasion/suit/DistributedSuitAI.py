@@ -455,7 +455,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     def toonHitByWeapon(self, weaponId, avId):
         sender = self.air.getMsgSender()
         weapon = SuitAttacks.SuitAttackLengths.keys()[weaponId]
-        if not weapon in ["pickpocket", "fountainpen", "hangup", "buzzword", "razzledazzle"]:
+        if not weapon in ["pickpocket", "fountainpen", "hangup", "buzzword", "razzledazzle",
+                        "jargon", "mumbojumbo", 'doubletalk', 'schmooze', 'fingerwag', 'filibuster']:
             self.d_handleWeaponTouch()
         dmg = int(self.maxHealth / SuitAttacks.SuitAttackDamageFactors[weapon])
         toon = self.air.doId2do.get(avId, None)
