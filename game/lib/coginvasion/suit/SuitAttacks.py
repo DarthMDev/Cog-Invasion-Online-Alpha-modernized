@@ -987,6 +987,7 @@ class ParticleAttack(Attack):
             base.playSfx(self.particleSound)
 
     def cleanup(self):
+        Attack.cleanup(self)
         self.targetX = None
         self.targetY = None
         self.targetZ = None
@@ -1006,7 +1007,6 @@ class ParticleAttack(Attack):
             self.particleMoveIval = None
         self.particleSound = None
         self.particleIvalDur = None
-        Attack.cleanup(self)
 
 class RazzleDazzleAttack(ParticleAttack):
     notify = directNotify.newCategory('RazzleDazzleAttack')
