@@ -263,6 +263,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if av.__class__.__name__ in ["DistributedSuitAI", "DistributedPieTurretAI"]:
             # Why would I pick pocket my boss?
             attack = random.randint(0, 6)
+            attackName = SuitAttacks.SuitAttackLengths.keys()[attack]
         else:
             if self.head in ['vp']:
                 attack = random.randint(0, 6)
