@@ -75,7 +75,7 @@ class SoundGag(Gag):
                 suitTrack.append(SoundInterval(self.hitSfx, node=suit))
                 suitTrack.append(Func(self.avatar.sendUpdate, 'suitHitByPie', [suit.doId, self.getID()]))
                 suitTrack.start()
-            base.localAvatar.sendUpdate('gagRelease', [self.getID()])
+        base.localAvatar.sendUpdate('gagRelease', [self.getID()])
         suits = None
 
     def setPosFromOther(self, dest, source, offset = Point3(0, 0, 0)):
