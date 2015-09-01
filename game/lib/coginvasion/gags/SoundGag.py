@@ -75,6 +75,7 @@ class SoundGag(Gag):
                 suitTrack.append(SoundInterval(self.hitSfx, node=suit))
                 suitTrack.append(Func(self.avatar.sendUpdate, 'suitHitByPie', [suit.doId, self.getID()]))
                 suitTrack.start()
+            base.localAvatar.sendUpdate('gagRelease', [self.getID()])
         suits = None
 
     def setPosFromOther(self, dest, source, offset = Point3(0, 0, 0)):
@@ -92,7 +93,6 @@ class SoundGag(Gag):
         if self.state == GagState.LOADED:
             Gag.cleanupGag(self)
             if self.megaphone:
-                base.localAvatar.sendUpdate('gagRelease', [self.getID()])
                 copies = self.avatar.findAllMatches('**/%s' % self.megaphone.getName())
                 for copy in copies:
                     copy.removeNode()
