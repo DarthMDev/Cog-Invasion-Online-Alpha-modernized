@@ -990,8 +990,9 @@ class ParticleAttack(Attack):
         self.targetX = None
         self.targetY = None
         self.targetZ = None
-        for particle in self.particles:
-            particle.cleanup()
+        if self.particles:
+            for particle in self.particles:
+                particle.cleanup()
         self.particles = None
         if self.handObj:
             self.handObj.removeNode()
