@@ -55,7 +55,7 @@ class StormCloud(SquirtGag, LocationGag):
         if cog.isDead():
             cloudHold = 1.7
         cloud01, trickleFx, rainEffects, entity = self.buildEntity()
-        cloud01.setZ(cog.find('**/joint_head').getZ() + 3)
+        cloud01.setZ(CIGlobals.SuitNameTagPos[cog.head] + 2)
         cloud01.reparentTo(cog)
         cloud02 = Actor(self.model, {'chan' : GagGlobals.getProp(4, 'stormcloud-chan')})
         cloud02.reparentTo(cloud01)
@@ -83,11 +83,13 @@ class StormCloud(SquirtGag, LocationGag):
                     Wait(3 * effectDelay), 
                     ActorInterval(cloud, 'chan', startTime = 1, duration = cloudHold))
                 )
-                damageTrack = Sequence(Wait(tContact))
+                damageTrack = Sequence()
                 if cog.getHealth() - self.getDamage() <= 0:
-                    damageTrack.append(Func(cog.d_disableMovement))
-                    damageTrack.append(Func(cog.play, 'soak'))
-                damageTrack.append(Func(damageCog))
+                    damageTrack.append(Func(cog.d_disableMovement, wantRay = True))
+                    damageTrack.append(Func(damageCog))
+                else:
+                    damageTrack.append(Wait(tContact))
+                    damageTrack.append(Func(damageCog))
                 pTrack.append(damageTrack)
                 track.append(pTrack)
             else:

@@ -377,22 +377,24 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         gag = self.gagMgr.getGagByName(GagGlobals.getGagByID(gag_id))
         dmg = gag.getDamage()
         if obj:
-            if not obj.isDead():
-                obj.b_setHealth(obj.getHealth() - dmg)
-                obj.d_announceHealth(0, dmg)
-                if obj.getHealth() <= 0:
-                    if gag.getType() == GagType.THROW or gag.getName() == CIGlobals.TNT:
-                        obj.b_setAnimState('pie')
-                    elif gag.getType() == GagType.DROP:
-                        majorDrops = [CIGlobals.GrandPiano, CIGlobals.Safe, CIGlobals.BigWeight]
-                        if gag.getName() in majorDrops:
-                            obj.b_setAnimState('drop')
-                        else:
-                            obj.b_setAnimState('drop-react')
-                    elif gag.getType() == GagType.SQUIRT or gag.getType() == GagType.SOUND:
+            obj.b_setHealth(obj.getHealth() - dmg)
+            obj.d_announceHealth(0, dmg)
+            if obj.getHealth() <= 0:
+                if gag.getType() == GagType.THROW or gag.getName() == CIGlobals.TNT:
+                    obj.b_setAnimState('pie')
+                elif gag.getType() == GagType.DROP:
+                    majorDrops = [CIGlobals.GrandPiano, CIGlobals.Safe, CIGlobals.BigWeight]
+                    if gag.getName() in majorDrops:
+                        obj.b_setAnimState('drop')
+                    else:
+                        obj.b_setAnimState('drop-react')
+                elif gag.getType() == GagType.SQUIRT or gag.getType() == GagType.SOUND:
+                    if gag.getName() == CIGlobals.StormCloud:
+                        obj.b_setAnimState('soak')
+                    else:
                         obj.b_setAnimState('squirt-small')
 
-                    self.questManager.cogDefeated(obj)
+                self.questManager.cogDefeated(obj)
 
     def suitKilled(self, avId):
         obj = self.air.doId2do.get(avId, None)

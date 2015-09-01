@@ -384,7 +384,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 'drop-react' : 3.5,
                 'squirt-small': 4.0,
                 'squirt-large': 4.9,
-                'soak' : 8,
+                'soak' : 6.5,
                 'neutral': 0.0,
                 'walk': 0.0
             }
