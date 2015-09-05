@@ -443,10 +443,13 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.avChooser.load()
         self.avChooser.enter()
         if not self.music:
-            self.music = base.loadMusic(CIGlobals.ThemeSong)
+            self.music = base.loadMusic(CIGlobals.getThemeSong())
             base.playMusic(self.music, volume = 0.75, looping = 1)
-        self.accept("enterMakeAToon", self.loginFSM.request, ["makeAToon"])
+        self.accept("enterMakeAToon", self.__handleMakeAToonReq)
         self.accept("avChooseDone", self.__handleAvChooseDone)
+
+    def __handleMakeAToonReq(self, slot):
+        self.loginFSM.request('makeAToon', [slot])
 
     def __handleAvChooseDone(self, avChoice):
         print "------- AvChooseDone -------"
@@ -652,8 +655,7 @@ class CogInvasionClientRepository(AstronClientRepository):
             return
         self.gameFSM.request('playGame', [status])
 
-    def enterMakeAToon(self):
-        slot = self.avChooser.pickAToon.slot
+    def enterMakeAToon(self, slot):
         if self.music:
             self.music.stop()
             self.music = None

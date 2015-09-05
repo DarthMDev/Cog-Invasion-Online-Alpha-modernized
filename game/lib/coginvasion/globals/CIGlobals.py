@@ -56,7 +56,22 @@ GunGameFOV = 70.0
 FactoryGame = "Factory Prowl"
 CameraShyGame = "Camera Shy"
 EagleGame = "Eagle Summit"
-ThemeSong = "phase_3/audio/bgm/ci_theme.mp3"
+
+ThemeSong = None
+
+def getThemeSong():
+    global ThemeSong
+    if not ThemeSong:
+        themeList = []
+        vfs = VirtualFileSystem.getGlobalPtr()
+        for fileName in vfs.scanDirectory('phase_3/audio/bgm/'):
+            fullpath = fileName.get_filename().get_fullpath()
+            if 'ci_theme' in fullpath:
+                themeList.append(fullpath)
+        import random
+        ThemeSong = random.choice(themeList)
+    return ThemeSong
+
 FloorBitmask = BitMask32(2)
 WallBitmask = BitMask32(1)
 EventBitmask = BitMask32(3)

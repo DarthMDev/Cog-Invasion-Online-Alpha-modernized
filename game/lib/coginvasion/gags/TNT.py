@@ -94,7 +94,6 @@ class TNT(TossTrapGag):
                     if obj.getDistance(self.entity) <= self.maxDistance:
                         if self.avatar.doId == base.localAvatar.doId:
                             self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
-                            Sequence(Wait(0.1), Func(self.avatar.checkSuitHealth, obj)).start()
         self.explode()
 
     def cleanupEntity(self):

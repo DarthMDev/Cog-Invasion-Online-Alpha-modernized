@@ -39,6 +39,7 @@ loadPrcFile("config/config_client.prc")
 
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
+base.cTrav = CollisionTraverser()
 
 if base.config.GetString('load-display') == 'pandagl':
     print "CIStart: Using OpenGL graphics library."
@@ -132,7 +133,7 @@ def doneInitLoad():
 print "CIStart: Starting initial game load..."
 from InitialLoad import InitialLoad
 il = InitialLoad(doneInitLoad)
-music = base.loadMusic(CIGlobals.ThemeSong)
+music = base.loadMusic(CIGlobals.getThemeSong())
 base.playMusic(music, looping = 1, volume = 0.75)
 il.load()
 

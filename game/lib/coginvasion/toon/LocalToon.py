@@ -76,7 +76,6 @@ class LocalToon(DistributedToon):
         self.isMoving_back = False
         self.isMoving_jump = False
         self.pieThrowBtn = None
-        base.cTrav = CollisionTraverser()
         self.myBattle = None
         self.invGui = None
 
