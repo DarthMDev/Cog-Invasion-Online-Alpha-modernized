@@ -40,7 +40,7 @@ class Shop(StateData):
 
     def confirmPurchase(self):
         if self.newHealth != None:
-            self.distShop.d_requestHealth(self.newHealth)
+            self.distShop.d_requestHealth(base.localAvatar.getHealth() - self.origHealth)
         messenger.send(self.doneEvent)
 
     def cancelPurchase(self):

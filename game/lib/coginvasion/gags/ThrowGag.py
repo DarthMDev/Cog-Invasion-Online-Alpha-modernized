@@ -11,6 +11,7 @@ from direct.interval.ProjectileInterval import ProjectileInterval
 from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.globals import CIGlobals
+from direct.actor.Actor import Actor
 import GagGlobals
 
 class ThrowGag(Gag):
@@ -19,6 +20,7 @@ class ThrowGag(Gag):
         Gag.__init__(self, name, model, damage, GagType.THROW, hitSfx, anim = anim, scale = scale)
         self.splatScale = GagGlobals.splatSizes[self.name]
         self.splatColor = splatColor
+        self.entities = []
 
     def start(self):
         super(ThrowGag, self).start()
@@ -34,8 +36,7 @@ class ThrowGag(Gag):
         self.gag.reparentTo(self.handJoint)
 
     def release(self):
-        if self.gag == None: return
-        super(ThrowGag, self).release()
+        Gag.release(self)
         base.audio3d.attachSoundToObject(self.woosh, self.gag)
         self.woosh.play()
 
@@ -44,60 +45,77 @@ class ThrowGag(Gag):
         throwPath.setScale(render, 1)
         throwPath.setPos(0, 160, -90)
         throwPath.setHpr(90, -90, 90)
-
-        self.gag.wrtReparentTo(render)
-        self.gag.setHpr(throwPath.getHpr(render))
+        
+        entity = self.gag
+        entity.wrtReparentTo(render)
+        entity.setHpr(throwPath.getHpr(render))
+        self.gag = None
 
         if not self.handJoint:
             self.handJoint = self.avatar.find('**/def_joint_right_hold')
-        self.track = ProjectileInterval(self.gag, startPos = self.handJoint.getPos(render), endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
-        self.track.start()
-        self.buildCollisions()
+
+        track = ProjectileInterval(entity, startPos = self.handJoint.getPos(render), endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
+        track.start()
+        self.entities.append([entity, track])
+        if self.isLocal():
+            self.buildCollisions(entity)
         self.reset()
 
     def handleSplat(self):
+        base.audio3d.detachSound(self.woosh)
         if self.woosh: self.woosh.stop()
         self.buildSplat(self.splatScale, self.splatColor)
         base.audio3d.attachSoundToObject(self.hitSfx, self.splat)
         self.splat.reparentTo(render)
         self.splat.setPos(self.splatPos)
         self.hitSfx.play()
-        self.cleanupGag()
+        self.cleanupEntity(self.splatPos)
         self.splatPos = None
         taskMgr.doMethodLater(0.5, self.delSplat, 'Delete Splat')
         return
+    
+    def cleanupEntity(self, pos):
+        for entity, track in self.entities:
+            if entity.getPos() == pos:
+                self.entities.remove([entity, track])
+                if isinstance(entity, Actor):
+                    entity.cleanup()
+                entity.removeNode()
 
     def onCollision(self, entry):
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
-        if self.avatar.doId == base.localAvatar.doId:
-            for key in base.cr.doId2do.keys():
-                obj = base.cr.doId2do[key]
-                if obj.__class__.__name__ == "DistributedSuit":
-                    if obj.getKey() == avNP.getKey():
-                        if obj.getHealth() > 0:
-                            self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
-                elif obj.__class__.__name__ == "DistributedToon":
-                    if obj.getKey() == avNP.getKey():
-                        if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
-                            if obj != self.avatar:
-                                self.avatar.sendUpdate('toonHitByPie', [obj.doId, self.getID()])
-                            else:
-                                self.avatar.acceptOnce('gagSensor-into', self.onCollision)
-                                return
-        if base.localAvatar == self.avatar:
-            self.splatPos = self.gag.getPos(render)
-            gagPos = self.gag.getPos(render)
-            self.handleSplat()
-            self.avatar.sendUpdate('setSplatPos', [self.getID(), gagPos.getX(), gagPos.getY(), gagPos.getZ()])
+        fromNP = entry.getFromNodePath().getParent()
+        
+        if fromNP.isEmpty():
+            return
+        
+        for key in base.cr.doId2do.keys():
+            obj = base.cr.doId2do[key]
+            if obj.__class__.__name__ == "DistributedSuit":
+                if obj.getKey() == avNP.getKey():
+                    if obj.getHealth() > 0:
+                        self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
+            elif obj.__class__.__name__ == "DistributedToon":
+                if obj.getKey() == avNP.getKey():
+                    if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
+                        if obj != self.avatar:
+                            self.avatar.sendUpdate('toonHitByPie', [obj.doId, self.getID()])
+                        else:
+                            self.avatar.acceptOnce('gagSensor-into', self.onCollision)
+                            return
+                        
+        self.splatPos = fromNP.getPos()
+        self.avatar.sendUpdate('setSplatPos', [self.getID(), self.splatPos.getX(), self.splatPos.getY(), self.splatPos.getZ()])
+        self.handleSplat()
 
-    def buildCollisions(self):
+    def buildCollisions(self, entity):
         pieSphere = CollisionSphere(0, 0, 0, 1)
         pieSensor = CollisionNode('gagSensor')
         pieSensor.addSolid(pieSphere)
-        pieNP = self.gag.attach_new_node(pieSensor)
-        pieNP.set_collide_mask(BitMask32(0))
-        pieNP.node().set_from_collide_mask(CIGlobals.WallBitmask | CIGlobals.FloorBitmask)
+        pieNP = entity.attachNewNode(pieSensor)
+        pieNP.setCollideMask(BitMask32(0))
+        pieNP.node().setFromCollideMask(CIGlobals.WallBitmask | CIGlobals.FloorBitmask)
 
         event = CollisionHandlerEvent()
         event.set_in_pattern("%fn-into")
