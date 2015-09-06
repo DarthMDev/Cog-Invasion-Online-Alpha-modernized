@@ -56,9 +56,10 @@ class LocationGag:
             self.buildTracks()
         
     def complete(self):
-        numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
-        ActorInterval(self.avatar, self.buttonAnim, startFrame = self.completeFrame, endFrame = numFrames,
-                      playRate = self.playRate).start()
+        if self.button:
+            numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
+            ActorInterval(self.avatar, self.buttonAnim, startFrame = self.completeFrame, endFrame = numFrames,
+                          playRate = self.playRate).start()
         self.cleanupButton()
         
     def buildTracks(self, mode=0):
