@@ -11,7 +11,9 @@
 game/safe_test.py
 game/.pydevproject
 game/.project
-game/astron/databases
+game/astron/databases/astrondb
+game/astron/databases/account-bridge.db
+game/astron/databases/astrondb/info.yaml
 game/tools/libcoginvasion.pyd
 game/tools/libcoginvasion.c
 game/tools/libcoginvasion.lib
