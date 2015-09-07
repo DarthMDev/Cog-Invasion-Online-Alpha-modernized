@@ -72,9 +72,9 @@ class DistributedCityCart(DistributedNode):
         self.moPath = NURBSMopath.NURBSMopath(self.moPaths[self.pathIndex], name = self.uniqueName('DCityCart_moPath'))
         startT = 0.0
         if ts > 0.0:
-            startT = duration / (ts % 120) % 1
+            startT = (ts % duration) * (1.0 / duration)
         self.moPath.play(self, loop = True, duration = duration, startT = startT)
-        #base.taskMgr.add(self.__drive, self.uniqueName('DCityCart.drive'))
+        base.taskMgr.add(self.__drive, self.uniqueName('DCityCart.drive'))
         self.wheelSpinTrack = Parallel()
         for name in ['leftFrontWheel', 'rightBackWheel', 'rightFrontWheel', 'leftBackWheel']:
             wheel = self.find('**/' + name)

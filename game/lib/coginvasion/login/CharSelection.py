@@ -37,6 +37,7 @@ class CharSelection:
         self.sky = None
         self.fog = None
         self.title = None
+        self.stageToon = None
         self.selectionFSM = ClassicFSM.ClassicFSM(
             'CharSelection',
             [
@@ -165,17 +166,17 @@ class CharSelection:
                                         pos = (-0.25, 0.5, 0), fg = (1, 0.9, 0.1, 1.0))
         self.charNameLabel.hide()
         self.playOrCreateButton = DirectButton(text = "", pos = (0, 0, -0.8), command = self.__action,
-                                            geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.055,
-                                            relief = None)
+                                            geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.06,
+                                            relief = None, text_pos = (0, -0.01))
         self.playOrCreateButton.hide()
         self.deleteButton = DirectButton(text = "Delete", pos = (-0.42, 0, -0.8),
                                         command = self.__action, extraArgs = ['delete'],
-                                        geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.055,
-                                        relief = None)
+                                        geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.06,
+                                        relief = None, text_pos = (0, -0.01))
         self.deleteButton.hide()
         self.quitButton = DirectButton(text = "Quit", pos = (-0.84, 0, -0.8), command = self.__action,
-                                    extraArgs = ['quit'], text_scale = 0.055, geom = CIGlobals.getDefaultBtnGeom(),
-                                    relief = None)
+                                    extraArgs = ['quit'], text_scale = 0.06, geom = CIGlobals.getDefaultBtnGeom(),
+                                    relief = None, text_pos = (0, -0.01))
 
         textRolloverColor = Vec4(1, 1, 0, 1)
         textDownColor = Vec4(0.5, 0.9, 1, 1)
@@ -188,7 +189,7 @@ class CharSelection:
             else:
                 text = self.NO_TOON
             btn = DirectButton(
-                relief=None, text = text, text_scale=0.07,
+                relief=None, text = text, text_scale=0.06,
                 text_align=TextNode.ALeft, text1_bg=textDownColor, text2_bg=textRolloverColor,
                 text3_fg=textDisabledColor, textMayChange=0, command=self.__handleCharButton,
                 extraArgs=[slot], text_pos = (0, 0, 0.0)

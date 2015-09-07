@@ -14,6 +14,8 @@ Logger.Starter()
 from lib.coginvasion.manager.SettingsManager import SettingsManager
 jsonfile = "settings.json"
 print "CIStart: Reading settings file " + jsonfile
+sm = SettingsManager()
+sm.maybeFixAA()
 
 import os
 class game:
@@ -96,7 +98,7 @@ base.setFrameRateMeter(False)
 base.accept('f9', base.screenshot, ['screenshots/screenshot'])
 from direct.filter.CommonFilters import CommonFilters
 print "CIStart: Setting display preferences..."
-SettingsManager().applySettings(jsonfile)
+sm.applySettings(jsonfile)
 if base.win == None:
     print "CIStart: Unable to open window; aborting."
     sys.exit()
@@ -109,12 +111,12 @@ DirectGuiGlobals.setDefaultFontFunc(CIGlobals.getToonFont)
 DirectGuiGlobals.setDefaultFont(CIGlobals.getToonFont())
 DirectGuiGlobals.setDefaultRolloverSound(loader.loadSfx("phase_3/audio/sfx/GUI_rollover.mp3"))
 DirectGuiGlobals.setDefaultClickSound(loader.loadSfx("phase_3/audio/sfx/GUI_create_toon_fwd.mp3"))
-DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialog_box_gui.bam"))
+DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/ci_dialog_box_gui.egg"))
 
 def maybeDoSomethingWithMusic(condition):
     # 0 = paused
     # 1 = restarted
-    width, height, fs, music, sfx, tex_detail, model_detail, aa, af = SettingsManager().getSettings(jsonfile)
+    width, height, fs, music, sfx, tex_detail, model_detail, aa, af = sm.getSettings(jsonfile)
     if condition == 0:
         if music == True:
             base.enableMusic(False)
