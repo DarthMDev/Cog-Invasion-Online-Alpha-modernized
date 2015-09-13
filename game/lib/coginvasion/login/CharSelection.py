@@ -16,8 +16,8 @@ import sys
 class CharSelection:
     notify = directNotify.newCategory('CharSelection')
 
-    STAGE_TOON_POS = (-1, 0, 0)
-    STAGE_TOON_HPR = (180, 0, 0)
+    STAGE_TOON_POS = (66.4, 74.47, -25)
+    STAGE_TOON_HPR = (227.73, 0, 0)
 
     NO_TOON = "Empty Slot"
     PLAY = "Play"
@@ -146,11 +146,10 @@ class CharSelection:
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 
         self.__setupStageToon()
-
-        self.world = loader.loadModel('phase_9/models/cogHQ/BossRoomHQ.bam')
+        
+        self.world = loader.loadModel('phase_9/models/cogHQ/SellbotHQExterior.bam')
         self.world.reparentTo(base.render)
-        self.world.setPos(0, 35, -18)
-        self.world.setH(180)
+        self.world.setPos(0, 227.09, -25.36)
         self.sky = loader.loadModel('phase_9/models/cogHQ/cog_sky.bam')
         self.sky.setScale(1)
         self.sky.reparentTo(base.render)
@@ -241,8 +240,8 @@ class CharSelection:
             items=self.charButtons
         )
 
-        base.camera.setPos(0, -15, 5)
-        base.camera.lookAt(self.stageToon, -1.5, 0, 3)
+        base.camera.setPos(75.12, 63.22, -23)
+        base.camera.setHpr(26.57, 9.62, 0)
 
     def unload(self):
         self.selectionFSM.requestFinalState()
