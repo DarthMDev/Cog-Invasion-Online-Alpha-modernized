@@ -9,7 +9,7 @@ from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.globals import CIGlobals
 from abc import ABCMeta
-import numbers
+import random, types
 
 class Backpack:
     amounts = {CIGlobals.WholeCreamPie : 7,
@@ -54,12 +54,22 @@ class Backpack:
         self.activeGag = None
         self.gagMgr = GagManager()
         self.gagGUI = None
+        self.loadout = []
 
     def setup(self, avatar):
         self.avatar = avatar
 
     def setGagGUI(self, gui):
         self.gagGUI = gui
+        
+        if not len(self.loadout):
+            availableGags = self.gags.keys()
+            for _ in xrange(4):
+                gag = random.choice(availableGags)
+                availableGags.remove(gag)
+                self.addLoadoutGag(gag)
+        else:
+            self.gagGUI.updateLoadout()
 
     def getGagGUI(self):
         return self.gagGUI
@@ -85,8 +95,35 @@ class Backpack:
         for gName in names:
             if gName == name:
                 return self.gags.keys().index(gName)
+            
+    def setLoadout(self, loadoutList):
+        self.loadout = loadoutList
+        if self.gagGUI:
+            self.gagGUI.updateLoadout()
+        
+    def addLoadoutGag(self, gag):
+        if gag not in self.loadout:
+            if len(self.loadout) < 4:
+                self.loadout.append(gag)
+                self.gagGUI.updateLoadout()
+            
+    def removeLoadoutGag(self, gag):
+        if type(gag) == types.IntType:
+            gag = self.getGagByIndex(gag)
+        self.loadout.remove(gag)
+        self.gagGUI.updateLoadout()
+        
+    def getLoadout(self):
+        return self.loadout
 
     def setCurrentGag(self, arg):
+        if arg == None:
+            if self.currentGag:
+                self.currentGag.unEquip()
+                self.currentGag = None
+            self.index = -1
+            return
+
         for gag in self.gags.keys():
             if gag:
                 if gag.getName() == arg:
@@ -123,7 +160,7 @@ class Backpack:
         return self.activeGag
 
     def setMaxSupply(self, nMaxSupply, arg = None):
-        if isinstance(arg, numbers.Number) or arg == None:
+        if type(arg) == types.IntType or arg == None:
             if self.index and self.gags:
                 if arg == None:
                     arg = self.index
@@ -132,7 +169,7 @@ class Backpack:
             self.amounts.update({arg : nMaxSupply})
 
     def getMaxSupply(self, arg = None):
-        if isinstance(arg, numbers.Number) or arg == None:
+        if type(arg) == types.IntType or arg == None:
             if self.index and self.gags:
                 if arg == None:
                     arg = self.index
@@ -164,7 +201,7 @@ class Backpack:
         if arg == None and self.index:
             curMaxSupply = self.gags.values()[self.index][1]
             index = self.gags.keys()[self.index]
-        if isinstance(arg, numbers.Number):
+        if type(arg) == types.IntType:
             if self.index and self.gags:
                 curMaxSupply = self.gags.values()[arg][1]
                 index = self.gags.keys()[arg]
@@ -188,7 +225,7 @@ class Backpack:
         curSupply = 0
         if arg == None:
             curSupply = self.gags.values()[self.index][0]
-        if isinstance(arg, numbers.Number):
+        if type(arg) == types.IntType:
             if self.index and self.gags:
                 curSupply = self.gags.values()[arg][0]
             if curSupply == None: return 0

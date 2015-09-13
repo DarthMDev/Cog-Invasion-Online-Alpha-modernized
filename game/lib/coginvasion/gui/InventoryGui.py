@@ -10,6 +10,7 @@ from direct.directnotify.DirectNotify import DirectNotify
 from direct.interval.SoundInterval import SoundInterval
 from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel
 from lib.coginvasion.gags import GagGlobals
+from lib.coginvasion.gags.GagState import GagState
 from panda3d.core import TransparencyAttrib
 
 class Slot(DirectFrame):
@@ -74,9 +75,13 @@ class InventoryGui(DirectObject):
             self.activeSlot.setOutlineImage('idle')
             self.prevSlot = self.activeSlot
         if self.backpack.getSupply(slot.getGag().getName()) > 0:
-            base.localAvatar.b_equip(GagGlobals.getIDByName(slot.getGag().getName()))
-            slot.setOutlineImage('selected')
-            self.activeSlot = slot
+            if self.activeSlot != slot:
+                base.localAvatar.b_equip(GagGlobals.getIDByName(slot.getGag().getName()))
+                slot.setOutlineImage('selected')
+                self.activeSlot = slot
+            elif self.activeSlot == slot and slot.getGag().getState() == GagState.LOADED:
+                base.localAvatar.b_unEquip()
+                self.activeSlot = None
             self.update()
             if self.switchSound and playSound: SoundInterval(self.switchSoundSfx).start()
         else: return
@@ -84,8 +89,6 @@ class InventoryGui(DirectObject):
     def createGui(self):
         self.deleteGui()
         phase = 'phase_3.5/maps/'
-        #textures = loader.loadModel('phase_3.5/models/gui/textures.bam')
-        #textures.reparentTo(render)
         posGroup = self.threeSlotsPos
         self.inventoryFrame = DirectFrame(parent = base.a2dRightCenter, pos = (-0.2, 0, 0))
         if self.defaultSlots == 4: posGroup = self.fourSlotPos
@@ -142,6 +145,8 @@ class InventoryGui(DirectObject):
             if not element: return
         for slot in self.slots:
             gag = slot.getGag()
+            if not gag:
+                continue
             supply = self.backpack.getSupply(gag.getName())
             index = self.slots.index(slot)
             if not gag and len(self.backpack.getGags()) - 1 >= index:
@@ -166,22 +171,28 @@ class InventoryGui(DirectObject):
                     slot.setOutlineImage('idle')
                 else:
                     slot.setOutlineImage('no_ammo')
+        if self.activeSlot == None:
+            self.ammoLabel.hide()
+            self.ammoLabel['text'] = 'Ammo: 0'
         self.resetScroll()
 
     def setBackpack(self, backpack):
         self.backpack = backpack
-        for gIndex in range(len(self.backpack.getGags())):
-            gag = self.backpack.getGagByIndex(gIndex)
-            if gIndex == 3:
-                self.slots[gIndex].show()
+        
+    def updateLoadout(self):
+        if self.backpack:
+            loadout = self.backpack.getLoadout()
+            if len(loadout) <= 3:
+                self.reseatSlots()
+            elif len(loadout) == 4:
                 self.reseatSlots(slots = 4)
-            if gIndex < len(self.slots) - 1 or gIndex == len(self.slots) - 1:
-                slot = self.slots[gIndex]
-                slot.setGag(gag)
-            else: break
-        for slot in self.slots:
-            if not slot.getGag(): slot.setOutlineImage('no_ammo')
-        self.update()
+            for i in range(len(self.slots)):
+                slot = self.slots[i]
+                if i < len(loadout):
+                    slot.setGag(loadout[i])
+                else:
+                    slot.setGag(None)
+            self.update()
 
     def reseatSlots(self, slots = 3):
         for slot in range(len(self.slots) - 1):

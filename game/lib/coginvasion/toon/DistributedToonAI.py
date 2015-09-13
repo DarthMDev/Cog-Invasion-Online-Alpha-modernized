@@ -323,6 +323,9 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def equip(self, index):
         if not self.setupGags: self.setupGags = True
         self.backpack.setCurrentGag(index)
+        
+    def unEquip(self):
+        self.backpack.setCurrentGag(None)
 
     def buildAmmoList(self, gagIds):
         ammoList = []
@@ -331,6 +334,16 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
             amt = self.backpack.getSupply(GagGlobals.getGagByID(gagId))
             ammoList.append(amt)
         return ammoList
+    
+    def setLoadout(self, gagIds):
+        if self.backpack:
+            loadout = []
+            for i in range(len(gagIds)):
+                gagId = gagIds[i]
+                gag = self.backpack.getGagByID(gagId)
+                if gag:
+                    loadout.append(gag)
+            self.backpack.setLoadout(loadout)
 
     def setBackpackAmmo(self, gagIds, ammoList):
         if self.ammo == ammoList: return
@@ -393,7 +406,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                         obj.b_setAnimState('soak')
                     else:
                         obj.b_setAnimState('squirt-small')
-
                 self.questManager.cogDefeated(obj)
 
     def suitKilled(self, avId):

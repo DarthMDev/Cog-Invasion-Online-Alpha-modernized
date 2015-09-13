@@ -374,6 +374,14 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                 if not gag.getAvatar():
                     gag.setAvatar(self)
                 self.backpack.setCurrentGag(gag.getName())
+                
+    def unEquip(self):
+        if self.backpack:
+            self.backpack.setCurrentGag(None)
+            
+    def b_unEquip(self):
+        self.unEquip()
+        self.sendUpdate('unEquip', [])
 
     def b_equip(self, gag_id):
         self.equip(gag_id)
@@ -404,6 +412,16 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             amt = self.backpack.getSupply(GagGlobals.getGagByID(gagId))
             ammoList.append(amt)
         return ammoList
+    
+    def setLoadout(self, gagIds):
+        if self.backpack:
+            loadout = []
+            for i in range(len(gagIds)):
+                gagId = gagIds[i]
+                gag = self.backpack.getGagByID(gagId)
+                if gag:
+                    loadout.append(gag)
+            self.backpack.setLoadout(loadout)
 
     def setBackpackAmmo(self, gagIds, ammoList):
         if -1 in ammoList: return

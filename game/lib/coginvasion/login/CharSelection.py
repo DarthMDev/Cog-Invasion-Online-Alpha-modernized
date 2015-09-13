@@ -164,16 +164,16 @@ class CharSelection:
         self.charNameLabel = OnscreenText(text = "", font = CIGlobals.getMickeyFont(),
                                         pos = (-0.25, 0.5, 0), fg = (1, 0.9, 0.1, 1.0))
         self.charNameLabel.hide()
-        self.playOrCreateButton = DirectButton(text = "", pos = (0, 0, -0.8), command = self.__action,
+        self.playOrCreateButton = DirectButton(text = "", pos = (0.8125, 0, -0.735), command = self.__action,
                                             geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.06,
                                             relief = None, text_pos = (0, -0.01))
         self.playOrCreateButton.hide()
-        self.deleteButton = DirectButton(text = "Delete", pos = (-0.42, 0, -0.8),
+        self.deleteButton = DirectButton(text = "Delete", pos = (0.8125, 0, -0.835),
                                         command = self.__action, extraArgs = ['delete'],
                                         geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.06,
                                         relief = None, text_pos = (0, -0.01))
         self.deleteButton.hide()
-        self.quitButton = DirectButton(text = "Quit", pos = (-0.84, 0, -0.8), command = self.__action,
+        self.quitButton = DirectButton(text = "Quit", pos = (-1.10, 0, -0.90), command = self.__action,
                                     extraArgs = ['quit'], text_scale = 0.06, geom = CIGlobals.getDefaultBtnGeom(),
                                     relief = None, text_pos = (0, -0.01))
 
