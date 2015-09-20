@@ -61,7 +61,7 @@ class Backpack:
 
     def setGagGUI(self, gui):
         self.gagGUI = gui
-        
+
         if not len(self.loadout):
             availableGags = self.gags.keys()
             for _ in xrange(4):
@@ -95,24 +95,26 @@ class Backpack:
         for gName in names:
             if gName == name:
                 return self.gags.keys().index(gName)
-            
+
     def setLoadout(self, loadoutList):
         self.loadout = loadoutList
-        if self.gagGUI:
-            self.gagGUI.updateLoadout()
-        
+        if hasattr(base, 'cr'):
+            if base.cr.playGame.getPlace() and base.cr.playGame.getPlace().fsm.getCurrentState().getName() == 'walk':
+                base.localAvatar.disablePies()
+                base.localAvatar.enablePies(1)
+
     def addLoadoutGag(self, gag):
         if gag not in self.loadout:
             if len(self.loadout) < 4:
                 self.loadout.append(gag)
                 self.gagGUI.updateLoadout()
-            
+
     def removeLoadoutGag(self, gag):
         if type(gag) == types.IntType:
             gag = self.getGagByIndex(gag)
         self.loadout.remove(gag)
         self.gagGUI.updateLoadout()
-        
+
     def getLoadout(self):
         return self.loadout
 

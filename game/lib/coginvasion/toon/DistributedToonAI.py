@@ -85,6 +85,13 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.friends = []
         return
 
+    def requestSetLoadout(self, gagIds):
+        for gagId in gagIds:
+            if not gagId in self.getInventory():
+                self.ejectSelf(reason = "Tried to add a gag to the loadout that isn't in the backpack.")
+                return
+        self.b_setLoadout(gagIds)
+
     def requestAddFriend(self, avId):
         av = self.air.doId2do.get(avId)
         if av:
@@ -323,7 +330,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def equip(self, index):
         if not self.setupGags: self.setupGags = True
         self.backpack.setCurrentGag(index)
-        
+
     def unEquip(self):
         self.backpack.setCurrentGag(None)
 
@@ -334,7 +341,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
             amt = self.backpack.getSupply(GagGlobals.getGagByID(gagId))
             ammoList.append(amt)
         return ammoList
-    
+
     def setLoadout(self, gagIds):
         if self.backpack:
             loadout = []
@@ -344,6 +351,10 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                 if gag:
                     loadout.append(gag)
             self.backpack.setLoadout(loadout)
+
+    def b_setLoadout(self, gagIds):
+        self.sendUpdate('setLoadout', [gagIds])
+        self.setLoadout(gagIds)
 
     def setBackpackAmmo(self, gagIds, ammoList):
         if self.ammo == ammoList: return
@@ -365,6 +376,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                 amt = 0
             self.backpack.setSupply(amt, GagGlobals.getGagByID(gagId))
         self.ammo = ammoList
+        self.gagIds = gagIds
         if self.setupGags == False: self.d_setBackpackAmmo(gagIds, ammoList)
 
     def d_setBackpackAmmo(self, gagIds, ammoList):
@@ -378,6 +390,9 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
 
     def getBackpackAmmo(self):
         return self.ammo
+
+    def getInventory(self):
+        return self.gagIds
 
     def died(self):
         self.b_setHealth(self.getMaxHealth())

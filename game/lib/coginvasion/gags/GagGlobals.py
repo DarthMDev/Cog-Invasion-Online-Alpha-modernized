@@ -18,6 +18,89 @@ gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobal
           23 : CIGlobals.Whistle, 24 : CIGlobals.Bugle, 25 : CIGlobals.PixieDust, 26 : CIGlobals.FlowerPot,
           27 : CIGlobals.Sandbag, 28 : CIGlobals.Anvil, 29 : CIGlobals.Geyser, 30 : CIGlobals.BigWeight,
           31 : CIGlobals.StormCloud}
+gagIdByName = {v: k for k, v in gagIds.items()}
+
+InventoryIconByName = {CIGlobals.WholeCreamPie : '**/inventory_creampie',
+ CIGlobals.BirthdayCake : '**/inventory_cake',
+ CIGlobals.CreamPieSlice : '**/inventory_cream_pie_slice',
+ CIGlobals.TNT : '**/inventory_tnt',
+ CIGlobals.SeltzerBottle : '**/inventory_seltzer_bottle',
+ CIGlobals.WholeFruitPie : '**/inventory_fruitpie',
+ CIGlobals.WeddingCake : '**/inventory_wedding',
+ CIGlobals.FruitPieSlice : '**/inventory_fruit_pie_slice',
+ CIGlobals.GrandPiano : '**/inventory_piano',
+ CIGlobals.BambooCane : '**/inventory_bamboo_cane',
+ CIGlobals.JugglingBalls : '**/inventory_juggling_cubes',
+ CIGlobals.Safe : '**/inventory_safe_box',
+ CIGlobals.Megaphone : '**/inventory_megaphone',
+ CIGlobals.Cupcake : '**/inventory_tart',
+ CIGlobals.TrapDoor : '**/inventory_trapdoor',
+ CIGlobals.Quicksand : '**/inventory_quicksand_icon',
+ CIGlobals.Lipstick : '**/inventory_lipstick',
+ CIGlobals.Foghorn : '**/inventory_fog_horn',
+ CIGlobals.Aoogah : '**/inventory_aoogah',
+ CIGlobals.ElephantHorn : '**/inventory_elephant',
+ CIGlobals.Opera : '**/inventory_opera_singer',
+ CIGlobals.BikeHorn : '**/inventory_bikehorn',
+ CIGlobals.Whistle : '**/inventory_whistle',
+ CIGlobals.Bugle : '**/inventory_bugle',
+ CIGlobals.PixieDust : '**/inventory_pixiedust',
+ CIGlobals.Anvil : '**/inventory_anvil',
+ CIGlobals.FlowerPot : '**/inventory_flower_pot',
+ CIGlobals.Sandbag : '**/inventory_sandbag',
+ CIGlobals.Geyser : '**/inventory_geyser',
+ CIGlobals.BigWeight : '**/inventory_weight',
+ CIGlobals.StormCloud : '**/inventory_storm_cloud',
+ CIGlobals.BananaPeel : '**/inventory_bannana_peel'}
+
+Throw = "Throw"
+Squirt = "Squirt"
+Drop = "Drop"
+Sound = "Sound"
+Lure = "Lure"
+ToonUp = "Toon-Up"
+Trap = "Trap"
+TrackColorByName = {ToonUp : (211 / 255.0, 148 / 255.0, 255 / 255.0),
+ Trap : (249 / 255.0, 255 / 255.0, 93 / 255.0),
+ Lure : (79 / 255.0, 190 / 255.0, 76 / 255.0),
+ Sound : (93 / 255.0, 108 / 255.0, 239 / 255.0),
+ Throw : (255 / 255.0, 145 / 255.0, 66 / 255.0),
+ Squirt : (255 / 255.0, 65 / 255.0, 199 / 255.0),
+ Drop : (67 / 255.0, 243 / 255.0, 255 / 255.0)}
+TrackNameById = {0 : ToonUp, 1 : Trap, 2 : Lure, 3 : Sound, 4 : Throw, 5 : Squirt, 6 : Drop}
+TrackGagNamesByTrackName = {Throw : [CIGlobals.Cupcake,
+  CIGlobals.FruitPieSlice,
+  CIGlobals.CreamPieSlice,
+  CIGlobals.WholeFruitPie,
+  CIGlobals.WholeCreamPie,
+  CIGlobals.BirthdayCake,
+  CIGlobals.WeddingCake],
+ ToonUp : [CIGlobals.Megaphone,
+  CIGlobals.Lipstick,
+  CIGlobals.BambooCane,
+  CIGlobals.PixieDust,
+  CIGlobals.JugglingBalls],
+ Sound : [CIGlobals.BikeHorn,
+  CIGlobals.Whistle,
+  CIGlobals.Bugle,
+  CIGlobals.Aoogah,
+  CIGlobals.ElephantHorn,
+  CIGlobals.Foghorn,
+  CIGlobals.Opera],
+ Drop : [CIGlobals.FlowerPot,
+  CIGlobals.Sandbag,
+  CIGlobals.Anvil,
+  CIGlobals.BigWeight,
+  CIGlobals.Safe,
+  CIGlobals.GrandPiano],
+ Squirt : [CIGlobals.SeltzerBottle,
+  CIGlobals.StormCloud,
+  CIGlobals.Geyser],
+ Trap : [CIGlobals.BananaPeel,
+  CIGlobals.Quicksand,
+  CIGlobals.TrapDoor,
+  CIGlobals.TNT],
+ Lure : []}
 
 # These are the splat scales
 splatSizes = {

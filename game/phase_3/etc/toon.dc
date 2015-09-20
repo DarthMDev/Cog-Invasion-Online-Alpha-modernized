@@ -138,6 +138,8 @@ dclass DistributedToon : DistributedAvatar {
   setMoney(int32 = 0) required broadcast ownrecv db;
   setBackpack(int8 backpack = 0) required broadcast ownrecv db;
   setBackpackAmmo(uint8 gagIds [] = [2, 0, 1, 3], uint8 [] = [3, 7, 15, 0]) required broadcast airecv ownrecv db;
+  setLoadout(uint8 gagIds [] = [2, 0, 1, 3]) required broadcast airecv ownrecv db;
+  requestSetLoadout(uint8[]) ownsend airecv;
   setQuests(uint8[], uint8[], uint8[]) required broadcast ownrecv db;
   setQuestHistory(uint8[]) required broadcast ownrecv db;
   setTier(int8) required broadcast ownrecv db;
@@ -152,6 +154,7 @@ dclass DistributedToon : DistributedAvatar {
   setDropLoc(uint8 gagId, int16/10, int16/10, int16/10) clsend broadcast;
   setSplatPos(uint8 gagId, int16/10, int16/10, int16/10) ownsend broadcast;
   gagCollision(uint8 gagId) broadcast;
+  unEquip() broadcast ram ownsend airecv;
   equip(uint8 gag_id) broadcast ram ownsend airecv;
   handleSuitAttack(uint8 attack_id, uint32 suit_id) broadcast ownsend;
   suitHitByPie(uint32, uint8 gag_id) ownsend airecv;

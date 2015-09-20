@@ -13,6 +13,7 @@ from direct.fsm.StateData import StateData
 from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
 from lib.coginvasion.hood import ZoneUtil
+from lib.coginvasion.gui.BackpackGUI import BackpackGUI
 import types
 
 from OptionPage import OptionPage
@@ -26,13 +27,13 @@ class ShtickerBook(StateData):
         self.parentFSM = parentFSM
         StateData.__init__(self, doneEvent)
         self.fsm = ClassicFSM('ShtickerBook', [State('off', self.enterOff, self.exitOff),
-                State('optionPage', self.enterOptionPage, self.exitOptionPage, ['districtPage', 'off']),
-                State('districtPage', self.enterDistrictPage, self.exitDistrictPage, ['optionPage', 'questPage', 'off']),
-                State('questPage', self.enterQuestPage, self.exitQuestPage, ['zonePage', 'districtPage', 'off']),
-                State('zonePage', self.enterZonePage, self.exitZonePage, ['releaseNotesPage', 'questPage', 'off']),
-                State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['zonePage', 'off']),
-                State('adminPage', self.enterAdminPage, self.exitAdminPage, ['releaseNotesPage', 'off'])],
-                'off', 'off')
+         State('optionPage', self.enterOptionPage, self.exitOptionPage, ['districtPage', 'off']),
+         State('districtPage', self.enterDistrictPage, self.exitDistrictPage, ['optionPage', 'questPage', 'off']),
+         State('questPage', self.enterQuestPage, self.exitQuestPage, ['inventoryPage', 'districtPage', 'off']),
+         State('inventoryPage', self.enterInventoryPage, self.exitInventoryPage, ['zonePage', 'questPage', 'off']),
+         State('zonePage', self.enterZonePage, self.exitZonePage, ['releaseNotesPage', 'inventoryPage', 'off']),
+         State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['zonePage', 'off']),
+         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['releaseNotesPage', 'off'])], 'off', 'off')
         if base.localAvatar.getAdminToken() > -1:
             self.fsm.getStateNamed('releaseNotesPage').addTransition('adminPage')
         self.fsm.enterInitialState()
@@ -197,7 +198,7 @@ class ShtickerBook(StateData):
         self.clearTitle()
 
     def enterQuestPage(self):
-        self.createPageButtons('districtPage', 'zonePage')
+        self.createPageButtons('districtPage', 'inventoryPage')
         self.setTitle("Quests")
 
         self.notes = base.localAvatar.questManager.makeQuestNotes()
@@ -215,8 +216,20 @@ class ShtickerBook(StateData):
         self.deletePageButtons(True, True)
         self.clearTitle()
 
+    def enterInventoryPage(self):
+        self.createPageButtons('questPage', 'zonePage')
+        self.setTitle('Gags')
+        self.gui = BackpackGUI()
+        self.gui.createGUI()
+
+    def exitInventoryPage(self):
+        self.gui.deleteGUI()
+        del self.gui
+        self.deletePageButtons(True, True)
+        self.clearTitle()
+
     def enterZonePage(self):
-        self.createPageButtons('questPage', 'releaseNotesPage')
+        self.createPageButtons('inventoryPage', 'releaseNotesPage')
         self.setTitle("Places")
         #self.home_btn = DirectButton(geom=(qt_btn.find('**/QuitBtn_UP'),
         #									qt_btn.find('**/QuitBtn_DN'),
