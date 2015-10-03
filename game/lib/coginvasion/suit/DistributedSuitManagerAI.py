@@ -2,7 +2,10 @@
 # Created by:  blach (22Dec14)
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
-from lib.coginvasion.suit.DistributedSuitAI import DistributedSuitAI
+#from lib.coginvasion.suit.DistributedSuitAI import DistributedSuitAI
+from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
+from lib.coginvasion.cog import Variant
+from lib.coginvasion.cog import SuitBank
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.suit.SuitTournament import SuitTournament
 from lib.coginvasion.globals import CIGlobals
@@ -130,57 +133,42 @@ class DistributedSuitManagerAI(DistributedObjectAI):
     def sendSysMessage(self, message):
         self.sendUpdate('systemMessage', [message])
 
-    def createSuit(self, suitType = None, levelRange = None, head = None,
-                team = None, skeleton = 0, anySuit = 0, backup = 0):
+    def createSuit(self, anySuit = 0, levelRange = None, variant = Variant.NORMAL, plan = None):
         if self.isCogCountFull():
             return
         if anySuit:
             if not levelRange:
-                #difficulty = random.choice(["normal", "easy", "hard", "all"])
                 levelRange = CogBattleGlobals.HoodIndex2LevelRange[self.battle.getHoodIndex()]
-            possibleSuitsAndLevels = {}
-            lr = CIGlobals.getSuitLevelRanges()
-            for suit in CIGlobals.SuitBodyData.keys():
-                thisSuitLR = list(lr[suit])
-                possibleLevels = []
-                for level in thisSuitLR:
-                    if level in levelRange:
-                        possibleLevels.append(level)
-                if len(possibleLevels) > 0:
-                    possibleSuitsAndLevels[suit] = possibleLevels
-            head = random.choice(possibleSuitsAndLevels.keys())
-            level = random.choice(possibleSuitsAndLevels[head])
-            suitType = CIGlobals.SuitBodyData[head][0]
-            team = CIGlobals.SuitBodyData[head][1]
+            availableSuits = []
+            level = random.randint(levelRange[0], levelRange[1])
+            for suit in SuitBank.getSuits():
+                if level >= suit.getLevelRange()[0] and level <= suit.getLevelRange()[1]:
+                    availableSuits.append(suit)
+            plan = random.choice(availableSuits)
         else:
-            if not suitType or not head or not team:
+            if not plan:
                 return
-            level = random.choice(CIGlobals.getSuitLevelRanges()[head])
+            level = random.randint(plan.getLevelRange()[0], plan.getLevelRange()[1])
         if self.battle.getHoodIndex() == CogBattleGlobals.SkeletonHoodIndex:
-            skeleton = 1
+            variant = Variant.SKELETON
         suit = DistributedSuitAI(self.air)
         suit.setManager(self)
-        suit.setBackup(backup)
         suit.generateWithRequired(self.zoneId)
         suit.d_setHood(suit.hood)
         suit.b_setLevel(level)
-        suit.b_setSuit(suitType, head, team, skeleton)
+        suit.b_setSuit(plan, variant)
         suit.b_setPlace(self.zoneId)
-        if skeleton:
+        print "Spawned a Level %s %s." % (str(level), str(plan.getName()))
+        if variant == Variant.SKELETON:
             suit.b_setName(CIGlobals.Skelesuit)
         else:
-            suit.b_setName(CIGlobals.SuitNames[head])
+            suit.b_setName(plan.getName())
         #suit.startPosHprBroadcast()
         #suit.d_clearSmoothing()
         #suit.d_broadcastPosHpr()
         suit.b_setParent(CIGlobals.SPHidden)
         self.suits[suit.doId] = suit
         self.numSuits += 1
-        #if self.totalSuitsThisShift == 0 and self.maxSuitsThisShift > 0:
-        #	self.sendSysMessage(random.choice(CIGlobals.SuitBackFromBreakMsgArray))
-        #elif self.maxSuitsThisShift <= 0:
-        #	self.newShift()
-        #self.totalSuitsThisShift += 1
         if self.numSuits == 1:
             if (self.tournament.inTournament and self.tournament.getRound() == 1
             or not self.tournament.inTournament):
@@ -192,8 +180,9 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if self.suitsSpawnedThisInvasion == 1:
                 if not self.tournament.inTournament:
                     self.sendUpdate('invasionSpawned', [])
-        if head in ['vp']:
+        if plan == SuitBank.VicePresident or plan == SuitBank.CullenHamm:
             self.sendUpdate('bossSpawned', [])
+        return suit
 
     def requestSuitInfo(self):
         avId = self.air.getAvatarIdFromSender()
@@ -271,8 +260,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         elif choice == "suit":
             if not self.isCogCountFull() and not self.tournament.inTournament:
                 # Spawn suit
-                suitType= random.choice(["A", "B", "C"])
-                self.createSuit(suitType= suitType, anySuit = 1)
+                self.createSuit(anySuit = 1)
         elif choice == "tournament":
             if self.numSuits == 0 and not self.tournament.inTournament and not self.getActiveInvasion():
                 # Spawn tournament
@@ -311,7 +299,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
                 break
             if suitType == "ABC":
                 suitType = random.choice(["A", "B", "C"])
-            self.createSuit(suitType = suitType, levelRange = difficulty, skeleton = skeleton, anySuit = 1, backup = backup)
+            self.createSuit(levelRange = difficulty, anySuit = 1)
         task.delayTime = 4
         return task.again
 

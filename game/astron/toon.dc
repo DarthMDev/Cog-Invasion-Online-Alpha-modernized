@@ -29,7 +29,7 @@ from lib.coginvasion.minigame import DistributedEagleSuit/AI
 from lib.coginvasion.uber import ClientServicesManager/UD
 from lib.coginvasion.uber import LauncherLoginManager/UD
 from lib.coginvasion.uber import DistrictNameManager/AI/UD
-from lib.coginvasion.suit import DistributedSuit/AI
+from lib.coginvasion.cog import DistributedSuit/AI
 from lib.coginvasion.suit import DistributedSuitManager/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableObject/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableJellybeans/AI
@@ -258,25 +258,27 @@ dclass DistributedChar : DistributedSmoothNode {
 };
 
 dclass DistributedSuit : DistributedAvatar {
-  setLevel(int8) required broadcast ram;
-  setSuit(string type, string head, string team, int8 skeleton) required broadcast ram;
+  setLevel(uint8 level) required broadcast ram;
+  setSuit(uint8 planId, uint8 variantId) required broadcast ram;
   setName(string name) required broadcast ram;
-  setAnimState(uint8 anim, int16) broadcast ram;
-  handleWeaponTouch() clsend broadcast;
-  disableMovement() clsend broadcast;
-  enableMovement() clsend broadcast;
-  interruptAttack() broadcast;
+  setAnimState(uint8 anim, int16 timestamp) broadcast ram;
+  doAttack(int8 attackName, uint32, int16) broadcast;
   toonHitByWeapon(int8, uint32) clsend airecv;
   turretHitByWeapon(int8, uint32) clsend airecv;
-  //doAttack(string attackName, int16) broadcast;
-  doAttack(int8 attackName, uint32, int16) broadcast;
-
+  handleWeaponTouch() clsend broadcast;
+  interruptAttack() broadcast;
+  disableMovement() clsend broadcast;
+  enableMovement() clsend broadcast;
+  startMoveInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 duration) broadcast ram;
+  startProjInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 / 10, uint8 / 10, int16 timestamp) broadcast ram;
+  startPosInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 / 10, string blendType, int16 timestamp) broadcast ram;
+  stopMoveInterval() broadcast ram;
+  
   // This field is for setting the position of a Cog for a toon that
   // comes in while the Cog is standing still.
   setLatePos(int16 / 10, int16 / 10) required ram;
 
   setSuitState(int8, int8, int8, int16) broadcast ram;
-  //setWalkPaused(int8) broadcast ram required;
 };
 
 dclass DistributedVicePresident : DistributedAvatar {

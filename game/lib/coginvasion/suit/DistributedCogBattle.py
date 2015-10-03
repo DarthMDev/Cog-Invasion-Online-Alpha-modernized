@@ -3,7 +3,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
-from direct.gui.DirectGui import DirectWaitBar, DGG
+from direct.gui.DirectGui import DirectWaitBar, DGG, DirectFrame
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from lib.coginvasion.globals import CIGlobals
@@ -115,6 +115,17 @@ class DistributedCogBattle(DistributedObject):
         if self.cogProgressBar:
             self.cogProgressBar.destroy()
             self.cogProgressBar = None
+            
+    def createBossGui(self):
+        self.destroyInterface()
+        backgroundGui = loader.loadModel('phase_5/models/cogdominium/tt_m_gui_csa_flyThru.bam')
+        backgroundGui.find('**/chatBubble').removeNode()
+        bg = backgroundGui.find('**/background')
+        bg.setScale(5.2)
+        bg.setPos(0.14, 0, -0.6667)
+        bg.reparentTo(aspect2d)
+        self.frame = DirectFrame(geom = bg, relief = None, pos = (0.2, 0, -0.6667))
+        
 
     def constructArea(self):
         for data in self.DNCData[self.hoodIndex]:

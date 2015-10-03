@@ -10,7 +10,7 @@ from direct.interval.IntervalGlobal import LerpPosInterval
 
 from FlightProjectileInterval import FlightProjectileInterval
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.suit.DistributedSuit import DistributedSuit
+from lib.coginvasion.cog.DistributedSuit import DistributedSuit
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 import EagleGameGlobals as EGG
 
@@ -140,8 +140,8 @@ class DistributedEagleSuit(DistributedSuit):
     def __handleHit(self, entry):
         messenger.send(EGG.EAGLE_HIT_EVENT, [self.doId])
 
-    def setSuit(self, suitType, head, team, skeleton):
-        DistributedSuit.setSuit(self, suitType, head, team, skeleton)
+    def setSuit(self, arg, variant = 0):
+        DistributedSuit.setSuit(self, arg, variant = variant)
         self.deleteShadow()
         self.disableBodyCollisions()
         self.disableRay()

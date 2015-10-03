@@ -89,7 +89,7 @@ class Geyser(SquirtGag, ChargeUpGag):
             startPos = cog.getPos(render)
             cogFloat = Point3(0, 0, 14)
             cogEndPos = Point3(startPos[0] + cogFloat[0], startPos[1] + cogFloat[1], startPos[2] + cogFloat[2])
-            suitType = cog.type
+            suitType = cog.suitPlan.getSuitType()
             if suitType == 'A':
                 startFlailFrame = 16
                 endFlailFrame = 16

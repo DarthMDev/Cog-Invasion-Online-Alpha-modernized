@@ -14,6 +14,7 @@ from direct.actor import Actor
 import random
 
 class ToonHead(Actor.Actor):
+    notify = directNotify.newCategory('ToonHead')
     EyesOpen = loader.loadTexture('phase_3/maps/eyes.jpg', 'phase_3/maps/eyes_a.rgb')
     EyesOpen.setMinfilter(Texture.FTLinear)
     EyesOpen.setMagfilter(Texture.FTLinear)
@@ -351,7 +352,10 @@ class ToonHead(Actor.Actor):
             startP = self.getPart('head').getP()
             startR = self.getPart('head').getR()
             toon = random.randint(0, len(toons) - 1)
-            self.getPart('head').lookAt(toons[toon], 0, 0, -0.75)
+            if toons[toon]:
+                self.getPart('head').lookAt(toons[toon], 0, 0, -0.75)
+            else:
+                self.notify.warning('toons[toon] is None -- I cannot look at nothing.')
             endH = self.getPart('head').getH()
             endP = self.getPart('head').getP()
             endR = self.getPart('head').getR()

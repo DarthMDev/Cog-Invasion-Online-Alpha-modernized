@@ -17,6 +17,7 @@ from lib.coginvasion.toon.LabelScaler import LabelScaler
 from lib.coginvasion.toon.NameTag import NameTag
 from lib.coginvasion.base.ShadowPlacer import ShadowPlacer
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.cog import SuitBank
 from lib.coginvasion.toon import ToonTalker
 from direct.controls.ControlManager import CollisionHandlerRayStart
 import random
@@ -111,7 +112,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             if self.avatarType == CIGlobals.Suit:
                 if self.charName:
                     offset = 0.5
-                    z = CIGlobals.SuitNameTagPos[self.charName]
+                    z = SuitBank.getSuitByName(self.charName).getNametagZ()
             elif self.avatarType == CIGlobals.CChar:
                 z = 5
             elif self.avatarType == CIGlobals.Toon:

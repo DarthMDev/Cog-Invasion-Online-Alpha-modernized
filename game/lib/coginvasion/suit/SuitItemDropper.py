@@ -23,38 +23,38 @@ class SuitItemDropper:
     def calculate(self):
         if self.suit.getMaxHealth() <= 48:
             self.setDropChance(DBackpackAI, 2)
-        if self.suit.head in ['vp']:
+            """
             self.numDrops = 5
             self.setDropChance(DBackpackAI, 0)
+            """
         for _ in xrange(self.numDrops):
-            if not self.suit.head in ['vp']:
-                chance = random.randint(1, 100)
-                drop = None
-                for constructor, values in self.possibleDrops.iteritems():
-                    if 'chance' in values:
-                        dropChance = values.get('chance')
-                        if chance <= dropChance:
-                            drop = self.generateDrop(constructor)
-                            gags = list(GagGlobals.gagIds.keys())
-                            maxGags = values.get('maxGags')
-                            backpackGags = []
-                            for _ in xrange(maxGags):
-                                choice = random.choice(gags)
-                                backpackGags.append(choice)
-                                gags.remove(choice)
-                            drop.b_setBP(backpackGags)
-                    else:
-                        jellybeans = int(self.suit.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors['glowerpower'])
-                        constructor = DJellybeanAI
-                        if jellybeans > self.jarMinSize:
-                            constructor = DJellybeanJarAI
+            chance = random.randint(1, 100)
+            drop = None
+            for constructor, values in self.possibleDrops.iteritems():
+                if 'chance' in values:
+                    dropChance = values.get('chance')
+                    if chance <= dropChance:
                         drop = self.generateDrop(constructor)
-                        drop.setValue(jellybeans)
-                if not drop:
-                    self.notify.warning('Could not find a drop.')
-                    return
-                drop.setSuitManager(self.suit.getManager())
-                self.suitDrops.append(drop)
+                        gags = list(GagGlobals.gagIds.keys())
+                        maxGags = values.get('maxGags')
+                        backpackGags = []
+                        for _ in xrange(maxGags):
+                            choice = random.choice(gags)
+                            backpackGags.append(choice)
+                            gags.remove(choice)
+                        drop.b_setBP(backpackGags)
+                else:
+                    jellybeans = int(self.suit.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors['glowerpower'])
+                    constructor = DJellybeanAI
+                    if jellybeans > self.jarMinSize:
+                        constructor = DJellybeanJarAI
+                    drop = self.generateDrop(constructor)
+                    drop.setValue(jellybeans)
+            if not drop:
+                self.notify.warning('Could not find a drop.')
+                return
+            drop.setSuitManager(self.suit.getManager())
+            self.suitDrops.append(drop)
 
     def generateDrop(self, constructor):
         drop = constructor(self.suit.air)

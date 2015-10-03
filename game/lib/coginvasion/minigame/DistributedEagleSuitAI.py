@@ -6,7 +6,8 @@ from direct.interval.IntervalGlobal import LerpPosInterval, Sequence, Wait, Func
 
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.suit.DistributedSuitAI import DistributedSuitAI
+from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
+from lib.coginvasion.cog import SuitBank
 import EagleGameGlobals as EGG
 
 import random
@@ -17,10 +18,8 @@ class DistributedEagleSuitAI(DistributedSuitAI):
     def __init__(self, air):
         DistributedSuitAI.__init__(self, air)
         self.suitState = 1
-        self.type = "A"
-        self.team = "l"
-        self.head = "legaleagle"
-        self.name = CIGlobals.SuitNames[self.head]
+        self.suitPlan = SuitBank.getIdFromSuit(SuitBank.LegalEagle)
+        self.name = SuitBank.LegalEagle.getName()
         self.mg = None
         self.flyTrack = None
         self.currentFlyPoint = None
@@ -39,7 +38,7 @@ class DistributedEagleSuitAI(DistributedSuitAI):
             self.flyTrack.pause()
             self.flyTrack = None
         self.sendUpdate('fallAndExplode', [])
-        self.b_setSuitState(6, -1, -1)
+        self.b_setSuitState(3, -1, -1)
         self.flyTrack = Sequence(
             LerpPosInterval(
                 self,

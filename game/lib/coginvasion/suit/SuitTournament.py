@@ -6,11 +6,12 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-from direct.directnotify.DirectNotify import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from lib.coginvasion.cog import SuitBank
 import random
 
 class SuitTournament:
-    notify = DirectNotify().newCategory("SuitTournament")
+    notify = directNotify.newCategory("SuitTournament")
     round_difficulties = [range(1, 4 + 1),
                         range(5, 8 + 1),
                         range(9, 12 + 1)]
@@ -60,8 +61,7 @@ class SuitTournament:
         if self.getRound() != 1:
             self.suitMgr.sendSysMessage(self.round_dialogue[self.getRound()]["start"])
         if self.getRound() == 4:
-            self.suitMgr.createSuit(suitType = "A", head="vp", team="s")
-            self.startBackup()
+            self.suitMgr.createSuit(plan = SuitBank.VicePresident)
             return
         taskMgr.add(self.startInvasion, self.suitMgr.uniqueName("startTournamentInvasion"), appendTask=True)
 

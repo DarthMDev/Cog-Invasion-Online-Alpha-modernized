@@ -1,7 +1,7 @@
 # Filename: CogBattleGlobals.py
 # Created by:  blach (28Jul15)
 
-from lib.coginvasion.globals.CIGlobals import *
+from lib.coginvasion.globals.CIGlobals import ToontownCentral, TheBrrrgh, DonaldsDreamland
 from lib.coginvasion.hood import ZoneUtil
 
 HoodId2HoodIndex = {
@@ -24,9 +24,9 @@ if HoodIndex2HoodId == None:
 hi2hi = HoodId2HoodIndex
 
 HoodIndex2LevelRange = {
-    hi2hi[ToontownCentral]: range(1, 3 + 1),
-    hi2hi[TheBrrrgh]: range(5, 9 + 1),
-    hi2hi[DonaldsDreamland]: range(6, 9 + 1),
+    hi2hi[ToontownCentral]: list(range(1, 5 + 1)),
+    hi2hi[TheBrrrgh]: list(range(5, 9 + 1)),
+    hi2hi[DonaldsDreamland]: list(range(6, 9 + 1)),
     #hi2hi[MinniesMelodyland]: range(2, 6 + 1),
     #hi2hi[DaisyGardens]: range(2, 6 + 1),
     #hi2hi[DonaldsDock]: range(2, 6 + 1)

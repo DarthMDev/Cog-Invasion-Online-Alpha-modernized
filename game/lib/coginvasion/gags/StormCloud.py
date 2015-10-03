@@ -55,7 +55,7 @@ class StormCloud(SquirtGag, LocationGag):
         if cog.isDead():
             cloudHold = 1.7
         cloud01, trickleFx, rainEffects, entity = self.buildEntity()
-        cloud01.setZ(CIGlobals.SuitNameTagPos[cog.head] + 2)
+        cloud01.setZ(cog.suitPlan.getNametagZ() + 2)
         cloud01.reparentTo(cog)
         cloud02 = Actor(self.model, {'chan' : GagGlobals.getProp(4, 'stormcloud-chan')})
         cloud02.reparentTo(cloud01)

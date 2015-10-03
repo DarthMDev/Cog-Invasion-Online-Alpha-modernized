@@ -24,7 +24,7 @@ class Shop(StateData):
         StateData.__init__(self, doneEvent)
         self.distShop = distShop
         self.destroyEvent = self.distShop.destroyEvent
-        self.origHealth = base.localAvatar.getHealth()
+        self.origHealth = None
         self.avMoney = base.localAvatar.getMoney()
         self.healCooldownDoneSoundPath = 'phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3'
         self.healCooldownDoneSfx = None
@@ -164,6 +164,7 @@ class Shop(StateData):
     def enter(self):
         StateData.enter(self)
         self.avMoney = base.localAvatar.getMoney()
+        self.origHealth = base.localAvatar.getHealth()
         self.window = ShopWindow(self, image = 'phase_4/maps/FrameBlankA.jpg')
         self.window.setup()
         self.window.setOKCommand(self.confirmPurchase)
