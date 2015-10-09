@@ -53,6 +53,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.tokenIcon = None
         self.tokenIconIval = None
         self.backpack = None
+        self.forcedTorsoAnim = None
         self.fallSfx = base.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
         base.audio3d.attachSoundToObject(self.fallSfx, self)
         self.eyes = loader.loadTexture("phase_3/maps/eyes.jpg", "phase_3/maps/eyes_a.rgb")
@@ -248,6 +249,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             self.standWalkRunReverse = None
             self.currentAnim = None
             self.toon_head = None
+            self.forcedTorsoAnim = None
             self.toon_torso = None
             self.toon_legs = None
             self.gender = None
@@ -559,6 +561,14 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.findAllMatches('**/neck').setColor(torsocolor)
         self.findAllMatches('**/hands').setColor(1,1,1,1)
 
+    def setForcedTorsoAnim(self, string):
+        self.forcedTorsoAnim = string
+        self.loop(string, partName = "torso")
+
+    def clearForcedTorsoAnim(self):
+        self.forcedTorsoAnim = None
+        self.animFSM.request(self.animFSM.getCurrentState().getName())
+
     def enterOff(self, ts = 0, callback = None, extraArgs = []):
         self.currentAnim = None
         return
@@ -636,6 +646,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                     if self.animal == "dog":
                         self.loop("neutral", partName = "head")
                     return
+        if self.forcedTorsoAnim != None:
+            self.loop(self.forcedTorsoAnim, partName = 'torso')
+            self.loop("neutral", partName = "legs")
+            return
         self.loop("neutral")
 
     def exitNeutral(self):
@@ -661,6 +675,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                     if self.animal == "dog":
                         self.loop("run", partName = "head")
                     return
+        if self.forcedTorsoAnim != None:
+            self.loop(self.forcedTorsoAnim, partName = 'torso')
+            self.loop("run", partName = "legs")
+            return
         self.loop("run")
 
     def exitRun(self):
@@ -674,6 +692,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                     if self.animal == "dog":
                         self.loop("walk", partName = "head")
                     return
+        if self.forcedTorsoAnim != None:
+            self.loop(self.forcedTorsoAnim, partName = 'torso')
+            self.loop("walk", partName = "legs")
+            return
         self.loop("walk")
 
     def exitWalk(self):

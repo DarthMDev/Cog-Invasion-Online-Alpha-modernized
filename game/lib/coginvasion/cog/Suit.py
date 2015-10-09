@@ -29,7 +29,7 @@ class Suit(Avatar):
     audio3d = Audio3DManager(base.sfxManagerList[0], camera)
     audio3d.setDistanceFactor(25)
     audio3d.setDropOffFactor(audio3d.getDistanceFactor() / 1000)
-    
+
     def __init__(self):
         Avatar.__init__(self)
         self.name = None
@@ -65,13 +65,15 @@ class Suit(Avatar):
             State('attack', self.enterAttack, self.exitAttack),
             State('flyDown', self.enterFlyDown, self.exitFlyDown),
             State('flyAway', self.enterFlyAway, self.exitFlyAway),
-            State('flyNeutral', self.enterFlyNeutral, self.exitFlyNeutral)
+            State('flyNeutral', self.enterFlyNeutral, self.exitFlyNeutral),
+            State('trayWalk', self.enterTrayWalk, self.exitTrayWalk),
+            State('trayNeutral', self.enterTrayNeutral, self.exitTrayNeutral)
         ], 'off', 'off')
         self.animFSM.enterInitialState()
         self.initializeBodyCollisions()
-        
+
     """ BEGIN STATES """
-        
+
     def enterOff(self, ts = 0):
         self.anim = None
         return
@@ -81,7 +83,20 @@ class Suit(Avatar):
 
     def exitGeneral(self):
         self.stop()
-        
+
+    def enterTrayWalk(self, ts = 0):
+        self.show()
+        self.loop('tray-walk')
+
+    def exitTrayWalk(self):
+        self.exitGeneral()
+
+    def enterTrayNeutral(self, ts = 0):
+        self.loop('tray-neutral')
+
+    def exitTrayNeutral(self):
+        self.stop()
+
     def enterNeutral(self, ts = 0):
         self.show()
         self.timestampAnimTrack = Sequence(Wait(ts), Func(self.loop, "neutral"))
@@ -90,7 +105,7 @@ class Suit(Avatar):
     def exitNeutral(self):
         self.exitTimestampAnimTrack()
         self.exitGeneral()
-        
+
     def enterWalk(self, ts = 0):
         self.show()
         self.timestampAnimTrack = Sequence(Wait(ts), Func(self.loop, "walk"))
@@ -101,15 +116,15 @@ class Suit(Avatar):
         self.exitTimestampAnimTrack()
         self.exitGeneral()
         self.enableShadowRay()
-        
+
     def exitTimestampAnimTrack(self):
         if self.timestampAnimTrack:
             self.timestampAnimTrack.pause()
             self.timestampAnimTrack = None
-        
+
     def enterAttack(self, attack, target, ts = 0):
         self.show()
-        
+
         if hasattr(self, 'uniqueName'):
             doneEvent = self.uniqueName('suitAttackDone')
         else:
@@ -122,7 +137,7 @@ class Suit(Avatar):
 
     def handleSuitAttackDone(self):
         self.exitAttack()
-        
+
     def exitAttack(self):
         if hasattr(self, 'uniqueName'):
             self.ignore(self.uniqueName('suitAttackDone'))
@@ -143,7 +158,7 @@ class Suit(Avatar):
     def handleWeaponTouch(self):
         if hasattr(self, 'suitAttackState'):
             self.suitAttackState.currentAttack.handleWeaponTouch()
-        
+
     def enterFlyNeutral(self, ts = 0):
         self.disableRay()
         if not self.propeller:
@@ -154,10 +169,10 @@ class Suit(Avatar):
         self.propeller.loop('chan', fromFrame = 0, toFrame = 3)
         self.setPlayRate(0.8, 'land')
         self.pingpong('land', fromFrame = 0, toFrame = 10)
-        
+
     def exitFlyNeutral(self):
         self.cleanupPropeller()
-        
+
     def enterFlyDown(self, ts = 0):
         self.disableRay()
         if not self.propeller:
@@ -182,7 +197,7 @@ class Suit(Avatar):
         self.acceptOnce(self.suitTrack.getDoneEvent(), self.exitFlyAway)
         self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, name)
         self.suitTrack.start(ts)
-        
+
     def exitFlyDown(self):
         self.initializeRay(self.avatarType, 2)
         if self.suitTrack != None:
@@ -192,7 +207,7 @@ class Suit(Avatar):
             self.suitTrack = None
         self.exitGeneral()
         self.cleanupPropeller()
-        
+
     def enterFlyAway(self, ts = 0):
         self.show()
         if not self.propeller:
@@ -225,7 +240,7 @@ class Suit(Avatar):
             self.suitTrack = None
         self.cleanupPropeller()
         self.exitGeneral()
-        
+
     def enterDie(self, ts = 0):
         self.show()
         self.generateCog(isLose = 1)
@@ -242,7 +257,7 @@ class Suit(Avatar):
         self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, trackName)
         self.suitTrack.start(ts)
         del deathSound
-        
+
     def smallDeathParticles(self):
         self.smallExp = ParticleLoader.loadParticleEffect('phase_3.5/etc/gearExplosionSmall.ptf')
         self.smallExp.start(self.getGeomNode())
@@ -259,7 +274,7 @@ class Suit(Avatar):
             self.explosion.setPos(self.getPart('body').find('**/joint_head').getPos(render) + (0, 0, 2))
         else:
             self.explosion.setPos(self.headModel.getPos(render) + (0,0,2))
-        
+
     def exitDie(self):
         if self.suitTrack != None:
             self.ignore(self.suitTrack.getName())
@@ -275,15 +290,15 @@ class Suit(Avatar):
         if self.explosion:
             self.explosion.removeNode()
             self.explosion = None
-        
+
     def enterWin(self, ts = 0):
         self.play('win')
-        
+
     def exitWin(self):
         self.exitGeneral()
-        
+
     """ END STATES """
-        
+
     def generate(self, suitPlan, variant, voice = None, hideFirst = True):
         self.suitPlan = suitPlan
         self.suit = suitPlan.getSuitType()
@@ -295,14 +310,14 @@ class Suit(Avatar):
         self.generateCog()
         if hideFirst:
             self.hide()
-            
+
     def __blinkRed(self, task):
         self.healthBar.setColor(SuitGlobals.healthColors[3], 1)
         self.healthBarGlow.setColor(SuitGlobals.healthGlowColors[3], 1)
         if self.condition == 5:
             self.healthBar.setScale(1.17)
         return Task.done
-    
+
     def __blinkGray(self, task):
         if not self.healthBar:
             return
@@ -311,7 +326,7 @@ class Suit(Avatar):
         if self.condition == 5:
             self.healthBar.setScale(1.0)
         return Task.done
-    
+
     def generateHealthBar(self):
         self.removeHealthBar()
         button = loader.loadModel('phase_3.5/models/gui/matching_game_gui.bam').find('**/minnieCircle')
@@ -367,7 +382,7 @@ class Suit(Avatar):
                 self.healthBar.setColor(SuitGlobals.healthColors[condition], 1)
                 self.healthBarGlow.setColor(SuitGlobals.healthGlowColors[condition], 1)
             self.condition = condition
-    
+
     def removeHealthBar(self):
         if self.healthBar:
             self.healthBar.removeNode()
@@ -376,7 +391,7 @@ class Suit(Avatar):
             taskMgr.remove(self.taskName('blink-task'))
         self.healthCondition = 0
         return
-            
+
     def initializeLocalCollisions(self, name):
         self.notify.info('Initializing Local Collisions!')
         Avatar.initializeLocalCollisions(self, 1, 3, name)
@@ -385,15 +400,15 @@ class Suit(Avatar):
         self.notify.info('Initializing Body Collisions!')
         Avatar.initializeBodyCollisions(self, self.avatarType, 6, 2)
         self.initializeRay(self.avatarType, 2)
-            
+
     def hideSuit(self):
         self.hide()
-        
+
     def showSuit(self):
         self.show()
         fadeIn = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(0.6, colorScale=Vec4(1,1,1,1), startColorScale=Vec4(1,1,1,0)), Func(self.clearColorScale), Func(self.clearTransparency), Func(self.reparentTo, render))
         fadeIn.start()
-            
+
     def generateCog(self, isLose = 0):
         self.cleanup()
         if not isLose:
@@ -429,7 +444,7 @@ class Suit(Avatar):
         self.setAvatarScale(self.suitPlan.getScale() / SuitGlobals.scaleFactors[self.suit])
         self.setupNameTag()
         Avatar.initShadow(self)
-            
+
     def cleanup(self):
         self.cleanupPropeller()
         self.clearChatbox()
@@ -441,7 +456,7 @@ class Suit(Avatar):
             self.headModel.removeNode()
             self.headModel = None
         self.timestampAnimTrack = None
-            
+
     def generatePropeller(self):
         self.cleanupPropeller()
         self.propeller = Actor('phase_4/models/props/propeller-mod.bam',
@@ -452,7 +467,7 @@ class Suit(Avatar):
         self.propellerSounds['neutral'] = self.audio3d.loadSfx(SuitGlobals.propellerNeutSfx)
         for sound in self.propellerSounds.values():
             self.audio3d.attachSoundToObject(sound, self.propeller)
-            
+
     def cleanupPropeller(self):
         for sound in self.propellerSounds.values():
             self.audio3d.detachSound(sound)
@@ -461,7 +476,7 @@ class Suit(Avatar):
         if self.propeller:
             self.propeller.cleanup()
             self.propeller = None
-            
+
     def setVoice(self, voice):
         if not voice:
             if self.variant == Variant.SKELETON:
@@ -470,7 +485,7 @@ class Suit(Avatar):
                 self.voice = Voice.NORMAL
         else:
             self.voice = voice
-            
+
     def setClothes(self):
         if self.variant == Variant.SKELETON:
             parts = self.findAllMatches('**/pPlane*')
@@ -489,10 +504,10 @@ class Suit(Avatar):
             self.find('**/arms').setTexture(loader.loadTexture(prefix % 'sleeve'), 1)
             self.find('**/torso').setTexture(loader.loadTexture(prefix % 'blazer'), 1)
             self.find('**/hands').setColor(self.handColor)
-            
+
     def setName(self, nameString, charName):
         Avatar.setName(self, nameString, avatarType = self.avatarType, charName = charName, createNow = 1)
-        
+
     def setupNameTag(self):
         Avatar.setupNameTag(self)
         if self.nameTag:
@@ -500,7 +515,7 @@ class Suit(Avatar):
                 self.nameTag.setText(self.nameTag.getText() + '\n%s\nLevel %s' % (self.dept.getName(), self.level))
             else:
                 self.nameTag.setText(self.nameTag.getText() + '\n%s' % (self.dept.getName()))
-            
+
     def setChat(self, chat):
         self.clearChatbox()
         Avatar.setChat(self, chat)
@@ -512,7 +527,7 @@ class Suit(Avatar):
         statementDial = self.voice.getSoundFile('statement')
         if self.voice == Voice.NORMAL:
             question02Dial = self.voice.getSoundFile('question_2')
-        
+
         if '!' in self.chat:
             chatDial = self.audio3d.loadSfx(gruntDial)
         elif '?' in self.chat:
@@ -523,26 +538,26 @@ class Suit(Avatar):
         else:
             chatDial = self.audio3d.loadSfx(statementDial)
         self.chatDial = chatDial
-        
+
         if self.variant == Variant.SKELETON:
             self.audio3d.attachSoundToObject(self.chatDial, self)
         else:
             self.audio3d.attachSoundToObject(self.chatDial, self.headModel)
         self.chatDial.play()
-        
+
     def clearChatbox(self):
         self.clearChat()
         self.chat = None
         if self.chatDial:
             self.chatDial.stop()
             self.chatDial = None
-            
+
     def getDept(self):
         return self.dept
-    
+
     def getVariant(self):
         return self.variant
-            
+
     def disable(self):
         if self.suitTrack:
             self.suitTrack.finish()
@@ -551,7 +566,7 @@ class Suit(Avatar):
         self.animFSM.requestFinalState()
         self.cleanup()
         Avatar.disable(self)
-        
+
     def delete(self):
         Avatar.delete(self)
         self.cleanup()

@@ -158,7 +158,6 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         suit.b_setLevel(level)
         suit.b_setSuit(plan, variant)
         suit.b_setPlace(self.zoneId)
-        print "Spawned a Level %s %s." % (str(level), str(plan.getName()))
         if variant == Variant.SKELETON:
             suit.b_setName(CIGlobals.Skelesuit)
         else:
@@ -180,7 +179,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if self.suitsSpawnedThisInvasion == 1:
                 if not self.tournament.inTournament:
                     self.sendUpdate('invasionSpawned', [])
-        if plan == SuitBank.VicePresident or plan == SuitBank.CullenHamm:
+        if plan == SuitBank.VicePresident or plan == SuitBank.LucyCrossbill:
             self.sendUpdate('bossSpawned', [])
         return suit
 

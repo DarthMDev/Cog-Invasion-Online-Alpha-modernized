@@ -15,5 +15,6 @@ want-toon-battle #t
 want-factory-sneak #f
 want-camera-shy #t
 want-eagle-game #t
+want-delivery-game #t
 
 # want-pstats 1

@@ -56,6 +56,7 @@ GunGameFOV = 70.0
 FactoryGame = "Factory Prowl"
 CameraShyGame = "Camera Shy"
 EagleGame = "Eagle Summit"
+DeliveryGame = "Delivery!"
 
 ThemeSong = None
 

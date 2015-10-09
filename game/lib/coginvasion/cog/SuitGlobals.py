@@ -62,35 +62,35 @@ scaleFactors = {'A' : 6.06, 'B' : 5.29, 'C' : 4.14}
 """
 
 class Anim:
-    
+
     def __init__(self, phase, fileName, name = None, suitTypes = [SuitType.A, SuitType.B, SuitType.C], deathHoldTime = 0):
         self.name = name
         self.phase = phase
         self.file = fileName
         self.deathHoldTime = deathHoldTime
         self.suitTypes = suitTypes
-        
+
         if not self.name:
             self.name = self.file
-        
+
     def getName(self):
         return self.name
-    
+
     def getPhase(self):
         return self.phase
-    
+
     def getFile(self):
         return self.file
-    
+
     def getSuitTypes(self):
         return self.suitTypes
-    
+
     def getDeathHoldTime(self):
         return self.deathHoldTime
-    
+
 animations = [
-    Anim(4, 'neutral'), 
-    Anim(4, 'walk'), 
+    Anim(4, 'neutral'),
+    Anim(4, 'walk'),
     Anim(4, 'victory', name = 'win'),
     Anim(4, 'pie-small', name = 'pie', deathHoldTime = 2.0),
     Anim(5, 'landing', name = 'land'),
@@ -111,7 +111,9 @@ animations = [
     Anim(5, 'finger-wag', suitTypes = [SuitType.B, SuitType.C], name = 'fingerwag'),
     Anim(5, 'speak'),
     Anim(5, 'lured'),
-    Anim(12, 'sit')
+    Anim(12, 'sit'),
+    Anim(12, 'tray-neutral'),
+    Anim(12, 'tray-walk')
 ]
 
 def getAnimById(animId):
@@ -121,12 +123,12 @@ def getAnimId(anim):
     for iAnim in animations:
         if iAnim == anim:
             return animations.index(iAnim)
-        
+
 def getAnimByName(animName):
     for anim in animations:
         if anim.getName() == animName:
             return anim
-        
+
 def getAnimations():
     return animations
 

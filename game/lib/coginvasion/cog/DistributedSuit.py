@@ -32,12 +32,12 @@ import types, random
 
 class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDeletable):
     notify = directNotify.newCategory('DistributedSuit')
-    
+
     def __init__(self, cr):
         Suit.__init__(self)
         DistributedAvatar.__init__(self, cr)
         DistributedSmoothNode.__init__(self, cr)
-        
+
         self.anim = None
         self.state = SuitState.ALIVE
         self.dept = None
@@ -45,7 +45,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.suitPlan = None
         self.level = None
         self.moveIval = None
-        
+
         self.suitFSM = ClassicFSM('DistributedSuit',
             [
                 State('off', self.enterSuitOff, self.exitSuitOff),
@@ -59,9 +59,9 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.stateIndex2suitState = {}
         self.suitFSM.enterInitialState()
         self.makeStateDict()
-        
+
     """ BEGIN STATES """
-        
+
     def enterWalking(self, startIndex, endIndex, ts = 0.0):
         durationFactor = 0.2
         if startIndex > -1:
@@ -110,9 +110,9 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
             startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint]
             endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint] + (0, 0, 50)
-            
+
             self.stopMoving(finish = 1)
-            
+
             self.moveIval = LerpPosInterval(self, duration = duration, pos = endPos, startPos = startPos, fluid = 1)
             self.moveIval.start(ts)
         self.animFSM.request('flyAway', [ts])
@@ -122,24 +122,24 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             self.moveIval.finish()
             self.moveIval = None
         self.animFSM.request('off')
-        
+
     def enterLured(self, _, __, ___):
         self.loop('lured')
-    
+
     def exitLured(self):
         self.stop()
-        
+
     def enterSuitOff(self, foo1 = None, foo2 = None, foo3 = None):
         pass
 
     def exitSuitOff(self):
         pass
-        
+
     """ END STATES """
-        
+
     def setName(self, name):
         Suit.setName(self, name, self.suitPlan.getName())
-        
+
     def setLevel(self, level):
         self.level = level
         if self.level == 12:
@@ -153,29 +153,29 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def getLevel(self):
         return self.level
-    
+
     def startMoveInterval(self, startX, startY, startZ, endX, endY, endZ, duration):
         self.stopMoving()
         endPos = Point3(endX, endY, endZ)
-        self.moveIval = NPCWalkInterval(self, endPos, 
+        self.moveIval = NPCWalkInterval(self, endPos,
             durationFactor = duration, fluid = 1)
         self.moveIval.start()
-        
+
     def stopMoveInterval(self):
         if self.moveIval:
             self.moveIval.clearToInitial()
             self.moveIval = None
-            
+
     def toggleRay(self, ray = 1):
         if ray:
             Suit.initializeRay(self, self.avatarType, 2)
         else:
             Suit.disableRay(self)
-            
+
     def startProjInterval(self, startX, startY, startZ, endX, endY, endZ, duration, gravityMult, ts = 0.0):
         if ts != 0.0:
             ts = globalClockDelta.localElapsedTime(ts)
-        
+
         self.stopMoveInterval()
         startPos = Point3(startX, startY, startZ)
         endPos = Point3(endX, endY, endZ)
@@ -187,7 +187,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             duration = duration
         )
         self.moveIval.start(ts)
-        
+
     def startPosInterval(self, startX, startY, startZ, endX, endY, endZ, duration, blendType, ts = 0.0):
         if ts != 0.0:
             ts = globalClockDelta.localElapsedTime(ts)
@@ -201,7 +201,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             blendType = blendType
         )
         self.moveIval.start(ts)
-            
+
     def stopMoving(self, finish = 0):
         if self.moveIval:
             if finish:
@@ -209,21 +209,21 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             else:
                 self.moveIval.pause()
             self.moveIval = None
-            
+
     def d_disableMovement(self, wantRay = False):
         self.sendUpdate('disableMovement', [])
         self.interruptAttack()
         self.stopMoving()
         if not wantRay:
             Suit.disableRay(self)
-            
+
     def d_enableMovement(self):
         self.sendUpdate('enableMovement', [])
         Suit.initializeRay(self, self.avatarType, 2)
-        
+
     def startRay(self):
         Suit.initializeRay(self, self.avatarType, 2)
-        
+
     def setHealth(self, health):
         DistributedAvatar.setHealth(self, health)
         if self.isDead():
@@ -234,48 +234,48 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
                 Func(self.clearColorScale)
             ).start()
         self.updateHealthBar(health)
-        
+
     def announceHealth(self, level, hp):
         DistributedAvatar.announceHealth(self, level, hp)
         if level == 1:
             healthSfx = base.loadSfx(SuitGlobals.healedSfx)
             SoundInterval(healthSfx, node = self).start()
             del healthSfx
-            
+
     """
         'setSuit' sets the suit type and generates it.
         'arg' is an id for a SuitPlan as defined in SuitBank or
             an instance of SuitPlan.
         'variant' is an optional argument that sets the variant.
-            It takes an id for the variant or an instance of Variant. 
+            It takes an id for the variant or an instance of Variant.
             Default is Variant.NORMAL.
     """
-        
+
     def setSuit(self, arg, variant = 0):
         if isinstance(arg, SuitPlan):
             plan = arg
         else:
             plan = SuitBank.getSuitById(arg)
-            
+
         voice = Voice.NORMAL
         if variant:
             if isinstance(variant, (int, long, float, complex)):
                 variant = Variant.getVariantById(variant)
-            
+
         if plan.getForcedVoice():
             voice = plan.getForcedVoice()
-            
-        Suit.generate(self, 
+
+        Suit.generate(self,
             plan,
             variant,
             voice = voice
         )
         self.suitPlan = plan
         self.variant = Variant.getVariantById(variant)
-        
+
     def getSuit(self):
         return tuple((self.suitPlan, self.variant))
-    
+
     def spawn(self, startIndex, endIndex, spawnMode = SpawnMode.FLYDOWN):
         if spawnMode == SpawnMode.FLYDOWN:
             startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
@@ -286,19 +286,19 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
                 self.moveIval.finish()
                 self.moveIval = None
             self.moveIval = LerpPosInterval(self, duration = 3, pos = endPos, startPos = startPos, fluid = 1)
-            
+
     def makeStateDict(self):
         self.stateIndex2suitState = {
             0 : self.suitFSM.getStateNamed('off'),
             1 : self.suitFSM.getStateNamed('walking'),
             2 : self.suitFSM.getStateNamed('flyingDown'),
             3 : self.suitFSM.getStateNamed('flyingUp'),
-            4 : self.suitFSM.getStateNamed('lured') 
+            4 : self.suitFSM.getStateNamed('lured')
         }
         self.suitState2stateIndex = {}
         for stateId, state in self.stateIndex2suitState.items():
             self.suitState2stateIndex[state.getName()] = stateId
-            
+
     def setSuitState(self, index, startPoint, endPoint, timestamp = None):
         if timestamp != None:
             ts = globalClockDelta.localElapsedTime(timestamp)
@@ -312,17 +312,17 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.suitFSM.request(self.suitState, [startPoint, endPoint, ts])
 
     def getSuitState(self):
-        return self.suitState     
-        
+        return self.suitState
+
     def setAnimState(self, anim, timestamp = None):
         prevAnim = self.anim
         self.anim = anim
-        
+
         if timestamp == None:
             ts = 0.0
         else:
             ts = globalClockDelta.localElapsedTime(timestamp)
-        
+
         if type(anim) == types.IntType:
             if anim != 44:
                 anim = SuitGlobals.getAnimById(anim)
@@ -331,13 +331,13 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
                 animName = 'die'
         elif type(anim) == types.StringType:
             animName = anim
-            
+
         if self.animFSM.hasStateNamed(animName):
             self.animFSM.request(animName, [ts])
         else:
             self.play(animName)
         messenger.send(SuitGlobals.animStateChangeEvent % (self.uniqueName), [anim, prevAnim])
-        
+
     def doAttack(self, attackId, avId, timestamp = None):
         if timestamp == None:
             ts = 0.0
@@ -346,7 +346,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         attackName = SuitAttacks.SuitAttackLengths.keys()[attackId]
         avatar = self.cr.doId2do.get(avId)
         self.animFSM.request('attack', [attackName, avatar, ts])
-        
+
     def throwObject(self):
         self.acceptOnce('enter' + self.wsnp.node().getName(), self.__handleWeaponCollision)
         Suit.throwObject(self)
@@ -359,16 +359,16 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def b_handleWeaponTouch(self):
         self.sendUpdate('handleWeaponTouch', [])
         self.handleWeaponTouch()
-        
+
     def announceGenerate(self):
         DistributedAvatar.announceGenerate(self)
         self.setAnimState('neutral')
-    
+
     def generate(self):
         DistributedAvatar.generate(self)
         DistributedSmoothNode.generate(self)
         self.startSmooth()
-        
+
     def disable(self):
         self.stopSmooth()
         self.anim = None
@@ -381,7 +381,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             self.moveIval = None
         Suit.disable(self)
         DistributedAvatar.disable(self)
-        
+
     def delete(self):
         Suit.delete(self)
         del self.anim
@@ -392,4 +392,3 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         del self.moveIval
         DistributedAvatar.delete(self)
         DistributedSmoothNode.delete(self)
-            

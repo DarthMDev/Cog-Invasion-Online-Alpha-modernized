@@ -22,15 +22,9 @@ class DistributedCityCart(DistributedNode):
 
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)
-        self.fsm = ClassicFSM(
-                'DistributedCityCart',
-                [
-                    State('off', self.enterOff, self.exitOff),
-                    State('pathFollow', self.enterPathFollow, self.exitPathFollow),
-                    State('collision', self.enterCollision, self.exitCollision)
-                ],
-                'off', 'off'
-        )
+        self.fsm = ClassicFSM('DistributedCityCart', [State('off', self.enterOff, self.exitOff),
+         State('pathFollow', self.enterPathFollow, self.exitPathFollow),
+         State('collision', self.enterCollision, self.exitCollision)], 'off', 'off')
         self.fsm.enterInitialState()
         self.suitInCar = None
         self.cart = None

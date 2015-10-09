@@ -26,6 +26,9 @@ from lib.coginvasion.minigame import DistributedCameraShyGame/AI
 from lib.coginvasion.minigame import DistributedEagleGame/AI
 from lib.coginvasion.minigame import DistributedToonCannon/AI
 from lib.coginvasion.minigame import DistributedEagleSuit/AI
+from lib.coginvasion.minigame import DistributedDeliveryGame/AI
+from lib.coginvasion.minigame import DistributedDeliveryTruck/AI
+from lib.coginvasion.minigame import DistributedDeliveryGameSuit/AI
 from lib.coginvasion.uber import ClientServicesManager/UD
 from lib.coginvasion.uber import LauncherLoginManager/UD
 from lib.coginvasion.uber import DistrictNameManager/AI/UD
@@ -273,7 +276,7 @@ dclass DistributedSuit : DistributedAvatar {
   startProjInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 / 10, uint8 / 10, int16 timestamp) broadcast ram;
   startPosInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 / 10, string blendType, int16 timestamp) broadcast ram;
   stopMoveInterval() broadcast ram;
-  
+
   // This field is for setting the position of a Cog for a toon that
   // comes in while the Cog is standing still.
   setLatePos(int16 / 10, int16 / 10) required ram;
@@ -413,6 +416,21 @@ dclass DistributedEagleSuit : DistributedSuit {
 dclass DistributedToonCannon : DistributedNode {
   setBarrelOrientation(float64, float64) clsend broadcast;
   shoot() clsend broadcast;
+};
+
+dclass DistributedDeliveryGame : DistributedMinigame {
+  giveBarrelToPlayer(uint32) broadcast;
+  giveBarrelToSuit(uint32) broadcast;
+  dropOffBarrel(uint32) broadcast;
+};
+
+dclass DistributedDeliveryTruck : DistributedNode {
+  setNumBarrels(int8) required broadcast ram;
+  requestBarrel() clsend airecv;
+};
+
+dclass DistributedDeliveryGameSuit : DistributedSuit {
+
 };
 
 dclass DistributedShop : DistributedNode {

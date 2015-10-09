@@ -18,7 +18,8 @@ class MGHoodAI(HoodAI.HoodAI):
                 CIGlobals.GunGame,
                 CIGlobals.CameraShyGame,
                 CIGlobals.EagleGame,
-                CIGlobals.FactoryGame]
+                CIGlobals.FactoryGame,
+                CIGlobals.DeliveryGame]
 
     def __init__(self, air):
         HoodAI.HoodAI.__init__(self, air, CIGlobals.MinigameAreaId,
@@ -49,6 +50,9 @@ class MGHoodAI(HoodAI.HoodAI):
             if not base.config.GetBool('want-eagle-game', True):
                 self.notify.info("Excluding %s" % CIGlobals.EagleGame)
                 self.minigames.remove(CIGlobals.EagleGame)
+            if not base.config.GetBool('want-delivery-game', True):
+                self.notify.info('Excluding %s' % CIGlobals.DeliveryGame)
+                self.minigames.remove(CIGlobals.DeliveryGame)
             for name in self.minigames:
                 index = self.minigames.index(name)
                 mg = DistributedMinigameStationAI(self.air)
