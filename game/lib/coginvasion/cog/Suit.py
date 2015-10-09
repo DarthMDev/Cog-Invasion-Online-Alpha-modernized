@@ -246,11 +246,36 @@ class Suit(Avatar):
         self.generateCog(isLose = 1)
         self.clearChatbox()
         self.play('lose')
-        deathSound = self.audio3d.loadSfx('phase_3.5/audio/sfx/Cog_Death_Full.mp3')
-        self.audio3d.attachSoundToObject(deathSound, self)
+        deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.mp3")
+        base.audio3d.attachSoundToObject(deathSound, self)
         trackName = self.uniqueName('enterDie')
-        self.suitTrack = Sequence(Wait(0.8), Func(self.smallDeathParticles), Wait(4.2),
-                Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions), name = trackName)
+
+        smallGears = ParticleLoader.loadParticleEffect('phase_3.5/etc/gearExplosionSmall.ptf')
+        smallGears.getParticlesNamed('particles-1').setPoolSize(30)
+
+        singleGear = ParticleLoader.loadParticleEffect('phase_3.5/etc/gearExplosion.ptf')
+        singleGear.getParticlesNamed('particles-1').setPoolSize(1)
+
+        smallGearExplosion = ParticleLoader.loadParticleEffect('phase_3.5/etc/gearExplosion.ptf')
+        smallGearExplosion.getParticlesNamed('particles-1').setPoolSize(10)
+
+        bigGearExplosion = ParticleLoader.loadParticleEffect('phase_3.5/etc/gearExplosionBig.ptf')
+        bigGearExplosion.getParticlesNamed('particles-1').setPoolSize(30)
+
+        smallGears.setDepthWrite(False)
+        singleGear.setDepthWrite(False)
+        smallGearExplosion.setDepthWrite(False)
+        bigGearExplosion.setDepthWrite(False)
+
+        self.smallGears = smallGears
+        self.smallGears.setPos(self.find('**/joint_head').getPos() + (0,0, 2))
+        self.singleGear = singleGear
+        self.smallGearExp = smallGearExplosion
+        self.bigGearExp = bigGearExplosion
+
+        gearTrack = Sequence(Wait(0.7), Func(self.doSingleGear), Wait(1.5), Func(self.doSmallGears), Wait(3.0), Func(self.doBigExp))
+        self.suitTrack = Parallel(Sequence(Wait(0.7), Func(self.doSingleGear), Wait(4.3),
+                Func(self.suitExplode), Wait(1.0), Func(self.delSuit)), gearTrack, name = trackName)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
         Sequence(Wait(0.8), SoundInterval(deathSound)).start()
         self.acceptOnce(self.suitTrack.getName(), self.exitDie)
@@ -258,14 +283,19 @@ class Suit(Avatar):
         self.suitTrack.start(ts)
         del deathSound
 
-    def smallDeathParticles(self):
-        self.smallExp = ParticleLoader.loadParticleEffect('phase_3.5/etc/gearExplosionSmall.ptf')
-        self.smallExp.start(self.getGeomNode())
+    def doSingleGear(self):
+        self.singleGear.start(self.getGeomNode())
+
+    def doSmallGears(self):
+        self.smallGears.start(self.getGeomNode())
+
+    def doSmallExp(self):
+        self.smallGearExp.start(self.getGeomNode())
+
+    def doBigExp(self):
+        self.bigGearExp.start(self.getGeomNode())
 
     def suitExplode(self):
-        self.smallExp.cleanup()
-        self.largeExp = ParticleLoader.loadParticleEffect('phase_3.5/etc/gearExplosion.ptf')
-        self.largeExp.start(self.getGeomNode())
         self.explosion = loader.loadModel('phase_3.5/models/props/explosion.bam')
         self.explosion.setScale(0.5)
         self.explosion.reparentTo(render)
@@ -281,12 +311,18 @@ class Suit(Avatar):
             self.suitTrack.finish()
             DelayDelete.cleanupDelayDeletes(self.suitTrack)
             self.suitTrack = None
-        if self.smallExp:
-            self.smallExp.cleanup()
-            self.smallExp = None
-        if self.largeExp:
-            self.largeExp.cleanup()
-            self.largeExp = None
+        if hasattr(self, 'singleGear'):
+            self.singleGear.cleanup()
+            del self.singleGear
+        if hasattr(self, 'smallGears'):
+            self.smallGears.cleanup()
+            del self.smallGears
+        if hasattr(self, 'smallGearExp'):
+            self.smallGearExp.cleanup()
+            del self.smallGearExp
+        if hasattr(self, 'bigGearExp'):
+            self.bigGearExp.cleanup()
+            del self.bigGearExp
         if self.explosion:
             self.explosion.removeNode()
             self.explosion = None
