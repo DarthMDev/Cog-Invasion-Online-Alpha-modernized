@@ -1,9 +1,10 @@
 # Filename: DistributedDeliveryGame.py
 # Created by:  blach (04Oct15)
 
-from panda3d.core import CompassEffect, NodePath
+from panda3d.core import CompassEffect, NodePath, CollisionSphere, CollisionNode, TextNode
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.gui.DirectGui import OnscreenText
 
 from lib.coginvasion.minigame.DistributedMinigame import DistributedMinigame
 from lib.coginvasion.hood.SkyUtil import SkyUtil
@@ -21,6 +22,34 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.soundPickUpBarrel = None
         self.soundDropOff = None
         self.barrelsByAvId = {}
+        self.bsLabel = None
+        self.brLabel = None
+        self.bdLabel = None
+        self.gagShopCollNP = None
+        self.barrelsRemaining = 0
+        self.barrelsStolen = 0
+        self.barrelsDelivered = 0
+
+    def setBarrelsRemaining(self, num):
+        self.barrelsRemaining = num
+        self.__updateLabels()
+
+    def getBarrelsRemaining(self):
+        return self.barrelsRemaining
+
+    def setBarrelsStolen(self, num):
+        self.barrelsStolen = num
+        self.__updateLabels()
+
+    def getBarrelsStolen(self):
+        return self.barrelsStolen
+
+    def setBarrelsDelivered(self, num):
+        self.barrelsDelivered = num
+        self.__updateLabels()
+
+    def getBarrelsDelivered(self):
+        return self.barrelsDelivered
 
     def giveBarrelToSuit(self, suitId):
         suit = self.cr.doId2do.get(suitId)
@@ -79,6 +108,11 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.gagShop = loader.loadModel('phase_4/models/modules/gagShop_TT.bam')
         self.gagShop.reparentTo(base.render)
         self.gagShop.setY(-70)
+        sphere = CollisionSphere(0, 0, 0, 3)
+        sphere.setTangible(0)
+        node = CollisionNode('MGDeliveryGagShop')
+        node.addSolid(sphere)
+        self.gagShopCollNP = self.gagShop.attachNewNode(node)
         self.world = loader.loadModel('phase_4/models/minigames/delivery_area.egg')
         self.world.setY(-5)
         self.world.reparentTo(base.render)
@@ -102,11 +136,40 @@ class DistributedDeliveryGame(DistributedMinigame):
         base.localAvatar.attachCamera()
         base.localAvatar.startSmartCamera()
         base.localAvatar.enableAvatarControls()
+        self.brLabel = OnscreenText(text = "", parent = base.a2dTopRight,
+                                    fg = (1, 1, 1, 1), shadow = (0, 0, 0, 1),
+                                    pos = (-0.1, -0.1, 0), align = TextNode.ARight)
+        self.bdLabel = OnscreenText(text = "", parent = base.a2dTopLeft,
+                                    fg = (1, 1, 1, 1), shadow = (0, 0, 0, 1),
+                                    pos = (0.1, -0.1, 0), align = TextNode.ALeft)
+        self.bsLabel = OnscreenText(text = "", parent = base.a2dTopLeft,
+                                    fg = (1, 1, 1, 1), shadow = (0, 0, 0, 1),
+                                    pos = (0.1, -0.2, 0), align = TextNode.ALeft)
+        self.accept('enterMGDeliveryGagShop', self.__maybeDropOffBarrel)
+
+    def __maybeDropOffBarrel(self, entry):
+        if base.localAvatar.hasBarrel:
+            self.sendUpdate('requestDropOffBarrel')
+
+    def __updateLabels(self):
+        if self.brLabel:
+            self.brLabel.setText("Barrels Remaining: {0}".format(self.getBarrelsRemaining()))
+        if self.bdLabel:
+            self.bdLabel.setText("Barrels Delivered: {0}".format(self.getBarrelsDelivered()))
+        if self.bsLabel:
+            self.bsLabel.setText("Barrels Stolen: {0}".format(self.getBarrelsStolen()))
 
     def exitPlay(self):
+        self.ignore('enterMGDeliveryGagShop')
         base.localAvatar.disableAvatarControls()
         base.localAvatar.stopSmartCamera()
         base.localAvatar.detachCamera()
+        self.brLabel.destroy()
+        self.brLabel = None
+        self.bsLabel.destroy()
+        self.bsLabel = None
+        self.bdLabel.destroy()
+        self.bdLabel = None
         DistributedMinigame.exitPlay(self)
 
     def announceGenerate(self):
@@ -123,6 +186,9 @@ class DistributedDeliveryGame(DistributedMinigame):
         if self.sky:
             self.sky.removeNode()
             self.sky = None
+        if self.gagShopCollNP:
+            self.gagShopCollNP.removeNode()
+            self.gagShopCollNP = None
         self.skyUtil = None
         self.soundPickUpBarrel = None
         self.soundDropOff = None

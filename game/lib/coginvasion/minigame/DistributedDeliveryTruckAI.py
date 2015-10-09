@@ -22,12 +22,15 @@ class DistributedDeliveryTruckAI(DistributedNodeAI):
         if self.numBarrels > 0:
             self.mg.sendUpdate('giveBarrelToSuit', [suitId])
             self.b_setNumBarrels(self.getNumBarrels() - 1)
+            self.mg.b_setBarrelsRemaining(self.mg.getBarrelsRemaining() - 1)
+            self.mg.b_setBarrelsStolen(self.mg.getBarrelsStolen() + 1)
 
     def requestBarrel(self):
         avId = self.air.getAvatarIdFromSender()
         if self.numBarrels > 0:
             self.mg.sendUpdate('giveBarrelToPlayer', [avId])
             self.b_setNumBarrels(self.getNumBarrels() - 1)
+            self.mg.b_setBarrelsRemaining(self.mg.getBarrelsRemaining() - 1)
 
     def setNumBarrels(self, num):
         self.numBarrels = num

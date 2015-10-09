@@ -22,6 +22,53 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
         DistributedMinigameAI.__init__(self, air)
         self.trucks = []
         self.suits = []
+        self.barrelsRemaining = 0
+        self.barrelsStolen = 0
+        self.barrelsDelivered = 0
+
+    def requestDropOffBarrel(self):
+        avId = self.air.getAvatarIdFromSender()
+        self.b_setBarrelsDelivered(self.getBarrelsDelivered() + 1)
+        self.sendUpdate('dropOffBarrel', [avId])
+
+    def setBarrelsRemaining(self, num):
+        self.barrelsRemaining = num
+
+    def d_setBarrelsRemaining(self, num):
+        self.sendUpdate('setBarrelsRemaining', [num])
+
+    def b_setBarrelsRemaining(self, num):
+        self.d_setBarrelsRemaining(num)
+        self.setBarrelsRemaining(num)
+
+    def getBarrelsRemaining(self):
+        return self.barrelsRemaining
+
+    def setBarrelsStolen(self, num):
+        self.barrelsStolen = num
+
+    def d_setBarrelsStolen(self, num):
+        self.sendUpdate('setBarrelsStolen', [num])
+
+    def b_setBarrelsStolen(self, num):
+        self.d_setBarrelsStolen(num)
+        self.setBarrelsStolen(num)
+
+    def getBarrelsStolen(self):
+        return self.barrelsStolen
+
+    def setBarrelsDelivered(self, num):
+        self.barrelsDelivered = num
+
+    def d_setBarrelsDelivered(self, num):
+        self.sendUpdate('setBarrelsDelivered', [num])
+
+    def b_setBarrelsDelivered(self, num):
+        self.d_setBarrelsDelivered(num)
+        self.setBarrelsDelivered(num)
+
+    def getBarrelsDelivered(self):
+        return self.barrelsDelivered
 
     def announceGenerate(self):
         DistributedMinigameAI.announceGenerate(self)
@@ -29,6 +76,10 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
         truck0.setNumBarrels(self.NumBarrelsInEachTruck)
         truck0.generateWithRequired(self.zoneId)
         self.trucks.append(truck0)
+        totalBarrels = 0
+        for truck in self.trucks:
+            totalBarrels += truck.getNumBarrels()
+        self.setBarrelsRemaining(totalBarrels)
 
     def allAvatarsReady(self):
         DistributedMinigameAI.allAvatarsReady(self)

@@ -146,7 +146,7 @@ class CharSelection:
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 
         self.__setupStageToon()
-        
+
         self.world = loader.loadModel('phase_9/models/cogHQ/SellbotHQExterior.bam')
         self.world.reparentTo(base.render)
         self.world.setPos(0, 227.09, -25.36)
@@ -173,7 +173,7 @@ class CharSelection:
                                         geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.06,
                                         relief = None, text_pos = (0, -0.01))
         self.deleteButton.hide()
-        self.quitButton = DirectButton(text = "Quit", pos = (-1.10, 0, -0.90), command = self.__action,
+        self.quitButton = DirectButton(text = "Quit", pos = (-1.10, 0, -0.925), command = self.__action,
                                     extraArgs = ['quit'], text_scale = 0.06, geom = CIGlobals.getDefaultBtnGeom(),
                                     relief = None, text_pos = (0, -0.01))
 

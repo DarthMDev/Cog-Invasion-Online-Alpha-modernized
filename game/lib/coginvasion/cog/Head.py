@@ -9,13 +9,13 @@ from lib.coginvasion.cog.SuitType import SuitType
 from direct.actor.Actor import Actor
 
 class Head:
-    
+
     """
         The 'suit' variable should only be set if we are working with a
         normal COG. Setting 'suit' to None will make this load what
         the 'head' variable is set to.
     """
-    
+
     def __init__(self, suit, head, headTex = None, headColor = None, headAnims = None):
         self.suit = suit
         self.head = head
@@ -23,7 +23,7 @@ class Head:
         self.headColor = headColor
         self.headMdl = None
         self.headAnims = headAnims
-        
+
     def generate(self):
         if self.suit:
             phase = 4
@@ -47,10 +47,10 @@ class Head:
         if self.headColor:
             self.headMdl.setColor(self.headColor)
         return self.headMdl
-    
+
     def get(self):
         return self.headMdl
-        
+
     def cleanup(self):
         if self.headMdl:
             self.headMdl.removeNode()

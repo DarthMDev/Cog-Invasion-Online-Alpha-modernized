@@ -422,6 +422,10 @@ dclass DistributedDeliveryGame : DistributedMinigame {
   giveBarrelToPlayer(uint32) broadcast;
   giveBarrelToSuit(uint32) broadcast;
   dropOffBarrel(uint32) broadcast;
+  setBarrelsDelivered(uint8) required ram broadcast;
+  setBarrelsStolen(uint8) required ram broadcast;
+  setBarrelsRemaining(uint8) required ram broadcast;
+  requestDropOffBarrel() clsend airecv;
 };
 
 dclass DistributedDeliveryTruck : DistributedNode {
