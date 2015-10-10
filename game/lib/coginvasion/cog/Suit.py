@@ -275,7 +275,7 @@ class Suit(Avatar):
 
         gearTrack = Sequence(Wait(0.7), Func(self.doSingleGear), Wait(1.5), Func(self.doSmallGears), Wait(3.0), Func(self.doBigExp))
         self.suitTrack = Parallel(Sequence(Wait(0.7), Func(self.doSingleGear), Wait(4.3),
-                Func(self.suitExplode), Wait(1.0), Func(self.delSuit)), gearTrack, name = trackName)
+                Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions)), gearTrack, name = trackName)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
         Sequence(Wait(0.8), SoundInterval(deathSound)).start()
         self.acceptOnce(self.suitTrack.getName(), self.exitDie)

@@ -14,7 +14,7 @@ import random
 class DistributedDeliveryGameAI(DistributedMinigameAI):
     notify = directNotify.newCategory('DistributedDeliveryGameAI')
 
-    NumBarrelsInEachTruck = 18
+    NumBarrelsInEachTruck = 3
     SuitSpawnRateByNumPlayers = {1 : 0.55, 2 : 0.45, 3 : 0.35, 4 : 0.25}
     SuitBaseSpawnTime = 20.0
 
@@ -22,9 +22,28 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
         DistributedMinigameAI.__init__(self, air)
         self.trucks = []
         self.suits = []
+        self.trucksOutOfBarrels = 0
         self.barrelsRemaining = 0
         self.barrelsStolen = 0
         self.barrelsDelivered = 0
+        self.totalBarrels = 0
+
+    def d_gameOver(self, winner=0, winnerDoId=[]):
+        amt = self.givePrizes(winnerDoId)
+        self.sendUpdate('gameOver', [winner, winnerDoId, amt])
+
+    def truckOutOfBarrels(self):
+        self.trucksOutOfBarrels += 1
+        if self.trucksOutOfBarrels == len(self.trucks):
+            self.stopSuitSpawner()
+            for suit in self.suits:
+                suit.requestDelete()
+            self.suits = []
+            self.sendUpdate('allBarrelsGone')
+            base.taskMgr.add(self.__gameOverTask, self.uniqueName('gameOverTask'))
+
+    def __gameOverTask(self, task):
+        self.d_gameOver()
 
     def requestDropOffBarrel(self):
         avId = self.air.getAvatarIdFromSender()
@@ -79,6 +98,7 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
         totalBarrels = 0
         for truck in self.trucks:
             totalBarrels += truck.getNumBarrels()
+        self.totalBarrels = totalBarrels
         self.setBarrelsRemaining(totalBarrels)
 
     def allAvatarsReady(self):
@@ -88,6 +108,15 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
     def d_gameOver(self, winner = 0, winnerDoId = []):
         DistributedMinigameAI.d_gameOver(self, winner, winnerDoId)
         self.stopSuitSpawner()
+
+    def givePrizes(self, winnerAvId):
+        if self.barrelsStolen == 0:
+            amt = int(self.totalBarrels * 4)
+        else:
+            amt = int(self.totalBarrels * 4 / self.barrelsStolen + self.barrelsDelivered)
+        for avatar in self.avatars:
+            avatar.b_setMoney(avatar.getMoney() + amt)
+        return amt
 
     def getSuitSpawnTime(self):
         minTime = self.SuitBaseSpawnTime * self.SuitSpawnRateByNumPlayers[self.numPlayers]

@@ -106,7 +106,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI, TimerAI.Tim
 
     def d_gameOver(self, winner=0, winnerDoId=[]):
         self.givePrizes(winnerDoId)
-        self.sendUpdate('gameOver', [winner, winnerDoId])
+        self.sendUpdate('gameOver', [winner, winnerDoId, 0])
 
     def d_abort(self):
         self.sendUpdate("abort", [])

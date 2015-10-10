@@ -325,7 +325,7 @@ dclass DistributedCogBattle : DistributedObject {
 dclass DistributedMinigame : DistributedObject {
   ready() clsend airecv;
   allPlayersReady() broadcast;
-  gameOver(int8 winner=0, uint32[] = []) broadcast;
+  gameOver(int8 winner=0, uint32[] = [], uint8 = 0) broadcast;
   setTimerTime(uint16 time) broadcast;
   leaving() clsend airecv;
   abort() broadcast;
@@ -426,6 +426,7 @@ dclass DistributedDeliveryGame : DistributedMinigame {
   setBarrelsStolen(uint8) required ram broadcast;
   setBarrelsRemaining(uint8) required ram broadcast;
   requestDropOffBarrel() clsend airecv;
+  allBarrelsGone() broadcast;
 };
 
 dclass DistributedDeliveryTruck : DistributedNode {

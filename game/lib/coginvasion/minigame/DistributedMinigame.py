@@ -19,6 +19,7 @@ import Timer
 from lib.coginvasion.hood import ZoneUtil
 from HeadPanels import HeadPanels
 from FinalScoreGUI import FinalScoreGUI
+import random
 
 transitions = Transitions(loader)
 
@@ -56,6 +57,8 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.loserPrize = 0
         self.winnerMsg = "Winner!\nYou have earned: %s"
         self.loserMsg = "Loser!\nYou have earned: %s"
+        self.allWinnerMsgs = ["Nice try!\nYou have earned: %s", "Good job!\nYou have earned: %s",
+                              "Way to go!\nYou have earned: %s", "Awesome!\nYou have earned: %s"]
         self.timer = None
         self.timeLbl = None
         return
@@ -134,18 +137,26 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.localAv.b_setAnimState("happy")
         Sequence(Wait(3.5), Func(self.displayGameOver, "winner")).start()
 
+    def showPrize(self, amt):
+        self.winSfx.play()
+        self.localAv.b_setAnimState("happy")
+        Sequence(Wait(3.5), Func(self.displayGameOver, "showPrize", amt)).start()
+
     def loser(self):
         self.loseSfx.play()
         self.localAv.b_setAnimState("neutral")
         Sequence(Wait(3.5), Func(self.displayGameOver, "loser")).start()
 
-    def displayGameOver(self, scenario):
+    def displayGameOver(self, scenario, amt = None):
         if scenario == "winner":
             msg = self.winnerMsg % self.winnerPrize
             self.prizeHigh.play()
         elif scenario == "loser":
             msg = self.loserMsg % self.loserPrize
             self.prizeLow.play()
+        elif scenario == 'showPrize':
+            msg = random.choice(self.allWinnerMsgs) % amt
+            self.prizeHigh.play()
         self.gameOverDialog = GlobalDialog(message = msg, style = 3, doneEvent = 'gameOverAck')
         self.acceptOnce('gameOverAck', self.__handleGameOverAck)
         self.gameOverDialog.show()
@@ -199,18 +210,20 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
     def exitOff(self):
         pass
 
-    def enterGameOver(self, winner, winnerDoId):
+    def enterGameOver(self, winner, winnerDoId, allPrize):
         if winner:
             if self.localAvId in winnerDoId:
                 self.winner()
             else:
                 self.loser()
+        else:
+            self.showPrize(allPrize)
 
     def exitGameOver(self):
         self.deleteGameOverDialog()
 
-    def gameOver(self, winner=0, winnerDoId=[]):
-        self.fsm.request('gameOver', [winner, winnerDoId])
+    def gameOver(self, winner=0, winnerDoId=[], allPrize = 0):
+        self.fsm.request('gameOver', [winner, winnerDoId, allPrize])
 
     def setMinigameMusic(self, path):
         self.musicPath = path

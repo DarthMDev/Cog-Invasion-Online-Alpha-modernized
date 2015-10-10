@@ -4,16 +4,20 @@
 from panda3d.core import CompassEffect, NodePath, CollisionSphere, CollisionNode, TextNode
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.gui.DirectGui import OnscreenText
+from direct.gui.DirectGui import OnscreenText, DirectLabel
+from direct.fsm import State
 
 from lib.coginvasion.minigame.DistributedMinigame import DistributedMinigame
 from lib.coginvasion.hood.SkyUtil import SkyUtil
+from lib.coginvasion.globals import CIGlobals
 
 class DistributedDeliveryGame(DistributedMinigame):
     notify = directNotify.newCategory('DistributedDeliveryGame')
 
     def __init__(self, cr):
         DistributedMinigame.__init__(self, cr)
+        self.fsm.addState(State.State('announceGameOver', self.enterAnnounceGameOver, self.exitAnnounceGameOver, ['gameOver']))
+        self.fsm.getStateNamed('play').addTransition('announceGameOver')
         self.world = None
         self.gagShop = None
         self.sky = None
@@ -29,6 +33,19 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.barrelsRemaining = 0
         self.barrelsStolen = 0
         self.barrelsDelivered = 0
+
+    def allBarrelsGone(self):
+        self.fsm.request('announceGameOver')
+
+    def enterAnnounceGameOver(self):
+        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+        whistleSfx.play()
+        del whistleSfx
+        self.gameOverLbl = DirectLabel(text = "GAME\nOVER!", relief = None, scale = 0.35, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
+
+    def exitAnnounceGameOver(self):
+        self.gameOverLbl.destroy()
+        del self.gameOverLbl
 
     def setBarrelsRemaining(self, num):
         self.barrelsRemaining = num

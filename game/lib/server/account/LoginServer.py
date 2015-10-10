@@ -50,6 +50,7 @@ fileNames = [
     "phase_11.mf",
     "phase_12.mf",
     "phase_13.mf",
+    "phase_14.mf",
     "panda3d/ai.pyd",
     "panda3d/bullet.pyd",
     "panda3d/core.pyd",

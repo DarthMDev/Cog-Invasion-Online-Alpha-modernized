@@ -34,6 +34,8 @@ class DistributedDeliveryTruckAI(DistributedNodeAI):
 
     def setNumBarrels(self, num):
         self.numBarrels = num
+        if self.numBarrels == 0:
+            self.mg.truckOutOfBarrels()
 
     def d_setNumBarrels(self, num):
         self.sendUpdate('setNumBarrels', [num])
