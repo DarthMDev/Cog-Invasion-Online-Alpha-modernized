@@ -336,7 +336,7 @@ class CogInvasionClientRepository(AstronClientRepository):
             obj = self.doId2do[doId]
             if hasattr(base, 'localAvatar'):
                 if doId != base.localAvatar.doId:
-                    if not obj.__class__.__name__ in ['ClientServicesManager', 'DistributedDistrict']:
+                    if not obj.__class__.__name__ in ['ClientServicesManager', 'DistributedDistrict', 'FriendsManager']:
                         self.deleteObject(doId)
             else:
                 self.deleteObject(doId)

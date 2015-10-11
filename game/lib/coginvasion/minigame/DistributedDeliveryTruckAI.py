@@ -15,6 +15,7 @@ class DistributedDeliveryTruckAI(DistributedNodeAI):
     def __init__(self, air, mg, index):
         DistributedNodeAI.__init__(self, air)
         self.numBarrels = 0
+        self.hasReportedAllGone = False
         self.index = index
         self.mg = mg
 
@@ -28,14 +29,17 @@ class DistributedDeliveryTruckAI(DistributedNodeAI):
     def requestBarrel(self):
         avId = self.air.getAvatarIdFromSender()
         if self.numBarrels > 0:
-            self.mg.sendUpdate('giveBarrelToPlayer', [avId])
+            self.mg.sendUpdate('giveBarrelToPlayer', [avId, self.doId])
             self.b_setNumBarrels(self.getNumBarrels() - 1)
             self.mg.b_setBarrelsRemaining(self.mg.getBarrelsRemaining() - 1)
 
+    def barrelDroppedOff(self):
+        if self.numBarrels == 0 and not self.hasReportedAllGone:
+            self.mg.truckOutOfBarrels()
+            self.hasReportedAllGone = True
+
     def setNumBarrels(self, num):
         self.numBarrels = num
-        if self.numBarrels == 0:
-            self.mg.truckOutOfBarrels()
 
     def d_setNumBarrels(self, num):
         self.sendUpdate('setNumBarrels', [num])
@@ -61,4 +65,5 @@ class DistributedDeliveryTruckAI(DistributedNodeAI):
         self.numBarrels = None
         self.mg = None
         self.index = None
+        self.hasReportedAllGone = None
         DistributedNodeAI.delete(self)

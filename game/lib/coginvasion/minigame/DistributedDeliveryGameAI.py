@@ -14,7 +14,7 @@ import random
 class DistributedDeliveryGameAI(DistributedMinigameAI):
     notify = directNotify.newCategory('DistributedDeliveryGameAI')
 
-    NumBarrelsInEachTruck = 3
+    NumBarrelsInEachTruck = 18
     SuitSpawnRateByNumPlayers = {1 : 0.55, 2 : 0.45, 3 : 0.35, 4 : 0.25}
     SuitBaseSpawnTime = 20.0
 
@@ -40,14 +40,17 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
                 suit.requestDelete()
             self.suits = []
             self.sendUpdate('allBarrelsGone')
-            base.taskMgr.add(self.__gameOverTask, self.uniqueName('gameOverTask'))
+            base.taskMgr.doMethodLater(4.0, self.__gameOverTask, self.uniqueName('gameOverTask'))
 
     def __gameOverTask(self, task):
         self.d_gameOver()
 
-    def requestDropOffBarrel(self):
+    def requestDropOffBarrel(self, truckId):
         avId = self.air.getAvatarIdFromSender()
         self.b_setBarrelsDelivered(self.getBarrelsDelivered() + 1)
+        for truck in self.trucks:
+            if truck.doId == truckId:
+                truck.barrelDroppedOff()
         self.sendUpdate('dropOffBarrel', [avId])
 
     def setBarrelsRemaining(self, num):
@@ -147,8 +150,16 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
     def delete(self):
         self.stopSuitSpawner()
         for truck in self.trucks:
-            self.truck.requestDelete()
+            truck.requestDelete()
         self.trucks = None
         for suit in self.suits:
-            self.suit.requestDelete()
+            suit.disable()
+            suit.requestDelete()
         self.suits = None
+        self.trucksOutOfBarrels = None
+        self.barrelsRemaining = None
+        self.barrelsStolen = None
+        self.barrelsDelivered = None
+        self.totalBarrels = None
+        print "Deleted DistributedDeliveryGameAI"
+        DistributedMinigameAI.delete(self)

@@ -60,6 +60,7 @@ class MinigameBase(DirectObject):
         self.minigame.disable()
         self.minigame.requestDelete()
         self.delete()
+        print "empty minigame"
 
     def delete(self):
         del self.minigame

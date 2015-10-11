@@ -2,7 +2,7 @@
 # Created by:  blach (04Oct15)
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import LerpPosInterval
+from direct.interval.IntervalGlobal import LerpPosInterval, Sequence, Wait
 
 from lib.coginvasion.cog.DistributedSuit import DistributedSuit
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
@@ -37,7 +37,7 @@ class DistributedDeliveryGameSuit(DistributedSuit):
         startPos = DGG.SpawnPoints[startIndex]
         endPos = DGG.SpawnPoints[endIndex] + (0, 0, 50)
         duration = 3
-        self.moveIval = LerpPosInterval(self, duration = duration, pos = endPos, startPos = startPos, fluid = 1)
+        self.moveIval = Sequence(Wait(1.7), LerpPosInterval(self, duration = duration, pos = endPos, startPos = startPos, fluid = 1))
         self.moveIval.start(ts)
         self.animFSM.request('flyAway', [ts])
 
@@ -56,4 +56,3 @@ class DistributedDeliveryGameSuit(DistributedSuit):
 
         self.moveIval = NPCWalkInterval(self, endPos, durationFactor, startPos, fluid = 1)
         self.moveIval.start(ts)
-        self.animFSM.request('walk')

@@ -10,6 +10,9 @@ from direct.fsm import State
 from lib.coginvasion.minigame.DistributedMinigame import DistributedMinigame
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.globals import CIGlobals
+import DeliveryGameGlobals as DGG
+
+import random
 
 class DistributedDeliveryGame(DistributedMinigame):
     notify = directNotify.newCategory('DistributedDeliveryGame')
@@ -23,6 +26,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.sky = None
         self.skyUtil = SkyUtil()
         base.localAvatar.hasBarrel = False
+        self.truckBarrelIsFrom = None
         self.soundPickUpBarrel = None
         self.soundDropOff = None
         self.barrelsByAvId = {}
@@ -73,17 +77,18 @@ class DistributedDeliveryGame(DistributedMinigame):
         if suit:
             barrel = loader.loadModel('phase_4/models/cogHQ/gagTank.bam')
             barrel.reparentTo(suit.find('**/joint_Rhold'))
-            #barrel.setP(90)
+            barrel.setP(180)
             #barrel.setZ(0.25)
             barrel.setScale(0.2)
             barrel.find('**/gagTankColl').removeNode()
             self.barrelsByAvId[suitId] = barrel
 
-    def giveBarrelToPlayer(self, avId):
+    def giveBarrelToPlayer(self, avId, truckId):
         if avId == self.localAvId:
             if not base.localAvatar.hasBarrel:
                 base.localAvatar.hasBarrel = True
                 base.playSfx(self.soundPickUpBarrel)
+                self.truckBarrelIsFrom = truckId
             else:
                 return
         av = self.cr.doId2do.get(avId)
@@ -113,6 +118,9 @@ class DistributedDeliveryGame(DistributedMinigame):
                 del self.barrelsByAvId[avId]
 
     def load(self):
+        spawn = random.choice(DGG.SpawnPoints)
+        base.localAvatar.setPos(spawn)
+        base.localAvatar.setHpr(0, 0, 0)
         self.soundPickUpBarrel = base.loadSfx('phase_6/audio/sfx/SZ_MM_gliss.mp3')
         self.soundDropOff = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_bell_for_trolley.mp3')
         self.setMinigameMusic('phase_4/audio/bgm/MG_Delivery.mp3')
@@ -165,8 +173,9 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.accept('enterMGDeliveryGagShop', self.__maybeDropOffBarrel)
 
     def __maybeDropOffBarrel(self, entry):
-        if base.localAvatar.hasBarrel:
-            self.sendUpdate('requestDropOffBarrel')
+        if base.localAvatar.hasBarrel and self.truckBarrelIsFrom != None:
+            self.sendUpdate('requestDropOffBarrel', [self.truckBarrelIsFrom])
+            self.truckBarrelIsFrom = None
 
     def __updateLabels(self):
         if self.brLabel:
@@ -209,6 +218,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.skyUtil = None
         self.soundPickUpBarrel = None
         self.soundDropOff = None
+        self.truckBarrelIsFrom = None
         del base.localAvatar.hasBarrel
         self.barrelsByAvId = None
         DistributedMinigame.disable(self)

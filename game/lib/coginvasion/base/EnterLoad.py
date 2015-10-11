@@ -14,7 +14,7 @@ class EnterLoad(LoadUtility):
 
     def __init__(self, callback):
         LoadUtility.__init__(self, callback)
-        phasesToScan = ["phase_3.5/models", "phase_4/models", "phase_5/models"]
+        phasesToScan = ["phase_3.5/models", "phase_4/models"]
         self.models = FileUtility.findAllModelFilesInVFS(phasesToScan)
 
     def load(self):

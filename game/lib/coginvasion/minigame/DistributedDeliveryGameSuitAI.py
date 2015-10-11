@@ -35,6 +35,7 @@ class DistributedDeliveryGameSuitAI(DistributedSuitAI):
         self.walkTrack.setDoneEvent(self.walkTrack.getName())
         self.acceptOnce(self.walkTrack.getDoneEvent(), self.__walkedToTruck)
         self.walkTrack.start()
+        self.b_setAnimState(SuitGlobals.getAnimId(SuitGlobals.getAnimByName('walk')))
 
     def __walkedToTruck(self):
         self.truck.suitPickUpBarrel(self.doId)
@@ -56,10 +57,11 @@ class DistributedDeliveryGameSuitAI(DistributedSuitAI):
 
     def __walkedBack2Spawn(self):
         self.b_setSuitState(3, self.spawnPoint, self.spawnPoint)
-        base.taskMgr.doMethodLater(5, self.__finished, self.uniqueName('finishSuit'))
+        base.taskMgr.doMethodLater(10, self.__finished, self.uniqueName('finishSuit'))
 
     def __finished(self, task):
         self.mg.suits.remove(self)
+        self.truck.barrelDroppedOff()
         self.requestDelete()
         return task.done
 
@@ -68,11 +70,25 @@ class DistributedDeliveryGameSuitAI(DistributedSuitAI):
         index = DGG.SpawnPoints.index(pos)
         self.spawnPoint = index
         self.b_setSuitState(2, index, index)
-        self.track = Sequence(self.posInterval(3, pos,
-                              startPos = pos + (0, 0, 50)))
+        flyTrack = self.posInterval(3, pos,
+            startPos = pos + (0, 0, 50))
+        flyTrack.start()
+        self.track = Sequence()
         self.track.append(Wait(5.4))
         self.track.append(Func(self.b_setAnimState, 'neutral'))
         self.track.append(Wait(1.0))
         self.track.append(Func(self.walkToTruck))
         self.track.start()
         self.b_setParent(CIGlobals.SPRender)
+
+    def delete(self):
+        base.taskMgr.remove(self.uniqueName('finishSuit'))
+        if hasattr(self, 'walkTrack') and self.walkTrack:
+            self.ignore(self.walkTrack.getDoneEvent())
+            self.walkTrack.finish()
+            self.walkTrack = None
+        self.mg = None
+        self.truck = None
+        self.truckIndex = None
+        self.spawnPoint = None
+        DistributedSuitAI.delete(self)
