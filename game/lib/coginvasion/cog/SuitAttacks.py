@@ -153,27 +153,27 @@ class ThrowAttack(Attack):
         self.targetY = self.attacksClass.target.getY(render)
         self.targetZ = self.attacksClass.target.getZ(render)
 
-        self.suitTrack = Sequence(name = track_name)
+        self.suitTrack = Parallel(ActorInterval(self.suit, animation_name), name = track_name)
+        seq = Sequence()
 
         if not self.attack in ['glowerpower']:
             self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
-            self.suitTrack.append(Wait(1.2))
-            self.suitTrack.append(Func(self.suit.setPlayRate, 1.0, animation_name))
+            seq.append(Wait(1.2))
+            seq.append(Func(self.suit.setPlayRate, 1.0, animation_name))
             if self.suit.suitPlan.getSuitType() == "C":
-                self.suitTrack.append(Wait(0))
+                seq.append(Wait(0))
             else:
-                self.suitTrack.append(Wait(0.7))
+                seq.append(Wait(0.7))
             self.suit.setPlayRate(2.0, animation_name)
-            self.suitTrack.append(Func(self.throwObject))
-            self.suitTrack.append(Wait(1.0))
-            self.suitTrack.append(Func(self.delWeapon))
+            seq.append(Func(self.throwObject))
+            seq.append(Wait(1.0))
+            seq.append(Func(self.delWeapon))
         else:
-            self.suitTrack.append(Wait(1))
-            self.suitTrack.append(Func(self.throwObject))
-            self.suitTrack.append(Wait(0.5))
-            self.suitTrack.append(Func(self.delWeapon))
-
-        self.suit.play(animation_name)
+            seq.append(Wait(1))
+            seq.append(Func(self.throwObject))
+            seq.append(Wait(0.5))
+            seq.append(Func(self.delWeapon))
+        self.suitTrack.append(seq)
 
         wsnode = CollisionNode(weapon_coll_id)
         wsnode.addSolid(self.wss)
@@ -932,11 +932,13 @@ class ParticleAttack(Attack):
         if hasattr(self.suit, 'uniqueName'):
             track_name = self.suit.uniqueName(track_name)
             particleCollId = self.suit.uniqueName(particleCollId)
-        self.suitTrack = Sequence(name = track_name)
-        self.suitTrack.append(Wait(delayUntilRelease))
-        self.suitTrack.append(Func(self.releaseAttack))
-        self.suitTrack.append(Wait(self.particleIvalDur))
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
+        self.suitTrack = Parallel(ActorInterval(self.suit, animation_name), name = track_name)
+        seq = Sequence()
+        seq.append(Wait(delayUntilRelease))
+        seq.append(Func(self.releaseAttack))
+        seq.append(Wait(self.particleIvalDur))
+        seq.setDoneEvent(self.suitTrack.getName())
+        self.suitTrack.append(seq)
         self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
         if startRightAway:
             self.suitTrack.start(ts)

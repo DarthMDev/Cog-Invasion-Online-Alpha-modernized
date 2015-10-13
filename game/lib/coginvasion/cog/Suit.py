@@ -275,10 +275,10 @@ class Suit(Avatar):
         self.bigGearExp = bigGearExplosion
 
         gearTrack = Sequence(Wait(0.7), Func(self.doSingleGear), Wait(1.5), Func(self.doSmallGears), Wait(3.0), Func(self.doBigExp))
-        self.suitTrack = Parallel(Sequence(Wait(0.7), Func(self.doSingleGear), Wait(4.3),
+        self.suitTrack = Parallel(Sequence(Wait(0.8), SoundInterval(deathSound)),
+                Sequence(Wait(0.7), Func(self.doSingleGear), Wait(4.3),
                 Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions)), gearTrack, name = trackName)
-        self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        Sequence(Wait(0.8), SoundInterval(deathSound)).start()
+        self.suitTrack.setDoneEvent(self.suitTrack.getName()).start()
         self.acceptOnce(self.suitTrack.getName(), self.exitDie)
         self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, trackName)
         self.suitTrack.start(ts)
