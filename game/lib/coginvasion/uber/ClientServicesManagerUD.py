@@ -282,6 +282,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
                 "setMaxHealth": (15,),
                 "setMoney": (400,),
                 "setBackpackAmmo": ([13, 12, 7, 1], [15, 7, 10, 10],),
+                "setLoadout": ([13, 12, 7, 1],),
                 "setAdminToken": (-1,),
                 "setQuests": ([], [], [],),
                 "setQuestHistory": ([],),
