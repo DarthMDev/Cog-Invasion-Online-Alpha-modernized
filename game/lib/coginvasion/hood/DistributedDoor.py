@@ -381,7 +381,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         if av:
             track = self.getAvatarEnterTrack(av)
             self.avatarTracks.append(track)
-            track.start(ts)
+            track.start()
 
     def exitDoor(self, avatarId, timestamp):
         if not self.building:
@@ -391,7 +391,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         if av:
             track = self.getAvatarExitTrack(av)
             self.avatarTracks.append(track)
-            track.start(ts)
+            track.start()
 
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
