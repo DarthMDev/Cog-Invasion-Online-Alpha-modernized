@@ -145,7 +145,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         self.rightTrack = Sequence(LerpQuatInterval(self.rightDoor, duration = 1.0, quat = (self.getRightDoorClosedH(), 0, 0),
             startHpr = (self.getRightDoorOpenH(), 0, 0), blendType = 'easeIn'),
             Func(base.playSfx, self.doorShutSound, 0, 1, None, 0.0, self.rightDoor))
-        self.rightTrack.start(ts)
+        self.rightTrack.start()
 
     def exitRightDoorClosing(self):
         if self.rightTrack:
@@ -158,7 +158,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
             self.rightTrack = None
         self.rightTrack = Parallel(LerpQuatInterval(self.rightDoor, duration = 1.0, quat = (self.getRightDoorOpenH(), 0, 0),
             startHpr = (self.getRightDoorClosedH(), 0, 0), blendType = 'easeOut'), SoundInterval(self.doorOpenSound, node = self.rightDoor))
-        self.rightTrack.start(ts)
+        self.rightTrack.start()
 
     def exitRightDoorOpening(self):
         if self.rightTrack:
@@ -185,7 +185,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
             self.leftDoor, duration = 1.0, quat = (self.getLeftDoorClosedH(), 0, 0),
             startHpr = (self.getLeftDoorOpenH(), 0, 0), blendType = 'easeIn'),
             Func(base.playSfx, self.doorShutSound, 0, 1, None, 0.0, self.leftDoor))
-        self.leftTrack.start(ts)
+        self.leftTrack.start()
 
     def exitLeftDoorClosing(self):
         if self.leftTrack:
@@ -198,7 +198,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
             self.leftTrack = None
         self.leftTrack = Parallel(LerpQuatInterval(self.leftDoor, duration = 1.0, quat = (self.getLeftDoorOpenH(), 0, 0),
             startHpr = (self.getLeftDoorClosedH(), 0, 0), blendType = 'easeOut'), SoundInterval(self.doorOpenSound, node = self.leftDoor))
-        self.leftTrack.start(ts)
+        self.leftTrack.start()
 
     def exitLeftDoorOpening(self):
         if self.leftTrack:
