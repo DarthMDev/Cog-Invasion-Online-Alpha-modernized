@@ -24,8 +24,7 @@ class ThrowGag(Gag):
 
     def start(self):
         super(ThrowGag, self).start()
-        if self.isLocal():
-            self.avatar.b_gagBuild(self.getID())
+        self.build()
         self.equip()
         self.avatar.setPlayRate(self.playRate, 'pie')
         self.avatar.play('pie', fromFrame = 0, toFrame = 45)
@@ -45,7 +44,7 @@ class ThrowGag(Gag):
         throwPath.setScale(render, 1)
         throwPath.setPos(0, 160, -90)
         throwPath.setHpr(90, -90, 90)
-        
+
         entity = self.gag
         entity.wrtReparentTo(render)
         entity.setHpr(throwPath.getHpr(render))
@@ -73,7 +72,7 @@ class ThrowGag(Gag):
         self.splatPos = None
         taskMgr.doMethodLater(0.5, self.delSplat, 'Delete Splat')
         return
-    
+
     def cleanupEntity(self, pos):
         for entity, track in self.entities:
             if entity.getPos() == pos:
@@ -86,10 +85,10 @@ class ThrowGag(Gag):
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
         fromNP = entry.getFromNodePath().getParent()
-        
+
         if fromNP.isEmpty():
             return
-        
+
         for key in base.cr.doId2do.keys():
             obj = base.cr.doId2do[key]
             if obj.__class__.__name__ == "DistributedSuit":
@@ -104,7 +103,7 @@ class ThrowGag(Gag):
                         else:
                             self.avatar.acceptOnce('gagSensor-into', self.onCollision)
                             return
-                        
+
         self.splatPos = fromNP.getPos()
         self.avatar.sendUpdate('setSplatPos', [self.getID(), self.splatPos.getX(), self.splatPos.getY(), self.splatPos.getZ()])
         self.handleSplat()

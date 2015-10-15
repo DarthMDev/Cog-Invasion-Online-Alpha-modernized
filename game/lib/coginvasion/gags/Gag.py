@@ -131,8 +131,8 @@ class Gag(object):
         if not self.avatar or not self.avatar.getBackpack() or self.avatar.getBackpack() and self.avatar.getBackpack().getSupply(self.getName()) == 0:
             return
         self.setHandJoint()
-        if not self.gag and self.isLocal():
-            base.localAvatar.b_gagBuild(self.getID())
+        if not self.gag:
+            self.build()
         self.gag.reparentTo(self.handJoint)
         self.equipped = True
 

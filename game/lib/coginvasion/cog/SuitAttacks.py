@@ -127,6 +127,7 @@ class ThrowAttack(Attack):
         self.targetY = None
         self.targetZ = None
         self.startNP = None
+        self.theActorIval = None
 
     def handleWeaponCollision(self, entry):
         if self.suit:
@@ -153,22 +154,27 @@ class ThrowAttack(Attack):
         self.targetY = self.attacksClass.target.getY(render)
         self.targetZ = self.attacksClass.target.getZ(render)
 
-        self.suitTrack = Parallel(ActorInterval(self.suit, animation_name), name = track_name)
+        if not self.attack in ['glowerpower']:
+            actorIval = ActorInterval(self.suit, animation_name, playRate = 2.0, duration = 1.2)
+            actorIval2 = ActorInterval(self.suit, animation_name, startTime = 2.4)
+        else:
+            actorIval = ActorInterval(self.suit, animation_name)
+
         seq = Sequence()
 
         if not self.attack in ['glowerpower']:
+            self.suitTrack = Parallel(Sequence(actorIval, actorIval2), name = track_name)
             self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
             seq.append(Wait(1.2))
-            seq.append(Func(self.suit.setPlayRate, 1.0, animation_name))
             if self.suit.suitPlan.getSuitType() == "C":
                 seq.append(Wait(0))
             else:
                 seq.append(Wait(0.7))
-            self.suit.setPlayRate(2.0, animation_name)
             seq.append(Func(self.throwObject))
             seq.append(Wait(1.0))
             seq.append(Func(self.delWeapon))
         else:
+            self.suitTrack = Parallel(actorIval, name = track_name)
             seq.append(Wait(1))
             seq.append(Func(self.throwObject))
             seq.append(Wait(0.5))

@@ -23,7 +23,8 @@ STORE_LOGIN_TOKEN = 100
 SERVER_MSG = 103
 
 messages = {'tmaotc': 'At this time, only %d account(s) can be created on each computer.',
-    'tmait': 'At this time, Cog Invasion Online only allows a total of %d game account(s) to be created. This amount has already been reached. We apologize for the inconvenience.'}
+    'tmait': 'At this time, Cog Invasion Online only allows a total of %d game account(s) to be created. This amount has already been reached. We apologize for the inconvenience.',
+    'cwog': "NOTICE (as of 10/11/15): If you previously had Cog Invasion Online installed on your computer, you MUST COMPLETELY uninstall the old version, and install the new one at http://download.coginvasion.com/installers/setup.exe\n(if you haven't done so already)"}
 
 baseLink = "http://download.coginvasion.com/"
 
