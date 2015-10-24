@@ -64,12 +64,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             plan = SuitBank.getIdFromSuit(plan)
         self.sendUpdate('setSuit', [plan, variant])
 
-    def setSuit(self, plan, variant = 0):
+    def setSuit(self, plan, variant = 0, tutorial = None):
         self.suitPlan = plan
         self.variant = Variant.getVariantById(variant)
         self.maxHealth = CIGlobals.getSuitHP(self.level)
         self.health = self.maxHealth
-        self.itemDropper.calculate()
+        self.itemDropper.calculate(tutorial)
 
         if self.level == 0:
             self.maxHealth = 1

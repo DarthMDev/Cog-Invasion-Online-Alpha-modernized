@@ -61,7 +61,14 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.questHistory = None
         self.busy = 1
         self.friends = None
+        self.tutDone = 0
         return
+
+    def setTutorialCompleted(self, value):
+        self.tutDone = value
+
+    def getTutorialCompleted(self):
+        return self.tutDone
 
     def setFriendsList(self, friends):
         self.friends = friends
@@ -374,11 +381,11 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                 if not gag.getAvatar():
                     gag.setAvatar(self)
                 self.backpack.setCurrentGag(gag.getName())
-                
+
     def unEquip(self):
         if self.backpack:
             self.backpack.setCurrentGag(None)
-            
+
     def b_unEquip(self):
         self.unEquip()
         self.sendUpdate('unEquip', [])
@@ -412,7 +419,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             amt = self.backpack.getSupply(GagGlobals.getGagByID(gagId))
             ammoList.append(amt)
         return ammoList
-    
+
     def setLoadout(self, gagIds):
         if self.backpack:
             loadout = []
@@ -571,6 +578,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             self.DistributedToon_deleted
         except:
             self.DistributedToon_deleted = 1
+            self.tutDone = None
             self.stopSmooth()
             Toon.Toon.delete(self)
             DistributedAvatar.delete(self)

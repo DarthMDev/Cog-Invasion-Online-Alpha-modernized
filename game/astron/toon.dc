@@ -61,6 +61,8 @@ from lib.coginvasion.battle import DistributedPieTurretManager/AI
 from lib.coginvasion.battle import DistributedPieTurret/AI
 from lib.coginvasion.friends import FriendsManager/UD
 from lib.coginvasion.cogtropolis import DistributedCityCart/AI
+from lib.coginvasion.tutorial import DistributedTutorial/AI
+from lib.coginvasion.tutorial import DistributedTutorialSuit/AI
 
 struct AvChoice {
   uint32 avId;
@@ -115,7 +117,7 @@ dclass ClientServicesManager : DistributedObject {
   loginAccepted();
   requestAvatars() clsend;
   setAvatars(AvChoice[]);
-  requestNewAvatar(string dnaStrand, int8 slot, string name) clsend;
+  requestNewAvatar(string dnaStrand, int8 slot, string name, int8 skipTutorial) clsend;
   toonCreated(int32 avId);
   toonDeleted();
   requestDeleteAvatar(uint32 avId) clsend;
@@ -177,6 +179,9 @@ dclass DistributedToon : DistributedAvatar {
   requestEquipPU(int8) ownsend airecv;
   usedPU(int8) ownsend airecv;
   requestAddFriend(uint32) ownsend airecv;
+  setTutorialCompleted(int8) required broadcast ownrecv db;
+  createTutorial() ownsend airecv;
+  tutorialCreated(uint32) ownrecv;
 };
 
 dclass DistributedTreasure : DistributedObject {
@@ -282,6 +287,18 @@ dclass DistributedSuit : DistributedAvatar {
   setLatePos(int16 / 10, int16 / 10) required ram;
 
   setSuitState(int8, int8, int8, int16) broadcast ram;
+};
+
+dclass DistributedTutorial : DistributedObject {
+  makeSuit(int8) clsend airecv;
+  suitNoHealth(int8);
+  suitExploded(int8);
+  pickedUpJellybean();
+  finishedTutorial() clsend airecv;
+};
+
+dclass DistributedTutorialSuit : DistributedSuit {
+
 };
 
 dclass DistributedVicePresident : DistributedAvatar {

@@ -81,11 +81,11 @@ class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
         DistributedMinigame.DistributedMinigame.enterPlay(self)
         self.createGui()
 
-    def enterGameOver(self, winner=0, winnerDoId=0):
+    def enterGameOver(self, winner=0, winnerDoId=0, allPrize = 0):
         self.cardDeck.disableAll()
         self.drawBtn['state'] = DGG.DISABLED
         self.callBtn['state'] = DGG.DISABLED
-        DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId)
+        DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId, allPrize)
 
     def createGui(self):
         self.deleteGui()

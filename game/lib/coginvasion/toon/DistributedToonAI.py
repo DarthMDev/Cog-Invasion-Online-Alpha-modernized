@@ -16,6 +16,7 @@ from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags.backpack import BackpackManager
 from lib.coginvasion.quests.QuestManagerAI import QuestManagerAI
+from lib.coginvasion.tutorial.DistributedTutorialAI import DistributedTutorialAI
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 import ToonDNA
 
@@ -83,7 +84,27 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.questHistory = []
         self.tier = -1
         self.friends = []
+        self.tutDone = 0
         return
+
+    def createTutorial(self):
+        zone = self.air.allocateZone()
+        tut = DistributedTutorialAI(self.air, self.doId)
+        tut.generateWithRequired(zone)
+        self.sendUpdate('tutorialCreated', [zone])
+
+    def setTutorialCompleted(self, value):
+        self.tutDone = value
+
+    def d_setTutorialCompleted(self, value):
+        self.sendUpdate('setTutorialCompleted', [value])
+
+    def b_setTutorialCompleted(self, value):
+        self.d_setTutorialCompleted(value)
+        self.setTutorialCompleted(value)
+
+    def getTutorialCompleted(self):
+        return self.tutDone
 
     def requestSetLoadout(self, gagIds):
         for gagId in gagIds:
@@ -421,7 +442,8 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                         obj.b_setAnimState('soak')
                     else:
                         obj.b_setAnimState('squirt-small')
-                self.questManager.cogDefeated(obj)
+                if obj.__class__.__name__ == 'DistributedSuit':
+                    self.questManager.cogDefeated(obj)
 
     def suitKilled(self, avId):
         obj = self.air.doId2do.get(avId, None)
@@ -449,6 +471,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
             DistributedSmoothNodeAI.delete(self)
             self.questManager.cleanup()
             self.questManager = None
+            self.tutDone = None
             self.token = None
             self.name = None
             self.anim = None

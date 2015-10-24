@@ -5,6 +5,11 @@ import __builtin__
 class game:
 	process = 'client'
 __builtin__.game = game
+
+cbm = CullBinManager.getGlobalPtr()
+cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
+cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
+cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 from lib.coginvasion.dna.DNAParser import *
@@ -14,25 +19,17 @@ from direct.controls.GravityWalker import GravityWalker
 from lib.coginvasion.toon.Toon import Toon
 from direct.distributed.ClientRepository import ClientRepository
 from lib.coginvasion.toon.SmartCamera import SmartCamera
+from direct.showbase.Audio3DManager import Audio3DManager
+base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)
 #from lib.toontown.base.ShadowCreator import ShadowCreator
 
 #caster = ShadowCreator()
 
 #from rp.Code.RenderingPipeline import RenderingPipeline
 
-cbm = CullBinManager.getGlobalPtr()
-cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
-cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
-cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
-
 render.setAntialias(AntialiasAttrib.MMultisample)
 
-base.camLens.setMinFov(54.0 / (4./3.))
-
-cbm = CullBinManager.getGlobalPtr()
-cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
-cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
-cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
+base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 
 ds = DNAStorage()
 
@@ -55,15 +52,27 @@ if gsg:
 geom.setName('toontown_central')
 geom.reparentTo(render)
 geom.find('**/toontown_central_DNARoot').setTwoSided(1)
+geom.find('**/ground_center').setBin('ground', 18)
+geom.find('**/ground_sidewalk').setBin('ground', 18)
+geom.find('**/ground').setBin('ground', 18)
+#geom.find('**/ground_sidewalk').setH(347.11)
+#geom.find('**/ground_sidewalk_coll').setH(347.11)
 for tree in geom.findAllMatches('**/prop_green_tree_large*_DNARoot'):
-	print tree.getName()
 	tree.setBillboardAxis()
 	try:
 		tree.find('**/prop_green_tree_large_ur_shadow').removeNode()
+		treeType = 'ur'
 	except:
 		tree.find('**/prop_green_tree_large_ul_shadow').removeNode()
+		treeType = 'ul'
 	newShadow = loader.loadModel("phase_3/models/props/drop_shadow.bam")
 	newShadow.reparentTo(tree)
+	if treeType == 'ur':
+		newShadow.setX(1)
+	else:
+		newShadow.setX(-1)
+	newShadow.setScale(1.5)
+	newShadow.setColor(0, 0, 0, 0.5, 1)
 sky = loader.loadModel("phase_3.5/models/props/TT_sky.bam")
 sky.reparentTo(render)
 sky.setScale(5)
@@ -88,24 +97,29 @@ for nodepath in render.findAllMatches('*'):
 base.cTrav = CollisionTraverser()
 cr = ClientRepository(['astron/direct.dc'])
 cr.isShowingPlayerIds = False
-"""
+
+def taskName(string):
+	return string
+
 controlManager = ControlManager.ControlManager(True, False)
 localAv = Toon(cr)
-localAv.setDNAStrand("00/01/07/00/02/00/01/00/00/00/00/00/00/00/00")
+localAv.taskName = taskName
+localAv.setDNAStrand("00/01/07/00/00/00/00/00/00/00/00/00/00/00/00")
 localAv.setName("Sneaky Toon")
 localAv.initCollisions()
 localAv.startBlink()
 localAv.startLookAround()
 localAv.reparentTo(render)
 localAv.animFSM.request("neutral")
+base.localAvatar = localAv
 avatarMoving = False
 base.disableMouse()
 
 animal = localAv.getAnimal()
-bodyScale = ToontownGlobals.toonBodyScales[animal]
-headScale = ToontownGlobals.toonHeadScales[animal][2]
-shoulderHeight = ToontownGlobals.legHeightDict[localAv.legs] * bodyScale + ToontownGlobals.torsoHeightDict[localAv.torso] * bodyScale
-height = shoulderHeight + ToontownGlobals.headHeightDict[localAv.head] * headScale
+bodyScale = CIGlobals.toonBodyScales[animal]
+headScale = CIGlobals.toonHeadScales[animal][2]
+shoulderHeight = CIGlobals.legHeightDict[localAv.legs] * bodyScale + CIGlobals.torsoHeightDict[localAv.torso] * bodyScale
+height = shoulderHeight + CIGlobals.headHeightDict[localAv.head] * headScale
 localAv.setHeight(height)
 camHeight = max(localAv.getHeight(), 3.0)
 heightScaleFactor = camHeight * 0.3333333333
@@ -115,7 +129,7 @@ camPos = (Point3(0.0, -9.0 * heightScaleFactor, camHeight),
 	Point3(0.0, camHeight, camHeight * 4.0),
 	Point3(0.0, camHeight, camHeight * -1.0),
 	0)
-
+"""
 av = Toon(cr)
 av.setDNAStrand("00/00/00/00/00/00/00/00/00/00/00/00/00/00/00")
 av.setName("Tom")
@@ -125,7 +139,7 @@ av.startLookAround()
 av.reparentTo(render)
 av.animFSM.request("neutral")
 av.setX(-20)
-"""
+
 av2 = Toon(cr)
 av2.setDNAStrand("00/04/01/00/02/00/01/00/00/00/00/00/00/00/00")
 av2.setName("Flippy")
@@ -153,15 +167,16 @@ ToonRotateSlowSpeed = 33.0
 Y_FACTOR = -0.15
 
 smart_cam = SmartCamera()
-smart_cam.set_default_pos(camPos)
-smart_cam.set_parent(localAv)
-smart_cam.initialize_smartcamera()
-smart_cam.initialize_smartcamera_collisions()
-smart_cam.start_smartcamera()
+smart_cam.initializeSmartCamera()
+smart_cam.setIdealCameraPos(camPos[0])
+smart_cam.setLookAtPoint(defLookAt)
+camera.reparentTo(localAv)
+camera.setPos(smart_cam.getIdealCameraPos())
+smart_cam.startUpdateSmartCamera()
 
 walkControls = GravityWalker(legacyLifter=False)
-walkControls.setWallBitMask(ToontownGlobals.WallBitmask)
-walkControls.setFloorBitMask(ToontownGlobals.FloorBitmask)
+walkControls.setWallBitMask(CIGlobals.WallBitmask)
+walkControls.setFloorBitMask(CIGlobals.FloorBitmask)
 walkControls.setWalkSpeed(ToonForwardSpeed, ToonJumpForce, ToonReverseSpeed, ToonRotateSpeed)
 walkControls.initializeCollisions(base.cTrav, localAv, avatarRadius=1.4, floorOffset=0.025, reach=4.0)
 walkControls.enableAvatarControls()
@@ -187,7 +202,7 @@ base.accept("control-up", uncrouch)
 base.accept("arrow_up", moving)
 base.accept("arrow_up-up", unmoving)
 """
-"""
+
 amb = AmbientLight('amblight')
 amb.setColor(VBase4(0.5, 0.5, 0.5, 1))
 ambNp = render.attachNewNode(amb)
@@ -228,5 +243,7 @@ render.setShaderAuto()
 
 #caster.shadowCamera.place()
 
+
 #base.oobe()
+#base.startDirect()
 base.run()

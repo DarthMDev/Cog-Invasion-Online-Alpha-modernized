@@ -26,6 +26,7 @@ class ToonTalker:
     def __init__(self):
         self.avatar = None
         self.nametag = None
+        self.autoClearChat = True
 
     def setAvatar(self, avatar, nametag):
         self.avatar = avatar
@@ -50,7 +51,8 @@ class ToonTalker:
             if length > self.MAX_LENGTH:
                 length = self.MAX_LENGTH
             bubble = loader.loadModel(CIGlobals.ChatBubble)
-            taskMgr.doMethodLater(length, self.clearChatTask, "clearAvatarChat-%s" % (str(self.taskId)))
+            if self.autoClearChat:
+                taskMgr.doMethodLater(length, self.clearChatTask, "clearAvatarChat-%s" % (str(self.taskId)))
 
         if self.avatarType == CIGlobals.Suit:
             font = CIGlobals.getSuitFont()

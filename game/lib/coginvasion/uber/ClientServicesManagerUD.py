@@ -287,7 +287,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
                 "setQuests": ([], [], [],),
                 "setQuestHistory": ([],),
                 "setTier": (13,),
-                "setFriendsList": ([],)}
+                "setFriendsList": ([],),
+                "setTutorialCompleted": (str(choice[3]),)}
         self.notify.info("Creating new toon!")
         avId = 0
         avList = accFields["AVATAR_IDS"]
@@ -374,8 +375,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
         self.queryAccount(accountId, accountResp)
 
-    def requestNewAvatar(self, dna, slot, name):
-        choice = [dna, slot, name]
+    def requestNewAvatar(self, dna, slot, name, skipTutorial = 0):
+        choice = [dna, slot, name, skipTutorial]
         accountId = self.air.getAccountIdFromSender()
         sender = self.air.getMsgSender()
 

@@ -1,0 +1,4 @@
+// Beta test party
+model "phase_13/models/parties/btp_banner.egg" [
+  store_node [ "prop" "prop_btp_banner" "" ]
+  ]

@@ -246,7 +246,6 @@ class Suit(Avatar):
         self.generateCog(isLose = 1)
         self.clearChatbox()
         self.deleteNameTag()
-        self.play('lose')
         deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.mp3")
         base.audio3d.attachSoundToObject(deathSound, self)
         trackName = self.uniqueName('enterDie')
@@ -277,7 +276,7 @@ class Suit(Avatar):
         gearTrack = Sequence(Wait(0.7), Func(self.doSingleGear), Wait(1.5), Func(self.doSmallGears), Wait(3.0), Func(self.doBigExp))
         self.suitTrack = Parallel(Sequence(Wait(0.8), SoundInterval(deathSound)),
                 Sequence(Wait(0.7), Func(self.doSingleGear), Wait(4.3),
-                Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions)), gearTrack, name = trackName)
+                Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions)), gearTrack, Sequence(ActorInterval(self, 'lose', duration = 6), Func(self.getGeomNode().hide)), name = trackName)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
         self.acceptOnce(self.suitTrack.getName(), self.exitDie)
         self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, trackName)

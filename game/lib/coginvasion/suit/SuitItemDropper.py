@@ -19,8 +19,9 @@ class SuitItemDropper:
         self.suit = suit
         self.numDrops = 1
         self.suitDrops = []
+        self.isTutorialDrop = False
 
-    def calculate(self):
+    def calculate(self, tutDrop = None):
         if self.suit.getMaxHealth() <= 48:
             self.setDropChance(DBackpackAI, 2)
             """
@@ -53,6 +54,7 @@ class SuitItemDropper:
             if not drop:
                 self.notify.warning('Could not find a drop.')
                 return
+            drop.setTutDrop(tutDrop)
             drop.setSuitManager(self.suit.getManager())
             self.suitDrops.append(drop)
 
@@ -74,7 +76,8 @@ class SuitItemDropper:
             drop.b_setParent(CIGlobals.SPRender)
             if hasattr(drop, 'startTimer'):
                 drop.startTimer()
-            self.suit.getManager().drops.append(drop)
+            if self.suit.getManager():
+                self.suit.getManager().drops.append(drop)
 
     def setDropChance(self, drop, chance):
         values = self.possibleDrops.get(drop)

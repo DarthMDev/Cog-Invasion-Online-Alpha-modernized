@@ -12,9 +12,9 @@ group "toontownCentral" [
    pos [ 0 0 0 ]
    nhpr [ 0 0 0 ]
   ]
-  prop "prop_green_tree_large_ur_DNARoot" [
-   code [ "old_tree_large_ur" ]
-   pos [ 33.47 -22.45 0 ]
+  prop "prop_green_tree_large_ul_DNARoot" [
+   code [ "old_tree_large_ul" ]
+   pos [ 41.92 -36.43 0 ]
    nhpr [ 0 0 0 ]
   ]
   prop "prop_green_tree_large_ur_2_DNARoot" [
@@ -22,24 +22,39 @@ group "toontownCentral" [
    pos [ -45.05 16.04 0 ]
    nhpr [ 0 0 0 ]
   ]
-  prop "prop_green_tree_large_ul_DNARoot" [
-   code [ "old_tree_large_ul" ]
-   pos [ 36.45 14.25 0 ]
+  prop "prop_green_tree_large_ul_3_DNARoot" [
+   code [ "old_tree_large_ur" ]
+   pos [ 18.47 14.15 0 ]
    nhpr [ 0 0 0 ]
   ]
   prop "prop_green_tree_large_ul_2_DNARoot" [
    code [ "old_tree_large_ul" ]
-   pos [ 20.00 34.06 0 ]
+   pos [ 27.91 40.00 0 ]
    nhpr [ 0 0 0 ]
   ]
   prop "prop_green_tree_large_ur_3_DNARoot" [
+   code [ "old_tree_large_ul" ]
+   pos [ -24.14 47.08 0 ]
+   nhpr [ 0 0 0 ]
+  ]
+  prop "prop_green_tree_large_6_DNARoot" [
+   code [ "old_tree_large_ul" ]
+   pos [ -8.97 -47.00 0 ]
+   nhpr [ 0 0 0 ]
+  ]
+  prop "prop_green_tree_large_7_DNARoot" [
    code [ "old_tree_large_ur" ]
-   pos [ 41.32 85.35 7.32 ]
+   pos [ -31.95 -29.59 0 ]
+   nhpr [ 0 0 0 ]
+  ]
+  prop "prop_green_tree_large_8_DNARoot" [
+   code [ "old_tree_large_ul" ]
+   pos [ -48.65 -10.28 0 ]
    nhpr [ 0 0 0 ]
   ]
   node "buildings" [
-   nhpr [ 48.01 0 0 ]
-   pos [ 0 0 0.5 ]
+   nhpr [ 35 0 0 ]
+   pos [ 0 0 0.607 ]
    prop "prop_trolley_station_DNARoot" [
     code [ "prop_trolley_station" ]
     pos [ 96.17 -41.76 7.60 ]

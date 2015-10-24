@@ -102,9 +102,9 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		self.movement.createGui()
 		self.movement.fsm.request('run')
 
-	def enterGameOver(self, winner=0, winnerDoId=0):
+	def enterGameOver(self, winner=0, winnerDoId=0, allPrize = 0):
 		self.raceFSM.request('off')
-		DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId)
+		DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId, allPrize)
 
 	def stopMovement(self):
 		self.movement.cleanup()

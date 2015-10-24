@@ -84,7 +84,12 @@ class LocalToon(DistributedToon):
         self.pickerRayNode = None
         self.pickerHandler = None
         self.rolledOverTag = None
+        
+        self.inTutorial = False
         #base.cTrav.showCollisions(render)
+
+    def tutorialCreated(self, zoneId):
+        self.cr.tutorialCreated(zoneId)
 
     def friendsButtonClicked(self):
         self.hideFriendButton()

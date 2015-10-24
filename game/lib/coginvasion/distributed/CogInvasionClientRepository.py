@@ -26,6 +26,7 @@ from lib.coginvasion.distributed.PlayGame import PlayGame
 from lib.coginvasion.distributed.HoodMgr import HoodMgr
 from lib.coginvasion.toon import LocalToon
 from lib.coginvasion.base.EnterLoad import EnterLoad
+from lib.coginvasion.hood.QuietZoneState import QuietZoneState
 from direct.distributed import DistributedSmoothNode
 from CogInvasionErrorCodes import *
 from lib.coginvasion.base import SpeedHackChecker
@@ -107,6 +108,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.uberZoneInterest = None
         self.isShowingPlayerIds = False
         self.doBetaInform = True
+        self.dTutorial = None
         #self.tournamentMusicChunks = {}
         #self.threadedTaskChain = taskMgr.setupTaskChain("threadedTaskChainForSoundIntervals", numThreads = 2)
 
@@ -678,11 +680,11 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.ignore("quitCreateAToon")
         self.ignore("createAToonFinished")
 
-    def enterSubmitNewToon(self, dnaStrand, slot, name):
+    def enterSubmitNewToon(self, dnaStrand, slot, name, skipTutorial = 0):
         self.submittingDialog = GlobalDialog(message = CIGlobals.Submitting)
         self.submittingDialog.show()
         self.acceptOnce(self.csm.getToonCreatedEvent(), self.__handleSubmitNewToonResp)
-        self.csm.sendSubmitNewToon(dnaStrand, slot, name)
+        self.csm.sendSubmitNewToon(dnaStrand, slot, name, skipTutorial)
 
     def __handleSubmitNewToonResp(self, avId):
         self.loginFSM.request('avChoose')
@@ -706,14 +708,38 @@ class CogInvasionClientRepository(AstronClientRepository):
         if self.localAvChoice == None:
             self.notify.error("called enterPlayGame() without self.localAvChoice being set!")
             return
-        zoneId = status['zoneId']
-        hoodId = status['hoodId']
-        avId = status['avId']
-        self.playGame.load()
-        self.playGame.enter(hoodId, zoneId, avId)
+        if localAvatar.getTutorialCompleted() == 1:
+            zoneId = status['zoneId']
+            hoodId = status['hoodId']
+            avId = status['avId']
+            self.playGame.load()
+            self.playGame.enter(hoodId, zoneId, avId)
+        else:
+            self.sendQuietZoneRequest()
+            localAvatar.sendUpdate('createTutorial')
         self.myDistrict.d_joining()
 
+    def tutorialCreated(self, zoneId):
+        # zoneId = the zone the tutorial resides in
+        # tutId = the doId of the tutorial
+        requestStatus = {'zoneId': zoneId}
+        self.tutQuietZoneState = QuietZoneState('tutQuietZoneDone')
+        self.tutQuietZoneState.load()
+        self.tutQuietZoneState.enter(requestStatus)
+        self.acceptOnce('tutQuietZoneDone', self.__handleTutQuietZoneDone)
+
+    def __handleTutQuietZoneDone(self):
+        # We've entered the zone that the tutorial is in.
+        self.tutQuietZoneState.exit()
+        self.tutQuietZoneState.unload()
+        del self.tutQuietZoneState
+
     def exitPlayGame(self):
+        self.ignore('tutQuietZoneDone')
+        if hasattr(self, 'tutQuietZoneDone'):
+            self.tutQuietZoneState.exit()
+            self.tutQuietZoneState.unload()
+            del self.tutQuietZoneState
         if self.music:
             self.music.stop()
             self.music = None

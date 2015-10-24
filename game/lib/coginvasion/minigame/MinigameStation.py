@@ -46,7 +46,7 @@ class MinigameStation(GroupStation):
 								2: (-255.00, 0.00, 0.00),
                                 3: (0.00, 0.00, 0.00),
                                 4: (310.00, 0.00, 0.00),
-                                5: (355.00, 0, 0)}}
+                                5: (-260.00, 0, 0)}}
 		return
 
 	def delete(self):
