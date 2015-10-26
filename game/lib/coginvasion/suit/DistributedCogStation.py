@@ -21,6 +21,9 @@ class DistributedCogStation(DistributedGroupStation, CogStation):
 
 	def headOff(self, zone, hoodIndex):
 		self.deleteStationAbortGui()
+		hoodId = self.cr.playGame.hood.hoodId
+		if hoodId == CIGlobals.ToontownCentral:
+			hoodId = CIGlobals.BattleTTC
 		requestStatus = {'zoneId': zone,
 					'hoodId': self.cr.playGame.hood.hoodId,
 					'where': 'playground',

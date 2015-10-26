@@ -1,4 +1,0 @@
-hood_model "phase_3.5/models/props/old_trees" [
-    store_node [ "holiday_prop" "old_tree_large_ur" "green_tree_large_ur" ]
-    store_node [ "holiday_prop" "old_tree_large_ul" "green_tree_large_ul" ]
-    ]

@@ -23,7 +23,7 @@ class TTHoodAI(ToonHoodAI.ToonHoodAI):
     def startup(self):
         self.notify.info("Creating hood %s" % CIGlobals.ToontownCentral)
         self.dnaFiles = ['phase_5/dna/toontown_central_2100.dna', 'phase_5/dna/toontown_central_2200.dna',
-            'phase_5/dna/toontown_central_2300.dna', 'phase_4/dna/toontown_central_sz.dna']
+            'phase_5/dna/toontown_central_2300.dna', 'phase_4/dna/new_ttc_sz.dna']
         ToonHoodAI.ToonHoodAI.startup(self)
         self.notify.info("Finished creating hood %s" % CIGlobals.ToontownCentral)
 

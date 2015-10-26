@@ -1,12 +1,16 @@
-# Filename: TTPlayground.py
-# Created by:  blach (25Oct15)
+"""
+
+  Filename: CTCPlayground.py
+  Created by: blach (14Dec14)
+
+"""
 
 import Playground
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.SoundInterval import SoundInterval
 import random
 
-class TTPlayground(Playground.Playground):
+class CTCPlayground(Playground.Playground):
 	notify = directNotify.newCategory("TTPlayground")
 
 	def __init__(self, loader, parentFSM, doneEvent):
@@ -24,10 +28,10 @@ class TTPlayground(Playground.Playground):
 		self.startBirds()
 
 	def startBirds(self):
-		taskMgr.add(self.birdTask, "TTPlayground-birdTask")
+		taskMgr.add(self.birdTask, "CTCPlayground-birdTask")
 
 	def stopBirds(self):
-		taskMgr.remove("TTPlayground-birdTask")
+		taskMgr.remove("CTCPlayground-birdTask")
 		if self.birdSfx:
 			self.birdSfx.finish()
 			self.birdSfx = None

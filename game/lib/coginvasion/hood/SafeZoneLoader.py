@@ -131,7 +131,8 @@ class SafeZoneLoader(StateData):
         else:
             self.geom = hidden.attachNewNode(node)
         self.makeDictionaries(self.hood.dnaStore)
-        self.geom.flattenMedium()
+        if not self.__class__.__name__ in ['TTSafeZoneLoader']:
+            self.geom.flattenMedium()
         gsg = base.win.getGsg()
         if gsg:
             self.geom.prepareScene(gsg)
@@ -144,7 +145,8 @@ class SafeZoneLoader(StateData):
             groupNode = self.geom.find('**/' + groupFullName)
             if groupNode.isEmpty():
                 self.notify.error('Could not find visgroup')
-            groupNode.flattenMedium()
+            if not self.__class__.__name__ in ['TTSafeZoneLoader']:
+                groupNode.flattenMedium()
             self.nodeList.append(groupNode)
 
         self.hood.dnaStore.resetPlaceNodes()

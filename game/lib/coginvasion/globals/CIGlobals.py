@@ -84,6 +84,7 @@ PositiveTextColor = (0, 1, 0, 1)
 NegativeTextColor = (1, 0, 0, 1)
 Estate = "The Estate"
 ToontownCentral = "Toontown Central"
+BattleTTC = "CogTropolis Central"
 DonaldsDock = "Donald's Dock"
 MinniesMelodyland = "Minnie's Melodyland"
 TheBrrrgh = "The Brrrgh"

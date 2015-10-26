@@ -3,10 +3,15 @@
 
 from panda3d.core import *
 loadPrcFile('config/config_client.prc')
-loadPrcFileData('', 'frambuffer-multisample 1')
+loadPrcFileData('', 'framebuffer-multisample 0')
 loadPrcFileData('', 'multisamples 16')
 loadPrcFileData('', 'tk-main-loop 0')
 loadPrcFileData('', 'egg-load-old-curves 0')
+
+cbm = CullBinManager.getGlobalPtr()
+cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
+cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
+cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
 
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()

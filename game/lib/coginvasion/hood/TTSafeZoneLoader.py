@@ -1,15 +1,13 @@
-"""
-
-  Filename: TTSafeZoneLoader.py
-  Created by: blach (14Dec14)
-
-"""
+# Filename: TTSafeZoneLoader.py
+# Created by:  blach (25Oct15)
 
 from pandac.PandaModules import *
 from direct.actor.Actor import Actor
 import SafeZoneLoader
 import TTPlayground
 import random
+
+from lib.coginvasion.globals import CIGlobals
 
 class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 
@@ -30,7 +28,7 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
-        self.dnaFile = 'phase_4/dna/toontown_central_sz.dna'
+        self.dnaFile = 'phase_4/dna/new_ttc_sz.dna'
         self.szStorageDNAFile = 'phase_4/dna/storage_TT_sz.dna'
         self.telescope = None
         self.birdNoises = [
@@ -41,33 +39,16 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 
     def load(self):
         SafeZoneLoader.SafeZoneLoader.load(self)
-        self.geom.find('**/hill').setTransparency(TransparencyAttrib.MBinary, 1)
-        self.telescope = Actor(self.geom.find('**/*animated_prop_HQTelescopeAnimatedProp*'),
-                            {"chan": "phase_3.5/models/props/HQ_telescope-chan.bam"}, copy=0)
-        self.telescope.reparentTo(self.geom.find('**/*toon_landmark_hqTT*'))
-        hq = self.geom.find('**/*toon_landmark_hqTT*')
-        hq.find('**/doorFrameHoleLeft_0').stash()
-        hq.find('**/doorFrameHoleRight_0').stash()
-        hq.find('**/doorFrameHoleLeft_1').stash()
-        hq.find('**/doorFrameHoleRight_1').stash()
-
-    def unload(self):
-        self.telescope.cleanup()
-        self.telescope = None
-        SafeZoneLoader.SafeZoneLoader.unload(self)
-
-    def enter(self, requestStatus):
-        SafeZoneLoader.SafeZoneLoader.enter(self, requestStatus)
-        taskMgr.add(self.telescopeTask, "TTSafeZoneLoader-telescopeTask")
-
-    def telescopeTask(self, task):
-        if self.telescope:
-            self.telescope.play("chan")
-            task.delayTime = 12.0
-            return task.again
-        else:
-            return task.done
-
-    def exit(self):
-        taskMgr.remove("TTSafeZoneLoader-telescopeTask")
-        SafeZoneLoader.SafeZoneLoader.exit(self)
+        self.geom.find('**/toontown_central_beta_DNARoot').setTwoSided(1)
+        self.geom.find('**/ground_center').setBin('ground', 18)
+        self.geom.find('**/ground_sidewalk').setBin('ground', 18)
+        self.geom.find('**/ground').setBin('ground', 18)
+        self.geom.find('**/ground_center_coll').setCollideMask(CIGlobals.FloorBitmask)
+        self.geom.find('**/ground_sidewalk_coll').setCollideMask(CIGlobals.FloorBitmask)
+        for tunnel in self.geom.findAllMatches('**/linktunnel_tt*'):
+            tunnel.find('**/tunnel_floor_1').setTexture(loader.loadTexture('phase_4/models/neighborhoods/tex/sidewalkbrown.jpg'), 1)
+        for tree in self.geom.findAllMatches('**/prop_green_tree_*_DNARoot'):
+            newShadow = loader.loadModel("phase_3/models/props/drop_shadow.bam")
+            newShadow.reparentTo(tree)
+            newShadow.setScale(1.5)
+            newShadow.setColor(0, 0, 0, 0.5, 1)

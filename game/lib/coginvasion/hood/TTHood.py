@@ -1,9 +1,5 @@
-"""
-
-  Filename: TTHood.py
-  Created by: blach (01Dec14)
-
-"""
+# Filename: TTHood.py
+# Created by:  blach (25Oct15)
 
 import ToonHood
 import TTSafeZoneLoader
@@ -33,24 +29,6 @@ class TTHood(ToonHood.ToonHood):
     def unload(self):
         self.parentFSM.getStateNamed('TTHood').removeChild(self.fsm)
         ToonHood.ToonHood.unload(self)
-
-    def enter(self, requestStatus):
-        ToonHood.ToonHood.enter(self, requestStatus)
-
-    def exit(self):
-        ToonHood.ToonHood.exit(self)
-
-    def startSuitEffect(self):
-        ToonHood.ToonHood.startSuitEffect(self)
-        if base.cr.playGame.getPlace():
-            if hasattr(base.cr.playGame.getPlace(), 'stopBirds'):
-                base.cr.playGame.getPlace().stopBirds()
-
-    def stopSuitEffect(self, newSky = 1):
-        if base.cr.playGame.getPlace():
-            if hasattr(base.cr.playGame.getPlace(), 'startBirds'):
-                base.cr.playGame.getPlace().startBirds()
-        ToonHood.ToonHood.stopSuitEffect(self, newSky)
 
     def startSky(self):
         ToonHood.ToonHood.startSky(self)
