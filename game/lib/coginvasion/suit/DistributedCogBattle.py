@@ -55,8 +55,14 @@ class DistributedCogBattle(DistributedObject):
         self.victorySeq.start()
 
     def finishVictory(self):
-        requestStatus = {'zoneId': CogBattleGlobals.HoodIndex2HoodId[self.getHoodIndex()],
-                    'hoodId': self.cr.playGame.hood.id,
+        hoodId = self.cr.playGame.hood.hoodId
+        if hoodId == CIGlobals.BattleTTC:
+            hoodId = CIGlobals.ToontownCentral
+            zoneId = CIGlobals.ToontownCentralId
+        else:
+            zoneId = CogBattleGlobals.HoodIndex2HoodId[self.getHoodIndex()]
+        requestStatus = {'zoneId': zoneId,
+                    'hoodId': hoodId,
                     'where': 'playground',
                     'avId': base.localAvatar.doId,
                     'loader': 'safeZoneLoader',
@@ -115,7 +121,7 @@ class DistributedCogBattle(DistributedObject):
         if self.cogProgressBar:
             self.cogProgressBar.destroy()
             self.cogProgressBar = None
-            
+
     def createBossGui(self):
         self.destroyInterface()
         backgroundGui = loader.loadModel('phase_5/models/cogdominium/tt_m_gui_csa_flyThru.bam')
@@ -125,7 +131,7 @@ class DistributedCogBattle(DistributedObject):
         bg.setPos(0.14, 0, -0.6667)
         bg.reparentTo(aspect2d)
         self.frame = DirectFrame(geom = bg, relief = None, pos = (0.2, 0, -0.6667))
-        
+
 
     def constructArea(self):
         for data in self.DNCData[self.hoodIndex]:

@@ -9,7 +9,7 @@ group "toontownCentral" [
   ]
   prop "prop_gazebo_DNARoot" [
    code [ "prop_gazebo" ]
-   pos [ 0 0 0 ]
+   pos [ 0 1.25 0 ]
    nhpr [ 0 0 0 ]
   ]
   prop "prop_green_tree_large_ul_DNARoot" [

@@ -11,6 +11,7 @@ from lib.coginvasion.shop.DistributedGagShopAI import DistributedGagShopAI
 from lib.coginvasion.suit.DistributedSuitManagerAI import DistributedSuitManagerAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.suit.DistributedCogStationAI import DistributedCogStationAI
+from lib.coginvasion.battle.DistributedBattleTrolleyAI import DistributedBattleTrolleyAI
 from lib.coginvasion.suit import CogBattleGlobals
 
 class ToonHoodAI(HoodAI):
@@ -35,11 +36,14 @@ class ToonHoodAI(HoodAI):
         #	self.suitManager.generateWithRequired(self.zoneId)
         #else:
         #	self.notify.info("Won't create suits.")
-        if CogBattleGlobals.HoodId2HoodIndex.get(self.hood, None) != None:
-            self.cogStation = DistributedCogStationAI(self.air)
+        if CogBattleGlobals.HoodId2HoodIndex.get(self.hood, None) != None or self.hood == CIGlobals.ToontownCentral:
+            self.cogStation = DistributedBattleTrolleyAI(self.air, 0)
             self.cogStation.generateWithRequired(self.zoneId)
-            self.cogStation.setHoodIndex(CogBattleGlobals.HoodId2HoodIndex[self.hood])
-            self.cogStation.b_setLocationPoint(self.cogStation.getHoodIndex())
+            #if self.hood == CIGlobals.ToontownCentral:
+            #    self.cogStation.setHoodIndex(CogBattleGlobals.HoodId2HoodIndex[CIGlobals.BattleTTC])
+            #else:
+            #    self.cogStation.setHoodIndex(CogBattleGlobals.HoodId2HoodIndex[self.hood])
+            #self.cogStation.b_setLocationPoint(self.cogStation.getHoodIndex())
         else:
             self.notify.info("This ToonHood is not a cog battle area.")
 

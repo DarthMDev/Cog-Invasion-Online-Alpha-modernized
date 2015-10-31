@@ -92,7 +92,7 @@ def getHoodId(zoneId, street = 0):
 			return CogTropolis
 
 def getZoneId(hoodId):
-	if hoodId == ToontownCentral:
+	if hoodId == ToontownCentral or hoodId == BattleTTC:
 		return ToontownCentralId
 	elif hoodId == MinigameArea:
 		return MinigameAreaId

@@ -39,7 +39,7 @@ print "CIStart: Using Panda3D version {0}".format(PandaSystem.getVersionString()
 loadPrcFile('config/Confauto.prc')
 loadPrcFile("config/config_client.prc")
 
-from direct.showbase.ShowBaseWide import ShowBase
+from direct.showbase.ShowBase import ShowBase
 base = ShowBase()
 base.cTrav = CollisionTraverser()
 

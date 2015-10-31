@@ -30,7 +30,7 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
-        self.dnaFile = 'phase_4/dna/toontown_central_cog_sz.dna'
+        self.dnaFile = 'phase_4/dna/cog_toontown_central_sz.dna'
         self.szStorageDNAFile = 'phase_4/dna/storage_TT_sz.dna'
         self.telescope = None
         self.birdNoises = [
@@ -42,19 +42,24 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
     def load(self):
         SafeZoneLoader.SafeZoneLoader.load(self)
         self.geom.find('**/hill').setTransparency(TransparencyAttrib.MBinary, 1)
-        self.telescope = Actor(self.geom.find('**/*animated_prop_HQTelescopeAnimatedProp*'),
-                            {"chan": "phase_3.5/models/props/HQ_telescope-chan.bam"}, copy=0)
-        self.telescope.reparentTo(self.geom.find('**/*toon_landmark_hqTT*'))
-        hq = self.geom.find('**/*toon_landmark_hqTT*')
-        hq.find('**/doorFrameHoleLeft_0').stash()
-        hq.find('**/doorFrameHoleRight_0').stash()
-        hq.find('**/doorFrameHoleLeft_1').stash()
-        hq.find('**/doorFrameHoleRight_1').stash()
+        #self.telescope = Actor(self.geom.find('**/*animated_prop_HQTelescopeAnimatedProp*'),
+        #                    {"chan": "phase_3.5/models/props/HQ_telescope-chan.bam"}, copy=0)
+        #self.telescope.reparentTo(self.geom.find('**/*toon_landmark_hqTT*'))
+        #hq = self.geom.find('**/*toon_landmark_hqTT*')
+        #hq.find('**/doorFrameHoleLeft_0').stash()
+        #hq.find('**/doorFrameHoleRight_0').stash()
+        #hq.find('**/doorFrameHoleLeft_1').stash()
+        #hq.find('**/doorFrameHoleRight_1').stash()
 
     def unload(self):
-        self.telescope.cleanup()
-        self.telescope = None
+        #self.telescope.cleanup()
+        #self.telescope = None
         SafeZoneLoader.SafeZoneLoader.unload(self)
+
+    def createSafeZone(self, dnaFile):
+        # We need to load the town storage for the Cog buildings.
+        loader.loadDNAFile(self.hood.dnaStore, 'phase_5/dna/storage_town.dna')
+        SafeZoneLoader.SafeZoneLoader.createSafeZone(self, dnaFile)
 
     def enter(self, requestStatus):
         SafeZoneLoader.SafeZoneLoader.enter(self, requestStatus)

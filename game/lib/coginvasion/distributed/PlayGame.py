@@ -22,7 +22,7 @@ from lib.coginvasion.hood import DLHood
 from lib.coginvasion.hood import MLHood
 from lib.coginvasion.hood import DGHood
 from lib.coginvasion.hood import DDHood
-from lib.coginvasion.hood impotr CTCHood
+from lib.coginvasion.hood import CTCHood
 from lib.coginvasion.cogtropolis import CTHood
 
 from lib.coginvasion.hood.QuietZoneState import QuietZoneState
@@ -212,6 +212,9 @@ class PlayGame(StateData):
 
         self.dnaStore = DNAStorage()
         loadDNAFile(self.dnaStore, 'phase_4/dna/storage.dna')
+        self.dnaStore.storeFont('humanist', CIGlobals.getToonFont())
+        self.dnaStore.storeFont('mickey', CIGlobals.getMickeyFont())
+        self.dnaStore.storeFont('suit', CIGlobals.getSuitFont())
         loadDNAFile(self.dnaStore, 'phase_3.5/dna/storage_interior.dna')
 
     def enterQuietZone(self, requestStatus):

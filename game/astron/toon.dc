@@ -59,6 +59,7 @@ from lib.coginvasion.hood import DistributedBoat/AI
 from lib.coginvasion.hood import DistributedDoor/AI
 from lib.coginvasion.battle import DistributedPieTurretManager/AI
 from lib.coginvasion.battle import DistributedPieTurret/AI
+from lib.coginvasion.battle import DistributedBattleTrolley/AI
 from lib.coginvasion.friends import FriendsManager/UD
 from lib.coginvasion.cogtropolis import DistributedCityCart/AI
 from lib.coginvasion.tutorial import DistributedTutorial/AI
@@ -337,6 +338,15 @@ dclass DistributedCogBattle : DistributedObject {
   setCogsRemaining(uint8) required broadcast ram;
   arrived() clsend airecv;
   victory() broadcast;
+};
+
+dclass DistributedBattleTrolley : DistributedObject {
+  requestBoard() clsend airecv;
+  requestHopOff() clsend airecv;
+  fillSlot(int8, uint32) broadcast;
+  emptySlot(int8, uint32) broadcast;
+  setState(string, int16) required broadcast ram;
+  setToZone(uint32) required broadcast ram;
 };
 
 dclass DistributedMinigame : DistributedObject {

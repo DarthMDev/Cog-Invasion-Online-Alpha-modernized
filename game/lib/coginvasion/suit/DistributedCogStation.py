@@ -6,6 +6,7 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from lib.coginvasion.minigame.DistributedGroupStation import DistributedGroupStation
 from CogStation import CogStation
+from lib.coginvasion.globals import CIGlobals
 
 class DistributedCogStation(DistributedGroupStation, CogStation):
 	notify = directNotify.newCategory("DistributedCogStation")
@@ -25,7 +26,7 @@ class DistributedCogStation(DistributedGroupStation, CogStation):
 		if hoodId == CIGlobals.ToontownCentral:
 			hoodId = CIGlobals.BattleTTC
 		requestStatus = {'zoneId': zone,
-					'hoodId': self.cr.playGame.hood.hoodId,
+					'hoodId': hoodId,
 					'where': 'playground',
 					'avId': base.localAvatar.doId,
 					'loader': 'safeZoneLoader',
