@@ -139,9 +139,16 @@ dclass DistributedAvatar : DistributedSmoothNode {
 dclass DistributedToon : DistributedAvatar {
   // The account id this toon is associated with.
   uint32 ACCOUNT required db;
+
   setDNAStrand(string) required broadcast ownrecv db;
   setAnimState(uint8, int16) broadcast ram ownsend airecv;
   setMoney(int32 = 0) required broadcast ownrecv db;
+
+  // We'll do an array of zoneIds for now.
+  setHoodsDiscovered(uint32[]) required ownsend ownrecv db;
+  setTeleportAccess(uint32[]) required ownrecv db;
+
+  setLastHood(uint32) required ownsend ownrecv db;
   setBackpack(int8 backpack = 0) required broadcast ownrecv db;
   setBackpackAmmo(uint8 gagIds [] = [2, 0, 1, 3], uint8 [] = [3, 7, 15, 0]) required broadcast airecv ownrecv db;
   setLoadout(uint8 gagIds [] = [2, 0, 1, 3]) required broadcast airecv ownrecv db;

@@ -27,6 +27,7 @@ from lib.coginvasion.distributed.HoodMgr import HoodMgr
 from lib.coginvasion.toon import LocalToon
 from lib.coginvasion.base.EnterLoad import EnterLoad
 from lib.coginvasion.hood.QuietZoneState import QuietZoneState
+from lib.coginvasion.hood import ZoneUtil
 from direct.distributed import DistributedSmoothNode
 from CogInvasionErrorCodes import *
 from lib.coginvasion.base import SpeedHackChecker
@@ -474,8 +475,12 @@ class CogInvasionClientRepository(AstronClientRepository):
 
     def enterPlayingGame(self):
         #self.handler = self.handlePlayGame
-        status = {"hoodId": CIGlobals.ToontownCentral,
-                "zoneId": CIGlobals.ToontownCentralId,
+        zoneId = localAvatar.getLastHood()
+        print "Going to {0}".format(zoneId)
+        hoodId = ZoneUtil.getHoodId(zoneId)
+        print "Hood {0}".format(hoodId)
+        status = {"hoodId": hoodId,
+                "zoneId": zoneId,
                 "avId": self.localAvId}
         shardId = self.myDistrict.doId
         self.gameFSM.request('waitForGameEnterResponse', [status, shardId])

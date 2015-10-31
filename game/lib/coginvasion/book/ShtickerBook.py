@@ -30,9 +30,9 @@ class ShtickerBook(StateData):
          State('optionPage', self.enterOptionPage, self.exitOptionPage, ['districtPage', 'off']),
          State('districtPage', self.enterDistrictPage, self.exitDistrictPage, ['optionPage', 'questPage', 'off']),
          State('questPage', self.enterQuestPage, self.exitQuestPage, ['inventoryPage', 'districtPage', 'off']),
-         State('inventoryPage', self.enterInventoryPage, self.exitInventoryPage, ['zonePage', 'questPage', 'off']),
-         State('zonePage', self.enterZonePage, self.exitZonePage, ['releaseNotesPage', 'inventoryPage', 'off']),
-         State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['zonePage', 'off']),
+         State('inventoryPage', self.enterInventoryPage, self.exitInventoryPage, ['mapPage', 'questPage', 'off']),
+         State('mapPage', self.enterMapPage, self.exitMapPage, ['releaseNotesPage', 'inventoryPage', 'off']),
+         State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['mapPage', 'off']),
          State('adminPage', self.enterAdminPage, self.exitAdminPage, ['releaseNotesPage', 'off'])], 'off', 'off')
         if base.localAvatar.getAdminToken() > -1:
             self.fsm.getStateNamed('releaseNotesPage').addTransition('adminPage')
@@ -82,7 +82,7 @@ class ShtickerBook(StateData):
         if base.localAvatar.getAdminToken() > -1:
             self.fsm.request('adminPage')
         else:
-            self.fsm.request('zonePage')
+            self.fsm.request('mapPage')
 
     def exit(self):
         if not self.entered:
@@ -217,7 +217,7 @@ class ShtickerBook(StateData):
         self.clearTitle()
 
     def enterInventoryPage(self):
-        self.createPageButtons('questPage', 'zonePage')
+        self.createPageButtons('questPage', 'mapPage')
         self.setTitle('Gags')
         self.gui = BackpackGUI()
         self.gui.createGUI()
@@ -225,6 +225,108 @@ class ShtickerBook(StateData):
     def exitInventoryPage(self):
         self.gui.deleteGUI()
         del self.gui
+        self.deletePageButtons(True, True)
+        self.clearTitle()
+
+    def enterMapPage(self):
+        self.createPageButtons('inventoryPage', 'releaseNotesPage')
+        self.setTitle("")
+
+        themap = loader.loadModel('phase_3.5/models/gui/toontown_map.bam')
+        self.frame = DirectFrame(parent=aspect2d, relief=None, image=themap, image_scale=(1.8, 1, 1.35), scale=0.97, pos=(0, 0, 0.0775))
+        cloudpos = [[(-0.61, 0, 0.18), (0.55, 0.25, 0.37), (180, 0, 0)],
+                    [(-0.54, 0, 0.34), (0.76, 0.4, 0.55), (180, 0, 0)],
+                    [(-0.55, 0, -0.09), (0.72, 0.4, 0.55), (0, 0, 0)],
+                    [(-0.67, 0, -0.51),  (0.5, 0.29, 0.38), (180, 0, 0)],
+                    [(-0.67, 0, 0.51), (0.50, 0.29, 0.38), (0, 0, 0)],
+                    [(0.67, 0, 0.51), (0.5, 0.29, 0.38), (0, 0, 0)],
+                    [(0.35, 0, -0.46),  (0.63, 0.35, 0.45), (0, 0, 0)],
+                    [(0.18, 0, -0.45),  (0.52, 0.27, 0.32), (0, 0, 0)],
+                    [(0.67, 0, -0.44),  (0.63, 0.35, 0.48), (180, 0, 0)]]
+        hoodclouds = [#[(0.02, 0, -0.17),  (0.63, 0.35, 0.48), (180, 0, 0), CIGlobals.ToontownCentral],
+                      [(0.63, 0, -0.13),  (0.63, 0.35, 0.40), (0, 0, 0), CIGlobals.DonaldsDock],
+                      [(0.51, 0, 0.25),  (0.57, 0.35, 0.40), (0, 0, 0), CIGlobals.TheBrrrgh],
+                      [(0.03, 0, 0.19),  (0.63, 0.35, 0.40), (180, 0, 0), CIGlobals.MinniesMelodyland],
+                      [(-0.08, 0, 0.46),  (0.54, 0.35, 0.40), (0, 0, 0), CIGlobals.DonaldsDreamland],
+                      [(-0.28, 0, -0.49),  (0.60, 0.35, 0.45), (0, 0, 0), CIGlobals.DaisyGardens]]
+        self.clouds = []
+        self.labels = []
+
+        for pos, scale, hpr in cloudpos:
+            cloud = loader.loadModel('phase_3.5/models/gui/cloud.bam')
+            cloud.reparentTo(self.frame)
+            cloud.setPos(pos)
+            cloud.setScale(scale)
+            cloud.setHpr(hpr)
+            self.clouds.append(cloud)
+
+        for pos, scale, hpr, hood in hoodclouds:
+            if not base.localAvatar.hasDiscoveredHood(ZoneUtil.getZoneId(hood)):
+                cloud = loader.loadModel('phase_3.5/models/gui/cloud.bam')
+                cloud.reparentTo(self.frame)
+                cloud.setPos(pos)
+                cloud.setScale(scale)
+                cloud.setHpr(hpr)
+                self.clouds.append(cloud)
+
+        labeldata = [[(0, 0, -0.2), CIGlobals.ToontownCentral],
+                     [(0.65, 0, -0.125), CIGlobals.DonaldsDock],
+                     [(0.07, 0, 0.18), CIGlobals.MinniesMelodyland],
+                     [(-0.1, 0, 0.45), CIGlobals.DonaldsDreamland],
+                     [(0.5, 0, 0.25), CIGlobals.TheBrrrgh],
+                     [(-0.37, 0, -0.525), CIGlobals.DaisyGardens]]
+
+        for pos, name in labeldata:
+            if base.localAvatar.hasDiscoveredHood(ZoneUtil.getZoneId(name)):
+                text = name
+                if base.localAvatar.hasTeleportAccess(ZoneUtil.getZoneId(name)):
+                    text = 'Go To\n' + text
+                label = DirectButton(
+                    parent=self.frame,
+                    relief=None,
+                    pos=pos,
+                    pad=(0.2, 0.16),
+                    text=('', text, text),
+                    text_bg=Vec4(1, 1, 1, 0.4),
+                    text_scale=0.055,
+                    text_wordwrap=8,
+                    rolloverSound=None,
+                    clickSound=None,
+                    pressEffect=0,
+                    sortOrder=1,
+                    text_font = CIGlobals.getToonFont())
+                if base.localAvatar.hasTeleportAccess(ZoneUtil.getZoneId(name)):
+                    label['command'] = self.finished
+                    label['extraArgs'] = [ZoneUtil.getZoneId(name)]
+                label.resetFrameSize()
+                self.labels.append(label)
+
+        currHoodName = base.cr.playGame.hood.id
+        if ZoneUtil.getWhereName(base.localAvatar.zoneId) == 'playground':
+            currLocation = 'Playground'
+        elif ZoneUtil.getWhereName(base.localAvatar.zoneId) in ['street', 'interior']:
+            currLocation = CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(base.localAvatar.zoneId)]
+        self.infoLabel = DirectLabel(relief = None, text = 'You are in: {0}\n{1}'.format(currHoodName, currLocation),
+                                     scale = 0.06, pos = (-0.4, 0, -0.74), parent = self.frame, text_align = TextNode.ACenter)
+
+        self.BTPButton = DirectButton(relief = None, text = "Back to Playground", geom = CIGlobals.getDefaultBtnGeom(),
+                                      text_pos = (0, -0.018), geom_scale = (1.3, 1.11, 1.11), text_scale = 0.06, parent = self.frame,
+                                      text_font = CIGlobals.getToonFont(), pos = (0.43, 0, -0.75), command = self.finished,
+                                      extraArgs = [ZoneUtil.getZoneId(currHoodName)])
+
+    def exitMapPage(self):
+        for label in self.labels:
+            label.destroy()
+        del self.labels
+        for cloud in self.clouds:
+            cloud.removeNode()
+        del self.clouds
+        self.frame.destroy()
+        del self.frame
+        self.infoLabel.destroy()
+        del self.infoLabel
+        self.BTPButton.destroy()
+        del self.BTPButton
         self.deletePageButtons(True, True)
         self.clearTitle()
 
@@ -319,9 +421,9 @@ class ShtickerBook(StateData):
 
     def enterReleaseNotesPage(self):
         if base.localAvatar.getAdminToken() > -1:
-            self.createPageButtons('zonePage', 'adminPage')
+            self.createPageButtons('mapPage', 'adminPage')
         else:
-            self.createPageButtons('zonePage', None)
+            self.createPageButtons('mapPage', None)
         self.setTitle("Release Notes")
         self.frame = DirectScrolledFrame(canvasSize = (-1, 1, -3.5, 1), frameSize = (-1, 1, -0.6, 0.6))
         self.frame.setPos(0, 0, 0)

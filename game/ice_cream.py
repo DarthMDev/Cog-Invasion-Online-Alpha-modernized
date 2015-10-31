@@ -1,30 +1,38 @@
 from panda3d.core import *
 loadPrcFile('config/config_client.prc')
 loadPrcFileData('', 'tk-main-loop 0')
+loadPrcFileData('', 'framebuffer-multisample 1')
+loadPrcFileData('', 'multisamples 2048')
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 from direct.controls.ControlManager import CollisionHandlerRayStart
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.dna.DNAParser import *
+from direct.showutil.Rope import Rope
+from lib.coginvasion.toon.Toon import Toon
+from lib.coginvasion.npc import NPCGlobals
 import __builtin__
 class game:
 	process = 'client'
 __builtin__.game = game
-from lib.coginvasion.hood.DistributedGagShop import DistributedGagShop
+#from lib.coginvasion.hood.DistributedGagShop import DistributedGagShop
 from lib.coginvasion.suit.CogStation import CogStation
 from direct.distributed.ClientRepository import ClientRepository
+from direct.showbase.Audio3DManager import Audio3DManager
 from Tkinter import *
 base.startTk()
 
 base.cr = ClientRepository([])
+base.cr.isShowingPlayerIds = False
+base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)
 base.cTrav = CollisionTraverser()
 
 ds = DNAStorage()
 
 loadDNAFile(ds, "phase_4/dna/storage.dna")
-loadDNAFile(ds, "phase_8/dna/storage_DL.dna")
-loadDNAFile(ds, "phase_8/dna/storage_DL_sz.dna")
-node = loadDNAFile(ds, "phase_8/dna/donalds_dreamland_sz.dna")
+loadDNAFile(ds, "phase_6/dna/storage_DD.dna")
+loadDNAFile(ds, "phase_6/dna/storage_DD_sz.dna")
+node = loadDNAFile(ds, "phase_6/dna/donalds_dock_sz.dna")
 
 if node.getNumParents() == 1:
 	geom = NodePath(node.getParent(0))
@@ -34,12 +42,10 @@ else:
 gsg = base.win.getGsg()
 if gsg:
 	geom.prepareScene(gsg)
+geom.setName('toontown_central')
 geom.reparentTo(render)
 
-partyGate = geom.find('**/prop_party_gate_DNARoot')
-if not partyGate.isEmpty():
-	partyGate.removeNode()
-del partyGate
+base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 
 
 """
@@ -112,19 +118,67 @@ class IceCreamPoints(Points):
 		self.lastPoint.setBillboardAxis()
 		self.points.append(self.lastPoint)
 
-#health = IceCreamPoints()
+health = IceCreamPoints()
 
-#def createICPoint():
-#	health.createPoint()
-#	health.placeLastPoint()
+for pos in CIGlobals.SuitSpawnPoints[CIGlobals.DonaldsDock].values():
+	health.createPoint()
+	health.lastPoint.setPos(pos)
 
-#newWalkBtn = Button(base.tkRoot, text = "Spawn Point", command = createICPoint)
-#newWalkBtn.pack()
+def createICPoint():
+	health.createPoint()
+	health.placeLastPoint()
 
-station = CogStation()
-station.generateStation()
-station.reparentTo(render)
-station.place()
+newWalkBtn = Button(base.tkRoot, text = "Spawn Point", command = createICPoint)
+newWalkBtn.pack()
+
+#station = CogStation()
+#station.generateStation()
+#station.reparentTo(render)
+#station.place()
+
+#banner = loader.loadModel('phase_13/models/parties/btp_banner.egg')
+#banner.reparentTo(render)
+#banner.setPos(102.00, 1.58, 26.40)
+#banner.setH(180)
+
+#print ds.nodes
+
+sphere = CollisionSphere(0, 0, 0, 1)
+node = CollisionNode('collNode')
+node.addSolid(sphere)
+node.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(node)
+np.setScale(75)
+np.setPos(-26.8, 5.18, 0.0)
+np.show()
+
+sphere = CollisionSphere(0, 0, 0, 1)
+node = CollisionNode('collNode')
+node.addSolid(sphere)
+node.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(node)
+np.show()
+np.setPos(-14.39, 127.12, 0)
+np.setScale(20)
+
+sphere = CollisionSphere(0, 0, 0, 1)
+node = CollisionNode('collNode')
+node.addSolid(sphere)
+node.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(node)
+np.show()
+np.setPos(-14.39, 92.18, 0)
+np.setScale(20)
+
+sphere = CollisionSphere(0, 0, 0, 1)
+node = CollisionNode('collNode')
+node.addSolid(sphere)
+node.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(node)
+np.show()
+np.setPos(31.02, -51.43, 0.0)
+np.setScale(20)
+np.place()
 
 base.oobe()
 base.run()

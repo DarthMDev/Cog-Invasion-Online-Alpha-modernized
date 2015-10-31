@@ -35,6 +35,13 @@ class Hood(StateData):
         StateData.enter(self)
         hoodId = requestStatus['hoodId']
         zoneId = requestStatus['zoneId']
+        rootZone = ZoneUtil.getZoneId(hoodId)
+        if base.localAvatar.getLastHood() != rootZone:
+            base.localAvatar.b_setLastHood(rootZone)
+        if not base.localAvatar.hasDiscoveredHood(rootZone):
+            hoodsDiscovered = list(base.localAvatar.getHoodsDiscovered())
+            hoodsDiscovered.append(rootZone)
+            base.localAvatar.b_setHoodsDiscovered(hoodsDiscovered)
         text = self.getHoodText(zoneId)
         self.titleText = OnscreenText(
             text, fg = self.titleColor, font = CIGlobals.getMickeyFont(),
@@ -46,8 +53,12 @@ class Hood(StateData):
         self.fsm.request(requestStatus['loader'], [requestStatus])
 
     def getHoodText(self, zoneId):
-        hoodText = self.id
-        hoodText += '\n' + ZoneUtil.getWhereName(zoneId).upper()
+        if ZoneUtil.getWhereName(zoneId) == 'street':
+            hoodText = CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(zoneId)]
+            hoodText += '\n' + self.id
+        else:
+            hoodText = self.id
+            hoodText += '\n' + ZoneUtil.getWhereName(zoneId).upper()
         return hoodText
 
     def spawnTitleText(self, zoneId):

@@ -62,7 +62,36 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.busy = 1
         self.friends = None
         self.tutDone = 0
+        self.hoodsDiscovered = []
+        self.teleportAccess = []
+        self.lastHood = 0
         return
+
+    def setLastHood(self, zoneId):
+        self.lastHood = zoneId
+
+    def b_setLastHood(self, zoneId):
+        self.sendUpdate('setLastHood', [zoneId])
+        self.setLastHood(zoneId)
+
+    def getLastHood(self):
+        return self.lastHood
+
+    def setTeleportAccess(self, array):
+        self.teleportAccess = array
+
+    def getTeleportAccess(self):
+        return self.teleportAccess
+
+    def setHoodsDiscovered(self, array):
+        self.hoodsDiscovered = array
+
+    def b_setHoodsDiscovered(self, array):
+        self.sendUpdate('setHoodsDiscovered', [array])
+        self.setHoodsDiscovered(array)
+
+    def getHoodsDiscovered(self):
+        return self.hoodsDiscovered
 
     def setTutorialCompleted(self, value):
         self.tutDone = value

@@ -85,7 +85,32 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.tier = -1
         self.friends = []
         self.tutDone = 0
+        self.hoodsDiscovered = []
+        self.teleportAccess = []
+        self.lastHood = 0
         return
+
+    def setLastHood(self, zoneId):
+        self.lastHood = zoneId
+
+    def getLastHood(self):
+        return self.lastHood
+
+    def setHoodsDiscovered(self, array):
+        self.hoodsDiscovered = array
+
+    def getHoodsDiscovered(self):
+        return self.hoodsDiscovered
+
+    def setTeleportAccess(self, array):
+        self.teleportAccess = array
+
+    def b_setTeleportAccess(self, array):
+        self.sendUpdate('setTeleportAccess', [array])
+        self.setTeleportAccess(array)
+
+    def getTeleportAccess(self):
+        return self.teleportAccess
 
     def createTutorial(self):
         zone = self.air.allocateZone()

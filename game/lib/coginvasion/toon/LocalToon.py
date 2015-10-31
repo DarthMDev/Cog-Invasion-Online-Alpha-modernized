@@ -84,9 +84,15 @@ class LocalToon(DistributedToon):
         self.pickerRayNode = None
         self.pickerHandler = None
         self.rolledOverTag = None
-        
+
         self.inTutorial = False
         #base.cTrav.showCollisions(render)
+
+    def hasDiscoveredHood(self, zoneId):
+        return zoneId in self.hoodsDiscovered
+
+    def hasTeleportAccess(self, zoneId):
+        return zoneId in self.teleportAccess
 
     def tutorialCreated(self, zoneId):
         self.cr.tutorialCreated(zoneId)

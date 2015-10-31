@@ -13,6 +13,8 @@ from pandac.PandaModules import *
 import anydbm
 import os
 
+from lib.coginvasion.globals import CIGlobals
+
 class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def __init__(self, air):
@@ -288,7 +290,10 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
                 "setQuestHistory": ([],),
                 "setTier": (13,),
                 "setFriendsList": ([],),
-                "setTutorialCompleted": (str(choice[3]),)}
+                "setTutorialCompleted": (str(choice[3]),),
+                "setHoodsDiscovered": ([CIGlobals.ToontownCentralId],),
+                "setTeleportAccess": ([],),
+                "setLastHood": (CIGlobals.ToontownCentralId,)}
         self.notify.info("Creating new toon!")
         avId = 0
         avList = accFields["AVATAR_IDS"]

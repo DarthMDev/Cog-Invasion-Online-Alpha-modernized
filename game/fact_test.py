@@ -13,6 +13,7 @@ from lib.coginvasion.suit.Suit import Suit
 from direct.distributed.ClientRepository import ClientRepository
 from collections import deque
 from lib.coginvasion.dna.DNAParser import *
+from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 #base.startTk()
 import random
 
@@ -96,13 +97,13 @@ class BarrelPoints(Points):
         self.lastPoint.setTwoSided(1)
         self.points.append(self.lastPoint)
 
-"""
+
 ds = DNAStorage()
 
 loadDNAFile(ds, "phase_4/dna/storage.dna")
-loadDNAFile(ds, "phase_8/dna/storage_DL.dna")
-loadDNAFile(ds, "phase_8/dna/storage_DL_sz.dna")
-node = loadDNAFile(ds, "phase_8/dna/donalds_dreamland_sz.dna")
+loadDNAFile(ds, "phase_6/dna/storage_DD.dna")
+loadDNAFile(ds, "phase_6/dna/storage_DD_sz.dna")
+node = loadDNAFile(ds, "phase_6/dna/donalds_dock_sz.dna")
 
 if node.getNumParents() == 1:
     geom = NodePath(node.getParent(0))
@@ -119,8 +120,8 @@ if not partyGate.isEmpty():
 del partyGate
 
 geom.reparentTo(render)
-"""
 
+"""
 walks = WalkPoints()
 guards = GuardPoints()
 barrels = BarrelPoints()
@@ -271,27 +272,55 @@ pusher = CollisionHandlerPusher()
 pusher.addCollider(cSphereNodePath, node)
 floorCollNodePath = cSphereNodePath
 base.cTrav.addCollider(cSphereNodePath, pusher)
-"""
+
 #base.disableMouse()
 
 #camera.reparentTo(node)
 #camera.setY(-10)
 #camera.setZ(2)
 
-#snowsphere = CollisionSphere(0.0, 0.0, 0.0, 25)
-#snownode = CollisionNode('DistributedPieTurret.WallSphere')
-#snownode.addSolid(snowsphere)
-#snownode.setCollideMask(CIGlobals.WallBitmask)
-#wallCollNode = geom.attachNewNode(snownode)
-#wallCollNode.show()
-#wallCollNode.setPos(-109.00, -39.86, 0.00)
-"""
+sphere = CollisionSphere(0, 0, 0, 1)
+cnode = CollisionNode('collNode')
+cnode.addSolid(sphere)
+cnode.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(cnode)
+np.setScale(75)
+np.setPos(-26.8, 5.18, 0.0)
+np.show()
+
+sphere = CollisionSphere(0, 0, 0, 1)
+cnode = CollisionNode('collNode')
+cnode.addSolid(sphere)
+cnode.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(cnode)
+np.show()
+np.setPos(-14.39, 127.12, 0)
+np.setScale(20)
+
+sphere = CollisionSphere(0, 0, 0, 1)
+cnode = CollisionNode('collNode')
+cnode.addSolid(sphere)
+cnode.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(cnode)
+np.show()
+np.setPos(-14.39, 92.18, 0)
+np.setScale(20)
+
+sphere = CollisionSphere(0, 0, 0, 1)
+cnode = CollisionNode('collNode')
+cnode.addSolid(sphere)
+cnode.setCollideMask(CIGlobals.WallBitmask)
+np = render.attachNewNode(cnode)
+np.show()
+np.setPos(31.02, -51.43, 0.0)
+np.setScale(20)
+
 class WayPointTest:
 
     def __init__(self, point, number):
         self.point = point
         self.number = number
-        self.wayPointsToTest = dict(CIGlobals.SuitSpawnPoints[CIGlobals.DonaldsDreamland])
+        self.wayPointsToTest = dict(CIGlobals.SuitSpawnPoints[CIGlobals.DonaldsDock])
         del self.wayPointsToTest[number]
         self.finalList = []
         self.currentWayPointTestKey = None
@@ -343,7 +372,7 @@ class WayPointTests:
 
     def __init__(self):
         self.finalDict = {}
-        self.wayPointsToTest = dict(CIGlobals.SuitSpawnPoints[CIGlobals.DonaldsDreamland])
+        self.wayPointsToTest = dict(CIGlobals.SuitSpawnPoints[CIGlobals.DonaldsDock])
         self.numberOfTests = -1
         self.currentWayPointTestKey = None
         self.currentTest = None
@@ -370,7 +399,7 @@ class WayPointTests:
         return task.cont
 
     def done(self):
-        open("dl_suit_accessible_waypoints.py", "w").write(str(self.finalDict))
+        open("dd_suit_accessible_waypoints.py", "w").write(str(self.finalDict))
         print "Completed!"
         sys.exit()
 
@@ -388,7 +417,7 @@ cog.generateSuit("A", "mrhollywood", "s", 132, 0, False)
 #cog.setupNameTag()
 cog.loop('neutral')
 cog.reparentTo(render)
-"""
+
 def findClosestWayPoint(pos, returnId = False):
     distances = {}
     shortestDistance = 999
@@ -443,8 +472,8 @@ farthestWalkPoint = findClosestWayPoint(destination, returnId = True)
 
 path = findPath(CGG.FactoryWayPointData, closestWalkPoint[0], farthestWalkPoint[0])
 print path
-"""
-"""
+
+
 class CogFactoryWander:
 
     def __init__(self, cog, currentWayPoint = None, lastWayPoint = None, path = None):
@@ -664,6 +693,6 @@ taskMgr.add(watchCog, "watchCog")
 render.setAntialias(AntialiasAttrib.MMultisample)
 
 base.camLens.setMinFov(70.0 / (4./3.))
-base.startDirect()
-base.oobe()
+#base.startDirect()
+#base.oobe()
 base.run()
