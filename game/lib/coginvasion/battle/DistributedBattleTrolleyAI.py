@@ -6,12 +6,15 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm import ClassicFSM, State
 
+from lib.coginvasion.suit import CogBattleGlobals
+from lib.coginvasion.suit.DistributedCogBattleAI import DistributedCogBattleAI
+
 class DistributedBattleTrolleyAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedBattleTrolleyAI')
 
     NUM_SLOTS = 4
 
-    def __init__(self, air, toZone):
+    def __init__(self, air, hoodIndex):
         DistributedObjectAI.__init__(self, air)
         self.fsm = ClassicFSM.ClassicFSM('DBTrolleyAI', [State.State('off', self.enterOff, self.exitOff),
          State.State('wait', self.enterWait, self.exitWait),
@@ -19,14 +22,14 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
          State.State('leaving', self.enterLeaving, self.exitLeaving),
          State.State('arriving', self.enterArriving, self.exitArriving)], 'wait', 'off')
         self.fsm.enterInitialState()
-        self.toZone = toZone
+        self.hoodIndex = hoodIndex
         self.slots = [0, 1, 2, 3]
         self.slotTakenByAvatarId = {}
         self.state = 'off'
         self.stateTimestamp = 0
 
-    def getToZone(self):
-        return self.toZone
+    def getHoodIndex(self):
+        return self.hoodIndex
 
     def enterOff(self):
         pass
@@ -54,9 +57,26 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
         base.taskMgr.doMethodLater(5.0, self.__trolleyLeft, self.uniqueName('trolleyLeft'))
 
     def __trolleyLeft(self, task):
+        self.createBattle()
         self.slotTakenByAvatarId = {}
         self.b_setState('arriving')
         return task.done
+
+    def createBattle(self):
+		zone = base.air.allocateZone()
+		avIdArray = []
+		for avId in self.slotTakenByAvatarId.keys():
+			avIdArray.append(avId)
+		battle = DistributedCogBattleAI(self.air)
+		battle.generateWithRequired(zone)
+		battle.setNumPlayers(len(self.slotTakenByAvatarId))
+		battle.b_setHoodIndex(self.getHoodIndex())
+		battle.b_setTotalCogs(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
+		battle.b_setCogsRemaining(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
+		battle.setAvIdArray(avIdArray)
+		battle.startWatchingAvatars()
+		for avId in self.slotTakenByAvatarId.keys():
+			self.sendUpdateToAvatarId(avId, 'headOff', [zone])
 
     def exitLeaving(self):
         base.taskMgr.remove(self.uniqueName('trolleyLeft'))

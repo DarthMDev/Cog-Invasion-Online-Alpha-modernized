@@ -37,12 +37,16 @@ class ToonHoodAI(HoodAI):
         #else:
         #	self.notify.info("Won't create suits.")
         if CogBattleGlobals.HoodId2HoodIndex.get(self.hood, None) != None or self.hood == CIGlobals.ToontownCentral:
-            self.cogStation = DistributedBattleTrolleyAI(self.air, 0)
+            if self.hood == CIGlobals.ToontownCentral:
+                hoodIndex = CogBattleGlobals.HoodId2HoodIndex[CIGlobals.BattleTTC]
+            else:
+                hoodIndex = CogBattleGlobals.HoodId2HoodIndex[self.hood]
+            self.cogStation = DistributedBattleTrolleyAI(self.air, hoodIndex)
             self.cogStation.generateWithRequired(self.zoneId)
             #if self.hood == CIGlobals.ToontownCentral:
-            #    self.cogStation.setHoodIndex(CogBattleGlobals.HoodId2HoodIndex[CIGlobals.BattleTTC])
+            #    self.cogStation.setHoodIndex()
             #else:
-            #    self.cogStation.setHoodIndex(CogBattleGlobals.HoodId2HoodIndex[self.hood])
+            #    self.cogStation.setHoodIndex()
             #self.cogStation.b_setLocationPoint(self.cogStation.getHoodIndex())
         else:
             self.notify.info("This ToonHood is not a cog battle area.")

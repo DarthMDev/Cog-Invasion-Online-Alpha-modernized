@@ -346,7 +346,8 @@ dclass DistributedBattleTrolley : DistributedObject {
   fillSlot(int8, uint32) broadcast;
   emptySlot(int8, uint32) broadcast;
   setState(string, int16) required broadcast ram;
-  setToZone(uint32) required broadcast ram;
+  setHoodIndex(int8) required broadcast ram;
+  headOff(uint32);
 };
 
 dclass DistributedMinigame : DistributedObject {

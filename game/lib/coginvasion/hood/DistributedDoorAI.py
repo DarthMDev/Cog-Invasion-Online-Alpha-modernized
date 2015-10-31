@@ -8,8 +8,8 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
     notify = directNotify.newCategory("DistributedDoorAI")
 
     OPEN_TO_CLOSE_TIME = 1.0
-    CLOSE_TO_OPEN_TIME = 1.0
-    OPEN_TIME = 1.0
+    CLOSE_TO_OPEN_TIME = 1.7
+    OPEN_TIME = 1.5
 
     def __init__(self, air, block, toZone, doorType = 1, doorIndex = 0):
         DistributedObjectAI.DistributedObjectAI.__init__(self, air)

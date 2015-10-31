@@ -39,7 +39,7 @@ print "CIStart: Using Panda3D version {0}".format(PandaSystem.getVersionString()
 loadPrcFile('config/Confauto.prc')
 loadPrcFile("config/config_client.prc")
 
-from direct.showbase.ShowBase import ShowBase
+from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 base.cTrav = CollisionTraverser()
 
@@ -111,7 +111,7 @@ DirectGuiGlobals.setDefaultFontFunc(CIGlobals.getToonFont)
 DirectGuiGlobals.setDefaultFont(CIGlobals.getToonFont())
 DirectGuiGlobals.setDefaultRolloverSound(loader.loadSfx("phase_3/audio/sfx/GUI_rollover.mp3"))
 DirectGuiGlobals.setDefaultClickSound(loader.loadSfx("phase_3/audio/sfx/GUI_create_toon_fwd.mp3"))
-DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/ci_dialog_box_gui.egg"))
+DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialog_box_gui.bam"))
 
 def maybeDoSomethingWithMusic(condition):
     # 0 = paused

@@ -38,11 +38,31 @@ class DistributedBattleTrolley(DistributedObject):
         self.countdownText = None
         self.soundMoving = base.loadSfx('phase_4/audio/sfx/SZ_trolley_away.mp3')
         self.soundBell = base.loadSfx('phase_4/audio/sfx/SZ_trolley_bell.mp3')
-        self.toZone = 0
+        self.hoodIndex = 0
         self.localAvOnTrolley = False
 
-    def setToZone(self, zone):
-        self.toZone = zone
+    def headOff(self, zoneId):
+        hoodId = self.cr.playGame.hood.hoodId
+        if hoodId == CIGlobals.ToontownCentral:
+            hoodId = CIGlobals.BattleTTC
+        requestStatus = {'zoneId': zoneId,
+                    'hoodId': hoodId,
+                    'where': 'playground',
+                    'avId': base.localAvatar.doId,
+                    'loader': 'safeZoneLoader',
+                    'shardId': None,
+                    'wantLaffMeter': 1,
+                    'how': 'teleportIn'}
+        self.cr.playGame.getPlace().doneStatus = requestStatus
+        messenger.send(self.cr.playGame.getPlace().doneEvent)
+        base.localAvatar.reparentTo(render)
+        base.localAvatar.setPos(0, 0, 0)
+        base.localAvatar.setHpr(0, 0, 0)
+        base.localAvatar.walkControls.setCollisionsActive(1)
+        self.localAvOnTrolley = False
+
+    def setHoodIndex(self, zone):
+        self.hoodIndex = zone
 
     def getToZone(self):
         return self.toZone
@@ -89,8 +109,11 @@ class DistributedBattleTrolley(DistributedObject):
     def enterLeaving(self, ts = 0):
         base.playSfx(self.soundMoving)
         base.playSfx(self.soundBell)
-        self.moveTrack = LerpPosInterval(self.trolleyCar, duration = 3.0, pos = self.TROLLEY_GONE_POS,
-            startPos = self.TROLLEY_NEUTRAL_POS, blendType = 'easeIn')
+        self.moveTrack = Parallel()
+        self.moveTrack.append(LerpPosInterval(self.trolleyCar, duration = 3.0, pos = self.TROLLEY_GONE_POS,
+            startPos = self.TROLLEY_NEUTRAL_POS, blendType = 'easeIn'))
+        if self.localAvOnTrolley == True:
+            self.moveTrack.append(Sequence(Wait(2.0), Func(base.transitions.fadeOut)))
         self.moveTrack.start()
 
     def exitLeaving(self):
@@ -194,6 +217,7 @@ class DistributedBattleTrolley(DistributedObject):
          Func(toon.startSmooth)
         )
         if avId == base.localAvatar.doId:
+            self.localAvOnTrolley = False
             track.append(Func(self.__hoppedOffTrolley))
         track.start()
 
