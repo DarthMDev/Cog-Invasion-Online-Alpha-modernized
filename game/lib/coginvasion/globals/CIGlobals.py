@@ -7,6 +7,12 @@
 
 from panda3d.core import *
 from lib.coginvasion.manager.SettingsManager import SettingsManager
+WalkCutOff = 0.5
+RunCutOff = 8.0
+STAND_INDEX = 0
+WALK_INDEX = 1
+RUN_INDEX = 2
+REVERSE_INDEX = 3
 GeneralAnimPlayRate = 1.0
 BackwardsAnimPlayRate = -1.0
 OpenBookFromFrame = 29

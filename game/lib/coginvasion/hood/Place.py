@@ -306,10 +306,7 @@ class Place(StateData):
         if teleportIn == 0:
             self.walkStateData.fsm.request('walking')
         self.acceptOnce(self.walkDoneEvent, self.handleWalkDone)
-        if base.localAvatar.getHealth() < 1:
-            self.walkStateData.fsm.request('deadWalking')
-        else:
-            self.walkStateData.fsm.request('walking')
+        self.walkStateData.fsm.request('walking')
         self.watchTunnelSeq = Sequence(Wait(1.0), Func(LinkTunnel.globalAcceptCollisions))
         self.watchTunnelSeq.start()
         base.localAvatar.setBusy(0)

@@ -67,6 +67,12 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.lastHood = 0
         return
 
+    def doSmoothTask(self, task):
+        self.smoother.computeAndApplySmoothPosHpr(self, self)
+        if self.doId != base.localAvatar.doId:
+            self.setSpeed(self.smoother.getSmoothForwardVelocity(), self.smoother.getSmoothRotationalVelocity())
+        return task.cont
+
     def setLastHood(self, zoneId):
         self.lastHood = zoneId
 

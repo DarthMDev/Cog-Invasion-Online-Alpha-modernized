@@ -361,6 +361,8 @@ class DistributedDoor(DistributedObject.DistributedObject):
         track.append(Func(av.setAnimState, 'neutral'))
         if base.localAvatar.doId == av.doId:
             track.append(Func(messenger.send, 'DistributedDoor_localAvatarCameOutOfDoor'))
+        else:
+            track.append(Func(av.startSmooth))
         track.setDoneEvent(track.getName())
         track.delayDelete = DelayDelete.DelayDelete(av, track.getName())
         self.acceptOnce(track.getDoneEvent(), self.__avatarTrackDone, [track])
@@ -379,6 +381,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
             self.cr.playGame.getPlace().fsm.request('doorIn', [self])
         av = self.cr.doId2do.get(avatarId)
         if av:
+            av.stopSmooth()
             track = self.getAvatarEnterTrack(av)
             self.avatarTracks.append(track)
             track.start()
@@ -389,6 +392,8 @@ class DistributedDoor(DistributedObject.DistributedObject):
         ts = ClockDelta.globalClockDelta.localElapsedTime(timestamp)
         av = self.cr.doId2do.get(avatarId)
         if av:
+            if av.doId != base.localAvatar.doId:
+                av.stopSmooth()
             track = self.getAvatarExitTrack(av)
             self.avatarTracks.append(track)
             track.start()

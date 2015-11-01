@@ -86,6 +86,9 @@ class LocalToon(DistributedToon):
         self.rolledOverTag = None
 
         self.inTutorial = False
+        self.hasDoneJump = False
+        self.lastState = None
+        self.lastAction = None
         #base.cTrav.showCollisions(render)
 
     def hasDiscoveredHood(self, zoneId):
@@ -385,14 +388,6 @@ class LocalToon(DistributedToon):
 
     def enableAvatarControls(self):
         self.walkControls.enableAvatarControls()
-        self.accept("arrow_up", self.updateMovementKeymap, ["forward", 1])
-        self.accept("arrow_up-up", self.updateMovementKeymap, ["forward", 0])
-        self.accept("arrow_down", self.updateMovementKeymap, ["backward", 1])
-        self.accept("arrow_down-up", self.updateMovementKeymap, ["backward", 0])
-        self.accept("arrow_left", self.updateMovementKeymap, ["left", 1])
-        self.accept("arrow_left-up", self.updateMovementKeymap, ["left", 0])
-        self.accept("arrow_right", self.updateMovementKeymap, ["right", 1])
-        self.accept("arrow_right-up", self.updateMovementKeymap, ["right", 0])
         self.accept("control", self.updateMovementKeymap, ["jump", 1])
         self.accept("control-up", self.updateMovementKeymap, ["jump", 0])
         taskMgr.add(self.movementTask, "avatarMovementTask")
@@ -444,10 +439,10 @@ class LocalToon(DistributedToon):
         if self.getHealth() < 1:
             self.playMovementSfx("walk")
             self.setPlayRate(1.2, 'dwalk')
-            self.b_setAnimState('deadWalk')
+            self.setAnimState('deadWalk')
         else:
             self.playMovementSfx("run")
-            self.b_setAnimState('run')
+            self.setAnimState('run')
         self.isMoving_side = False
         self.isMoving_back = False
         self.isMoving_forward = True
@@ -459,10 +454,10 @@ class LocalToon(DistributedToon):
         self.playMovementSfx("walk")
         if self.getHealth() < 1:
             self.setPlayRate(1.2, 'dwalk')
-            self.b_setAnimState('deadWalk')
+            self.setAnimState('deadWalk')
         else:
             self.setPlayRate(1.0, "walk")
-            self.b_setAnimState("walk")
+            self.setAnimState("walk")
         self.isMoving_forward = False
         self.isMoving_back = False
         self.isMoving_side = True
@@ -474,9 +469,9 @@ class LocalToon(DistributedToon):
         self.playMovementSfx("walk")
         if self.getHealth() < 1:
             self.setPlayRate(-1.0, 'dwalk')
-            self.b_setAnimState('deadWalk')
+            self.setAnimState('deadWalk')
         else:
-            self.b_setAnimState("walkBack")
+            self.setAnimState("walkBack")
         self.isMoving_side = False
         self.isMoving_forward = False
         self.isMoving_back = True
@@ -485,7 +480,7 @@ class LocalToon(DistributedToon):
     def __jump(self):
         self.playMovementSfx(None)
         if base.localAvatar.getHealth() > 0:
-            if self.isMoving_forward or self.isMoving_side or self.isMoving_back:
+            if self.playingAnim == 'run' or self.playingAnim == 'walk':
                 self.b_setAnimState("leap")
             else:
                 self.b_setAnimState("jump")
@@ -499,10 +494,10 @@ class LocalToon(DistributedToon):
         self.startLookAround()
         self.playMovementSfx(None)
         if base.localAvatar.getHealth() > 0:
-            self.b_setAnimState("neutral")
+            self.setAnimState("neutral")
         else:
             self.setPlayRate(1.0, 'dneutral')
-            self.b_setAnimState("deadNeutral")
+            self.setAnimState("deadNeutral")
         self.isMoving_side = False
         self.isMoving_forward = False
         self.isMoving_back = False
@@ -510,39 +505,52 @@ class LocalToon(DistributedToon):
 
     def movementTask(self, task):
         if self.getMovementKeyValue("jump") == 1:
-            if not self.isMoving_jump:
-                if not self.walkControls.isAirborne:
-                    if self.walkControls.mayJump:
-                        self.__jump()
-                    else:
-                        if self.getMovementKeyValue("forward") == 1:
-                            if not self.isMoving_forward:
-                                self.__forward()
-                        elif self.getMovementKeyValue("backward") == 1:
-                            if not self.isMoving_back:
-                                self.__reverse()
-                        elif self.getMovementKeyValue("left") == 1 or self.getMovementKeyValue("right") == 1:
-                            if not self.isMoving_side:
-                                self.__turn()
-                        else:
-                            if self.isMoving_side or self.isMoving_forward or self.isMoving_back:
-                                self.__neutral()
-        elif self.getMovementKeyValue("forward") == 1:
-            if not self.isMoving_forward:
-                if not self.walkControls.isAirborne:
-                    self.__forward()
-        elif self.getMovementKeyValue("backward") == 1:
-            if not self.isMoving_back:
-                if not self.walkControls.isAirborne:
-                    self.__reverse()
-        elif self.getMovementKeyValue("left") == 1 or self.getMovementKeyValue("right") == 1:
-            if not self.isMoving_side:
-                if not self.walkControls.isAirborne:
-                    self.__turn()
+            if not self.walkControls.isAirborne:
+                if self.walkControls.mayJump:
+                    self.__jump()
+                    self.hasDoneJump = True
+                else:
+                    if self.hasDoneJump:
+                        if self.getHealth() > 0:
+                            self.b_setAnimState('Happy')
+                        self.hasDoneJump = False
         else:
-            if self.isMoving_side or self.isMoving_forward or self.isMoving_back or self.isMoving_jump:
-                if not self.walkControls.isAirborne:
-                    self.__neutral()
+            if not self.walkControls.isAirborne:
+                if self.hasDoneJump:
+                    if self.getHealth() > 0:
+                        self.b_setAnimState('Happy')
+                    self.hasDoneJump = False
+        return task.cont
+
+    def startTrackAnimToSpeed(self):
+        base.taskMgr.add(self.trackAnimToSpeed, self.uniqueName('trackAnimToSpeed'))
+
+    def stopTrackAnimToSpeed(self):
+        base.taskMgr.remove(self.uniqueName('trackAnimToSpeed'))
+
+    def trackAnimToSpeed(self, task):
+        speed, rotSpeed, slideSpeed = self.walkControls.getSpeeds()
+        state = None
+        if self.getHealth() > 0:
+            state = 'Happy'
+        else:
+            state = 'Sad'
+        if state != self.lastState:
+            self.lastState = state
+            self.b_setAnimState(state)
+            if state == 'Sad':
+                self.setWalkSpeedSlow()
+            else:
+                self.setWalkSpeedNormal()
+        action = self.setSpeed(speed, rotSpeed)
+        if action != self.lastAction:
+            self.lastAction = action
+            if action == CIGlobals.WALK_INDEX or action == CIGlobals.REVERSE_INDEX:
+                self.playMovementSfx("walk")
+            elif action == CIGlobals.RUN_INDEX:
+                self.playMovementSfx("run")
+            else:
+                self.playMovementSfx(None)
         return task.cont
 
     def createLaffMeter(self):
