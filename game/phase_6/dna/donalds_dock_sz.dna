@@ -346,22 +346,7 @@ group "donaldsDock" [
        letters [ "T" ]
       ]
       text [
-       letters [ "R" ]
-      ]
-      text [
        letters [ "O" ]
-      ]
-      text [
-       letters [ "L" ]
-      ]
-      text [
-       letters [ "L" ]
-      ]
-      text [
-       letters [ "E" ]
-      ]
-      text [
-       letters [ "Y" ]
       ]
      ]
      baseline [
@@ -371,19 +356,22 @@ group "donaldsDock" [
       scale [ 2.7 1 2.7 ]
       kern [ -0.22 ]
       text [
-       letters [ "G" ]
+       letters [ "B" ]
       ]
       text [
        letters [ "A" ]
       ]
       text [
-       letters [ "M" ]
+       letters [ "T" ]
+      ]
+      text [
+       letters [ "T" ]
+      ]
+      text [
+       letters [ "L" ]
       ]
       text [
        letters [ "E" ]
-      ]
-      text [
-       letters [ "S" ]
       ]
      ]
     ]
@@ -1329,10 +1317,10 @@ group "donaldsDock" [
     ]
    ]
   ]
-  prop "prop_party_gate_DNARoot" [
-   code [ "prop_party_gate" ]
-   pos [ 36.9924 113.67 3.28138 ]
-   nhpr [ 315 0 0 ]
-  ]
+  //prop "prop_party_gate_DNARoot" [
+  // code [ "prop_party_gate" ]
+  // pos [ 36.9924 113.67 3.28138 ]
+  // nhpr [ 315 0 0 ]
+  //]
  ]
 ]

@@ -462,22 +462,7 @@ group "theBurrrgh" [
        letters [ "T" ]
       ]
       text [
-       letters [ "R" ]
-      ]
-      text [
        letters [ "O" ]
-      ]
-      text [
-       letters [ "L" ]
-      ]
-      text [
-       letters [ "L" ]
-      ]
-      text [
-       letters [ "E" ]
-      ]
-      text [
-       letters [ "Y" ]
       ]
      ]
      baseline [
@@ -487,19 +472,22 @@ group "theBurrrgh" [
       scale [ 2.7 1 2.7 ]
       kern [ -0.22 ]
       text [
-       letters [ "G" ]
+       letters [ "B" ]
       ]
       text [
        letters [ "A" ]
       ]
       text [
-       letters [ "M" ]
+       letters [ "T" ]
+      ]
+      text [
+       letters [ "T" ]
+      ]
+      text [
+       letters [ "L" ]
       ]
       text [
        letters [ "E" ]
-      ]
-      text [
-       letters [ "S" ]
       ]
      ]
     ]

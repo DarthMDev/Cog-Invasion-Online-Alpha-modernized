@@ -1,7 +1,7 @@
 # Filename: CogBattleGlobals.py
 # Created by:  blach (28Jul15)
 
-from lib.coginvasion.globals.CIGlobals import BattleTTC, TheBrrrgh, DonaldsDreamland
+from lib.coginvasion.globals.CIGlobals import BattleTTC, TheBrrrgh, DonaldsDreamland, DonaldsDock
 from lib.coginvasion.hood import ZoneUtil
 
 HoodId2HoodIndex = {
@@ -10,7 +10,7 @@ HoodId2HoodIndex = {
     DonaldsDreamland: 2,
     #MinniesMelodyland: 3,
     #DaisyGardens: 4,
-    #DonaldsDock: 5
+    DonaldsDock: 5
 }
 HoodIndex2HoodName = {v: k for k, v in HoodId2HoodIndex.items()}
 HoodIndex2HoodId = None
@@ -29,7 +29,7 @@ HoodIndex2LevelRange = {
     hi2hi[DonaldsDreamland]: list(range(6, 9 + 1)),
     #hi2hi[MinniesMelodyland]: range(2, 6 + 1),
     #hi2hi[DaisyGardens]: range(2, 6 + 1),
-    #hi2hi[DonaldsDock]: range(2, 6 + 1)
+    hi2hi[DonaldsDock]: range(2, 6 + 1)
 }
 
 HoodIndex2TotalCogs = {
@@ -38,7 +38,7 @@ HoodIndex2TotalCogs = {
     hi2hi[DonaldsDreamland]: 50,
     #hi2hi[MinniesMelodyland]: 45,
     #hi2hi[DaisyGardens]: 45,
-    #hi2hi[DonaldsDock]: 45
+    hi2hi[DonaldsDock]: 45
 }
 
 WaiterHoodIndex = hi2hi[TheBrrrgh]

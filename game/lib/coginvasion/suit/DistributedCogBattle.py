@@ -23,7 +23,8 @@ class DistributedCogBattle(DistributedObject):
         ],
 
         1: [],
-        2: []
+        2: [],
+        5: []
     }
 
     def __init__(self, cr):

@@ -68,6 +68,13 @@ class HoodMgr(DirectObject):
       0.0,
       5.0,
       0.0,
+      0.0],
+
+      CIGlobals.DonaldsDock: [-119.38,
+      -30.07,
+      5.67,
+      270.35,
+      0.0,
       0.0]}
     BattleShopClerkPoints = {CIGlobals.BattleTTC: [72.95,
       -152.49,
@@ -88,7 +95,14 @@ class HoodMgr(DirectObject):
       -15.94,
       -90.0,
       0.0,
-      -3.0]}
+      -3.0],
+
+      CIGlobals.DonaldsDock: [33.63,
+      114.46,
+      3.25,
+      324.46,
+      0.0,
+      0.0]}
     ToontownCentralHQDropPoints = ([-43.5,
       42.6,
       -0.55,
