@@ -36,7 +36,7 @@ class Hood(StateData):
         hoodId = requestStatus['hoodId']
         zoneId = requestStatus['zoneId']
         rootZone = ZoneUtil.getZoneId(hoodId)
-        if base.localAvatar.getLastHood() != rootZone:
+        if base.localAvatar.getLastHood() != rootZone and hoodId != CIGlobals.MinigameArea:
             base.localAvatar.b_setLastHood(rootZone)
         if not base.localAvatar.hasDiscoveredHood(rootZone):
             hoodsDiscovered = list(base.localAvatar.getHoodsDiscovered())
@@ -58,7 +58,8 @@ class Hood(StateData):
             hoodText += '\n' + self.id
         else:
             hoodText = self.id
-            hoodText += '\n' + ZoneUtil.getWhereName(zoneId).upper()
+            if self.id != CIGlobals.MinigameArea:
+                hoodText += '\n' + ZoneUtil.getWhereName(zoneId).upper()
         return hoodText
 
     def spawnTitleText(self, zoneId):

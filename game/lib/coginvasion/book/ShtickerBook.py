@@ -302,17 +302,26 @@ class ShtickerBook(StateData):
                 self.labels.append(label)
 
         currHoodName = base.cr.playGame.hood.id
-        if ZoneUtil.getWhereName(base.localAvatar.zoneId) == 'playground':
+        if base.localAvatar.zoneId == CIGlobals.MinigameAreaId:
+            currLocation = ''
+        elif ZoneUtil.getWhereName(base.localAvatar.zoneId) == 'playground':
             currLocation = 'Playground'
         elif ZoneUtil.getWhereName(base.localAvatar.zoneId) in ['street', 'interior']:
             currLocation = CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(base.localAvatar.zoneId)]
         self.infoLabel = DirectLabel(relief = None, text = 'You are in: {0}\n{1}'.format(currHoodName, currLocation),
                                      scale = 0.06, pos = (-0.4, 0, -0.74), parent = self.frame, text_align = TextNode.ACenter)
 
+        if currHoodName == CIGlobals.MinigameArea:
+            currHoodName = base.cr.playGame.lastHood
         self.BTPButton = DirectButton(relief = None, text = "Back to Playground", geom = CIGlobals.getDefaultBtnGeom(),
                                       text_pos = (0, -0.018), geom_scale = (1.3, 1.11, 1.11), text_scale = 0.06, parent = self.frame,
-                                      text_font = CIGlobals.getToonFont(), pos = (0.43, 0, -0.75), command = self.finished,
-                                      extraArgs = [ZoneUtil.getZoneId(currHoodName)])
+                                      text_font = CIGlobals.getToonFont(), pos = (0.25, 0, -0.75), command = self.finished,
+                                      extraArgs = [ZoneUtil.getZoneId(currHoodName)], scale = 0.7)
+        if base.localAvatar.zoneId != CIGlobals.MinigameAreaId:
+            self.MGAButton = DirectButton(relief = None, text = "Minigame Area", geom = CIGlobals.getDefaultBtnGeom(),
+                                          text_pos = (0, -0.018), geom_scale = (1, 1.11, 1.11), text_scale = 0.06, parent = self.frame,
+                                          text_font = CIGlobals.getToonFont(), pos = (0.625, 0, -0.75), command = self.finished,
+                                          extraArgs = [CIGlobals.MinigameAreaId], scale = 0.7)
 
     def exitMapPage(self):
         for label in self.labels:
@@ -327,6 +336,9 @@ class ShtickerBook(StateData):
         del self.infoLabel
         self.BTPButton.destroy()
         del self.BTPButton
+        if hasattr(self, 'MGAButton'):
+            self.MGAButton.destroy()
+            del self.MGAButton
         self.deletePageButtons(True, True)
         self.clearTitle()
 
