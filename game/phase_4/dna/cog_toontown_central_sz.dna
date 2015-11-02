@@ -454,6 +454,66 @@ group "toontownCentral" [
    ]
   ]
   node "buildings" [
+   prop "prop_trolley_station_DNARoot" [
+    code [ "prop_trolley_station" ]
+    pos [ -120.945 -77.5626 0.525 ]
+    nhpr [ 128 0 0 ]
+    sign [
+     color [ 1 0.88 0.56 1 ]
+     baseline [
+      code [ "mickey" ]
+      color [ 0.992157 0.968627 0.00784314 1 ]
+      pos [ 0.5 0 1.33 ]
+      scale [ 1.4 1 1.4 ]
+      kern [ -0.09181 ]
+      width [ 10.9993 ]
+      height [ 10.9993 ]
+      text [
+       letters [ "T" ]
+      ]
+      text [
+       letters [ "R" ]
+      ]
+      text [
+       letters [ "O" ]
+      ]
+      text [
+       letters [ "L" ]
+      ]
+      text [
+       letters [ "L" ]
+      ]
+      text [
+       letters [ "E" ]
+      ]
+      text [
+       letters [ "Y" ]
+      ]
+     ]
+     baseline [
+      code [ "mickey" ]
+      color [ 1 0 0 1 ]
+      pos [ 0.29 0 -1.9 ]
+      scale [ 2.7 1 2.7 ]
+      kern [ -0.2159 ]
+      text [
+       letters [ "G" ]
+      ]
+      text [
+       letters [ "A" ]
+      ]
+      text [
+       letters [ "M" ]
+      ]
+      text [
+       letters [ "E" ]
+      ]
+      text [
+       letters [ "S" ]
+      ]
+     ]
+    ]
+   ]
    landmark_building "sz13:toon_landmark_TT_toonhall_DNARoot" [
     code [ "toon_landmark_TT_toonhall" ]
     title [ "Toon Hall" ]
@@ -750,54 +810,6 @@ group "toontownCentral" [
       ]
       text [
        letters [ "9" ]
-      ]
-     ]
-    ]
-   ]
-   prop "prop_trolley_station_DNARoot" [
-    code [ "prop_trolley_station" ]
-    pos [ -120.945 -77.5626 0.525 ]
-    nhpr [ 128 0 0 ]
-    sign [
-     color [ 1 0.88 0.56 1 ]
-     baseline [
-      code [ "mickey" ]
-      color [ 0.27451 0.27451 0.27451 1 ]
-      pos [ 0.0876415 0 1.05613 ]
-      scale [ 2.39512 1 1.8162 ]
-      kern [ -0.09181 ]
-      flags [ "d" ]
-      text [
-       letters [ "C" ]
-      ]
-      text [
-       letters [ "O" ]
-      ]
-      text [
-       letters [ "G" ]
-      ]
-     ]
-     baseline [
-      code [ "mickey" ]
-      color [ 0.27451 0.27451 0.27451 1 ]
-      pos [ 0 0 -1.59988 ]
-      scale [ 2.7 1 2.7 ]
-      kern [ 0.13738 ]
-      flags [ "d" ]
-      text [
-       letters [ "T" ]
-      ]
-      text [
-       letters [ "R" ]
-      ]
-      text [
-       letters [ "A" ]
-      ]
-      text [
-       letters [ "N" ]
-      ]
-      text [
-       letters [ "S" ]
       ]
      ]
     ]
@@ -1274,8 +1286,8 @@ group "toontownCentral" [
   pos [ -67.3495 -98.5979 0.4 ]
   nhpr [ 171.254 0 0 ]
  ]
- prop "suit_elevator_DNARoot" [
-  code [ "suit_elevator" ]
+ prop "elevator_DNARoot" [
+  code [ "elevator" ]
   pos [ -81.7092 -92.7592 0.499999 ]
   nhpr [ 171.25 0 0 ]
  ]
