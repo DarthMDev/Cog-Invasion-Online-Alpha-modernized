@@ -19,4 +19,7 @@ class DistributedGagShopAI(DistributedShopAI):
         DistributedShopAI.confirmPurchase(self, avId, money)
         av = self.air.doId2do.get(avId)
         if av:
-            av.b_setBackpackAmmo(gagIds, ammoList)
+            for i in range(len(gagIds)):
+                gagId = gagIds[i]
+                ammo = ammoList[i]
+                av.b_setGagAmmo(gagId, ammo)

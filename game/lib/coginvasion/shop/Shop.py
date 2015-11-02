@@ -13,6 +13,7 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.shop.ItemType import ItemType
 from panda3d.core import Vec4, TransparencyAttrib
 from direct.task.Task import Task
+from lib.coginvasion.gags.GagGlobals import gagIds
 
 GRAYED_OUT_COLOR = Vec4(0.25, 0.25, 0.25, 1)
 NORMAL_COLOR = Vec4(1, 1, 1, 1)
@@ -32,6 +33,7 @@ class Shop(StateData):
         self.pages = 1
         self.window = None
         self.upgradesPurchased = False
+        self.originalSupply = {}
         
         # This handles heal cooldowns.
         self.healCooldowns = {}
@@ -70,19 +72,14 @@ class Shop(StateData):
         supply = self.backpack.getSupply(name)
         maxSupply = self.backpack.getMaxSupply(name)
         if supply < maxSupply:
-            gagIds = []
-            ammoList = []
-            for bpGag in self.backpack.getGags():
-                gagIds.append(bpGag.getID())
-                bpSupply = self.backpack.getSupply(bpGag.getName())
-                if bpGag.getName() == name:
-                    if bpSupply < self.backpack.getMaxSupply(bpGag.getName()):
-                        ammoList.append(supply + 1)
-                        base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
-                        self.window.showInfo('Purchased a %s' % (name), duration = 3)
-                else: ammoList.append(bpSupply)
-            base.localAvatar.setBackpackAmmo(gagIds, ammoList)
-            base.localAvatar.updateBackpackAmmo()
+            if not hasattr(self.originalSupply, 'keys') or gag.getID() not in self.originalSupply.keys() == None:
+                if not hasattr(self.originalSupply, 'keys'):
+                    self.originalSupply = {gag.getID() : supply}
+                else:
+                    self.originalSupply.update({gag.getID() : supply})
+            base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
+            self.window.showInfo('Purchased a %s' % (name), duration = 3)
+            base.localAvatar.setGagAmmo(gag.getID(), supply + 1)
             
     def __purchaseHealItem(self, item, values):
         health = base.localAvatar.getHealth()
@@ -181,6 +178,7 @@ class Shop(StateData):
             self.window.delete()
             self.newHealth = None
             self.healCooldownDoneSfx = None
+            self.originalSupply = {}
             
     def destroy(self):
         self.exit()
@@ -188,6 +186,7 @@ class Shop(StateData):
             base.taskMgr.removeTask(cooldown)
             if cooldown in self.healCooldowns:
                 del self.healCooldowns[cooldown]
+            del self.gagsPurchased
 
 class Page(DirectFrame):
 
@@ -350,10 +349,13 @@ class ShopWindow(DirectFrame):
 
     def makePages(self, items):
         newItems = dict(items)
+        loadout = []
+        for slot in base.localAvatar.getBackpack().gagGUI.getSlots():
+            loadout.append(slot.getGag().getID())
         for item, values in newItems.items():
             if values.get('type') == ItemType.GAG:
                 gag = item()
-                if not base.localAvatar.getBackpack().isInBackpack(gag.getName()):
+                if gag.getID() not in loadout or not base.localAvatar.getBackpack().isInBackpack(gag.getName()):
                     del newItems[item]
         self.nPages = int((len(newItems) / 4))
         if self.nPages % 4 != 0 and len(newItems) > 4:

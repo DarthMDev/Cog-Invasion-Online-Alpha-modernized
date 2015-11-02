@@ -48,6 +48,7 @@ class Backpack:
     def __init__(self):
         __metaclass__ = ABCMeta
         self.gags = {}
+        self.gagIds = {}
         self.avatar = None
         self.index = 3
         self.currentGag = None
@@ -80,6 +81,7 @@ class Backpack:
     def addGag(self, gag, supply):
         gag.setAvatar(self.avatar)
         self.gags[gag] = [supply, self.amounts.get(gag.getName())]
+        self.gagIds[gag.getID()] = gag
         for key in self.gags.keys():
             if key == None:
                 del self.gags[key]
@@ -194,6 +196,7 @@ class Backpack:
 
     def resetGags(self):
         self.gags = {}
+        self.gagIds = {}
         self.currentGag = None
         self.activeGag = None
 
@@ -242,11 +245,7 @@ class Backpack:
 
     def getGagByID(self, gagID):
         if not self.gags: return
-        for gag in self.gags:
-            if gag:
-                if gag.getID() == gagID:
-                    return gag
-        return None
+        return self.gagIds[gagID]
 
     def getIndex(self):
         return self.index

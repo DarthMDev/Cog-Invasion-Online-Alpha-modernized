@@ -204,3 +204,6 @@ class InventoryGui(DirectObject):
 
     def disableWeaponSwitch(self):
         for key in ['1', '2', '3', '4', 'wheel_down', 'wheel_up']: self.ignore(key)
+        
+    def getSlots(self):
+        return self.slots

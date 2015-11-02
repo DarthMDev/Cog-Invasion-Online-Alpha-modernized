@@ -354,24 +354,12 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         return self.token
 
     def gagRelease(self, gag_id):
-        gagIds = []
-        ammoList = []
-        for gag in self.backpack.getGags():
-            if gag:
-                gagIds.append(gag.getID())
-        for index in range(len(gagIds)):
-            gagId = gagIds[index]
-            supply = self.backpack.getSupply(GagGlobals.getGagByID(gagId))
-            if gagId == gag_id:
-                amt = supply - 1
-                if amt < 0:
-                    self.ejectSelf()
-                    return
-            else:
-                amt = supply
-                if not amt: amt = 0
-            ammoList.append(amt)
-        self.b_setBackpackAmmo(gagIds, ammoList)
+        supply = self.backpack.getSupply(GagGlobals.getGagByID(gag_id))
+        amt = supply - 1
+        if amt < 0:
+            self.ejectSelf()
+            return
+        self.b_setGagAmmo(gag_id, amt)
 
     def equip(self, index):
         if not self.setupGags: self.setupGags = True
@@ -436,6 +424,17 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
 
     def getBackpackAmmo(self):
         return self.ammo
+    
+    def setGagAmmo(self, gagId, ammo):
+        if self.backpack.getGagByID(gagId):
+            self.backpack.setSupply(ammo, GagGlobals.getGagByID(gagId))
+            
+    def d_setGagAmmo(self, gagId, ammo):
+        self.sendUpdate('setGagAmmo', [gagId, ammo])
+    
+    def b_setGagAmmo(self, gagId, ammo):
+        self.setGagAmmo(gagId, ammo)
+        self.d_setGagAmmo(gagId, ammo)
 
     def getInventory(self):
         return self.gagIds
@@ -491,6 +490,10 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         try:
             self.DistributedToonAI_deleted
         except:
+            gagIds = []
+            for gag in self.backpack.getGags():
+                gagIds.append(gag.getID())
+            self.b_setBackpackAmmo(gagIds, self.buildAmmoList(gagIds))
             self.DistributedToonAI_deleted = 1
             DistributedAvatarAI.delete(self)
             DistributedSmoothNodeAI.delete(self)

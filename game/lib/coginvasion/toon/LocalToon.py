@@ -855,4 +855,4 @@ class LocalToon(DistributedToon):
         self.accept("gotLookSpot", self.handleLookSpot)
 
     def printAvPos(self):
-        print self.getPos(render)
+        print "Pos: %s, Hpr: %s" % (self.getPos(), self.getHpr())

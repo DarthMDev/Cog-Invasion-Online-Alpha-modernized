@@ -361,7 +361,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
 
     def gagRelease(self, gagId):
         gag = self.backpack.getGagByID(gagId)
-        if gag:
+        if gag and hasattr(gag, 'name'):
             gag.release()
 
     def b_gagRelease(self, gagId):
@@ -499,6 +499,11 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
 
     def getBackpackAmmo(self):
         return self.gagBPData
+    
+    def setGagAmmo(self, gagId, ammo):
+        self.backpack.setSupply(ammo, GagGlobals.getGagByID(gagId))
+        if self.backpack.gagGUI:
+            self.backpack.gagGUI.update()
 
     def updateBackpackAmmo(self):
         gagIds = []
