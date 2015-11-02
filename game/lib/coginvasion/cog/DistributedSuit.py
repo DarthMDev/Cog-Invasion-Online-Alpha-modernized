@@ -344,7 +344,9 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         else:
             ts = globalClockDelta.localElapsedTime(timestamp)
         attackName = SuitAttacks.SuitAttackLengths.keys()[attackId]
+        attackTaunt = CIGlobals.SuitAttackTaunts[attackName][random.randint(0, len(CIGlobals.SuitAttackTaunts[attackName]) - 1)]
         avatar = self.cr.doId2do.get(avId)
+        self.setChat(attackTaunt)
         self.animFSM.request('attack', [attackName, avatar, ts])
 
     def throwObject(self):

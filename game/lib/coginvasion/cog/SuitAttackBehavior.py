@@ -92,13 +92,11 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         # Choose a random attack and start it.
         attack = random.choice(self.suit.suitPlan.getAttacks())
         attackIndex = SuitAttacks.SuitAttackLengths.keys().index(attack)
-        attackTaunt = random.randint(0, len(CIGlobals.SuitAttackTaunts[attack]) - 1)
         timestamp = globalClockDelta.getFrameNetworkTime()
         if self.suit.isDead():
             self.stopAttacking()
             return
         self.suit.sendUpdate('doAttack', [attackIndex, target.doId, timestamp])
-        self.suit.d_setChat(CIGlobals.SuitAttackTaunts[attack][attackTaunt])
         self.attacksThisSession += 1
         self.attacksDone += 1
 
