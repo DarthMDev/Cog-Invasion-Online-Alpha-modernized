@@ -1,6 +1,6 @@
 
 // This file is for putting generic things that all town use
-// but are not used in any safe zones. It gets loaded and 
+// but are not used in any safe zones. It gets loaded and
 // unloaded every time we enter/leave the Town state data
 
 place_model "phase_5/models/modules/suit_walls" [

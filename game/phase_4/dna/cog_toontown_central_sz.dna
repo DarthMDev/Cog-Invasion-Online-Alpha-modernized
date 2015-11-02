@@ -1269,8 +1269,8 @@ group "toontownCentral" [
   pos [ 146.455 -1.79201 0 ]
   nhpr [ 0 0 0 ]
  ]
- prop "suit_landmark_sales_DNARoot" [
-  code [ "suit_landmark_sales" ]
+ prop "suit_landmark_s5_DNARoot" [
+  code [ "suit_landmark_s5" ]
   pos [ -67.3495 -98.5979 0.4 ]
   nhpr [ 171.254 0 0 ]
  ]
