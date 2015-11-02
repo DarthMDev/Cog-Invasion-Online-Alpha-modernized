@@ -119,10 +119,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
     def exitSad(self):
         self.standWalkRunReverse = None
         self.stop()
-        if hasattr(self, 'doId'):
-            if hasattr(base, 'localAvatar'):
-                if base.localAvatar.doId == self.doId:
-                    self.controlManager.enableAvatarJump()
+        #if hasattr(self, 'doId'):
+        #    if hasattr(base, 'localAvatar'):
+        #        if base.localAvatar.doId == self.doId:
+        #            self.controlManager.enableAvatarJump()
 
     def setSpeed(self, forwardSpeed, rotateSpeed):
         self.forwardSpeed = forwardSpeed
