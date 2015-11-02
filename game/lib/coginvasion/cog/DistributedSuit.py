@@ -97,12 +97,12 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             self.moveIval.start(ts)
         self.animFSM.request('flyDown', [ts])
         yaw = random.uniform(0.0, 360.0)
-        self.getGeomNode().setH(yaw)
+        self.setH(yaw)
 
     def exitFlyingDown(self):
         self.stopMoving(finish = 1)
         self.animFSM.request('off')
-        self.getGeomNode().setH(0.0)
+        #self.setH(0.0)
 
     def enterFlyingUp(self, startIndex, endIndex, ts = 0.0):
         if self.getHood() != '' and startIndex != -1 and endIndex != -1:
