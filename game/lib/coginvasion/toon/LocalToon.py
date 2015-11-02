@@ -607,6 +607,7 @@ class LocalToon(DistributedToon):
     def disablePies(self):
         self.disablePieKeys()
         self.invGui.deleteGui()
+        self.backpack.setCurrentGag(None)
 
     def setWeaponType(self, weaponType):
         enableKeysAgain = 0
