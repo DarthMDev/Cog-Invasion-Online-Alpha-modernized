@@ -15,6 +15,7 @@ from direct.showbase.Transitions import Transitions
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.interval.IntervalGlobal import *
+from lib.coginvasion.gui import Dialog
 import sys
 import random
 
@@ -30,6 +31,7 @@ prevShops = {"body": "gender",
             "name": "cloth"}
 
 class MakeAToon:
+    MSG_BADNAME = 'Sorry, that name will not work.'
 
     def __init__(self):
         self.toonMade = 0
@@ -208,8 +210,19 @@ class MakeAToon:
     def exitMakeAToon(self, direction):
         self.matFSM.request("exit", enterArgList = [direction])
 
-    def finishedMakeAToon(self, textEntered):
+    def finishedMakeAToon(self, textEntered = None):
+        self.toonName = self.nameEntry.get()
+        if self.toonName.isspace() or len(self.toonName) == 0:
+            self.badNameDialog = Dialog.GlobalDialog(message = self.MSG_BADNAME,
+                doneEvent = 'badNameAck', style = Dialog.Ok)
+            base.acceptOnce('badNameAck', self.__handleBadNameAck)
+            self.badNameDialog.show()
+            return
         self.__handleExit("finished")
+
+    def __handleBadNameAck(self):
+        self.badNameDialog.cleanup()
+        del self.badNameDialog
 
     def isAvailable(self):
         return True
@@ -293,8 +306,7 @@ class MakeAToon:
                                 geom1_scale=0.65,
                                 geom2_scale=0.65,
                                 geom3_scale=0.6,
-                                command=self.__handleExit,
-                                extraArgs=["finished"],
+                                command=self.finishedMakeAToon,
                                 parent=base.a2dBottomRight)
         self.okBtn.hide()
         self.okBtn.setBin('gui-popup', 60)
@@ -359,10 +371,12 @@ class MakeAToon:
         self.namePanel.reparentTo(hidden)
         #self.spotlight_img.setX(0)
         #self.spotlight_img.setZ(0)
-        self.toonName = self.nameEntry.get()
         self.nameEntry.destroy()
         del self.nameEntry
         self.toonGen.setToonPosForGeneralShop()
+        if hasattr(self, 'badNameDialog'):
+            self.badNameDialog.cleanup()
+            del self.badNameDialog
 
     def enterGenderShop(self):
         self.nextBtn.show()
