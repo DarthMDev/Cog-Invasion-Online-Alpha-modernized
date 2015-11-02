@@ -101,7 +101,7 @@ class DistributedCameraShyGame(DistributedMinigame):
         Sequence(Wait(0.51), Func(self.fsm.request, 'showWinner', [avId])).start()
         #self.fsm.request('showWinner', [avId])
 
-    def enterGameOver(self, winner, winnerDoId):
+    def enterGameOver(self, winner, winnerDoId, allPrize):
         try:
             currentCamPos = base.camera.getPos(render)
             currentCamHpr = base.camera.getHpr(render)
@@ -110,7 +110,7 @@ class DistributedCameraShyGame(DistributedMinigame):
             base.camera.setHpr(currentCamHpr)
         except:
             pass
-        DistributedMinigame.enterGameOver(self, winner, winnerDoId)
+        DistributedMinigame.enterGameOver(self, winner, winnerDoId, allPrize)
 
     def enterShowWinner(self, winnerId):
         self.firstPerson.reallyEnd()
