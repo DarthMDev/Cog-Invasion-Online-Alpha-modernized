@@ -53,7 +53,7 @@ class Hood(StateData):
         self.fsm.request(requestStatus['loader'], [requestStatus])
 
     def getHoodText(self, zoneId):
-        if ZoneUtil.getWhereName(zoneId) == 'street':
+        if ZoneUtil.getWhereName(zoneId) == 'street' and zoneId < 61000:
             hoodText = CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(zoneId)]
             hoodText += '\n' + self.id
         else:
