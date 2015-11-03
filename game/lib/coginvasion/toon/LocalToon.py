@@ -150,6 +150,7 @@ class LocalToon(DistributedToon):
 
     def setFriendsList(self, friends):
         DistributedToon.setFriendsList(self, friends)
+        self.cr.friendsManager.d_requestFriendsList()
         self.panel.maybeUpdateFriendButton()
 
     def d_requestAddFriend(self, avId):

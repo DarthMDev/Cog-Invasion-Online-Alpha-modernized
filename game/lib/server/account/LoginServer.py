@@ -271,7 +271,7 @@ class LoginServer(MiniServer.MiniServer):
         dg = PyDatagram()
         dg.addUint16(ACC_VALID)
         dg.addString("gameserver.coginvasion.com:7032")
-        dg.addString("0.9.8")
+        dg.addString("1.0.0")
         token = LoginTokenGenerator.generateLoginToken(str(address))
         dg.addString(token.getToken())
         self.sendNewLoginToken(token.getToken(), str(address))

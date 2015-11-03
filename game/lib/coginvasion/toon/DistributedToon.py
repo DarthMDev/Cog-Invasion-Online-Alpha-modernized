@@ -110,7 +110,6 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
 
     def setFriendsList(self, friends):
         self.friends = friends
-        self.cr.friendsManager.d_requestFriendsList()
 
     def getFriendsList(self):
         return self.friends

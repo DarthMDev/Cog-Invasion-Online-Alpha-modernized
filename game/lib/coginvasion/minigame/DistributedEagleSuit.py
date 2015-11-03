@@ -32,7 +32,7 @@ class DistributedEagleSuit(DistributedSuit):
         self.fallingPropProjectile = None
         self.mg = None
         self.flySpeed = 0.0
-        
+
     def makeStateDict(self):
         self.suitFSM.addState(State('eagleFly', self.enterEagleFly, self.exitEagleFly))
         self.suitFSM.addState(State('eagleFall', self.enterEagleFall, self.exitEagleFall))
@@ -160,6 +160,8 @@ class DistributedEagleSuit(DistributedSuit):
         self.disableBodyCollisions()
         self.disableRay()
         self.__initializeEventSphere()
+        self.show()
+        self.setAnimState('flyNeutral')
 
     def __doEagleCry(self, task):
         self.eagleCry.play()

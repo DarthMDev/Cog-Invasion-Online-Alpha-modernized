@@ -4,6 +4,71 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 
+class RequestFriendsListProcess:
+    notify = directNotify.newCategory('RequestFriendsListProcess')
+
+    def __init__(self, csm, air, sender):
+        self.csm = csm
+        self.air = air
+        self.sender = sender
+        self.realFriendsList = [[], [], []]
+        self.avatarFriendsList = []
+        self.friendIndex = 0
+
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            sender,
+            self.senderRetrieved
+        )
+
+    def friendRetrieved(self, dclass, fields):
+        if dclass != self.air.dclassesByName['DistributedToonUD']:
+            self.notify.warning("Queried a non toon object?!")
+            return
+
+        name = fields['setName'][0]
+        avatarId = self.avatarFriendsList[self.friendIndex]
+        self.realFriendsList[0].append(avatarId)
+        self.realFriendsList[1].append(name)
+        isOnline = int(avatarId in self.csm.toonsOnline)
+        self.realFriendsList[2].append(isOnline)
+        if self.friendIndex == len(self.avatarFriendsList) - 1:
+            # Done, send it out
+            self.csm.sendUpdateToAvatarId(self.sender, 'friendsList', self.realFriendsList)
+            self.cleanup()
+            return
+        self.friendIndex += 1
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            self.avatarFriendsList[self.friendIndex],
+            self.friendRetrieved
+        )
+
+    def senderRetrieved(self, dclass, fields):
+        if dclass != self.air.dclassesByName['DistributedToonUD']:
+            self.notify.warning("Queried a non toon object?!")
+            return
+
+        self.avatarFriendsList = fields['setFriendsList'][0]
+
+        if len(self.avatarFriendsList) == 0:
+            self.csm.sendUpdateToAvatarId(self.sender, 'friendsList', [[], [], []])
+            return
+
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            self.avatarFriendsList[self.friendIndex],
+            self.friendRetrieved
+        )
+
+    def cleanup(self):
+        del self.air
+        del self.csm
+        del self.sender
+        del self.realFriendsList
+        del self.avatarFriendsList
+        del self.friendIndex
+
 class FriendsManagerUD(DistributedObjectGlobalUD):
     notify = directNotify.newCategory("FriendsManagerUD")
 
@@ -13,62 +78,7 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
 
     def requestFriendsList(self):
         sender = self.air.getAvatarIdFromSender()
-
-        realFriendsList = [[], [], []]
-        avatarFriendsList = []
-
-        def friendResponse(dclass, fields):
-            global avatarFriendsList
-            if dclass != self.air.dclassesByName['DistributedToonUD']:
-                self.notify.warning("Queried a non toon object?!")
-                return
-
-            name = fields['setName'][0]
-            try:
-                avatarId = avatarFriendsList[friendResponse.friend]
-            except:
-                self.sendUpdateToAvatarId(sender, 'friendsList', realFriendsList)
-                return
-            realFriendsList[0].append(avatarId)
-            realFriendsList[1].append(name)
-            isOnline = int(avatarId in self.toonsOnline)
-            realFriendsList[2].append(isOnline)
-            if friendResponse.friend == len(avatarFriendsList) - 1:
-                # Done, send it out
-                self.sendUpdateToAvatarId(sender, 'friendsList', realFriendsList)
-                return
-            friendResponse.friend += 1
-            self.air.dbInterface.queryObject(
-                self.air.dbId,
-                avatarFriendsList[friendResponse.friend],
-                friendResponse
-            )
-
-        friendResponse.friend = 0
-
-        def avatarResponse(dclass, fields):
-            global avatarFriendsList
-            if dclass != self.air.dclassesByName['DistributedToonUD']:
-                self.notify.warning("Queried a non toon object?!")
-                return
-
-            avatarFriendsList = fields['setFriendsList'][0]
-
-            if len(avatarFriendsList) == 0:
-                self.sendUpdateToAvatarId(sender, 'friendsList', [[], [], []])
-                return
-
-            self.air.dbInterface.queryObject(
-                self.air.dbId,
-                avatarFriendsList[friendResponse.friend],
-                friendResponse
-            )
-
-        self.air.dbInterface.queryObject(
-            self.air.dbId,
-            sender,
-            avatarResponse
-        )
+        RequestFriendsListProcess(self, self.air, sender)
 
     def d_toonOnline(self, avatarId, friendsList, name):
         self.toonsOnline.append(avatarId)

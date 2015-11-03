@@ -27,6 +27,24 @@ class DistributedTutorialSuitAI(DistributedSuitAI):
         self.currentPath = None
         self.walkTrack = None
 
+    def delete(self):
+        base.taskMgr.remove(self.uniqueName('monitorHealth'))
+        base.taskMgr.remove(self.uniqueName('doAttack'))
+        base.taskMgr.remove(self.uniqueName('scwaa'))
+        self.stopAttacks()
+        if self.track:
+            self.track.pause()
+            self.track = None
+        if self.walkTrack:
+            self.walkTrack.pause()
+            self.walkTrack = None
+        if self.currentPath:
+            self.currentPath = None
+        self.tutorial = None
+        self.tutPartIndex = None
+        self.avatarId = None
+        DistributedSuitAI.delete(self)
+
     def spawn(self):
         pos = TutorialGlobals.SUIT_POINTS[TutorialGlobals.SUIT_SPAWN_POINT]
         index = TutorialGlobals.SUIT_POINTS.index(pos)
