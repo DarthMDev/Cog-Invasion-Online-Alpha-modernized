@@ -323,7 +323,7 @@ class ToonHead(Actor.Actor):
     def doLookAround(self, task):
         hpr = self.findSomethingToLookAt()
         h, p, r = hpr
-        if not hpr:
+        if not hpr or not hasattr(base, 'localAvatar'):
             return task.done
         if hasattr(self, 'doId') and self.doId == base.localAvatar.doId:
             self.b_lookAtObject(h, p, r, blink = 1)

@@ -251,6 +251,8 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             self.readyGag = None
 
     def makeSplat(self, index, pos):
+        if index >= len(self.entities):
+            return
         ent = self.entities[index]
         gagClass = ent.gagClass
         splat = gagClass.buildSplat(gagClass.splatScale, gagClass.splatColor)

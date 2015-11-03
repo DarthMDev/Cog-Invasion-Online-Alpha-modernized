@@ -24,6 +24,9 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
 
     def __healthChange(self, health, prevHealth):
         if self.suit.isDead() and self.isAirborne:
+            if not self.suit:
+                self.exit()
+                return
             startPos = self.suit.getPos(render)
             endPos = startPos - (0, 0, 75)
             self.flyIval.pause()
