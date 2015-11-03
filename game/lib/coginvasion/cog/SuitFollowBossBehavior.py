@@ -24,7 +24,6 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
 
         # Let's start following the boss.
         self.__updatePath()
-        print '%s is following boss man.' % (self.suit.getName())
         
         # Let's begin waiting for the suit to get in front of the boss.
         taskMgr.add(self.__followBoss, self.followBossTaskName)
