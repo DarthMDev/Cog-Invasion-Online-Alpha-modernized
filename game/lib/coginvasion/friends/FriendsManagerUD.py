@@ -24,7 +24,11 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
                 return
 
             name = fields['setName'][0]
-            avatarId = avatarFriendsList[friendResponse.friend]
+            try:
+                avatarId = avatarFriendsList[friendResponse.friend]
+            except:
+                self.sendUpdateToAvatarId(sender, 'friendsList', realFriendsList)
+                return
             realFriendsList[0].append(avatarId)
             realFriendsList[1].append(name)
             isOnline = int(avatarId in self.toonsOnline)

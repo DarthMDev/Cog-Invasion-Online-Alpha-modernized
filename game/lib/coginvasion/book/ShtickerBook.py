@@ -302,6 +302,7 @@ class ShtickerBook(StateData):
                 self.labels.append(label)
 
         currHoodName = base.cr.playGame.hood.id
+        currLocation = ''
         if base.localAvatar.zoneId == CIGlobals.MinigameAreaId:
             currLocation = ''
         elif base.localAvatar.getMyBattle() != None:

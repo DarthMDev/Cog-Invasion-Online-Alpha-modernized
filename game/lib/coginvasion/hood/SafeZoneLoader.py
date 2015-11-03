@@ -96,7 +96,8 @@ class SafeZoneLoader(StateData):
 
     def enter(self, requestStatus):
         StateData.enter(self)
-        self.findAndMakeLinkTunnels()
+        if base.localAvatar.zoneId < 6100:
+            self.findAndMakeLinkTunnels()
         self.fsm.enterInitialState()
         messenger.send('enterSafeZone')
         self.setState(requestStatus['where'], requestStatus)
