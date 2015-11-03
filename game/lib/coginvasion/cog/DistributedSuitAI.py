@@ -101,18 +101,24 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             messenger.send(self.animStateChangeEvent, [anim, self.anim])
             self.anim = anim
             if type(self.anim) == types.IntType:
-                if anim != 44:
+                if anim != 44 and anim != 45:
                     self.anim = SuitGlobals.getAnimById(anim).getName()
-                else:
+                elif anim == 44:
                     self.anim = 'die'
+                elif anim == 45:
+                    self.anim = 'flyNeutral'
 
     def b_setAnimState(self, anim):
         if type(anim) == types.StringType:
-            anim = SuitGlobals.getAnimId(SuitGlobals.getAnimByName(anim))
-            if anim == None:
-                anim = 44
-        self.d_setAnimState(anim)
-        self.setAnimState(anim)
+            animId = SuitGlobals.getAnimId(SuitGlobals.getAnimByName(anim))
+            if animId == None and anim != 'flyNeutral':
+                animId = 44
+            elif anim == 'flyNeutral':
+                animId = 45
+        else:
+            animId = anim
+        self.d_setAnimState(animId)
+        self.setAnimState(animId)
 
     def d_setAnimState(self, anim):
         timestamp = globalClockDelta.getFrameNetworkTime()

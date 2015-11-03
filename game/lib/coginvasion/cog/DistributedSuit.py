@@ -324,11 +324,13 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             ts = globalClockDelta.localElapsedTime(timestamp)
 
         if type(anim) == types.IntType:
-            if anim != 44:
+            if anim != 44 and anim != 45:
                 anim = SuitGlobals.getAnimById(anim)
                 animName = anim.getName()
-            else:
+            elif anim == 44:
                 animName = 'die'
+            elif anim == 45:
+                animName = 'flyNeutral'
         elif type(anim) == types.StringType:
             animName = anim
 

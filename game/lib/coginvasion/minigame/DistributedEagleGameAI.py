@@ -98,10 +98,9 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 		if not self.air:
 			return
 		eagle = DistributedEagleSuitAI(self.air)
-		eagle.level = 12
-		eagle.health = 100
 		eagle.setMinigame(self)
 		eagle.generateWithRequired(self.zoneId)
+		eagle.b_setLevel(0)
 		eagle.b_setSuit(SuitBank.getIdFromSuit(SuitBank.LegalEagle), 3)
 		eagle.b_setName(SuitBank.LegalEagle.getName())
 		eagle.b_setPlace(self.zoneId)
@@ -174,7 +173,7 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 			cannon.d_setPos(*self.cannonPositions[i])
 			cannon.b_setParent(CIGlobals.SPRender)
 			self.cannonId2cannon[cannon.doId] = cannon
-		taskMgr.doMethodLater(2.0, self.__eagleSpawner, self.uniqueName("DEagleGameAI-eagleSpawner"))
+		taskMgr.add(self.__eagleSpawner, self.uniqueName("DEagleGameAI-eagleSpawner"))
 
 	def delete(self):
 		self.stopTiming()

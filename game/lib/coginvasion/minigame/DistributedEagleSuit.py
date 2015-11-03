@@ -92,6 +92,7 @@ class DistributedEagleSuit(DistributedSuit):
             self.moveIval = None
 
     def fallAndExplode(self):
+        self.cleanupPropeller()
         self.fallingPropeller = Actor("phase_4/models/props/propeller-mod.bam",
                         {"chan": "phase_4/models/props/propeller-chan.bam"})
         self.fallingPropeller.reparentTo(render)
