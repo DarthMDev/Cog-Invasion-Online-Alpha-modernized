@@ -245,7 +245,7 @@ class Backpack:
 
     def getGagByID(self, gagID):
         if not self.gags: return
-        return self.gagIds.get(gagID)
+        return self.gagIds[gagID]
 
     def getIndex(self):
         return self.index

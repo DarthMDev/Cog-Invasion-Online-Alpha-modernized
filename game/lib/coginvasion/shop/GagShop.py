@@ -49,6 +49,7 @@ class GagShop(Shop):
         Shop.__init__(self, distShop, doneEvent)
         self.distShop = distShop
         self.backpack = base.localAvatar.getBackpack()
+        self.originalSupply = base.localAvatar.getBackpackAmmo()
         self.setup()
 
     def setup(self):
@@ -91,18 +92,16 @@ class GagShop(Shop):
 
     def confirmPurchase(self):
         ammoList = []
-        if not hasattr(self.originalSupply, 'keys'):
-            gagIds = []
-        else:
-            gagIds = self.originalSupply.keys()
-            for gagId in gagIds:
-                ammoList.append(base.localAvatar.getBackpack().getSupply(GagGlobals.getGagByID(gagId)))
+        gagIds = []
+        for gag in self.backpack.getGags():
+            gagId = GagGlobals.getIDByName(gag.getName())
+            gagIds.append(gagId)
+            ammoList.append(self.backpack.getSupply(gag.getName()))
         self.distShop.sendUpdate('confirmPurchase', [gagIds, ammoList, base.localAvatar.getMoney()])
         Shop.confirmPurchase(self)
 
     def cancelPurchase(self):
-        for gagId, ammo in self.originalSupply:
-            base.localAvatar.setGagAmmo(ammo, GagGlobals.getGagByID(gagId))
+        base.localAvatar.setBackpackAmmo(self.originalSupply[0], self.originalSupply[1])
         Shop.cancelPurchase(self)
 
     def update(self):
@@ -114,4 +113,4 @@ class GagShop(Shop):
 
     def exit(self):
         Shop.exit(self)
-        self.originalSupply = {}
+        self.originalSupply = None

@@ -499,7 +499,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
 
     def getBackpackAmmo(self):
         return self.gagBPData
-    
+
     def setGagAmmo(self, gagId, ammo):
         self.backpack.setSupply(ammo, GagGlobals.getGagByID(gagId))
         if self.backpack.gagGUI:
