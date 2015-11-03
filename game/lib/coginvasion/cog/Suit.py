@@ -468,7 +468,7 @@ class Suit(Avatar):
             else:
                 self.loadModel('phase_4/models/char/suit%s-lose-mod.bam' % (str(self.suit)), 'body')
             self.loadAnims({'lose' : 'phase_4/models/char/suit%s-lose.bam' % (str(self.suit))}, 'body')
-        if self.variant == Variant.NORMAL:
+        if self.variant != Variant.SKELETON:
             self.headModel = self.head.generate()
             self.headModel.reparentTo(self.find('**/joint_head'))
         if self.suitPlan.getName() == SuitGlobals.VicePresident:

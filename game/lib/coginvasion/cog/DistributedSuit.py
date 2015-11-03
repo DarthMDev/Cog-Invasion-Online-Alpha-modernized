@@ -102,7 +102,6 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def exitFlyingDown(self):
         self.stopMoving(finish = 1)
         self.animFSM.request('off')
-        #self.setH(0.0)
 
     def enterFlyingUp(self, startIndex, endIndex, ts = 0.0):
         if self.getHood() != '' and startIndex != -1 and endIndex != -1:
@@ -309,7 +308,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.suitState = self.stateIndex2suitState[index]
         self.startPoint = startPoint
         self.endPoint = endPoint
-
+        
         self.suitFSM.request(self.suitState, [startPoint, endPoint, ts])
 
     def getSuitState(self):

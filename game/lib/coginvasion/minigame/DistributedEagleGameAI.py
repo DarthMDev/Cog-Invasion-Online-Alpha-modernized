@@ -1,11 +1,11 @@
 # Filename: DistributedEagleGameAI.py
 # Created by:  blach (04Jul15)
 
-from panda3d.core import Point3
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
 
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.cog import SuitBank
 from DistributedEagleSuitAI import DistributedEagleSuitAI
 from DistributedToonCannonAI import DistributedToonCannonAI
 from DistributedMinigameAI import DistributedMinigameAI
@@ -98,8 +98,13 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 		if not self.air:
 			return
 		eagle = DistributedEagleSuitAI(self.air)
+		eagle.level = 12
+		eagle.health = 100
 		eagle.setMinigame(self)
 		eagle.generateWithRequired(self.zoneId)
+		eagle.b_setSuit(SuitBank.getIdFromSuit(SuitBank.LegalEagle), 3)
+		eagle.b_setName(SuitBank.LegalEagle.getName())
+		eagle.b_setPlace(self.zoneId)
 		self.eagleId2eagle[eagle.doId] = eagle
 
 	def __eagleSpawner(self, task):
@@ -169,7 +174,7 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 			cannon.d_setPos(*self.cannonPositions[i])
 			cannon.b_setParent(CIGlobals.SPRender)
 			self.cannonId2cannon[cannon.doId] = cannon
-		taskMgr.add(self.__eagleSpawner, self.uniqueName("DEagleGameAI-eagleSpawner"))
+		taskMgr.doMethodLater(2.0, self.__eagleSpawner, self.uniqueName("DEagleGameAI-eagleSpawner"))
 
 	def delete(self):
 		self.stopTiming()

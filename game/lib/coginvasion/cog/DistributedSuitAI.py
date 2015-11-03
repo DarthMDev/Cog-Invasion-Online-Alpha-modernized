@@ -229,10 +229,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.sendUpdate('interruptAttack', [])
 
     def killSuit(self):
-        self.b_setAnimState('die')
-        self.clearTrack()
-        self.track = Sequence(Wait(6.0), Func(self.closeSuit))
-        self.track.start()
+        if self.level > 0 and self.health <= 0:
+            print self.health
+            self.b_setAnimState('die')
+            self.clearTrack()
+            self.track = Sequence(Wait(6.0), Func(self.closeSuit))
+            self.track.start()
 
     def closeSuit(self):
         self.itemDropper.drop()

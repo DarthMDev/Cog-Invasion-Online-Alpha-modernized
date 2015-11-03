@@ -21,9 +21,6 @@ class DistributedEagleSuit(DistributedSuit):
 
     def __init__(self, cr):
         DistributedSuit.__init__(self, cr)
-        self.suitFSM.addState(State('eagleFly', self.enterEagleFly, self.exitEagleFly))
-        self.suitFSM.addState(State('eagleFall', self.enterEagleFall, self.exitEagleFall))
-        self.makeStateDict()
         self.eagleCry = base.audio3d.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_eagleCry.mp3')
         base.audio3d.attachSoundToObject(self.eagleCry, self)
         self.fallWhistle = base.audio3d.loadSfx('phase_5/audio/sfx/incoming_whistleALT.mp3')
@@ -35,6 +32,22 @@ class DistributedEagleSuit(DistributedSuit):
         self.fallingPropProjectile = None
         self.mg = None
         self.flySpeed = 0.0
+        
+    def makeStateDict(self):
+        self.suitFSM.addState(State('eagleFly', self.enterEagleFly, self.exitEagleFly))
+        self.suitFSM.addState(State('eagleFall', self.enterEagleFall, self.exitEagleFall))
+        self.stateIndex2suitState = {
+            0 : self.suitFSM.getStateNamed('off'),
+            1 : self.suitFSM.getStateNamed('walking'),
+            2 : self.suitFSM.getStateNamed('flyingDown'),
+            3 : self.suitFSM.getStateNamed('flyingUp'),
+            4 : self.suitFSM.getStateNamed('lured'),
+            5 : self.suitFSM.getStateNamed('eagleFly'),
+            6 : self.suitFSM.getStateNamed('eagleFall')
+        }
+        self.suitState2stateIndex = {}
+        for stateId, state in self.stateIndex2suitState.items():
+            self.suitState2stateIndex[state.getName()] = stateId
 
     def setFlySpeed(self, value):
         self.flySpeed = value
@@ -140,8 +153,8 @@ class DistributedEagleSuit(DistributedSuit):
     def __handleHit(self, entry):
         messenger.send(EGG.EAGLE_HIT_EVENT, [self.doId])
 
-    def setSuit(self, arg, variant = 0):
-        DistributedSuit.setSuit(self, arg, variant = variant)
+    def setSuit(self, arg, variant):
+        DistributedSuit.setSuit(self, arg, 3)
         self.deleteShadow()
         self.disableBodyCollisions()
         self.disableRay()

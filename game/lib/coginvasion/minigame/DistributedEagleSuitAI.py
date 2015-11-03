@@ -7,7 +7,6 @@ from direct.interval.IntervalGlobal import LerpPosInterval, Sequence, Wait, Func
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
-from lib.coginvasion.cog import SuitBank
 import EagleGameGlobals as EGG
 
 import random
@@ -17,9 +16,6 @@ class DistributedEagleSuitAI(DistributedSuitAI):
 
     def __init__(self, air):
         DistributedSuitAI.__init__(self, air)
-        self.suitState = 1
-        self.suitPlan = SuitBank.getIdFromSuit(SuitBank.LegalEagle)
-        self.name = SuitBank.LegalEagle.getName()
         self.mg = None
         self.flyTrack = None
         self.currentFlyPoint = None
@@ -38,7 +34,7 @@ class DistributedEagleSuitAI(DistributedSuitAI):
             self.flyTrack.pause()
             self.flyTrack = None
         self.sendUpdate('fallAndExplode', [])
-        self.b_setSuitState(3, -1, -1)
+        self.b_setSuitState(6, -1, -1)
         self.flyTrack = Sequence(
             LerpPosInterval(
                 self,
@@ -99,7 +95,7 @@ class DistributedEagleSuitAI(DistributedSuitAI):
             startIndex = point_list.index(random.choice(point_list))
         else:
             startIndex = -1
-        self.b_setSuitState(2, startIndex, EGG.EAGLE_FLY_POINTS.index(point))
+        self.b_setSuitState(5, startIndex, EGG.EAGLE_FLY_POINTS.index(point))
         self.flyTrack = NPCWalkInterval(self, point,
             durationFactor = EGG.ROUND_2_EAGLE_SPEED[self.getMinigame().getRound()],
             startPos = self.getPos(render), fluid = 1, name = self.uniqueName('DEagleSuitAI-flyTrack'))
