@@ -50,15 +50,15 @@ class TossTrapGag(TrapGag):
         gagSph.setTangible(0)
         gagNode = CollisionNode('gagSensor')
         gagNode.addSolid(gagSph)
-        gagNP = self.gag.attach_new_node(gagNode)
+        gagNP = self.gag.attachNewNode(gagNode)
         gagNP.setScale(0.75, 0.8, 0.75)
         gagNP.setPos(0.0, 0.1, 0.5)
         gagNP.setCollideMask(BitMask32.bit(0))
-        gagNP.node().set_from_collide_mask(CIGlobals.FloorBitmask)
+        gagNP.node().setFromCollideMask(CIGlobals.FloorBitmask)
 
         event = CollisionHandlerEvent()
-        event.set_in_pattern("%fn-into")
-        event.set_out_pattern("%fn-out")
+        event.setInPattern("%fn-into")
+        event.setOutPattern("%fn-out")
         base.cTrav.addCollider(gagNP, event)
 
     def onCollision(self, entry):
@@ -83,9 +83,10 @@ class TossTrapGag(TrapGag):
         self.setHandJoint()
         self.track = ProjectileInterval(self.gag, startPos = self.handJoint.getPos(render), endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
         self.track.start()
-        self.buildCollisions()
+        if base.localAvatar == self.avatar:
+            self.buildCollisions()
+            self.avatar.acceptOnce('gagSensor-into', self.onCollision)
         self.reset()
-        self.avatar.acceptOnce('gagSensor-into', self.onCollision)
 
     def delete(self):
         TrapGag.delete(self)

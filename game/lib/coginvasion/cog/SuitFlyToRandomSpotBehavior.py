@@ -14,14 +14,14 @@ from direct.interval.LerpInterval import LerpPosInterval
 import random
 
 class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
-    
+
     def __init__(self, suit):
         doneEvent = 'suit%s-flyToRandSpot' % (str(suit.doId))
         SuitHabitualBehavior.__init__(self, suit, doneEvent)
         self.canFly = True
         self.isAirborne = False
         self.flyIval = None
-        
+
     def __healthChange(self, health, prevHealth):
         if self.suit.isDead() and self.isAirborne:
             startPos = self.suit.getPos(render)
@@ -29,11 +29,11 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
             self.flyIval.pause()
             self.suit.d_stopMoveInterval()
             self.suit.b_setAnimState('flail')
-            self.suit.d_enableMovement()
+            self.suit.enableMovement()
             self.suit.d_startPosInterval(startPos, endPos, 4.0, 'easeIn')
             self.suit.moveIval = LerpPosInterval(self.suit, duration = 4.0, pos = endPos, startPos = startPos, blendType = 'easeIn')
             self.suit.moveIval.start()
-        
+
     def enter(self):
         SuitHabitualBehavior.enter(self)
         self.accept(self.suit.healthChangeEvent, self.__healthChange)
@@ -50,7 +50,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
             Wait(0.5),
             Func(self.flyToNewSpot, pathKey)
         ).start()
-        
+
     def exit(self):
         SuitHabitualBehavior.exit(self)
         if not hasattr(self.suit, 'DELETED'):
@@ -59,7 +59,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
                 self.flyIval.pause()
                 self.flyIval = None
             self.standSuit()
-        
+
     def unload(self):
         SuitHabitualBehavior.unload(self)
         if self.flyIval:
@@ -68,14 +68,14 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         del self.flyIval
         del self.canFly
         del self.isAirborne
-        
+
     def flyToNewSpot(self, spot):
         self.isAirborne = True
         endPos = CIGlobals.SuitSpawnPoints[self.suit.getHood()][spot]
         self.suit.headsUp(endPos)
         startPos = self.suit.getPos(render)
         duration = 3.5
-        
+
         self.flyIval = Parallel(
             # Server Information
             ProjectileInterval(self.suit,
@@ -98,7 +98,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
             ),
         )
         self.flyIval.start()
-        
+
     def standSuit(self, withAnim = True):
         if withAnim:
             self.suit.b_setAnimState('neutral')
@@ -106,11 +106,11 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         self.canFly = False
         flyCooldown = random.uniform(6.1, 20.0)
         taskMgr.doMethodLater(flyCooldown, self.__toggleCanFly, self.suit.uniqueName('FlyCooldown'))
-        
+
     def __toggleCanFly(self, task):
         self.canFly = True
         return task.done
-        
+
     def shouldStart(self):
         # The lower the health, the greater the chance of flying away.
         defaultChance = 0.15
@@ -121,6 +121,6 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
             for _ in xrange(chanceIncreases):
                 defaultChance += 0.15
         return self.canFly and random.random() < defaultChance
-    
+
     def isAirborne(self):
         return self.isAirborne
