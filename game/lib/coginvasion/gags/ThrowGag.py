@@ -24,7 +24,7 @@ class ThrowGag(Gag):
 
     def start(self):
         super(ThrowGag, self).start()
-        self.build()
+        base.localAvatar.b_gagBuild()
         self.equip()
         self.avatar.setPlayRate(self.playRate, 'pie')
         self.avatar.play('pie', fromFrame = 0, toFrame = 45)
@@ -46,8 +46,6 @@ class ThrowGag(Gag):
         throwPath.setHpr(90, -90, 90)
 
         entity = self.gag
-        if not entity:
-            return
         entity.wrtReparentTo(render)
         entity.setHpr(throwPath.getHpr(render))
         self.gag = None
