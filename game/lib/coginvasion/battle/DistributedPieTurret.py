@@ -229,12 +229,13 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
     def createAndShootGag(self):
         if not self.readyGag:
             self.loadGagInTurret()
-        self.readyGag.shoot(Point3(0, 200, -90))
-        self.entities.append(self.readyGag)
-        collideEventName = self.readyGag.getCollideEventName()
-        self.readyGag = None
-        if self.isLocal():
-            self.acceptOnce(collideEventName, self.handleGagCollision)
+        if self.readyGag:
+            self.readyGag.shoot(Point3(0, 200, -90))
+            self.entities.append(self.readyGag)
+            collideEventName = self.readyGag.getCollideEventName()
+            self.readyGag = None
+            if self.isLocal():
+                self.acceptOnce(collideEventName, self.handleGagCollision)
         Sequence(Wait(self.reloadTime), Func(self.loadGagInTurret)).start()
 
     def loadGagInTurret(self):
