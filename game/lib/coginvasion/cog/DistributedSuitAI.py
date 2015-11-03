@@ -182,9 +182,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         return Task.cont
 
     def handleAvatarDefeat(self, av):
-        if av.isDead():
-            self.brain.stopThinking()
+        if av.isDead() and hasattr(self, 'brain'):
             self.b_setAnimState('win')
+            self.brain.stopThinking()
             taskMgr.doMethodLater(6.0, self.brain.startThinking, self.uniqueName('Resume Thinking'))
 
     def disableMovement(self):

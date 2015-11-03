@@ -46,6 +46,8 @@ class DistributedTutorialSuitAI(DistributedSuitAI):
 
     def createPath(self, fromCurPos = False):
         durationFactor = 0.2
+        if not hasattr(self, 'currentPath'):
+            self.currentPath = None
         if self.currentPath == None:
             path = random.choice(TutorialGlobals.SUIT_POINTS)
             self.currentPath = TutorialGlobals.SUIT_POINTS.index(path)

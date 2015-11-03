@@ -130,8 +130,9 @@ class Geyser(SquirtGag, ChargeUpGag):
         if self.isLocal():
             cogs = ChargeUpGag.getSelectedCogs(self)
             for cog in cogs:
-                geyser = self.buildGeyser()
-                self.startEntity(geyser, cog)
-                self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
+                if cog.getHealth() > 0:
+                    geyser = self.buildGeyser()
+                    self.startEntity(geyser, cog)
+                    self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
             base.localAvatar.enablePieKeys()
         
