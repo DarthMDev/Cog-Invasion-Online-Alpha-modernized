@@ -24,7 +24,7 @@ class ThrowGag(Gag):
 
     def start(self):
         super(ThrowGag, self).start()
-        base.localAvatar.b_gagBuild()
+        self.build()
         self.equip()
         self.avatar.setPlayRate(self.playRate, 'pie')
         self.avatar.play('pie', fromFrame = 0, toFrame = 45)
@@ -32,6 +32,8 @@ class ThrowGag(Gag):
 
     def throw(self):
         self.avatar.play('pie', fromFrame = 45, toFrame = 90)
+        if not self.gag:
+            self.build()
         self.gag.reparentTo(self.handJoint)
 
     def release(self):
