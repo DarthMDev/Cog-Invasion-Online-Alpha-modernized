@@ -21,6 +21,9 @@ class DistributedNPCToon(DistributedToon):
         self.currentChatIndex = 0
         self.chatArray = None
 
+    def setLoadout(self, foo):
+        pass
+
     def lookAtAvatar(self, avId):
         av = self.cr.doId2do.get(avId)
         if av:
