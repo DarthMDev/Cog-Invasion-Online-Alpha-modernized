@@ -69,8 +69,9 @@ class InventoryGui(DirectObject):
     def setWeapon(self, slot, playSound = True):
         if isinstance(slot, str):
             for iSlot in self.slots:
-                if iSlot.getGag().getName() == slot:
-                    slot = iSlot
+                if iSlot.getGag():
+                    if iSlot.getGag().getName() == slot:
+                        slot = iSlot
         if self.activeSlot:
             self.activeSlot.setOutlineImage('idle')
             self.prevSlot = self.activeSlot

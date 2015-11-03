@@ -405,7 +405,9 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                 Sequence(Wait(3.0), Func(self.resetHeadColor)).start()
 
     def resetHeadColor(self):
-        self.getPart('head').setColorScale(1, 1, 1, 1)
+        head = self.getPart('head')
+        if head:
+            head.setColorScale(1, 1, 1, 1)
 
     def b_handleSuitAttack(self, attack_id, suit_id):
         self.handleSuitAttack(attack_id, suit_id)

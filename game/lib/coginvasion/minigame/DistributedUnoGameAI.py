@@ -453,9 +453,10 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         return newCardId
 
     def isAvatarPresent(self, doId):
-        for avatar in self.avatars:
-            if avatar.doId == doId:
-                return True
+        if hasattr(self, 'avatars') and self.avatars != None:
+            for avatar in self.avatars:
+                if avatar.doId == doId:
+                    return True
         if self.ais > 0 and self.playerMgr:
             for player in self.playerMgr.getPlayers():
                 if player.getID() == doId:
