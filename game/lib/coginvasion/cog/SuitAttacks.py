@@ -855,6 +855,8 @@ class BiteAttack(ThrowAttack):
 
     def throwObject(self):
         ThrowAttack.throwObject(self, False)
+        if not self.weapon:
+            return
         self.weapon.setH(self.weapon, -90)
 
 class ChompAttack(ThrowAttack):
@@ -867,6 +869,8 @@ class ChompAttack(ThrowAttack):
 
     def throwObject(self):
         ThrowAttack.throwObject(self, False)
+        if not self.weapon:
+            return
         self.weapon.setH(self.weapon, -90)
 
 class EvictionNoticeAttack(ThrowAttack):

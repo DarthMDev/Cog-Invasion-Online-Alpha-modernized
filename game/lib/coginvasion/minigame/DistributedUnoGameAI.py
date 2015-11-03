@@ -276,6 +276,8 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         for avatar in self.avatars:
             if avatar.doId == doId:
                 name = avatar.getName()
+                if not name:
+                    return "Toon"
                 if name.endswith("s"):
                     return name + "'"
                 else:
