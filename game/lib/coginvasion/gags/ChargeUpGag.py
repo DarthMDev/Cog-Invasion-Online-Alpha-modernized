@@ -57,11 +57,11 @@ class ChargeUpGag:
         self.resetGag()
         
     def release(self):
-        if self.avatar:
+        if self.isLocal():
             self.avatar.ignore(self.chargeUpSpot.getChargedCanceledName())
             self.selectedCogs = self.chargeUpSpot.getSelectedCogs()
             self.cleanupChargeUpSpot()
-            self.buildTracks()
+        self.buildTracks()
             
     def handleStopCharging(self):
         if self.avatar.getBackpack().getSupply(self.getName()) > 0:
