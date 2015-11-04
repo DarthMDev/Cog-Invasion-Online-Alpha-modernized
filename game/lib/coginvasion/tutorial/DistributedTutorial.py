@@ -186,15 +186,19 @@ class DistributedTutorial(DistributedObject):
         self.music.stop()
         base.playMusic(self.battleMusic, volume = 0.8, looping = 1)
         self.sendUpdate('makeSuit', [0])
-        base.localAvatar.enableAvatarControls()
-        base.localAvatar.enablePies(1)
+        base.localAvatar.startPosHprBroadcast()
+        base.localAvatar.d_broadcastPositionNow()
+        base.localAvatar.startBlink()
         base.localAvatar.attachCamera()
         base.localAvatar.startSmartCamera()
+        base.localAvatar.collisionsOn()
+        base.localAvatar.enableAvatarControls()
+        base.localAvatar.enablePies(1)
         Whisper().createSystemMessage("This should be pretty simple. Just throw a gag at this dummy bot to defeat it.")
 
     def suitNoHealth(self, index):
         if index == 0:
-            Whisper().createSystemMessage("Goob job {0}!".format(base.localAvatar.getName()))
+            Whisper().createSystemMessage("Good job, {0}!".format(base.localAvatar.getName()))
         elif index == 1:
             Whisper().createSystemMessage("Wow, you're doing very well!")
 
@@ -213,10 +217,15 @@ class DistributedTutorial(DistributedObject):
             self.fsm.request('trainingDone')
 
     def exitTrainingPT1(self):
+        base.localAvatar.lastState = None
         base.localAvatar.disableAvatarControls()
-        base.localAvatar.disablePies()
-        base.localAvatar.stopSmartCamera()
         base.localAvatar.detachCamera()
+        base.localAvatar.stopSmartCamera()
+        base.localAvatar.stopPosHprBroadcast()
+        base.localAvatar.stopBlink()
+        base.localAvatar.collisionsOff()
+        base.localAvatar.controlManager.placeOnFloor()
+        base.localAvatar.disablePies()
 
     def enterTraining2Info(self):
         base.camera.setPos(3.09, 37.16, 3.93)
@@ -246,16 +255,25 @@ class DistributedTutorial(DistributedObject):
         self.music.stop()
         base.playMusic(self.battleMusic, volume = 0.8, looping = 1)
         self.sendUpdate('makeSuit', [1])
-        base.localAvatar.enableAvatarControls()
-        base.localAvatar.enablePies(1)
+        base.localAvatar.startPosHprBroadcast()
+        base.localAvatar.d_broadcastPositionNow()
+        base.localAvatar.startBlink()
         base.localAvatar.attachCamera()
         base.localAvatar.startSmartCamera()
+        base.localAvatar.collisionsOn()
+        base.localAvatar.enableAvatarControls()
+        base.localAvatar.enablePies(1)
 
     def exitTrainingPT2(self):
+        base.localAvatar.lastState = None
         base.localAvatar.disableAvatarControls()
-        base.localAvatar.disablePies()
-        base.localAvatar.stopSmartCamera()
         base.localAvatar.detachCamera()
+        base.localAvatar.stopSmartCamera()
+        base.localAvatar.stopPosHprBroadcast()
+        base.localAvatar.stopBlink()
+        base.localAvatar.collisionsOff()
+        base.localAvatar.controlManager.placeOnFloor()
+        base.localAvatar.disablePies()
 
     def enterTraining3Info(self):
         base.camera.setPos(3.09, 37.16, 3.93)
@@ -285,16 +303,25 @@ class DistributedTutorial(DistributedObject):
         self.music.stop()
         base.playMusic(self.battleMusic, volume = 0.8, looping = 1)
         self.sendUpdate('makeSuit', [2])
-        base.localAvatar.enableAvatarControls()
-        base.localAvatar.enablePies(1)
+        base.localAvatar.startPosHprBroadcast()
+        base.localAvatar.d_broadcastPositionNow()
+        base.localAvatar.startBlink()
         base.localAvatar.attachCamera()
         base.localAvatar.startSmartCamera()
+        base.localAvatar.collisionsOn()
+        base.localAvatar.enableAvatarControls()
+        base.localAvatar.enablePies(1)
 
     def exitTrainingPT3(self):
+        base.localAvatar.lastState = None
         base.localAvatar.disableAvatarControls()
-        base.localAvatar.disablePies()
-        base.localAvatar.stopSmartCamera()
         base.localAvatar.detachCamera()
+        base.localAvatar.stopSmartCamera()
+        base.localAvatar.stopPosHprBroadcast()
+        base.localAvatar.stopBlink()
+        base.localAvatar.collisionsOff()
+        base.localAvatar.controlManager.placeOnFloor()
+        base.localAvatar.disablePies()
 
     def enterTrainingDone(self):
         base.camera.setPos(3.09, 37.16, 3.93)

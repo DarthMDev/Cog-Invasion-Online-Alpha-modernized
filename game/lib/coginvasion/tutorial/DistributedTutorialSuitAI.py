@@ -124,6 +124,8 @@ class DistributedTutorialSuitAI(DistributedSuitAI):
     def __doAttack(self, task):
         base.taskMgr.remove(self.uniqueName('scwaa'))
         target = self.air.doId2do.get(self.avatarId)
+        if not target:
+            return task.done
         self.clearTrack()
         self.b_setSuitState(0, -1, -1)
         self.b_setAnimState('neutral')

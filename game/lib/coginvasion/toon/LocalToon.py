@@ -547,10 +547,16 @@ class LocalToon(DistributedToon):
         if action != self.lastAction:
             self.lastAction = action
             if action == CIGlobals.WALK_INDEX or action == CIGlobals.REVERSE_INDEX:
+                self.resetHeadHpr()
+                self.stopLookAround()
                 self.playMovementSfx("walk")
             elif action == CIGlobals.RUN_INDEX:
+                self.resetHeadHpr()
+                self.stopLookAround()
                 self.playMovementSfx("run")
             else:
+                self.resetHeadHpr()
+                self.startLookAround()
                 self.playMovementSfx(None)
         return task.cont
 
