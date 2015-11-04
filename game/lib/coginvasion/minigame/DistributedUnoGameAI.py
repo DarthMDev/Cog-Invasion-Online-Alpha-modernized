@@ -90,9 +90,10 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
     def dealCards(self):
         """ Deal cards to all avatars. """
         self.d_setPlayByPlay(UGG.EVENT_DEALING_CARDS)
-        for avatar in self.avatars:
-            for _ in range(self.cardsToDeal):
-                self.d_takeNewCard(avatar.doId, self.pickNewCard())
+        if hasattr(self, 'avatars') and self.avatars != None:
+            for avatar in self.avatars:
+                for _ in range(self.cardsToDeal):
+                    self.d_takeNewCard(avatar.doId, self.pickNewCard())
         # Let's also deal cards to NPCs
         if self.playerMgr:
             for player in self.playerMgr.getPlayers():
@@ -114,8 +115,9 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
             Wait(1.0), Func(self.d_setPlayByPlay, "1"), Wait(1.0), Func(self.startTurns), Func(setGameStarted)).start()
 
     def startTurns(self):
-        for avatar in self.avatars:
-            self.turnOrder.append(avatar.doId)
+        if hasattr(self, 'avatars') and self.avatars != None:
+            for avatar in self.avatars:
+                self.turnOrder.append(avatar.doId)
         if self.ais > 0 and self.playerMgr:
             for player in self.playerMgr.getPlayers():
                 self.turnOrder.append(player.getID())
@@ -273,15 +275,16 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         self.turnSeq = seq
 
     def getAvatarNamePossesive(self, doId):
-        for avatar in self.avatars:
-            if avatar.doId == doId:
-                name = avatar.getName()
-                if not name:
-                    return "Toon"
-                if name.endswith("s"):
-                    return name + "'"
-                else:
-                    return name + "'s"
+        if hasattr(self, 'avatars') and self.avatars != None:
+            for avatar in self.avatars:
+                if avatar.doId == doId:
+                    name = avatar.getName()
+                    if not name:
+                        return "Toon"
+                    if name.endswith("s"):
+                        return name + "'"
+                    else:
+                        return name + "'s"
         if self.playerMgr:
             for player in self.playerMgr.getPlayers():
                 if player.getID() == doId:
@@ -464,9 +467,10 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         return False
 
     def getAvatarName(self, doId):
-        for avatar in self.avatars:
-            if avatar.doId == doId:
-                return avatar.getName()
+        if hasattr(self, 'avatars') and self.avatars != None:
+            for avatar in self.avatars:
+                if avatar.doId == doId:
+                    return avatar.getName()
         if self.playerMgr:
             for player in self.playerMgr.getPlayers():
                 if player.getID() == doId:
@@ -480,8 +484,9 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                     self.avatarLoser = True
             addMoney = self.loserPrize
             if not avatarLoser: addMoney = self.winnerPrize
-            for avatar in self.avatars:
-                avatar.b_setMoney(avatar.getMoney() + addMoney)
+            if hasattr(self, 'avatars') and self.avatars != None:
+                for avatar in self.avatars:
+                    avatar.b_setMoney(avatar.getMoney() + addMoney)
         else:
             DistributedMinigameAI.DistributedMinigameAI.givePrizes(self, winnerAvId)
 

@@ -48,6 +48,11 @@ class ThrowGag(Gag):
         throwPath.setHpr(90, -90, 90)
 
         entity = self.gag
+        
+        if not entity:
+            self.build()
+            entity = self.gag
+
         entity.wrtReparentTo(render)
         entity.setHpr(throwPath.getHpr(render))
         self.gag = None
