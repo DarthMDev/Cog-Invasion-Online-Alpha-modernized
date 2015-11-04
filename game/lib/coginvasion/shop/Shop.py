@@ -51,7 +51,8 @@ class Shop(StateData):
         base.localAvatar.setHealth(self.origHealth)
         
         for healCooldown in self.newHealCooldowns.keys():
-            del self.healCooldowns[healCooldown]
+            if self.healCooldowns.get(healCooldown):
+                del self.healCooldowns[healCooldown]
         
     def __purchaseUpgradeItem(self, values):
         upgradeID = values.get('upgradeID')
