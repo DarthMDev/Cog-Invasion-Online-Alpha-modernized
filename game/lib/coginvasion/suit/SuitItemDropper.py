@@ -12,7 +12,7 @@ import SuitAttacks
 
 class SuitItemDropper:
     notify = directNotify.newCategory('SuitItemDropper')
-    possibleDrops = {DJellybeanAI : {}, DJellybeanJarAI : {}}
+    possibleDrops = {DBackpackAI : {'chance' : 4, 'maxGags' : 4}, DJellybeanAI : {}, DJellybeanJarAI : {}}
     jarMinSize = 10
 
     def __init__(self, suit):
