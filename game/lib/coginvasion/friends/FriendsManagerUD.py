@@ -14,6 +14,7 @@ class RequestFriendsListProcess:
         self.realFriendsList = [[], [], []]
         self.avatarFriendsList = []
         self.friendIndex = 0
+        self.senderDclass = None
 
         self.air.dbInterface.queryObject(
             self.air.dbId,
@@ -21,9 +22,17 @@ class RequestFriendsListProcess:
             self.senderRetrieved
         )
 
+    def __updatedFriendsListDeletedToonDone(self, foo = None):
+        self.csm.requestFriendsList(self.sender)
+        self.cleanup()
+
     def friendRetrieved(self, dclass, fields):
         if dclass != self.air.dclassesByName['DistributedToonUD']:
-            self.notify.warning("Queried a non toon object?!")
+            self.notify.warning("Toon on friends list was deleted.")
+            self.avatarFriendsList.remove(self.avatarFriendsList[self.friendIndex])
+            dg = self.senderDclass.aiFormatUpdate('setFriendsList', self.sender, self.sender, self.air.ourChannel, [self.avatarFriendsList])
+            self.air.send(dg)
+            self.air.dbInterface.updateObject(self.air.dbId, self.sender, self.senderDclass, {'setFriendsList': [self.avatarFriendsList]}, callback = self.__updatedFriendsListDeletedToonDone)
             return
 
         name = fields['setName'][0]
@@ -32,12 +41,13 @@ class RequestFriendsListProcess:
         self.realFriendsList[1].append(name)
         isOnline = int(avatarId in self.csm.toonsOnline)
         self.realFriendsList[2].append(isOnline)
-        if self.friendIndex == len(self.avatarFriendsList) - 1:
+        if self.friendIndex >= len(self.avatarFriendsList) - 1:
             # Done, send it out
             self.csm.sendUpdateToAvatarId(self.sender, 'friendsList', self.realFriendsList)
             self.cleanup()
             return
         self.friendIndex += 1
+
         self.air.dbInterface.queryObject(
             self.air.dbId,
             self.avatarFriendsList[self.friendIndex],
@@ -48,6 +58,8 @@ class RequestFriendsListProcess:
         if dclass != self.air.dclassesByName['DistributedToonUD']:
             self.notify.warning("Queried a non toon object?!")
             return
+
+        self.senderDclass = dclass
 
         self.avatarFriendsList = fields['setFriendsList'][0]
 
@@ -68,6 +80,7 @@ class RequestFriendsListProcess:
         del self.realFriendsList
         del self.avatarFriendsList
         del self.friendIndex
+        del self.senderDclass
 
 class FriendsManagerUD(DistributedObjectGlobalUD):
     notify = directNotify.newCategory("FriendsManagerUD")
@@ -76,8 +89,9 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
         self.toonsOnline = []
 
-    def requestFriendsList(self):
-        sender = self.air.getAvatarIdFromSender()
+    def requestFriendsList(self, sender = None):
+        if sender == None:
+            sender = self.air.getAvatarIdFromSender()
         RequestFriendsListProcess(self, self.air, sender)
 
     def d_toonOnline(self, avatarId, friendsList, name):
