@@ -12,7 +12,8 @@ import SuitAttacks
 
 class SuitItemDropper:
     notify = directNotify.newCategory('SuitItemDropper')
-    possibleDrops = {DBackpackAI : {'chance' : 4, 'maxGags' : 4}, DJellybeanAI : {}, DJellybeanJarAI : {}}
+    possibleDrops = {DJellybeanAI : {}, DJellybeanJarAI : {}}
+    #DBackpackAI : {'chance' : 4, 'maxGags' : 4}, 
     jarMinSize = 10
 
     def __init__(self, suit):
@@ -23,7 +24,7 @@ class SuitItemDropper:
 
     def calculate(self, tutDrop = None):
         if self.suit.getMaxHealth() <= 48:
-            self.setDropChance(DBackpackAI, 2)
+            #self.setDropChance(DBackpackAI, 2)
             """
             self.numDrops = 5
             self.setDropChance(DBackpackAI, 0)
