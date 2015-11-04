@@ -105,12 +105,13 @@ class ToonFPS(DirectObject):
         return Task.cont
 
     def enterAlive(self):
-        base.localAvatar.disableChatInput()
-        self.start()
-        self.resetHp()
-        self.resetAmmo()
-        if self.mg.fsm.getCurrentState().getName() == "play":
-            self.reallyStart()
+        if not self.mg.fsm.getCurrentState().getName() in ['gameOver', 'announceGameOver', 'finalScores']:
+            base.localAvatar.disableChatInput()
+            self.start()
+            self.resetHp()
+            self.resetAmmo()
+            if self.mg.fsm.getCurrentState().getName() == "play":
+                self.reallyStart()
 
     def exitAlive(self):
         self.end()
@@ -265,30 +266,37 @@ class ToonFPS(DirectObject):
 
     def end(self):
         self.aliveFSM.request('off')
-        self.firstPerson.enableMouse()
-        self.firstPerson.end()
+        if self.firstPerson:
+            self.firstPerson.enableMouse()
+            self.firstPerson.end()
         taskMgr.remove("toonBattleMovement")
         if self.mg.fsm.getCurrentState().getName() != "play":
             self.fsm.request('off')
 
     def reallyEnd(self):
-        self.shooterRayNode.removeNode()
-        self.shooterRayNode = None
+        if self.shooterRayNode:
+            self.shooterRayNode.removeNode()
+            self.shooterRayNode = None
         self.shooterRay = None
         self.shooterTrav = None
         self.shooterHandler = None
-        self.firstPerson.reallyEnd()
-        self.v_model_root.reparentTo(hidden)
-        self.v_model.reparentTo(hidden)
-        self.v_model.setPosHpr(0, 0, 0, 0, 0, 0)
-        self.gui.end()
+        if self.firstPerson:
+            self.firstPerson.reallyEnd()
+        if self.v_model_root:
+            self.v_model_root.reparentTo(hidden)
+        if self.v_model:
+            self.v_model.reparentTo(hidden)
+            self.v_model.setPosHpr(0, 0, 0, 0, 0, 0)
+        if self.gui:
+            self.gui.end()
         base.camLens.setNear(1.0)
 
     def cleanup(self):
         taskMgr.remove("lookAtKiller")
         taskMgr.remove("toonBattleMovement")
-        self.firstPerson.cleanup()
-        self.firstPerson = None
+        if self.firstPerson:
+            self.firstPerson.cleanup()
+            self.firstPerson = None
         self.draw = None
         self.shoot = None
         self.reload = None
@@ -301,13 +309,17 @@ class ToonFPS(DirectObject):
         self.max_camerap = None
         self.hp = None
         self.max_hp = None
-        self.v_model.cleanup()
-        self.v_model = None
-        self.weapon.removeNode()
-        self.weapon = None
-        self.v_model_root.removeNode()
-        self.v_model_root = None
-        self.gui.cleanup()
+        if self.v_model:
+            self.v_model.cleanup()
+            self.v_model = None
+        if self.weapon:
+            self.weapon.removeNode()
+            self.weapon = None
+        if self.weapon:
+            self.v_model_root.removeNode()
+            self.v_model_root = None
+        if self.gui:
+            self.gui.cleanup()
 
     def damageTaken(self, amount, avId):
         if self.hp <= 0.0:
