@@ -30,6 +30,7 @@ from lib.coginvasion.friends.FriendsList import FriendsList
 from lib.coginvasion.suit import SuitAttacks
 
 import random
+from lib.coginvasion.gags.GagState import GagState
 
 class LocalToon(DistributedToon):
     neverDisable = 1
@@ -647,6 +648,9 @@ class LocalToon(DistributedToon):
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
                 self.pieThrowBtn.unbind(DGG.B1PRESS)
+            if self.backpack.getActiveGag():
+                if self.backpack.getActiveGag().getState() != GagState.LOADED:
+                    return
             self.ignore("delete")
             self.backpack.getCurrentGag().setAvatar(self)
             self.resetHeadHpr()
@@ -676,8 +680,9 @@ class LocalToon(DistributedToon):
             gag = self.backpack.getActiveGag()
             if not gag:
                 gag = self.backpack.getCurrentGag()
-            gagName = gag.getName()
-            self.b_gagRelease(GagGlobals.getIDByName(gagName))
+            if gag.getState() != GagState.RELEASED:
+                gagName = gag.getName()
+                self.b_gagRelease(GagGlobals.getIDByName(gagName))
 
     def checkSuitHealth(self, suit):
         pass

@@ -52,7 +52,7 @@ class ThrowGag(Gag):
         if not entity:
             self.build()
             entity = self.gag
-
+    
         entity.wrtReparentTo(render)
         entity.setHpr(throwPath.getHpr(render))
         self.gag = None
