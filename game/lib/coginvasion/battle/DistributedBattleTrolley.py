@@ -104,6 +104,7 @@ class DistributedBattleTrolley(DistributedObject):
 
     def exitArriving(self):
         self.moveTrack.finish()
+        self.acceptOnce('entertrolley_sphere', self.__handleTrolleyTrigger)
         del self.moveTrack
 
     def enterLeaving(self, ts = 0):
@@ -115,6 +116,7 @@ class DistributedBattleTrolley(DistributedObject):
         if self.localAvOnTrolley == True:
             self.moveTrack.append(Sequence(Wait(2.0), Func(base.transitions.fadeOut)))
         self.moveTrack.start()
+        self.ignore('entertrolley_sphere')
 
     def exitLeaving(self):
         self.moveTrack.finish()
