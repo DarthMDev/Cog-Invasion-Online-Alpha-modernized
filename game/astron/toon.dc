@@ -174,8 +174,6 @@ dclass DistributedToon : DistributedAvatar {
   suitHitByPie(uint32, uint8 gag_id) ownsend airecv;
   toonHitByPie(uint32, uint8 gag_id) ownsend airecv;
   toonUp(uint8 hp, uint8 announce, uint8 sound) clsend airecv;
-  suitKilled(uint32) ownsend airecv;
-  died() ownsend airecv;
   gagActivate(uint8 gagId) ownsend broadcast;
   setTarget(uint8 gagId, uint32 target) clsend broadcast;
   setGagPos(uint8 gagId, float64, float64, float64) ownsend broadcast;

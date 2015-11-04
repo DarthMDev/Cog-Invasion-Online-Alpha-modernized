@@ -680,8 +680,7 @@ class LocalToon(DistributedToon):
             self.b_gagRelease(GagGlobals.getIDByName(gagName))
 
     def checkSuitHealth(self, suit):
-        if suit.getHealth() <= 0:
-            self.sendUpdate('suitKilled', [suit.doId])
+        pass
 
     def handleLookSpot(self, hpr):
         h, p, r = hpr

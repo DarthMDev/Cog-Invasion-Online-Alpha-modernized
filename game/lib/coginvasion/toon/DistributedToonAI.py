@@ -424,14 +424,14 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
 
     def getBackpackAmmo(self):
         return self.ammo
-    
+
     def setGagAmmo(self, gagId, ammo):
         if self.backpack.getGagByID(gagId):
             self.backpack.setSupply(ammo, GagGlobals.getGagByID(gagId))
-            
+
     def d_setGagAmmo(self, gagId, ammo):
         self.sendUpdate('setGagAmmo', [gagId, ammo])
-    
+
     def b_setGagAmmo(self, gagId, ammo):
         self.setGagAmmo(gagId, ammo)
         self.d_setGagAmmo(gagId, ammo)
@@ -470,10 +470,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                     self.questManager.cogDefeated(obj)
 
     def suitKilled(self, avId):
-        obj = self.air.doId2do.get(avId, None)
-        if obj:
-            money = int(obj.maxHealth / CIGlobals.SuitAttackDamageFactors['clipontie'])
-            self.b_setMoney(self.getMoney() + money)
+        pass
 
     def toonHitByPie(self, avId, gag_id):
         obj = self.air.doId2do.get(avId, None)
