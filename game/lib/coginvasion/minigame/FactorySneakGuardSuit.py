@@ -7,8 +7,8 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.FSM import FSM
 from direct.interval.IntervalGlobal import LerpHprInterval
 
-from lib.coginvasion.npc.NPCWalker import NPCWalkInterval, NPCLookInterval
-from lib.coginvasion.suit.Suit import Suit
+from lib.coginvasion.npc.NPCWalker import NPCLookInterval
+from lib.coginvasion.cog.Suit import Suit
 from lib.coginvasion.globals import CIGlobals
 import CogGuardGlobals as CGG
 

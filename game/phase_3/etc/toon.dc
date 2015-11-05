@@ -41,7 +41,6 @@ from lib.coginvasion.suit import DistributedDroppableCollectableJellybean/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableHealth/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableIceCream/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableBackpack/AI
-from lib.coginvasion.suit import DistributedVicePresident/AI
 from lib.coginvasion.suit import DistributedCogStation/AI
 from lib.coginvasion.suit import DistributedCogBattle/AI
 from lib.coginvasion.hood import DistributedTreasure/AI
@@ -306,12 +305,6 @@ dclass DistributedTutorial : DistributedObject {
 
 dclass DistributedTutorialSuit : DistributedSuit {
 
-};
-
-dclass DistributedVicePresident : DistributedAvatar {
-  jump(int16) broadcast;
-  throwGear(Point3[], int16) broadcast;
-  spawn(int16) broadcast;
 };
 
 dclass DistributedTrolley : DistributedNode {

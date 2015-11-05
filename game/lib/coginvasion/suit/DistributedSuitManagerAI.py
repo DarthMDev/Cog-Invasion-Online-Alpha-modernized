@@ -2,7 +2,6 @@
 # Created by:  blach (22Dec14)
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
-#from lib.coginvasion.suit.DistributedSuitAI import DistributedSuitAI
 from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
 from lib.coginvasion.cog import Variant
 from lib.coginvasion.cog import SuitBank

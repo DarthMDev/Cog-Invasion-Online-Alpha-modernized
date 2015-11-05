@@ -11,7 +11,7 @@ from direct.fsm.State import State
 from direct.interval.IntervalGlobal import Parallel, LerpHprInterval
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.suit.Suit import Suit
+from lib.coginvasion.cog.Suit import Suit
 import NURBSMopath
 import CityCartGlobals
 

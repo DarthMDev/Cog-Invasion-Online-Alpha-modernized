@@ -161,7 +161,6 @@ class DistributedTutorialSuitAI(DistributedSuitAI):
             # This is part two, we just walk around and wait to die.
             self.createPath()
         elif self.tutPartIndex == 2:
-            print 'doing part 3 stuff'
             # This is part three, we walk around, attack a bit, and wait to die.
             self.createPath()
             self.startAttacks()
