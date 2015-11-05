@@ -204,7 +204,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.killSuit()
             return Task.done
         else:
-            self.deathTimeLeft--
+            self.deathTimeLeft -= 1
             return Task.cont
 
     def handleAvatarDefeat(self, av):
