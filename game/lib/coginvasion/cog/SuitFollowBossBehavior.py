@@ -78,7 +78,10 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
     
     def shouldAbandonFollow(self):
         suitsByBoss = self.getSuitsByBoss()
-        return float(len(suitsByBoss)) / float(self.getBackupCalledIn()) >= 0.4
+        backupCalledIn = self.getBackupCalledIn()
+        if backupCalledIn == 0:
+            backupCalledIn = 1
+        return float(len(suitsByBoss)) / float(backupCalledIn) >= 0.4
     
     def getSuitsByBoss(self):
         suits = []
