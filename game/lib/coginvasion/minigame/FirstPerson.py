@@ -48,8 +48,9 @@ class FirstPerson(DirectObject):
         base.localAvatar.walkControls.disableAvatarControls()
 
     def reallyEnd(self):
-        self.player_node.removeNode()
-        self.player_node = None
+        if self.player_node:
+            self.player_node.removeNode()
+            self.player_node = None
         camera.reparentTo(render)
         camera.setZ(0.0)
         base.localAvatar.getGeomNode().show()
@@ -59,8 +60,9 @@ class FirstPerson(DirectObject):
         base.localAvatar.controlManager.enable()
 
     def cleanup(self):
-        del self.min_camerap
-        del self.max_camerap
+        if hasattr(self, 'min_camerap'):
+            del self.min_camerap
+            del self.max_camerap
 
     def cameraMovement(self, task):
         if hasattr(self, 'min_camerap') and hasattr(self, 'max_camerap'):
