@@ -255,7 +255,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
     def killSuit(self):
         if self.level > 0 and self.health <= 0:
-            print self.health
             self.b_setAnimState('die')
             self.clearTrack()
             self.track = Sequence(Wait(6.0), Func(self.closeSuit))
