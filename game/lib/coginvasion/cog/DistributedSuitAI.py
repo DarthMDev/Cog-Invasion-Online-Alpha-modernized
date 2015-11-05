@@ -107,6 +107,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             if type(self.anim) == types.IntType:
                 if anim != 44 and anim != 45:
                     self.anim = SuitGlobals.getAnimById(anim).getName()
+                    print "Set anim state to: " + self.anim
                 elif anim == 44:
                     self.anim = 'die'
                 elif anim == 45:
