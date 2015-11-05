@@ -42,18 +42,21 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
         if not self.boss or not self.isBossInManager() or self.shouldAbandonFollow() or hasattr(self.boss, 'DELETED'):
             self.suit.b_setAnimState('neutral')
             self.exit()
-    
-        bossSpot = self.boss.getCurrentPath()
-        currentPathQueue = self.suit.getCurrentPathQueue()
-        
-        # Let's create a path.
-        if self.suit.getCurrentPath() == bossSpot:
-            self.createPath(pathKey = bossSpot, fromCurPos = True)
+            
+        if hasattr(self.boss, 'currentPath'):
+            bossSpot = self.boss.getCurrentPath()
+            currentPathQueue = self.suit.getCurrentPathQueue()
+            
+            # Let's create a path.
+            if self.suit.getCurrentPath() == bossSpot:
+                self.createPath(pathKey = bossSpot, fromCurPos = True)
+            else:
+                currentPathQueue = self.findPath(self.suit.getHood(), self.suit.getCurrentPath(), bossSpot)
+                currentPathQueue.remove(currentPathQueue[0])
+                self.createPath(fromCurPos = True)
+            self.acceptOnce(self.walkTrack.getDoneEvent(), self.__updatePath)
         else:
-            currentPathQueue = self.findPath(self.suit.getHood(), self.suit.getCurrentPath(), bossSpot)
-            currentPathQueue.remove(currentPathQueue[0])
-            self.createPath(fromCurPos = True)
-        self.acceptOnce(self.walkTrack.getDoneEvent(), self.__updatePath)
+            self.exit()
         
     def __followBoss(self, task):
         # Let's cancel the task if the behavior was unloaded
@@ -91,7 +94,7 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
     def getBackupCalledIn(self):
         from lib.coginvasion.cog.SuitCallInBackupBehavior import SuitCallInBackupBehavior
         behaviorClass = SuitCallInBackupBehavior
-        if hasattr(self.boss, 'DELETED'):
+        if hasattr(self.boss, 'DELETED') or not self.boss.getBrain():
             return 0
         behavior = self.boss.getBrain().getBehavior(behaviorClass)
         return behavior.getCalledInBackup()

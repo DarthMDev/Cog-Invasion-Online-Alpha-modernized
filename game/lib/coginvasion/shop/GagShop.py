@@ -101,8 +101,11 @@ class GagShop(Shop):
         Shop.confirmPurchase(self)
 
     def cancelPurchase(self):
-        for gagId, ammo in self.originalSupply:
-            base.localAvatar.setGagAmmo(ammo, GagGlobals.getGagByID(gagId))
+        if hasattr(self.originalSupply, 'keys'):
+            gagIds = self.originalSupply.keys()
+            for gagId in gagIds:
+                base.localAvatar.setGagAmmo(gagId, self.originalSupply.get(gagId))
+            self.originalSupply = {}
         Shop.cancelPurchase(self)
 
     def update(self):
