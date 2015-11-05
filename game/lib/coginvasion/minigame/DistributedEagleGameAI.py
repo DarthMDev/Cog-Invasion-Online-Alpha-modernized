@@ -183,7 +183,6 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 		taskMgr.remove(self.uniqueName("DEagleGameAI-startNewRound"))
 		taskMgr.remove(self.uniqueName("DEagleGameAI-eagleSpawner"))
 		for cannon in self.cannonId2cannon.values():
-			cannon.disable()
 			cannon.requestDelete()
 		del self.cannonId2cannon
 		for eagle in self.eagleId2eagle.values():
