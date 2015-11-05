@@ -57,10 +57,8 @@ class MinigameBase(DirectObject):
     def handleEmptyMinigame(self):
         taskMgr.remove(self.cr.uniqueName("monitorAvatars"))
         base.air.deallocateZone(self.zoneId)
-        self.minigame.disable()
         self.minigame.requestDelete()
         self.delete()
-        print "empty minigame"
 
     def delete(self):
         del self.minigame

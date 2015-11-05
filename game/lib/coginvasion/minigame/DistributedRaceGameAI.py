@@ -2,7 +2,7 @@
 
   Filename: DistributedRaceGameAI.py
   Created by: blach (07Oct14)
-  
+
 """
 
 from panda3d.core import *
@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 import DistributedMinigameAI
 
 class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):
-	
+
 	def __init__(self, cr):
 		try:
 			self.DistributedRaceGameAI_initialized
@@ -25,7 +25,7 @@ class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):
 		self.winnerPrize = 20
 		self.loserPrize = 5
 		return
-		
+
 	def monitorAvatarPositions(self, task):
 		for avatar in self.avatars:
 			if not avatar.isEmpty():
@@ -33,10 +33,10 @@ class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):
 					self.d_gameOver(winner=1, winnerDoId=[avatar.doId])
 					return task.done
 		return task.cont
-				
+
 	def hasPassedFinishLine(self, avatar):
 		return (avatar.getY(render) >= self.winnerY)
-		
+
 	def requestToonLane(self):
 		""" This is called by the client so the AI can figure out
 		which lane the client's avatar should stand in. """
@@ -45,14 +45,14 @@ class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):
 			if avatar.doId == doId:
 				lane = self.avatars.index(avatar)
 				self.d_setToonLane(lane, doId)
-				
+
 	def d_setToonLane(self, lane, doId):
 		self.sendUpdateToAvatarId(doId, 'setToonLane', [lane])
-		
+
 	def announceGenerate(self):
 		DistributedMinigameAI.DistributedMinigameAI.announceGenerate(self)
 		taskMgr.add(self.monitorAvatarPositions, self.cr.uniqueName("monitorAvatarPositions"))
-		
-	def disable(self):
-		DistributedMinigameAI.DistributedMinigameAI.disable(self)
+
+	def delete(self):
+		DistributedMinigameAI.DistributedMinigameAI.delete(self)
 		taskMgr.remove(self.cr.uniqueName("monitorAvatarPositions"))

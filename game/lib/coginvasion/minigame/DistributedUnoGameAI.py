@@ -490,8 +490,8 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         else:
             DistributedMinigameAI.DistributedMinigameAI.givePrizes(self, winnerAvId)
 
-    def disable(self):
-        DistributedMinigameAI.DistributedMinigameAI.disable(self)
+    def delete(self):
+        DistributedMinigameAI.DistributedMinigameAI.delete(self)
         if self.turnSeq:
             self.turnSeq.pause()
             self.turnSeq = None

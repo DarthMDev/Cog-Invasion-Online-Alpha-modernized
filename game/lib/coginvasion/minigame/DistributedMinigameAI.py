@@ -86,6 +86,8 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI, TimerAI.Tim
         return None
 
     def ready(self):
+        if self.readyAvatars == None:
+            return
         self.readyAvatars += 1
         if self.areAllAvatarsReady():
             self.allAvatarsReady()
@@ -121,7 +123,7 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI, TimerAI.Tim
     def d_setTimerTime(self, time):
         self.sendUpdate("setTimerTime", [time])
 
-    def disable(self):
+    def delete(self):
         DistributedObjectAI.DistributedObjectAI.delete(self)
         TimerAI.TimerAI.disable(self)
         self.readyAvatars = None

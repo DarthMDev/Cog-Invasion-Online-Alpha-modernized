@@ -100,7 +100,7 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
         self.setInitialTime(self.loader.getGameTimeOfCurrentLevel())
         DistributedToonFPSGameAI.generate(self)
 
-    def disable(self):
+    def delete(self):
         self.stopTiming()
         self.loader.cleanup()
-        DistributedToonFPSGameAI.disable(self)
+        DistributedToonFPSGameAI.delete(self)

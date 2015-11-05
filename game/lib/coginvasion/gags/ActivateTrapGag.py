@@ -159,6 +159,8 @@ class ActivateTrapGag(TrapGag, LocationGag):
         if self.getLocation():
             x, y, z = self.getLocation()
             self.gag.setPos(x, y, z - 0.45)
+        if not self.gag:
+            self.build()
         self.gag.setScale(GagGlobals.PNT3NEAR0)
         self.gag.reparentTo(render)
         LerpScaleInterval(self.gag, 1.2, Point3(1.7, 1.7, 1.7)).start()
