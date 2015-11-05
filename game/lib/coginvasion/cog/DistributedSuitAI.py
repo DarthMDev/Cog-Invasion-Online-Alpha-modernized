@@ -58,7 +58,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         # This is for handling death.
         self.deathAnim = None
         self.deathTimeLeft = 0
-        self.hitAfterDeath = False
 
     def b_setSuit(self, plan, variant = 0):
         self.d_setSuit(plan, variant)
@@ -188,9 +187,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 if not self.deathAnim:
                     self.deathAnim = currentAnim
                     self.deathTimeLeft = currentAnim.getDeathHoldTime()
-                    taskMgr.doMethodLater(1, self.__handleDeath, 'Handle Suit Defeat')
+                    taskMgr.add(self.__handleDeath, 'Handle Suit Defeat')
                 else:
-                    self.hitAfterDeath = True
+                    delayTime = currentAnim.getDeathHoldTime()
+                    self.deathTimeLeft += int(delayTime / 2)
             else:
                 self.killSuit()
             return Task.done
@@ -199,14 +199,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     def __handleDeath(self, task):
         task.delayTime = 1
         self.deathTimeLeft -= 1
-        
-        # Let's handle new hits.
-        if self.hitAfterDeath:
-            self.hitAfterDeath = False
-            currentAnim = SuitGlobals.getAnimByName(self.anim)
-            if currentAnim:
-                delayTime = currentAnim.getDeathHoldTime()
-                self.deathTimeLeft += int(delayTime / 2)
                 
         # Let's handle when we run out of time.
         if self.deathTimeLeft <= 0:
@@ -361,7 +353,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.requestedBehaviors = None
         self.deathAnim = None
         self.deathTimeLeft = None
-        self.hitAfterDeath = None
 
     def delete(self):
         self.DELETED = True
@@ -386,7 +377,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         del self.track
         del self.deathAnim
         del self.deathTimeLeft
-        del self.hitAfterDeath
         DistributedAvatarAI.delete(self)
         DistributedSmoothNodeAI.delete(self)
 
