@@ -6,7 +6,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
 from direct.actor.Actor import Actor
 from direct.fsm.State import State
-from direct.interval.IntervalGlobal import LerpPosInterval
+from direct.interval.IntervalGlobal import LerpPosInterval, Sequence, Wait, Func
 
 from FlightProjectileInterval import FlightProjectileInterval
 from lib.coginvasion.globals import CIGlobals
@@ -32,6 +32,13 @@ class DistributedEagleSuit(DistributedSuit):
         self.fallingPropProjectile = None
         self.mg = None
         self.flySpeed = 0.0
+        
+    # A work around to prevent the weird standing eagles in the air.
+        
+    def enterNeutral(self, ts=0):
+        self.show()
+        self.timestampAnimTrack = Sequence(Wait(ts), Func(self.loop, "flyNeutral"))
+        self.timestampAnimTrack.start()
 
     def makeStateDict(self):
         self.suitFSM.addState(State('eagleFly', self.enterEagleFly, self.exitEagleFly))
@@ -170,7 +177,7 @@ class DistributedEagleSuit(DistributedSuit):
 
     def announceGenerate(self):
         DistributedSuit.announceGenerate(self)
-        taskMgr.doMethodLater(random.uniform(0, 20), self.__doEagleCry, self.uniqueName("DEagleSuit-doEagleCry"))
+        taskMgr.doMethodLater(random.uniform(5, 25), self.__doEagleCry, self.uniqueName("DEagleSuit-doEagleCry"))
         self.acceptHit()
 
     def disable(self):

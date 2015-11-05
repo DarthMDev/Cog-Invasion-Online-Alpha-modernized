@@ -69,18 +69,19 @@ class DistributedEagleSuitAI(DistributedSuitAI):
 
         if not self.getMinigame():
             self.notify.error("Tried to spawn before self.mg was set!")
-
+        
+        self.b_setAnimState('flyNeutral')
         point = random.choice(EGG.EAGLE_FLY_POINTS)
         self.setPos(point)
         self.d_setPos(*point)
 
         self.b_setFlySpeed(EGG.ROUND_2_EAGLE_SPEED[self.getMinigame().getRound()])
 
-        self.b_setAnimState('flyNeutral')
         self.createFlyPath()
         self.b_setParent(CIGlobals.SPRender)
 
     def createFlyPath(self):
+        self.b_setAnimState('flyNeutral')
         if self.flyTrack:
             self.ignore(self.flyTrack.getDoneEvent())
             self.flyTrack.pause()
@@ -96,13 +97,16 @@ class DistributedEagleSuitAI(DistributedSuitAI):
         else:
             startIndex = -1
         self.b_setSuitState(5, startIndex, EGG.EAGLE_FLY_POINTS.index(point))
-        self.flyTrack = NPCWalkInterval(self, point,
-            durationFactor = EGG.ROUND_2_EAGLE_SPEED[self.getMinigame().getRound()],
-            startPos = self.getPos(render), fluid = 1, name = self.uniqueName('DEagleSuitAI-flyTrack'))
-        self.flyTrack.setDoneEvent(self.flyTrack.getName())
-        self.acceptOnce(self.flyTrack.getDoneEvent(), self.handleFlyDone)
-        self.flyTrack.start()
-        self.currentFlyPoint = point
+        mgRound = self.getMinigame().getRound()
+        if mgRound:
+            self.flyTrack = NPCWalkInterval(self, point,
+                durationFactor = EGG.ROUND_2_EAGLE_SPEED[mgRound],
+                startPos = self.getPos(render), fluid = 1, name = self.uniqueName('DEagleSuitAI-flyTrack'))
+            self.flyTrack.setDoneEvent(self.flyTrack.getName())
+            self.acceptOnce(self.flyTrack.getDoneEvent(), self.handleFlyDone)
+            self.flyTrack.start()
+            self.currentFlyPoint = point
+        else: return
 
     def handleFlyDone(self):
         self.createFlyPath()

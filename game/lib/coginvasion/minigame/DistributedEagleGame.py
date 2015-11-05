@@ -5,10 +5,9 @@ from panda3d.core import Fog, NodePath
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.interval.IntervalGlobal import Sequence, LerpPosInterval, Func, ProjectileInterval, Wait
+from direct.interval.IntervalGlobal import Sequence, LerpPosInterval, Func, Wait
 from direct.gui.DirectGui import OnscreenText
 from direct.showbase.InputStateGlobal import inputState
-from direct.task import Task
 
 from lib.coginvasion.globals import CIGlobals
 from FlightProjectileInterval import FlightProjectileInterval
@@ -311,6 +310,7 @@ class DistributedEagleGame(DistributedMinigame):
 
 	def load(self):
 		self.hitEagleSfx = base.loadSfx('phase_4/audio/sfx/AA_drop_anvil_miss.mp3')
+		self.hitObstacleSfx = base.loadSfx('phase_4/audio/sfx/MG_cannon_hit_tower.mp3')
 		self.toonOof = base.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_toonHit.mp3')
 		self.cannonMoveSfx = base.loadSfx("phase_4/audio/sfx/MG_cannon_adjust.mp3")
 		self.cannonMoveSfx.setLoop(True)
@@ -348,7 +348,7 @@ class DistributedEagleGame(DistributedMinigame):
 
 	def __handleHitWall(self, entry):
 		self.toonOof.play()
-		self.hitEagleSfx.play()
+		self.hitObstacleSfx.play()
 		self.sendUpdate('missedEagle')
 
 	def playMinigameMusic(self):
@@ -370,6 +370,7 @@ class DistributedEagleGame(DistributedMinigame):
 		self.triggers = None
 		self.toonOof = None
 		self.hitEagleSfx = None
+		self.hitObstacleSfx = None
 		self.cannonMoveSfx = None
 		self.fallSfx = None
 		if self.world:

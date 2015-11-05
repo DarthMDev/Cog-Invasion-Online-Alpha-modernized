@@ -58,6 +58,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         # This is for handling death.
         self.deathAnim = None
         self.deathTimeLeft = 0
+        self.deathTaskName = None
 
     def b_setSuit(self, plan, variant = 0):
         self.d_setSuit(plan, variant)
@@ -173,6 +174,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         prevHealth = self.health
         DistributedAvatarAI.setHealth(self, health)
         messenger.send(self.healthChangeEvent, [health, prevHealth])
+        
+        if not self.isDead() or self.isDead() and self.deathTimeLeft > 0:
+            self.d_announceHealth(0, prevHealth - self.health)
 
     def monitorHealth(self, task):
         if self.health <= 0:
@@ -184,31 +188,29 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             currentAnim = SuitGlobals.getAnimByName(self.anim)
             self.clearTrack()
             if currentAnim:
-                self.track = Sequence(Wait(currentAnim.getDeathHoldTime()), Func(self.killSuit))
-                self.track.start()
-                """
                 if not self.deathAnim:
                     self.deathAnim = currentAnim
                     self.deathTimeLeft = currentAnim.getDeathHoldTime()
-                    taskMgr.add(self.__handleDeath, 'Handle Suit Defeat')
+                    self.deathTaskName = self.uniqueName('__handleDeath')
+                    taskMgr.doMethodLater(1, self.__handleDeath, name = self.deathTaskName)
                 else:
+                    taskMgr.remove(self.deathTaskName)
                     delayTime = currentAnim.getDeathHoldTime()
-                    self.deathTimeLeft += int(delayTime / 2)
-                """
+                    self.deathTimeLeft = (delayTime / 2)
+                    taskMgr.doMethodLater(1, self.__handleDeath, name = self.deathTaskName)
             else:
                 self.killSuit()
             return Task.done
         return Task.cont
     
     def __handleDeath(self, task):
-        task.delayTime = 1
         self.deathTimeLeft -= 1
                 
         # Let's handle when we run out of time.
         if self.deathTimeLeft <= 0:
             self.killSuit()
             return Task.done
-        return Task.cont
+        return Task.again
 
     def handleAvatarDefeat(self, av):
         if av.isDead() and hasattr(self, 'brain'):

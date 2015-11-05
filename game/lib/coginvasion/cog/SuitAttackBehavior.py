@@ -6,7 +6,6 @@
 """
 
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
-from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit import SuitAttacks
 
 from direct.distributed.ClockDelta import globalClockDelta
@@ -29,6 +28,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         self.target = None
         self.canAttack = True
         self.origHealth = None
+        self.isAttacking = False
 
         level = self.suit.getLevel()
         if 1 <= level <= 5:
@@ -46,11 +46,16 @@ class SuitAttackBehavior(SuitHabitualBehavior):
 
     def exit(self):
         SuitHabitualBehavior.exit(self)
+        
+        if hasattr(self, 'isAttacking') and hasattr(self, 'suit'):
+            if self.isAttacking and self.suit:
+                self.suit.d_interruptAttack()
 
     def unload(self):
         SuitHabitualBehavior.exit(self)
         self.avatarsInRange = None
         self.origHealth = None
+        del self.isAttacking
         del self.origHealth
         del self.avatarsInRange
         del self.maxAttacksPerSession
@@ -97,6 +102,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
             self.stopAttacking()
             return
         self.suit.sendUpdate('doAttack', [attackIndex, target.doId, timestamp])
+        self.isAttacking = True
         self.attacksThisSession += 1
         self.attacksDone += 1
 
@@ -122,6 +128,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
     def stopAttacking(self, task = None):
         if hasattr(self, 'suit'):
             self.canAttack = False
+            self.isAttacking = False
             self.origHealth = self.suit.getHealth()
             self.attacksThisSession = 0
             self.avatarsInRange = []
