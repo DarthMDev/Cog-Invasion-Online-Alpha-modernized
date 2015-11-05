@@ -54,6 +54,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.healthChangeEvent = SuitGlobals.healthChangeEvent
         self.animStateChangeEvent = SuitGlobals.animStateChangeEvent
         self.requestedBehaviors = []
+        
+        # This is for handling death.
+        self.deathAnim = None
+        self.deathTimeLeft = 0
 
     def b_setSuit(self, plan, variant = 0):
         self.d_setSuit(plan, variant)
@@ -180,12 +184,28 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             currentAnim = SuitGlobals.getAnimByName(self.anim)
             self.clearTrack()
             if currentAnim:
-                self.track = Sequence(Wait(currentAnim.getDeathHoldTime()), Func(self.killSuit))
-                self.track.start()
+                if not self.deathAnim:
+                    self.deathAnim = currentAnim
+                    self.deathTimeLeft = currentAnim.getDeathHoldTime()
+                    taskMgr.add(self.__handleDeath, 'Handle Suit Defeat')
             else:
                 self.killSuit()
             return Task.done
         return Task.cont
+    
+    def __handleDeath(self, task):
+        task.delayTime = 1
+        if self.anim != self.deathAnim:
+            currentAnim = SuitGlobals.getAnimByName(self.anim)
+            if currentAnim:
+                delayTime = currentAnim.getDeathHoldTime()
+                self.deathTimeLeft += int(delayTime / 2)
+        if self.deathTimeLeft == 0:
+            self.killSuit()
+            return Task.done
+        else:
+            self.deathTimeLeft--
+            return Task.cont
 
     def handleAvatarDefeat(self, av):
         if av.isDead() and hasattr(self, 'brain'):
@@ -332,6 +352,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.healthChangeEvent = None
         self.animStateChangeEvent = None
         self.requestedBehaviors = None
+        self.deathAnim = None
+        self.deathTimeLeft = None
 
     def delete(self):
         self.DELETED = True
@@ -354,6 +376,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         del self.animStateChangeEvent
         del self.requestedBehaviors
         del self.track
+        del self.deathAnim
+        del self.deathTimeLeft
         DistributedAvatarAI.delete(self)
         DistributedSmoothNodeAI.delete(self)
 
