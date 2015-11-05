@@ -54,5 +54,10 @@ class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):
 		taskMgr.add(self.monitorAvatarPositions, self.cr.uniqueName("monitorAvatarPositions"))
 
 	def delete(self):
+        try:
+			self.DistributedRaceGameAI_deleted
+			return
+		except:
+			self.DistributedRaceGameAI_deleted = 1
 		DistributedMinigameAI.DistributedMinigameAI.delete(self)
 		taskMgr.remove(self.cr.uniqueName("monitorAvatarPositions"))

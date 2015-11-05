@@ -148,6 +148,11 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
         base.taskMgr.remove(self.uniqueName('suitSpawner'))
 
     def delete(self):
+        try:
+			self.DistributedDeliveryGameAI_deleted
+			return
+		except:
+			self.DistributedDeliveryGameAI_deleted = 1
         self.stopSuitSpawner()
         for truck in self.trucks:
             truck.requestDelete()
@@ -161,5 +166,4 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
         self.barrelsStolen = None
         self.barrelsDelivered = None
         self.totalBarrels = None
-        print "Deleted DistributedDeliveryGameAI"
         DistributedMinigameAI.delete(self)

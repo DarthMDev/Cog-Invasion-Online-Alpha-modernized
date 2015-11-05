@@ -124,6 +124,11 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI, TimerAI.Tim
         self.sendUpdate("setTimerTime", [time])
 
     def delete(self):
+        try:
+			self.DistributedMinigameGameAI_deleted
+			return
+		except:
+			self.DistributedMinigameGameAI_deleted = 1
         DistributedObjectAI.DistributedObjectAI.delete(self)
         TimerAI.TimerAI.disable(self)
         self.readyAvatars = None

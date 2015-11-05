@@ -101,6 +101,11 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
         DistributedToonFPSGameAI.generate(self)
 
     def delete(self):
+        try:
+			self.DistributedGunGameAI_deleted
+			return
+		except:
+			self.DistributedGunGameAI_deleted = 1
         self.stopTiming()
         self.loader.cleanup()
         DistributedToonFPSGameAI.delete(self)

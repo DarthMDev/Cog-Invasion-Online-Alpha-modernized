@@ -176,6 +176,11 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 		taskMgr.add(self.__eagleSpawner, self.uniqueName("DEagleGameAI-eagleSpawner"))
 
 	def delete(self):
+		try:
+			self.DistributedEagleGameAI_deleted
+			return
+		except:
+			self.DistributedEagleGameAI_deleted = 1
 		self.stopTiming()
 		taskMgr.remove(self.uniqueName("DEagleGameAI-removeAllEagles"))
 		taskMgr.remove(self.uniqueName("DEagleGameAI-gameOver"))
@@ -190,6 +195,6 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 			eagle.requestDelete()
 		del self.eagleId2eagle
 		del self.cannonPositions
-		del self.eagleFlyPoints
 		del self.round
+		del self.avId2score
 		DistributedMinigameAI.delete(self)

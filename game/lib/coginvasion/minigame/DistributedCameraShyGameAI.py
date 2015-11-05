@@ -78,6 +78,11 @@ class DistributedCameraShyGameAI(DistributedMinigameAI):
         DistributedMinigameAI.d_gameOver(self, 1, [0])
 
     def delete(self):
+        try:
+			self.DistributedCameraShyGameAI_deleted
+			return
+		except:
+			self.DistributedCameraShyGameAI_deleted = 1
         del self.availableSpawnPoints
         del self.pictureData
         self.stopTiming()
