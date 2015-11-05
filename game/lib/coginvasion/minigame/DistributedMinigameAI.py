@@ -31,11 +31,11 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI, TimerAI.Tim
         return
 
     def myFinalScore(self, score):
-		avId = self.air.getAvatarIdFromSender()
-		self.finalScoreAvIds.append(avId)
-		self.finalScores.append(score)
-		if len(self.finalScores) == self.numPlayers:
-			self.sendUpdate('finalScores', [self.finalScoreAvIds, self.finalScores])
+        avId = self.air.getAvatarIdFromSender()
+        self.finalScoreAvIds.append(avId)
+        self.finalScores.append(score)
+        if len(self.finalScores) == self.numPlayers:
+            self.sendUpdate('finalScores', [self.finalScoreAvIds, self.finalScores])
 
     def sendHeadPanels(self):
         gender = None
@@ -125,10 +125,10 @@ class DistributedMinigameAI(DistributedObjectAI.DistributedObjectAI, TimerAI.Tim
 
     def delete(self):
         try:
-			self.DistributedMinigameGameAI_deleted
-			return
-		except:
-			self.DistributedMinigameGameAI_deleted = 1
+            self.DistributedMinigameGameAI_deleted
+            return
+        except:
+            self.DistributedMinigameGameAI_deleted = 1
         DistributedObjectAI.DistributedObjectAI.delete(self)
         TimerAI.TimerAI.disable(self)
         self.readyAvatars = None

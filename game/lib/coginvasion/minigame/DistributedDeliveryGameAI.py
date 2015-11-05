@@ -149,10 +149,10 @@ class DistributedDeliveryGameAI(DistributedMinigameAI):
 
     def delete(self):
         try:
-			self.DistributedDeliveryGameAI_deleted
-			return
-		except:
-			self.DistributedDeliveryGameAI_deleted = 1
+            self.DistributedDeliveryGameAI_deleted
+            return
+        except:
+            self.DistributedDeliveryGameAI_deleted = 1
         self.stopSuitSpawner()
         for truck in self.trucks:
             truck.requestDelete()
