@@ -187,6 +187,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 if not self.deathAnim:
                     self.deathAnim = currentAnim
                     self.deathTimeLeft = currentAnim.getDeathHoldTime()
+                    print "Death Time: %s \nDeath Animation: %s" % (str(self.deathTimeLeft), self.deathAnim.getName())
                     taskMgr.add(self.__handleDeath, 'Handle Suit Defeat')
                 else:
                     delayTime = currentAnim.getDeathHoldTime()
