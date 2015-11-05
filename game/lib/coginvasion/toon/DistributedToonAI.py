@@ -450,6 +450,8 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         gag = self.gagMgr.getGagByName(GagGlobals.getGagByID(gag_id))
         dmg = gag.getDamage()
         if obj:
+            obj.b_setHealth(obj.getHealth() - dmg)
+            obj.d_announceHealth(0, dmg)
             if obj.getHealth() <= 0:
                 if gag.getType() == GagType.THROW or gag.getName() == CIGlobals.TNT:
                     obj.b_setAnimState('pie')
@@ -466,8 +468,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                         obj.b_setAnimState('squirt-small')
                 if obj.__class__.__name__ == 'DistributedSuit':
                     self.questManager.cogDefeated(obj)
-            obj.b_setHealth(obj.getHealth() - dmg)
-            obj.d_announceHealth(0, dmg)
 
     def suitKilled(self, avId):
         pass

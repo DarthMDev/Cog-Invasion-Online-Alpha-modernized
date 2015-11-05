@@ -107,7 +107,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             if type(self.anim) == types.IntType:
                 if anim != 44 and anim != 45:
                     self.anim = SuitGlobals.getAnimById(anim).getName()
-                    print "Set anim state to: " + self.anim
                 elif anim == 44:
                     self.anim = 'die'
                 elif anim == 45:
@@ -185,14 +184,17 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             currentAnim = SuitGlobals.getAnimByName(self.anim)
             self.clearTrack()
             if currentAnim:
+                self.track = Sequence(Wait(currentAnim.getDeathHoldTime()), Func(self.killSuit))
+                self.track.start()
+                """
                 if not self.deathAnim:
                     self.deathAnim = currentAnim
                     self.deathTimeLeft = currentAnim.getDeathHoldTime()
-                    print "Death Time: %s \nDeath Animation: %s" % (str(self.deathTimeLeft), self.deathAnim.getName())
                     taskMgr.add(self.__handleDeath, 'Handle Suit Defeat')
                 else:
                     delayTime = currentAnim.getDeathHoldTime()
                     self.deathTimeLeft += int(delayTime / 2)
+                """
             else:
                 self.killSuit()
             return Task.done
