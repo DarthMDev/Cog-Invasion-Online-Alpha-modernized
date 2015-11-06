@@ -105,9 +105,10 @@ class SuitHealBossBehavior(SuitHabitualBehavior):
         
     def shouldStart(self):
         SuitHabitualBehavior.shouldStart(self)
-        if self.suit.getDistance(self.boss) <= self.HEAL_DISTANCE:
-            if not hasattr(self.suit, 'DELETED') and not hasattr(self.boss, 'DELETED'):
-                return self.canHeal
+        if hasattr(self, 'suit') and hasattr(self, 'boss'):
+            if self.suit.getDistance(self.boss) <= self.HEAL_DISTANCE:
+                if not hasattr(self.suit, 'DELETED') and not hasattr(self.boss, 'DELETED'):
+                    return self.canHeal
         return False
         
     def unload(self):
