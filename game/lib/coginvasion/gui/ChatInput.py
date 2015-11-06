@@ -1,8 +1,8 @@
 """
-  
+
   Filename: ChatInput.py
   Created by: blach (04Oct14)
-  
+
 """
 
 from panda3d.core import *
@@ -12,7 +12,7 @@ from direct.fsm import ClassicFSM, State, StateData
 import commands
 
 class ChatInput(DirectObject, StateData.StateData):
-	
+
 	def __init__(self):
 		DirectObject.__init__(self)
 		StateData.StateData.__init__(self, 'chatInputDone')
@@ -40,13 +40,13 @@ class ChatInput(DirectObject, StateData.StateData):
 					'off', 'off')
 		self.fsm.enterInitialState()
 		return
-		
+
 	def enterOff(self):
 		pass
-		
+
 	def exitOff(self):
 		pass
-		
+
 	def enter(self):
 		StateData.StateData.enter(self)
 		# Create the gui for chat input.
@@ -55,7 +55,7 @@ class ChatInput(DirectObject, StateData.StateData):
 		self.chatBx.reparentTo(base.a2dTopLeft)
 		self.chatBx.hide()
 		self.chatBx.setBin('gui-popup', 60)
-		self.chat_btn = DirectButton(text=("", "Chat", "Chat", ""), text_shadow=(0, 0, 0, 1), 
+		self.chat_btn = DirectButton(text=("", "Chat", "Chat", ""), text_shadow=(0, 0, 0, 1),
 									geom=(self.chat_btn_model.find('**/ChtBx_ChtBtn_UP'),
 									self.chat_btn_model.find('**/ChtBx_ChtBtn_DN'),
 									self.chat_btn_model.find('**/ChtBx_ChtBtn_RLVR')), relief=None,
@@ -64,7 +64,7 @@ class ChatInput(DirectObject, StateData.StateData):
 									parent=base.a2dTopLeft, extraArgs=[""])
 		self.chat_btn.setBin('gui-popup', 60)
 		self.fsm.request('idle')
-									
+
 	def exit(self):
 		StateData.StateData.exit(self)
 		if self.chat_btn_model:
@@ -77,13 +77,13 @@ class ChatInput(DirectObject, StateData.StateData):
 			self.chat_btn.destroy()
 			self.chat_btn = None
 		self.disableKeyboardShortcuts()
-		
+
 	def enableKeyboardShortcuts(self):
 		# Enable the shortcuts to open the chat box.
 		for key in self.keyList:
 			self.acceptOnce(key, self.openChatInput, [key])
 			self.acceptOnce("shift-" + key, self.openChatInput, ["shift-" + key.upper()])
-			
+
 	def openChatInput(self, key):
 		if "shift-" in key:
 			shift, keyName = key.split('-')
@@ -91,13 +91,13 @@ class ChatInput(DirectObject, StateData.StateData):
 			if not key:
 				key = keyName.upper()
 		self.fsm.request('input', [key])
-			
+
 	def disableKeyboardShortcuts(self):
 		# Disable the shortcuts to open the chat box.
 		for key in self.keyList:
 			self.ignore(key)
 			self.ignore("shift-" + key)
-			
+
 	def enterInput(self, key):
 		if not self.chatBx:
 			base.localAvatar.disableChatInput()
@@ -107,15 +107,15 @@ class ChatInput(DirectObject, StateData.StateData):
 		self.chatBx.show()
 		self.chatBx.setScale(1.20)
 		self.chatBx.setPos(0.30, 0, -0.245)
-		self.chatBx_close = DirectButton(text=("", "Cancel", "Cancel", ""), text_shadow=(0, 0, 0, 1), 
+		self.chatBx_close = DirectButton(text=("", "Cancel", "Cancel", ""), text_shadow=(0, 0, 0, 1),
 												geom=(self.chat_btn_model.find('**/CloseBtn_UP'),
 												self.chat_btn_model.find('**/CloseBtn_DN'),
 												self.chat_btn_model.find('**/CloseBtn_Rllvr')), relief=None,
 												text_scale=0.0525, text_pos=(0, -0.08), text_fg=(1,1,1,1), parent=self.chatBx,
 												pos=(-0.15, 0, -0.0875), scale=1.05, command=self.fsm.request, extraArgs = ['idle'])
 		self.chatInput = DirectEntry(focus=1, cursorKeys=0, relief=None, geom=None, numLines=3,
-								parent=self.chatBx, pos=(-0.2, 0, 0.11), scale=0.057, command=self.sendChat, 
-								width=8, initialText=key)
+								parent=self.chatBx, pos=(-0.2, 0, 0.11), scale=0.05, command=self.sendChat,
+								width=8.6, initialText=key, backgroundFocus = 0)
 		self.chatBx_send = DirectButton(text=("", "Say It", "Say It", ""), text_shadow=(0, 0, 0, 1),
 									geom=(self.chat_btn_model.find('**/ChtBx_ChtBtn_UP'),
 									self.chat_btn_model.find('**/ChtBx_ChtBtn_DN'),
@@ -126,14 +126,14 @@ class ChatInput(DirectObject, StateData.StateData):
 		self.chatBx_close.setBin('gui-popup', 60)
 		self.chatBx_send.setBin('gui-popup', 60)
 		self.chatInput.setBin('gui-popup', 60)
-									
+
 	def sendChat(self, chat):
 		chat = self.chatInput.get()
 		if hasattr(base, 'localAvatar'):
 			if len(chat) > 0:
 				base.localAvatar.b_setChat(chat)
 		self.fsm.request('idle')
-									
+
 	def exitInput(self):
 		if self.chatBx:
 			self.chatBx.hide()
@@ -146,15 +146,13 @@ class ChatInput(DirectObject, StateData.StateData):
 		if self.chatInput:
 			self.chatInput.destroy()
 			self.chatInput = None
-		
+
 	def enterIdle(self):
 		if self.chat_btn:
 			self.chat_btn.show()
 		self.enableKeyboardShortcuts()
-		
+
 	def exitIdle(self):
 		if self.chat_btn:
 			self.chat_btn.hide()
 		self.disableKeyboardShortcuts()
-		
-		
