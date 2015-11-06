@@ -11,6 +11,7 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 import random
 
 from DistributedMinigameAI import DistributedMinigameAI
+from CameraShyLevelLoaderAI import CameraShyLevelLoaderAI
 
 class DistributedCameraShyGameAI(DistributedMinigameAI):
     notify = directNotify.newCategory("DistributedCameraShyGameAI")
@@ -28,8 +29,20 @@ class DistributedCameraShyGameAI(DistributedMinigameAI):
         self.winnerPrize = 30
         self.loserPrize = 15
         self.availableSpawnPoints = [0, 1, 2, 3, 4]
+        self.levelLoader = CameraShyLevelLoaderAI(self)
 
         self.pictureData = {}
+        
+    def generate(self):
+        self.levelLoader.selectLevel()
+        self.setInitialTime(self.levelLoader.getGameTime())
+        DistributedMinigameAI.generate(self)
+        
+    def d_setLevel(self, levelName):
+        self.sendUpdate('setLevel', [levelName])
+        
+    def getLevel(self):
+        return self.levelLoader.getLevel()
 
     def tookPictureOfToon(self, idOfToon):
         avId = self.air.getAvatarIdFromSender()
@@ -83,6 +96,8 @@ class DistributedCameraShyGameAI(DistributedMinigameAI):
             return
         except:
             self.DistributedCameraShyGameAI_deleted = 1
+        self.levelLoader.cleanup()
+        del self.levelLoader
         del self.availableSpawnPoints
         del self.pictureData
         self.stopTiming()

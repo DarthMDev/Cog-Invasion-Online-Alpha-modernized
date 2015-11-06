@@ -5,13 +5,12 @@
 
 """
 
-from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import *
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from lib.coginvasion.minigame.DistributedToonFPSGameAI import DistributedToonFPSGameAI
+from GunGameGlobals import GameModes
 import GunGameLevelLoaderAI
-from GunGameGlobals import *
 
 class DistributedGunGameAI(DistributedToonFPSGameAI):
     notify = directNotify.newCategory("DistributedGunGameAI")

@@ -10,7 +10,6 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.State import State
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from direct.distributed.ClockDelta import globalClockDelta
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.minigame.GunGameToonFPS import GunGameToonFPS

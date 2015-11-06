@@ -3,9 +3,9 @@
 
 from panda3d.core import CollisionSphere, CollisionNode
 from direct.distributed.DistributedObject import DistributedObject
-from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.gui.DirectGui import DirectButton
-from direct.directnotify.DirectNotify import DirectNotify
+from direct.directnotify.DirectNotifyGlobal import directNotify
+
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 import GroupStation

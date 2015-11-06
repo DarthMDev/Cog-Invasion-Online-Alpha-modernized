@@ -54,7 +54,7 @@ class DistributedGroupStationAI(DistributedObjectAI):
 		return task.cont
 				
 	def isAvatarPresent(self, doId):
-		""" Is the avatar currently in our station? """
+		# The avatar currently in our station?
 		for avatar in self.avatars:
 			if avatar.doId == doId:
 				return True
@@ -67,23 +67,6 @@ class DistributedGroupStationAI(DistributedObjectAI):
 		return self.availableSlots
 		
 	def getAnAvailableSlot(self):
-		slot = 0
-		if 1 in self.slotsAvailable:
-			slot = 0
-		elif 2 in self.slotsAvailable:
-			slot = 1
-		elif 3 in self.slotsAvailable:
-			slot = 2
-		elif 4 in self.slotsAvailable:
-			slot = 3
-		elif 5 in self.slotsAvailable:
-			slot = 4
-		elif 6 in self.slotsAvailable:
-			slot = 5
-		elif 7 in self.slotsAvailable:
-			slot = 6
-		elif 8 in self.slotsAvailable:
-			slot = 7
 		return self.slotsAvailable[0]
 		
 	def appendAvatar(self, doId):

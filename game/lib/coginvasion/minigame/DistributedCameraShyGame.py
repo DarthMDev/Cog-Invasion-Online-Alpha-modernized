@@ -5,21 +5,20 @@
 
 """
 
-from panda3d.core import Point3, Vec3, CompassEffect, NodePath
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.State import State
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpScaleInterval
 from direct.gui.DirectGui import OnscreenText
 from direct.task import Task
-
 import random
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.hood.SkyUtil import SkyUtil
+
 from DistributedMinigame import DistributedMinigame
 from RemoteCameraShyAvatar import RemoteCameraShyAvatar
 from CameraShyFirstPerson import CameraShyFirstPerson
 from CameraShyHeadPanels import CameraShyHeadPanels
+from CameraShyLevelLoader import CameraShyLevelLoader
 
 class DistributedCameraShyGame(DistributedMinigame):
     notify = directNotify.newCategory("DistributedCameraShyGame")
@@ -38,9 +37,6 @@ class DistributedCameraShyGame(DistributedMinigame):
         self.fsm.addState(State('showWinner', self.enterShowWinner, self.exitShowWinner, ['gameOver']))
         self.fsm.getStateNamed('waitForOthers').addTransition('countdown')
         self.fsm.getStateNamed('play').addTransition('announceGameOver')
-        self.maze = None
-        self.mazeCollModel = None
-        self.spawnPoints = []
         self.remoteAvatars = []
         self.myRemoteAvatar = None
         self.thisPlayerWinsLbl = None
@@ -48,6 +44,12 @@ class DistributedCameraShyGame(DistributedMinigame):
         self.firstPerson = CameraShyFirstPerson(self)
         self.skyUtil = None
         self.pbpText = None
+        
+        self.levelLoader = CameraShyLevelLoader()
+        self.spawnPoints = []
+        
+    def setLevel(self, level):
+        self.levelLoader.setLevel(level)
 
     def generateOtherPlayerGui(self):
         self.headPanels.generateOtherPlayerGui()
@@ -226,42 +228,8 @@ class DistributedCameraShyGame(DistributedMinigame):
         DistributedMinigame.exitPlay(self)
 
     def createWorld(self):
-        self.deleteWorld()
-        self.maze = loader.loadModel("phase_4/models/minigames/maze_1player.bam")
-        self.maze.find('**/maze_walls').setSz(1.5)
-        self.maze.reparentTo(base.render)
-        self.mazeCollModel = loader.loadModel("phase_4/models/minigames/maze_1player_collisions.egg")
-        self.mazeCollModel.reparentTo(base.render)
-        self.mazeCollModel.hide()
-        self.mazeCollModel.setTransparency(1)
-        self.mazeCollModel.setColorScale(1, 1, 1, 0)
-        for node in self.mazeCollModel.findAllMatches('**'):
-            node.setSz(1.5)
-        self.sky = loader.loadModel("phase_3.5/models/props/TT_sky.bam")
-        self.skyUtil = SkyUtil()
-        self.skyUtil.startSky(self.sky)
-        self.sky.reparentTo(base.camera)
-        ce = CompassEffect.make(NodePath(), CompassEffect.PRot | CompassEffect.PZ)
-        self.sky.node().setEffect(ce)
-        self.spawnPoints.append((Point3(0, 0, 0), Vec3(0, 0, 0)))
-        self.spawnPoints.append((Point3(-23.89, 18.58, 0.00), Vec3(90.00, 0.00, 0.00)))
-        self.spawnPoints.append((Point3(-23.89, 6.30, 0.00), Vec3(0.00, 0.00, 0.00)))
-        self.spawnPoints.append((Point3(23.78, 6.30, 0.00), Vec3(0.00, 0.00, 0.00)))
-        self.spawnPoints.append((Point3(8.12, -17.79, 0.00), Vec3(270.00, 0.00, 0.00)))
-
-    def deleteWorld(self):
-        if self.maze:
-            self.maze.removeNode()
-            self.maze = None
-        if self.mazeCollModel:
-            self.mazeCollModel.removeNode()
-            self.mazeCollModel = None
-        if self.skyUtil:
-            self.skyUtil.stopSky()
-            self.skyUtil = None
-        if self.sky:
-            self.sky.removeNode()
-            self.sky = None
+        self.levelLoader.load()
+        self.spawnPoints = self.levelLoader.getSpawnPoints()
 
     def pickSpawnPoint(self):
         return random.choice(self.spawnPoints)
@@ -301,6 +269,7 @@ class DistributedCameraShyGame(DistributedMinigame):
             del self.myRemoteAvatar
         self.firstPerson.cleanup()
         del self.firstPerson
-        self.deleteWorld()
+        self.levelLoader.cleanup()
+        del self.levelLoader
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         DistributedMinigame.disable(self)

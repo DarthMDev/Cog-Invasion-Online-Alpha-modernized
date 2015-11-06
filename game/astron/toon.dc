@@ -423,6 +423,7 @@ dclass DistributedCameraShyGame : DistributedMinigame {
   tookPictureOfMe(uint32);
   generateOtherPlayerGui() broadcast;
   updateOtherPlayerHead(uint32, uint32, int8) broadcast;
+  setLevel(string) broadcast ram;
 };
 
 dclass DistributedEagleGame : DistributedMinigame {
