@@ -53,7 +53,7 @@ class SuitCallInBackupBehavior(SuitHabitualBehavior):
             self.backupAvailable = True
         
     def __spawnBackupGroup(self, task):
-        if hasattr(self.suit, 'DELETED'):
+        if not hasattr(self, 'suit') or hasattr(self.suit, 'DELETED'):
             return Task.done
         mgr = self.suit.getManager()
         if mgr.isCogCountFull() or mgr.suits == None:

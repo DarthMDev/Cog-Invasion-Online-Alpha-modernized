@@ -21,20 +21,25 @@ class ThrowGag(Gag):
         self.splatScale = GagGlobals.splatSizes[self.name]
         self.splatColor = splatColor
         self.entities = []
+        
+    def build(self):
+        if not self.gag:
+            Gag.build(self)
+            self.equip()
+            if self.anim and self.gag:
+                self.gag.loop('chan')
+        return self.gag
 
     def start(self):
         super(ThrowGag, self).start()
         self.build()
-        self.equip()
         self.avatar.setPlayRate(self.playRate, 'pie')
         self.avatar.play('pie', fromFrame = 0, toFrame = 45)
-        if self.anim and self.gag: self.gag.play('chan')
 
     def throw(self):
         self.avatar.play('pie', fromFrame = 45, toFrame = 90)
         if not self.gag:
             self.build()
-        self.gag.reparentTo(self.handJoint)
 
     def release(self):
         Gag.release(self)
@@ -50,8 +55,7 @@ class ThrowGag(Gag):
         entity = self.gag
         
         if not entity:
-            self.build()
-            entity = self.gag
+            entity = self.build()
     
         entity.wrtReparentTo(render)
         entity.setHpr(throwPath.getHpr(render))
