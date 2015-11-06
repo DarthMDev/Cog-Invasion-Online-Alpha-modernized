@@ -6,9 +6,11 @@
 """
 
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
+from lib.coginvasion.cog.SuitType import SuitType
 from lib.coginvasion.suit import SuitAttacks
 
 from direct.distributed.ClockDelta import globalClockDelta
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.task.Task import Task
 import random, operator
 
@@ -29,6 +31,8 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         self.canAttack = True
         self.origHealth = None
         self.isAttacking = False
+        
+        self.suitAttackTurretTrack = None
 
         level = self.suit.getLevel()
         if 1 <= level <= 5:
@@ -50,6 +54,10 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         if hasattr(self, 'isAttacking') and hasattr(self, 'suit'):
             if self.isAttacking and self.suit:
                 self.suit.d_interruptAttack()
+                
+                if self.suitAttackTurretTrack:
+                    self.suitAttackTurretTrack.pause()
+                    self.suitAttackTurretTrack = None
 
     def unload(self):
         SuitHabitualBehavior.exit(self)
@@ -63,6 +71,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         del self.attacksDone
         del self.target
         del self.canAttack
+        del self.suitAttackTurretTrack
 
     def startAttacking(self, task = None):
         if hasattr(self.suit, 'DELETED') or not hasattr(self, 'attacksThisSession'):
@@ -102,6 +111,36 @@ class SuitAttackBehavior(SuitHabitualBehavior):
             self.stopAttacking()
             return
         self.suit.sendUpdate('doAttack', [attackIndex, target.doId, timestamp])
+        
+        # Let's handle when we're attacking a turret.
+        if target.__class__.__name__ == 'DistributedPieTurretAI':
+            distance = self.suit.getDistance(target)
+            speed = 50.0
+            
+            if attack == 'glowerpower':
+                speed = 100.0
+            
+            timeUntilRelease = distance / speed
+            if attack != 'glowerpower':
+                if self.suit.getSuit()[0].getSuitType() == SuitType.C:
+                    timeUntilRelease += 2.2
+                else:
+                    timeUntilRelease += 3.0
+            else:
+                timeUntilRelease += 1.0
+            turretPos = target.getPos(render)
+            hp = int(self.suit.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors[attack])
+            self.suitAttackTurretTrack = Sequence(
+                Wait(timeUntilRelease),
+                Func(
+                    self.damageTurret,
+                    target,
+                    turretPos,
+                    hp
+                )
+            )
+            self.suitAttackTurretTrack.start()
+        
         self.isAttacking = True
         self.attacksThisSession += 1
         self.attacksDone += 1
@@ -121,6 +160,14 @@ class SuitAttackBehavior(SuitHabitualBehavior):
 
         if task:
             return Task.done
+        
+    def damageTurret(self, target, position, hp):
+        if not target.isEmpty():
+            if (target.getPos(render) - position).length() <= 1:
+                if not target.isDead():
+                    target.b_setHealth(target.getHealth() - hp)
+                    target.d_announceHealth(0, hp)
+                    self.suit.d_handleWeaponTouch()
 
     def __doAttackCooldown(self, task):
         self.canAttack = True

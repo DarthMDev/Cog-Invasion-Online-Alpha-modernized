@@ -13,7 +13,6 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.shop.ItemType import ItemType
 from panda3d.core import Vec4, TransparencyAttrib
 from direct.task.Task import Task
-from lib.coginvasion.gags.GagGlobals import gagIds
 
 GRAYED_OUT_COLOR = Vec4(0.25, 0.25, 0.25, 1)
 NORMAL_COLOR = Vec4(1, 1, 1, 1)

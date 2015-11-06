@@ -63,6 +63,7 @@ class Suit(Avatar):
             State('die', self.enterDie, self.exitDie),
             State('win', self.enterWin, self.exitWin),
             State('attack', self.enterAttack, self.exitAttack),
+            State('flail', self.enterFlail, self.exitFlail),
             State('flyDown', self.enterFlyDown, self.exitFlyDown),
             State('flyAway', self.enterFlyAway, self.exitFlyAway),
             State('flyNeutral', self.enterFlyNeutral, self.exitFlyNeutral),
@@ -116,6 +117,12 @@ class Suit(Avatar):
         self.exitTimestampAnimTrack()
         self.exitGeneral()
         self.enableShadowRay()
+        
+    def enterFlail(self, ts = 0):
+        self.pingpong('flail', fromFrame = 30, toFrame = 35)
+        
+    def exitFlail(self):
+        self.stop()
 
     def exitTimestampAnimTrack(self):
         if self.timestampAnimTrack:
@@ -157,7 +164,9 @@ class Suit(Avatar):
 
     def handleWeaponTouch(self):
         if hasattr(self, 'suitAttackState'):
-            self.suitAttackState.currentAttack.handleWeaponTouch()
+            currentAttack = self.suitAttackState.currentAttack
+            if hasattr(currentAttack, 'handleWeaponTouch'):
+                currentAttack.handleWeaponTouch()
 
     def enterFlyNeutral(self, ts = 0):
         self.disableRay()

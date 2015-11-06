@@ -16,8 +16,8 @@ class BattleShop(Shop):
         Shop.__init__(self, distShop, doneEvent)
         self.distShop.addItem('Whole Cream \nPie', ItemType.UPGRADE, 200, 'phase_3.5/maps/cannon-icon.png', upgradeID = 0, maxUpgrades = 1)
         self.distShop.addItem('Whole Fruit \nPie', ItemType.UPGRADE, 150, 'phase_3.5/maps/cannon-icon.png', upgradeID = 1, maxUpgrades = 1)
-        self.distShop.addItem('Birthday Cake', ItemType.UPGRADE, 500, 'phase_3.5/maps/cannon-icon.png', upgradeID = 2, maxUpgrades = 1)
-        self.distShop.addItem('Wedding Cake', ItemType.UPGRADE, 750, 'phase_3.5/maps/cannon-icon.png', upgradeID = 3, maxUpgrades = 1)
+        #self.distShop.addItem('Birthday Cake', ItemType.UPGRADE, 500, 'phase_3.5/maps/cannon-icon.png', upgradeID = 2, maxUpgrades = 1)
+        #self.distShop.addItem('Wedding Cake', ItemType.UPGRADE, 750, 'phase_3.5/maps/cannon-icon.png', upgradeID = 3, maxUpgrades = 1)
         self.distShop.addItem('+20 Laff', ItemType.HEAL, 100, 'phase_3.5/maps/ice-cream-cone.png', heal = 20, healCooldown = 5, showTitle = True)
         self.items = self.distShop.getItems()
 

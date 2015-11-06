@@ -85,6 +85,9 @@ class DistributedPieTurretManager(DistributedObject):
             text_pos = (0, -0.01),
             parent = base.a2dBottomRight
         )
+        
+        if base.localAvatar.getPUInventory()[0]:
+            self.setGag(base.localAvatar.getPUInventory()[1])
 
     def handleMakeTurretBtn(self):
         self.makeTurretBtn.destroy()

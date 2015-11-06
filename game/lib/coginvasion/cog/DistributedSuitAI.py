@@ -232,7 +232,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if not weapon in ["pickpocket", "fountainpen", "hangup", "buzzword", "razzledazzle",
                         "jargon", "mumbojumbo", 'doubletalk', 'schmooze', 'fingerwag', 'filibuster']:
             self.d_handleWeaponTouch()
-        dmg = int(self.maxHealth / SuitAttacks.SuitAttackDamageFactors[weapon])
+        dmg = int(self.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors[weapon])
+        
+        # Temporary way to nerf VP to Level 12 damage.
+        if self.suitPlan.getName() == SuitGlobals.VicePresident:
+            dmg = int(200 / SuitAttacks.SuitAttackDamageFactors[weapon])
+        
         toon = self.air.doId2do.get(avId, None)
         if toon:
             hp = toon.getHealth() - dmg

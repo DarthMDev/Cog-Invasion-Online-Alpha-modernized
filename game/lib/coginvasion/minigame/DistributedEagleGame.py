@@ -229,6 +229,7 @@ class DistributedEagleGame(DistributedMinigame):
 		else:
 			camera.reparentTo(base.localAvatar)
 		camera.setPos(0.0, -14.75, 6.33)
+		camera.setHpr(0, 0, 0)
 		camera.setP(356.82)
 
 	def enterPlay(self):
