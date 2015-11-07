@@ -53,7 +53,7 @@ class Launcher:
     notify = directNotify.newCategory("Launcher")
     appTitle = "Cog Invasion Launcher"
     loginServer_port = 7033
-    Server_host = "s://gameserver.coginvasion.com"
+    Server_host = "s://127.0.0.1"
     timeout = 2000
     version = 1.2
     helpVideoLink = "http://download.coginvasion.com/videos/ci_launcher_crash_help.mp4"
@@ -348,6 +348,13 @@ class Launcher:
     def enterConnect(self):
         self.connectingLbl = canvas.create_text(287, 210, text = "Connecting...", fill = "white")
         self.tk.update()
+        self.channel.preserveStatus()
+        self.channel.beginConnectTo(DocumentSpec(self.Server_host + ":" + str(self.loginServer_port))
+        spawnTask(name = 'connect-to-server',
+                     callback = self.httpConnectCallback,
+                     extraArgs = [ch, serverList, serverIndex + 1,
+                                  successCallback, successArgs,
+                                  failureCallback, failureArgs])
         self.Connection = self.cMgr.openTCPClientConnection(self.Server_host, self.loginServer_port, self.timeout)
         self.noConnectionDialog = None
         if self.Connection:

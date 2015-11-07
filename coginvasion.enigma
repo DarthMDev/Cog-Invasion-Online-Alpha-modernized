@@ -16,14 +16,14 @@
     <EnableLogging>False</EnableLogging>
   </KeysGenerator>
   <Input>
-    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\coginvasion.exe</FileName>
+    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\tools\coginvasion.exe</FileName>
     <ProductName>Cog Invasion Online</ProductName>
     <VersionInfo/>
     <ProductInfoFromResources>False</ProductInfoFromResources>
   </Input>
   <Output>
     <SameAsInputFile>True</SameAsInputFile>
-    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\coginvasion.exe</FileName>
+    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\tools\coginvasion.exe</FileName>
     <DoNotBackup>False</DoNotBackup>
   </Output>
   <AdvanceInput>
