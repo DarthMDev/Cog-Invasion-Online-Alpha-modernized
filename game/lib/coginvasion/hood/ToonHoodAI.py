@@ -7,10 +7,7 @@
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.hood.HoodAI import HoodAI
-from lib.coginvasion.shop.DistributedGagShopAI import DistributedGagShopAI
-from lib.coginvasion.suit.DistributedSuitManagerAI import DistributedSuitManagerAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from lib.coginvasion.suit.DistributedCogStationAI import DistributedCogStationAI
 from lib.coginvasion.battle.DistributedBattleTrolleyAI import DistributedBattleTrolleyAI
 from lib.coginvasion.suit import CogBattleGlobals
 

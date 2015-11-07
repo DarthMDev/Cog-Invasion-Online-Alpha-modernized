@@ -8,6 +8,7 @@
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
 from lib.coginvasion.cog.SuitType import SuitType
 from lib.coginvasion.suit import SuitAttacks
+from lib.coginvasion.cog import SuitGlobals
 
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
@@ -130,6 +131,10 @@ class SuitAttackBehavior(SuitHabitualBehavior):
                 timeUntilRelease += 1.0
             turretPos = target.getPos(render)
             hp = int(self.suit.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors[attack])
+            
+            if self.suit.suitPlan.getName() == SuitGlobals.VicePresident:
+                hp = int(200 / SuitAttacks.SuitAttackDamageFactors[attack])
+            
             self.suitAttackTurretTrack = Sequence(
                 Wait(timeUntilRelease),
                 Func(

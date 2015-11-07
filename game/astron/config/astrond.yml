@@ -24,8 +24,8 @@ uberdogs:
 roles:
     - type: clientagent
       bind: 0.0.0.0:7032
-      version: "ver-0.9.8"
-      manual_dc_hash: 0x13606d16
+      version: "ver-1.0.3"
+      manual_dc_hash: 0x17eb73ba
       client:
        relocate: true
        add_interest: enabled

@@ -41,7 +41,6 @@ from lib.coginvasion.suit import DistributedDroppableCollectableJellybean/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableHealth/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableIceCream/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableBackpack/AI
-from lib.coginvasion.suit import DistributedCogStation/AI
 from lib.coginvasion.suit import DistributedCogBattle/AI
 from lib.coginvasion.hood import DistributedTreasure/AI
 from lib.coginvasion.hood import DistributedTTCTreasure/AI
