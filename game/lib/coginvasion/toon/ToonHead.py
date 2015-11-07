@@ -117,7 +117,9 @@ class ToonHead(Actor.Actor):
                 'smooch' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_smooch.bam',
                 'conked' : 'phase_3.5/models/char/tt_a_chr_' + headtype + '_head_conked.bam',
                 'sound' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_shout.bam',
-                'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_sprinkle-dust.bam'}, 'head')
+                'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_sprinkle-dust.bam',
+                'start-sit' : 'phase_4/models/char/tt_a_chr_' + headtype + '_head_intoSit.bam',
+                'sit' : 'phase_4/models/char/tt_a_chr_' + headtype + '_head_sit.bam'}, 'head')
             _pupilL = self.findAllMatches('**/def_left_pupil')
             _pupilR = self.findAllMatches('**/def_right_pupil')
         if headtype == "1":

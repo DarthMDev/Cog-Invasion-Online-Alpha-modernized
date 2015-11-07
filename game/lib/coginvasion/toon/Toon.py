@@ -543,7 +543,9 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             'smooch' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_smooch.bam',
                             'conked' : 'phase_3.5/models/char/tt_a_chr_' + legtype + '_shorts_legs_conked.bam',
                             'sound' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_shout.bam',
-                            'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_sprinkle-dust.bam'}, 'legs')
+                            'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_sprinkle-dust.bam',
+                            'start-sit' : 'phase_4/models/char/tt_a_chr_' + legtype + '_shorts_legs_intoSit.bam',
+                            'sit' : 'phase_4/models/char/char/tt_a_chr_' + legtype + '_shorts_legs_sit.bam'}, 'legs')
         self.findAllMatches('**/boots_long').stash()
         self.findAllMatches('**/boots_short').stash()
         self.findAllMatches('**/shoes').stash()
@@ -589,7 +591,9 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             'smooch' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_smooch.bam',
                             'conked' : 'phase_3.5/models/char/tt_a_chr_' + torsotype + '_torso_conked.bam',
                             'sound' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_shout.bam',
-                            'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_sprinkle-dust.bam'}, 'torso')
+                            'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_sprinkle-dust.bam',
+                            'start-sit' : 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_intoSit.bam',
+                            'sit' : 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_sit.bam'}, 'torso')
 
     def generateHead(self, pat=0):
         gender = self.getGender()

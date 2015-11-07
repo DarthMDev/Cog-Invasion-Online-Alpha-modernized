@@ -23,7 +23,7 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
          State.State('arriving', self.enterArriving, self.exitArriving)], 'wait', 'off')
         self.fsm.enterInitialState()
         self.hoodIndex = hoodIndex
-        self.slots = [0, 1, 2, 3]
+        self.slots = [0, 1, 2, 3, 4, 5, 6, 7]
         self.slotTakenByAvatarId = {}
         self.state = 'off'
         self.stateTimestamp = 0
