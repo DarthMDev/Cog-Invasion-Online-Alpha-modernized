@@ -501,7 +501,6 @@ class Launcher:
         os.environ['GAME_SERVER'] = self.gameServer
         os.environ['GAME_VERSION'] = self.gameVersion
         os.environ['LOGIN_TOKEN'] = self.loginToken
-        os.environ['CODE_PASSWORD'] = self.codePassword
         os.system("start coginvasion.exe")
         self.launcherFSM.requestFinalState()
         sys.exit()
