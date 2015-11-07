@@ -85,8 +85,8 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.tier = -1
         self.friends = []
         self.tutDone = 0
-        self.hoodsDiscovered = []
-        self.teleportAccess = []
+        self.hoodsDiscovered = [1000, 2000, 3000, 4000, 5000, 9000]
+        self.teleportAccess = [1000, 2000, 3000, 4000, 5000, 9000]
         self.lastHood = 0
         return
 
