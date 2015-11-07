@@ -41,6 +41,7 @@ class DistributedPieTurretManager(DistributedObject):
         turret = self.cr.doId2do.get(turretId)
         if turret != None:
             self.myTurret = turret
+            self.myTurret.b_setGag(self.turretGag)
             self.turretGag = None
             self.makeGui()
             return Task.done
@@ -53,9 +54,6 @@ class DistributedPieTurretManager(DistributedObject):
         self.sendUpdate('requestPlace', [posHpr])
 
     def turretPlaced(self, turretId):
-        turret = self.cr.doId2do.get(turretId)
-        turret.b_setGag(self.turretGag)
-        self.turretGag = None
         base.taskMgr.add(self.__pollTurret, 'DPTM.pollTurret', extraArgs = [turretId], appendTask = True)
 
     def yourTurretIsDead(self):
