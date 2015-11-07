@@ -89,11 +89,10 @@ class SquirtGag(Gag):
                 obj = base.cr.doId2do[key]
                 if obj.__class__.__name__ == "DistributedSuit":
                     if obj.getKey() == avNP.getKey():
-                        if obj.getHealth() > 0:
-                            self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
+                        self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
                 elif obj.__class__.__name__ == "DistributedToon":
                     if obj.getKey() == avNP.getKey():
-                        if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
+                        if obj.getHealth() < obj.getMaxHealth():
                             self.avatar.sendUpdate('toonHitByPie', [obj.doId, self.getID()])
         if base.localAvatar == self.avatar:
             self.splatPos = self.sprayNP.getPos(render)

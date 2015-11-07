@@ -196,7 +196,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 else:
                     taskMgr.remove(self.deathTaskName)
                     delayTime = currentAnim.getDeathHoldTime()
-                    self.deathTimeLeft = (delayTime / 2)
+                    self.deathTimeLeft = delayTime
                     taskMgr.doMethodLater(1, self.__handleDeath, name = self.deathTaskName)
             else:
                 self.killSuit()

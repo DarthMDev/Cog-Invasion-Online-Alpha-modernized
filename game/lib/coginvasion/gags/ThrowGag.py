@@ -107,7 +107,7 @@ class ThrowGag(Gag):
                     self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
             elif obj.__class__.__name__ == "DistributedToon":
                 if obj.getKey() == avNP.getKey():
-                    if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
+                    if obj.getHealth() < obj.getMaxHealth():
                         if obj != self.avatar:
                             self.avatar.sendUpdate('toonHitByPie', [obj.doId, self.getID()])
                         else:

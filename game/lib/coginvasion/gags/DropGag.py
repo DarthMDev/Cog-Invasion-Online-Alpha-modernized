@@ -71,10 +71,9 @@ class DropGag(Gag, LocationGag):
                 obj = base.cr.doId2do[key]
                 if obj.__class__.__name__ == "DistributedSuit":
                     if obj.getKey() == avNP.getKey():
-                        if obj.getHealth() > 0:
-                            self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
-                            self.avatar.b_trapActivate(self.getID(), self.avatar.doId, 0, obj.doId)
-                            hitCog = True
+                        self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
+                        self.avatar.b_trapActivate(self.getID(), self.avatar.doId, 0, obj.doId)
+                        hitCog = True
         gagObj = self.gag
         if hitCog:
             SoundInterval(self.hitSfx, node = self.gag).start()
