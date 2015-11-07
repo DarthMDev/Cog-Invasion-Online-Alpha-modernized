@@ -23,22 +23,26 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         self.flyIval = None
 
     def __healthChange(self, health, prevHealth):
-        if self.suit.isDead() and self.isAirborne:
-            if not self.suit or self.suit.isEmpty():
-                self.exit()
-                return
-            startPos = self.suit.getPos(render)
-            endPos = startPos - (0, 0, 75)
-            self.flyIval.pause()
-            self.suit.d_stopMoveInterval()
-            self.suit.b_setAnimState('flail')
-            self.suit.enableMovement()
-            self.suit.d_startPosInterval(startPos, endPos, 4.0, 'easeIn')
-            self.suit.moveIval = LerpPosInterval(self.suit, duration = 4.0, pos = endPos, startPos = startPos, blendType = 'easeIn')
-            self.suit.moveIval.start()
+        if hasattr(self, 'suit'):
+            if self.suit.isDead() and self.isAirborne:
+                if not self.suit or self.suit.isEmpty():
+                    self.exit()
+                    return
+                startPos = self.suit.getPos(render)
+                endPos = startPos - (0, 0, 75)
+                self.flyIval.pause()
+                self.suit.d_stopMoveInterval()
+                self.suit.b_setAnimState('flail')
+                self.suit.enableMovement()
+                self.suit.d_startPosInterval(startPos, endPos, 4.0, 'easeIn')
+                self.suit.moveIval = LerpPosInterval(self.suit, duration = 4.0, pos = endPos, startPos = startPos, blendType = 'easeIn')
+                self.suit.moveIval.start()
 
     def enter(self):
         SuitHabitualBehavior.enter(self)
+        if not hasattr(self, 'suit') or not self.suit or self.suit.isEmpty():
+            self.exit()
+            return
         self.accept(self.suit.healthChangeEvent, self.__healthChange)
         pathKeys = CIGlobals.SuitSpawnPoints[self.suit.getHood()].keys()
         pathKey = random.choice(pathKeys)
@@ -56,11 +60,11 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
 
     def exit(self):
         SuitHabitualBehavior.exit(self)
-        if not hasattr(self.suit, 'DELETED'):
+        if self.flyIval:
+            self.flyIval.pause()
+            self.flyIval = None
+        if hasattr(self, 'suit') and not hasattr(self.suit, 'DELETED') and self.suit and not self.suit.isEmpty():
             self.ignore(self.suit.healthChangeEvent)
-            if self.flyIval:
-                self.flyIval.pause()
-                self.flyIval = None
             self.standSuit()
 
     def unload(self):
@@ -73,7 +77,8 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         del self.isAirborne
 
     def flyToNewSpot(self, spot):
-        if not self.suit or self.suit.isEmpty():
+        if not hasattr(self, 'suit') or not self.suit or self.suit.isEmpty():
+            self.exit()
             return
         self.isAirborne = True
         endPos = CIGlobals.SuitSpawnPoints[self.suit.getHood()][spot]
@@ -105,7 +110,8 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         self.flyIval.start()
 
     def standSuit(self, withAnim = True):
-        if not self.suit or self.suit.isEmpty():
+        if not hasattr(self, 'suit') or not self.suit or self.suit.isEmpty():
+            self.exit()
             return
         if withAnim:
             self.suit.b_setAnimState('neutral')
