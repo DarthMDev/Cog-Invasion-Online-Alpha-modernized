@@ -24,7 +24,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
 
     def __healthChange(self, health, prevHealth):
         if self.suit.isDead() and self.isAirborne:
-            if not self.suit:
+            if not self.suit or self.suit.isEmpty():
                 self.exit()
                 return
             startPos = self.suit.getPos(render)
@@ -73,6 +73,8 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         del self.isAirborne
 
     def flyToNewSpot(self, spot):
+        if not self.suit or self.suit.isEmpty():
+            return
         self.isAirborne = True
         endPos = CIGlobals.SuitSpawnPoints[self.suit.getHood()][spot]
         self.suit.headsUp(endPos)
@@ -103,6 +105,8 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         self.flyIval.start()
 
     def standSuit(self, withAnim = True):
+        if not self.suit or self.suit.isEmpty():
+            return
         if withAnim:
             self.suit.b_setAnimState('neutral')
         self.isAirborne = False
