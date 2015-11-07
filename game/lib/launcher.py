@@ -53,12 +53,11 @@ class Launcher:
     notify = directNotify.newCategory("Launcher")
     appTitle = "Cog Invasion Launcher"
     loginServer_port = 7033
-    Server_host = "s://127.0.0.1"
+    Server_host = "gameserver.coginvasion.com"
     timeout = 2000
-    version = 1.2
+    version = 1.1
     helpVideoLink = "http://download.coginvasion.com/videos/ci_launcher_crash_help.mp4"
     hashFileLink = "http://download.coginvasion.com/file_info.txt"
-    crtFileLink = "http://download.coginvasion.com/gameserver.crt"
 
     def __init__(self):
         self.tk = base.tkRoot
@@ -69,7 +68,6 @@ class Launcher:
         self.launcherFSM = ClassicFSM('launcher', [State('menu', self.enterMenu, self.exitMenu, ['login', 'updateFiles', 'accCreate']),
             State('fetch', self.enterFetch, self.exitFetch, ['menu']),
             State('validate', self.enterValidate, self.exitValidate, ['fetch']),
-            State('getCRT', self.enterGetCRT, self.exitGetCRT, ['connect']),
             State('connect', self.enterConnect, self.exitConnect, ['validate']),
             State('accCreate', self.enterAccCreate, self.exitAccCreate, ['submitAcc', 'menu']),
             State('submitAcc', self.enterSubmitAcc, self.exitSubmitAcc, ['menu', 'accCreate']),
@@ -81,22 +79,16 @@ class Launcher:
         self.loginUserName = StringVar()
         self.loginPassword = StringVar()
         self.downloadTime = {}
-        self.sslCert = None
 
         # This var is in case the user sent incorrect account info
         # so they don't have to update all their files again.
         self.alreadyUpdated = False
 
-        try:
-            os.remove("libcoginvasion.pyd")
-        except:
-            pass
-
         self.__initConnectionManagers()
         self.checkHasFolder("logs")
         self.checkHasFolder("screenshots")
         self.checkHasFolder("config")
-        self.launcherFSM.request('getCRT')
+        self.launcherFSM.request('connect')
 
     def __initConnectionManagers(self):
         self.cMgr = QueuedConnectionManager()
@@ -115,29 +107,6 @@ class Launcher:
 
     def exitOff(self):
         pass
-
-    def enterGetCRT(self):
-        # We need to download the SSL certificate from the FTP server before connecting.
-        self.notify.info('Downloading certificate...')
-        self.channel.beginGetDocument(DocumentSpec(self.crtFileLink))
-        self.channel.downloadToRam(self.rf)
-        taskMgr.add(self.__downloadCRTFileTask, "dlCRTFileTask")
-
-    def __downloadCRTFileTask(self, task):
-        if self.channel.run():
-            return task.cont
-        data = self.rf.getData()
-        self.__finishedDownloadingCRTFile(data)
-        return task.done
-
-    def __finishedDownloadingCRTFile(self, data):
-        self.sslCert = data
-        self.http.addPreapprovedServerCertificatePem(URLSpec(self.Server_host + ":" + str(self.loginServer_port)), self.sslCert)
-        self.notify.info('Got the certificate, connecting to server.')
-        self.launcherFSM.request('connect')
-
-    def exitGetCRT(self):
-        taskMgr.remove("dlCRTFileTask")
 
     def enterValidate(self):
         self.infoLbl = canvas.create_text(287, 210, text = "Validating...", fill = "white")
@@ -348,13 +317,6 @@ class Launcher:
     def enterConnect(self):
         self.connectingLbl = canvas.create_text(287, 210, text = "Connecting...", fill = "white")
         self.tk.update()
-        self.channel.preserveStatus()
-        self.channel.beginConnectTo(DocumentSpec(self.Server_host + ":" + str(self.loginServer_port))
-        spawnTask(name = 'connect-to-server',
-                     callback = self.httpConnectCallback,
-                     extraArgs = [ch, serverList, serverIndex + 1,
-                                  successCallback, successArgs,
-                                  failureCallback, failureArgs])
         self.Connection = self.cMgr.openTCPClientConnection(self.Server_host, self.loginServer_port, self.timeout)
         self.noConnectionDialog = None
         if self.Connection:

@@ -93,7 +93,7 @@ fileNames = [
 ]
 
 class LoginServer(MiniServer.MiniServer):
-    version = 1.2
+    version = 1.1
 
     def __init__(self, dataFileName = 'astron/databases/astrondb/loginAccData'):
         MiniServer.MiniServer.__init__(self, "localhost", 7033, 402000000, "login")
