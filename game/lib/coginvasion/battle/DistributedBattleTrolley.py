@@ -9,7 +9,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm import ClassicFSM, State
-from direct.interval.IntervalGlobal import LerpPosInterval, LerpHprInterval, LerpQuatInterval, Parallel, Sequence, Wait, Func
+from direct.interval.IntervalGlobal import LerpPosInterval, LerpHprInterval, LerpQuatInterval, ActorInterval, Parallel, Sequence, Wait, Func
 from direct.gui.DirectGui import DirectButton
 
 from lib.coginvasion.globals import CIGlobals
@@ -75,12 +75,14 @@ class DistributedBattleTrolley(DistributedObject):
 
     def enterWait(self, ts = 0):
         self.trolleyCar.setPos(self.TROLLEY_NEUTRAL_POS)
+        self.acceptOnce('entertrolley_sphere', self.__handleTrolleyTrigger)
 
     def exitWait(self):
-        pass
+        self.ignore('entertrolley_sphere')
 
     def enterWaitCountdown(self, ts = 0):
         self.trolleyCar.setPos(self.TROLLEY_NEUTRAL_POS)
+        self.acceptOnce('entertrolley_sphere', self.__handleTrolleyTrigger)
         if self.countdownText:
             self.countdownTrack = Sequence()
             for i in range(10):
@@ -89,6 +91,7 @@ class DistributedBattleTrolley(DistributedObject):
             self.countdownTrack.start()
 
     def exitWaitCountdown(self):
+        self.ignore('entertrolley_sphere')
         if hasattr(self, 'countdownTrack'):
             self.countdownTrack.finish()
             del self.countdownTrack
@@ -104,7 +107,6 @@ class DistributedBattleTrolley(DistributedObject):
 
     def exitArriving(self):
         self.moveTrack.finish()
-        self.acceptOnce('entertrolley_sphere', self.__handleTrolleyTrigger)
         del self.moveTrack
 
     def enterLeaving(self, ts = 0):
@@ -138,18 +140,32 @@ class DistributedBattleTrolley(DistributedObject):
         toon.stopSmooth()
         if toon:
             toon.wrtReparentTo(self.trolleyCar)
-            slotPos = self.STAND_POSITIONS[index]
-            toon.headsUp(slotPos)
-            track = Sequence(
-             Func(toon.setAnimState, 'run'),
-             LerpPosInterval(
-              toon,
-              duration = 1.0,
-              pos = slotPos,
-              startPos = toon.getPos()
-             ),
-             Func(toon.setAnimState, 'neutral'),
-             Func(toon.setHpr, 90, 0, 0)
+            if index <= 3:
+                slotPos = Point3(-5, -4.5 + index * 3, 1.4)
+                sitStartDuration = toon.getDuration('start-sit')
+                toon.headsUp(slotPos)
+                track = Sequence(
+                    Func(toon.setAnimState, 'run'),
+                    LerpPosInterval(toon, 0.75, Point3(-5, -4.5 + index * 3, 1.4)), 
+                    LerpHprInterval(toon, 0.25, Point3(90, 0, 0)),
+                    Parallel(
+                        Sequence(Wait(sitStartDuration * 0.25), 
+                            LerpPosInterval(toon, sitStartDuration * 0.25, Point3(-3.9, -4.5 + index * 3, 3.0)), 
+                            ActorInterval(toon, 'start-sit')), 
+                        Func(toon.loop, 'sit')))
+            else:
+                slotPos = self.STAND_POSITIONS[index]
+                toon.headsUp(slotPos)
+                track = Sequence(
+                 Func(toon.setAnimState, 'run'),
+                 LerpPosInterval(
+                  toon,
+                  duration = 1.0,
+                  pos = slotPos,
+                  startPos = toon.getPos()
+                 ),
+                 Func(toon.setAnimState, 'neutral'),
+                 Func(toon.setHpr, 90, 0, 0)
             )
             track.start()
         if avId == base.localAvatar.doId:
@@ -207,17 +223,29 @@ class DistributedBattleTrolley(DistributedObject):
         endPosWrtRender = toon.getPos(render)
         toon.setPos(currToonPos)
         toon.headsUp(self.trolleyCar, endPos)
-        track = Sequence(
-         Func(toon.setAnimState, 'run'),
-         LerpPosInterval(
-          toon,
-          duration = 1.0,
-          pos = endPosWrtRender,
-          startPos = currToonPos
-         ),
-         Func(toon.setAnimState, 'neutral'),
-         Func(toon.startSmooth)
-        )
+        if index <= 3:
+            track = Sequence(Parallel(
+                ActorInterval(toon, 'start-sit', startTime=1, endTime=0.0), 
+                Sequence(Wait(0.5), 
+                    LerpPosInterval(toon, 0.25, 
+                    Point3(-5, -4.5 + index * 3, 1.4), other=self.trolleyCar))), 
+                    Func(toon.setAnimState, 'run'), 
+                    LerpPosInterval(toon, 1, Point3(21 - index * 3, -5, 0.02), other=self.trolleyStation),
+                    Func(toon.setAnimState, 'neutral'),
+                    Func(toon.startSmooth),
+                name=toon.uniqueName('emptyTrolley'), autoPause=1)
+        else:
+            track = Sequence(
+             Func(toon.setAnimState, 'run'),
+             LerpPosInterval(
+              toon,
+              duration = 1.0,
+              pos = endPosWrtRender,
+              startPos = currToonPos
+             ),
+             Func(toon.setAnimState, 'neutral'),
+             Func(toon.startSmooth)
+            )
         if avId == base.localAvatar.doId:
             self.localAvOnTrolley = False
             track.append(Func(self.__hoppedOffTrolley))

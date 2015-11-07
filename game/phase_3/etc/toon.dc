@@ -167,7 +167,7 @@ dclass DistributedToon : DistributedAvatar {
   trapActivate(uint8 gagId, uint32 avId, uint8 entityId, uint32 suitId) broadcast ownsend;
   setDropLoc(uint8 gagId, int16/10, int16/10, int16/10) clsend broadcast;
   setSplatPos(uint8 gagId, int16/10, int16/10, int16/10) ownsend broadcast;
-  gagCollision(uint8 gagId) broadcast;
+  gagCollision(uint8 gagId) broadcast clsend;
   unEquip() broadcast ram ownsend airecv;
   equip(uint8 gag_id) broadcast ram ownsend airecv;
   handleSuitAttack(uint8 attack_id, uint32 suit_id) broadcast ownsend;

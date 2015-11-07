@@ -44,6 +44,7 @@ class TNT(TossTrapGag):
 
     def onCollision(self, entry):
         TossTrapGag.onCollision(self, entry)
+        base.localAvatar.b_gagCollision(self.getID())
         self.doCollision()
 
     def doCollision(self):
