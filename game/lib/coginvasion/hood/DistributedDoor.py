@@ -18,6 +18,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
     EXT_STANDARD = 1
     INT_HQ = 2
     EXT_HQ = 3
+    EXT_GAGSHOP = 4
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
@@ -80,7 +81,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         elif self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ:
             num = -110
         if (self.getDoorIndex() == 1 and not self.doorType == self.EXT_HQ or
-        self.getDoorIndex() == 0 and self.doorType == self.EXT_HQ):
+        self.getDoorIndex() == 0 and self.doorType in [self.EXT_HQ, self.EXT_GAGSHOP]):
             return num - 180
         else:
             return num
@@ -92,7 +93,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         elif self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ:
             num = 0
         if (self.getDoorIndex() == 1 and not self.doorType == self.EXT_HQ or
-        self.getDoorIndex() == 0 and self.doorType == self.EXT_HQ):
+        self.getDoorIndex() == 0 and self.doorType in [self.EXT_HQ, self.EXT_GAGSHOP]):
             return num - 180
         else:
             return num
@@ -101,21 +102,22 @@ class DistributedDoor(DistributedObject.DistributedObject):
         num = 0
         if self.getDoorType() == self.INT_STANDARD or self.getDoorType() == self.INT_HQ:
             num = -70
-        elif self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ:
+        elif self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ or self.getDoorType() == self.EXT_GAGSHOP:
             num = 110
         if (self.getDoorIndex() == 1 and not self.doorType == self.EXT_HQ or
-        self.getDoorIndex() == 0 and self.doorType == self.EXT_HQ):
+        self.getDoorIndex() == 0 and self.doorType in [self.EXT_HQ, self.EXT_GAGSHOP]):
             return num - 180
         else:
             return num
 
     def getRightDoorClosedH(self):
+        num = 0
         if self.getDoorType() == self.INT_STANDARD or self.getDoorType() == self.INT_HQ:
             num = 180
-        elif self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ:
+        elif self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ or self.getDoorType() == self.EXT_GAGSHOP:
             num = 0
         if (self.getDoorIndex() == 1 and not self.doorType == self.EXT_HQ or
-        self.getDoorIndex() == 0 and self.doorType == self.EXT_HQ):
+        self.getDoorIndex() == 0 and self.doorType in [self.EXT_HQ, self.EXT_GAGSHOP]):
             return num - 180
         else:
             return num
@@ -243,7 +245,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
 
     def findBuilding(self):
         bldg = None
-        if self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ:
+        if self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_HQ or self.getDoorType() == self.EXT_GAGSHOP:
             bldg = self.cr.playGame.hood.loader.geom.find('**/??' + str(self.getBlock()) + ':*_landmark_*_DNARoot;+s')
         elif self.getDoorType() == self.INT_STANDARD:
             bldg = render.find('**/leftDoor;+s').getParent()
@@ -253,7 +255,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
 
     def findDoorNodePath(self):
         doorNode = None
-        if self.getDoorType() == self.EXT_STANDARD:
+        if self.getDoorType() in [self.EXT_STANDARD, self.EXT_GAGSHOP]:
             doorNode = self.building.find('**/*door_origin')
         elif self.getDoorType() == self.EXT_HQ:
             doorNode = self.building.find('**/door_origin_' + str(self.doorIndex))
@@ -275,7 +277,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         return foundNode
 
     def getTriggerName(self):
-        if self.getDoorType() == self.INT_STANDARD or self.getDoorType() == self.EXT_STANDARD:
+        if self.getDoorType() == self.INT_STANDARD or self.getDoorType() == self.EXT_STANDARD or self.getDoorType() == self.EXT_GAGSHOP:
             return 'door_trigger_' + str(self.getBlock())
         elif self.getDoorType() == self.EXT_HQ:
             return 'door_trigger_' + str(self.doorIndex)

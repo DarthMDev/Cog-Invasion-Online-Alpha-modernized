@@ -33,7 +33,7 @@ class Shop(StateData):
         self.window = None
         self.upgradesPurchased = False
         self.originalSupply = {}
-        
+
         # This handles heal cooldowns.
         self.healCooldowns = {}
         self.newHealCooldowns = {}
@@ -48,11 +48,11 @@ class Shop(StateData):
         messenger.send(self.doneEvent)
         base.localAvatar.setMoney(self.avMoney)
         base.localAvatar.setHealth(self.origHealth)
-        
+
         for healCooldown in self.newHealCooldowns.keys():
             if self.healCooldowns.get(healCooldown):
                 del self.healCooldowns[healCooldown]
-        
+
     def __purchaseUpgradeItem(self, values):
         upgradeID = values.get('upgradeID')
         upgrades = base.localAvatar.getPUInventory()[0]
@@ -66,7 +66,7 @@ class Shop(StateData):
             base.localAvatar.getMyBattle().getTurretManager().setGag(upgradeID)
             base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
             base.localAvatar.setPUInventory([upgrades, upgradeID])
-            
+
     def __purchaseGagItem(self, gag, values):
         name = gag.getName()
         supply = self.backpack.getSupply(name)
@@ -80,7 +80,7 @@ class Shop(StateData):
             base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
             self.window.showInfo('Purchased a %s' % (name), duration = 3)
             base.localAvatar.setGagAmmo(gag.getID(), supply + 1)
-            
+
     def __purchaseHealItem(self, item, values):
         health = base.localAvatar.getHealth()
         maxHealth = base.localAvatar.getMaxHealth()
@@ -95,7 +95,7 @@ class Shop(StateData):
             self.newHealCooldowns.update(healDict)
             base.taskMgr.doMethodLater(1, self.__doHealCooldown, item, extraArgs = [item], appendTask = True)
             base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
-            
+
     def __doHealCooldown(self, item, task):
         cooldownData = self.getCooldown(item)
         if cooldownData:
@@ -112,11 +112,11 @@ class Shop(StateData):
                 return Task.done
             return Task.again
         return Task.done
-        
+
     def getCooldown(self, item):
         if self.hasCooldown(item):
             return self.healCooldowns.get(item)
-        
+
     def hasCooldown(self, item):
         return item in self.healCooldowns.keys()
 
@@ -146,7 +146,7 @@ class Shop(StateData):
 
     def handleNoMoney(self, duration = -1):
         self.window.showInfo('You need more jellybeans!', negative = 1, duration = duration)
-        
+
     def isAffordable(self, price, silent = 0):
         if base.localAvatar.getMoney() - price >= 0:
             return True
@@ -168,18 +168,18 @@ class Shop(StateData):
         self.window.setCancelCommand(self.cancelPurchase)
         self.window.makePages(self.distShop.getItems())
         self.window.setPage(0)
-        
+
         # Load the rejection sfx.
         self.healCooldownDoneSfx = base.loadSfx(self.healCooldownDoneSoundPath)
 
     def exit(self):
         StateData.exit(self)
-        if self.window: 
+        if self.window:
             self.window.delete()
             self.newHealth = None
             self.healCooldownDoneSfx = None
             self.originalSupply = {}
-            
+
     def destroy(self):
         self.exit()
         for cooldown in self.healCooldowns.keys():
@@ -287,7 +287,7 @@ class ShopWindow(DirectFrame):
         if direction == 1:
             var = self.nextPage
         self.setPage(var)
-        
+
     def __makeGagEntry(self, pos, item, values, page):
         itemImage = values.get('image')
         button = DirectButton(
@@ -303,7 +303,7 @@ class ShopWindow(DirectFrame):
                 parent = button, text_scale = 0.05, pos = (0, 0, -0.11)
         )
         self.addEntryToPage(page, item, values, button, buttonLabel)
-        
+
     def __makeUpgradeEntry(self, pos, item, values, page):
         itemImage = values.get('image')
         button = DirectButton(
@@ -325,7 +325,7 @@ class ShopWindow(DirectFrame):
                  parent = button, text_scale = 0.3, pos = (0, 0, -1.2)
         )
         self.addEntryToPage(page, item, values, button, buttonLabel)
-        
+
     def __makeHealEntry(self, pos, item, values, page):
         label = '%s' % (item)
         itemImage = values.get('image')
@@ -342,7 +342,7 @@ class ShopWindow(DirectFrame):
                   text_scale = 0.55, pos = (0, 0, -1.6)
         )
         self.addEntryToPage(page, item, values, button, buttonLabel)
-        
+
     def addEntryToPage(self, page, item, values, button, buttonLabel):
         page.addItemEntry(item, [button, buttonLabel])
         page.addItem({item : values})

@@ -200,7 +200,8 @@ class ToonDNA:
                     '19': 'phase_4/maps/tt_t_chr_avt_skirt_winter1.jpg',
                     '20': 'phase_4/maps/tt_t_chr_shorts_scientistA.jpg',
                     '21': 'phase_4/maps/tt_t_chr_shorts_scientistB.jpg',
-                    '22': 'phase_4/maps/tt_t_chr_shorts_scientistC.jpg'}
+                    '22': 'phase_4/maps/tt_t_chr_shorts_scientistC.jpg',
+                    '23': 'phase_3/maps/desat_shorts_1.jpg',}
     gender2genderDNA = {v: k for k, v in genderDNA2gender.items()}
     animal2animalDNA = {v: k for k, v in animalDNA2animal.items()}
     head2headDNA = {v: k for k, v in headDNA2head.items()}

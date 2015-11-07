@@ -6,7 +6,7 @@ from direct.distributed import DistributedObjectAI
 
 from lib.coginvasion.globals import CIGlobals
 import DistributedDoorAI
-from lib.coginvasion.toon import DistributedNPCToonAI, DistributedHQNPCToonAI, DistributedTailorNPCToonAI
+from lib.coginvasion.toon import DistributedNPCToonAI, DistributedHQNPCToonAI, DistributedTailorNPCToonAI, DistributedClerkNPCToonAI
 
 class DistributedToonInteriorAI(DistributedObjectAI.DistributedObjectAI):
     notify = directNotify.newCategory('DistributedToonInteriorAI')
@@ -32,7 +32,7 @@ class DistributedToonInteriorAI(DistributedObjectAI.DistributedObjectAI):
         for i in xrange(len(npcIdList)):
             npcId = npcIdList[i]
             npcData = CIGlobals.NPCToonDict.get(npcId)
-            if not npcData[3] in [CIGlobals.NPC_REGULAR, CIGlobals.NPC_HQ, CIGlobals.NPC_TAILOR]:
+            if not npcData[3] in [CIGlobals.NPC_REGULAR, CIGlobals.NPC_HQ, CIGlobals.NPC_TAILOR, CIGlobals.NPC_CLERK]:
                 continue
             if npcData[3] == CIGlobals.NPC_REGULAR:
                 npcClass = DistributedNPCToonAI.DistributedNPCToonAI
@@ -40,6 +40,8 @@ class DistributedToonInteriorAI(DistributedObjectAI.DistributedObjectAI):
                 npcClass = DistributedHQNPCToonAI.DistributedHQNPCToonAI
             elif npcData[3] == CIGlobals.NPC_TAILOR:
                 npcClass = DistributedTailorNPCToonAI.DistributedTailorNPCToonAI
+            elif npcData[3] == CIGlobals.NPC_CLERK:
+                npcClass = DistributedClerkNPCToonAI.DistributedClerkNPCToonAI
             npc = npcClass(self.air, npcId, len(self.npcs))
             npc.generateWithRequired(self.zoneId)
             self.npcs.append(npc)

@@ -6,6 +6,7 @@ from lib.coginvasion.toon import DistributedToon/AI/UD
 from lib.coginvasion.toon import DistributedNPCToon/AI
 from lib.coginvasion.toon import DistributedHQNPCToon/AI
 from lib.coginvasion.toon import DistributedTailorNPCToon/AI
+from lib.coginvasion.toon import DistributedClerkNPCToon/AI
 from lib.coginvasion.npc import DistributedChar
 from lib.coginvasion.shop import DistributedBattleShop/AI
 from lib.coginvasion.shop import DistributedGagShop/AI
@@ -53,6 +54,7 @@ from lib.coginvasion.hood import DistributedToonInterior/AI
 from lib.coginvasion.hood import DistributedCinemaInterior/AI
 from lib.coginvasion.hood import DistributedToonHQInterior/AI
 from lib.coginvasion.hood import DistributedTailorInterior/AI
+from lib.coginvasion.hood import DistributedGagShopInterior/AI
 from lib.coginvasion.hood import DistributedBoat/AI
 from lib.coginvasion.hood import DistributedDoor/AI
 from lib.coginvasion.battle import DistributedPieTurretManager/AI
@@ -243,6 +245,8 @@ dclass DistributedToonHQInterior : DistributedToonInterior {
 
 dclass DistributedTailorInterior : DistributedToonInterior {};
 
+dclass DistributedGagShopInterior : DistributedToonInterior {};
+
 dclass DistributedNPCToon : DistributedToon {
   setNpcId(uint16) required broadcast ram;
   setOriginIndex(int8) required broadcast ram;
@@ -261,6 +265,11 @@ dclass DistributedTailorNPCToon : DistributedNPCToon {};
 dclass DistributedHQNPCToon : DistributedNPCToon {
   makePickableQuests(uint8[]);
   pickedQuest(uint8) clsend airecv;
+};
+
+dclass DistributedClerkNPCToon : DistributedNPCToon {
+  setChat(string) broadcast ownsend airecv;
+  confirmPurchase(uint8 gagIds [], uint8 [], int32) clsend airecv;
 };
 
 dclass DistributedChar : DistributedSmoothNode {

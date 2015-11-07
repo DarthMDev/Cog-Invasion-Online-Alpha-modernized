@@ -2,6 +2,7 @@
 # Created by:  blach (09Nov14)
 # Edited by:  blach (12Apr15) - Improved the way files are validated
 # Edited by:  blach (14Jul15) - Improved the gui
+# Edited by:  blach (06Nov15) - Improved security and using SSL
 
 import sys
 import os
@@ -52,11 +53,12 @@ class Launcher:
     notify = directNotify.newCategory("Launcher")
     appTitle = "Cog Invasion Launcher"
     loginServer_port = 7033
-    Server_host = "gameserver.coginvasion.com"
+    Server_host = "s://gameserver.coginvasion.com"
     timeout = 2000
-    version = 1.1
+    version = 1.2
     helpVideoLink = "http://download.coginvasion.com/videos/ci_launcher_crash_help.mp4"
     hashFileLink = "http://download.coginvasion.com/file_info.txt"
+    crtFileLink = "http://download.coginvasion.com/gameserver.crt"
 
     def __init__(self):
         self.tk = base.tkRoot
@@ -67,6 +69,7 @@ class Launcher:
         self.launcherFSM = ClassicFSM('launcher', [State('menu', self.enterMenu, self.exitMenu, ['login', 'updateFiles', 'accCreate']),
             State('fetch', self.enterFetch, self.exitFetch, ['menu']),
             State('validate', self.enterValidate, self.exitValidate, ['fetch']),
+            State('getCRT', self.enterGetCRT, self.exitGetCRT, ['connect']),
             State('connect', self.enterConnect, self.exitConnect, ['validate']),
             State('accCreate', self.enterAccCreate, self.exitAccCreate, ['submitAcc', 'menu']),
             State('submitAcc', self.enterSubmitAcc, self.exitSubmitAcc, ['menu', 'accCreate']),
@@ -78,16 +81,22 @@ class Launcher:
         self.loginUserName = StringVar()
         self.loginPassword = StringVar()
         self.downloadTime = {}
+        self.sslCert = None
 
         # This var is in case the user sent incorrect account info
         # so they don't have to update all their files again.
         self.alreadyUpdated = False
 
+        try:
+            os.remove("libcoginvasion.pyd")
+        except:
+            pass
+
         self.__initConnectionManagers()
         self.checkHasFolder("logs")
         self.checkHasFolder("screenshots")
         self.checkHasFolder("config")
-        self.launcherFSM.request('connect')
+        self.launcherFSM.request('getCRT')
 
     def __initConnectionManagers(self):
         self.cMgr = QueuedConnectionManager()
@@ -106,6 +115,29 @@ class Launcher:
 
     def exitOff(self):
         pass
+
+    def enterGetCRT(self):
+        # We need to download the SSL certificate from the FTP server before connecting.
+        self.notify.info('Downloading certificate...')
+        self.channel.beginGetDocument(DocumentSpec(self.crtFileLink))
+        self.channel.downloadToRam(self.rf)
+        taskMgr.add(self.__downloadCRTFileTask, "dlCRTFileTask")
+
+    def __downloadCRTFileTask(self, task):
+        if self.channel.run():
+            return task.cont
+        data = self.rf.getData()
+        self.__finishedDownloadingCRTFile(data)
+        return task.done
+
+    def __finishedDownloadingCRTFile(self, data):
+        self.sslCert = data
+        self.http.addPreapprovedServerCertificatePem(URLSpec(self.Server_host + ":" + str(self.loginServer_port)), self.sslCert)
+        self.notify.info('Got the certificate, connecting to server.')
+        self.launcherFSM.request('connect')
+
+    def exitGetCRT(self):
+        taskMgr.remove("dlCRTFileTask")
 
     def enterValidate(self):
         self.infoLbl = canvas.create_text(287, 210, text = "Validating...", fill = "white")
@@ -141,6 +173,7 @@ class Launcher:
     def __handleBaseLink(self, dgi):
         global baseLink
         baseLink = dgi.getString()
+        print "base link is: " + baseLink
 
     def exitFetch(self):
         canvas.delete(self.infoLbl)
@@ -166,7 +199,6 @@ class Launcher:
             return
         fileName = files2Download[self.currentFile]
         canvas.itemconfigure(self.infoLbl, text = "File {0} of {1}... ({2})".format(self.currentFile + 1, len(files2Download), fileName))
-        print fileName
         self.downloadFile()
 
     def reportDownloadTimes(self):
@@ -270,10 +302,10 @@ class Launcher:
             admin = os.getuid() == 0
         except:
             admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        if not admin:
-            self.adminLbl = canvas.create_text(287, 220, text = "You must run the Cog Invasion Launcher\nwith administrator rights for correct operation.", fill = "red")
-            self.notify.warning("Launcher is not running in administrator mode!")
-            return
+        #if not admin:
+        #    self.adminLbl = canvas.create_text(287, 220, text = "You must run the Cog Invasion Launcher\nwith administrator rights for correct operation.", fill = "red")
+        #    self.notify.warning("Launcher is not running in administrator mode!")
+        #    return
         self.title = canvas.create_text(287, 167, text = "Log-In", fill = "white")
         self.userNameEntryLbl = canvas.create_text(195, 198, text = "Username:", fill = "white", font = ("Arial", 12))
         self.passwordEntryLbl = canvas.create_text(196, 228, text = "Password:", fill = "white", font = ("Arial", 12))
@@ -365,6 +397,7 @@ class Launcher:
         self.gameServer = dgi.getString()
         self.gameVersion = dgi.getString()
         self.loginToken = dgi.getString()
+        self.codePassword = dgi.getString()
         self.launcherFSM.request('play')
 
     def __handleInvalidCredidentials(self):
@@ -468,6 +501,7 @@ class Launcher:
         os.environ['GAME_SERVER'] = self.gameServer
         os.environ['GAME_VERSION'] = self.gameVersion
         os.environ['LOGIN_TOKEN'] = self.loginToken
+        os.environ['CODE_PASSWORD'] = self.codePassword
         os.system("start coginvasion.exe")
         self.launcherFSM.requestFinalState()
         sys.exit()
@@ -489,6 +523,8 @@ class Launcher:
             self.__handleLauncherStatus(msgType)
         elif msgType == DL_LIST:
             self.__handleDLList(dgi)
+        elif msgType == BASE_LINK:
+            self.__handleBaseLink(dgi)
         elif msgType == SERVER_MSG:
             self.__handleServerMsg(dgi)
 
@@ -503,7 +539,7 @@ class Launcher:
         baseLink += dgi.getString()
         numFiles = dgi.getUint8()
         for i in range(numFiles):
-			files2Download.append(dgi.getString())
+            files2Download.append(dgi.getString())
         self.launcherFSM.request('menu')
         print fileNames
 

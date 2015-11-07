@@ -77,7 +77,7 @@ def getThemeSong():
                 themeList.append(fullpath)
         import random
         ThemeSong = random.choice(themeList)
-        #ThemeSong = 'phase_3/audio/bgm/tt_theme.mid'
+        ThemeSong = 'phase_3/audio/bgm/tt_theme.mid'
     return ThemeSong
 
 FloorBitmask = BitMask32(2)
