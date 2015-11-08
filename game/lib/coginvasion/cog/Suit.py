@@ -457,7 +457,7 @@ class Suit(Avatar):
     def generateCog(self, isLose = 0):
         self.cleanup()
         if not isLose:
-            if self.variant == Variant.SKELETON:
+            if self.variant == Variant.SKELETON or self.variant == Variant.ZOMBIE:
                 self.loadModel('phase_5/models/char/cog%s_robot-zero.bam' % (str(self.suit)), 'body')
             else:
                 self.loadModel('phase_3.5/models/char/suit%s-mod.bam' % (str(self.suit)), 'body')
@@ -472,7 +472,7 @@ class Suit(Avatar):
             self.generateHealthBar()
             self.generatePropeller()
         else:
-            if self.variant == Variant.SKELETON:
+            if self.variant == Variant.SKELETON or self.variant == Variant.ZOMBIE:
                 self.loadModel('phase_5/models/char/cog%s_robot-lose-mod.bam' % (str(self.suit)), 'body')
             else:
                 self.loadModel('phase_4/models/char/suit%s-lose-mod.bam' % (str(self.suit)), 'body')
@@ -524,7 +524,7 @@ class Suit(Avatar):
 
     def setVoice(self, voice):
         if not voice:
-            if self.variant == Variant.SKELETON:
+            if self.variant == Variant.SKELETON or self.variant == Variant.ZOMBIE:
                 self.voice = Voice.SKELETON
             else:
                 self.voice = Voice.NORMAL

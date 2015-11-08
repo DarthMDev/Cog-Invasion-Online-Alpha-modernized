@@ -6,8 +6,8 @@
 """
 
 
-NORMAL, SKELETON, WAITER, MINIGAME = range(4)
+NORMAL, SKELETON, WAITER, MINIGAME, ZOMBIE = range(5)
 
 def getVariantById(index):
-    variants = [NORMAL, SKELETON, WAITER, MINIGAME]
+    variants = [NORMAL, SKELETON, WAITER, MINIGAME, ZOMBIE]
     return variants[index]
