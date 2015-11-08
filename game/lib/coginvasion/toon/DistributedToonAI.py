@@ -304,8 +304,8 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
             self.ejectSelf("This player did not have administrator rights, but was trying to eject someone.")
 
     def setGhost(self, value):
-        if not self.getAdminToken() > -1:
-            self.ejectSelf()
+        if not self.getAdminToken() > -1 and value > 0:
+            self.ejectSelf("This player did not have administrator rights, but was trying to set ghost.")
             return
         self.ghost = value
 
