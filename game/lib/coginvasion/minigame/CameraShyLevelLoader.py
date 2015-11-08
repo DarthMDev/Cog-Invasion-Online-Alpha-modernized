@@ -179,14 +179,12 @@ class CameraShyLevelLoader:
             self.CameraShyLevelLoader_deleted = 1
             if self.dnaStore:
                 self.unload()
-            del self.models
-            del self.levelGeom
-            del self.skyUtil
-            del self.skyModel
-            del self.dnaStore
-            del self.levelData
-            del self.notify
-            del hoodMgr 
+            self.models = None
+            self.levelGeom = None
+            self.skyUtil = None 
+            self.skyModel = None
+            self.dnaStore = None
+            self.levelData = None
         
     def levelLoaded(self):
         if self.level == 'TT_maze':
