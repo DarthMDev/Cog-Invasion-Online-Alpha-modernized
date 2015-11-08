@@ -48,7 +48,11 @@ class CameraShyLevelLoaderAI:
             self.CameraShyLevelLoaderAI_deleted
         except:
             self.CameraShyLevelLoaderAI_deleted = 1
-            del self.minigame
-            del self.level
-            del self.levels
-            del self.levelData
+            if hasattr(self, 'minigame'):
+                del self.minigame
+            if hasattr(self, 'level'):
+                del self.level
+            if hasattr(self, 'levels'):
+                del self.levels
+            if hasattr(self, 'levelData'):
+                del self.levelData
