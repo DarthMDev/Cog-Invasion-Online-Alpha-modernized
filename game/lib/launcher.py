@@ -55,7 +55,7 @@ class Launcher:
     loginServer_port = 7033
     Server_host = "gameserver.coginvasion.com"
     timeout = 2000
-    version = 1.1
+    version = 1.2
     helpVideoLink = "http://download.coginvasion.com/videos/ci_launcher_crash_help.mp4"
     hashFileLink = "http://download.coginvasion.com/file_info.txt"
 
@@ -366,7 +366,6 @@ class Launcher:
         self.gameServer = dgi.getString()
         self.gameVersion = dgi.getString()
         self.loginToken = dgi.getString()
-        self.codePassword = dgi.getString()
         self.launcherFSM.request('play')
 
     def __handleInvalidCredidentials(self):
