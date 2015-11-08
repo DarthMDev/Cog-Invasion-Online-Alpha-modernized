@@ -228,7 +228,8 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         DistributedAvatar.setHealth(self, health)
         if self.isDead():
             self.interruptAttack()
-        if self.getLevel() > 12:
+            self.state = SuitState.DEAD
+        if self.getLevel() > 12 and self.state != SuitState.DEAD:
             Sequence(
                 LerpColorScaleInterval(self, 0.2, VBase4(1, 0, 0, 1)),
                 Func(self.clearColorScale)
