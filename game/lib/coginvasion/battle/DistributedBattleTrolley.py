@@ -17,7 +17,16 @@ from lib.coginvasion.globals import CIGlobals
 class DistributedBattleTrolley(DistributedObject):
     notify = directNotify.newCategory('DistributedBattleTrolley')
 
-    STAND_POSITIONS = [Point3(-4.75, -5, 1.4), Point3(-4.75, -1.6, 1.4), Point3(-4.75, 1.6, 1.4), Point3(-4.75, 5, 1.4)]
+    STAND_POSITIONS = [
+        Point3(-4.75, -5, 1.4), 
+        Point3(-4.75, -1.6, 1.4), 
+        Point3(-4.75, 1.6, 1.4), 
+        Point3(-4.75, 5, 1.4),
+        Point3(-4.75, -5, 1.4), 
+        Point3(-4.75, -1.6, 1.4), 
+        Point3(-4.75, 1.6, 1.4), 
+        Point3(-4.75, 5, 1.4)
+    ]
     TROLLEY_NEUTRAL_POS = Point3(15.751, 14.1588, -0.984615)
     TROLLEY_GONE_POS = Point3(50, 14.1588, -0.984615)
     TROLLEY_ARRIVING_START_POS = Point3(-20, 14.1588, -0.984615)

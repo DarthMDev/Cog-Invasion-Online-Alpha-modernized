@@ -12,7 +12,7 @@ from lib.coginvasion.suit.DistributedCogBattleAI import DistributedCogBattleAI
 class DistributedBattleTrolleyAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedBattleTrolleyAI')
 
-    NUM_SLOTS = 4
+    NUM_SLOTS = 8
 
     def __init__(self, air, hoodIndex):
         DistributedObjectAI.__init__(self, air)
