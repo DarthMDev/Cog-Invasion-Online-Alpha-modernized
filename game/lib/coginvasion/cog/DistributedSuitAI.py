@@ -204,13 +204,16 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         return Task.cont
     
     def __handleDeath(self, task):
-        self.deathTimeLeft -= 1
-                
-        # Let's handle when we run out of time.
-        if self.deathTimeLeft <= 0:
-            self.killSuit()
+        if hasattr(self, 'deathTimeLeft'):
+            self.deathTimeLeft -= 1
+            
+            # Let's handle when we run out of time.
+            if self.deathTimeLeft <= 0:
+                self.killSuit()
+                return Task.done
+            return Task.again
+        else:
             return Task.done
-        return Task.again
 
     def handleAvatarDefeat(self, av):
         if av.isDead() and hasattr(self, 'brain'):
