@@ -182,12 +182,14 @@ class LocalToon(DistributedToon):
         if self.rolledOverTag:
             base.playSfx(DGG.getDefaultClickSound())
             avatar = self.cr.doId2do.get(self.rolledOverTag)
-            avatar.nameTag.setPickerState('down')
+            if avatar:
+                avatar.nameTag.setPickerState('down')
 
     def pickedSomething_up(self):
         if self.rolledOverTag:
             avatar = self.cr.doId2do.get(self.rolledOverTag)
-            avatar.nameTag.setPickerState('up')
+            if avatar:
+                avatar.nameTag.setPickerState('up')
             self.panel.makePanel(self.rolledOverTag)
 
     def __travMousePicker(self, task):
@@ -213,6 +215,10 @@ class LocalToon(DistributedToon):
                                     base.playSfx(DGG.getDefaultRolloverSound())
                                     self.rolledOverTag = avatarId
                                     break
+                                else:
+                                    if (do.nameTag.fsm.getCurrentState().getName() == 'rollover'):
+                                        if self.rolledOverTag != do.doId:
+                                            do.nameTag.setPickerState('up')
                     else:
                         if do.__class__.__name__ == "DistributedToon":
                             if do.nameTag.fsm.getCurrentState().getName() != "up":
