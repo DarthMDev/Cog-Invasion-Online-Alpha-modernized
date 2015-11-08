@@ -81,12 +81,22 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
     def disable(self):
         self.fsm.requestFinalState()
         del self.fsm
+        
+        # This should fix crashes related to Sequences.
+        if self.track:
+            self.track.pause()
+            self.track = None
+        
+        # Cleanup entities.
         for ent in self.entities:
             ent.cleanup()
         self.entities = None
+        
+        # Get rid of explosions.
         if self.explosion:
             self.explosion.removeNode()
             self.explosion = None
+
         self.removeTurret()
         DistributedSmoothNode.disable(self)
         DistributedAvatar.disable(self)
@@ -115,8 +125,8 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             self.suit = self.cr.doId2do.get(suitId)
             self.cannon.find('**/cannon').lookAt(self.suit.find('**/joint_head'))
             self.cannon.find('**/square_drop_shadow').headsUp(self.suit.find('**/joint_head'))
-            track = Sequence(Parallel(LerpScaleInterval(smoke, 0.5, 3), LerpColorScaleInterval(smoke, 0.5, Vec4(2, 2, 2, 0))), Func(smoke.removeNode))
-            track.start()
+            self.track = Sequence(Parallel(LerpScaleInterval(smoke, 0.5, 3), LerpColorScaleInterval(smoke, 0.5, Vec4(2, 2, 2, 0))), Func(smoke.removeNode))
+            self.track.start()
             self.createAndShootGag()
 
     def exitShoot(self):
