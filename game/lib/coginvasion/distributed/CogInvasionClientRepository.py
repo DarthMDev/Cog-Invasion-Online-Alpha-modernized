@@ -88,7 +88,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.makeAToon = MakeAToon()
         self.loginToken = os.environ.get("LOGIN_TOKEN")
         self.serverAddress = os.environ.get("GAME_SERVER")
-        self.serverURL = URLSpec("http://%s" % self.serverAddress)
+        self.serverURL = URLSpec("s://%s" % self.serverAddress)
         self.parentMgr.registerParent(CIGlobals.SPRender, render)
         self.parentMgr.registerParent(CIGlobals.SPHidden, hidden)
         self.adminAccess = False
@@ -111,7 +111,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.doBetaInform = True
         self.dTutorial = None
         self.checkHttp()
-        #self.http.addPreapprovedServerCertificateFilename(self.serverURL, Filename('phase_3/etc/gameserver.crt'))
+        self.http.addPreapprovedServerCertificateFilename(self.serverURL, Filename('phase_3/etc/gameserver.crt'))
         #self.tournamentMusicChunks = {}
         #self.threadedTaskChain = taskMgr.setupTaskChain("threadedTaskChainForSoundIntervals", numThreads = 2)
 
