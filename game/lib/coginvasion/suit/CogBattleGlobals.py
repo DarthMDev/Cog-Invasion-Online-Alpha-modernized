@@ -4,6 +4,8 @@
 from lib.coginvasion.globals.CIGlobals import BattleTTC, TheBrrrgh, DonaldsDreamland, DonaldsDock
 from lib.coginvasion.hood import ZoneUtil
 
+MAX_TURRETS = 3
+
 HoodId2HoodIndex = {
     BattleTTC: 0,
     TheBrrrgh: 1,

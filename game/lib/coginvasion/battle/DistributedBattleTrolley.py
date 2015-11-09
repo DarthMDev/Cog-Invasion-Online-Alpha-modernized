@@ -10,9 +10,14 @@ from direct.distributed.DistributedObject import DistributedObject
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import LerpPosInterval, LerpHprInterval, LerpQuatInterval, ActorInterval, Parallel, Sequence, Wait, Func
+from direct.interval.IntervalGlobal import SoundInterval, LerpFunctionInterval
 from direct.gui.DirectGui import DirectButton
 
 from lib.coginvasion.globals import CIGlobals
+import math
+
+TROLLEY_ENTER_TIME = 3.0
+TROLLEY_EXIT_TIME = 3.0
 
 class DistributedBattleTrolley(DistributedObject):
     notify = directNotify.newCategory('DistributedBattleTrolley')
@@ -45,8 +50,8 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyCar = None
         self.trolleyKey = None
         self.countdownText = None
-        self.soundMoving = base.loadSfx('phase_4/audio/sfx/SZ_trolley_away.mp3')
-        self.soundBell = base.loadSfx('phase_4/audio/sfx/SZ_trolley_bell.mp3')
+        self.trolleyAwaySfx = base.loadSfx('phase_4/audio/sfx/SZ_trolley_away.mp3')
+        self.trolleyBellSfx = base.loadSfx('phase_4/audio/sfx/SZ_trolley_bell.mp3')
         self.hoodIndex = 0
         self.localAvOnTrolley = False
 
@@ -109,29 +114,21 @@ class DistributedBattleTrolley(DistributedObject):
         self.disableExitButton()
 
     def enterArriving(self, ts = 0):
-        base.playSfx(self.soundMoving)
-        self.moveTrack = LerpPosInterval(self.trolleyCar, duration = 3.0, pos = self.TROLLEY_NEUTRAL_POS,
-            startPos = self.TROLLEY_ARRIVING_START_POS, blendType = 'easeOut')
-        self.moveTrack.start()
+        self.trolleyEnterTrack.start(ts)
 
     def exitArriving(self):
         self.moveTrack.finish()
         del self.moveTrack
 
     def enterLeaving(self, ts = 0):
-        base.playSfx(self.soundMoving)
-        base.playSfx(self.soundBell)
-        self.moveTrack = Parallel()
-        self.moveTrack.append(LerpPosInterval(self.trolleyCar, duration = 3.0, pos = self.TROLLEY_GONE_POS,
-            startPos = self.TROLLEY_NEUTRAL_POS, blendType = 'easeIn'))
         if self.localAvOnTrolley == True:
-            self.moveTrack.append(Sequence(Wait(2.0), Func(base.transitions.fadeOut)))
-        self.moveTrack.start()
+            self.trolleyExitTrack.append(Sequence(Wait(2.0), Func(base.transitions.fadeOut)))
+        self.trolleyExitTrack.start(ts)
         self.ignore('entertrolley_sphere')
 
     def exitLeaving(self):
-        self.moveTrack.finish()
-        del self.moveTrack
+        self.trolleyExitTrack.finish()
+        del self.trolleyExitTrack
 
     def setState(self, stateName, timestamp):
         ts = globalClockDelta.localElapsedTime(timestamp)
@@ -273,10 +270,99 @@ class DistributedBattleTrolley(DistributedObject):
         tn = TextNode('trolleycountdowntext')
         tn.setFont(CIGlobals.getMickeyFont())
         tn.setTextColor(1, 0, 0, 1)
+        
+        self.keys = self.trolleyCar.findAllMatches('**/key')
+        self.numKeys = self.keys.getNumPaths()
+        self.keyInit = []
+        self.keyRef = []
+        for i in range(self.numKeys):
+            key = self.keys[i]
+            key.setTwoSided(1)
+            ref = self.trolleyCar.attachNewNode('key' + `i` + 'ref')
+            ref.iPosHpr(key)
+            self.keyRef.append(ref)
+            self.keyInit.append(key.getTransform())
+            
+        self.frontWheels = self.trolleyCar.findAllMatches('**/front_wheels')
+        self.numFrontWheels = self.frontWheels.getNumPaths()
+        self.frontWheelInit = []
+        self.frontWheelRef = []
+        for i in range(self.numFrontWheels):
+            wheel = self.frontWheels[i]
+            ref = self.trolleyCar.attachNewNode('frontWheel' + `i` + 'ref')
+            ref.iPosHpr(wheel)
+            self.frontWheelRef.append(ref)
+            self.frontWheelInit.append(wheel.getTransform())
+
+        self.backWheels = self.trolleyCar.findAllMatches('**/back_wheels')
+        self.numBackWheels = self.backWheels.getNumPaths()
+        self.backWheelInit = []
+        self.backWheelRef = []
+        for i in range(self.numBackWheels):
+            wheel = self.backWheels[i]
+            ref = self.trolleyCar.attachNewNode('backWheel' + `i` + 'ref')
+            ref.iPosHpr(wheel)
+            self.backWheelRef.append(ref)
+            self.backWheelInit.append(wheel.getTransform())
+
+        trolleyAnimationReset = Func(self.resetAnimation)
+        trolleyEnterStartPos = Point3(-20, 14, -1)
+        trolleyEnterEndPos = Point3(15, 14, -1)
+        trolleyEnterPos = Sequence(name='TrolleyEnterPos')
+        trolleyEnterPos.append(self.trolleyCar.posInterval(TROLLEY_ENTER_TIME, trolleyEnterEndPos, startPos=trolleyEnterStartPos, blendType='easeOut'))
+        trolleyEnterTrack = Sequence(trolleyAnimationReset, trolleyEnterPos, name='trolleyEnter')
+        keyAngle = round(TROLLEY_ENTER_TIME) * 360
+        dist = Vec3(trolleyEnterEndPos - trolleyEnterStartPos).length()
+        wheelAngle = dist / (2.0 * math.pi * 0.95) * 360
+        trolleyEnterAnimateInterval = LerpFunctionInterval(self.animateTrolley, duration=TROLLEY_ENTER_TIME, blendType='easeOut', extraArgs=[keyAngle, wheelAngle], name='TrolleyAnimate')
+        trolleyEnterSoundTrack = SoundInterval(self.trolleyAwaySfx, node=self.trolleyCar)
+        self.trolleyEnterTrack = Parallel(trolleyEnterTrack, trolleyEnterAnimateInterval, trolleyEnterSoundTrack)
+        trolleyExitStartPos = Point3(15, 14, -1)
+        trolleyExitEndPos = Point3(50, 14, -1)
+        trolleyExitPos = Sequence(name='TrolleyExitPos')
+        trolleyExitPos.append(self.trolleyCar.posInterval(TROLLEY_EXIT_TIME, trolleyExitEndPos, startPos=trolleyExitStartPos, blendType='easeIn'))
+        trolleyExitStartPos = Point3(15, 14, -1)
+        trolleyExitEndPos = Point3(50, 14, -1)
+        trolleyExitBellInterval = SoundInterval(self.trolleyBellSfx, node=self.trolleyCar)
+        trolleyExitAwayInterval = SoundInterval(self.trolleyAwaySfx, node=self.trolleyCar)
+        keyAngle = round(TROLLEY_EXIT_TIME) * 360
+        dist = Vec3(trolleyExitEndPos - trolleyExitStartPos).length()
+        wheelAngle = dist / (2.0 * math.pi * 0.95) * 360
+        trolleyExitAnimateInterval = LerpFunctionInterval(self.animateTrolley, duration=TROLLEY_EXIT_TIME, blendType='easeIn', extraArgs=[keyAngle, wheelAngle], name='TrolleyAnimate')
+        self.trolleyExitTrack = Parallel(trolleyExitPos, trolleyExitBellInterval, trolleyExitAwayInterval, trolleyExitAnimateInterval, name=self.uniqueName('trolleyExit'))
+        
         self.countdownText = self.trolleyStation.attachNewNode(tn)
         self.countdownText.setScale(3.0)
         self.countdownText.setPos(14.58, 10.77, 11.17)
         self.acceptOnce('entertrolley_sphere', self.__handleTrolleyTrigger)
+        
+    def resetAnimation(self):
+        if self.keys:
+            for i in range(self.numKeys):
+                self.keys[i].setTransform(self.keyInit[i])
+    
+            for i in range(self.numFrontWheels):
+                self.frontWheels[i].setTransform(self.frontWheelInit[i])
+    
+            for i in range(self.numBackWheels):
+                self.backWheels[i].setTransform(self.backWheelInit[i])
+            
+    def animateTrolley(self, t, keyAngle, wheelAngle):
+        if self.keys:
+            for i in range(self.numKeys):
+                key = self.keys[i]
+                ref = self.keyRef[i]
+                key.setH(ref, t * keyAngle)
+    
+            for i in range(self.numFrontWheels):
+                frontWheel = self.frontWheels[i]
+                ref = self.frontWheelRef[i]
+                frontWheel.setH(ref, t * wheelAngle)
+    
+            for i in range(self.numBackWheels):
+                backWheel = self.backWheels[i]
+                ref = self.backWheelRef[i]
+                backWheel.setH(ref, t * wheelAngle)
 
     def delete(self):
         self.trolleyStation = None
@@ -284,5 +370,15 @@ class DistributedBattleTrolley(DistributedObject):
         self.soundMoving = None
         self.soundBell = None
         self.troleyCar = None
+        self.backWheelInit = None
+        self.backWheelRef = None
+        self.backWheels = None
+        self.frontWheelInit = None
+        self.frontWheelRef = None
+        self.frontWheels = None
+        self.keyInit = None
+        self.keyRef = None
+        self.keys = None
+        
         self.ignore('entertrolley_sphere')
         DistributedObject.delete(self)

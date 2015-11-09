@@ -36,6 +36,9 @@ class DistributedPieTurretManager(DistributedObject):
         if base.localAvatar.getMyBattle():
             base.localAvatar.getMyBattle().setTurretManager(None)
         DistributedObject.disable(self)
+        
+    def clearTurret(self):
+        self.turret = None
 
     def __pollTurret(self, turretId, task):
         turret = self.cr.doId2do.get(turretId)
@@ -43,6 +46,7 @@ class DistributedPieTurretManager(DistributedObject):
             self.myTurret = turret
             self.myTurret.b_setGag(self.turretGag)
             self.turretGag = None
+            self.acceptOnce(turret.getDeathEvent(), self.clearTurret)
             self.makeGui()
             return Task.done
         return Task.cont
@@ -120,3 +124,6 @@ class DistributedPieTurretManager(DistributedObject):
     def updateTurretGui(self):
         if self.guiBar:
             self.guiBar.update(self.myTurret.getHealth())
+            
+    def getTurret(self):
+        return self.myTurret

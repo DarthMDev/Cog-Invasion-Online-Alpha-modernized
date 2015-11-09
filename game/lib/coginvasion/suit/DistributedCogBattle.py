@@ -48,6 +48,29 @@ class DistributedCogBattle(DistributedObject):
 
     def getTurretManager(self):
         return self.turretManager
+    
+    def getTurretCount(self):
+        avatars = self.cr.doFindAll('DistributedToon')
+        turrets = 0
+        
+        if self.turretManager:
+            if self.turretManager.getTurret():
+                turrets += 1
+    
+        if base.localAvatar.getPUInventory()[0] > 0:
+            turrets += 1
+        
+        for avatar in avatars:
+            if avatar.zoneId == base.localAvatar.zoneId:
+                battle = avatar.getMyBattle()
+                if avatar.getPUInventory()[0] > 0:
+                    turrets += 1
+                    
+                if battle:
+                    if battle.getTurretManager():
+                        if battle.getTurretManager().getTurret():
+                            turrets += 1
+        return turrets
 
     def victory(self):
         self.cr.playGame.getPlace().fsm.request('stop')

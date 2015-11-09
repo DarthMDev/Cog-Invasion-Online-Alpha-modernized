@@ -5,8 +5,8 @@ win-size 640 480
 load-display pandagl
 
 # Logging...
-notify-level info
-default-directnotify-level info
+notify-level warning
+default-directnotify-level warning
 
 # Filenames...
 cursor-filename toonmono.cur

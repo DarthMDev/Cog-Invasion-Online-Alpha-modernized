@@ -13,7 +13,7 @@ class BattleShop(Shop):
     notify = directNotify.newCategory('BattleShop')
 
     def __init__(self, distShop, doneEvent):
-        Shop.__init__(self, distShop, doneEvent)
+        Shop.__init__(self, distShop, doneEvent, wantTurretCount = 1)
         self.distShop.addItem('Whole Cream \nPie', ItemType.UPGRADE, 200, 'phase_3.5/maps/cannon-icon.png', upgradeID = 0, maxUpgrades = 1)
         self.distShop.addItem('Whole Fruit \nPie', ItemType.UPGRADE, 150, 'phase_3.5/maps/cannon-icon.png', upgradeID = 1, maxUpgrades = 1)
         #self.distShop.addItem('Birthday Cake', ItemType.UPGRADE, 500, 'phase_3.5/maps/cannon-icon.png', upgradeID = 2, maxUpgrades = 1)

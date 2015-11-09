@@ -48,6 +48,8 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         self.suit = None
         self.eventId = None
         self.entities = []
+        self.upgradeID = None
+        self.deathEvent = None
 
     def setOwner(self, avatar):
         self.owner = avatar
@@ -64,9 +66,13 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
     def b_setGag(self, upgradeId):
         self.sendUpdate('setGag', [upgradeId])
         self.setGag(upgradeId)
+        self.upgradeID = upgradeId
 
     def getGag(self):
         return self.gag
+    
+    def getGagID(self):
+        return self.upgradeID
 
     def generate(self):
         DistributedAvatar.generate(self)
@@ -76,6 +82,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         DistributedAvatar.announceGenerate(self)
         DistributedSmoothNode.announceGenerate(self)
         self.healthLabel.setScale(1.1)
+        self.deathEvent = self.uniqueName('DistributedPieTurret-death')
         self.makeTurret()
 
     def disable(self):
@@ -311,6 +318,10 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         sfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
         base.audio3d.attachSoundToObject(sfx, self)
         base.playSfx(sfx)
+        messenger.send(self.deathEvent)
 
     def isLocal(self):
         return self.getOwner() == base.localAvatar.doId
+    
+    def getDeathEvent(self):
+        return self.deathEvent

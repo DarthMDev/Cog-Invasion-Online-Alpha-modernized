@@ -9,7 +9,7 @@ from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.distributed.DelayDeletable import DelayDeletable
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import SoundInterval, LerpPosInterval, ProjectileInterval
-from direct.interval.IntervalGlobal import Sequence, LerpColorScaleInterval, Func
+from direct.interval.IntervalGlobal import Sequence, LerpColorScaleInterval, Func, Wait
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
@@ -226,13 +226,22 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def setHealth(self, health):
         DistributedAvatar.setHealth(self, health)
+        
+        def doBossFlash():
+            if not self.isEmpty():
+                LerpColorScaleInterval(self, 0.2, VBase4(1, 0, 0, 1)).start()
+        
+        def clearBossFlash():
+            if not self.isEmpty():
+                self.clearColorScale()
+        
         if self.isDead():
             self.interruptAttack()
-            self.state = SuitState.DEAD
-        if self.getLevel() > 12 and self.state != SuitState.DEAD:
+        if self.getLevel() > 12:
             Sequence(
-                LerpColorScaleInterval(self, 0.2, VBase4(1, 0, 0, 1)),
-                Func(self.clearColorScale)
+                Func(doBossFlash),
+                Wait(0.2),
+                Func(clearBossFlash)
             ).start()
         self.updateHealthBar(health)
 
