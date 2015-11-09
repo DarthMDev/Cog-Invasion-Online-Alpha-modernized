@@ -56,13 +56,13 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
 
     def getOwner(self):
         return self.owner
-    
+
     def setGag(self, upgradeId):
         gags = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.WholeFruitPie, 2 : CIGlobals.BirthdayCake, 3 : CIGlobals.WeddingCake}
         self.gag = gags.get(upgradeId)
         if not self.readyGag:
             self.loadGagInTurret()
-            
+
     def b_setGag(self, upgradeId):
         self.sendUpdate('setGag', [upgradeId])
         self.setGag(upgradeId)
@@ -70,7 +70,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
 
     def getGag(self):
         return self.gag
-    
+
     def getGagID(self):
         return self.upgradeID
 
@@ -88,17 +88,17 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
     def disable(self):
         self.fsm.requestFinalState()
         del self.fsm
-        
+
         # This should fix crashes related to Sequences.
         if self.track:
             self.track.pause()
             self.track = None
-        
+
         # Cleanup entities.
         for ent in self.entities:
             ent.cleanup()
         self.entities = None
-        
+
         # Get rid of explosions.
         if self.explosion:
             self.explosion.removeNode()
@@ -137,7 +137,8 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             self.createAndShootGag()
 
     def exitShoot(self):
-        del self.suit
+        if hasattr(self, 'suit'):
+            del self.suit
 
     def shoot(self, suitId):
         self.fsm.request('shoot', [suitId])
@@ -261,7 +262,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             self.eventId = random.uniform(0, 100000000)
             self.readyGag = TurretGag(self, self.uniqueName('pieTurretCollision') + str(self.eventId), self.gag)
             self.readyGag.build()
-            
+
     def removeGagInTurret(self):
         if self.readyGag:
             self.readyGag.cleanup()
@@ -322,6 +323,6 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
 
     def isLocal(self):
         return self.getOwner() == base.localAvatar.doId
-    
+
     def getDeathEvent(self):
         return self.deathEvent
