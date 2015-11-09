@@ -1,4 +1,36 @@
 <CoordinateSystem> { Z-up } 
+<Material> Material.001 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
+<Material> Material.004 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
 <Material> Material.002 {
   <Scalar> diffr { 0.640000 }
   <Scalar> diffg { 0.640000 }
@@ -31,48 +63,8 @@
   <Scalar> emitb { 0.000000 }
 }
 
-<Material> Material.001 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Texture> Tex {
+<Texture> UVMap_metal_ramp.jpg {
   "phase_4/maps/metal_ramp.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture {
-  "phase_4/maps/tire_diffuse.png"
   <Scalar> envtype { MODULATE }
   <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
   <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
@@ -87,8 +79,24 @@
   <Scalar> wrap { REPEAT }
 }
 
+<Texture> Texture.004 {
+  "phase_4/maps/metal_ramp.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
 <Texture> Texture.002 {
   "phase_4/maps/pod_diffuse.png"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture {
+  "phase_4/maps/tire_diffuse.png"
   <Scalar> envtype { MODULATE }
   <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
   <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
@@ -105,178 +113,7 @@
       }
     }
     
-    <Group> truck_ramp {
-      <Transform> {
-        <Matrix4> {
-          1.0 0.0 0.0 0.0 
-          0.0 1.0 0.0 0.0 
-          0.0 0.0 1.0 0.0 
-          0.0 0.9116569757461548 -4.091977119445801 1.0 
-        }
-      }
-      
-      <VertexPool> truck_ramp {
-      
-        <Vertex> 0 {-8.308797 -0.916561 3.824360
-          <UV>  {
-            0.400362 1.568348 
-          }
-        }
-        <Vertex> 1 {-8.308797 -14.091505 -0.080934
-          <UV>  {
-            -4.130140 1.568348 
-          }
-        }
-        <Vertex> 2 {8.347519 -14.091505 -0.080934
-          <UV>  {
-            -4.130142 -4.130141 
-          }
-        }
-        <Vertex> 3 {8.347519 -0.916561 3.824360
-          <UV>  {
-            0.400361 -4.130141 
-          }
-        }
-        <Vertex> 4 {-8.308797 -0.986219 4.010116
-          <UV>  {
-            0.400363 1.568346 
-          }
-        }
-        <Vertex> 5 {8.347519 -0.986219 4.010116
-          <UV>  {
-            0.400362 -4.130141 
-          }
-        }
-        <Vertex> 6 {8.347519 -14.161163 0.104821
-          <UV>  {
-            4.930862 -4.130141 
-          }
-        }
-        <Vertex> 7 {-8.308797 -14.161163 0.104821
-          <UV>  {
-            4.930863 1.568346 
-          }
-        }
-        <Vertex> 8 {-8.308797 -14.091505 -0.080934
-          <UV>  {
-            5.130141 0.504808 
-          }
-        }
-        <Vertex> 9 {-8.308797 -0.916561 3.824360
-          <UV>  {
-            5.130140 5.130141 
-          }
-        }
-        <Vertex> 10 {-8.308797 -0.986219 4.010116
-          <UV>  {
-            5.063827 5.125333 
-          }
-        }
-        <Vertex> 11 {-8.308797 -14.161163 0.104821
-          <UV>  {
-            5.063827 0.500000 
-          }
-        }
-        <Vertex> 12 {-8.308797 -0.916561 3.824360
-          <UV>  {
-            4.930864 1.568347 
-          }
-        }
-        <Vertex> 13 {8.347519 -0.916561 3.824360
-          <UV>  {
-            4.930863 -4.130141 
-          }
-        }
-        <Vertex> 14 {8.347519 -0.986219 4.010116
-          <UV>  {
-            4.997344 -4.130141 
-          }
-        }
-        <Vertex> 15 {-8.308797 -0.986219 4.010116
-          <UV>  {
-            4.997345 1.568347 
-          }
-        }
-        <Vertex> 16 {8.347519 -14.091505 -0.080934
-          <UV>  {
-            5.063827 -4.130141 
-          }
-        }
-        <Vertex> 17 {-8.308797 -14.091505 -0.080934
-          <UV>  {
-            5.063827 1.568345 
-          }
-        }
-        <Vertex> 18 {-8.308797 -14.161163 0.104821
-          <UV>  {
-            4.997346 1.568345 
-          }
-        }
-        <Vertex> 19 {8.347519 -14.161163 0.104821
-          <UV>  {
-            4.997345 -4.130141 
-          }
-        }
-        <Vertex> 20 {8.347519 -0.916561 3.824360
-          <UV>  {
-            5.063827 0.500000 
-          }
-        }
-        <Vertex> 21 {8.347519 -14.091505 -0.080934
-          <UV>  {
-            5.063827 -4.125334 
-          }
-        }
-        <Vertex> 22 {8.347519 -14.161163 0.104821
-          <UV>  {
-            5.130141 -4.130141 
-          }
-        }
-        <Vertex> 23 {8.347519 -0.986219 4.010116
-          <UV>  {
-            5.130141 0.495192 
-          }
-        }}
-      
-      
-      <Polygon> {
-        <TRef> { Tex }
-        <MRef> { Material }
-        <Normal> {0.000000 -0.284196 0.958766}
-        <VertexRef> { 0 1 2 3 <Ref> { truck_ramp }} 
-      }
-      <Polygon> {
-        <TRef> { Tex }
-        <MRef> { Material }
-        <Normal> {0.000000 0.284196 -0.958766}
-        <VertexRef> { 4 5 6 7 <Ref> { truck_ramp }} 
-      }
-      <Polygon> {
-        <TRef> { Tex }
-        <MRef> { Material }
-        <Normal> {1.000000 0.000000 0.000000}
-        <VertexRef> { 8 9 10 11 <Ref> { truck_ramp }} 
-      }
-      <Polygon> {
-        <TRef> { Tex }
-        <MRef> { Material }
-        <Normal> {0.000000 -0.936329 -0.351123}
-        <VertexRef> { 12 13 14 15 <Ref> { truck_ramp }} 
-      }
-      <Polygon> {
-        <TRef> { Tex }
-        <MRef> { Material }
-        <Normal> {0.000000 0.936329 0.351123}
-        <VertexRef> { 16 17 18 19 <Ref> { truck_ramp }} 
-      }
-      <Polygon> {
-        <TRef> { Tex }
-        <MRef> { Material }
-        <Normal> {-1.000000 0.000000 0.000000}
-        <VertexRef> { 20 21 22 23 <Ref> { truck_ramp }} 
-      }
-    }
-    <Group> truck_ramp_coll {
+    <Group> metal_ramp_coll {
       <Collide> { Polyset descend }
       <Transform> {
         <Matrix4> {
@@ -287,21 +124,204 @@
         }
       }
       
-      <VertexPool> truck_ramp_coll {
+      <VertexPool> metal_ramp_coll {
       
-        <Vertex> 0 {-8.308797 -0.986219 4.010116
+        <Vertex> 0 {8.353205 -14.244561 0.284012
+          <UV>  {
+            -1.857776 -2.418033 
+          }
         }
-        <Vertex> 1 {8.347519 -0.986219 4.010116
+        <Vertex> 1 {8.353205 -0.953969 4.284012
+          <UV>  {
+            0.314593 -2.418033 
+          }
         }
-        <Vertex> 2 {8.347519 -14.571533 -0.002630
+        <Vertex> 2 {-8.312675 -0.953969 4.284012
+          <UV>  {
+            0.314593 1.064086 
+          }
         }
-        <Vertex> 3 {-8.308797 -14.571533 -0.002630
+        <Vertex> 3 {-8.312675 -14.244561 0.284012
+          <UV>  {
+            -1.857776 1.064087 
+          }
         }}
       
       
       <Polygon> {
-        <Normal> {0.000000 0.283275 -0.959039}
-        <VertexRef> { 0 1 2 3 <Ref> { truck_ramp_coll }} 
+        <Normal> {0.000000 -0.288195 0.957572}
+        <VertexRef> { 0 1 2 3 <Ref> { metal_ramp_coll }} 
+      }
+    }
+    <Group> metal_ramp {
+      <Transform> {
+        <Matrix4> {
+          1.0 0.0 0.0 0.0 
+          0.0 1.0 0.0 0.0 
+          0.0 0.0 1.0 0.0 
+          0.0 0.9116569757461548 -4.091977119445801 1.0 
+        }
+      }
+      
+      <VertexPool> metal_ramp {
+      
+        <Vertex> 0 {-8.312675 -14.244561 0.284012
+          <UV>  {
+            2.581036 0.481904 
+          }
+        }
+        <Vertex> 1 {-8.312675 -0.953969 4.284012
+          <UV>  {
+            2.581035 -2.418033 
+          }
+        }
+        <Vertex> 2 {-8.312675 -0.953969 3.983489
+          <UV>  {
+            2.626076 -2.399938 
+          }
+        }
+        <Vertex> 3 {-8.312675 -14.244561 -0.016511
+          <UV>  {
+            2.626076 0.500000 
+          }
+        }
+        <Vertex> 4 {-8.312675 -0.953969 4.284012
+          <UV>  {
+            2.486961 1.064087 
+          }
+        }
+        <Vertex> 5 {8.353205 -0.953969 4.284012
+          <UV>  {
+            2.486961 -2.418033 
+          }
+        }
+        <Vertex> 6 {8.353205 -0.953969 3.983489
+          <UV>  {
+            2.533999 -2.418033 
+          }
+        }
+        <Vertex> 7 {-8.312675 -0.953969 3.983489
+          <UV>  {
+            2.533999 1.064087 
+          }
+        }
+        <Vertex> 8 {8.353205 -0.953969 4.284012
+          <UV>  {
+            2.626076 0.500000 
+          }
+        }
+        <Vertex> 9 {8.353205 -14.244561 0.284012
+          <UV>  {
+            2.626076 3.399938 
+          }
+        }
+        <Vertex> 10 {8.353205 -14.244561 -0.016511
+          <UV>  {
+            2.581035 3.418033 
+          }
+        }
+        <Vertex> 11 {8.353205 -0.953969 3.983489
+          <UV>  {
+            2.581035 0.518096 
+          }
+        }
+        <Vertex> 12 {8.353205 -14.244561 0.284012
+          <UV>  {
+            2.581035 -2.418033 
+          }
+        }
+        <Vertex> 13 {-8.312675 -14.244561 0.284012
+          <UV>  {
+            2.581036 1.064087 
+          }
+        }
+        <Vertex> 14 {-8.312675 -14.244561 -0.016511
+          <UV>  {
+            2.533999 1.064087 
+          }
+        }
+        <Vertex> 15 {8.353205 -14.244561 -0.016511
+          <UV>  {
+            2.533999 -2.418033 
+          }
+        }
+        <Vertex> 16 {-8.312675 -14.244561 -0.016511
+          <UV>  {
+            0.314593 -2.418033 
+          }
+        }
+        <Vertex> 17 {-8.312675 -0.953969 3.983489
+          <UV>  {
+            2.486961 -2.418033 
+          }
+        }
+        <Vertex> 18 {8.353205 -0.953969 3.983489
+          <UV>  {
+            2.486961 1.064085 
+          }
+        }
+        <Vertex> 19 {8.353205 -14.244561 -0.016511
+          <UV>  {
+            0.314593 1.064086 
+          }
+        }
+        <Vertex> 20 {8.353205 -14.244561 0.284012
+          <UV>  {
+            -1.857776 -2.418033 
+          }
+        }
+        <Vertex> 21 {8.353205 -0.953969 4.284012
+          <UV>  {
+            0.314593 -2.418033 
+          }
+        }
+        <Vertex> 22 {-8.312675 -0.953969 4.284012
+          <UV>  {
+            0.314593 1.064086 
+          }
+        }
+        <Vertex> 23 {-8.312675 -14.244561 0.284012
+          <UV>  {
+            -1.857776 1.064087 
+          }
+        }}
+      
+      
+      <Polygon> {
+        <TRef> { Texture.004 }
+        <MRef> { Material.004 }
+        <Normal> {-1.000000 0.000000 0.000000}
+        <VertexRef> { 0 1 2 3 <Ref> { metal_ramp }} 
+      }
+      <Polygon> {
+        <TRef> { Texture.004 }
+        <MRef> { Material.004 }
+        <Normal> {0.000000 1.000000 0.000000}
+        <VertexRef> { 4 5 6 7 <Ref> { metal_ramp }} 
+      }
+      <Polygon> {
+        <TRef> { Texture.004 }
+        <MRef> { Material.004 }
+        <Normal> {1.000000 0.000000 0.000000}
+        <VertexRef> { 8 9 10 11 <Ref> { metal_ramp }} 
+      }
+      <Polygon> {
+        <TRef> { Texture.004 }
+        <MRef> { Material.004 }
+        <Normal> {0.000000 -1.000000 0.000000}
+        <VertexRef> { 12 13 14 15 <Ref> { metal_ramp }} 
+      }
+      <Polygon> {
+        <TRef> { Texture.004 }
+        <MRef> { Material.004 }
+        <Normal> {0.000000 0.288195 -0.957572}
+        <VertexRef> { 16 17 18 19 <Ref> { metal_ramp }} 
+      }
+      <Polygon> {
+        <TRef> { Texture.004 }
+        <MRef> { Material.004 }
+        <Normal> {0.000000 -0.288195 0.957572}
+        <VertexRef> { 20 21 22 23 <Ref> { metal_ramp }} 
       }
     }
   }

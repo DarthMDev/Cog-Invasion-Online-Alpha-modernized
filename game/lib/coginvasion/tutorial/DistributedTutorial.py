@@ -194,6 +194,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
         base.localAvatar.enablePies(1)
+        base.localAvatar.showPieButton()
+        base.localAvatar.startTrackAnimToSpeed()
         Whisper().createSystemMessage("This should be pretty simple. Just throw a gag at this dummy bot to defeat it.")
 
     def suitNoHealth(self, index):
@@ -226,6 +228,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.collisionsOff()
         base.localAvatar.controlManager.placeOnFloor()
         base.localAvatar.disablePies()
+        base.localAvatar.stopTrackAnimToSpeed()
+        base.localAvatar.hidePieButton()
 
     def enterTraining2Info(self):
         base.camera.setPos(3.09, 37.16, 3.93)
@@ -263,6 +267,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
         base.localAvatar.enablePies(1)
+        base.localAvatar.showPieButton()
+        base.localAvatar.startTrackAnimToSpeed()
 
     def exitTrainingPT2(self):
         base.localAvatar.lastState = None
@@ -274,6 +280,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.collisionsOff()
         base.localAvatar.controlManager.placeOnFloor()
         base.localAvatar.disablePies()
+        base.localAvatar.stopTrackAnimToSpeed()
+        base.localAvatar.hidePieButton()
 
     def enterTraining3Info(self):
         base.camera.setPos(3.09, 37.16, 3.93)
@@ -311,6 +319,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
         base.localAvatar.enablePies(1)
+        base.localAvatar.showPieButton()
+        base.localAvatar.startTrackAnimToSpeed()
 
     def exitTrainingPT3(self):
         base.localAvatar.lastState = None
@@ -322,6 +332,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.collisionsOff()
         base.localAvatar.controlManager.placeOnFloor()
         base.localAvatar.disablePies()
+        base.localAvatar.stopTrackAnimToSpeed()
+        base.localAvatar.hidePieButton()
 
     def enterTrainingDone(self):
         base.camera.setPos(3.09, 37.16, 3.93)

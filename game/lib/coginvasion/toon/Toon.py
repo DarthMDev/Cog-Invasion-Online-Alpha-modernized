@@ -23,6 +23,8 @@ from direct.showbase.ShadowDemo import *
 import ToonDNA
 import random
 
+from lib.coginvasion.gags.GagState import GagState
+
 notify = DirectNotify().newCategory("Toon")
 
 class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
@@ -62,6 +64,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.soundChatBubble = loader.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.mp3")
         self.shadowCaster = None
         self.chatSoundDict = {}
+        self.backpack = None
         self.animFSM = ClassicFSM('Toon', [State('off', self.enterOff, self.exitOff),
             State('neutral', self.enterNeutral, self.exitNeutral),
             State('swim', self.enterSwim, self.exitSwim),
@@ -143,7 +146,21 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             if anim != self.playingAnim:
                 self.playingAnim = anim
                 self.stop()
-                self.loop(anim)
+                doingGagAnim = False
+                if self.backpack:
+                    if self.backpack.getCurrentGag():
+                        if self.backpack.getCurrentGag().getState() != GagState.LOADED:
+                            doingGagAnim = True
+                            self.loop(anim, partName = "legs")
+                            if self.animal == "dog":
+                                self.loop(anim, partName = "head")
+                if not doingGagAnim:
+                    if self.forcedTorsoAnim == None:
+                        self.loop(anim)
+                    else:
+                        self.loop(self.forcedTorsoAnim, partName = 'head')
+                        self.loop(self.forcedTorsoAnim, partName = 'torso')
+                        self.loop(anim, partName = 'legs')
                 self.setPlayRate(rate, anim)
         return action
 

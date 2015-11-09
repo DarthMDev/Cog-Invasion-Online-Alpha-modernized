@@ -141,6 +141,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.world = loader.loadModel('phase_4/models/minigames/delivery_area.egg')
         self.world.setY(-5)
         self.world.reparentTo(base.render)
+        self.world.find('**/ground').setBin('ground', 18)
         self.sky = loader.loadModel('phase_3.5/models/props/TT_sky.bam')
         self.sky.reparentTo(base.camera)
         ce = CompassEffect.make(NodePath(), CompassEffect.PRot | CompassEffect.PZ)
@@ -161,6 +162,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         base.localAvatar.attachCamera()
         base.localAvatar.startSmartCamera()
         base.localAvatar.enableAvatarControls()
+        base.localAvatar.startTrackAnimToSpeed()
         self.brLabel = OnscreenText(text = "", parent = base.a2dTopRight,
                                     fg = (1, 1, 1, 1), shadow = (0, 0, 0, 1),
                                     pos = (-0.1, -0.1, 0), align = TextNode.ARight)
@@ -190,6 +192,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         base.localAvatar.disableAvatarControls()
         base.localAvatar.stopSmartCamera()
         base.localAvatar.detachCamera()
+        base.localAvatar.stopTrackAnimToSpeed()
         self.brLabel.destroy()
         self.brLabel = None
         self.bsLabel.destroy()

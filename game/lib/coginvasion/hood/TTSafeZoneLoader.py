@@ -45,6 +45,8 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.geom.find('**/ground').setBin('ground', 18)
         self.geom.find('**/ground_center_coll').setCollideMask(CIGlobals.FloorBitmask)
         self.geom.find('**/ground_sidewalk_coll').setCollideMask(CIGlobals.FloorBitmask)
+        for face in self.geom.findAllMatches('**/ground_sidewalk_front_*'):
+            face.setColorScale(0.8, 0.8, 0.8, 1.0)
         for tunnel in self.geom.findAllMatches('**/linktunnel_tt*'):
             tunnel.find('**/tunnel_floor_1').setTexture(loader.loadTexture('phase_4/models/neighborhoods/tex/sidewalkbrown.jpg'), 1)
         for tree in self.geom.findAllMatches('**/prop_green_tree_*_DNARoot'):

@@ -67,6 +67,8 @@ class DistributedDeliveryTruck(DistributedNode):
         self.pod.setScale(0.2)
         self.pod.setY(8.5)
         self.pod.setH(180)
+        self.pod.find('**/metal_ramp').setBin('ground', 18)
+        self.pod.find('**/metal_ramp_coll').setCollideMask(CIGlobals.FloorBitmask)
         self.rope = Rope()
         self.rope.ropeNode.setUseVertexColor(1)
         self.rope.setup(3, ({'node': self.kart, 'point': (0, 1.5, 0.7), 'color': (0, 0, 0, 1), 'thickness': 1000},
