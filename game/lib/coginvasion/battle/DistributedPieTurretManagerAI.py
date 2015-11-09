@@ -15,12 +15,16 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
         self.turretId2turret = {}
 
     def killTurret(self, turretId):
+        if self.turretId2turret == None:
+            return
         turret = self.turretId2turret[turretId]
         turret.disable()
         turret.requestDelete()
         del self.turretId2turret[turretId]
 
     def requestPlace(self, posHpr):
+        if self.turretId2turret == None:
+            return
         avId = self.air.getAvatarIdFromSender()
         turret = DistributedPieTurretAI(self.air)
         turret.setManager(self)
