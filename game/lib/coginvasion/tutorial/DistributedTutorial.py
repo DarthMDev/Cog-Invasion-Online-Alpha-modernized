@@ -25,7 +25,7 @@ class DistributedTutorial(DistributedObject):
     GUIDE_WATCH_HPR = (41.63, 0, 0)
     GUIDE_INTRO_SPEECH = ['Hey, looks like you made it!', 'So, welcome to OToontown.',
      'OToontown is short for Old Toontown, or Toontown from the past.',
-     'Not long ago, Toons used to live present day Toontown.',
+     'Not long ago, Toons used to live in present day Toontown.',
      'Unfortunately, the Cogs planned a mega-invasion that was sure to be a complete takeover of Toontown and make all Toons go sad for good.',
      "There was no way we could have let that happen, so we built a time machine, and sent every Toon back in time to OToontown, where Cogs didn't exist yet.",
      "The Cogs completely took over present day Toontown, and turned it into what they wanted it to be - a business metropolis.",
