@@ -159,11 +159,13 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             if self.collNodePath:
                 self.notify.info('Tried to initialize body collisions more than once!')
                 return
+        height -= 0.5
         cTube = CollisionTube(0, 0, height, 0, 0, 0, radius)
         cNode = CollisionNode('cNode')
         cNode.addSolid(cTube)
         cNode.setCollideMask(CIGlobals.WallBitmask)
         self.collNodePath = self.attachNewNode(cNode)
+        self.collNodePath.setZ(0.5)
         #self.collNodePath.show()
 
     def collisionFix(self, task):
