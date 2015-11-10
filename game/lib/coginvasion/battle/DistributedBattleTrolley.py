@@ -23,13 +23,13 @@ class DistributedBattleTrolley(DistributedObject):
     notify = directNotify.newCategory('DistributedBattleTrolley')
 
     STAND_POSITIONS = [
-        Point3(-4.75, -5, 1.4), 
-        Point3(-4.75, -1.6, 1.4), 
-        Point3(-4.75, 1.6, 1.4), 
+        Point3(-4.75, -5, 1.4),
+        Point3(-4.75, -1.6, 1.4),
+        Point3(-4.75, 1.6, 1.4),
         Point3(-4.75, 5, 1.4),
-        Point3(-4.75, -5, 1.4), 
-        Point3(-4.75, -1.6, 1.4), 
-        Point3(-4.75, 1.6, 1.4), 
+        Point3(-4.75, -5, 1.4),
+        Point3(-4.75, -1.6, 1.4),
+        Point3(-4.75, 1.6, 1.4),
         Point3(-4.75, 5, 1.4)
     ]
     TROLLEY_NEUTRAL_POS = Point3(15.751, 14.1588, -0.984615)
@@ -121,6 +121,7 @@ class DistributedBattleTrolley(DistributedObject):
         del self.moveTrack
 
     def enterLeaving(self, ts = 0):
+        base.playSfx(self.trolleyBellSfx, node = self.trolleyCar)
         if self.localAvOnTrolley == True:
             self.trolleyExitTrack.append(Sequence(Wait(2.0), Func(base.transitions.fadeOut)))
         self.trolleyExitTrack.start(ts)
@@ -152,13 +153,12 @@ class DistributedBattleTrolley(DistributedObject):
                 toon.headsUp(slotPos)
                 track = Sequence(
                     Func(toon.setAnimState, 'run'),
-                    LerpPosInterval(toon, 0.75, Point3(-5, -4.5 + index * 3, 1.4)), 
+                    LerpPosInterval(toon, 0.75, Point3(-5, -4.5 + index * 3, 1.4)),
                     LerpHprInterval(toon, 0.25, Point3(90, 0, 0)),
                     Parallel(
-                        Sequence(Wait(sitStartDuration * 0.25), 
-                            LerpPosInterval(toon, sitStartDuration * 0.25, Point3(-3.9, -4.5 + index * 3, 3.0)), 
-                            ActorInterval(toon, 'start-sit')), 
-                        Func(toon.loop, 'sit')))
+                        Sequence(Wait(sitStartDuration * 0.25),
+                            LerpPosInterval(toon, sitStartDuration * 0.25, Point3(-3.9, -4.5 + index * 3, 3.0)),
+                            ActorInterval(toon, 'start-sit'), Func(toon.loop, 'sit'))))
             else:
                 slotPos = self.STAND_POSITIONS[index]
                 toon.headsUp(slotPos)
@@ -231,11 +231,11 @@ class DistributedBattleTrolley(DistributedObject):
         toon.headsUp(self.trolleyCar, endPos)
         if index <= 3:
             track = Sequence(Parallel(
-                ActorInterval(toon, 'start-sit', startTime=1, endTime=0.0), 
-                Sequence(Wait(0.5), 
-                    LerpPosInterval(toon, 0.25, 
-                    Point3(-5, -4.5 + index * 3, 1.4), other=self.trolleyCar))), 
-                    Func(toon.setAnimState, 'run'), 
+                ActorInterval(toon, 'start-sit', startTime=1, endTime=0.0),
+                Sequence(Wait(0.5),
+                    LerpPosInterval(toon, 0.25,
+                    Point3(-5, -4.5 + index * 3, 1.4), other=self.trolleyCar))),
+                    Func(toon.setAnimState, 'run'),
                     LerpPosInterval(toon, 1, Point3(21 - index * 3, -5, 0.02), other=self.trolleyStation),
                     Func(toon.setAnimState, 'neutral'),
                     Func(toon.startSmooth),
@@ -270,7 +270,7 @@ class DistributedBattleTrolley(DistributedObject):
         tn = TextNode('trolleycountdowntext')
         tn.setFont(CIGlobals.getMickeyFont())
         tn.setTextColor(1, 0, 0, 1)
-        
+
         self.keys = self.trolleyCar.findAllMatches('**/key')
         self.numKeys = self.keys.getNumPaths()
         self.keyInit = []
@@ -282,7 +282,7 @@ class DistributedBattleTrolley(DistributedObject):
             ref.iPosHpr(key)
             self.keyRef.append(ref)
             self.keyInit.append(key.getTransform())
-            
+
         self.frontWheels = self.trolleyCar.findAllMatches('**/front_wheels')
         self.numFrontWheels = self.frontWheels.getNumPaths()
         self.frontWheelInit = []
@@ -330,35 +330,35 @@ class DistributedBattleTrolley(DistributedObject):
         wheelAngle = dist / (2.0 * math.pi * 0.95) * 360
         trolleyExitAnimateInterval = LerpFunctionInterval(self.animateTrolley, duration=TROLLEY_EXIT_TIME, blendType='easeIn', extraArgs=[keyAngle, wheelAngle], name='TrolleyAnimate')
         self.trolleyExitTrack = Parallel(trolleyExitPos, trolleyExitBellInterval, trolleyExitAwayInterval, trolleyExitAnimateInterval, name=self.uniqueName('trolleyExit'))
-        
+
         self.countdownText = self.trolleyStation.attachNewNode(tn)
         self.countdownText.setScale(3.0)
         self.countdownText.setPos(14.58, 10.77, 11.17)
         self.acceptOnce('entertrolley_sphere', self.__handleTrolleyTrigger)
-        
+
     def resetAnimation(self):
         if self.keys:
             for i in range(self.numKeys):
                 self.keys[i].setTransform(self.keyInit[i])
-    
+
             for i in range(self.numFrontWheels):
                 self.frontWheels[i].setTransform(self.frontWheelInit[i])
-    
+
             for i in range(self.numBackWheels):
                 self.backWheels[i].setTransform(self.backWheelInit[i])
-            
+
     def animateTrolley(self, t, keyAngle, wheelAngle):
         if self.keys:
             for i in range(self.numKeys):
                 key = self.keys[i]
                 ref = self.keyRef[i]
                 key.setH(ref, t * keyAngle)
-    
+
             for i in range(self.numFrontWheels):
                 frontWheel = self.frontWheels[i]
                 ref = self.frontWheelRef[i]
                 frontWheel.setH(ref, t * wheelAngle)
-    
+
             for i in range(self.numBackWheels):
                 backWheel = self.backWheels[i]
                 ref = self.backWheelRef[i]
@@ -379,6 +379,6 @@ class DistributedBattleTrolley(DistributedObject):
         self.keyInit = None
         self.keyRef = None
         self.keys = None
-        
+
         self.ignore('entertrolley_sphere')
         DistributedObject.delete(self)
