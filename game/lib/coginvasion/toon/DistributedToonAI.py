@@ -88,7 +88,21 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.hoodsDiscovered = []
         self.teleportAccess = []
         self.lastHood = 0
+        self.defaultShard = 0
         return
+
+    def setDefaultShard(self, shardId):
+        self.defaultShard = shardId
+
+    def d_setDefaultShard(self, shardId):
+        self.sendUpdate('setDefaultShard', [shardId])
+
+    def b_setDefaultShard(self, shardId):
+        self.d_setDefaultShard(shardId)
+        self.setDefaultShard(shardId)
+
+    def getDefaultShard(self):
+        return self.defaultShard
 
     def setLastHood(self, zoneId):
         self.lastHood = zoneId
@@ -481,6 +495,8 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def announceGenerate(self):
         DistributedAvatarAI.announceGenerate(self)
         DistributedSmoothNodeAI.announceGenerate(self)
+        if self.parentId != self.getDefaultShard():
+            self.b_setDefaultShard(self.parentId)
 
     def delete(self):
         try:

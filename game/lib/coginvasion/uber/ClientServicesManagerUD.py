@@ -295,7 +295,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
                 "setTutorialCompleted": (str(choice[3]),),
                 "setHoodsDiscovered": ([CIGlobals.ToontownCentralId],),
                 "setTeleportAccess": ([],),
-                "setLastHood": (CIGlobals.ToontownCentralId,)}
+                "setLastHood": (CIGlobals.ToontownCentralId,),
+                "setDefaultShard": (0,)}
         self.notify.info("Creating new toon!")
         avId = 0
         avList = accFields["AVATAR_IDS"]

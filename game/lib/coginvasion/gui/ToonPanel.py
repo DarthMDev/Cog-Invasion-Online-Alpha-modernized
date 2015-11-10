@@ -1,6 +1,8 @@
 # Filename: ToonPanel.py
 # Created by:  blach (03Aug15)
 
+from panda3d.core import TextNode
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import DirectFrame, DirectButton, OnscreenText, DGG
 from direct.fsm import ClassicFSM, State
@@ -45,6 +47,9 @@ class ToonPanel(DirectFrame):
         self.actionFrameButton2 = None
         self.avatarInfo = None
         self.action = None
+        self.locationText = None
+        self.shardText = None
+        self.detailsExitBtn = None
 
         self.fsm = ClassicFSM.ClassicFSM('ToonPanel', [State.State('off', self.enterOff, self.exitOff),
             State.State('waitOnAvatarInfoResponse', self.enterWaitOnAvatarInfoResponse,
@@ -69,6 +74,40 @@ class ToonPanel(DirectFrame):
             State.State('removedFriend', self.enterRemovedFriend, self.exitRemovedFriend, ['off'])],
             'off', 'off')
         self.actionFSM.enterInitialState()
+
+    def makeMoreDetailsPanel(self):
+        self.actionFSM.request('off')
+        self.removeMoreDetailsPanel()
+        self.removeActionPanel()
+        self.makeActionPanel()
+        zoneId = self.avatarInfo[5]
+        shardId = self.avatarInfo[6]
+        isOnline = self.avatarInfo[7]
+        shardName = 'Unknown District'
+        hoodName = ZoneUtil.getHoodId(zoneId, 1)
+        for district in base.cr.activeDistricts.values():
+            if district.doId == shardId:
+                shardName = district.getDistrictName()
+                break
+        if not isOnline:
+            hoodName = 'Offline'
+            shardName = 'Offline'
+        self.locationText = OnscreenText('Location: {0}'.format(hoodName), parent = self.actionFrame, pos = (-0.3, 0.05, 0), align = TextNode.ALeft, scale = 0.04)
+        self.shardText = OnscreenText('District: {0}'.format(shardName), parent = self.actionFrame, pos = (-0.3, 0.0, 0), align = TextNode.ALeft, scale = 0.04)
+        self.detailsExitBtn = DirectButton(geom = CIGlobals.getCancelBtnGeom(), parent = self.actionFrame,
+            relief = None, scale = 0.8, pos = (-0.3, 0.0, -0.175), command = self.removeMoreDetailsPanel)
+
+    def removeMoreDetailsPanel(self):
+        if self.locationText:
+            self.locationText.destroy()
+            self.locationText = None
+        if self.shardText:
+            self.shardText.destroy()
+            self.shardText = None
+        if self.detailsExitBtn:
+            self.detailsExitBtn.destroy()
+            self.detailsExitBtn = None
+        self.removeActionPanel()
 
     def maybeUpdateFriendButton(self):
         if self.friendButton:
@@ -279,6 +318,7 @@ class ToonPanel(DirectFrame):
     def doAction(self, action):
         self.action = action
         self.actionFSM.requestFinalState()
+        self.removeMoreDetailsPanel()
         self.removeActionPanel()
         self.makeActionPanel()
         if action != 'removeFriendConfirm':
@@ -291,12 +331,15 @@ class ToonPanel(DirectFrame):
         self.acceptOnce('avatarInfoResponse', self.handleAvatarInfoResponse)
         base.cr.friendsManager.d_requestAvatarInfo(self.avatarInfo[0])
 
-    def handleAvatarInfoResponse(self, name, dna, maxHealth, health):
+    def handleAvatarInfoResponse(self, name, dna, maxHealth, health, zoneId, shardId, isOnline):
         if self.avatarInfo:
             self.avatarInfo.append(name)
             self.avatarInfo.append(dna)
             self.avatarInfo.append(maxHealth)
             self.avatarInfo.append(health)
+            self.avatarInfo.append(zoneId)
+            self.avatarInfo.append(shardId)
+            self.avatarInfo.append(isOnline)
             self.fsm.request('panel')
 
     def exitWaitOnAvatarInfoResponse(self):
@@ -367,7 +410,24 @@ class ToonPanel(DirectFrame):
         self.teleportButton.setPos(0, 0, -0.275)
 
         self.exitButton = DirectButton(geom = CIGlobals.getCancelBtnGeom(), parent = self,
-            relief = None, scale = 0.6, pos = (-0.127, 0.0, -0.3425), command = self.exitClicked)
+            relief = None, scale = 0.6, pos = (0, 0.0, -0.3425), command = self.exitClicked)
+        gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui.bam")
+        self.moreDetailsBtn = DirectButton(geom = (gui.find('**/Horiz_Arrow_UP'),
+            gui.find('**/Horiz_Arrow_DN'),
+            gui.find('**/Horiz_Arrow_Rllvr'),
+            gui.find('**/Horiz_Arrow_UP')),
+            relief = None,
+            parent = self,
+            pos = (-0.127, 0.0, -0.3425),
+            geom_hpr = (180, 0, 0),
+            command = self.makeMoreDetailsPanel,
+            scale = 0.77,
+            text = ('', 'More Details', 'More Details', ''),
+            text_scale = 0.045,
+            text_fg = (1, 1, 1, 1),
+            text_shadow = (0, 0, 0, 1),
+            text_pos = (-0.08, -0.01),
+            text_align = TextNode.ARight)
 
     def exitPanel(self):
         if self.actionFSM.getCurrentState().getName() == 'waitOnAvatarFriendListResponse':
@@ -377,6 +437,7 @@ class ToonPanel(DirectFrame):
         self.action = None
         self.avatarInfo = None
         self.removeActionPanel()
+        self.removeMoreDetailsPanel()
         self.hide()
         if self.nameText:
             self.nameText.destroy()
@@ -398,3 +459,6 @@ class ToonPanel(DirectFrame):
         if self.exitButton:
             self.exitButton.destroy()
             self.exitButton = None
+        if self.moreDetailsBtn:
+            self.moreDetailsBtn.destroy()
+            self.moreDetailsBtn = None

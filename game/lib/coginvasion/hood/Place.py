@@ -157,8 +157,10 @@ class Place(StateData):
         self.shtickerBookStateData.enter()
         base.localAvatar.showBookButton(1)
         base.localAvatar.b_setAnimState('readBook')
+        self.acceptOnce('escape-up', base.localAvatar.bookButtonClicked, [0])
 
     def __shtickerBookDone(self):
+        self.ignore('escape-up')
         doneStatus = self.shtickerBookStateData.getDoneStatus()
         base.localAvatar.hideBookButton()
         self.shtickerBookStateData.exit()
@@ -209,6 +211,7 @@ class Place(StateData):
         self.shtickerBookStateData.unload()
         del self.shtickerBookStateData
         base.localAvatar.hideBookButton()
+        self.ignore('escape-up')
 
     def enterStop(self, doNeutral = 1):
         if doNeutral:

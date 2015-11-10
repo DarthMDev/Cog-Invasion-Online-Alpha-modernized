@@ -65,7 +65,14 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.hoodsDiscovered = []
         self.teleportAccess = []
         self.lastHood = 0
+        self.defaultShard = 0
         return
+
+    def setDefaultShard(self, shardId):
+        self.defaultShard = shardId
+
+    def getDefaultShard(self):
+        return self.defaultShard
 
     def doSmoothTask(self, task):
         self.smoother.computeAndApplySmoothPosHpr(self, self)
@@ -623,6 +630,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         except:
             self.DistributedToon_deleted = 1
             self.tutDone = None
+            self.defaultShard = None
             self.stopSmooth()
             Toon.Toon.delete(self)
             DistributedAvatar.delete(self)

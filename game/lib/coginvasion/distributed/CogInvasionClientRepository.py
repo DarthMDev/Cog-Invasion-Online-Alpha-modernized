@@ -478,9 +478,7 @@ class CogInvasionClientRepository(AstronClientRepository):
     def enterPlayingGame(self):
         #self.handler = self.handlePlayGame
         zoneId = localAvatar.getLastHood()
-        print "Going to {0}".format(zoneId)
         hoodId = ZoneUtil.getHoodId(zoneId)
-        print "Hood {0}".format(hoodId)
         status = {"hoodId": hoodId,
                 "zoneId": zoneId,
                 "avId": self.localAvId}

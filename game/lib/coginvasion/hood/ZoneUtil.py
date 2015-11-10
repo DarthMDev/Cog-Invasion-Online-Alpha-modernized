@@ -57,7 +57,7 @@ def getHoodId(zoneId, street = 0):
 	if street:
 		if str(zoneId)[0] == '1' and len(str(zoneId)) == 4:
 			return DonaldsDock
-		elif str(zoneId)[:2] == '11' and len(str(zoneId)) == 5:
+		elif str(zoneId)[:2] == '10' and len(str(zoneId)) == 5:
 			return MinigameArea
 		elif str(zoneId)[:2] == '12' and len(str(zoneId)) == 5:
 			return CogTropolis

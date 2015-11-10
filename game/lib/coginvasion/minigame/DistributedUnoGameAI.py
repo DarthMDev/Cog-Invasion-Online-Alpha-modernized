@@ -90,7 +90,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
     def dealCards(self):
         """ Deal cards to all avatars. """
         self.d_setPlayByPlay(UGG.EVENT_DEALING_CARDS)
-        if hasattr(self, 'avatars') and self.avatars and isinstance(self.avatars, (list, tuple)):
+        if hasattr(self, 'avatars') and self.avatars != None:
             for avatar in self.avatars:
                 for _ in range(self.cardsToDeal):
                     self.d_takeNewCard(avatar.doId, self.pickNewCard())
@@ -115,7 +115,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
             Wait(1.0), Func(self.d_setPlayByPlay, "1"), Wait(1.0), Func(self.startTurns), Func(setGameStarted)).start()
 
     def startTurns(self):
-        if hasattr(self, 'avatars') and self.avatars and isinstance(self.avatars, (list, tuple)):
+        if hasattr(self, 'avatars') and self.avatars != None:
             for avatar in self.avatars:
                 self.turnOrder.append(avatar.doId)
         if self.ais > 0 and self.playerMgr:
@@ -218,6 +218,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                         track.start()
                 else:
                     seq.append(Func(self.doNextPlayerTurn, shouldSkip, shouldDraw, reversedNow))
+                self.turnSeq = seq
                 seq.start()
             elif (self.isAvatarPresent(doId) and self.turnOrder[self.currentTurn] != doId and not self.winnerAnnounced):
                 # Oops, the avatar must have selected their card at the last second,
@@ -275,7 +276,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         self.turnSeq = seq
 
     def getAvatarNamePossesive(self, doId):
-        if hasattr(self, 'avatars') and self.avatars and isinstance(self.avatars, (list, tuple)):
+        if hasattr(self, 'avatars') and self.avatars != None:
             for avatar in self.avatars:
                 if avatar.doId == doId:
                     name = avatar.getName()
@@ -366,6 +367,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                         track.append(Wait(waitTime))
                         track.append(Func(self.requestPlaceCard, card, player.getID()))
                         track.start()
+                        self.turnSeq = track
                     else:
                         self.requestPlaceCard(card, doId = player.getID())
                     return
@@ -380,12 +382,14 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                     track.append(Func(player.addCard, new_card))
                     track.append(Func(player.removeDealingCard, new_card))
                     track.start()
+                    self.turnSeq = track
                 else:
                     waitTime = random.uniform(0.15, 0.45)
                     track = Sequence()
                     track.append(Wait(waitTime))
                     track.append(Func(player.addCard, new_card))
                     track.start()
+                    self.turnSeq = track
                 placeable = hasPlaceableCardBeingDealt()
                 self.__handleAITurn(player)
             elif player.getDrawsThisTurn() == self.maxDrawsPerTurn:
@@ -394,12 +398,14 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                 seq.append(Wait(self.time))
                 seq.append(Func(player.setDrawsThisTurn, 0))
                 seq.start()
+                self.turnSeq = seq
                 return
             elif hasPlaceableCardBeingDealt():
                 seq = Sequence()
                 seq.append(Wait(0.75))
                 seq.append(Func(self.__handleAITurn, player))
                 seq.start()
+                self.turnSeq = seq
 
     def callUno(self):
         doId = self.air.getAvatarIdFromSender()
@@ -456,7 +462,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         return newCardId
 
     def isAvatarPresent(self, doId):
-        if hasattr(self, 'avatars') and self.avatars and isinstance(self.avatars, (list, tuple)):
+        if hasattr(self, 'avatars') and self.avatars != None:
             for avatar in self.avatars:
                 if avatar.doId == doId:
                     return True
@@ -467,7 +473,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         return False
 
     def getAvatarName(self, doId):
-        if hasattr(self, 'avatars') and self.avatars and isinstance(self.avatars, (list, tuple)):
+        if hasattr(self, 'avatars') and self.avatars != None:
             for avatar in self.avatars:
                 if avatar.doId == doId:
                     return avatar.getName()
@@ -484,7 +490,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                     self.avatarLoser = True
             addMoney = self.loserPrize
             if not avatarLoser: addMoney = self.winnerPrize
-            if hasattr(self, 'avatars') and self.avatars and isinstance(self.avatars, (list, tuple)):
+            if hasattr(self, 'avatars') and self.avatars != None:
                 for avatar in self.avatars:
                     avatar.b_setMoney(avatar.getMoney() + addMoney)
         else:

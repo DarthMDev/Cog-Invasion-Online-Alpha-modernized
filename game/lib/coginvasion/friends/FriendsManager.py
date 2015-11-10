@@ -43,8 +43,8 @@ class FriendsManager(DistributedObjectGlobal):
             Whisper().createSystemMessage(self.GoingOfflineMessage % name)
             self.d_requestFriendsList()
 
-    def avatarInfo(self, name, dna, maxHP, hp):
-        messenger.send('avatarInfoResponse', [name, dna, maxHP, hp])
+    def avatarInfo(self, name, dna, maxHP, hp, zoneId, shardId, isOnline):
+        messenger.send('avatarInfoResponse', [name, dna, maxHP, hp, zoneId, shardId, isOnline])
 
     def friendRequest(self, sender, name, dna):
         messenger.send('newFriendRequest', [sender, name, dna])

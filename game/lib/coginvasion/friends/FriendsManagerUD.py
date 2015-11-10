@@ -4,6 +4,8 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 
+from lib.coginvasion.hood import ZoneUtil
+
 class RequestFriendsListProcess:
     notify = directNotify.newCategory('RequestFriendsListProcess')
 
@@ -120,8 +122,14 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
             dna = fields['setDNAStrand'][0]
             maxHP = fields['setMaxHealth'][0]
             hp = fields['setHealth'][0]
+            zoneId = fields['setLastHood'][0]
+            try:
+                shardId = fields['setDefaultShard'][0]
+            except:
+                shardId = 0
+            isOnline = int(avId in self.toonsOnline)
 
-            self.sendUpdateToAvatarId(sender, 'avatarInfo', [name, dna, maxHP, hp])
+            self.sendUpdateToAvatarId(sender, 'avatarInfo', [name, dna, maxHP, hp, zoneId, shardId, isOnline])
 
         self.air.dbInterface.queryObject(
             self.air.dbId,

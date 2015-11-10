@@ -414,16 +414,20 @@ class ShtickerBook(StateData):
             self.btn_prev = DirectButton(geom=(self.book_contents.find('**/arrow_button'),
                                         self.book_contents.find('**/arrow_down'),
                                         self.book_contents.find('**/arrow_rollover')), relief=None, pos=(-0.838, 0, -0.661), scale=(-0.1, 0.1, 0.1), command=self.pageDone, extraArgs = [back])
+            self.acceptOnce('arrow_left-up', self.pageDone, [back])
         if fwd:
             self.btn_next = DirectButton(geom=(self.book_contents.find('**/arrow_button'),
                                         self.book_contents.find('**/arrow_down'),
                                         self.book_contents.find('**/arrow_rollover')), relief=None, pos=(0.838, 0, -0.661), scale=(0.1, 0.1, 0.1), command=self.pageDone, extraArgs = [fwd])
+            self.acceptOnce('arrow_right-up', self.pageDone, [fwd])
 
     def deletePageButtons(self, back, fwd):
         if back:
+            self.ignore('arrow_left-up')
             self.btn_prev.destroy()
             del self.btn_prev
         if fwd:
+            self.ignore('arrow_right-up')
             self.btn_next.destroy()
             del self.btn_next
 
