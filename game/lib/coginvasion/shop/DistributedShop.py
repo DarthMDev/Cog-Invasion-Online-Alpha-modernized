@@ -10,7 +10,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.shop.ItemType import ItemType
 from panda3d.core import NodePath, CollisionSphere, CollisionNode
-import abc, random
+import abc
 
 class DistributedShop(DistributedNode):
     notify = directNotify.newCategory('DistributedShop')
@@ -20,7 +20,6 @@ class DistributedShop(DistributedNode):
         NodePath.__init__(self, 'shop')
         self.cr = cr
         self.items = {}
-        self.destroyEvent = 'destroyShop-' + str(random.randint(0, 1000))
         self.inShop = False
         self.clerk = None
         self.shopNP = None
@@ -37,6 +36,10 @@ class DistributedShop(DistributedNode):
 
     def getItems(self):
         return self.items
+    
+    def updateTurretCount(self, amount):
+        if self.shop:
+            self.shop.updateTurrets(amount)
 
     @abc.abstractmethod
     def setupClerk(self):
@@ -94,7 +97,8 @@ class DistributedShop(DistributedNode):
         self.setParent(CIGlobals.SPRender)
 
     def destroy(self):
-        messenger.send(self.destroyEvent)
+        if self.shop:
+            self.shop.destroy()
         self.deleteClerk()
         self.inShop = False
         self.shopNP = None

@@ -31,6 +31,15 @@ class DistributedShopAI(DistributedNodeAI):
                 amt = avatar.getMaxHealth() - avatar.getHealth()
             avatar.b_setHealth(giveHealth)
             avatar.d_announceHealthAndPlaySound(1, amt)
+            
+    def requestTurretCount(self):
+        avId = self.air.getAvatarIdFromSender()
+        for obj in self.air.doId2do.values():
+            className = obj.__class__.__name__
+            if obj.zoneId == self.zoneId:
+                if className == 'DistributedCogBattleAI':
+                    if obj.getTurretManager():
+                        self.sendUpdateToAvatarId(avId, 'updateTurretCount', [obj.getTurretManager().getTurretCount()])
 
     def requestEnter(self):
         avId = self.air.getAvatarIdFromSender()

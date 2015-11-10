@@ -128,6 +128,9 @@ class DistributedCogBattleAI(DistributedObjectAI):
             return task.done
         task.delayTime = 5
         return task.again
+    
+    def getTurretManager(self):
+        return self.turretMgr
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)

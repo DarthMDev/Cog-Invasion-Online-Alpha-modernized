@@ -24,7 +24,6 @@ class Shop(StateData):
     def __init__(self, distShop, doneEvent, wantTurretCount = 0):
         StateData.__init__(self, doneEvent)
         self.distShop = distShop
-        self.destroyEvent = self.distShop.destroyEvent
         self.origHealth = None
         self.avMoney = base.localAvatar.getMoney()
         self.healCooldownDoneSoundPath = 'phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3'
@@ -39,7 +38,6 @@ class Shop(StateData):
         # This handles heal cooldowns.
         self.healCooldowns = {}
         self.newHealCooldowns = {}
-        self.acceptOnce(self.destroyEvent, self.destroy)
 
     def confirmPurchase(self):
         if self.newHealth != None:
@@ -134,6 +132,10 @@ class Shop(StateData):
                 return Task.done
             return Task.again
         return Task.done
+    
+    def updateTurrets(self, amount):
+        if self.window:
+            self.window.setTurrets(amount)
 
     def getCooldown(self, item):
         if self.hasCooldown(item):
@@ -197,6 +199,7 @@ class Shop(StateData):
     def exit(self):
         StateData.exit(self)
         if self.window:
+            self.upgradesPurchased = False
             self.window.delete()
             self.newHealth = None
             self.healCooldownDoneSfx = None
@@ -330,12 +333,17 @@ class ShopWindow(DirectFrame):
         self.nextBtn = DirectButton(geom = buttonGeom, relief = None, scale = 0.05, pos = (0.3, 0, -0.25), hpr = (0, 0, 180), command = self.changePage, extraArgs = [1], parent = self)
         self.hideInfo()
         
+    def setTurrets(self, amount):
+        if self.shop.upgradesPurchased:
+            amount += 1
+        self.turretCount = amount
+        self.updatePages()
+        
     def updateTurretCount(self):
         if self.turretLabel:
             self.turretLabel.destroy()
 
         if self.wantTurretCount:
-            battle = base.localAvatar.getMyBattle()
             maxTurrets = CogBattleGlobals.MAX_TURRETS
             
             if not self.turretImg:
@@ -344,9 +352,6 @@ class ShopWindow(DirectFrame):
                     pos = (-0.22, 0, 0.275)
                 )
                 self.turretImg.setTransparency(TransparencyAttrib.MAlpha)
-            
-            if battle:
-                self.turretCount = battle.getTurretCount()
             
             self.turretLabel = DirectLabel(text = 'Turrets: %s/%s' % (str(self.turretCount), str(maxTurrets)),
                 relief = None,
@@ -478,7 +483,12 @@ class ShopWindow(DirectFrame):
         self.isSetup = True
 
     def updatePages(self):
-        self.updateTurretCount()
+        battle = base.localAvatar.getMyBattle()
+        
+        if battle:
+            self.shop.distShop.sendUpdate('requestTurretCount', [])
+            self.updateTurretCount()
+
         for page in self.pages:
             page.update()
 
