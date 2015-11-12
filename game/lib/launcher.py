@@ -6,7 +6,6 @@
 
 import sys
 import os
-import ctypes
 import subprocess
 import hashlib
 from uuid import getnode as getMacAddress
@@ -55,7 +54,7 @@ class Launcher:
     loginServer_port = 7033
     Server_host = "gameserver.coginvasion.com"
     timeout = 2000
-    version = 1.2
+    version = 1.3
     helpVideoLink = "http://download.coginvasion.com/videos/ci_launcher_crash_help.mp4"
     hashFileLink = "http://download.coginvasion.com/file_info.txt"
 
@@ -267,14 +266,6 @@ class Launcher:
         del self.infoLbl
 
     def enterMenu(self):
-        try:
-            admin = os.getuid() == 0
-        except:
-            admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        #if not admin:
-        #    self.adminLbl = canvas.create_text(287, 220, text = "You must run the Cog Invasion Launcher\nwith administrator rights for correct operation.", fill = "red")
-        #    self.notify.warning("Launcher is not running in administrator mode!")
-        #    return
         self.title = canvas.create_text(287, 167, text = "Log-In", fill = "white")
         self.userNameEntryLbl = canvas.create_text(195, 198, text = "Username:", fill = "white", font = ("Arial", 12))
         self.passwordEntryLbl = canvas.create_text(196, 228, text = "Password:", fill = "white", font = ("Arial", 12))

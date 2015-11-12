@@ -21,7 +21,7 @@ REQUEST_BASE_LINK = 101
 BASE_LINK = 102
 STORE_LOGIN_TOKEN = 100
 SERVER_MSG = 103
-SERVER_VERSION = "1.0.5"
+SERVER_VERSION = "1.0.6"
 
 messages = {'tmaotc': 'At this time, only %d account(s) can be created on each computer.',
     'tmait': 'At this time, Cog Invasion Online only allows a total of %d game account(s) to be created. This amount has already been reached. We apologize for the inconvenience.',
@@ -29,71 +29,8 @@ messages = {'tmaotc': 'At this time, only %d account(s) can be created on each c
 
 baseLink = "http://download.coginvasion.com/"
 
-# This shouldn't be needed anymore, but I'll keep updating this list incase
-# someone decides never to update the launcher.
-fileNames = [
-    "libcoginvasion.pyd",
-    "coginvasion.exe",
-    "icon.ico",
-    "toonmono.cur",
-    "config/config_client.prc",
-    "release_notes.txt",
-    "phase_0.mf",
-    "phase_3.mf",
-    "phase_3.5.mf",
-    "phase_4.mf",
-    "phase_5.mf",
-    "phase_5.5.mf",
-    "phase_6.mf",
-    "phase_7.mf",
-    "phase_8.mf",
-    "phase_9.mf",
-    "phase_10.mf",
-    "phase_11.mf",
-    "phase_12.mf",
-    "phase_13.mf",
-    "phase_14.mf",
-    "panda3d/ai.pyd",
-    "panda3d/bullet.pyd",
-    "panda3d/core.pyd",
-    "panda3d/direct.pyd",
-    "panda3d/dtoolconfig.pyd",
-    "panda3d/egg.pyd",
-    "panda3d/fx.pyd",
-    "panda3d/ode.pyd",
-    "panda3d/physics.pyd",
-    "panda3d/rocket.pyd",
-    "panda3d/skel.pyd",
-    "panda3d/vision.pyd",
-    "panda3d/vrpn.pyd",
-    "libp3direct.dll",
-    "libp3dtool.dll",
-    "libp3dtoolconfig.dll",
-    "libp3ffmpeg.dll",
-    "libp3miles_audio.dll",
-    "mss32.dll",
-    "mssmp3.asi",
-    "mssogg.asi",
-    "libp3framework.dll",
-    "libp3ptloader.dll",
-    "libp3rocket.dll",
-    "libp3vision.dll",
-    "libp3vrpn.dll",
-    "libp3windisplay.dll",
-    "libpanda.dll",
-    "libpandaai.dll",
-    "libpandabullet.dll",
-    "libpandaegg.dll",
-    "libpandaexpress.dll",
-    "libpandafx.dll",
-    "libpandagl.dll",
-    "libpandaode.dll",
-    "libpandaphysics.dll",
-    "libpandaskel.dll"
-]
-
 class LoginServer(MiniServer.MiniServer):
-    version = 1.2
+    version = 1.3
 
     def __init__(self, dataFileName = 'astron/databases/astrondb/loginAccData'):
         MiniServer.MiniServer.__init__(self, "localhost", 7033, 402000000, "login")

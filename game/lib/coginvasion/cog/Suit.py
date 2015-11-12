@@ -22,7 +22,6 @@ from direct.showbase.Audio3DManager import Audio3DManager
 from direct.task.Task import Task
 from panda3d.core import Vec4, Texture
 import random
-from direct.extensions_native.extension_native_helpers import path
 
 class Suit(Avatar):
     notify = directNotify.newCategory('Suit')
@@ -117,10 +116,10 @@ class Suit(Avatar):
         self.exitTimestampAnimTrack()
         self.exitGeneral()
         self.enableShadowRay()
-        
+
     def enterFlail(self, ts = 0):
         self.pingpong('flail', fromFrame = 30, toFrame = 35)
-        
+
     def exitFlail(self):
         self.stop()
 

@@ -9,13 +9,10 @@ import hashlib
 import time
 
 FILE_LIST = [
-    "libcoginvasion.pyd",
+    "coginvasion.bin",
     "coginvasion.exe",
     "icon.ico",
     "toonmono.cur",
-    "config/config_client.prc",
-    "config/Confauto.prc",
-    "release_notes.txt",
     "phase_0.mf",
     "phase_3.mf",
     "phase_3.5.mf",

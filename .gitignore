@@ -44,6 +44,7 @@ Panda3D-CI/Pmw-new
 Panda3D-CI/python
 Panda3D-CI/LICENSE
 Panda3D-CI/ReleaseNotes
+game/built
 *.yaml
 *.bat
 .project

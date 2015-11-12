@@ -36,8 +36,23 @@ import __builtin__
 print "CIStart: Starting the game."
 from panda3d.core import *
 print "CIStart: Using Panda3D version {0}".format(PandaSystem.getVersionString())
-loadPrcFile('config/Confauto.prc')
-loadPrcFile("config/config_client.prc")
+
+try:
+    import aes
+    import niraidata
+    # Config
+    prc = niraidata.CONFIG
+    iv, key, prc = prc[:16], prc[16:32], prc[32:]
+    prc = aes.decrypt(prc, key, iv)
+    for line in prc.split('\n'):
+        line = line.strip()
+        if line:
+            loadPrcFileData('coginvasion config', line)
+    print "CIStart: Running production"
+except:
+    loadPrcFile('config/Confauto.prc')
+    loadPrcFile('config/config_client.prc')
+    print "CIStart: Running dev"
 
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
@@ -56,8 +71,6 @@ elif base.config.GetString('audio-library-name') == 'p3fmod_audio':
     print "CIStart: Using FMOD audio library."
 elif base.config.GetString('audio-library-name') == 'p3openal_audio':
     print "CIStart: Using OpenAL audio library."
-else:
-    print "CIStart: Using no or an unknown audio library."
 
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *

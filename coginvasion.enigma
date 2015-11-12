@@ -16,14 +16,14 @@
     <EnableLogging>False</EnableLogging>
   </KeysGenerator>
   <Input>
-    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\tools\coginvasion.exe</FileName>
+    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\built\coginvasion.exe</FileName>
     <ProductName>Cog Invasion Online</ProductName>
     <VersionInfo/>
     <ProductInfoFromResources>False</ProductInfoFromResources>
   </Input>
   <Output>
     <SameAsInputFile>True</SameAsInputFile>
-    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\tools\coginvasion.exe</FileName>
+    <FileName>C:\Users\Brian\Documents\cog-invasion-online\game\built\coginvasion.exe</FileName>
     <DoNotBackup>False</DoNotBackup>
   </Output>
   <AdvanceInput>
@@ -264,7 +264,7 @@ Use the link below to visit our web site.</Text>
   </RegistrationFeatures>
   <CheckUp>
     <AntiDebugger>
-      <Enabled>False</Enabled>
+      <Enabled>True</Enabled>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Debugger warning</Title>
@@ -290,9 +290,9 @@ This program will not execute while debuggers are running.</Text>
       </Message>
     </AntiDebugger>
     <ControlSum>
-      <Enabled>False</Enabled>
-      <FileIntegrityChecking>False</FileIntegrityChecking>
-      <RTIntegrityChecking>False</RTIntegrityChecking>
+      <Enabled>True</Enabled>
+      <FileIntegrityChecking>True</FileIntegrityChecking>
+      <RTIntegrityChecking>True</RTIntegrityChecking>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Virus warning</Title>
@@ -351,8 +351,8 @@ Try to check it again or contact the software developers:</Text>
       <Passwords Count="0"/>
     </StartupPassword>
     <FileName>
-      <Enabled>False</Enabled>
-      <OriginalFileName>notepad_protected.exe</OriginalFileName>
+      <Enabled>True</Enabled>
+      <OriginalFileName>coginvasion.exe</OriginalFileName>
       <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
       <Message>
         <Title>Invalid File Name</Title>
@@ -410,7 +410,7 @@ Try to contact to developers or download newest version of this software at:</Te
       </Message>
     </DiskDrive>
     <ExecutedCopies>
-      <Enabled>False</Enabled>
+      <Enabled>True</Enabled>
       <AllowCopies>1</AllowCopies>
       <ShowMessageIfCopiesCountIsExceeded>True</ShowMessageIfCopiesCountIsExceeded>
       <Message>
@@ -932,8 +932,8 @@ Uninstall service &quot;%CU_INSTSERV%&quot; and try again!</Text>
     </VirtualizationTools>
     <Privileges>
       <Administrator>
-        <Enabled>False</Enabled>
-        <ShowMessageBeforeTermination>False</ShowMessageBeforeTermination>
+        <Enabled>True</Enabled>
+        <ShowMessageBeforeTermination>True</ShowMessageBeforeTermination>
         <Message>
           <Title>Warning</Title>
           <Text>You have not enough permissions to run this application. 
@@ -1085,7 +1085,84 @@ try again!</Text>
       <Watermarks Count="0"/>
     </Watermarks>
     <Plugins>
-      <Plugins Count="0"/>
+      <Plugins Count="19">
+        <Plugin ID="0">
+          <Name>checkremotedebuggerpresent.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="1">
+          <Name>closehandle.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="2">
+          <Name>debugobjects.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="3">
+          <Name>emulatorsdetect.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="4">
+          <Name>getstartupinfo.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="5">
+          <Name>hardwarebreakpoints.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="6">
+          <Name>heapcheck.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="7">
+          <Name>hidecurrentthread.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="8">
+          <Name>int3.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="9">
+          <Name>int3check.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="10">
+          <Name>isdebuggerpresent.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="11">
+          <Name>isdebuggerpresentx.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="12">
+          <Name>ntflags.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="13">
+          <Name>ntforceflags.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="14">
+          <Name>ntglobalflag.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="15">
+          <Name>ntqueryinformationprocess.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="16">
+          <Name>outputdebugstring.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="17">
+          <Name>sandboxiedetect.dll</Name>
+          <Data/>
+        </Plugin>
+        <Plugin ID="18">
+          <Name>writeprocessmemoryinject.dll</Name>
+          <Data/>
+        </Plugin>
+      </Plugins>
     </Plugins>
     <CustomVersionResource>
       <Enabled>False</Enabled>
