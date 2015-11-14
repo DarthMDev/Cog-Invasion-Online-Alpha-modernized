@@ -152,10 +152,11 @@ class CameraShyLevelLoader:
         self.levelLoaded()
 
     def unload(self):
-        if len(self.models) > 0:
-            for model in self.models:
-                model.removeNode()
-                self.models.remove(model)
+        if self.models:
+            if len(self.models) > 0:
+                for model in self.models:
+                    model.removeNode()
+        self.models = None
         if self.levelGeom:
             self.levelGeom.removeNode()
             self.levelGeom = None

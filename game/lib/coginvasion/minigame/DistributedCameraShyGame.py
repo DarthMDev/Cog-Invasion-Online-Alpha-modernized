@@ -44,10 +44,10 @@ class DistributedCameraShyGame(DistributedMinigame):
         self.firstPerson = CameraShyFirstPerson(self)
         self.skyUtil = None
         self.pbpText = None
-        
+
         self.levelLoader = CameraShyLevelLoader()
         self.spawnPoints = []
-        
+
     def setLevel(self, level):
         self.levelLoader.setLevel(level)
 
@@ -269,6 +269,7 @@ class DistributedCameraShyGame(DistributedMinigame):
             del self.myRemoteAvatar
         self.firstPerson.cleanup()
         del self.firstPerson
+        self.levelLoader.unload()
         self.levelLoader.cleanup()
         del self.levelLoader
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
