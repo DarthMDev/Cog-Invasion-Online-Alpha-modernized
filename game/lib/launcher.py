@@ -229,8 +229,8 @@ class Launcher:
         for line in data.splitlines():
             if len(line) <= 0 or line[:2] == "//":
                 continue
-            fileName, md5, size = line.split(' ')
-            if not self.isSameMD5(fileName, md5) or not self.isSameFileSize(fileName, size):
+            fileName, md5 = line.split(' ')
+            if not self.isSameMD5(fileName, md5):# or not self.isSameFileSize(fileName, size):
                 self.notify.info("{0} is out of date or missing! Adding to download list.".format(fileName))
                 files2Download.append(fileName)
             else:

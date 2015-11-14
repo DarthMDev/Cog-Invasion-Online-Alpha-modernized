@@ -70,7 +70,7 @@ for fileName in FILE_LIST:
         fileName = "../Panda3D-CI/" + fileName
     md5 = hashlib.sha1(open(fileName, 'rb').read()).hexdigest()
     size = os.path.getsize(fileName)
-    what2PutInFile = fileNameToWrite + " " + str(md5) + " " + str(size)
+    what2PutInFile = fileNameToWrite + " " + str(md5)# + " " + str(size)
     print what2PutInFile
     info_file.write(what2PutInFile + "\n")
     info_file.flush()
