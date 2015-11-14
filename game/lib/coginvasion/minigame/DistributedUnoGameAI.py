@@ -229,6 +229,8 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         self.sendUpdateToAvatarId(doId, "requestNewCardColor", [])
 
     def doNextPlayerTurn(self, skip=0, draw=0, reversedNow=0):
+        if self.turnOrder == None:
+            return
         turns = 1
         if self.currentTurn == None:
             self.currentTurn = 0
