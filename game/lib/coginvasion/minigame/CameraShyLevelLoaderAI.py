@@ -10,9 +10,9 @@ import random
 
 class CameraShyLevelLoaderAI:
     notify = directNotify.newCategory('CameraShyLevelLoaderAI')
-    
+
     levels = ['TT_maze']
-    
+
     levelData = {
         'TT_maze' : {
             'gameTime' : 150
@@ -21,16 +21,16 @@ class CameraShyLevelLoaderAI:
             'gameTime' : 240
         }
     }
-    
+
     def __init__(self, minigame):
         self.minigame = minigame
-        self.level = None
-        
+        self.level = ""
+
     # Select a random level.
     def selectLevel(self):
         self.level = random.choice(self.levels)
         self.minigame.d_setLevel(self.level)
-        
+
     def getGameTime(self, level = None):
         if not level and self.level:
             return self.levelData[self.level]['gameTime']
@@ -39,10 +39,10 @@ class CameraShyLevelLoaderAI:
             return 0
         elif level:
             return self.levelData[level]['gameTime']
-    
+
     def getLevel(self):
         return self.level
-    
+
     def cleanup(self):
         try:
             self.CameraShyLevelLoaderAI_deleted
