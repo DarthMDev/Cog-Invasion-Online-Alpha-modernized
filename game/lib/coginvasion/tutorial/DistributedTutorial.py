@@ -394,8 +394,8 @@ class DistributedTutorial(DistributedObject):
         self.guide.startBlink()
         self.guide.reparentTo(render)
         base.localAvatar.reparentTo(render)
-        loader.loadDNAFile(self.dnaStore, 'phase_3.5/dna/storage_tutorial.dna')
-        node = loader.loadDNAFile(self.dnaStore, 'phase_3.5/dna/tutorial_street.dna')
+        loader.loadDNAFile(self.dnaStore, 'phase_3.5/dna/storage_tutorial.pdna')
+        node = loader.loadDNAFile(self.dnaStore, 'phase_3.5/dna/tutorial_street.pdna')
         if node.getNumParents() == 1:
             self.streetGeom = NodePath(node.getParent(0))
             self.streetGeom.reparentTo(hidden)
@@ -438,6 +438,16 @@ class DistributedTutorial(DistributedObject):
         if self.battleMusic:
             self.battleMusic.stop()
             self.battleMusic = None
+        self.dnaStore.reset_nodes()
+        self.dnaStore.reset_hood_nodes()
+        self.dnaStore.reset_place_nodes()
+        self.dnaStore.reset_hood()
+        self.dnaStore.reset_fonts()
+        self.dnaStore.reset_DNA_vis_groups()
+        self.dnaStore.reset_textures()
+        self.dnaStore.reset_block_numbers()
+        self.dnaStore.reset_block_zones()
+        self.dnaStore.reset_suit_points()
         self.dnaStore = None
         self.skyUtil = None
         base.localAvatar.inTutorial = False
