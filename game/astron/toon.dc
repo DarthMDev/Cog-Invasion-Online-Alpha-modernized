@@ -420,7 +420,6 @@ dclass DistributedFactorySneakGame : DistributedToonFPSGame {
 };
 
 dclass DistributedCameraShyGame : DistributedMinigame {
-  setSpawnPoint(int8);
   createRemoteAvatar(uint32) broadcast;
   runningAvatar(uint32) broadcast clsend;
   standingAvatar(uint32) broadcast clsend;
@@ -432,7 +431,8 @@ dclass DistributedCameraShyGame : DistributedMinigame {
   tookPictureOfMe(uint32);
   generateOtherPlayerGui() broadcast;
   updateOtherPlayerHead(uint32, uint32, int8) broadcast;
-  setLevel(string) broadcast ram;
+  setLevel(string) broadcast required ram;
+  setSpawnPoint(int8);
 };
 
 dclass DistributedEagleGame : DistributedMinigame {
