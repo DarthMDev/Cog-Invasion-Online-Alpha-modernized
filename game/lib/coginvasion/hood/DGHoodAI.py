@@ -15,6 +15,6 @@ class DGHoodAI(ToonHoodAI):
 
     def startup(self):
         self.dnaFiles = []
-        self.dnaFiles = ['phase_8/dna/daisys_garden_5100.dna', #'phase_8/dna/daisys_garden_5200.dna',
-            'phase_8/dna/daisys_garden_5300.dna', 'phase_8/dna/daisys_garden_sz.dna']
+        self.dnaFiles = ['phase_8/dna/daisys_garden_5100.pdna', #'phase_8/dna/daisys_garden_5200.dna',
+            'phase_8/dna/daisys_garden_5300.pdna', 'phase_8/dna/daisys_garden_sz.pdna']
         ToonHoodAI.startup(self)

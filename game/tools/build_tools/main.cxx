@@ -33,6 +33,7 @@ _P3D_INIT(egg)
 _P3D_INIT(ode)
 _P3D_INIT(physics)
 _P3D_INIT(interrogatedb)
+_P3D_INIT(libpandadna)
 
 // P3D CXX fwd decls.
 #ifdef WIN32
@@ -96,6 +97,9 @@ static void start_nirai()
     initode();
     initphysics();
 
+    // Init libpandadna
+    initlibpandadna();
+
     // Remove our hacked panda3d root from sys.modules
     // so it can be reloaded with a proper __init__.py
     // but all panda3d.xxx submodules are still accessible.
@@ -105,6 +109,7 @@ static void start_nirai()
     PyObject* modulesdict = PyObject_GetAttrString(sysmodule, "modules");
     Py_INCREF(modulesdict);
     PyDict_DelItemString(modulesdict, "panda3d");
+    //PyDict_DelItemString(modulesdict, "libpandadna");
     Py_DECREF(modulesdict);
     Py_DECREF(sysmodule);
 };
@@ -162,6 +167,32 @@ int main(int argc, char* argv[])
     PyObject_SetAttrString(panda3d_mod, "fx", PyImport_ImportModule("panda3d.fx"));
     PyObject_SetAttrString(panda3d_mod, "ode", PyImport_ImportModule("panda3d.ode"));
     PyObject_SetAttrString(panda3d_mod, "physics", PyImport_ImportModule("panda3d.physics"));
+
+    /*
+    // Do the same for libpandadna.
+    PyObject* lpdna_mod = PyImport_ImportModule("libpandadna");
+    PyObject_SetAttrString(lpdna_mod, "DNALoader", PyImport_ImportModule("libpandadna.DNALoader"));
+    PyObject_SetAttrString(lpdna_mod, "DNAStorage", PyImport_ImportModule("libpandadna.DNAStorage"));
+    PyObject_SetAttrString(lpdna_mod, "DNAAnimBuilding", PyImport_ImportModule("libpandadna.DNAAnimBuilding"));
+    PyObject_SetAttrString(lpdna_mod, "DNAAnimProp", PyImport_ImportModule("libpandadna.DNAAnimProp"));
+    PyObject_SetAttrString(lpdna_mod, "DNABattleCell", PyImport_ImportModule("libpandadna.DNABattleCell"));
+    PyObject_SetAttrString(lpdna_mod, "DNACornice", PyImport_ImportModule("libpandadna.DNACornice"));
+    PyObject_SetAttrString(lpdna_mod, "DNADoor", PyImport_ImportModule("libpandadna.DNADoor"));
+    PyObject_SetAttrString(lpdna_mod, "DNAFlatBuilding", PyImport_ImportModule("libpandadna.DNAFlatBuilding"));
+    PyObject_SetAttrString(lpdna_mod, "DNAFlatDoor", PyImport_ImportModule("libpandadna.DNAFlatDoor"));
+    PyObject_SetAttrString(lpdna_mod, "DNAGroup", PyImport_ImportModule("libpandadna.DNAGroup"));
+    PyObject_SetAttrString(lpdna_mod, "DNAInteractiveProp", PyImport_ImportModule("libpandadna.DNAInteractiveProp"));
+    PyObject_SetAttrString(lpdna_mod, "DNALandmarkBuilding", PyImport_ImportModule("libpandadna.DNALandmarkBuilding"));
+    PyObject_SetAttrString(lpdna_mod, "DNANode", PyImport_ImportModule("libpandadna.DNANode"));
+    PyObject_SetAttrString(lpdna_mod, "DNAProp", PyImport_ImportModule("libpandadna.DNAProp"));
+    PyObject_SetAttrString(lpdna_mod, "DNASign", PyImport_ImportModule("libpandadna.DNASign"));
+    PyObject_SetAttrString(lpdna_mod, "DNASignBaseline", PyImport_ImportModule("libpandadna.DNASignBaseline"));
+    PyObject_SetAttrString(lpdna_mod, "DNASignGraphic", PyImport_ImportModule("libpandadna.DNASignGraphic"));
+    PyObject_SetAttrString(lpdna_mod, "DNAStreet", PyImport_ImportModule("libpandadna.DNAStreet"));
+    PyObject_SetAttrString(lpdna_mod, "DNAVisGroup", PyImport_ImportModule("libpandadna.DNAVisGroup"));
+    PyObject_SetAttrString(lpdna_mod, "DNAWall", PyImport_ImportModule("libpandadna.DNAWall"));
+    PyObject_SetAttrString(lpdna_mod, "DNAWindows", PyImport_ImportModule("libpandadna.DNAWindows"));
+    */
 
     const char* module = "lib.coginvasion.base.CIStartGlobal";
     if (!niraicall_isGameExe()) {

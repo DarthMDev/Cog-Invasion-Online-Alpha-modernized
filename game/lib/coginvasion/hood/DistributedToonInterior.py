@@ -5,7 +5,7 @@ from panda3d.core import Mat4, Point3
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed import DistributedObject
 
-from lib.coginvasion.dna.DNAParser import DNADoor
+from libpandadna import *
 import ToonInteriorColors
 import ZoneUtil
 
@@ -82,7 +82,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
         door_origin.setScale(0.8, 0.8, 0.8)
         door_origin.setPos(door_origin, 0, -0.025, 0)
         color = self.generator.choice(self.colors['TI_door'])
-        DNADoor.setupDoor(doorNP, self.interior, door_origin, self.dnaStore, str(self.block), color)
+        DNADoor.setupDoor(doorNP, self.interior, door_origin, self.dnaStore, self.block, color)
         doorFrame = doorNP.find('door_*_flat')
         doorFrame.wrtReparentTo(self.interior)
         doorFrame.setColor(color)

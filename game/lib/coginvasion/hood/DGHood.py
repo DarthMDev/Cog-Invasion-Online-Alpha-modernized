@@ -19,7 +19,7 @@ class DGHood(ToonHood):
         self.safeZoneLoader = DGSafeZoneLoader
         self.townLoader = DGTownLoader.DGTownLoader
         self.skyUtil = SkyUtil.SkyUtil()
-        self.storageDNAFile = "phase_8/dna/storage_DG.dna"
+        self.storageDNAFile = "phase_8/dna/storage_DG.pdna"
         self.skyFilename = "phase_3.5/models/props/TT_sky.bam"
         self.spookySkyFile = "phase_8/models/props/DL_sky.bam"
         self.titleColor = (0.4, 0.67, 0.18, 1.0)

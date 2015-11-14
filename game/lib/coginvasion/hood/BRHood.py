@@ -14,7 +14,7 @@ class BRHood(ToonHood.ToonHood):
 		self.id = CIGlobals.TheBrrrgh
 		self.safeZoneLoader = BRSafeZoneLoader.BRSafeZoneLoader
 		self.townLoader = BRTownLoader.BRTownLoader
-		self.storageDNAFile = "phase_8/dna/storage_BR.dna"
+		self.storageDNAFile = "phase_8/dna/storage_BR.pdna"
 		self.skyFilename = "phase_3.5/models/props/BR_sky.bam"
 		self.spookySkyFile = "phase_3.5/models/props/BR_sky.bam"
 		self.titleColor = (0.25, 0.25, 1.0, 1.0)

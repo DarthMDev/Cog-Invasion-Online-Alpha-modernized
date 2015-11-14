@@ -13,6 +13,7 @@ from direct.interval.IntervalGlobal import *
 import ZoneUtil
 import HoodGui
 from QuietZoneState import QuietZoneState
+from lib.coginvasion.dna.DNALoader import *
 
 class Hood(StateData):
 
@@ -93,7 +94,7 @@ class Hood(StateData):
     def load(self):
         StateData.load(self)
         if self.storageDNAFile:
-            loader.loadDNAFile(self.dnaStore, self.storageDNAFile)
+            loadDNAFile(self.dnaStore, self.storageDNAFile)
         self.createNormalSky()
 
     def unload(self):
@@ -104,7 +105,16 @@ class Hood(StateData):
             del self.loader
         del self.parentFSM
         del self.fsm
-        self.dnaStore.resetAll()
+        self.dnaStore.reset_nodes()
+        self.dnaStore.reset_hood_nodes()
+        self.dnaStore.reset_place_nodes()
+        self.dnaStore.reset_hood()
+        self.dnaStore.reset_fonts()
+        self.dnaStore.reset_DNA_vis_groups()
+        self.dnaStore.reset_textures()
+        self.dnaStore.reset_block_numbers()
+        self.dnaStore.reset_block_zones()
+        self.dnaStore.reset_suit_points()
         del self.dnaStore
         self.deleteCurrentSky()
         self.stopSuitEffect(0)

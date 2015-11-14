@@ -16,7 +16,7 @@ class DLHood(ToonHood):
         self.id = CIGlobals.DonaldsDreamland
         self.safeZoneLoader = DLSafeZoneLoader
         self.townLoader = DLTownLoader
-        self.storageDNAFile = "phase_8/dna/storage_DL.dna"
+        self.storageDNAFile = "phase_8/dna/storage_DL.pdna"
         self.skyFilename = "phase_8/models/props/DL_sky.bam"
         self.spookySkyFile = "phase_8/models/props/DL_sky.bam"
         self.titleColor = (0.443, 0.21, 1.0, 1.0)

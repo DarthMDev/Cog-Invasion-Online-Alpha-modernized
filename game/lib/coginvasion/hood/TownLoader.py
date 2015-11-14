@@ -178,7 +178,7 @@ class TownLoader(StateData):
 
     def createHood(self, dnaFile, loadStorage = 1):
         if loadStorage:
-            loader.loadDNAFile(self.hood.dnaStore, 'phase_5/dna/storage_town.dna')
+            loader.loadDNAFile(self.hood.dnaStore, 'phase_5/dna/storage_town.pdna')
             loader.loadDNAFile(self.hood.dnaStore, self.townStorageDNAFile)
         node = loader.loadDNAFile(self.hood.dnaStore, dnaFile)
         if node.getNumParents() == 1:
@@ -238,7 +238,7 @@ class TownLoader(StateData):
             self.zoneDict[zoneId] = groupNode
             visibles = []
             for i in xrange(visGroup.getNumVisibles()):
-                visibles.append(int(visGroup.visibles[i]))
+                visibles.append(int(visGroup.get_visible(i)))
             visibles.append(ZoneUtil.getBranchZone(zoneId))
             self.zoneVisDict[zoneId] = visibles
             fadeDuration = 0.5

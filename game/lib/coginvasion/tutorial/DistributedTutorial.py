@@ -11,7 +11,7 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, LerpQ
 
 from lib.coginvasion.toon.Toon import Toon
 from lib.coginvasion.npc import NPCGlobals
-from lib.coginvasion.dna.DNAParser import DNAStorage
+from libpandadna import *
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.gui.Whisper import Whisper
 from lib.coginvasion.globals import CIGlobals

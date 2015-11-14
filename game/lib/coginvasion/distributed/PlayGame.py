@@ -26,7 +26,7 @@ from lib.coginvasion.hood import CTCHood
 from lib.coginvasion.cogtropolis import CTHood
 
 from lib.coginvasion.hood.QuietZoneState import QuietZoneState
-from lib.coginvasion.dna.DNAParser import *
+from lib.coginvasion.dna.DNALoader import *
 
 class PlayGame(StateData):
     notify = directNotify.newCategory('PlayGame')
@@ -217,15 +217,24 @@ class PlayGame(StateData):
 
     def loadDNAStore(self):
         if hasattr(self, 'dnaStore'):
-            self.dnaStore.resetAll()
+            self.dnaStore.reset_nodes()
+            self.dnaStore.reset_hood_nodes()
+            self.dnaStore.reset_place_nodes()
+            self.dnaStore.reset_hood()
+            self.dnaStore.reset_fonts()
+            self.dnaStore.reset_DNA_vis_groups()
+            self.dnaStore.reset_textures()
+            self.dnaStore.reset_block_numbers()
+            self.dnaStore.reset_block_zones()
+            self.dnaStore.reset_suit_points()
             del self.dnaStore
 
         self.dnaStore = DNAStorage()
-        loadDNAFile(self.dnaStore, 'phase_4/dna/storage.dna')
+        loadDNAFile(self.dnaStore, 'phase_4/dna/storage.pdna')
         self.dnaStore.storeFont('humanist', CIGlobals.getToonFont())
         self.dnaStore.storeFont('mickey', CIGlobals.getMickeyFont())
         self.dnaStore.storeFont('suit', CIGlobals.getSuitFont())
-        loadDNAFile(self.dnaStore, 'phase_3.5/dna/storage_interior.dna')
+        loadDNAFile(self.dnaStore, 'phase_3.5/dna/storage_interior.pdna')
 
     def enterQuietZone(self, requestStatus):
         self.acceptOnce(self.quietZoneDoneEvent, self.handleQuietZoneDone, [requestStatus])

@@ -26,8 +26,8 @@ class MLSafeZoneLoader(SafeZoneLoader):
             "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
-        self.dnaFile = 'phase_6/dna/minnies_melody_land_sz.dna'
-        self.szStorageDNAFile = 'phase_6/dna/storage_MM_sz.dna'
+        self.dnaFile = 'phase_6/dna/minnies_melody_land_sz.pdna'
+        self.szStorageDNAFile = 'phase_6/dna/storage_MM_sz.pdna'
         self.telescope = None
 
     def load(self):

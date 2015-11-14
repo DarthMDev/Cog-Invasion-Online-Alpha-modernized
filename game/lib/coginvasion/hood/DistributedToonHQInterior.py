@@ -6,7 +6,7 @@ from panda3d.core import ModelNode, NodePath
 import DistributedToonInterior
 import ToonInteriorColors
 from lib.coginvasion.hood import ZoneUtil
-from lib.coginvasion.dna.DNAParser import DNADoor
+from libpandadna import *
 from lib.coginvasion.globals import CIGlobals
 
 import random
@@ -40,7 +40,8 @@ class DistributedToonHQInterior(DistributedToonInterior.DistributedToonInterior)
             doorOrigin.setScale(0.8, 0.8, 0.8)
             doorOrigin.setPos(doorOrigin, 0, -0.025, 0)
             doorColor = self.generator.choice(self.colors['TI_door'])
-            triggerId = str(self.block) + '_' + doorOriginIndexStr
+            triggerId = str(self.block) + '0' + doorOriginIndexStr
+            triggerId = int(triggerId)
             DNADoor.setupDoor(doorNP, newNodePath, doorOrigin, self.dnaStore, triggerId, doorColor)
             doorFrame = doorNP.find('door_*_flat')
             doorFrame.setColor(doorColor)

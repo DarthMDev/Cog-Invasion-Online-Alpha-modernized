@@ -10,7 +10,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.hood import TreasureGlobals
 from lib.coginvasion.hood.SZTreasurePlannerAI import SZTreasurePlannerAI
 import ZoneUtil
-from lib.coginvasion.dna.DNAParser import *
+from lib.coginvasion.dna.DNALoader import *
 import DistributedDoorAI
 import DistributedToonInteriorAI
 import DistributedCinemaInteriorAI
@@ -53,17 +53,21 @@ class HoodAI:
             dnaData = loadDNAFileAI(dnaStore, dnaFile)
             self.air.dnaStoreMap[zoneId] = dnaStore
             self.air.dnaDataMap[zoneId] = dnaData
-            for block in dnaStore.blockZones.keys():
-                exteriorZone = dnaStore.blockZones[block]
+            blockZoneByNumber = {}
+            for i in range(dnaStore.get_num_block_numbers()):
+                blockNumber = dnaStore.get_block_number_at(i)
+                blockZoneByNumber[blockNumber] = dnaStore.get_zone_from_block_number(blockNumber)
+            for block, exteriorZone in blockZoneByNumber.items():
+                buildingType = dnaStore.get_block_building_type(block)
                 interiorZone = (ZoneUtil.getBranchZone(zoneId) - (ZoneUtil.getBranchZone(zoneId) % 100)) + 500 + block
-                if dnaStore.blockBuildingTypes.get(block, None) == None:
+                if not buildingType:
                     interior = DistributedToonInteriorAI.DistributedToonInteriorAI(self.air, block, exteriorZone)
                     interior.generateWithRequired(interiorZone)
                     door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
                     door.generateWithRequired(exteriorZone)
                     self.exteriorDoors.append(door)
                     self.interiors.append(interior)
-                elif dnaStore.blockBuildingTypes.get(block) == 'cinema':
+                elif buildingType == 'cinema':
                     cinemaIndex = CinemaGlobals.Zone2Block2CinemaIndex[zoneId][block]
                     interior = DistributedCinemaInteriorAI.DistributedCinemaInteriorAI(
                         self.air, block, exteriorZone, cinemaIndex)
@@ -72,7 +76,7 @@ class HoodAI:
                     door.generateWithRequired(exteriorZone)
                     self.exteriorDoors.append(door)
                     self.interiors.append(interior)
-                elif dnaStore.blockBuildingTypes.get(block) == 'hq':
+                elif buildingType == 'hq':
                     interior = DistributedToonHQInteriorAI.DistributedToonHQInteriorAI(
                         self.air, block, exteriorZone)
                     interior.generateWithRequired(interiorZone)
@@ -83,14 +87,14 @@ class HoodAI:
                     self.exteriorDoors.append(door0)
                     self.exteriorDoors.append(door1)
                     self.interiors.append(interior)
-                elif dnaStore.blockBuildingTypes.get(block) == 'clotheshop':
+                elif buildingType == 'clotheshop':
                     interior = DistributedTailorInteriorAI.DistributedTailorInteriorAI(self.air, block, exteriorZone)
                     interior.generateWithRequired(interiorZone)
                     door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
                     door.generateWithRequired(exteriorZone)
                     self.exteriorDoors.append(door)
                     self.interiors.append(interior)
-                elif dnaStore.blockBuildingTypes.get(block) == 'gagshop':
+                elif buildingType == 'gagshop':
                     interior = DistributedGagShopInteriorAI.DistributedGagShopInteriorAI(self.air, block, exteriorZone)
                     interior.generateWithRequired(interiorZone)
                     door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 4)

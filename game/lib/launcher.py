@@ -6,6 +6,7 @@
 
 import sys
 import os
+import ctypes
 import subprocess
 import hashlib
 from uuid import getnode as getMacAddress
@@ -228,8 +229,8 @@ class Launcher:
         for line in data.splitlines():
             if len(line) <= 0 or line[:2] == "//":
                 continue
-            fileName, md5 = line.split(' ')
-            if not self.isSameMD5(fileName, md5):
+            fileName, md5, size = line.split(' ')
+            if not self.isSameMD5(fileName, md5) or not self.isSameFileSize(fileName, size):
                 self.notify.info("{0} is out of date or missing! Adding to download list.".format(fileName))
                 files2Download.append(fileName)
             else:
@@ -241,7 +242,10 @@ class Launcher:
         self.launcherFSM.request('menu')
 
     def isSameMD5(self, filename, md5):
-        return os.path.isfile(filename) and hashlib.md5(open(filename).read()).hexdigest() == md5
+        return os.path.isfile(filename) and hashlib.sha1(open(filename, 'rb').read()).hexdigest() == md5
+
+    def isSameFileSize(self, filename, size):
+        return os.path.isfile(filename) and os.path.getsize(filename) == size
 
     def sendMD5(self, fileName):
         dg = PyDatagram()
@@ -266,6 +270,14 @@ class Launcher:
         del self.infoLbl
 
     def enterMenu(self):
+        try:
+            admin = os.getuid() == 0
+        except:
+            admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if not admin:
+            self.adminLbl = canvas.create_text(287, 220, text = "You must run the Cog Invasion Launcher\nwith administrator rights for correct operation.", fill = "red")
+            self.notify.warning("Launcher is not running in administrator mode!")
+            return
         self.title = canvas.create_text(287, 167, text = "Log-In", fill = "white")
         self.userNameEntryLbl = canvas.create_text(195, 198, text = "Username:", fill = "white", font = ("Arial", 12))
         self.passwordEntryLbl = canvas.create_text(196, 228, text = "Password:", fill = "white", font = ("Arial", 12))

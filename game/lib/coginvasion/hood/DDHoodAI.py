@@ -16,8 +16,8 @@ class DDHoodAI(ToonHoodAI):
         self.startup()
 
     def startup(self):
-        self.dnaFiles = ['phase_6/dna/donalds_dock_1100.dna', 'phase_6/dna/donalds_dock_1200.dna',
-            'phase_6/dna/donalds_dock_1300.dna', 'phase_6/dna/donalds_dock_sz.dna']
+        self.dnaFiles = ['phase_6/dna/donalds_dock_1100.pdna', 'phase_6/dna/donalds_dock_1200.pdna',
+            'phase_6/dna/donalds_dock_1300.pdna', 'phase_6/dna/donalds_dock_sz.pdna']
         ToonHoodAI.startup(self)
         self.notify.info("Making Donald's Dock boat...")
         self.boat = DistributedBoatAI.DistributedBoatAI(self.air)

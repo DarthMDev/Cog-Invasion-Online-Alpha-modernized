@@ -23,8 +23,8 @@ class DDSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
-        self.dnaFile = 'phase_6/dna/donalds_dock_sz.dna'
-        self.szStorageDNAFile = 'phase_6/dna/storage_DD_sz.dna'
+        self.dnaFile = 'phase_6/dna/donalds_dock_sz.pdna'
+        self.szStorageDNAFile = 'phase_6/dna/storage_DD_sz.pdna'
         self.telescope = None
         self.birdNoise = 'phase_6/audio/sfx/SZ_DD_Seagull.mp3'
 

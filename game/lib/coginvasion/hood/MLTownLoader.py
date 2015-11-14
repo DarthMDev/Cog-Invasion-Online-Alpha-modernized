@@ -11,11 +11,11 @@ class MLTownLoader(TownLoader.TownLoader):
         self.streetClass = MLStreet.MLStreet
         self.musicFile = 'phase_6/audio/bgm/MM_SZ.mid'
         self.interiorMusicFile = 'phase_6/audio/bgm/MM_SZ_activity.mid'
-        self.townStorageDNAFile = 'phase_6/dna/storage_MM_town.dna'
+        self.townStorageDNAFile = 'phase_6/dna/storage_MM_town.pdna'
 
     def load(self, zoneId):
         TownLoader.TownLoader.load(self, zoneId)
-        dnaFile = 'phase_6/dna/minnies_melody_land_' + str(self.branchZone) + '.dna'
+        dnaFile = 'phase_6/dna/minnies_melody_land_' + str(self.branchZone) + '.pdna'
         self.createHood(dnaFile)
 
     def unload(self):

@@ -12,7 +12,7 @@ from direct.gui.DirectGui import OnscreenText
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.distributed.HoodMgr import HoodMgr
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.dna.DNAParser import DNAStorage
+from lib.coginvasion.dna.DNALoader import *
 
 hoodMgr = HoodMgr()
 
@@ -84,9 +84,9 @@ class GunGameLevelLoader:
             'name': CIGlobals.DaisyGardens,
             'camera': (Point3(-33.13, -3.20, 48.62), Vec3(326.31, 332.68, 0.00)),
             'dna': [
-                'phase_8/dna/storage_DG.dna',
-                'phase_8/dna/storage_DG_sz.dna',
-                'phase_8/dna/daisys_garden_sz.dna'
+                'phase_8/dna/storage_DG.pdna',
+                'phase_8/dna/storage_DG_sz.pdna',
+                'phase_8/dna/daisys_garden_sz.pdna'
             ],
             'sky': 'TT',
             'spawn_points': hoodMgr.dropPoints[CIGlobals.DaisyGardens]
@@ -96,9 +96,9 @@ class GunGameLevelLoader:
             'name': CIGlobals.MinniesMelodyland,
             'camera': (Point3(-54.42, -91.05, 34.89), Vec3(315.29, 336.80, 0.00)),
             'dna': [
-                'phase_6/dna/storage_MM.dna',
-                'phase_6/dna/storage_MM_sz.dna',
-                'phase_6/dna/minnies_melody_land_sz.dna'
+                'phase_6/dna/storage_MM.pdna',
+                'phase_6/dna/storage_MM_sz.pdna',
+                'phase_6/dna/minnies_melody_land_sz.pdna'
             ],
             'sky': 'MM',
             'spawn_points': hoodMgr.dropPoints[CIGlobals.MinniesMelodyland]
@@ -108,9 +108,9 @@ class GunGameLevelLoader:
             'name': CIGlobals.OutdoorZone,
             'camera': (Point3(-54.42, -91.05, 34.89), Vec3(315.29, 336.80, 0.00)),
             'dna': [
-                'phase_6/dna/storage_OZ.dna',
-                'phase_6/dna/storage_OZ_sz.dna',
-                'phase_6/dna/outdoor_zone_sz.dna'
+                'phase_6/dna/storage_OZ.pdna',
+                'phase_6/dna/storage_OZ_sz.pdna',
+                'phase_6/dna/outdoor_zone_sz.pdna'
             ],
             'sky': 'TT',
             'spawn_points': hoodMgr.dropPoints[CIGlobals.OutdoorZone]
@@ -220,10 +220,10 @@ class GunGameLevelLoader:
             dnaFiles = self.LevelData[self.levelName]['dna']
             skyType = self.LevelData[self.levelName]['sky']
             skyPhase = self.SkyData[skyType]
-            loader.loadDNAFile(self.dnaStore, 'phase_4/dna/storage.dna')
+            loadDNAFile(self.dnaStore, 'phase_4/dna/storage.pdna')
             for index in range(len(dnaFiles)):
                 if index == len(dnaFiles) - 1:
-                    node = loader.loadDNAFile(self.dnaStore, dnaFiles[index])
+                    node = loadDNAFile(self.dnaStore, dnaFiles[index])
                     if node.getNumParents() == 1:
                         self.levelGeom = NodePath(node.getParent(0))
                         self.levelGeom.reparentTo(hidden)
@@ -235,7 +235,7 @@ class GunGameLevelLoader:
                         self.levelGeom.prepareScene(gsg)
                     self.levelGeom.reparentTo(render)
                 else:
-                    loader.loadDNAFile(self.dnaStore, dnaFiles[index])
+                    loadDNAFile(self.dnaStore, dnaFiles[index])
             self.skyModel = loader.loadModel(skyPhase + "/" + skyType + "_sky.bam")
             self.skyUtil = SkyUtil()
             self.skyUtil.startSky(self.skyModel)
@@ -294,5 +294,15 @@ class GunGameLevelLoader:
     def cleanup(self):
         self.momadaAreas = None
         self.momadaAreaName2areaModel = None
-        self.dnaStore.resetAll()
+        if self.dnaStore:
+            self.dnaStore.reset_nodes()
+            self.dnaStore.reset_hood_nodes()
+            self.dnaStore.reset_place_nodes()
+            self.dnaStore.reset_hood()
+            self.dnaStore.reset_fonts()
+            self.dnaStore.reset_DNA_vis_groups()
+            self.dnaStore.reset_textures()
+            self.dnaStore.reset_block_numbers()
+            self.dnaStore.reset_block_zones()
+            self.dnaStore.reset_suit_points()
         self.dnaStore = None

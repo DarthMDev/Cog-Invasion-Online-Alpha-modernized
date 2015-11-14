@@ -28,8 +28,8 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
-        self.dnaFile = 'phase_4/dna/new_ttc_sz.dna'
-        self.szStorageDNAFile = 'phase_4/dna/storage_TT_sz.dna'
+        self.dnaFile = 'phase_4/dna/new_ttc_sz.pdna'
+        self.szStorageDNAFile = 'phase_4/dna/storage_TT_sz.pdna'
         self.telescope = None
         self.birdNoises = [
             'phase_4/audio/sfx/SZ_TC_bird1.mp3',

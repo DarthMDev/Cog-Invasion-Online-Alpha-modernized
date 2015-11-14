@@ -11,9 +11,9 @@ class DGTownLoader(TownLoader.TownLoader):
         self.streetClass = DGStreet.DGStreet
         self.musicFile = 'phase_8/audio/bgm/DG_SZ.mid'
         self.interiorMusicFile = self.musicFile
-        self.townStorageDNAFile = 'phase_8/dna/storage_DG_town.dna'
+        self.townStorageDNAFile = 'phase_8/dna/storage_DG_town.pdna'
 
     def load(self, zoneId):
         TownLoader.TownLoader.load(self, zoneId)
-        dnaFile = 'phase_8/dna/daisys_garden_' + str(self.branchZone) + '.dna'
+        dnaFile = 'phase_8/dna/daisys_garden_' + str(self.branchZone) + '.pdna'
         self.createHood(dnaFile)

@@ -14,6 +14,6 @@ class DLHoodAI(ToonHoodAI):
         self.startup()
 
     def startup(self):
-        self.dnaFiles = ['phase_8/dna/donalds_dreamland_9100.dna', 'phase_8/dna/donalds_dreamland_9200.dna',
-            'phase_8/dna/donalds_dreamland_sz.dna']
+        self.dnaFiles = ['phase_8/dna/donalds_dreamland_9100.pdna', 'phase_8/dna/donalds_dreamland_9200.pdna',
+            'phase_8/dna/donalds_dreamland_sz.pdna']
         ToonHoodAI.startup(self)

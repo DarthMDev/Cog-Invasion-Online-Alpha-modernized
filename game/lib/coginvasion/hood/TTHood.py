@@ -16,7 +16,7 @@ class TTHood(ToonHood.ToonHood):
         self.safeZoneLoader = TTSafeZoneLoader.TTSafeZoneLoader
         self.townLoader = TTTownLoader.TTTownLoader
         self.skyUtil = SkyUtil.SkyUtil()
-        self.storageDNAFile = "phase_4/dna/storage_TT.dna"
+        self.storageDNAFile = "phase_4/dna/storage_TT.pdna"
         self.skyFilename = "phase_3.5/models/props/TT_sky.bam"
         self.spookySkyFile = "phase_3.5/models/props/BR_sky.bam"
         self.titleColor = (1.0, 0.5, 0.4, 1.0)

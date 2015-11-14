@@ -16,8 +16,8 @@ class BRHoodAI(ToonHoodAI.ToonHoodAI):
 
 	def startup(self):
 		self.notify.info("Creating hood {0}...".format(CIGlobals.TheBrrrgh))
-		self.dnaFiles = ['phase_8/dna/the_burrrgh_3100.dna', 'phase_8/dna/the_burrrgh_3200.dna',
-            'phase_8/dna/the_burrrgh_3300.dna', 'phase_8/dna/the_burrrgh_sz.dna']
+		self.dnaFiles = ['phase_8/dna/the_burrrgh_3100.pdna', 'phase_8/dna/the_burrrgh_3200.pdna',
+            'phase_8/dna/the_burrrgh_3300.pdna', 'phase_8/dna/the_burrrgh_sz.pdna']
 		ToonHoodAI.ToonHoodAI.startup(self)
 		#self.cogStation.b_setLocationPoint(1)
 		self.notify.info("Finished creating hood %s" % CIGlobals.TheBrrrgh)

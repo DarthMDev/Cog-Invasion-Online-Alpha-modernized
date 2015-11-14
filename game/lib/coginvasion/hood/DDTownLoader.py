@@ -11,11 +11,11 @@ class DDTownLoader(TownLoader.TownLoader):
         self.streetClass = DDStreet.DDStreet
         self.musicFile = 'phase_6/audio/bgm/DD_SZ.mid'
         self.interiorMusicFile = 'phase_6/audio/bgm/DD_SZ_activity.mid'
-        self.townStorageDNAFile = 'phase_6/dna/storage_DD_town.dna'
+        self.townStorageDNAFile = 'phase_6/dna/storage_DD_town.pdna'
 
     def load(self, zoneId):
         TownLoader.TownLoader.load(self, zoneId)
-        dnaFile = 'phase_6/dna/donalds_dock_' + str(self.branchZone) + '.dna'
+        dnaFile = 'phase_6/dna/donalds_dock_' + str(self.branchZone) + '.pdna'
         self.createHood(dnaFile)
 
     def enter(self, requestStatus):

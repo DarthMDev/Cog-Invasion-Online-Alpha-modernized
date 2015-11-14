@@ -2,17 +2,17 @@
 
   Filename: CogInvasionLoader.py
   Created by: blach (28Nov14)
-  
+
 """
 
 from panda3d.core import *
 from direct.showbase import Loader
 from lib.coginvasion.gui.CIProgressScreen import CIProgressScreen
-from lib.coginvasion.dna.DNAParser import *
+from lib.coginvasion.dna.DNALoader import *
 
 class CogInvasionLoader(Loader.Loader):
 	TickPeriod = 0.2
-	
+
 	def __init__(self, base):
 		Loader.Loader.__init__(self, base)
 		self.inBulkBlock = None
@@ -20,7 +20,7 @@ class CogInvasionLoader(Loader.Loader):
 		self.progressScreen = CIProgressScreen()
 		self.wantAutoTick = False
 		return
-		
+
 	def beginBulkLoad(self, name, hood, range, wantGui = 1, autoTick = True):
 		self.wantAutoTick = autoTick
 		self._loadStartT = globalClock.getRealTime()
@@ -44,7 +44,7 @@ class CogInvasionLoader(Loader.Loader):
 		self.wantAutoTick = False
 		self.progressScreen.end()
 		return
-        
+
 	def tick(self):
 		if self.inBulkBlock:
 			now = globalClock.getRealTime()
@@ -57,10 +57,10 @@ class CogInvasionLoader(Loader.Loader):
 				except:
 					pass
 			base.graphicsEngine.renderFrame()
-					
+
 	def loadDNAFile(self, dnaStore, filename):
 		return loadDNAFile(dnaStore, filename)
-					
+
 	def loadModel(self, *args, **kw):
 		ret = Loader.Loader.loadModel(self, *args, **kw)
 		try:

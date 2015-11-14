@@ -14,6 +14,6 @@ class MLHoodAI(ToonHoodAI):
         self.startup()
 
     def startup(self):
-        self.dnaFiles = ['phase_6/dna/minnies_melody_land_4100.dna', 'phase_6/dna/minnies_melody_land_4200.dna',
-            'phase_6/dna/minnies_melody_land_4300.dna', 'phase_6/dna/minnies_melody_land_sz.dna']
+        self.dnaFiles = ['phase_6/dna/minnies_melody_land_4100.pdna', 'phase_6/dna/minnies_melody_land_4200.pdna',
+            'phase_6/dna/minnies_melody_land_4300.pdna', 'phase_6/dna/minnies_melody_land_sz.pdna']
         ToonHoodAI.startup(self)

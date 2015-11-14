@@ -10,7 +10,7 @@ class AstronClientRepository(ClientRepositoryBase):
     """
     The Astron implementation of a clients repository for
     communication with an Astron ClientAgent.
-    
+
     This repo will emit events for:
     * CLIENT_HELLO_RESP
     * CLIENT_EJECT ( error_code, reason )
@@ -27,18 +27,18 @@ class AstronClientRepository(ClientRepositoryBase):
     # This is required by DoCollectionManager, even though it's not
     # used by this implementation.
     GameGlobalsId = 0
-    
+
     def __init__(self, *args, **kwargs):
         ClientRepositoryBase.__init__(self, *args, **kwargs)
         base.finalExitCallbacks.append(self.shutdown)
         self.message_handlers = {CLIENT_HELLO_RESP: self.handleHelloResp,
                                  CLIENT_EJECT: self.handleEject,
                                  CLIENT_ENTER_OBJECT_REQUIRED: self.handleEnterObjectRequired,
-                                 
+
                                  # Defined by DuckyDuck1553:
                                  CLIENT_ENTER_OBJECT_REQUIRED_OTHER: self.handleEnterObjectRequiredOther,
                                  CLIENT_ENTER_OBJECT_REQUIRED_OTHER_OWNER: self.handleEnterObjectRequiredOtherOwner,
-                                 
+
                                  CLIENT_ENTER_OBJECT_REQUIRED_OWNER: self.handleEnterObjectRequiredOwner,
                                  CLIENT_OBJECT_SET_FIELD: self.handleUpdateField,
                                  CLIENT_OBJECT_SET_FIELDS: self.handleUpdateFields,
@@ -50,11 +50,11 @@ class AstronClientRepository(ClientRepositoryBase):
                                  CLIENT_REMOVE_INTEREST: self.handleRemoveInterest,
                                  CLIENT_DONE_INTEREST_RESP: self.handleInterestDoneMessage,
                                  }
-       
+
     #
     # Message Handling
     #
-    
+
     def handleDatagram(self, di):
         msgType = self.getMsgType()
     #    self.handleMessageType(msgType, di)
@@ -68,13 +68,13 @@ class AstronClientRepository(ClientRepositoryBase):
         self.considerHeartbeat()
 
     def handleHelloResp(self, di):
-        messenger.send("CLIENT_HELLO_RESP", []) 
+        messenger.send("CLIENT_HELLO_RESP", [])
 
     def handleEject(self, di):
         error_code = di.get_uint16()
         reason = di.get_string()
         messenger.send("CLIENT_EJECT", [error_code, reason])
-    
+
     def handleEnterObjectRequired(self, di):
         do_id = di.getArg(STUint32)
         parent_id = di.getArg(STUint32)
@@ -82,7 +82,7 @@ class AstronClientRepository(ClientRepositoryBase):
         dclass_id = di.getArg(STUint16)
         dclass = self.dclassesByNumber[dclass_id]
         self.generateWithRequiredFields(dclass, do_id, di, parent_id, zone_id)
-    
+
     # Defined by DuckyDuck1553:
     def handleEnterObjectRequiredOther(self, di):
         do_id = di.getArg(STUint32)
@@ -108,7 +108,7 @@ class AstronClientRepository(ClientRepositoryBase):
         dclass_id = di.getArg(STUint16)
         dclass = self.dclassesByNumber[dclass_id]
         self.generateWithRequiredFieldsOwner(dclass, avatar_doId, di)
-    
+
     def generateWithRequiredFieldsOwner(self, dclass, doId, di):
         if doId in self.doId2ownerView:
             # ...it is in our dictionary.
@@ -190,11 +190,11 @@ class AstronClientRepository(ClientRepositoryBase):
         context = di.get_uint32()
         interest_id = di.get_uint16()
         messenger.send("CLIENT_REMOVE_INTEREST", [context, interest_id])
-    
+
     def deleteObject(self, doId):
         """
         implementation copied from ClientRepository.py
-        
+
         Removes the object from the client's view of the world.  This
         should normally not be called directly except in the case of
         error recovery, since the server will normally be responsible
@@ -281,7 +281,7 @@ class AstronClientRepository(ClientRepositoryBase):
     #
     # Other stuff
     #
-    
+
     def lostConnection(self):
         messenger.send("LOST_CONNECTION")
 

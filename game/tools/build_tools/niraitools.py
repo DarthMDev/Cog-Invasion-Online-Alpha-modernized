@@ -10,8 +10,8 @@ import aes
 
 SOURCE_ROOT = os.path.dirname(os.path.abspath(__file__))
 NIRAI_ROOT = '.'
-PYTHON_ROOT = "C:\\Users\\Brian\\Documents\\cio-panda3d\\python-master"
-PANDA3D_ROOT = "C:\\Users\\Brian\\Documents\\cio-panda3d"
+PYTHON_ROOT = "C:\\Users\\Brian\\Documents\\cog-invasion-online\\python-master"
+PANDA3D_ROOT = "C:\\Users\\Brian\\Documents\\cog-invasion-online\\cio-panda3d"
 THIRDPARTY_ROOT = os.path.join(PANDA3D_ROOT, 'thirdparty')
 
 class NiraiCompilerBase:
@@ -131,6 +131,7 @@ class NiraiCompilerWindows(NiraiCompilerBase):
         for lib in self.libs:
             if not lib.endswith('.lib'):
                 lib += '.lib'
+            print lib
             cmd += ' "%s"' % lib
 
         for path in self.libpath:

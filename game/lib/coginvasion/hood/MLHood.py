@@ -16,7 +16,7 @@ class MLHood(ToonHood):
         self.id = CIGlobals.MinniesMelodyland
         self.safeZoneLoader = MLSafeZoneLoader
         self.townLoader = MLTownLoader
-        self.storageDNAFile = "phase_6/dna/storage_MM.dna"
+        self.storageDNAFile = "phase_6/dna/storage_MM.pdna"
         self.skyFilename = "phase_6/models/props/MM_sky.bam"
         self.spookySkyFile = "phase_6/models/props/MM_sky.bam"
         self.titleColor = (0.945, 0.54, 1.0, 1.0)

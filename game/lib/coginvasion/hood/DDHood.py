@@ -14,7 +14,7 @@ class DDHood(ToonHood):
         self.id = CIGlobals.DonaldsDock
         self.safeZoneLoader = DDSafeZoneLoader.DDSafeZoneLoader
         self.townLoader = DDTownLoader.DDTownLoader
-        self.storageDNAFile = "phase_6/dna/storage_DD.dna"
+        self.storageDNAFile = "phase_6/dna/storage_DD.pdna"
         self.skyFilename = "phase_3.5/models/props/BR_sky.bam"
         self.spookySkyFile = "phase_3.5/models/props/BR_sky.bam"
         self.titleColor = (0.80000000000000004, 0.59999999999999998, 0.5, 1.0)
