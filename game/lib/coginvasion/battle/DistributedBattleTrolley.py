@@ -54,6 +54,8 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyBellSfx = base.loadSfx('phase_4/audio/sfx/SZ_trolley_bell.mp3')
         self.hoodIndex = 0
         self.localAvOnTrolley = False
+        self.trolleyEnterTrack = None
+        self.trolleyExitTrack = None
 
     def headOff(self, zoneId):
         hoodId = self.cr.playGame.hood.hoodId
@@ -117,8 +119,8 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyEnterTrack.start(ts)
 
     def exitArriving(self):
-        self.moveTrack.finish()
-        del self.moveTrack
+        if self.trolleyEnterTrack:
+            self.trolleyEnterTrack.finish()
 
     def enterLeaving(self, ts = 0):
         base.playSfx(self.trolleyBellSfx, node = self.trolleyCar)
@@ -128,8 +130,8 @@ class DistributedBattleTrolley(DistributedObject):
         self.ignore('entertrolley_sphere')
 
     def exitLeaving(self):
-        self.trolleyExitTrack.finish()
-        del self.trolleyExitTrack
+        if self.trolleyExitTrack:
+            self.trolleyExitTrack.finish()
 
     def setState(self, stateName, timestamp):
         ts = globalClockDelta.localElapsedTime(timestamp)
@@ -379,6 +381,8 @@ class DistributedBattleTrolley(DistributedObject):
         self.keyInit = None
         self.keyRef = None
         self.keys = None
+        self.trolleyEnterTrack = None
+        self.trolleyExitTrack = None
 
         self.ignore('entertrolley_sphere')
         DistributedObject.delete(self)
