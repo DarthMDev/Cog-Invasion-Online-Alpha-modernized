@@ -109,6 +109,8 @@ class DropGag(Gag, LocationGag):
             actorTrack.start()
             soundTrack.append(self.fallSoundInterval)
             soundTrack.start()
+        if self.isLocal():
+            base.localAvatar.sendUpdate('usedGag', [self.id])
 
     def setEndPos(self, x, y, z):
         LocationGag.setDropLoc(self, x, y, z)

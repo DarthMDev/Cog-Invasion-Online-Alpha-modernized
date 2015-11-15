@@ -44,8 +44,8 @@ class SquirtGag(Gag):
         if self.anim:
             self.build()
             self.equip()
-            duration = base.localAvatar.getDuration(self.anim, toFrame = self.enableReleaseFrame)
-            Parallel(ActorInterval(self.avatar, self.anim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate), 
+            duration = base.localAvatar.getDuration(self.toonAnim, toFrame = self.enableReleaseFrame)
+            Parallel(ActorInterval(self.avatar, self.toonAnim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate),
                      Wait(duration - 0.15), Func(self.setSquirtEnabled, True)).start()
 
     def startSquirt(self, sprayScale, containerHold):

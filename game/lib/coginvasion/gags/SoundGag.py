@@ -31,7 +31,8 @@ class SoundGag(Gag):
     def start(self):
         Gag.start(self)
         self.build()
-        base.localAvatar.sendUpdate('gagRelease', [self.getID()])
+        if self.isLocal():
+            base.localAvatar.sendUpdate('usedGag', [self.id])
 
     def finish(self):
         self.reset()

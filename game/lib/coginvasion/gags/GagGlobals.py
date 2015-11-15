@@ -17,7 +17,7 @@ gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobal
           19 : CIGlobals.Aoogah, 20 : CIGlobals.ElephantHorn, 21 : CIGlobals.Opera, 22 : CIGlobals.BikeHorn,
           23 : CIGlobals.Whistle, 24 : CIGlobals.Bugle, 25 : CIGlobals.PixieDust, 26 : CIGlobals.FlowerPot,
           27 : CIGlobals.Sandbag, 28 : CIGlobals.Anvil, 29 : CIGlobals.Geyser, 30 : CIGlobals.BigWeight,
-          31 : CIGlobals.StormCloud}
+          31 : CIGlobals.StormCloud, 32 : CIGlobals.WaterGlass, 33 : CIGlobals.WaterGun, 34 : CIGlobals.FireHose}
 gagIdByName = {v: k for k, v in gagIds.items()}
 
 InventoryIconByName = {CIGlobals.WholeCreamPie : '**/inventory_creampie',
@@ -51,7 +51,10 @@ InventoryIconByName = {CIGlobals.WholeCreamPie : '**/inventory_creampie',
  CIGlobals.Geyser : '**/inventory_geyser',
  CIGlobals.BigWeight : '**/inventory_weight',
  CIGlobals.StormCloud : '**/inventory_storm_cloud',
- CIGlobals.BananaPeel : '**/inventory_bannana_peel'}
+ CIGlobals.BananaPeel : '**/inventory_bannana_peel',
+ CIGlobals.WaterGlass : '**/inventory_glass_of_water',
+ CIGlobals.WaterGun : '**/inventory_water_gun',
+ CIGlobals.FireHose : '**/inventory_firehose'}
 
 Throw = "Throw"
 Squirt = "Squirt"
@@ -93,7 +96,10 @@ TrackGagNamesByTrackName = {Throw : [CIGlobals.Cupcake,
   CIGlobals.BigWeight,
   CIGlobals.Safe,
   CIGlobals.GrandPiano],
- Squirt : [CIGlobals.SeltzerBottle,
+ Squirt : [CIGlobals.WaterGlass,
+  CIGlobals.WaterGun,
+  CIGlobals.SeltzerBottle,
+  CIGlobals.FireHose,
   CIGlobals.StormCloud,
   CIGlobals.Geyser],
  Trap : [CIGlobals.BananaPeel,
@@ -107,7 +113,9 @@ splatSizes = {
     CIGlobals.WholeCreamPie: 0.5, CIGlobals.WholeFruitPie: 0.45,
     CIGlobals.CreamPieSlice: 0.35, CIGlobals.BirthdayCake: 0.6,
     CIGlobals.WeddingCake: 0.7, CIGlobals.FruitPieSlice: 0.35,
-    CIGlobals.SeltzerBottle: 0.6, CIGlobals.Cupcake: 0.25
+    CIGlobals.SeltzerBottle: 0.6, CIGlobals.Cupcake: 0.25,
+    CIGlobals.WaterGlass: 0.35, CIGlobals.WaterGun : 0.35,
+    CIGlobals.FireHose: 0.6
 }
 
 # Let's define some gag sounds.
@@ -157,6 +165,10 @@ PIXIE_DUST_SFX = "phase_5/audio/sfx/AA_heal_pixiedust.mp3"
 GEYSER_HIT_SFX = "phase_5/audio/sfx/AA_squirt_Geyser.mp3"
 CLOUD_HIT_SFX = "phase_5/audio/sfx/AA_throw_stormcloud.mp3"
 CLOUD_MISS_SFX = "phase_5/audio/sfx/AA_throw_stormcloud_miss.mp3"
+SPIT_SFX = "phase_5/audio/sfx/AA_squirt_glasswater.mp3"
+WATERGUN_SFX = "phase_5/audio/sfx/AA_squirt_neonwatergun.mp3"
+FIREHOSE_SFX = "phase_5/audio/sfx/firehose_spray.mp3"
+NULL_SFX = "phase_3/audio/sfx/null.wav"
 
 # These are globals for splats.
 SPLAT_MDL = "phase_3.5/models/props/splat-mod.bam"
@@ -186,6 +198,9 @@ CREAM_PIE_SLICE_HEAL = 2
 FRUIT_PIE_SLICE_HEAL = 1
 CUPCAKE_HEAL = 1
 SELTZER_HEAL = 5
+WATERGLASS_HEAL = 2
+WATERGUN_HEAL = 4
+FIREHOSE_HEAL = 6
 
 # Scales of gags.
 CUPCAKE_SCALE = 0.5

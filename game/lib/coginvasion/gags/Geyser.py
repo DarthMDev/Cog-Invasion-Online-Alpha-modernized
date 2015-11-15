@@ -15,59 +15,59 @@ from direct.interval.IntervalGlobal import SoundInterval
 from panda3d.core import Point3
 
 class Geyser(SquirtGag, ChargeUpGag):
-    
+
     def __init__(self):
-        SquirtGag.__init__(self, CIGlobals.Geyser, GagGlobals.getProp(5, 'geyser'), 105, 
+        SquirtGag.__init__(self, CIGlobals.Geyser, GagGlobals.getProp(5, 'geyser'), 105,
                            GagGlobals.GEYSER_HIT_SFX, None, None, None, None, None, None, 1, 1)
         ChargeUpGag.__init__(self, 24, 10, 50, 0.5, maxCogs = 4)
         self.setImage('phase_3.5/maps/geyser.png')
         self.entities = []
-        
+
     def start(self):
         SquirtGag.start(self)
         ChargeUpGag.start(self, self.avatar)
-        
+
     def unEquip(self):
         SquirtGag.unEquip(self)
         ChargeUpGag.unEquip(self)
-        
+
     def buildGeyser(self):
         def clearNodes(entity, paths):
             for i in xrange(paths.getNumPaths()):
                 paths[i].removeNode()
-        
+
         geyserWater = loader.loadModel(self.model)
         waterRemoveSet = geyserWater.findAllMatches('**/hole')
         waterRemoveSet.addPathsFrom(geyserWater.findAllMatches('**/shadow'))
         clearNodes(geyserWater, waterRemoveSet)
-        
+
         geyserMound = loader.loadModel(self.model)
         moundRemoveSet = geyserMound.findAllMatches('**/Splash*')
         moundRemoveSet.addPathsFrom(geyserMound.findAllMatches('**/spout'))
         clearNodes(geyserMound, moundRemoveSet)
-        
+
         entitySet = [geyserWater, geyserMound]
         self.entities.append(entitySet)
         return entitySet
-    
+
     def removeEntity(self, entity):
         for iEntity in self.entities:
             if iEntity == entity:
                 self.entities.remove(iEntity)
-                
+
     def onActivate(self, ignore, cog):
         self.startEntity(self.buildGeyser(), cog)
-    
+
     def startEntity(self, entity, cog):
         geyserHold = 1.5
         scaleUpPoint = Point3(1.8, 1.8, 1.8)
         geyserWater = entity[0]
         geyserMound = entity[1]
-        
+
         def showEntity(entity, cog):
             entity.reparentTo(render)
             entity.setPos(cog.getPos())
-        
+
         def __getGeyserTrack():
             track = Sequence(
                 Func(showEntity, geyserMound, cog),
@@ -81,7 +81,7 @@ class Geyser(SquirtGag, ChargeUpGag):
                 Func(self.removeEntity, entity)
             )
             return track
-        
+
         def __getCogTrack():
             def handleHit():
                 if self.isLocal():
@@ -99,10 +99,10 @@ class Geyser(SquirtGag, ChargeUpGag):
             track = Sequence()
             track.append(Wait(0.5))
             slipIval = Sequence(
-                ActorInterval(cog, 'slip-backward', playRate=0.5, startFrame=0, endFrame=startFlailFrame - 1), 
-                Func(cog.pingpong, 'slip-backward', fromFrame=startFlailFrame, toFrame=endFlailFrame), 
+                ActorInterval(cog, 'slip-backward', playRate=0.5, startFrame=0, endFrame=startFlailFrame - 1),
+                Func(cog.pingpong, 'slip-backward', fromFrame=startFlailFrame, toFrame=endFlailFrame),
                 Wait(0.5),
-                Parallel( 
+                Parallel(
                      ActorInterval(cog, 'slip-backward', playRate=1.0, startFrame=endFlailFrame),
                      Func(cog.startRay),
                      Func(handleHit)
@@ -115,7 +115,7 @@ class Geyser(SquirtGag, ChargeUpGag):
             if cog.getHealth() - self.getDamage() <= 0:
                 track.append(Func(cog.d_enableMovement))
             return track
-        
+
         if entity and cog:
             track = Sequence()
             track.append(Parallel(
@@ -123,11 +123,12 @@ class Geyser(SquirtGag, ChargeUpGag):
                 Parallel(__getGeyserTrack(), __getCogTrack()))
             )
             track.start()
-        
+
     def release(self):
         ChargeUpGag.release(self)
         self.reset()
         if self.isLocal():
+            base.localAvatar.sendUpdate('usedGag', [self.id])
             cogs = ChargeUpGag.getSelectedCogs(self)
             for cog in cogs:
                 if cog.getHealth() > 0:
@@ -135,4 +136,3 @@ class Geyser(SquirtGag, ChargeUpGag):
                     self.startEntity(geyser, cog)
                     self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
             base.localAvatar.enablePieKeys()
-        

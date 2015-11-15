@@ -367,7 +367,8 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def getAdminToken(self):
         return self.token
 
-    def gagRelease(self, gag_id):
+    def usedGag(self, gag_id):
+        print 'Used gag: {0}'.format(GagGlobals.getGagByID(gag_id))
         supply = self.backpack.getSupply(GagGlobals.getGagByID(gag_id))
         amt = supply - 1
         if amt < 0:

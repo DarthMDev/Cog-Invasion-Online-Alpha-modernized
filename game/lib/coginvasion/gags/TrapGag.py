@@ -55,6 +55,8 @@ class TrapGag(Gag):
 
     def release(self):
         super(TrapGag, self).release()
+        if self.isLocal():
+            base.localAvatar.sendUpdate('usedGag', [self.id])
         if not self.gag: return
 
     def getHandle(self):

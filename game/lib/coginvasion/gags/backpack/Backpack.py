@@ -43,7 +43,10 @@ class Backpack:
         CIGlobals.Sandbag : 10,
         CIGlobals.Geyser : 1,
         CIGlobals.BigWeight : 7,
-        CIGlobals.StormCloud : 3}
+        CIGlobals.StormCloud : 3,
+        CIGlobals.WaterGlass : 10,
+        CIGlobals.WaterGun : 7,
+        CIGlobals.FireHose : 5}
 
     def __init__(self):
         __metaclass__ = ABCMeta

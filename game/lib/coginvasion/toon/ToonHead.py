@@ -119,7 +119,10 @@ class ToonHead(Actor.Actor):
                 'sound' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_shout.bam',
                 'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + headtype + '_head_sprinkle-dust.bam',
                 'start-sit' : 'phase_4/models/char/tt_a_chr_' + headtype + '_head_intoSit.bam',
-                'sit' : 'phase_4/models/char/tt_a_chr_' + headtype + '_head_sit.bam'}, 'head')
+                'sit' : 'phase_4/models/char/tt_a_chr_' + headtype + '_head_sit.bam',
+                'water': 'phase_3.5/models/char/tt_a_chr_' + headtype + '_head_water.bam',
+                'spit': 'phase_5/models/char/tt_a_chr_' + headtype + '_head_spit.bam',
+                'firehose': 'phase_5/models/char/tt_a_chr_' + headtype + '_head_firehose.bam'}, 'head')
             _pupilL = self.findAllMatches('**/def_left_pupil')
             _pupilR = self.findAllMatches('**/def_right_pupil')
         if headtype == "1":

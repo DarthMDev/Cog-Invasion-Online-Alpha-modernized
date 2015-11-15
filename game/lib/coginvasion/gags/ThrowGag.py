@@ -21,7 +21,7 @@ class ThrowGag(Gag):
         self.splatScale = GagGlobals.splatSizes[self.name]
         self.splatColor = splatColor
         self.entities = []
-        
+
     def build(self):
         if not self.gag:
             Gag.build(self)
@@ -53,10 +53,10 @@ class ThrowGag(Gag):
         throwPath.setHpr(90, -90, 90)
 
         entity = self.gag
-        
+
         if not entity:
             entity = self.build()
-    
+
         entity.wrtReparentTo(render)
         entity.setHpr(throwPath.getHpr(render))
         self.gag = None
@@ -69,6 +69,7 @@ class ThrowGag(Gag):
         self.entities.append([entity, track])
         if self.isLocal():
             self.buildCollisions(entity)
+            base.localAvatar.sendUpdate('usedGag', [self.id])
         self.reset()
 
     def handleSplat(self):

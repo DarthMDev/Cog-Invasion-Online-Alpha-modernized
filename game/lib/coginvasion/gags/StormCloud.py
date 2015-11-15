@@ -17,16 +17,16 @@ from direct.interval.IntervalGlobal import ActorInterval
 from panda3d.core import Point3
 
 class StormCloud(SquirtGag, LocationGag):
-    
+
     def __init__(self):
-        SquirtGag.__init__(self, CIGlobals.StormCloud, GagGlobals.getProp(4, 'stormcloud-mod'), 60, 
+        SquirtGag.__init__(self, CIGlobals.StormCloud, GagGlobals.getProp(4, 'stormcloud-mod'), 60,
                            GagGlobals.CLOUD_HIT_SFX, None, GagGlobals.CLOUD_MISS_SFX, None, None, None, None, 1, 1)
         LocationGag.__init__(self, 10, 50)
         LocationGag.setShadowData(self, isCircle = True, shadowScale = 0.75)
         self.setImage('phase_3.5/maps/storm-cloud.png')
         self.entities = []
         self.searchRadius = 6
-        
+
     def buildEntity(self):
         cloud = Actor(self.model, {'chan' : GagGlobals.getProp(4, 'stormcloud-chan')})
         trickleFx = GagUtils.loadParticle(5, 'trickleLiquidate')
@@ -37,12 +37,12 @@ class StormCloud(SquirtGag, LocationGag):
         entity = [cloud, [trickleFx, rainEffects]]
         self.entities.append(entity)
         return cloud, trickleFx, rainEffects, entity
-    
+
     def destroyEntity(self, ent):
         for entity in self.entities:
             if entity == ent:
                 self.entities.remove(entity)
-    
+
     def startEntity(self, cog):
         if not cog:
             self.completeSquirt()
@@ -62,10 +62,10 @@ class StormCloud(SquirtGag, LocationGag):
         def damageCog():
             if self.isLocal():
                 self.avatar.sendUpdate('suitHitByPie', [cog.doId, self.getID()])
-                
+
         def __getCloudTrack(cloud, useEffect = 1):
             track = Sequence(
-                Func(cloud.pose, 'chan', 0), 
+                Func(cloud.pose, 'chan', 0),
                 LerpScaleInterval(cloud, 1.5, scaleUpPoint, startScale = GagGlobals.PNT3NEAR0),
                 Wait(rainDelay)
             )
@@ -78,9 +78,9 @@ class StormCloud(SquirtGag, LocationGag):
                     dur = cloudHold - 2 * trickleDuration
                     pTrack.append(Sequence(Wait(delay), ParticleInterval(rainEffects[i], cloud, worldRelative=0, duration=dur, cleanup=True)))
                     delay += effectDelay
-                    
+
                 pTrack.append(Sequence(
-                    Wait(3 * effectDelay), 
+                    Wait(3 * effectDelay),
                     ActorInterval(cloud, 'chan', startTime = 1, duration = cloudHold))
                 )
                 damageTrack = Sequence()
@@ -108,7 +108,7 @@ class StormCloud(SquirtGag, LocationGag):
         tracks.append(cloud02Track)
         tracks.append(Func(self.destroyEntity, entity))
         tracks.start()
-    
+
     def getClosestCog(self, radius = 6):
         loc = LocationGag.getLocation(self)
         for cog in base.cr.doId2do.values():
@@ -117,11 +117,11 @@ class StormCloud(SquirtGag, LocationGag):
                     distance = (cog.getPos(render) - loc).length()
                     if distance <= radius:
                         return cog
-        
+
     def start(self):
         SquirtGag.start(self)
         LocationGag.start(self, self.avatar)
-        
+
     def completeSquirt(self):
         if game.process == 'client':
             LocationGag.complete(self)
@@ -133,17 +133,17 @@ class StormCloud(SquirtGag, LocationGag):
         LocationGag.cleanupLocationSeeker(self)
         SquirtGag.unEquip(self)
         self.completeSquirt()
-        
+
     def considerSquirt(self):
         cog = self.getClosestCog(self.searchRadius)
         self.startEntity(cog)
         if cog:
             self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
         self.completeSquirt()
-        
+
     def onActivate(self, ignore, cog):
         self.startEntity(cog)
-        
+
     def release(self):
         LocationGag.release(self)
         actorTrack = LocationGag.getActorTrack(self)
@@ -152,3 +152,5 @@ class StormCloud(SquirtGag, LocationGag):
             if self.isLocal():
                 actorTrack.append(Func(self.considerSquirt))
             actorTrack.start()
+        if self.isLocal():
+            base.localAvatar.sendUpdate('usedGag', [self.id])

@@ -24,6 +24,11 @@ class ToonUpGag(Gag):
         self.PNTNORMAL = Point3(1, 1, 1)
         self.healAmount = None
 
+    def start(self):
+        Gag.start(self)
+        if self.isLocal():
+            base.localAvatar.sendUpdate('usedGag', [self.id])
+
     def equip(self):
         self.setupHandJoints()
 

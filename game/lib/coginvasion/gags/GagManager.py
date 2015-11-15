@@ -38,6 +38,9 @@ from lib.coginvasion.gags.Sandbag import Sandbag
 from lib.coginvasion.gags.Geyser import Geyser
 from lib.coginvasion.gags.BigWeight import BigWeight
 from lib.coginvasion.gags.StormCloud import StormCloud
+from lib.coginvasion.gags.WaterGlass import WaterGlass
+from lib.coginvasion.gags.WaterGun import WaterGun
+from lib.coginvasion.gags.FireHose import FireHose
 
 class GagManager:
 
@@ -73,7 +76,10 @@ class GagManager:
                      CIGlobals.Anvil : Anvil,
                      CIGlobals.Geyser : Geyser,
                      CIGlobals.BigWeight : BigWeight,
-                     CIGlobals.StormCloud : StormCloud}
+                     CIGlobals.StormCloud : StormCloud,
+                     CIGlobals.WaterGlass : WaterGlass,
+                     CIGlobals.WaterGun : WaterGun,
+                     CIGlobals.FireHose : FireHose}
 
     def getGagByName(self, name):
         for gName in self.gags.keys():

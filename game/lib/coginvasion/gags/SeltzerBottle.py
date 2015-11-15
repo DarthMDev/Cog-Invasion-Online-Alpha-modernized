@@ -32,6 +32,8 @@ class SeltzerBottle(SquirtGag):
             self.startSquirt(self.sprayScale, self.holdTime)
         else:
             self.completeSquirt()
+        if self.isLocal():
+            base.localAvatar.sendUpdate('usedGag', [self.id])
 
     def getSprayStartPos(self):
         self.sprayJoint = self.gag.find('**/joint_toSpray')

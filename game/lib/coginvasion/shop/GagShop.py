@@ -40,6 +40,9 @@ from lib.coginvasion.gags.Sandbag import Sandbag
 from lib.coginvasion.gags.Geyser import Geyser
 from lib.coginvasion.gags.BigWeight import BigWeight
 from lib.coginvasion.gags.StormCloud import StormCloud
+from lib.coginvasion.gags.WaterGlass import WaterGlass
+from lib.coginvasion.gags.WaterGun import WaterGun
+from lib.coginvasion.gags.FireHose import FireHose
 from lib.coginvasion.globals import CIGlobals
 
 class GagShop(Shop):
@@ -84,6 +87,9 @@ class GagShop(Shop):
         self.distShop.addItem(Geyser, ItemType.GAG, 75, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.Geyser]))
         self.distShop.addItem(BigWeight, ItemType.GAG, 14, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.BigWeight]))
         self.distShop.addItem(StormCloud, ItemType.GAG, 8, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.StormCloud]))
+        self.distShop.addItem(WaterGlass, ItemType.GAG, 1, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.WaterGlass]))
+        self.distShop.addItem(WaterGun, ItemType.GAG, 2, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.WaterGun]))
+        self.distShop.addItem(FireHose, ItemType.GAG, 5, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.FireHose]))
         self.items = self.distShop.getItems()
         Shop.setup(self)
         invIcons.removeNode()

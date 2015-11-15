@@ -225,6 +225,8 @@ class ActivateTrapGag(TrapGag, LocationGag):
     def release(self):
         TrapGag.release(self)
 
+        print 'RELEASING!!!'
+
         # Let's release the location seeker if we're using a trapdoor or quicksand.
         if self.trapMode == 0:
             LocationGag.release(self)
