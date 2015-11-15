@@ -47,8 +47,18 @@ class DistributedTutorial(DistributedObject):
      "Click your mouse when you're ready."]
     GUIDE_PT2_INFO = ["Now it'll get a tad bit tougher.", "This next dummy bot will be walking around.",
      "This will test your aiming skills.", "Click your mouse when you're ready."]
-    GUIDE_PT3_INFO = ["This final dummy bot will walk around and try to attack you at times.", "Defeat this Cog, and you should be ready to go."]
-    GUIDE_DONE = ["Wow, you did great!", "You're definitely ready for battle in CogTropolis.", "Click your mouse to head to OToontown."]
+    GUIDE_PT3_INFO = ["This final dummy bot will walk around and try to attack you at times.", "Defeat this Cog to continue on to the next part of the tutorial."]
+    GUIDE_DONE = ["Great!", "Did you know that Cog Invasion Online Alpha allows you to use any Gag that you want?",
+     "Just use the Gags page in your Shticker Book to swap out the Gags that you want to be able to use!",
+     "Also during Alpha testing, your Toon will start off with 5000 jellybeans and 100 Laff points.",
+     "If you're looking to fight some Cogs, hop on the Trolley in the playgrounds to be teleported to CogTropolis!",
+     "Each playground has a different difficulty of Cogs, so be careful!",
+     "You can only fight Cogs in Toontown Central, Minnie's Melodyland, Donald's Dock, and Donald's Dreamland at the moment.",
+     "You can also visit the Minigame Area using your Shticker Book to play some fun minigames!",
+     "These games are best to play with other Toons!",
+     "Remember, if you find any bugs or strange things during gameplay, you can go to the Contact Us page at coginvasion.com to report the issue.",
+     "Have fun!"]
+    #GUIDE_DONE = ["Wow, you did great!", "You're definitely ready for battle in CogTropolis.", "Click your mouse to head to OToontown."]
     GUIDE_START_TRAINING = "Alright! Let's do this!"
 
     def __init__(self, cr):

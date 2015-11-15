@@ -54,7 +54,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.healthChangeEvent = SuitGlobals.healthChangeEvent
         self.animStateChangeEvent = SuitGlobals.animStateChangeEvent
         self.requestedBehaviors = []
-        
+
         # This is for handling death.
         self.deathAnim = None
         self.deathTimeLeft = 0
@@ -174,7 +174,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         prevHealth = self.health
         DistributedAvatarAI.setHealth(self, health)
         messenger.send(self.healthChangeEvent, [health, prevHealth])
-        
+
         if not self.isDead() or self.isDead() and self.deathTimeLeft > 0:
             self.d_announceHealth(0, prevHealth - self.health)
 
@@ -202,11 +202,11 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 self.killSuit()
             return Task.done
         return Task.cont
-    
+
     def __handleDeath(self, task):
         if hasattr(self, 'deathTimeLeft'):
             self.deathTimeLeft -= 1
-            
+
             # Let's handle when we run out of time.
             if self.deathTimeLeft <= 0:
                 self.killSuit()
@@ -216,7 +216,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             return Task.done
 
     def handleAvatarDefeat(self, av):
-        if av.isDead() and hasattr(self, 'brain'):
+        if av.isDead() and hasattr(self, 'brain') and self.brain != None:
             self.b_setAnimState('win')
             self.brain.stopThinking()
             taskMgr.doMethodLater(6.0, self.brain.startThinking, self.uniqueName('Resume Thinking'))
@@ -236,11 +236,11 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                         "jargon", "mumbojumbo", 'doubletalk', 'schmooze', 'fingerwag', 'filibuster']:
             self.d_handleWeaponTouch()
         dmg = int(self.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors[weapon])
-        
+
         # Temporary way to nerf VP to Level 12 damage.
         if self.suitPlan.getName() == SuitGlobals.VicePresident:
             dmg = int(200 / SuitAttacks.SuitAttackDamageFactors[weapon])
-        
+
         toon = self.air.doId2do.get(avId, None)
         if toon:
             hp = toon.getHealth() - dmg
