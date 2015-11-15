@@ -7,7 +7,9 @@
 
 from LocationSeeker import LocationSeeker
 from direct.interval.IntervalGlobal import Sequence, ActorInterval, Func, Wait, SoundInterval
+from direct.gui.DirectGui import OnscreenText
 from panda3d.core import Point3
+from lib.coginvasion.globals import CIGlobals
 
 class LocationGag:
     
@@ -28,6 +30,7 @@ class LocationGag:
         self.soundTrack = None
         self.isCircle = False
         self.shadowScale = 1
+        self.helpInfo = None
         
     def setShadowData(self, isCircle, shadowScale):
         self.isCircle = isCircle
@@ -48,6 +51,11 @@ class LocationGag:
             self.locationSeeker.setShadowType(self.isCircle, self.shadowScale)
             self.avatar.acceptOnce(self.locationSeeker.getLocationSelectedName(), base.localAvatar.releaseGag)
             track.append(Func(self.locationSeeker.startSeeking))
+            
+            self.helpInfo = OnscreenText(text = 'Move the shadow with your mouse\nClick to release', 
+                pos = (0, -0.75), font = CIGlobals.getToonFont(), fg = (1, 1, 1, 1), 
+                shadow = (0.25, 0.25, 0.25, 1))
+            
         track.start()
         
     def release(self):
@@ -108,6 +116,8 @@ class LocationGag:
             self.dropLoc = self.locationSeeker.getLocation()
             self.locationSeeker.cleanup()
             self.locationSeeker = None
+        if self.helpInfo:
+            self.helpInfo.destroy()
             
     def cleanup(self):
         LocationSeeker.cleanup(self)
