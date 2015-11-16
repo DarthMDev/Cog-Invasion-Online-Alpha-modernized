@@ -115,6 +115,9 @@ class SquirtGag(Gag):
         taskMgr.doMethodLater(0.5, self.delSplat, 'Delete Splat')
 
     def getSprayTrack(self, origin, target, scaleUp, hold, scaleDown, horizScale = 1.0, vertScale = 1.0):
+        if self.sprayJoint.isEmpty():
+            self.build()
+            self.origin = self.getSprayStartPos()
         base.localAvatar.stop(self.toonAnim)
         self.lastFrame = self.avatar.getCurrentFrame(self.toonAnim)
         track = Sequence()

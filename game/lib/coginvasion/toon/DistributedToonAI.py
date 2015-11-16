@@ -15,6 +15,7 @@ from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags.backpack import BackpackManager
+from lib.coginvasion.gags.backpack.Backpack import Backpack
 from lib.coginvasion.quests.QuestManagerAI import QuestManagerAI
 from lib.coginvasion.tutorial.DistributedTutorialAI import DistributedTutorialAI
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
@@ -498,6 +499,25 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         DistributedSmoothNodeAI.announceGenerate(self)
         if self.parentId != self.getDefaultShard():
             self.b_setDefaultShard(self.parentId)
+        
+        if self.__class__.__name__ == "DistributedToonAI":
+            self.setupGags = True
+            # TEMPORARY: Any new gags that we make have to be given to toons automatically.
+            newGags = GagGlobals.gagIds.keys()
+            currentBP = self.gagIds
+            currentAmmo = self.ammo
+            newBP = list(self.gagIds)
+            newAmmo = list(self.ammo)
+            needsToUpdate = False
+            for newGag in newGags:
+                if not newGag in currentBP:
+                    print 'This player is missing {0}'.format(GagGlobals.getGagByID(newGag))
+                    newBP.append(newGag)
+                    newAmmo.append(Backpack.amounts.get(GagGlobals.getGagByID(newGag)))
+                    if not needsToUpdate:
+                        needsToUpdate = True
+            if needsToUpdate:
+                self.b_setBackpackAmmo(newBP, newAmmo)
 
     def delete(self):
         try:

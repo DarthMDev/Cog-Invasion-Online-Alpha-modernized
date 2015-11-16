@@ -156,7 +156,7 @@ class CameraShyLevelLoader:
             if len(self.models) > 0:
                 for model in self.models:
                     model.removeNode()
-        self.models = None
+        self.models = []
         if self.levelGeom:
             self.levelGeom.removeNode()
             self.levelGeom = None
@@ -177,7 +177,6 @@ class CameraShyLevelLoader:
             self.dnaStore.reset_block_numbers()
             self.dnaStore.reset_block_zones()
             self.dnaStore.reset_suit_points()
-            self.dnaStore = None
 
         # This is set outside of the class, so no need to check if it exists.
         hoodMgr = None

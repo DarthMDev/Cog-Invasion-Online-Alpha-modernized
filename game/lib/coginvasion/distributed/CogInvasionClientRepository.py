@@ -28,6 +28,8 @@ from lib.coginvasion.toon import LocalToon
 from lib.coginvasion.base.EnterLoad import EnterLoad
 from lib.coginvasion.hood.QuietZoneState import QuietZoneState
 from lib.coginvasion.hood import ZoneUtil
+from lib.coginvasion.gags import GagGlobals
+from lib.coginvasion.gags.backpack.Backpack import Backpack
 from direct.distributed import DistributedSmoothNode
 from CogInvasionErrorCodes import *
 from lib.coginvasion.base import SpeedHackChecker
@@ -600,7 +602,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         # TEMPORARY:
         localAvatar.hoodsDiscovered = [1000, 2000, 3000, 4000, 5000, 9000]
         localAvatar.teleportAccess = [1000, 2000, 3000, 4000, 5000, 9000]
-
+        
         enterLoad.load()
         del enterLoad
 
