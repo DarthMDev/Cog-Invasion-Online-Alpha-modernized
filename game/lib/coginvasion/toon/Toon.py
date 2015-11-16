@@ -394,7 +394,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         return
 
     def setAdminToken(self, tokenId):
-        tokens = {0 : 500}
+        tokens = {0 : 500, 2 : 300}
         if tokenId in tokens.keys():
             icons = loader.loadModel("phase_3/models/props/gm_icons.bam")
             self.tokenIcon = icons.find('**/access_level_%s' % (tokens[tokenId]))
