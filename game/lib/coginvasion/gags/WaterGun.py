@@ -22,11 +22,14 @@ class WaterGun(SquirtGag):
         self.scale = 1.0
         self.holdTime = 0.0
         self.shootSfx = None
+        
+    def build(self):
+        SquirtGag.build(self)
+        self.gag.setPos(Point3(0.28, 0.1, 0.08))
+        self.gag.setHpr(VBase3(85.6, -4.44, 94.43))
 
     def start(self):
         SquirtGag.start(self)
-        self.gag.setPos(Point3(0.28, 0.1, 0.08))
-        self.gag.setHpr(VBase3(85.6, -4.44, 94.43))
         self.origin = self.getSprayStartPos()
         self.release()
 
