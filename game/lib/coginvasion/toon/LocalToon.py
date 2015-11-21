@@ -67,6 +67,7 @@ class LocalToon(DistributedToon):
         self.walkSfx.setLoop(True)
         self.controlManager = ControlManager.ControlManager(True, False)
         self.offset = 3.2375
+        self.firstPersonCamPos = None
         self.movementKeymap = {
             "forward": 0, "backward": 0,
             "left": 0, "right": 0, "jump": 0
@@ -307,6 +308,7 @@ class LocalToon(DistributedToon):
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.camLens.setNearFar(CIGlobals.DefaultCameraNear, CIGlobals.DefaultCameraFar)
         camHeight = max(self.getHeight(), 3.0)
+        nrCamHeight = self.getHeight() # Non-restricted cam height
         heightScaleFactor = camHeight * 0.3333333333
         defLookAt = Point3(0.0, 1.5, camHeight)
         camPos = (Point3(0.0, -9.0 * heightScaleFactor, camHeight),
@@ -314,6 +316,7 @@ class LocalToon(DistributedToon):
             Point3(0.0, camHeight, camHeight * 4.0),
             Point3(0.0, camHeight, camHeight * -1.0),
             0)
+        self.firstPersonCamPos = Point3(0.0, 0.7, nrCamHeight * 5.0)
         self.smartCamera.initializeSmartCamera()
         self.smartCamera.setIdealCameraPos(camPos[0])
         self.smartCamera.setLookAtPoint(defLookAt)
@@ -608,15 +611,15 @@ class LocalToon(DistributedToon):
                 self.backpack = DistributedToon.getBackpack(self)
             self.pieThrowBtn.bind(DGG.B1PRESS, self.startGag)
             self.pieThrowBtn.bind(DGG.B1RELEASE, self.throwGag)
-        self.accept("delete", self.startGag)
-        self.accept("delete-up", self.throwGag)
+        self.accept("mouse1", self.startGag)
+        self.accept("mouse1-up", self.throwGag)
 
     def disablePieKeys(self):
         if self.pieThrowBtn:
             self.pieThrowBtn.unbind(DGG.B1PRESS)
             self.pieThrowBtn.unbind(DGG.B1RELEASE)
-        self.ignore("delete")
-        self.ignore("delete-up")
+        self.ignore("mouse1")
+        self.ignore("mouse1-up")
 
     def disablePies(self):
         self.disablePieKeys()
@@ -657,7 +660,7 @@ class LocalToon(DistributedToon):
             if self.backpack.getActiveGag():
                 if self.backpack.getActiveGag().getState() != GagState.LOADED:
                     return
-            self.ignore("delete")
+            self.ignore("mouse1")
             self.backpack.getCurrentGag().setAvatar(self)
             self.resetHeadHpr()
             self.b_gagStart(self.backpack.getCurrentGag().getID())
@@ -668,7 +671,7 @@ class LocalToon(DistributedToon):
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
                 self.pieThrowBtn.unbind(DGG.B1RELEASE)
-            self.ignore("delete-up")
+            self.ignore("mouse1-up")
             if self.backpack.getActiveGag().getType() == GagType.SQUIRT and self.backpack.getActiveGag().getName() in [CIGlobals.SeltzerBottle]:
                 self.b_gagRelease(self.backpack.getActiveGag().getID())
             else:

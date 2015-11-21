@@ -5,7 +5,7 @@
 
 """
 
-from panda3d.core import VBase4
+from panda3d.core import VBase4, TextNode
 from lib.coginvasion.globals import CIGlobals
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import *
@@ -13,6 +13,7 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from Bullet import Bullet
 from RemoteAvatar import RemoteAvatar
+import GunGameGlobals as GGG
 
 class RemoteToonBattleAvatar(RemoteAvatar):
     notify = directNotify.newCategory("RemoteToonBattleAvatar")
@@ -21,6 +22,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         RemoteAvatar.__init__(self, mg, cr, avId)
         self.track = None
         self.gunName = gunName
+        self.team = None
+        self.teamText = None
         self.fsm = ClassicFSM(
             'RemoteToonBattleAvatar',
             [
@@ -51,6 +54,24 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         self.fsm.enterInitialState()
         self.soundGrunt = None
         self.retrieveAvatar()
+
+    def setTeam(self, team):
+        self.team = team
+        if self.teamText:
+            self.teamText.removeNode()
+            self.teamText = None
+        textNode = TextNode('teamText')
+        textNode.setText(GGG.TeamNameById[team][0])
+        textNode.setTextColor(GGG.TeamColorById[team])
+        textNode.setAlign(TextNode.ACenter)
+        textNode.setFont(CIGlobals.getMickeyFont())
+        self.teamText = self.avatar.attachNewNode(textNode)
+        self.teamText.setBillboardAxis()
+        self.teamText.setZ(self.getNameTag().getZ() + 5.0)
+        self.teamText.setScale(5.0)
+
+    def getTeam(self):
+        return self.team
 
     def setGunName(self, gunName):
         self.gunName = gunName

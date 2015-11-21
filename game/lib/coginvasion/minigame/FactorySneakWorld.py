@@ -4,7 +4,10 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.State import State
+from direct.gui.DirectGui import OnscreenText
+from direct.interval.IntervalGlobal import Sequence, LerpFunc, Wait, Func
 
+from lib.coginvasion.globals import CIGlobals
 from FactorySneakJellybeanBarrel import FactorySneakJellybeanBarrel
 from FactorySneakPlayer import FactorySneakPlayer
 from FactorySneakGuardSuit import FactorySneakGuardSuit
@@ -28,6 +31,50 @@ class FactorySneakWorld(DirectObject):
         self.barrels = []
         self.guards = []
         self.player = FactorySneakPlayer(mg)
+        self.alertText = None
+        self.alertPulse = None
+        self.popupSound = None
+        self.music = [
+            'phase_4/audio/bgm/MG_Escape.mp3',
+            'phase_7/audio/bgm/encntr_suit_winning_indoor.mid']
+
+    def playMusic(self, index):
+        self.mg.music.stop()
+        self.mg.music = base.loadMusic(self.music[index])
+        base.playMusic(self.mg.music, volume = 0.7, looping = 1)
+
+    def showAlert(self, text):
+        self.stopPulse()
+
+        def change_text_scale(num):
+            self.alertText.setScale(num)
+
+        base.playSfx(self.popupSound)
+        self.alertText.setText(text)
+        self.alertPulse = Sequence(
+            LerpFunc(
+                change_text_scale,
+                duration = 0.3,
+                toData = 0.12,
+                fromData = 0.01,
+                blendType = 'easeOut'
+            ),
+            LerpFunc(
+                change_text_scale,
+                duration = 0.2,
+                toData = 0.1,
+                fromData = 0.12,
+                blendType = 'easeInOut'
+            ),
+            Wait(1.5),
+            Func(self.alertText.setText, '')
+        )
+        self.alertPulse.start()
+
+    def stopPulse(self):
+        if self.alertPulse:
+            self.alertPulse.finish()
+            self.alertPulse = None
 
     def setupPlayer(self):
         self.player.setupInterface()
@@ -124,6 +171,9 @@ class FactorySneakWorld(DirectObject):
         for occluderNode in self.occluderData.findAllMatches('**/+OccluderNode'):
             base.render.setOccluder(occluderNode)
             occluderNode.node().setDoubleSided(True)
+        self.worldMdl.flattenMedium()
+        self.alertText = OnscreenText(text = '', font = CIGlobals.getMickeyFont(), fg = (1, 0.9, 0.3, 1), pos = (0, 0.8, 0))
+        self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
 
     def unloadWorld(self):
         if (self.worldMdl != None):
@@ -132,6 +182,10 @@ class FactorySneakWorld(DirectObject):
         if self.occluderData != None:
             self.occluderData.removeNode()
             self.occluderData = None
+        self.stopPulse()
+        if self.alertText != None:
+            self.alertText.destroy()
+            self.alertText = None
 
     def showWorld(self):
         self.worldMdl.reparentTo(base.render)

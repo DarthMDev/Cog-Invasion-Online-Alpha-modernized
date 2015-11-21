@@ -185,8 +185,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         cRayBitMask = CIGlobals.FloorBitmask
         cRayNode.setFromCollideMask(cRayBitMask)
         cRayNode.setIntoCollideMask(BitMask32.allOff())
-        lifter = CollisionHandlerFloor()
-        lifter.addCollider(self.cRayNodePath, self)
+        base.lifter.addCollider(self.cRayNodePath, self)
 
         cSphere = CollisionSphere(0.0, 0.0, radius, 0.01)
         cSphereNode = CollisionNode(name + 'fc')
@@ -197,18 +196,19 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         cSphereNode.setFromCollideMask(CIGlobals.FloorBitmask)
         cSphereNode.setIntoCollideMask(BitMask32.allOff())
 
-        pusher = CollisionHandlerPusher()
-        pusher.addCollider(cSphereNodePath, self)
+        base.pusher.addCollider(cSphereNodePath, self)
         self.floorCollNodePath = cSphereNodePath
-        base.cTrav.addCollider(self.floorCollNodePath, pusher)
-        base.shadowTrav.addCollider(self.cRayNodePath, lifter)
+        base.cTrav.addCollider(self.floorCollNodePath, base.pusher)
+        base.shadowTrav.addCollider(self.cRayNodePath, base.lifter)
 
     def disableRay(self):
         if hasattr(self, 'cRayNodePath'):
             base.shadowTrav.removeCollider(self.cRayNodePath)
+            base.lifter.removeCollider(self.cRayNodePath)
             self.cRayNodePath.removeNode()
             del self.cRayNodePath
             base.cTrav.removeCollider(self.floorCollNodePath)
+            base.pusher.removeCollider(self.floorCollNodePath)
             self.floorCollNodePath.removeNode()
             del self.floorCollNodePath
         self.rayNode = None

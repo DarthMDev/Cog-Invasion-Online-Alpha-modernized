@@ -98,5 +98,9 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
             avId = hitObj.getParent().getPythonTag('player')
             avatar = self.mg.cr.doId2do.get(avId)
             if avatar:
-                damage = self.calcDamage(avatar)
-                self.mg.sendUpdate('avatarHitByBullet', [avatar.doId, damage])
+                remoteAvatar = self.mg.getRemoteAvatar(avatar.doId)
+                if remoteAvatar:
+                    if remoteAvatar.getTeam() != self.mg.team:
+                        # Good, this player isn't on my team. I can damage them.
+                        damage = self.calcDamage(avatar)
+                        self.mg.sendUpdate('avatarHitByBullet', [avatar.doId, damage])

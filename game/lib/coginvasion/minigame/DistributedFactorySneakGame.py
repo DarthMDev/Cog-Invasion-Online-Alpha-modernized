@@ -1,11 +1,14 @@
 # Filename: DistributedFactorySneakGame.py
 # Created by:  blach (21Aug15)
 
+from panda3d.core import CollisionNode, CollisionSphere, BitMask32
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from lib.coginvasion.globals import CIGlobals
 from DistributedToonFPSGame import DistributedToonFPSGame
 from FactorySneakWorld import FactorySneakWorld
+import CogGuardGlobals as CGG
 
 class DistributedFactorySneakGame(DistributedToonFPSGame):
     notify = directNotify.newCategory("DistributedFactorySneakGame")
@@ -34,7 +37,11 @@ class DistributedFactorySneakGame(DistributedToonFPSGame):
 
         base.camLens.setMinFov(CIGlobals.GunGameFOV / (4./3.))
         base.camLens.setFar(250)
-
+        base.localAvatar.setPythonTag('localAvatar', 1)
+        self.avatarBody = base.localAvatar.attachNewNode(CollisionNode('sphereforguardeyes'))
+        self.avatarBody.node().addSolid(CollisionSphere(0, 0, 0, 1.2))
+        self.avatarBody.node().setFromCollideMask(BitMask32.allOff())
+        self.avatarBody.node().setIntoCollideMask(CGG.GuardBitmask)
         self.gameWorld = FactorySneakWorld(self)
         self.gameWorld.loadWorld()
         self.gameWorld.loadJellybeanBarrels()

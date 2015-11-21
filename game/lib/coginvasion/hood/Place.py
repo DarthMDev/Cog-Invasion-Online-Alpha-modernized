@@ -17,6 +17,7 @@ from lib.coginvasion.globals import CIGlobals
 from PublicWalk import PublicWalk
 from lib.coginvasion.book.ShtickerBook import ShtickerBook
 from lib.coginvasion.gui.Dialog import GlobalDialog
+from lib.coginvasion.minigame.FirstPerson import FirstPerson
 import LinkTunnel
 import ZoneUtil
 
@@ -28,6 +29,7 @@ class Place(StateData):
         self.loader = loader
         self.zoneId = None
         self.track = None
+        self.firstPerson = FirstPerson()
         return
 
     def maybeUpdateAdminPage(self):
@@ -313,8 +315,20 @@ class Place(StateData):
         self.watchTunnelSeq = Sequence(Wait(1.0), Func(LinkTunnel.globalAcceptCollisions))
         self.watchTunnelSeq.start()
         base.localAvatar.setBusy(0)
-        base.localAvatar.enablePicking()
+        #base.localAvatar.enablePicking()
         base.localAvatar.showFriendButton()
+        if base.localAvatar.getMyBattle():
+            base.localAvatar.stopSmartCamera()
+            camera.setPos(base.localAvatar.firstPersonCamPos)
+            self.firstPerson.start()
+            self.firstPerson.reallyStart()
+            self.firstPerson.disableMouse()
+            base.localAvatar.getGeomNode().show()
+            base.localAvatar.getShadow().hide()
+            base.localAvatar.find('**/torso-top').hide()
+            base.localAvatar.find('**/torso-bot').hide()
+            base.localAvatar.getPart('head').hide()
+            base.localAvatar.chatInput.disableKeyboardShortcuts()
 
     def exitWalk(self):
         self.walkStateData.exit()
@@ -324,10 +338,18 @@ class Place(StateData):
         self.watchTunnelSeq.pause()
         del self.watchTunnelSeq
         base.localAvatar.setBusy(1)
-        base.localAvatar.disablePicking()
+        #base.localAvatar.disablePicking()
         base.localAvatar.hideFriendButton()
         base.localAvatar.friendsList.fsm.requestFinalState()
         base.localAvatar.panel.fsm.requestFinalState()
+        if base.localAvatar.getMyBattle():
+            self.firstPerson.enableMouse()
+            self.firstPerson.end()
+            self.firstPerson.reallyEnd()
+            base.localAvatar.getShadow().show()
+            base.localAvatar.find('**/torso-top').show()
+            base.localAvatar.find('**/torso-bot').show()
+            base.localAvatar.getPart('head').show()
         return
 
     def handleWalkDone(self, doneStatus):

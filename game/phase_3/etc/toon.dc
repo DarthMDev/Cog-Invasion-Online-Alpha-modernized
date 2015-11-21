@@ -394,7 +394,7 @@ dclass DistributedUnoGame : DistributedMinigame {
 };
 
 dclass DistributedToonFPSGame : DistributedMinigame {
-  attachGunToAvatar(uint32) broadcast;
+  setupRemoteAvatar(uint32) broadcast;
   gunShot(uint32, int16) broadcast clsend;
   standingAvatar(uint32) broadcast clsend;
   runningAvatar(uint32) broadcast clsend;
@@ -406,14 +406,48 @@ dclass DistributedToonFPSGame : DistributedMinigame {
 };
 
 dclass DistributedGunGame : DistributedToonFPSGame {
-  setGameMode(int8) required broadcast ram;
+  // Tell the clients to start voting for the game mode.
   startGameModeVote() broadcast;
+
+  // Tell the ai which game mode we voted for.
   myGameModeVote(int8) clsend;
+
+  // Tell the clients to update their gui to show how many votes a game mode has.
+  incrementGameModeVote(int8) broadcast;
+
+  // Tell the clients that the vote is over and what game mode was decided.
+  gameModeDecided(int8, int8) broadcast;
+
+  // Tell the ai what team we've chosen.
+  choseTeam(int8) clsend airecv;
+
+  // Tell the client that the team they chose is full.
+  teamFull();
+
+  // Tell the client that they've been accepted into the team they chose.
+  acceptedIntoTeam();
+
+  // Tell the clients to update their gui for a certain team.
+  incrementTeamPlayers(int8) broadcast;
+
+  // Tell the clients to set the team of this player.
+  setTeamOfPlayer(uint32, int8) broadcast;
+
+  // Tell the other clients which gun we chose.
+  gunChoice(string, uint32) clsend broadcast;
+
+  // Tell the ai that we've chosen our team and gun,
+  // and are ready to actually start playing.
+  readyToStart() clsend airecv;
+
+  setGameMode(int8) broadcast ram;
+  setLevelName(string) broadcast ram;
+
+  // Tell the ai that our health got to 0.
   dead(uint32) clsend airecv;
+
   incrementKills();
   timeUp() broadcast;
-  gunChoice(string, uint32) clsend broadcast;
-  setLevelName(string) required broadcast ram;
 };
 
 dclass DistributedFactorySneakGame : DistributedToonFPSGame {

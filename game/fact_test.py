@@ -1,4 +1,8 @@
 from panda3d.core import *
+cbm = CullBinManager.getGlobalPtr()
+cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
+cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
+cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
 loadPrcFile('config/config_client.prc')
 loadPrcFileData('', 'tk-main-loop 0')
 loadPrcFileData('', 'framebuffer-multisample 1')
@@ -12,7 +16,8 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit.Suit import Suit
 from direct.distributed.ClientRepository import ClientRepository
 from collections import deque
-from lib.coginvasion.dna.DNAParser import *
+from libpandadna import *
+from lib.coginvasion.dna.DNALoader import *
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 #base.startTk()
 import random
@@ -20,6 +25,8 @@ import random
 base.cTrav = CollisionTraverser()
 base.cr = ClientRepository([])
 base.shadowTrav = CollisionTraverser()
+base.lifter = CollisionHandlerFloor()
+base.pusher = CollisionHandlerPusher()
 
 class Points:
 
@@ -73,6 +80,7 @@ class WalkPoints(Points):
     def createPoint(self):
         Points.createPoint(self)
         self.lastPoint.node().setText("Walk Point " + str(len(self.points) + 1))
+        self.lastPoint.node().setText("")
         self.lastPoint.setBillboardAxis()
         self.points.append(self.lastPoint)
 
@@ -84,6 +92,7 @@ class GuardPoints(Points):
     def createPoint(self):
         Points.createPoint(self)
         self.lastPoint.node().setText("Guard Point " + str(len(self.points) + 1))
+        self.lastPoint.node().setText("")
         self.lastPoint.node().setTextColor(VBase4(0.5, 0.5, 1, 1.0))
         self.lastPoint.setTwoSided(1)
         self.points.append(self.lastPoint)
@@ -93,17 +102,18 @@ class BarrelPoints(Points):
     def createPoint(self):
         Points.createPoint(self)
         self.lastPoint.node().setText("Barrel Point " + str(len(self.points) + 1))
+        self.lastPoint.node().setText("")
         self.lastPoint.node().setTextColor(VBase4(1, 0.5, 0.5, 1.0))
         self.lastPoint.setTwoSided(1)
         self.points.append(self.lastPoint)
 
-
+"""
 ds = DNAStorage()
 
-loadDNAFile(ds, "phase_4/dna/storage.dna")
-loadDNAFile(ds, "phase_6/dna/storage_DD.dna")
-loadDNAFile(ds, "phase_6/dna/storage_DD_sz.dna")
-node = loadDNAFile(ds, "phase_6/dna/donalds_dock_sz.dna")
+loadDNAFile(ds, "phase_4/dna/storage.pdna")
+loadDNAFile(ds, "phase_6/dna/storage_OZ.pdna")
+loadDNAFile(ds, "phase_6/dna/storage_OZ_sz.pdna")
+node = loadDNAFile(ds, "phase_6/dna/outdoor_zone_sz.pdna")
 
 if node.getNumParents() == 1:
     geom = NodePath(node.getParent(0))
@@ -121,7 +131,11 @@ del partyGate
 
 geom.reparentTo(render)
 
-"""
+sky = loader.loadModel('phase_3.5/models/props/TT_sky.bam')
+sky.reparentTo(render)
+sky.setScale(5)
+
+
 walks = WalkPoints()
 guards = GuardPoints()
 barrels = BarrelPoints()
@@ -174,6 +188,7 @@ jbsPointDoneBtn.pack()
 
 pointfile = open("factory_sneak_guard_walk_points.py", "r")
 for line in pointfile.readlines():
+    print line
     x, y, z = line.split(' ')
     x = float(x)
     y = float(y)
@@ -201,8 +216,6 @@ pointfile.close()
 del pointfile
 
 pointfile = open("factory_sneak_barrel_points.py", "r")
-output = open("factory_sneak_barrel_list.py", "w")
-output.write("JellybeanBarrelPoints = [\n")
 for line in pointfile.readlines():
     pos, hpr = line.split('|')
     x, y, z = pos.split(' ')
@@ -214,15 +227,15 @@ for line in pointfile.readlines():
     p = float(p)
     r = float(r)
     string = "    [Point3({0}, {1}, {2}), Vec3({3}, {4}, {5})],\n".format(x, y, z, h, p, r)
-    output.write(string)
-output.write("]")
-output.flush()
-output.close()
-del output
+    #output.write(string)
+#output.write("]")
+#output.flush()
+#output.close()
+#del output
 pointfile.close()
 del pointfile
 
-
+"""
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from direct.interval.IntervalGlobal import *
@@ -404,7 +417,7 @@ class WayPointTests:
         sys.exit()
 
 WayPointTests()
-"""
+
 
 
 from lib.coginvasion.minigame import CogGuardGlobals as CGG
@@ -689,10 +702,47 @@ def watchCog(task):
 taskMgr.add(watchCog, "watchCog")
 """
 
+b = Suit()
+b.generateSuit("B", "bloodsucker", "l", 132, 0, False)
+#cog.setName("Mr. Hollywood", "mrhollywood")
+#cog.setupNameTag()
+b.pose('win', 15)
+b.reparentTo(render)
+b.place()
+"""
+r = Suit()
+r.generateSuit("A", "robberbaron", "m", 132, 0, False)
+#cog.setName("Mr. Hollywood", "mrhollywood")
+#cog.setupNameTag()
+r.pose('glower', 20)
+r.reparentTo(render)
+r.setPosHpr(0, 106.78, -25.10, 206.57, 0, 0)
+
+world = loader.loadModel('phase_9/models/cogHQ/SellbotHQExterior.bam')
+world.reparentTo(base.render)
+world.setPos(0, 227.09, -25.36)
+sky = loader.loadModel('phase_9/models/cogHQ/cog_sky.bam')
+sky.setScale(1)
+sky.reparentTo(base.render)
+sky.find('**/InnerGroup').removeNode()
+fog = Fog('charSelectFog')
+fog.setColor(0.2, 0.2, 0.2)
+fog.setExpDensity(0.003)
+"""
 #base.disableMouse()
 render.setAntialias(AntialiasAttrib.MMultisample)
 
+for nodepath in render.findAllMatches('*'):
+	try:
+		for node in nodepath.findAllMatches('**'):
+			try:
+				node.findTexture('*').setAnisotropicDegree(16)
+			except:
+				pass
+	except:
+		continue
+
 base.camLens.setMinFov(70.0 / (4./3.))
 #base.startDirect()
-#base.oobe()
+base.oobe()
 base.run()

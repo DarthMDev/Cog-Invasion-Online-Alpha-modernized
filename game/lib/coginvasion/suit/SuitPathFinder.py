@@ -4,6 +4,7 @@
 # An implementation of the A* path finding algorithm for Cogs.
 
 from lib.coginvasion.globals import CIGlobals
+import types
 
 class Node:
 
@@ -34,15 +35,15 @@ def get_path(start_key, target_key, nodes):
     path.append(start_key)
     return list(reversed(path))
 
-def find_path(area, start_key, target_key):
-    start_point = CIGlobals.SuitSpawnPoints[area][start_key]
-    target_point = CIGlobals.SuitSpawnPoints[area][target_key]
+def find_path(pointDict, pathData, start_key, target_key):
+    start_point = pointDict[start_key]
+    target_point = pointDict[target_key]
 
     nodes = []
     open_nodes = []
     closed_nodes = []
 
-    for key, point in CIGlobals.SuitSpawnPoints[area].items():
+    for key, point in pointDict.items():
         g_cost = get_distance(point, start_point)
         h_cost = get_distance(point, target_point)
         node = Node(g_cost, h_cost, key, point)
@@ -70,7 +71,7 @@ def find_path(area, start_key, target_key):
         if current.key == target_key:
             return get_path(start_key, target_key, nodes)
 
-        neighbor_keys = CIGlobals.SuitPathData[area][current.key]
+        neighbor_keys = pathData[current.key]
         for neighbor_key in neighbor_keys:
 
             isClosed = False

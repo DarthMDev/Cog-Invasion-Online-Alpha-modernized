@@ -21,6 +21,21 @@ class FactorySneakPlayer(DirectObject):
         self.moneyGui = None
         self.mg = mg
         self.toonFPS = FactorySneakGameToonFPS(mg)
+        self.guardsPursuing = 0
+
+    def guardPursue(self):
+        self.mg.gameWorld.showAlert("A guard has noticed you!")
+        self.guardsPursuing += 1
+        if self.guardsPursuing == 1:
+            # Play the "guards pursuing" music.
+            self.mg.gameWorld.playMusic(1)
+
+    def guardStopPursue(self):
+        self.guardsPursuing -= 1
+        if self.guardsPursuing == 0:
+            # Play the "sneak around" music.
+            self.mg.gameWorld.playMusic(0)
+            self.mg.gameWorld.showAlert("You've evaded the guards!")
 
     def startFPS(self, enableLookAround = True):
         self.toonFPS.load()
@@ -28,6 +43,8 @@ class FactorySneakPlayer(DirectObject):
         if (enableLookAround == False):
             self.disableLookAround()
         self.toonFPS.gui.hp_meter.hide()
+        self.accept("guardPursue", self.guardPursue)
+        self.accept("guardStopPursue", self.guardStopPursue)
 
     def enableLookAround(self):
         self.toonFPS.firstPerson.disableMouse()
@@ -42,6 +59,8 @@ class FactorySneakPlayer(DirectObject):
         self.toonFPS.end()
 
     def cleanupFPS(self):
+        self.ignore("guardPursue")
+        self.ignore("guardStopPursue")
         self.toonFPS.reallyEnd()
         self.toonFPS.cleanup()
 
