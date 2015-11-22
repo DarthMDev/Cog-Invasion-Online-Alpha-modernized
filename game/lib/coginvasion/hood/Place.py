@@ -316,7 +316,7 @@ class Place(StateData):
         self.watchTunnelSeq = Sequence(Wait(1.0), Func(LinkTunnel.globalAcceptCollisions))
         self.watchTunnelSeq.start()
         base.localAvatar.setBusy(0)
-        #base.localAvatar.enablePicking()
+        base.localAvatar.enablePicking()
         base.localAvatar.showFriendButton()
         if self.useFirstPerson:
             if base.localAvatar.getMyBattle():
@@ -340,7 +340,7 @@ class Place(StateData):
         self.watchTunnelSeq.pause()
         del self.watchTunnelSeq
         base.localAvatar.setBusy(1)
-        #base.localAvatar.disablePicking()
+        base.localAvatar.disablePicking()
         base.localAvatar.hideFriendButton()
         base.localAvatar.friendsList.fsm.requestFinalState()
         base.localAvatar.panel.fsm.requestFinalState()

@@ -38,7 +38,7 @@ class GunGameLevelLoaderAI:
         },
 
         'sbf': {
-            'gameTime': 305
+            'gameTime': 999
         }
     }
 
