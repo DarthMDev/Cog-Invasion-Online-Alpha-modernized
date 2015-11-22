@@ -30,6 +30,7 @@ class Place(StateData):
         self.zoneId = None
         self.track = None
         self.firstPerson = FirstPerson()
+        self.useFirstPerson = config.GetBool('want-firstperson-battle')
         return
 
     def maybeUpdateAdminPage(self):
@@ -247,11 +248,6 @@ class Place(StateData):
         del self.loader
 
     def enterTeleportIn(self, requestStatus):
-        if requestStatus['avId'] != base.localAvatar.doId:
-            av = base.cr.doId2do.get(requestStatus['avId'])
-            if av:
-                base.localAvatar.gotoNode(av)
-                base.localAvatar.b_setChat("Hi, %s." % av.getName())
         base.transitions.irisIn()
         self.nextState = requestStatus.get('nextState', 'walk')
         base.localAvatar.attachCamera()
@@ -261,6 +257,11 @@ class Place(StateData):
         base.localAvatar.b_setAnimState('teleportIn', callback = self.teleportInDone)
         base.localAvatar.d_broadcastPositionNow()
         base.localAvatar.b_setParent(CIGlobals.SPRender)
+        if requestStatus['avId'] != base.localAvatar.doId:
+            av = base.cr.doId2do.get(requestStatus['avId'])
+            if av:
+                base.localAvatar.gotoNode(av)
+                base.localAvatar.b_setChat("Hi, %s." % av.getName())
         return
 
     def exitTeleportIn(self):
@@ -317,18 +318,19 @@ class Place(StateData):
         base.localAvatar.setBusy(0)
         #base.localAvatar.enablePicking()
         base.localAvatar.showFriendButton()
-        if base.localAvatar.getMyBattle():
-            base.localAvatar.stopSmartCamera()
-            camera.setPos(base.localAvatar.firstPersonCamPos)
-            self.firstPerson.start()
-            self.firstPerson.reallyStart()
-            self.firstPerson.disableMouse()
-            base.localAvatar.getGeomNode().show()
-            base.localAvatar.getShadow().hide()
-            base.localAvatar.find('**/torso-top').hide()
-            base.localAvatar.find('**/torso-bot').hide()
-            base.localAvatar.getPart('head').hide()
-            base.localAvatar.chatInput.disableKeyboardShortcuts()
+        if self.useFirstPerson:
+            if base.localAvatar.getMyBattle():
+                base.localAvatar.stopSmartCamera()
+                camera.setPos(base.localAvatar.firstPersonCamPos)
+                self.firstPerson.start()
+                self.firstPerson.reallyStart()
+                self.firstPerson.disableMouse()
+                base.localAvatar.getGeomNode().show()
+                base.localAvatar.getShadow().hide()
+                base.localAvatar.find('**/torso-top').hide()
+                base.localAvatar.find('**/torso-bot').hide()
+                base.localAvatar.getPart('head').hide()
+                base.localAvatar.chatInput.disableKeyboardShortcuts()
 
     def exitWalk(self):
         self.walkStateData.exit()
@@ -342,14 +344,15 @@ class Place(StateData):
         base.localAvatar.hideFriendButton()
         base.localAvatar.friendsList.fsm.requestFinalState()
         base.localAvatar.panel.fsm.requestFinalState()
-        if base.localAvatar.getMyBattle():
-            self.firstPerson.enableMouse()
-            self.firstPerson.end()
-            self.firstPerson.reallyEnd()
-            base.localAvatar.getShadow().show()
-            base.localAvatar.find('**/torso-top').show()
-            base.localAvatar.find('**/torso-bot').show()
-            base.localAvatar.getPart('head').show()
+        if self.useFirstPerson:
+            if base.localAvatar.getMyBattle():
+                self.firstPerson.enableMouse()
+                self.firstPerson.end()
+                self.firstPerson.reallyEnd()
+                base.localAvatar.getShadow().show()
+                base.localAvatar.find('**/torso-top').show()
+                base.localAvatar.find('**/torso-bot').show()
+                base.localAvatar.getPart('head').show()
         return
 
     def handleWalkDone(self, doneStatus):

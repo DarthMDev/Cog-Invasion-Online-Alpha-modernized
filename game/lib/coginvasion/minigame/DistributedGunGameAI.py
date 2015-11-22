@@ -12,6 +12,7 @@ from direct.fsm import ClassicFSM, State
 from lib.coginvasion.minigame.DistributedToonFPSGameAI import DistributedToonFPSGameAI
 import GunGameGlobals as GGG
 import GunGameLevelLoaderAI
+from DistributedGunGameFlagAI import DistributedGunGameFlagAI
 
 class DistributedGunGameAI(DistributedToonFPSGameAI):
     notify = directNotify.newCategory("DistributedGunGameAI")
@@ -34,10 +35,12 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
         self.winnerPrize = 70
         self.loserPrize = 15
         self.gameMode = 0
-        self.votes = {}
+        self.votes = {GGG.GameModes.CTF: 0, GGG.GameModes.CASUAL: 0}
         self.playersReadyToStart = 0
         # This keeps track of what players are on what team. They are lists of doIds.
         self.playerListByTeam = {GGG.Teams.RED: [], GGG.Teams.BLUE: []}
+        self.flags = []
+        self.scoreByTeam = {GGG.Teams.RED: 0, GGG.Teams.BLUE: 0}
         return
 
     def enterOff(self):
@@ -48,6 +51,8 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
 
     def enterPlay(self):
         DistributedToonFPSGameAI.allAvatarsReady(self)
+        for flag in self.flags:
+            flag.sendUpdate('placeAtMainPoint')
         self.startTiming()
 
     def exitPlay(self):
@@ -63,20 +68,27 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
         for avatar in self.avatars:
             self.sendUpdate('setupRemoteAvatar', [avatar.doId])
 
+    def teamScored(self, team):
+        self.scoreByTeam[team] += 1
+        self.sendUpdate('incrementTeamScore', [team])
+        if self.scoreByTeam[team] >= GGG.CTF_SCORE_CAP:
+            self.sendUpdate('teamWon', [team])
+            Sequence(Wait(10.0), Func(self.d_gameOver)).start()
+
     def choseTeam(self, team):
         # A player chose the team they want to be on!
         avId = self.air.getAvatarIdFromSender()
-        numOnRed = len(self.playerListByTeam[team])
-        numOnBlue = len(self.playerListByTeam[team])
+        numOnRed = len(self.playerListByTeam[GGG.Teams.RED])
+        numOnBlue = len(self.playerListByTeam[GGG.Teams.BLUE])
         if team == GGG.Teams.RED and numOnRed > numOnBlue or team == GGG.Teams.BLUE and numOnBlue > numOnRed:
             # Wait a minute, this team is full. Tell the client.
-            self.sendUpdateToAvatarId(avId, 'teamFull')
+            self.sendUpdateToAvatarId(avId, 'teamFull', [])
         else:
             # This team is open, let's accept them onto the team they chose!
             self.playerListByTeam[team].append(avId)
             self.sendUpdate('incrementTeamPlayers', [team])
-            self.sendUpdateToAvatarId(avId, 'acceptedIntoTeam')
-            self.sendUpdate('setTeamOfPlayer', [avId])
+            self.sendUpdateToAvatarId(avId, 'acceptedIntoTeam', [])
+            self.sendUpdate('setTeamOfPlayer', [avId, team])
 
     def exitWaitForChoseTeam(self):
         pass
@@ -132,6 +144,13 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
     def setupGameMode(self):
         self.loader.makeLevel()
         self.setInitialTime(self.loader.getGameTimeOfCurrentLevel())
+        if self.gameMode == GGG.GameModes.CTF:
+            blueFlag = DistributedGunGameFlagAI(self.air, self, GGG.Teams.BLUE)
+            blueFlag.generateWithRequired(self.zoneId)
+            redFlag = DistributedGunGameFlagAI(self.air, self, GGG.Teams.RED)
+            redFlag.generateWithRequired(self.zoneId)
+            self.flags.append(blueFlag)
+            self.flags.append(redFlag)
 
     def deadAvatar(self, avId, timestamp):
         sender = self.air.getAvatarIdFromSender()
@@ -151,6 +170,9 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
             return
         except:
             self.DistributedGunGameAI_deleted = 1
+        for flag in self.flags:
+            flag.requestDelete()
+        self.flags = None
         self.stopTiming()
         self.loader.cleanup()
         DistributedToonFPSGameAI.delete(self)

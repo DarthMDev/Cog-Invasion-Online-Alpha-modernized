@@ -61,7 +61,43 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
                               "Way to go!\nYou have earned: %s", "Awesome!\nYou have earned: %s"]
         self.timer = None
         self.timeLbl = None
+        self.alertText = None
+        self.alertPulse = None
+        self.popupSound = None
         return
+
+    def showAlert(self, text):
+        self.stopPulse()
+
+        def change_text_scale(num):
+            self.alertText.setScale(num)
+
+        base.playSfx(self.popupSound)
+        self.alertText.setText(text)
+        self.alertPulse = Sequence(
+            LerpFunc(
+                change_text_scale,
+                duration = 0.3,
+                toData = 0.12,
+                fromData = 0.01,
+                blendType = 'easeOut'
+            ),
+            LerpFunc(
+                change_text_scale,
+                duration = 0.2,
+                toData = 0.1,
+                fromData = 0.12,
+                blendType = 'easeInOut'
+            ),
+            Wait(3.0),
+            Func(self.alertText.setText, '')
+        )
+        self.alertPulse.start()
+
+    def stopPulse(self):
+        if self.alertPulse:
+            self.alertPulse.finish()
+            self.alertPulse = None
 
     def enterFinalScores(self):
         # Not defined as a state in DistributedMinigame, but you
@@ -248,6 +284,9 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
 
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
+        base.minigame = self
+        self.alertText = OnscreenText(text = '', font = CIGlobals.getMickeyFont(), fg = (1, 0.9, 0.3, 1), pos = (0, 0.8, 0))
+        self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
 
     def disable(self):
         DistributedObject.DistributedObject.disable(self)
@@ -262,4 +301,5 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.headPanels = None
         self.finalScoreUI.unload()
         self.finalScoreUI = None
+        base.minigame = None
         return

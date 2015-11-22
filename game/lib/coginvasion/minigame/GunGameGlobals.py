@@ -20,3 +20,5 @@ MSG_CHOSE_MODE = "{0}, it is!"
 GameModeNameById = {GameModes.CASUAL: CASUAL, GameModes.CTF: CTF}
 TeamColorById = {Teams.RED: (1, 0, 0, 1), Teams.BLUE: (0.2, 0.2, 1, 1)}
 TeamNameById = {Teams.RED: RED, Teams.BLUE: BLUE}
+
+CTF_SCORE_CAP = 3

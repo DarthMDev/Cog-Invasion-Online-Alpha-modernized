@@ -8,6 +8,7 @@
 import ToonFPS
 from GunGameBullet import GunGameBullet
 from direct.distributed.ClockDelta import globalClockDelta
+import GunGameGlobals as GGG
 
 class GunGameToonFPS(ToonFPS.ToonFPS):
 
@@ -17,6 +18,12 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         self.points = 0
         ToonFPS.ToonFPS.__init__(self, mg, weaponName)
 
+    def load(self):
+        ToonFPS.ToonFPS.load(self)
+        if self.weaponName == 'shotgun':
+            color = GGG.TeamColorById[self.mg.team]
+            self.weapon.setColorScale(color)
+
     def resetStats(self):
         self.points = 0
         self.kills = 0
@@ -24,15 +31,21 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         self.gui.updateStats()
 
     def enterAlive(self):
-        ToonFPS.ToonFPS.enterAlive(self)
         pos, hpr = self.mg.pickSpawnPoint()
         base.localAvatar.setPos(pos)
         base.localAvatar.setHpr(hpr)
         base.localAvatar.d_broadcastPositionNow()
+        base.localAvatar.walkControls.setCollisionsActive(1)
+        ToonFPS.ToonFPS.enterAlive(self)
         if self.mg.fsm.getCurrentState().getName() == "play":
             self.mg.sendUpdate("respawnAvatar", [base.localAvatar.doId])
 
     def enterDead(self, killer):
+        base.localAvatar.walkControls.setCollisionsActive(0)
+        if self.mg.gameMode == GGG.GameModes.CTF:
+            if self.mg.localAvHasFlag:
+                x, y, z = base.localAvatar.getPos(render)
+                self.mg.getFlagOfOtherTeam(self.mg.team).b_dropFlag(x, y, z + 1)
         self.deaths += 1
         self.updatePoints()
         self.gui.updateStats()

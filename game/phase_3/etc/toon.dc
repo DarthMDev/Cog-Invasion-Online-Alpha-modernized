@@ -21,6 +21,7 @@ from lib.coginvasion.minigame import DistributedMinigame/AI
 from lib.coginvasion.minigame import DistributedRaceGame/AI
 from lib.coginvasion.minigame import DistributedUnoGame/AI
 from lib.coginvasion.minigame import DistributedGunGame/AI
+from lib.coginvasion.minigame import DistributedGunGameFlag/AI
 from lib.coginvasion.minigame import DistributedToonFPSGame/AI
 from lib.coginvasion.minigame import DistributedFactorySneakGame/AI
 from lib.coginvasion.minigame import DistributedCameraShyGame/AI
@@ -410,7 +411,7 @@ dclass DistributedGunGame : DistributedToonFPSGame {
   startGameModeVote() broadcast;
 
   // Tell the ai which game mode we voted for.
-  myGameModeVote(int8) clsend;
+  myGameModeVote(int8) clsend airecv;
 
   // Tell the clients to update their gui to show how many votes a game mode has.
   incrementGameModeVote(int8) broadcast;
@@ -448,6 +449,19 @@ dclass DistributedGunGame : DistributedToonFPSGame {
 
   incrementKills();
   timeUp() broadcast;
+  incrementTeamScore(int8) broadcast;
+  teamWon(int8) broadcast;
+};
+
+dclass DistributedGunGameFlag : DistributedNode {
+  setTeam(int8) required broadcast ram;
+  placeAtMainPoint() broadcast;
+  requestPickup() clsend airecv;
+  pickupFlag(uint32) broadcast;
+  dropFlag(int16 / 10, int16 / 10, int16 / 10) clsend airecv broadcast;
+  requestDropOff() clsend airecv;
+  dropOffFlag(uint32) broadcast;
+  flagReturned() broadcast;
 };
 
 dclass DistributedFactorySneakGame : DistributedToonFPSGame {

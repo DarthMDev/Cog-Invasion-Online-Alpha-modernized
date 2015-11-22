@@ -221,14 +221,6 @@ class ToonFPS(DirectObject):
             self.weapon.setScale(0.75)
             self.weapon.setPos(0.45, -1.03, -1.17)
             self.weapon.setHpr(9.46, 308.19, 75.78)
-            color = random.choice(
-                [
-                    VBase4(1, 0.25, 0.25, 1),
-                    VBase4(0.25, 1, 0.25, 1),
-                    VBase4(0.25, 0.25, 1, 1)
-                ]
-            )
-            self.weapon.setColorScale(color)
         self.gui.load()
 
     def start(self):

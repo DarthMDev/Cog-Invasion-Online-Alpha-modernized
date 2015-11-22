@@ -7,13 +7,15 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.gui.DirectGui import OnscreenText, DirectButton, DGG, DirectScrolledList, DirectLabel
+from direct.showbase.DirectObject import DirectObject
 
 from lib.coginvasion.toon.Toon import Toon
+from lib.coginvasion.gui import Dialog
 from lib.coginvasion.globals import CIGlobals
 
 import sys
 
-class CharSelection:
+class CharSelection(DirectObject):
     notify = directNotify.newCategory('CharSelection')
 
     STAGE_TOON_POS = (66.4, 74.47, -25)
@@ -38,6 +40,7 @@ class CharSelection:
         self.fog = None
         self.title = None
         self.stageToon = None
+        self.deleteConf = None
         self.selectionFSM = ClassicFSM.ClassicFSM(
             'CharSelection',
             [
@@ -105,9 +108,11 @@ class CharSelection:
                 break
         func = None
         arg = None
+        doFade = True
         if action == 'delete':
             func = self.deleteToon
             arg = self.choice.avId
+            doFade = False
         elif action == 'play':
             func = self.playGame
             arg = self.choice.slot
@@ -115,11 +120,17 @@ class CharSelection:
             func = self.enterMAT
         elif action == 'quit':
             func = sys.exit
-        base.transitions.fadeOut(0.3)
-        if arg != None:
-            Sequence(Wait(0.31), Func(func, arg)).start()
+        if doFade:
+            base.transitions.fadeOut(0.3)
+            if arg != None:
+                Sequence(Wait(0.31), Func(func, arg)).start()
+            else:
+                Sequence(Wait(0.31), Func(func)).start()
         else:
-            Sequence(Wait(0.31), Func(func)).start()
+            if arg != None:
+                func(arg)
+            else:
+                func()
 
     def playGame(self, slot):
         messenger.send("avChooseDone", [self.avChooser.getAvChoiceBySlot(slot)])
@@ -128,7 +139,21 @@ class CharSelection:
         messenger.send("enterMakeAToon", [self.slot])
 
     def deleteToon(self, avId):
-        self.avChooser.avChooseFSM.request("waitForToonDelResponse", [avId])
+        # Show a confirmation message
+        self.deleteConf = Dialog.GlobalDialog(
+            message = 'This will delete {0} forever. Are you sure?'.format(self.avChooser.getNameFromAvId(avId)),
+            style = Dialog.YesNo, doneEvent = 'deleteConfResponse', extraArgs = [avId])
+        self.acceptOnce('deleteConfResponse', self.__handleDeleteConfResponse)
+        self.deleteConf.show()
+
+    def __handleDeleteConfResponse(self, avId):
+        doneStatus = self.deleteConf.getValue()
+        if doneStatus:
+            # Alright, they pressed yes. No complaining to us.
+            self.avChooser.avChooseFSM.request("waitForToonDelResponse", [avId])
+        else:
+            self.deleteConf.cleanup()
+            self.deleteConf = None
 
     def __handleCharButton(self, slot):
         for btn in self.charButtons:
@@ -251,6 +276,9 @@ class CharSelection:
             for btn in self.charButtons:
                 btn.destroy()
             self.charButtons = None
+        if self.deleteConf:
+            self.deleteConf.cleanup()
+            self.deleteConf = None
         if self.charList:
             self.charList.destroy()
             self.charList = None

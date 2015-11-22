@@ -32,8 +32,6 @@ egg-object-type-glow            <Scalar> blend { add }
 egg-object-type-direct-widget   <Scalar> collide-mask { 0x80000000 } <Collide> { Polyset descend }
 cull-bin gui-popup 60 unsorted
 default-model-extension .egg
-load-display pandagl
-aux-display p3tinydisplay
 win-origin -2 -2
 win-size 800 600
 fullscreen #f
@@ -63,7 +61,8 @@ basic-shaders-only #f
 window-title Cog Invasion Online (Alpha)
 win-origin -1 -1
 win-size 640 480
-load-display pandagl
+load-display pandadx9
+aux-display pandagl
 
 # Logging...
 notify-level warning
@@ -114,6 +113,9 @@ want-weapons #t
 want-pies #t
 want-chat #t
 want-sa-reactions #f
+gag-start-key delete
+gag-throw-key delete-up
+want-firstperson-battle #f
 
 want-pstats 0
 

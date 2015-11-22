@@ -42,6 +42,8 @@ class LocalToon(DistributedToon):
         except:
             self.LocalToon_initialized = 1
         DistributedToon.__init__(self, cr)
+        self.gagStartKey = config.GetString('gag-start-key')
+        self.gagThrowKey = config.GetString('gag-throw-key')
         self.avatarChoice = cr.localAvChoice
         self.smartCamera = SmartCamera()
         self.chatInput = ChatInput()
@@ -611,15 +613,15 @@ class LocalToon(DistributedToon):
                 self.backpack = DistributedToon.getBackpack(self)
             self.pieThrowBtn.bind(DGG.B1PRESS, self.startGag)
             self.pieThrowBtn.bind(DGG.B1RELEASE, self.throwGag)
-        self.accept("mouse1", self.startGag)
-        self.accept("mouse1-up", self.throwGag)
+        self.accept(self.gagStartKey, self.startGag)
+        self.accept(self.gagThrowKey, self.throwGag)
 
     def disablePieKeys(self):
         if self.pieThrowBtn:
             self.pieThrowBtn.unbind(DGG.B1PRESS)
             self.pieThrowBtn.unbind(DGG.B1RELEASE)
-        self.ignore("mouse1")
-        self.ignore("mouse1-up")
+        self.ignore(self.gagStartKey)
+        self.ignore(self.gagThrowKey)
 
     def disablePies(self):
         self.disablePieKeys()
@@ -660,7 +662,7 @@ class LocalToon(DistributedToon):
             if self.backpack.getActiveGag():
                 if self.backpack.getActiveGag().getState() != GagState.LOADED:
                     return
-            self.ignore("mouse1")
+            self.ignore(self.gagStartKey)
             self.backpack.getCurrentGag().setAvatar(self)
             self.resetHeadHpr()
             self.b_gagStart(self.backpack.getCurrentGag().getID())
@@ -671,7 +673,7 @@ class LocalToon(DistributedToon):
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
                 self.pieThrowBtn.unbind(DGG.B1RELEASE)
-            self.ignore("mouse1-up")
+            self.ignore(self.gagThrowKey)
             if self.backpack.getActiveGag().getType() == GagType.SQUIRT and self.backpack.getActiveGag().getName() in [CIGlobals.SeltzerBottle]:
                 self.b_gagRelease(self.backpack.getActiveGag().getID())
             else:

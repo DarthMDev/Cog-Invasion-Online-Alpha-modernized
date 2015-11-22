@@ -15,7 +15,6 @@ from lib.coginvasion.manager.SettingsManager import SettingsManager
 jsonfile = "settings.json"
 print "CIStart: Reading settings file " + jsonfile
 sm = SettingsManager()
-sm.maybeFixAA()
 
 import os
 class game:
@@ -53,6 +52,8 @@ except:
     loadPrcFile('config/Confauto.prc')
     loadPrcFile('config/config_client.prc')
     print "CIStart: Running dev"
+
+sm.maybeFixAA()
 
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()

@@ -37,20 +37,38 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.fsm.addState(State('voteGM', self.enterVoteGameMode, self.exitVoteGameMode, ['chooseTeam']))
         self.fsm.addState(State('chooseTeam', self.enterChooseTeam, self.exitChooseTeam, ['chooseGun']))
         self.fsm.addState(State('chooseGun', self.enterChooseGun, self.exitChooseGun, ['waitForOthers']))
+        self.fsm.addState(State('announceTeamWon', self.enterAnnounceTeamWon, self.exitAnnounceTeamWon, ['finalScores']))
         self.fsm.getStateNamed('waitForOthers').addTransition('countdown')
+        self.fsm.getStateNamed('waitForOthers').addTransition('voteGM')
         self.fsm.getStateNamed('play').addTransition('announceGameOver')
+        self.fsm.getStateNamed('play').addTransition('announceTeamWon')
         self.toonFps = GunGameToonFPS(self)
-        self.loader = GunGameLevelLoader.GunGameLevelLoader()
+        self.loader = GunGameLevelLoader.GunGameLevelLoader(self)
         self.track = None
         self.isTimeUp = False
         self.cameraMovmentSeq = None
         self.gameMode = None
         self.team = None
+        self.flags = []
+        self.localAvHasFlag = False
+        self.blueScoreLbl = None
+        self.redScoreLbl = None
+        self.infoLbl = None
+        self.scoreByTeam = {GGG.Teams.RED: 0, GGG.Teams.BLUE: 0}
         self.balloonSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
         self.decidedSound = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_win_vote.mp3')
         return
 
+    def getFlagOfOtherTeam(self, team):
+        for flag in self.flags:
+            if flag.team != team:
+                return flag
+
+    def startGameModeVote(self):
+        self.fsm.request('voteGM')
+
     def enterVoteGameMode(self):
+        render.hide()
         font = CIGlobals.getMickeyFont()
         imp = CIGlobals.getToonFont()
         box = DGG.getDefaultDialogGeom()
@@ -71,7 +89,7 @@ class DistributedGunGame(DistributedToonFPSGame):
         			'phase_4/maps/casual_hover.png'),
         	image_scale = (0.9, 1, 1), scale = 0.4, command = self.__pickedGameMode, extraArgs = [GGG.GameModes.CASUAL])
         self.casual_votesLbl = OnscreenText(
-        	parent = casualFrame, text = "0", pos = (0, -0.46, 0), font = imp)
+        	parent = self.casualFrame, text = "0", pos = (0, -0.46, 0), font = imp)
         self.ctf = DirectButton(
         	parent = self.ctfFrame, relief = None, pressEffect = 0,
         	image = ('phase_4/maps/ctf_neutral.png',
@@ -87,6 +105,12 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.sendUpdate('myGameModeVote', [mode])
         self.ctf['state'] = DGG.DISABLED
         self.casual['state'] = DGG.DISABLED
+        if mode == GGG.GameModes.CASUAL:
+            self.ctf['image'] = 'phase_4/maps/ctf_neutral.png'
+            self.casual['image'] = 'phase_4/maps/casual_hover.png'
+        elif mode == GGG.GameModes.CTF:
+            self.ctf['image'] = 'phase_4/maps/ctf_hover.png'
+            self.casual['image'] = 'phase_4/maps/casual_neutral.png'
 
     def incrementGameModeVote(self, mode):
         base.playSfx(self.balloonSound)
@@ -105,8 +129,14 @@ class DistributedGunGame(DistributedToonFPSGame):
         else:
             msg = GGG.MSG_CHOSE_MODE.format(GGG.GameModeNameById[mode])
         self.outcomeLbl.setText(msg)
+        base.taskMgr.doMethodLater(3.0, self.__decided2chooseTeamTask, self.uniqueName('decided2chooseTeamTask'))
+
+    def __decided2chooseTeamTask(self, task):
+        self.fsm.request('chooseTeam')
+        return task.done
 
     def exitVoteGameMode(self):
+        base.taskMgr.remove(self.uniqueName('decided2chooseTeamTask'))
         self.outcomeLbl.destroy()
         del self.outcomeLbl
         self.ctf_votesLbl.destroy()
@@ -178,8 +208,13 @@ class DistributedGunGame(DistributedToonFPSGame):
         # Yay, we're on the team! Let's choose our gun!
         Whisper().createSystemMessage(GGG.MSG_WELCOME.format(GGG.TeamNameById[self.team]))
         self.fsm.request('chooseGun')
+        pos, hpr = self.pickSpawnPoint()
+        base.localAvatar.setPos(pos)
+        base.localAvatar.setHpr(hpr)
 
     def incrementTeamPlayers(self, team):
+        if self.fsm.getCurrentState().getName() != 'chooseTeam':
+            return
         if team == GGG.Teams.RED:
             lbl = self.rrb_playersLbl
         elif team == GGG.Teams.BLUE:
@@ -192,11 +227,11 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.rrb_playersLbl.destroy()
         del self.rrb_playersLbl
         self.bbs_playersLbl.destroy()
-        del self.casual_votesLbl
+        del self.bbs_playersLbl
         self.rrb.destroy()
-        del self.ctf
+        del self.rrb
         self.bbs.destroy()
-        del self.casual
+        del self.bbs
         self.rrbFrame.destroy()
         del self.rrbFrame
         self.bbsFrame.destroy()
@@ -275,9 +310,6 @@ class DistributedGunGame(DistributedToonFPSGame):
     def setLevelName(self, levelName):
         self.loader.setLevel(levelName)
         self.loader.load()
-        pos, hpr = self.pickSpawnPoint()
-        base.localAvatar.setPos(pos)
-        base.localAvatar.setHpr(hpr)
 
     def pickSpawnPoint(self):
         return random.choice(self.loader.getSpawnPoints())
@@ -307,6 +339,25 @@ class DistributedGunGame(DistributedToonFPSGame):
             self.fsm.request('announceGameOver')
             self.isTimeUp = True
 
+    def teamWon(self, team):
+        self.fsm.request('announceTeamWon', [team])
+
+    def enterAnnounceTeamWon(self, team):
+        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+        whistleSfx.play()
+        del whistleSfx
+        text = GGG.TeamNameById[team].split(' ')[0]
+        self.gameOverLbl = DirectLabel(text = "{0}\nWins!".format(text), relief = None, scale = 0.35, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
+        self.track = Sequence(Wait(3.0), Func(self.fsm.request, 'finalScores'))
+        self.track.start()
+
+    def exitAnnounceTeamWon(self):
+        self.gameOverLbl.destroy()
+        del self.gameOverLbl
+        if self.track:
+            self.track.pause()
+            self.track = None
+
     def enterAnnounceGameOver(self):
         whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
         whistleSfx.play()
@@ -326,7 +377,22 @@ class DistributedGunGame(DistributedToonFPSGame):
         DistributedToonFPSGame.enterFinalScores(self)
         self.sendUpdate('myFinalScore', [self.toonFps.points])
 
+    def incrementTeamScore(self, team):
+        self.scoreByTeam[team] += 1
+        if team == GGG.Teams.BLUE:
+            self.blueScoreLbl.setText("Blue: {0}".format(self.scoreByTeam[team]))
+        elif team == GGG.Teams.RED:
+            self.redScoreLbl.setText('Red: {0}'.format(self.scoreByTeam[team]))
+
     def enterCountdown(self):
+        render.show()
+        if self.gameMode == GGG.GameModes.CTF:
+            self.blueScoreLbl = OnscreenText(text = "Blue: 0", scale = 0.1, pos = (-0.1, -0.85),
+                fg = GGG.TeamColorById[GGG.Teams.BLUE], shadow = (0,0,0,1), align = TextNode.ARight)
+            self.redScoreLbl = OnscreenText(text = "Red: 0", scale = 0.1, pos = (0.1, -0.85),
+                fg = GGG.TeamColorById[GGG.Teams.RED], shadow = (0,0,0,1), align = TextNode.ALeft)
+            self.infoLbl = OnscreenText(text = "Playing to: 3", scale = 0.1, pos = (0, -0.95),
+                fg = (1, 1, 1, 1), shadow = (0,0,0,1))
         camera.setPos(0, 0, 0)
         camera.setHpr(0, 0, 0)
         self.toonFps.fsm.request('alive')
@@ -373,8 +439,23 @@ class DistributedGunGame(DistributedToonFPSGame):
         base.camLens.setMinFov(CIGlobals.GunGameFOV / (4./3.))
 
     def disable(self):
+        render.show()
         DistributedToonFPSGame.disable(self)
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
+        if self.blueScoreLbl:
+            self.blueScoreLbl.destroy()
+            self.blueScoreLbl = None
+        if self.redScoreLbl:
+            self.redScoreLbl.destroy()
+            self.redScoreLbl = None
+        if self.infoLbl:
+            self.infoLbl.destroy()
+            self.infoLbl = None
+        self.scoreByTeam = None
+        self.flags = None
+        self.gameMode = None
+        self.team = None
+        self.localAvHasFlag = None
         if self.loader:
             self.loader.unload()
             self.loader.cleanup()

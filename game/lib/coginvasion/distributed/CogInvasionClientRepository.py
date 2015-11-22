@@ -126,6 +126,8 @@ class CogInvasionClientRepository(AstronClientRepository):
         base.pusher = CollisionHandlerPusher()
         base.queue = CollisionHandlerQueue()
 
+        base.minigame = None
+
         self.accountName = os.environ.get('ACCOUNT_NAME', '')
         self.csm = self.generateGlobalObject(DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
         self.friendsManager = self.generateGlobalObject(DO_ID_FRIENDS_MANAGER, 'FriendsManager')

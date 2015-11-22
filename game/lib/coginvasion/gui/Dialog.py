@@ -79,6 +79,7 @@ class GlobalDialog(Dialog):
             okButtonText = CIGlobals.DialogOk,
             cancelButtonText = CIGlobals.DialogCancel, extraArgs = [], **kw):
         self.extraArgs = extraArgs
+        self.doneStatus = None
         if doneEvent == None and style != NoButtons:
             self.notify.error("You must specify a doneEvent on a dialog with buttons.")
         self.__doneEvent = doneEvent

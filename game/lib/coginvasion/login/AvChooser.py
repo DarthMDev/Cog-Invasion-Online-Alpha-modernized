@@ -88,6 +88,11 @@ class AvChooser(StateData):
     def getNameInSlot(self, slot):
         return self.getAvChoiceBySlot(slot).getName()
 
+    def getNameFromAvId(self, avId):
+        for avChoice in self.avChoices:
+            if avChoice.getAvId() == avId:
+                return avChoice.getName()
+
     def getAvChoiceBySlot(self, slot):
         for avChoice in self.avChoices:
             if avChoice.getSlot() == slot:

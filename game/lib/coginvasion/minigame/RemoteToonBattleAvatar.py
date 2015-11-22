@@ -67,7 +67,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         textNode.setFont(CIGlobals.getMickeyFont())
         self.teamText = self.avatar.attachNewNode(textNode)
         self.teamText.setBillboardAxis()
-        self.teamText.setZ(self.getNameTag().getZ() + 5.0)
+        self.teamText.setZ(self.avatar.getNameTag().getZ() + 1.0)
         self.teamText.setScale(5.0)
 
     def getTeam(self):
@@ -76,6 +76,9 @@ class RemoteToonBattleAvatar(RemoteAvatar):
     def setGunName(self, gunName):
         self.gunName = gunName
         self.avatar.attachGun(gunName)
+        if self.gunName == 'shotgun':
+            color = GGG.TeamColorById[self.team]
+            self.avatar.gun.setColorScale(color)
 
     def getGunName(self):
         return self.gunName
@@ -83,7 +86,6 @@ class RemoteToonBattleAvatar(RemoteAvatar):
     def retrieveAvatar(self):
         RemoteAvatar.retrieveAvatar(self)
         if self.avatar:
-            self.avatar.attachGun(self.gunName)
             self.soundGrunt = base.loadSfx('phase_4/audio/sfx/target_impact_grunt1.mp3')
 
     def enterOff(self):
@@ -136,7 +138,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 ),
                 Func(self.fsm.request, 'dead')
             )
-            self.track.start(ts)
+            self.track.start()
             del dieSound
 
     def exitDie(self):
@@ -207,7 +209,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 ),
                 Func(changeToLegAnim)
             )
-            self.track.start(ts)
+            self.track.start()
             del gunSound
 
             self.mg.makeSmokeEffect(self.avatar.gun.find('**/joint_nozzle').getPos(render))
@@ -216,6 +218,9 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         self.resetTrack()
 
     def cleanup(self):
+        if self.teamText:
+            self.teamText.removeNode()
+            self.teamText = None
         if self.avatar:
             self.avatar.detachGun()
         self.soundGrunt = None
