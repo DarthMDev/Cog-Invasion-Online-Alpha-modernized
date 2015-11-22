@@ -102,7 +102,7 @@ class ChatInput(DirectObject, StateData.StateData):
 		if not self.chatBx:
 			base.localAvatar.disableChatInput()
 			base.localAvatar.createChatInput()
-			self.fsm.request('input')
+			self.fsm.request('input', [''])
 			return
 		self.chatBx.show()
 		self.chatBx.setScale(1.20)
