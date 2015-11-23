@@ -654,7 +654,7 @@ class LocalToon(DistributedToon):
         self.b_lookAtObject(0, 0, 0, blink = 0)
 
     def startGag(self, start = True):
-        if not self.backpack or not self.backpack.getCurrentGag():
+        if not self.backpack or not self.backpack.getCurrentGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
@@ -668,7 +668,7 @@ class LocalToon(DistributedToon):
             self.b_gagStart(self.backpack.getCurrentGag().getID())
 
     def throwGag(self, start = True):
-        if not self.backpack or not self.backpack.getCurrentGag() or not self.backpack.getActiveGag():
+        if not self.backpack or not self.backpack.getCurrentGag() or not self.backpack.getActiveGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
@@ -685,7 +685,7 @@ class LocalToon(DistributedToon):
                 Sequence(Wait(0.75), Func(self.releaseGag), Wait(0.3), Func(self.enablePieKeys)).start()
 
     def releaseGag(self):
-        if not self.backpack or not self.backpack.getActiveGag():
+        if not self.backpack or not self.backpack.getActiveGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
         if self.backpack.getSupply() > 0:
             gag = self.backpack.getActiveGag()

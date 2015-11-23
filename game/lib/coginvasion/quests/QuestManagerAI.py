@@ -26,6 +26,10 @@ class QuestManagerAI(QuestManagerBase):
         for questId in possibleQuestIds:
             if Quests.Quests[questId]["tier"] != self.avatar.getTier():
                 possibleQuestIds.remove(questId)
+                break
+            for reqQuest in Quests.Quests[questId].get('rq', []):
+                if not reqQuest in self.avatar.getQuestHistory() and questId in possibleQuestIds:
+                    possibleQuestIds.remove(questId)
         for questId in self.avatar.getQuestHistory():
             if questId in possibleQuestIds:
                 possibleQuestIds.remove(questId)

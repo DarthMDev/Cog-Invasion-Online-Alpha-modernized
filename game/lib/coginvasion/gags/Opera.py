@@ -77,3 +77,4 @@ class Opera(SoundGag):
         soundTrack = Sequence(Wait(delayTime), Parallel(SoundInterval(self.soundSfx, node=self.avatar), Func(self.damageCogsNearby)))
         tracks.append(soundTrack)
         tracks.start()
+        self.tracks = tracks

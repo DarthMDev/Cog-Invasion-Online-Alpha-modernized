@@ -481,7 +481,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                         obj.b_setAnimState('soak')
                     else:
                         obj.b_setAnimState('squirt-small')
-                if obj.__class__.__name__ == 'DistributedSuit':
+                if obj.__class__.__name__ == 'DistributedSuitAI':
                     self.questManager.cogDefeated(obj)
 
     def suitKilled(self, avId):
@@ -499,7 +499,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         DistributedSmoothNodeAI.announceGenerate(self)
         if self.parentId != self.getDefaultShard():
             self.b_setDefaultShard(self.parentId)
-        
+
         if self.__class__.__name__ == "DistributedToonAI":
             self.setupGags = True
             # TEMPORARY: Any new gags that we make have to be given to toons automatically.

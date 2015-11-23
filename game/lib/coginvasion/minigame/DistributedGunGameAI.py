@@ -32,7 +32,7 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
         self.loader = GunGameLevelLoaderAI.GunGameLevelLoaderAI(self)
         self.setZeroCommand(self.timeUp)
         self.setInitialTime(305) # 5 minutes + the time it takes to countdown
-        self.winnerPrize = 70
+        self.winnerPrize = 200
         self.loserPrize = 15
         self.gameMode = 0
         self.votes = {GGG.GameModes.CTF: 0, GGG.GameModes.CASUAL: 0}

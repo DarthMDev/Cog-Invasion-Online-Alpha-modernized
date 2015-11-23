@@ -38,6 +38,8 @@ class ActivateTrapGag(TrapGag, LocationGag):
         # This is the sound effect called when a trap is tripped.
         self.activateSfx = None
 
+        self.entityTrack = None
+
         if game.process == 'client':
             if activateSfx:
                 self.activateSfx = base.audio3d.loadSfx(activateSfx)
@@ -103,6 +105,8 @@ class ActivateTrapGag(TrapGag, LocationGag):
         self.removeEntity(entity)
 
     def onProjCollision(self, entry):
+        if not self.gag:
+            self.build()
         x, y, z = self.gag.getPos(render)
         self.avatar.sendUpdate('setGagPos', [self.getID(), x, y, z])
         self.avatar.b_gagRelease(self.getID())
@@ -156,6 +160,9 @@ class ActivateTrapGag(TrapGag, LocationGag):
             self.avatar.play('toss', fromFrame = 22)
 
     def startEntity(self):
+        if self.entityTrack:
+            self.entityTrack.pause()
+            self.entityTrack = None
         if self.getLocation():
             x, y, z = self.getLocation()
             self.gag.setPos(x, y, z - 0.45)
@@ -178,7 +185,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
             if nearestCog and nearestCog.getDistance(self.gag) <= self.minSafeDistance:
                 self.onActivate(self.gag, nearestCog)
             else:
-                track.append(SoundInterval(self.hitSfx, duration = 0.5, node = self.avatar))
+                track.append(SoundInterval(self.hitSfx, duration = 0.5, node = self.gag))
                 base.taskMgr.doMethodLater(self.lifeTime, self.__clearEntity, 'Clear Entity', extraArgs = [self.gag], appendTask = True)
                 self.gag = None
         else:
@@ -189,6 +196,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
                     self.__doDustClear(ent)
         track.append(Func(self.completeTrap))
         track.start()
+        self.entityTrack = track
 
     def throw(self):
         if not self.gag and not self.isLocal():
@@ -224,8 +232,6 @@ class ActivateTrapGag(TrapGag, LocationGag):
 
     def release(self):
         TrapGag.release(self)
-
-        print 'RELEASING!!!'
 
         # Let's release the location seeker if we're using a trapdoor or quicksand.
         if self.trapMode == 0:

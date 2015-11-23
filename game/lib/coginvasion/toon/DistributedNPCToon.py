@@ -93,8 +93,8 @@ class DistributedNPCToon(DistributedToon):
             self.currentQuestObjective = quest.currentObjectiveIndex
             self.currentQuestId = questData[0]
             self.currentChatIndex = 0
-            #if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_HQ:
-            #    self.doNPCChat(array = Quests.QuestHQOfficerDialogue)
+            if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_HQ:
+                self.doNPCChat(array = Quests.QuestHQOfficerDialogue)
             if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_REGULAR:
                 self.doNPCChat(array = Quests.QuestNPCDialogue)
 

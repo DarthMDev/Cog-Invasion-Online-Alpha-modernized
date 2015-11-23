@@ -6,9 +6,9 @@ from lib.coginvasion.globals.CIGlobals import *
 
 QuestTypes = {-1: "Do", 0: "Defeat", 1: "Recover", 2: "Deliver"}
 QuestSubjects = {-1: "Nothing", 0: "Cogs", 1: "Cog Invasions", 2: "Lawbots",
-    3: "Bossbots", 4: "Sellbots", 5: "Cashbots"}
+    3: "Bossbots", 4: "Sellbots", 5: "Cashbots", 6: "Cog Tournaments"}
 AbbrToDept = {'l': QuestSubjects[2], 'c': QuestSubjects[3], 's': QuestSubjects[4], 'm': QuestSubjects[5]}
-CogSubjects = [0, 2, 3, 4, 5]
+CogSubjects = [0, 2, 3, 4, 5, 6]
 DeptSubjects = [2, 3, 4, 5]
 QuestSubject2SubjectId = {v: k for k, v in QuestSubjects.items()}
 Areas = [ToontownCentral, TheBrrrgh, DonaldsDreamland, MinniesMelodyland, DaisyGardens, DonaldsDock]

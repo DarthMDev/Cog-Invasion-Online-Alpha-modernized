@@ -37,7 +37,7 @@ _P3D_INIT(libpandadna)
 
 // P3D CXX fwd decls.
 #ifdef WIN32
-void init_libwgldisplay();
+void init_libdxgsg9();
 #elif __APPLE__
 void init_libcocoadisplay();
 #endif
@@ -78,7 +78,7 @@ static void start_nirai()
 
     // Setup the display.
 #ifdef WIN32
-    init_libwgldisplay();
+    init_libdxgsg9();
 #elif __APPLE__
     init_libcocoadisplay();
 #endif

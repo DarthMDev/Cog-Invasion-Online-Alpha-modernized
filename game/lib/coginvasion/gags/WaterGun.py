@@ -22,7 +22,7 @@ class WaterGun(SquirtGag):
         self.scale = 1.0
         self.holdTime = 0.0
         self.shootSfx = None
-        
+
     def build(self):
         SquirtGag.build(self)
         self.gag.setPos(Point3(0.28, 0.1, 0.08))
@@ -36,6 +36,8 @@ class WaterGun(SquirtGag):
     def release(self):
 
         def doSpray():
+            if self.avatar.isEmpty():
+                return
             self.sprayRange = self.avatar.getPos(render) + Point3(0, GagGlobals.SELTZER_RANGE, 0)
             self.doSpray(self.sprayScale, self.holdTime, self.sprayScale)
             if self.isLocal():
@@ -66,6 +68,7 @@ class WaterGun(SquirtGag):
             )
         )
         track.start()
+        self.tracks = track
 
     def getSprayStartPos(self):
         self.sprayJoint = self.gag.find('**/joint_nozzle')

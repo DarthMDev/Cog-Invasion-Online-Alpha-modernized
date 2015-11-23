@@ -61,7 +61,7 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		self.setDescription("Tap the left and right arrow keys repeatedly, in turns, as fast as " + \
 			"you can to win the race! Every time your power bar hits the top, the boost bar starts" + \
 			" to fill. When the boost bar is full, press CTRL to boost for a few seconds.")
-		self.setWinnerPrize(20)
+		self.setWinnerPrize(100)
 		self.setLoserPrize(5)
 		self.d_requestToonLane()
 		camera.reparentTo(render)

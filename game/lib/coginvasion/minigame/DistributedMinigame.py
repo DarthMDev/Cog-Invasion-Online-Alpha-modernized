@@ -223,8 +223,9 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
     def abort(self):
         self.headBackToMinigameArea()
 
-    def load(self):
-        self.fsm.request('start')
+    def load(self, showDesc = True):
+        if showDesc:
+            self.fsm.request('start')
         base.transitions.irisIn()
 
     def d_leaving(self):

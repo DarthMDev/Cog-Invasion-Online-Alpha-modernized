@@ -319,7 +319,7 @@ class DistributedEagleGame(DistributedMinigame):
 		self.setMinigameMusic("phase_9/audio/bgm/CHQ_FACT_bg.mid")
 		self.setDescription("Shoot as many flying Legal Eagles as you can using your cannon. "
 			"Use the arrow keys to aim your cannon and press the control key to fire.")
-		self.setWinnerPrize(60)
+		self.setWinnerPrize(175)
 		self.setLoserPrize(20)
 		base.setBackgroundColor(*self.bgColor)
 		self.world = loader.loadModel(self.worldModelPath)

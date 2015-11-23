@@ -55,3 +55,4 @@ class Bugle(SoundGag):
         tracks.append(megaphoneTrack)
         tracks.append(ActorInterval(self.avatar, 'sound'))
         tracks.start()
+        self.tracks = tracks

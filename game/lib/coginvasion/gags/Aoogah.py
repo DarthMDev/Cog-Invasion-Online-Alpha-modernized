@@ -48,3 +48,4 @@ class Aoogah(SoundGag):
         soundTrack = Sequence(Wait(delayTime), Parallel(attackTrack, SoundInterval(self.soundSfx, node=self.avatar), Sequence(Wait(1.5), instrumentshrink), Func(self.damageCogsNearby), Wait(0.4), Func(self.finish)))
         tracks.append(soundTrack)
         tracks.start()
+        self.tracks = tracks

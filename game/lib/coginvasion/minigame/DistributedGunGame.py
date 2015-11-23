@@ -20,9 +20,16 @@ import GunGameLevelLoader
 import GunGameGlobals as GGG
 
 import random
+import math
 
 class DistributedGunGame(DistributedToonFPSGame):
     notify = directNotify.newCategory("DistributedGunGame")
+    GameMode2Description = {GGG.GameModes.CASUAL: "Battle and defeat the Toons on the other team with your gun to gain points. " + \
+                        "Remember to reload your gun when you're out of ammo! " + \
+                        "The Toon with the most points when the timer runs out gets a nice prize!",
+                        GGG.GameModes.CTF: "Steal the other team's flag and take it to where your flag is to score a point. Follow the arrows at the bottom of the screen to find the flags! Use your gun to defend yourself and your flag!"}
+    GameMode2Music = {GGG.GameModes.CASUAL: 'phase_4/audio/bgm/MG_TwoDGame.mid',
+                      GGG.GameModes.CTF:    'phase_9/audio/bgm/CHQ_FACT_bg.mid'}
 
     def __init__(self, cr):
         try:
@@ -34,7 +41,7 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.fsm.addState(State('countdown', self.enterCountdown, self.exitCountdown, ['play']))
         self.fsm.addState(State('announceGameOver', self.enterAnnounceGameOver, self.exitAnnounceGameOver, ['finalScores']))
         self.fsm.addState(State('finalScores', self.enterFinalScores, self.exitFinalScores, ['gameOver']))
-        self.fsm.addState(State('voteGM', self.enterVoteGameMode, self.exitVoteGameMode, ['chooseTeam']))
+        self.fsm.addState(State('voteGM', self.enterVoteGameMode, self.exitVoteGameMode, ['start']))
         self.fsm.addState(State('chooseTeam', self.enterChooseTeam, self.exitChooseTeam, ['chooseGun']))
         self.fsm.addState(State('chooseGun', self.enterChooseGun, self.exitChooseGun, ['waitForOthers']))
         self.fsm.addState(State('announceTeamWon', self.enterAnnounceTeamWon, self.exitAnnounceTeamWon, ['finalScores']))
@@ -42,6 +49,7 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.fsm.getStateNamed('waitForOthers').addTransition('voteGM')
         self.fsm.getStateNamed('play').addTransition('announceGameOver')
         self.fsm.getStateNamed('play').addTransition('announceTeamWon')
+        self.fsm.getStateNamed('start').addTransition('chooseTeam')
         self.toonFps = GunGameToonFPS(self)
         self.loader = GunGameLevelLoader.GunGameLevelLoader(self)
         self.track = None
@@ -53,8 +61,11 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.localAvHasFlag = False
         self.blueScoreLbl = None
         self.redScoreLbl = None
+        self.redArrow = None
+        self.blueArrow = None
         self.infoLbl = None
         self.scoreByTeam = {GGG.Teams.RED: 0, GGG.Teams.BLUE: 0}
+        self.playersByTeam = {GGG.Teams.RED: 0, GGG.Teams.BLUE: 0}
         self.balloonSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
         self.decidedSound = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_win_vote.mp3')
         return
@@ -132,7 +143,7 @@ class DistributedGunGame(DistributedToonFPSGame):
         base.taskMgr.doMethodLater(3.0, self.__decided2chooseTeamTask, self.uniqueName('decided2chooseTeamTask'))
 
     def __decided2chooseTeamTask(self, task):
-        self.fsm.request('chooseTeam')
+        self.fsm.request('start')
         return task.done
 
     def exitVoteGameMode(self):
@@ -179,7 +190,7 @@ class DistributedGunGame(DistributedToonFPSGame):
         			'phase_4/maps/blue_hover.png'),
         	image_scale = (0.9, 1, 1), scale = 0.4, command = self.__choseTeam, extraArgs = [GGG.Teams.BLUE])
         self.bbs_playersLbl = OnscreenText(
-        	parent = self.bbsFrame, text = "0", pos = (0, -0.46, 0), font = imp)
+        	parent = self.bbsFrame, text = str(self.playersByTeam[GGG.Teams.BLUE]), pos = (0, -0.46, 0), font = imp)
         self.rrb = DirectButton(
         	parent = self.rrbFrame, relief = None, pressEffect = 0,
         	image = ('phase_4/maps/red_neutral.png',
@@ -187,7 +198,7 @@ class DistributedGunGame(DistributedToonFPSGame):
         			'phase_4/maps/red_hover.png'),
         	image_scale = (0.9, 1, 1), scale = 0.4, command = self.__choseTeam, extraArgs = [GGG.Teams.RED])
         self.rrb_playersLbl = OnscreenText(
-        	parent = self.rrbFrame, text = "0", pos = (0, -0.46, 0), font = imp)
+        	parent = self.rrbFrame, text = str(self.playersByTeam[GGG.Teams.RED]), pos = (0, -0.46, 0), font = imp)
         self.teamFull_text = OnscreenText(
             parent = self.container, text = "", pos = (0, -0.6, 0), font = imp)
 
@@ -213,13 +224,13 @@ class DistributedGunGame(DistributedToonFPSGame):
         base.localAvatar.setHpr(hpr)
 
     def incrementTeamPlayers(self, team):
-        if self.fsm.getCurrentState().getName() != 'chooseTeam':
-            return
-        if team == GGG.Teams.RED:
-            lbl = self.rrb_playersLbl
-        elif team == GGG.Teams.BLUE:
-            lbl = self.bbs_playersLbl
-        lbl.setText(str(int(lbl.getText()) + 1))
+        self.playersByTeam[team] += 1
+        if self.fsm.getCurrentState().getName() == 'chooseTeam':
+            if team == GGG.Teams.RED:
+                lbl = self.rrb_playersLbl
+            elif team == GGG.Teams.BLUE:
+                lbl = self.bbs_playersLbl
+            lbl.setText(str(self.playersByTeam[team]))
 
     def exitChooseTeam(self):
         self.teamFull_text.destroy()
@@ -288,6 +299,8 @@ class DistributedGunGame(DistributedToonFPSGame):
 
     def setGameMode(self, mode):
         self.gameMode = mode
+        self.setDescription(self.GameMode2Description[mode])
+        self.setMinigameMusic(self.GameMode2Music[mode])
 
     def getGameMode(self):
         return self.gameMode
@@ -317,16 +330,16 @@ class DistributedGunGame(DistributedToonFPSGame):
     def load(self):
         self.toonFps.load()
         self.myRemoteAvatar = RemoteToonBattleAvatar(self, self.cr, base.localAvatar.doId)
-        self.setMinigameMusic("phase_4/audio/bgm/MG_TwoDGame.mid")
-        self.setDescription("Battle and defeat the other Toons with your gun to gain points. " + \
-                            "Remember to reload your gun when you're out of ammo! " + \
-                            "The Toon with the most points when the timer runs out gets a nice prize!")
-        self.setWinnerPrize(70)
+        self.setWinnerPrize(200)
         self.setLoserPrize(15)
         #pos, hpr = self.loader.getCameraOfCurrentLevel()
         #camera.setPos(pos)
         #camera.setHpr(hpr)
-        DistributedToonFPSGame.load(self)
+        DistributedToonFPSGame.load(self, showDesc = False)
+        DistributedToonFPSGame.handleDescAck(self)
+
+    def handleDescAck(self):
+        self.fsm.request('chooseTeam')
 
     def incrementKills(self):
         self.toonFps.killedSomebody()
@@ -384,15 +397,55 @@ class DistributedGunGame(DistributedToonFPSGame):
         elif team == GGG.Teams.RED:
             self.redScoreLbl.setText('Red: {0}'.format(self.scoreByTeam[team]))
 
+    def __updateArrows(self, task):
+        blueFlag = None
+        redFlag = None
+
+        for flag in self.flags:
+            if flag.team == GGG.Teams.BLUE:
+                blueFlag = flag
+            if flag.team == GGG.Teams.RED:
+                redFlag = flag
+
+        if not blueFlag or not redFlag:
+            return task.done
+
+        bLocation = blueFlag.flagMdl.getPos(base.cam)
+        bRotation = base.cam.getQuat(base.cam)
+        bCamSpacePos = bRotation.xform(bLocation)
+        bArrowRadians = math.atan2(bCamSpacePos[0], bCamSpacePos[1])
+        bArrowDegrees = (bArrowRadians/math.pi) * 180
+        self.blueArrow.setR(bArrowDegrees - 90)
+
+        rLocation = redFlag.flagMdl.getPos(base.cam)
+        rRotation = base.cam.getQuat(base.cam)
+        rCamSpacePos = rRotation.xform(rLocation)
+        rArrowRadians = math.atan2(rCamSpacePos[0], rCamSpacePos[1])
+        rArrowDegrees = (rArrowRadians/math.pi) * 180
+        self.redArrow.setR(rArrowDegrees - 90)
+
+        return task.cont
+
     def enterCountdown(self):
         render.show()
         if self.gameMode == GGG.GameModes.CTF:
             self.blueScoreLbl = OnscreenText(text = "Blue: 0", scale = 0.1, pos = (-0.1, -0.85),
                 fg = GGG.TeamColorById[GGG.Teams.BLUE], shadow = (0,0,0,1), align = TextNode.ARight)
+            self.blueArrow = loader.loadModel('phase_3/models/props/arrow.bam')
+            self.blueArrow.setColor(GGG.TeamColorById[GGG.Teams.BLUE])
+            self.blueArrow.reparentTo(aspect2d)
+            self.blueArrow.setPos(-0.2, 0, -0.7)
+            self.blueArrow.setScale(0.1)
             self.redScoreLbl = OnscreenText(text = "Red: 0", scale = 0.1, pos = (0.1, -0.85),
                 fg = GGG.TeamColorById[GGG.Teams.RED], shadow = (0,0,0,1), align = TextNode.ALeft)
+            self.redArrow = loader.loadModel('phase_3/models/props/arrow.bam')
+            self.redArrow.setColor(GGG.TeamColorById[GGG.Teams.RED])
+            self.redArrow.reparentTo(aspect2d)
+            self.redArrow.setPos(0.2, 0, -0.7)
+            self.redArrow.setScale(0.1)
             self.infoLbl = OnscreenText(text = "Playing to: 3", scale = 0.1, pos = (0, -0.95),
                 fg = (1, 1, 1, 1), shadow = (0,0,0,1))
+            base.taskMgr.add(self.__updateArrows, self.uniqueName('updateArrows'))
         camera.setPos(0, 0, 0)
         camera.setHpr(0, 0, 0)
         self.toonFps.fsm.request('alive')
@@ -430,7 +483,6 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.deleteTimer()
         if self.toonFps:
             self.toonFps.end()
-        base.localAvatar.createChatInput()
         DistributedToonFPSGame.exitPlay(self)
 
     def announceGenerate(self):
@@ -442,6 +494,14 @@ class DistributedGunGame(DistributedToonFPSGame):
         render.show()
         DistributedToonFPSGame.disable(self)
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
+        base.taskMgr.remove(self.uniqueName('updateArrows'))
+        self.playersByTeam = None
+        if self.blueArrow:
+            self.blueArrow.removeNode()
+            self.blueArrow = None
+        if self.redArrow:
+            self.redArrow.removeNode()
+            self.redArrow = None
         if self.blueScoreLbl:
             self.blueScoreLbl.destroy()
             self.blueScoreLbl = None
