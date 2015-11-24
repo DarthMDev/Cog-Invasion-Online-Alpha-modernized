@@ -175,6 +175,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         if self.avatar:
 
             def createBullet():
+                if not self.avatar or not self.avatar.gun:
+                    return
                 if self.gunName == "pistol":
                     Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)
                 elif self.gunName == "shotgun":
@@ -182,6 +184,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                     b2 = Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)
 
             def changeToLegAnim():
+                if not self.avatar:
+                    return
                 self.avatar.loop(self.avatar.getCurrentAnim(partName = 'legs'))
 
             if self.gunName == "pistol":

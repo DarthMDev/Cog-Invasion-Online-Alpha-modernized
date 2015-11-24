@@ -29,8 +29,8 @@ class DistributedHQNPCToonAI(DistributedNPCToonAI.DistributedNPCToonAI):
         av = self.air.doId2do.get(avId)
         if av:
             chat = None
-            if len(av.getQuests()[0]) >= 4:
-                array = CIGlobals.NPCEnter_Pointless_Dialogue
+            if len(av.getQuests()[0]) >= 4 and not av.questManager.hasAnObjectiveToVisit(self.npcId, self.zoneId):
+                array = list(CIGlobals.NPCEnter_Pointless_Dialogue)
                 array.remove(array[28])
                 chat = random.choice(array)
             elif (len(av.questManager.getPickableQuestList(self)) == 0 and

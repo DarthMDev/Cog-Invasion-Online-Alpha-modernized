@@ -29,7 +29,8 @@ FILE_LIST = [
     "phase_12.mf",
     "phase_13.mf",
     "phase_14.mf",
-    "release_notes.txt"
+    "release_notes.txt",
+    "cgD3D9.dll"
 ]
 
 monthNum2monthAbr = {

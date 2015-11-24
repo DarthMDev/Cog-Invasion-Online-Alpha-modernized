@@ -58,7 +58,7 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 
     def createSafeZone(self, dnaFile):
         # We need to load the town storage for the Cog buildings.
-        loader.loadDNAFile(self.hood.dnaStore, 'phase_5/dna/storage_town.dna')
+        loader.loadDNAFile(self.hood.dnaStore, 'phase_5/dna/storage_town.pdna')
         SafeZoneLoader.SafeZoneLoader.createSafeZone(self, dnaFile)
 
     def enter(self, requestStatus):

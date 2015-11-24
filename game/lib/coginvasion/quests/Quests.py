@@ -29,6 +29,8 @@ TierML = 16
 TierBR = 17
 TierDL = 18
 
+VisHQObj = [VisitHQOfficer, 1, 1, Any]
+
 Quests = {
     #0: {"objectives": [[DefeatCogLevel, 1, 3, Any]], "reward": (RewardHealth, 1), "tier": TierTT},
     #1: {"objectives": [[VisitNPC, 'visitanNPC', 2308, 2801], []]}
@@ -36,10 +38,10 @@ Quests = {
                     [DefeatCog, Any, 1, Any],
                     [VisitNPC, 'visitanNPC', 2003, 2516]],
         "reward": (RewardHealth, 1), "tier": TierTT},
-    1: {'objectives': [[DefeatCogInvasion, '', 2, ToontownCentralId]], "reward": (RewardHealth, 2), "tier": TierTT, "rq": [0]},
-    2: {'objectives': [[DefeatCogLevel, 3, 25, ToontownCentralId]], "reward": (RewardJellybeans, 1000), "tier": TierTT, "rq": [0]},
-    3: {'objectives': [[DefeatCogTournament, '', 1, ToontownCentralId]], "reward": (RewardHealth, 2), "tier": TierTT, "rq": [0]},
-    4: {'objectives': [[DefeatCogInvasion, '', 10, DonaldsDreamlandId]], "reward": (RewardHealth, 5), "tier": TierTT, "rq": [0, 1, 2, 3]}
+    1: {'objectives': [[DefeatCogInvasion, '', 2, ToontownCentralId], VisHQObj], "reward": (RewardHealth, 2), "tier": TierTT, "rq": [0]},
+    2: {'objectives': [[DefeatCogLevel, 3, 25, ToontownCentralId], VisHQObj], "reward": (RewardJellybeans, 1000), "tier": TierTT, "rq": [0]},
+    3: {'objectives': [[DefeatCogTournament, '', 1, ToontownCentralId], VisHQObj], "reward": (RewardHealth, 2), "tier": TierTT, "rq": [0]},
+    4: {'objectives': [[DefeatCogInvasion, '', 10, DonaldsDreamlandId], VisHQObj], "reward": (RewardHealth, 5), "tier": TierTT, "rq": [0, 1, 2, 3]}
 }
 
 QuestNPCDialogue = {
@@ -110,7 +112,7 @@ class Quest:
         return self.tier
 
     def isComplete(self):
-        if self.currentObjective.type != VisitNPC:
+        if not self.currentObjective.type in [VisitNPC, VisitHQOfficer]:
             if self.currentObjective.isComplete() and self.currentObjectiveIndex >= self.numObjectives - 1:
                 return True
         else:

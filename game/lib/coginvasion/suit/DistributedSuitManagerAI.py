@@ -139,7 +139,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if not levelRange:
                 levelRange = CogBattleGlobals.HoodIndex2LevelRange[self.battle.getHoodIndex()]
             availableSuits = []
-            level = random.randint(levelRange[0], levelRange[1])
+            level = random.choice(levelRange)
             for suit in SuitBank.getSuits():
                 if level >= suit.getLevelRange()[0] and level <= suit.getLevelRange()[1]:
                     availableSuits.append(suit)
