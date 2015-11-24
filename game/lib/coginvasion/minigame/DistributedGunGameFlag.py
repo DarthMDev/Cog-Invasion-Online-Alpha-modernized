@@ -49,6 +49,7 @@ class DistributedGunGameFlag(DistributedNode):
 
     def placeAtMainPoint(self):
         pos, hpr = base.minigame.loader.getFlagPoint(self.team)
+        self.flagCollNP.unstash()
         self.flagMdl.reparentTo(render)
         self.flagMdl.setPos(pos)
         self.flagMdl.setHpr(hpr)
@@ -70,6 +71,7 @@ class DistributedGunGameFlag(DistributedNode):
                     base.minigame.showAlert("You have the enemy's flag!")
                     base.minigame.localAvHasFlag = True
                     self.acceptPointCollisions()
+            self.flagCollNP.stash()
             self.ignore('enter' + self.uniqueName('flag_colnode'))
             self.flagMdl.reparentTo(av.avatar.find('**/def_joint_attachFlower'))
             self.flagMdl.setPos(0.2, self.torsoType2flagY[av.avatar.getTorso()], -1)
@@ -77,6 +79,7 @@ class DistributedGunGameFlag(DistributedNode):
 
     def dropFlag(self, x, y, z):
         base.minigame.localAvHasFlag = False
+        self.flagCollNP.unstash()
         if base.minigame.team != self.team:
             self.acceptOnce('enter' + self.uniqueName('flag_colnode'), self.__touchedFlagSphere)
             base.minigame.showAlert("Your team has dropped the enemy's flag!")
