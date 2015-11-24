@@ -56,7 +56,8 @@ class DistributedCogBattleAI(DistributedObjectAI):
         self.cogsRemaining = num
         if self.cogsRemaining <= 0:
             if self.suitManager:
-                if (self.suitManager.numSuits == 0 or self.suitManager.tournament.inTournament and
+                if (self.suitManager.numSuits == 0 and not self.suitManager.tournament.inTournament or
+                self.suitManager.tournament.inTournament and
                 self.suitManager.tournament.getRound() == 4 and self.numSuits == 0):
                     self.suitManager.stopSpawner()
                     self.sendUpdate("victory", [])

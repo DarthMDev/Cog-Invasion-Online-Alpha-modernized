@@ -236,6 +236,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                         "jargon", "mumbojumbo", 'doubletalk', 'schmooze', 'fingerwag', 'filibuster']:
             self.d_handleWeaponTouch()
         dmg = int(self.getMaxHealth() / SuitAttacks.SuitAttackDamageFactors[weapon])
+        if dmg == 0:
+            # Prevents level 1 and 2 Cogs from doing 0 damage.
+            dmg = 1
 
         # Temporary way to nerf VP to Level 12 damage.
         if self.suitPlan.getName() == SuitGlobals.VicePresident:
