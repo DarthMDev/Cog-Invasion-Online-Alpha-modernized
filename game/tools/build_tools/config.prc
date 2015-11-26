@@ -74,8 +74,9 @@ icon-filename icon.ico
 
 default-model-extension .egg
 
-model-cache-model #t
-model-cache-textures #t
+model-cache-dir
+model-cache-model #f
+model-cache-textures #f
 
 model-path .
 
