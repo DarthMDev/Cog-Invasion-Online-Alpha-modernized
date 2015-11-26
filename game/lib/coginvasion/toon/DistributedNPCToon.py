@@ -7,6 +7,7 @@ from direct.interval.IntervalGlobal import Parallel, LerpPosInterval, LerpQuatIn
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.quests import Quests
+from lib.coginvasion.nametag import NametagGlobals
 from DistributedToon import DistributedToon
 
 class DistributedNPCToon(DistributedToon):
@@ -149,6 +150,11 @@ class DistributedNPCToon(DistributedToon):
 
     def stopNPCOriginPoll(self):
         base.taskMgr.remove(self.uniqueName('NPCOriginPoll'))
+
+    def setupNameTag(self, tempName = None):
+        DistributedToon.setupNameTag(self, tempName)
+        self.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCNPC])
+        self.nametag.updateAll()
 
     def announceGenerate(self):
         DistributedToon.announceGenerate(self)

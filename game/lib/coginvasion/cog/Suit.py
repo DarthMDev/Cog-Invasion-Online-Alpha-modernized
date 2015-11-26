@@ -554,11 +554,11 @@ class Suit(Avatar):
 
     def setupNameTag(self):
         Avatar.setupNameTag(self)
-        if self.nameTag:
+        if self.nametag:
             if self.level > 0:
-                self.nameTag.setText(self.nameTag.getText() + '\n%s\nLevel %s' % (self.dept.getName(), self.level))
+                self.nametag.setText(self.nametag.getText() + '\n%s\nLevel %s' % (self.dept.getName(), self.level))
             else:
-                self.nameTag.setText(self.nameTag.getText() + '\n%s' % (self.dept.getName()))
+                self.nametag.setText(self.nametag.getText() + '\n%s' % (self.dept.getName()))
 
     def setChat(self, chat):
         self.clearChatbox()

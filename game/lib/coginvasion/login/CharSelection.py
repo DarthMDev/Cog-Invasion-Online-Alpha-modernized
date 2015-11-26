@@ -12,6 +12,7 @@ from direct.showbase.DirectObject import DirectObject
 from lib.coginvasion.toon.Toon import Toon
 from lib.coginvasion.gui import Dialog
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.nametag import NametagGlobals
 
 import sys
 
@@ -75,7 +76,10 @@ class CharSelection(DirectObject):
         name = self.choice.name
         self.stageToon.setName(name)
         self.stageToon.setDNAStrand(dna)
-        self.stageToon.nameTag.setColorLocal()
+        self.stageToon.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCLocal])
+        self.stageToon.nametag.setActive(1)
+        self.stageToon.nametag.updateAll()
+        self.stageToon.nametag.nametag3d.request('Rollover')
         self.stageToon.animFSM.request('neutral')
         self.stageToon.reparentTo(base.render)
         self.charNameLabel.setText(name)
@@ -83,6 +87,8 @@ class CharSelection(DirectObject):
         self.playOrCreateButton['extraArgs'] = ['play']
         self.playOrCreateButton.show()
         self.deleteButton.show()
+
+        base.enableMouse()
 
     def exitCharSelected(self):
         self.stageToon.animFSM.requestFinalState()

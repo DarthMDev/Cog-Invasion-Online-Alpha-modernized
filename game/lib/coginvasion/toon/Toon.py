@@ -105,6 +105,16 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         if not hasattr(base, 'localAvatar') or not base.localAvatar == self:
             Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 3, 1)
 
+    def getNametagJoints(self):
+        joints = []
+        for lodName in self.getLODNames():
+            bundle = self.getPartBundle('legs', lodName)
+            joint = bundle.findChild('joint_nameTag')
+            if joint:
+                joints.append(joint)
+
+        return joints
+
     def enterHappy(self, ts = 0, callback = None, extraArgs = []):
         self.playingAnim = None
         self.standWalkRunReverse = (('neutral', 1.0), ('walk', 1.0), ('run', 1.0), ('walk', -1.0))
@@ -145,7 +155,6 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             anim, rate = self.standWalkRunReverse[action]
             if anim != self.playingAnim:
                 self.playingAnim = anim
-                self.stop()
                 doingGagAnim = False
                 if self.backpack:
                     if self.backpack.getCurrentGag():
@@ -231,7 +240,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
     def ghostOn(self):
         self.getGeomNode().hide()
-        self.getNameTag().hide()
+        self.nametag3d.hide()
         self.getShadow().hide()
         if self.tokenIcon:
             self.tokenIcon.hide()
@@ -242,7 +251,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         if self.tokenIcon:
             self.tokenIcon.show()
         self.getShadow().show()
-        self.getNameTag().show()
+        self.nametag3d.show()
         self.getGeomNode().show()
 
     def attachGun(self, gunName):
@@ -399,9 +408,9 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             icons = loader.loadModel("phase_3/models/props/gm_icons.bam")
             self.tokenIcon = icons.find('**/access_level_%s' % (tokens[tokenId]))
             self.tokenIcon.reparentTo(self)
-            x = self.getNameTag().getX()
-            y = self.getNameTag().getY()
-            z = self.getNameTag().getZ()
+            x = self.nametag3d.getX()
+            y = self.nametag3d.getY()
+            z = self.nametag3d.getZ()
             self.tokenIcon.setPos(Vec3(x, y, z) + (0, 0, 0.5))
             self.tokenIcon.setScale(0.4)
             self.tokenIconIval = Sequence(LerpHprInterval(self.tokenIcon, duration = 3.0, hpr = Vec3(360, 0, 0), startHpr = Vec3(0, 0, 0)))
@@ -924,7 +933,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
         holeTrack.append(Func(restorePortal, portal))
         toonTrack = Sequence(
-            Wait(0.3), Func(self.getGeomNode().show), Func(self.getNameTag().show),
+            Wait(0.3), Func(self.getGeomNode().show), Func(self.nametag3d.show),
             ActorInterval(self, 'happy', startTime = 0.45)
         )
         if hasattr(self, 'uniqueName'):
@@ -939,7 +948,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             {"chan": "phase_3.5/models/props/portal-chan.bam"})
         self.show()
         self.getGeomNode().hide()
-        self.getNameTag().hide()
+        self.nametag3d.hide()
         self.track = self.getTeleportInTrack(self.portal2)
         self.track.setDoneEvent(self.track.getName())
         self.acceptOnce(self.track.getName(), self.teleportInDone, [callback, extraArgs])
@@ -961,8 +970,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             self.portal2 = None
         if self.getGeomNode():
             self.getGeomNode().show()
-        if self.getNameTag():
-            self.getNameTag().show()
+        if self.nametag3d:
+            self.nametag3d.show()
         self.playingAnim = 'neutral'
 
     def enterFallFWD(self, ts = 0, callback = None, extraArgs = []):
@@ -996,7 +1005,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.loop("swim")
         self.getGeomNode().setP(-89.0)
         self.getGeomNode().setZ(4.0)
-        nt = self.getNameTag()
+        nt = self.nametag3d
         nt.setX(0)
         nt.setY(-2)
         nt.setZ(5.0)
@@ -1005,7 +1014,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.exitGeneral()
         self.getGeomNode().setP(0.0)
         self.getGeomNode().setZ(0.0)
-        nt = self.getNameTag()
+        nt = self.nametag3d
         nt.setX(0)
         nt.setY(0)
         nt.setZ(self.getHeight() + 0.3)

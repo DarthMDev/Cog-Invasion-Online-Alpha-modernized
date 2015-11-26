@@ -29,6 +29,8 @@ from lib.coginvasion.base.PositionExaminer import PositionExaminer
 from lib.coginvasion.friends.FriendsList import FriendsList
 from lib.coginvasion.suit import SuitAttacks
 
+from lib.coginvasion.nametag import NametagGlobals
+
 import random
 from lib.coginvasion.gags.GagState import GagState
 
@@ -334,8 +336,9 @@ class LocalToon(DistributedToon):
 
     def setupNameTag(self, tempName = None):
         DistributedToon.setupNameTag(self, tempName)
-        if self.nameTag:
-            self.nameTag.setColorLocal()
+        self.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCLocal])
+        self.nametag.unmanage(base.marginManager)
+        self.nametag.updateAll()
 
     def d_broadcastPositionNow(self):
         self.d_clearSmoothing()

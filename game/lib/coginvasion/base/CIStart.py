@@ -127,6 +127,57 @@ DirectGuiGlobals.setDefaultRolloverSound(loader.loadSfx("phase_3/audio/sfx/GUI_r
 DirectGuiGlobals.setDefaultClickSound(loader.loadSfx("phase_3/audio/sfx/GUI_create_toon_fwd.mp3"))
 DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialog_box_gui.bam"))
 
+from lib.coginvasion.nametag import NametagGlobals
+from lib.coginvasion.margins.MarginManager import MarginManager
+from lib.coginvasion.margins import MarginGlobals
+
+NametagGlobals.setMe(base.cam)
+NametagGlobals.setCardModel('phase_3/models/props/panel.bam')
+NametagGlobals.setArrowModel('phase_3/models/props/arrow.bam')
+NametagGlobals.setChatBalloon3dModel('phase_3/models/props/chatbox.bam')
+NametagGlobals.setChatBalloon2dModel('phase_3/models/props/chatbox_noarrow.bam')
+NametagGlobals.setThoughtBalloonModel('phase_3/models/props/chatbox_thought_cutout.bam')
+chatButtonGui = loader.loadModel('phase_3/models/gui/chat_button_gui.bam')
+NametagGlobals.setPageButton(chatButtonGui.find('**/Horiz_Arrow_UP'), chatButtonGui.find('**/Horiz_Arrow_DN'),
+                             chatButtonGui.find('**/Horiz_Arrow_Rllvr'), chatButtonGui.find('**/Horiz_Arrow_UP'))
+NametagGlobals.setQuitButton(chatButtonGui.find('**/CloseBtn_UP'), chatButtonGui.find('**/CloseBtn_DN'),
+                             chatButtonGui.find('**/CloseBtn_Rllvr'), chatButtonGui.find('**/CloseBtn_UP'))
+soundRlvr = DirectGuiGlobals.getDefaultRolloverSound()
+NametagGlobals.setRolloverSound(soundRlvr)
+soundClick = DirectGuiGlobals.getDefaultClickSound()
+NametagGlobals.setClickSound(soundClick)
+
+base.marginManager = MarginManager()
+base.margins = aspect2d.attachNewNode(base.marginManager, DirectGuiGlobals.MIDGROUND_SORT_INDEX + 1)
+base.leftCells = [
+    base.marginManager.addCell(0.1, -0.6, base.a2dTopLeft),
+    base.marginManager.addCell(0.1, -1.0, base.a2dTopLeft),
+    base.marginManager.addCell(0.1, -1.4, base.a2dTopLeft)
+]
+base.bottomCells = [
+    base.marginManager.addCell(0.4, 0.1, base.a2dBottomCenter),
+    base.marginManager.addCell(-0.4, 0.1, base.a2dBottomCenter),
+    base.marginManager.addCell(-1.0, 0.1, base.a2dBottomCenter),
+    base.marginManager.addCell(1.0, 0.1, base.a2dBottomCenter)
+]
+base.rightCells = [
+    base.marginManager.addCell(-0.1, -0.6, base.a2dTopRight),
+    base.marginManager.addCell(-0.1, -1.0, base.a2dTopRight),
+    base.marginManager.addCell(-0.1, -1.4, base.a2dTopRight)
+]
+
+# HACK: I don't feel like making a new file that inherits from ShowBase so I'm just going to do this...
+def setCellsActive(cells, active):
+    for cell in cells:
+        cell.setActive(active)
+    base.marginManager.reorganize()
+base.setCellsActive = setCellsActive
+
+def windowEvent(win):
+    ShowBase.windowEvent(base, win)
+    base.marginManager.updateMarginVisibles()
+base.windowEvent = windowEvent
+
 def maybeDoSomethingWithMusic(condition):
     # 0 = paused
     # 1 = restarted
