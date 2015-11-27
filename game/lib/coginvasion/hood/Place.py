@@ -251,6 +251,11 @@ class Place(StateData):
     def enterTeleportIn(self, requestStatus):
         base.transitions.irisIn()
         self.nextState = requestStatus.get('nextState', 'walk')
+        if requestStatus['avId'] != base.localAvatar.doId:
+            av = base.cr.doId2do.get(requestStatus['avId'])
+            if av:
+                base.localAvatar.gotoNode(av)
+                base.localAvatar.b_setChat("Hi, %s." % av.getName())
         base.localAvatar.attachCamera()
         base.localAvatar.startSmartCamera()
         base.localAvatar.startPosHprBroadcast()
@@ -258,11 +263,6 @@ class Place(StateData):
         base.localAvatar.b_setAnimState('teleportIn', callback = self.teleportInDone)
         base.localAvatar.d_broadcastPositionNow()
         base.localAvatar.b_setParent(CIGlobals.SPRender)
-        if requestStatus['avId'] != base.localAvatar.doId:
-            av = base.cr.doId2do.get(requestStatus['avId'])
-            if av:
-                base.localAvatar.gotoNode(av)
-                base.localAvatar.b_setChat("Hi, %s." % av.getName())
         return
 
     def exitTeleportIn(self):
