@@ -9,13 +9,13 @@ class ChatBalloon(NodePath):
     # line height:
     TEXT_Z_OFFSET = -(4.0/33.0)
 
-    TEXT_MIN_WIDTH = 1.75
-    TEXT_MIN_HEIGHT = 1
-    TEXT_GLYPH_SCALE = 1.05
-    TEXT_GLYPH_SHIFT = -0.05
+    TEXT_MIN_WIDTH = 1.3
+    TEXT_MIN_HEIGHT = 1.0
+    TEXT_GLYPH_SCALE = 1.0
+    TEXT_GLYPH_SHIFT = 0.15
 
-    BALLOON_X_PADDING = 0.65
-    BALLOON_Z_PADDING = 0.65
+    BALLOON_X_PADDING = 0.55
+    BALLOON_Z_PADDING = 0.8
 
     BUTTON_SCALE = 6
     BUTTON_SHIFT = (0, 0, 0.6)

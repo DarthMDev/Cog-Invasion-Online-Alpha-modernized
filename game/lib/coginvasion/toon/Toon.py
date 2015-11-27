@@ -309,6 +309,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             ToonHead.delete(self)
             self.deleteCurrentToon()
             self.chatSoundDict = {}
+            Avatar.Avatar.disable(self)
 
     def delete(self):
         try:

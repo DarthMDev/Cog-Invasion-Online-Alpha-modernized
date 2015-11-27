@@ -77,7 +77,7 @@ class CharSelection(DirectObject):
         self.stageToon.setName(name)
         self.stageToon.setDNAStrand(dna)
         self.stageToon.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCLocal])
-        self.stageToon.nametag.setActive(1)
+        self.stageToon.nametag.setActive(0)
         self.stageToon.nametag.updateAll()
         self.stageToon.nametag.nametag3d.request('Rollover')
         self.stageToon.animFSM.request('neutral')
@@ -87,8 +87,6 @@ class CharSelection(DirectObject):
         self.playOrCreateButton['extraArgs'] = ['play']
         self.playOrCreateButton.show()
         self.deleteButton.show()
-
-        base.enableMouse()
 
     def exitCharSelected(self):
         self.stageToon.animFSM.requestFinalState()

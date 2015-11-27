@@ -140,56 +140,56 @@ def getModelWidthHeight(model):
 NametagColors = {
     CCLocal: (
         (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.2, 0.2, 0.2, 0.1875)),  # Down
-        (VBase4(0.5, 0.5, 1.0, 1.0), VBase4(1.0, 1.0, 1.0, 0.5625)),  # Rollover
-        (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(1.0, 1.0, 1.0, 0.5))    # Disabled
+        (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
+        (VBase4(0.5, 0.5, 1.0, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
+        (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCNoChat: (
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(1.0, 0.5, 0.5, 1.0), VBase4(0.2, 0.2, 0.2, 0.1875)),  # Click
-        (VBase4(1.0, 0.5, 0.0, 1.0), VBase4(1.0, 1.0, 1.0, 0.5625)),  # Rollover
+        (VBase4(1.0, 0.5, 0.5, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Click
+        (VBase4(1.0, 0.5, 0.0, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCNPC: (
         (VBase4(0.0, 0.6, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.0, 0.5, 0.0, 1.0), VBase4(0.5, 0.5, 0.5, 0.1875)),  # Down
-        (VBase4(0.0, 0.7, 0.2, 1.0), VBase4(1.0, 1.0, 1.0, 0.5625)),  # Rollover
+        (VBase4(0.0, 0.5, 0.0, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
+        (VBase4(0.0, 0.7, 0.2, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0.0, 0.6, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCSuit: (
-        (VBase4(0.2, 0.2, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.2, 0.2, 0.2, 1.0), VBase4(0.2, 0.2, 0.2, 0.1875)),  # Down
-        (VBase4(0.4, 0.4, 0.4, 1.0), VBase4(1.0, 1.0, 1.0, 0.5625)),  # Rollover
-        (VBase4(0.2, 0.2, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
+        (VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
+        (VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
+        (VBase4(0.4, 0.4, 0.4, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
+        (VBase4(0, 0, 0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCSuitBuilding: (
         (VBase4(0.5, 0.5, 0.5, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.5, 0.5, 0.5, 1.0), VBase4(0.8, 0.8, 0.8, 0.1875)),  # Down
-        (VBase4(0.5, 0.5, 0.5, 1.0), VBase4(0.8, 0.8, 0.8, 0.5625)),  # Rollover
+        (VBase4(0.5, 0.5, 0.5, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),  # Down
+        (VBase4(0.5, 0.5, 0.5, 1.0), VBase4(0.8, 0.8, 0.8, 1.0)),  # Rollover
         (VBase4(0.5, 0.5, 0.5, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCToonBuilding: (
         (VBase4(0.2, 0.6, 0.9, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.2, 0.6, 0.9, 1.0), VBase4(0.8, 0.8, 0.8, 0.1875)),  # Down
-        (VBase4(0.2, 0.6, 0.9, 1.0), VBase4(0.8, 0.8, 0.8, 0.5625)),  # Rollover
+        (VBase4(0.2, 0.6, 0.9, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),  # Down
+        (VBase4(0.2, 0.6, 0.9, 1.0), VBase4(0.8, 0.8, 0.8, 1.0)),  # Rollover
         (VBase4(0.2, 0.6, 0.9, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCHouseBuilding: (
         (VBase4(0.2, 0.6, 0.9, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.2, 0.2, 0.5, 1.0), VBase4(0.2, 0.2, 0.2, 0.1875)),  # Down
-        (VBase4(0.5, 0.5, 1.0, 1.0), VBase4(1.0, 1.0, 1.0, 0.5625)),  # Rollover
+        (VBase4(0.2, 0.2, 0.5, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
+        (VBase4(0.5, 0.5, 1.0, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0.0, 0.6, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCOtherPlayer: (
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.1875)),  # Down
-        (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5625)),  # Rollover
+        (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
+        (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCFreeChat: (
         (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
-        (VBase4(0.2, 0.2, 0.5, 1.0), VBase4(0.2, 0.2, 0.2, 0.1875)),  # Down
-        (VBase4(0.5, 0.5, 1.0, 1.0), VBase4(1.0, 1.0, 1.0, 0.5625)),  # Rollover
+        (VBase4(0.2, 0.2, 0.5, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
+        (VBase4(0.5, 0.5, 1.0, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     )
 }

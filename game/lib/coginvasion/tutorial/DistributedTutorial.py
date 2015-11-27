@@ -403,6 +403,7 @@ class DistributedTutorial(DistributedObject):
         self.guide.setName(self.GUIDE_NAME)
         self.guide.generateToon()
         self.guide.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCNPC])
+        self.guide.nametag.setActive(0)
         self.guide.nametag.updateAll()
         self.guide.startBlink()
         self.guide.reparentTo(render)

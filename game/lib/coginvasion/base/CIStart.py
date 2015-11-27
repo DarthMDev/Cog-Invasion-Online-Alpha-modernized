@@ -178,6 +178,11 @@ def windowEvent(win):
     base.marginManager.updateMarginVisibles()
 base.windowEvent = windowEvent
 
+base.mouseWatcherNode.setEnterPattern('mouse-enter-%r')
+base.mouseWatcherNode.setLeavePattern('mouse-leave-%r')
+base.mouseWatcherNode.setButtonDownPattern('button-down-%r')
+base.mouseWatcherNode.setButtonUpPattern('button-up-%r')
+
 def maybeDoSomethingWithMusic(condition):
     # 0 = paused
     # 1 = restarted

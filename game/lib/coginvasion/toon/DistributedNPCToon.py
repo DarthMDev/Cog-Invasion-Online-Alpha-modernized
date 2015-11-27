@@ -154,6 +154,7 @@ class DistributedNPCToon(DistributedToon):
     def setupNameTag(self, tempName = None):
         DistributedToon.setupNameTag(self, tempName)
         self.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCNPC])
+        self.nametag.setActive(0)
         self.nametag.updateAll()
 
     def announceGenerate(self):
@@ -166,7 +167,6 @@ class DistributedNPCToon(DistributedToon):
         else:
             self.startNPCOriginPoll()
         self.acceptCollisions()
-        self.nameTag.setClickable(0)
 
     def disable(self):
         self.ignore('mouse1-up')

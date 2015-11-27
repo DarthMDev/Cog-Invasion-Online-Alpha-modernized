@@ -18,6 +18,7 @@ from PublicWalk import PublicWalk
 from lib.coginvasion.book.ShtickerBook import ShtickerBook
 from lib.coginvasion.gui.Dialog import GlobalDialog
 from lib.coginvasion.minigame.FirstPerson import FirstPerson
+from lib.coginvasion.nametag import NametagGlobals
 import LinkTunnel
 import ZoneUtil
 
@@ -318,6 +319,8 @@ class Place(StateData):
         base.localAvatar.setBusy(0)
         base.localAvatar.enablePicking()
         base.localAvatar.showFriendButton()
+        NametagGlobals.setWantActiveNametags(True)
+        NametagGlobals.setWant2dNametags(True)
         if self.useFirstPerson:
             if base.localAvatar.getMyBattle():
                 base.localAvatar.stopSmartCamera()
@@ -339,6 +342,8 @@ class Place(StateData):
             base.cr.playGame.hood.hideTitleText()
         self.watchTunnelSeq.pause()
         del self.watchTunnelSeq
+        NametagGlobals.setWantActiveNametags(False)
+        NametagGlobals.setWant2dNametags(False)
         base.localAvatar.setBusy(1)
         base.localAvatar.disablePicking()
         base.localAvatar.hideFriendButton()

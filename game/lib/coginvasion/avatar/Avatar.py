@@ -47,7 +47,6 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         self.nametag.setChatFont(font)
         self.nametag3d = self.attachNewNode('nametag3d')
         self.nametag3d.setTag('cam', 'nametag')
-        self.nametag3d.setLightOff()
         self.setTwoSided(False)
 
         self.avatarType = None
@@ -100,7 +99,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         return self.height
 
     def setChat(self, chatString = None):
-        ToonTalker.ToonTalker.setChatAbsolute(self, chatString)
+        self.nametag.setChatText(chatString, timeout = self.autoClearChat)
 
     def setName(self, nameString = None, avatarType = None, charName = None, createNow = 0):
         if not nameString:
@@ -142,6 +141,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             self.nametag.setFont(CIGlobals.getSuitFont())
             self.nametag.setChatFont(CIGlobals.getSuitFont())
             self.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCSuit])
+            self.nametag.setActive(0)
         else:
             self.nametag.setFont(CIGlobals.getToonFont())
             self.nametag.setChatFont(CIGlobals.getToonFont())

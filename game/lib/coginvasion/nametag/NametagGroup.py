@@ -10,7 +10,7 @@ from Nametag3d import Nametag3d
 class NametagGroup:
     CHAT_TIMEOUT_MIN = 4.0
     CHAT_TIMEOUT_MAX = 12.0
-    CHAT_STOMP_DELAY = 0.2
+    CHAT_STOMP_DELAY = 0.0
 
     def __init__(self):
         self.avatar = None
@@ -36,7 +36,7 @@ class NametagGroup:
         self.speedChatColor = VBase4(1, 1, 1, 1)
 
         self.wordWrap = 8
-        self.chatWordWrap = 12
+        self.chatWordWrap = 10
 
         self.text = ''
 

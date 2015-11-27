@@ -36,12 +36,10 @@ class Walk(StateData):
         base.localAvatar.startSmartCamera()
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
-        base.localAvatar.enablePicking()
 
     def exit(self):
         base.localAvatar.lastState = None
         self.fsm.request('off')
-        base.localAvatar.enablePicking()
         base.localAvatar.disableAvatarControls()
         base.localAvatar.detachCamera()
         base.localAvatar.stopSmartCamera()

@@ -8,6 +8,7 @@ from lib.coginvasion.margins.MarginVisible import MarginVisible
 import NametagGlobals
 from Nametag import Nametag
 from lib.coginvasion.gui.Clickable2d import Clickable2d
+from lib.coginvasion.globals import CIGlobals
 
 
 class Nametag2d(Nametag, Clickable2d, MarginVisible):
@@ -16,7 +17,7 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
     CHAT_TEXT_MAX_ROWS = 6
     CHAT_TEXT_WORD_WRAP = 8
 
-    CHAT_BALLOON_ALPHA = 0.4
+    CHAT_BALLOON_ALPHA = 0.5
 
     ARROW_OFFSET = -1.0
     ARROW_SCALE = 1.5
@@ -78,7 +79,6 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
             self.setClickRegionFrame(left, right, bottom, top)
             self.region.setActive(True)
         elif self.panel is not None:
-            print 'panel is not none'
             centerX = (self.textNode.getLeft()+self.textNode.getRight()) / 2.0
             centerY = (self.textNode.getBottom()+self.textNode.getTop()) / 2.0
 
@@ -153,7 +153,12 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
             return
 
         # Prefix the nametag text:
-        self.chatTextNode.setText(self.getText() + ': ' + self.actualChatText)
+        if self.avatar.avatarType == CIGlobals.Suit and len(self.getText().split('\n')) == 3:
+            # Just show the cog's name
+            name, dept, level = self.getText().split('\n')
+        else:
+            name = self.getText()
+        self.chatTextNode.setText(name + ': ' + self.actualChatText)
 
         # Set our priority in the margin system:
         self.setPriority(MarginGlobals.MP_normal)
@@ -245,7 +250,11 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
         self.arrow = NametagGlobals.arrowModel.copyTo(self.contents)
         self.arrow.setZ(self.ARROW_OFFSET + self.textNode.getBottom())
         self.arrow.setScale(self.ARROW_SCALE)
-        self.arrow.setColor(self.nametagColor[0][0])
+        if self.avatar.avatarType == CIGlobals.Suit:
+            # Give cogs an orange arrow
+            self.arrow.setColor(NametagGlobals.NametagColors[NametagGlobals.CCOtherPlayer][0][0])
+        else:
+            self.arrow.setColor(self.nametagColor[0][0])
 
     def marginVisibilityChanged(self):
         if self.cell is not None:
