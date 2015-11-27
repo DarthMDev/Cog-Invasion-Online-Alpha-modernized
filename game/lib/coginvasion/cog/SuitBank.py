@@ -15,9 +15,9 @@ from lib.coginvasion.cog import SuitAttacks
 from panda3d.core import VBase4
 
 class SuitPlan:
-    
-    def __init__(self, name, suitType, dept, head, scale, nametagZ, headColor = None, 
-                 headTex = None, headAnims = None, handColor = None, forcedVariant = None, forcedVoice = None, 
+
+    def __init__(self, name, suitType, dept, head, scale, nametagZ, headColor = None,
+                 headTex = None, headAnims = None, handColor = None, forcedVariant = None, forcedVoice = None,
                  levelRange = None, forcedLevel = None, attacks = SuitAttacks.SuitAttackLengths.keys()):
         self.name = name
         self.suitType = suitType
@@ -31,61 +31,61 @@ class SuitPlan:
         self.levelRange = levelRange
         self.forcedLevel = forcedLevel
         self.behaviors = []
-        
+
         if 'phase' in head:
             self.head = Head(None, head, headColor = headColor, headTex = headTex, headAnims = headAnims)
         else:
             self.head = Head(self.suitType, head, headColor = headColor, headTex = headTex)
-        
+
         if not self.handColor:
             self.handColor = self.dept.getHandColor()
         if not len(self.behaviors):
             defaultBehaviors = [[SuitPanicBehavior, 4]]
             self.behaviors = defaultBehaviors
-            
+
     def getName(self):
         return self.name
-    
+
     def getSuitType(self):
         return self.suitType
-            
+
     def getDept(self):
         return self.dept
-    
+
     def getHead(self):
         return self.head
-    
+
     def getScale(self):
         return self.scale
-    
+
     def getNametagZ(self):
         return self.nametagZ
-    
+
     def getHandColor(self):
         return self.handColor
-    
+
     def getForcedVariant(self):
         return self.forcedVariant
-    
+
     def getForcedVoice(self):
         return self.forcedVoice
-    
+
     def getAttacks(self):
         return self.attacks
-    
+
     def getLevelRange(self):
         return self.levelRange
-    
+
     def getForcedLevel(self):
         return self.forcedLevel
-    
+
     def getBehaviors(self):
         return self.behaviors
 
 TheBigCheese = SuitPlan(
-    SuitGlobals.TheBigCheese, 
-    SuitType.A, 
-    Dept.BOSS, 
+    SuitGlobals.TheBigCheese,
+    SuitType.A,
+    Dept.BOSS,
     'bigcheese',
     scale = 7.0,
     nametagZ = 9.8,
@@ -407,14 +407,15 @@ LucyCrossbill = SuitPlan(
     scale = 7.125,
     nametagZ = 8.75,
     handColor = VBase4(0.25, 0.25, 0.5, 1.0),
-    levelRange = (12, 12)
+    levelRange = (80, 80),
+    forcedVoice = Voice.BOSS
 )
 
 SuitIds = {
-    0 : Flunky, 
-    1 : PencilPusher, 
-    2 : Yesman, 
-    3 : Micromanager, 
+    0 : Flunky,
+    1 : PencilPusher,
+    2 : Yesman,
+    3 : Micromanager,
     4 : Downsizer,
     5 : HeadHunter,
     6 : CorporateRaider,
@@ -456,7 +457,7 @@ def getIdFromSuit(suit):
     for suitId, iSuit in SuitIds.items():
         if iSuit == suit:
             return suitId
-        
+
 def getSuitByName(suitName):
     for suit in SuitIds.values():
         if suit.getName() == suitName:

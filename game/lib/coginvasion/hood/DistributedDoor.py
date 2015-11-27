@@ -324,9 +324,10 @@ class DistributedDoor(DistributedObject.DistributedObject):
                 )
             )
         )
-        track.append(Func(av.setAnimState, 'neutral'))
+        track.append(Func(av.setPlayRate, 1.0, 'walk'))
+        track.append(Func(av.loop, 'neutral'))
         track.append(Wait(1.5))
-        track.append(Func(av.setAnimState, 'walk'))
+        track.append(Func(av.loop, 'walk'))
         parallel = Parallel()
         parallel.append(
             LerpPosInterval(
@@ -360,7 +361,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
                 startPos = av.getPos(render)
             )
         )
-        track.append(Func(av.setAnimState, 'neutral'))
+        track.append(Func(av.loop, 'neutral'))
         if base.localAvatar.doId == av.doId:
             track.append(Func(messenger.send, 'DistributedDoor_localAvatarCameOutOfDoor'))
         else:
@@ -371,9 +372,10 @@ class DistributedDoor(DistributedObject.DistributedObject):
         return track
 
     def __avatarTrackDone(self, track):
-        if self.avatarTracks and track:
+        if track:
             DelayDelete.cleanupDelayDeletes(track)
-            self.avatarTracks.remove(track)
+            if self.avatarTracks:
+                self.avatarTracks.remove(track)
 
     def enterDoor(self, avatarId, timestamp):
         if not self.building:

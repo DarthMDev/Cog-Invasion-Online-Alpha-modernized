@@ -55,8 +55,8 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.descDialog = None
         self.winnerPrize = 0
         self.loserPrize = 0
-        self.winnerMsg = "Winner!\nYou have earned: %s"
-        self.loserMsg = "Loser!\nYou have earned: %s"
+        self.winnerMsg = "Winner!\nYou have earned: %s Jellybeans"
+        self.loserMsg = "Loser!\nYou have earned: %s Jellybeans"
         self.allWinnerMsgs = ["Nice try!\nYou have earned: %s", "Good job!\nYou have earned: %s",
                               "Way to go!\nYou have earned: %s", "Awesome!\nYou have earned: %s"]
         self.timer = None

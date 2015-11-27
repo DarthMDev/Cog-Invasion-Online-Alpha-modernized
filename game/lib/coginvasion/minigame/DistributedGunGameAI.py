@@ -112,10 +112,19 @@ class DistributedGunGameAI(DistributedToonFPSGameAI):
 
     def d_gameOver(self):
         winnerAvIds = []
-        for avId in self.finalScoreAvIds:
-            score = self.finalScores[self.finalScoreAvIds.index(avId)]
-            if score == max(self.finalScores):
-                winnerAvIds.append(avId)
+        if self.gameMode == GGG.GameModes.CASUAL:
+            for avId in self.finalScoreAvIds:
+                score = self.finalScores[self.finalScoreAvIds.index(avId)]
+                if score == max(self.finalScores):
+                    winnerAvIds.append(avId)
+        elif self.gameMode == GGG.GameModes.CTF:
+            highestScore = max(self.scoreByTeam.values())
+            for team, score in self.scoreByTeam.items():
+                if score == highestScore:
+                    # This team won. Make all the players that are on the winning team be winners.
+                    for avId in self.playerListByTeam[team]:
+                        winnerAvIds.append(avId)
+
         DistributedToonFPSGameAI.d_gameOver(self, 1, winnerAvIds)
 
     def allAvatarsReady(self):

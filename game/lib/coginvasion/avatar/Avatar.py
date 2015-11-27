@@ -90,7 +90,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             Actor.delete(self)
 
     def getNameTag(self):
-        return self.nameTag.getNodePath()
+        return self.nametag3d
 
     def setHeight(self, height):
         self.height = height
