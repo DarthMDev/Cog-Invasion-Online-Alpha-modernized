@@ -18,6 +18,7 @@ from lib.coginvasion.base.ShadowPlacer import ShadowPlacer
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog import SuitBank
 from lib.coginvasion.toon import ToonTalker
+from lib.coginvasion.nametag import NametagGlobals
 from direct.controls.ControlManager import CollisionHandlerRayStart
 import random
 
@@ -99,7 +100,15 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         return self.height
 
     def setChat(self, chatString = None):
-        self.nametag.setChatText(chatString, timeout = self.autoClearChat)
+        self.nametag.setChatType(NametagGlobals.CHAT)
+        shouldClear = self.autoClearChat
+        if self.isThought(chatString):
+            chatString = self.removeThoughtPrefix(chatString)
+            self.nametag.setChatBalloonType(NametagGlobals.THOUGHT_BALLOON)
+            shouldClear = False
+        else:
+            self.nametag.setChatBalloonType(NametagGlobals.CHAT_BALLOON)
+        self.nametag.setChatText(chatString, timeout = shouldClear)
 
     def setName(self, nameString = None, avatarType = None, charName = None, createNow = 0):
         if not nameString:

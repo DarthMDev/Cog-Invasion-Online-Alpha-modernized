@@ -627,6 +627,8 @@ dclass FriendsManager : DistributedObject {
   teleportNotify(string);
   requestFriendsList() clsend;
   friendsList(uint32[], string[], int8[]);
+  sendWhisper(uint32 target, string message) clsend;
+  whisper(uint32 sender, string message, string senderName);
 };
 
 dclass DistributedCityCart : DistributedNode {

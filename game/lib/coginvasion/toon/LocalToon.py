@@ -97,6 +97,23 @@ class LocalToon(DistributedToon):
         self.lastAction = None
         #base.cTrav.showCollisions(render)
 
+    def handleClickedWhisper(self, senderName, fromId, isPlayer, openPanel = False):
+        if self.cr.playGame.getPlace() == None or not hasattr(self.cr.playGame.getPlace(), 'fsm') or self.cr.playGame.getPlace().fsm == None:
+            return
+        if openPanel and self.cr.playGame.getPlace().fsm.getCurrentState().getName() in ['walk', 'shtickerBook']:
+            self.panel.makePanel(fromId)
+        self.chatInput.disableKeyboardShortcuts()
+        self.chatInput.fsm.request('input', ["", self.sendWhisper, [fromId]])
+
+    def handleClickedSentWhisper(self, senderName, fromId, isPlayer):
+        self.handleClickedWhisper(senderName, fromId, isPlayer, True)
+
+    def sendWhisper(self, message, target):
+        message = self.chatInput.chatInput.get()
+        self.cr.friendsManager.d_sendWhisper(target, message)
+        self.chatInput.fsm.request('idle')
+        self.chatInput.enableKeyboardShortcuts()
+
     def hasDiscoveredHood(self, zoneId):
         return zoneId in self.hoodsDiscovered
 
@@ -244,19 +261,9 @@ class LocalToon(DistributedToon):
     def setupCamera(self):
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.camLens.setNearFar(CIGlobals.DefaultCameraNear, CIGlobals.DefaultCameraFar)
-        camHeight = max(self.getHeight(), 3.0)
-        nrCamHeight = self.getHeight() # Non-restricted cam height
-        heightScaleFactor = camHeight * 0.3333333333
-        defLookAt = Point3(0.0, 1.5, camHeight)
-        camPos = (Point3(0.0, -9.0 * heightScaleFactor, camHeight),
-            defLookAt,
-            Point3(0.0, camHeight, camHeight * 4.0),
-            Point3(0.0, camHeight, camHeight * -1.0),
-            0)
-        self.firstPersonCamPos = Point3(0.0, 0.7, nrCamHeight * 5.0)
         self.smartCamera.initializeSmartCamera()
-        self.smartCamera.setIdealCameraPos(camPos[0])
-        self.smartCamera.setLookAtPoint(defLookAt)
+        self.smartCamera.initCameraPositions()
+        self.smartCamera.setCameraPositionByIndex(0)
 
     def setDNAStrand(self, dnaStrand):
         DistributedToon.setDNAStrand(self, dnaStrand)
@@ -340,12 +347,20 @@ class LocalToon(DistributedToon):
         self.walkControls.enableAvatarControls()
         self.accept("control", self.updateMovementKeymap, ["jump", 1])
         self.accept("control-up", self.updateMovementKeymap, ["jump", 0])
+        self.accept('tab', self.smartCamera.nextCameraPos, [1])
+        self.accept('shift-tab', self.smartCamera.nextCameraPos, [0])
+        self.accept('page_up', self.smartCamera.pageUp)
+        self.accept('page_down', self.smartCamera.pageDown)
         taskMgr.add(self.movementTask, "avatarMovementTask")
         self.avatarMovementEnabled = True
         self.playMovementSfx(None)
 
     def disableAvatarControls(self):
         self.walkControls.disableAvatarControls()
+        self.ignore('tab')
+        self.ignore('shift-tab')
+        self.ignore('page_up')
+        self.ignore('page_down')
         self.ignore("arrow_up")
         self.ignore("arrow_up-up")
         self.ignore("arrow_down")
@@ -775,6 +790,12 @@ class LocalToon(DistributedToon):
     def collisionsOff(self):
         self.controlManager.collisionsOff()
 
+    def toggleAspect2d(self):
+        if base.aspect2d.isHidden():
+            base.aspect2d.show()
+        else:
+            base.aspect2d.hide()
+
     def generate(self):
         DistributedToon.generate(self)
 
@@ -803,6 +824,8 @@ class LocalToon(DistributedToon):
         self.pieType = None
         self.myBattle = None
         self.ignore("gotLookSpot")
+        self.ignore("clickedWhisper")
+        self.ignore('f2')
         return
 
     def announceGenerate(self):
@@ -814,6 +837,8 @@ class LocalToon(DistributedToon):
         #self.accept('c', self.teleportToCT)
         #posBtn = DirectButton(text = "Get Pos", scale = 0.08, pos = (0.3, 0, 0), parent = base.a2dLeftCenter, command = self.printAvPos)
         self.accept("gotLookSpot", self.handleLookSpot)
+        self.accept("clickedWhisper", self.handleClickedSentWhisper)
+        self.accept('f2', self.toggleAspect2d)
 
     def printAvPos(self):
         print "Pos: %s, Hpr: %s" % (self.getPos(), self.getHpr())

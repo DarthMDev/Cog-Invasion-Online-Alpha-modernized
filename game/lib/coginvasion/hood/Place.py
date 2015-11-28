@@ -31,6 +31,7 @@ class Place(StateData):
         self.zoneId = None
         self.track = None
         self.firstPerson = FirstPerson()
+        self.lastBookPage = 'mapPage'
         self.useFirstPerson = config.GetBool('want-firstperson-battle')
         return
 
@@ -66,6 +67,7 @@ class Place(StateData):
 
     def exit(self):
         base.localAvatar.disableChatInput()
+        del self.lastBookPage
         StateData.exit(self)
 
     def enterDoorIn(self, distDoor):
@@ -158,7 +160,7 @@ class Place(StateData):
         self.shtickerBookStateData = ShtickerBook(self.fsm, doneEvent)
         self.acceptOnce(doneEvent, self.__shtickerBookDone)
         self.shtickerBookStateData.load()
-        self.shtickerBookStateData.enter()
+        self.shtickerBookStateData.enter(self.lastBookPage)
         base.localAvatar.showBookButton(1)
         base.localAvatar.b_setAnimState('readBook')
         self.acceptOnce('escape-up', base.localAvatar.bookButtonClicked, [0])
@@ -324,7 +326,7 @@ class Place(StateData):
         if self.useFirstPerson:
             if base.localAvatar.getMyBattle():
                 base.localAvatar.stopSmartCamera()
-                camera.setPos(base.localAvatar.firstPersonCamPos)
+                camera.setPos(base.localAvatar.smartCamera.firstPersonCamPos)
                 self.firstPerson.start()
                 self.firstPerson.reallyStart()
                 self.firstPerson.disableMouse()

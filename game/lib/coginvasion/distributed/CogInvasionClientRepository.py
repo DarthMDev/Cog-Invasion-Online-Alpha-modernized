@@ -112,6 +112,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.isShowingPlayerIds = False
         self.doBetaInform = True
         self.dTutorial = None
+        self.whisperNoise = base.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.mp3')
         self.checkHttp()
         self.http.addPreapprovedServerCertificateFilename(self.serverURL, Filename('phase_3/etc/gameserver.crt'))
         #self.tournamentMusicChunks = {}

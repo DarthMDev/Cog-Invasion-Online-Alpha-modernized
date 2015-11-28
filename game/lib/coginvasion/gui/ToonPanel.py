@@ -28,9 +28,9 @@ class ToonPanel(DirectFrame):
         DirectFrame.__init__(self, scale = 1.2)
         self['image'] = DGG.getDefaultDialogGeom()
         self['image_hpr'] = (0, 0, -90)
-        self['image_scale'] = (0.62, 0.9, 0.325)
+        self['image_scale'] = (0.67, 0.9, 0.325)
         self['image_color'] = (1, 1, 0.75, 1)
-        self['image_pos'] = (0, 0, -0.065)
+        self['image_pos'] = (0, 0, -0.09)
         self['relief'] = None
         self.reparentTo(base.a2dTopRight)
         self.setPos(-0.235, 0.0, -0.325)
@@ -40,6 +40,7 @@ class ToonPanel(DirectFrame):
         self.exitButton = None
         self.friendButton = None
         self.teleportButton = None
+        self.whisperButton = None
         self.nameText = None
         self.actionFrame = None
         self.actionFrameText = None
@@ -409,8 +410,13 @@ class ToonPanel(DirectFrame):
            parent = self, pos = (0, 0, -0.12), command = self.doAction, extraArgs = ['waitOnAvatarTeleportResponse'])
         self.teleportButton.setPos(0, 0, -0.275)
 
+        self.whisperButton = DirectButton(geom = CIGlobals.getDefaultBtnGeom(), text = "Whisper", scale = 0.58,
+	       relief = None, text_scale = 0.058, geom_scale = (1.25, 0, 0.9), text_pos = (0, -0.0125),
+           parent = self, pos = (0, 0, -0.12), command = base.localAvatar.handleClickedWhisper, extraArgs = [self.avatarInfo[1], self.avatarInfo[0], 1])
+        self.whisperButton.setPos(0, 0, -0.325)
+
         self.exitButton = DirectButton(geom = CIGlobals.getCancelBtnGeom(), parent = self,
-            relief = None, scale = 0.6, pos = (0, 0.0, -0.3425), command = self.exitClicked)
+            relief = None, scale = 0.6, pos = (0, 0.0, -0.39), command = self.exitClicked)
         gui = loader.loadModel("phase_3.5/models/gui/friendslist_gui.bam")
         self.moreDetailsBtn = DirectButton(geom = (gui.find('**/Horiz_Arrow_UP'),
             gui.find('**/Horiz_Arrow_DN'),
@@ -418,7 +424,7 @@ class ToonPanel(DirectFrame):
             gui.find('**/Horiz_Arrow_UP')),
             relief = None,
             parent = self,
-            pos = (-0.127, 0.0, -0.3425),
+            pos = (-0.127, 0.0, -0.39),
             geom_hpr = (180, 0, 0),
             command = self.makeMoreDetailsPanel,
             scale = 0.77,
@@ -456,6 +462,9 @@ class ToonPanel(DirectFrame):
         if self.teleportButton:
             self.teleportButton.destroy()
             self.teleportButton = None
+        if self.whisperButton:
+            self.whisperButton.destroy()
+            self.whisperButton = None
         if self.exitButton:
             self.exitButton.destroy()
             self.exitButton = None

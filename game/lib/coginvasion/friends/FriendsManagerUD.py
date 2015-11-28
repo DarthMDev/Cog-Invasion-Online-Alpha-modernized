@@ -91,6 +91,21 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
         self.toonsOnline = []
 
+    def sendWhisper(self, target, message):
+        sender = self.air.getAvatarIdFromSender()
+
+        def senderAvatarResponse(dclass, fields):
+            if dclass != self.air.dclassesByName['DistributedToonUD']:
+                return
+            name = fields['setName'][0]
+            self.sendUpdateToAvatarId(target, 'whisper', [sender, message, name])
+            
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            sender,
+            senderAvatarResponse
+        )
+
     def requestFriendsList(self, sender = None):
         if sender == None:
             sender = self.air.getAvatarIdFromSender()
