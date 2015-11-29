@@ -125,6 +125,10 @@ class Avatar(ToonTalker.ToonTalker, Actor):
     def setupNameTag(self, tempName = None):
         if not self.name and not tempName:
             return
+        if tempName:
+            name = tempName
+        else:
+            name = self.name
         offset = 0.0
         if self.avatarType:
             if self.avatarType == CIGlobals.Suit:
@@ -155,7 +159,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             self.nametag.setFont(CIGlobals.getToonFont())
             self.nametag.setChatFont(CIGlobals.getToonFont())
             self.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCOtherPlayer])
-        self.nametag.setText(self.getName())
+        self.nametag.setText(name)
         self.nametag.manage(base.marginManager)
         self.nametag.updateAll()
 

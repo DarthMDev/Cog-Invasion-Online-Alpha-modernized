@@ -292,6 +292,8 @@ class ToonFPS(DirectObject):
         self.reload = None
         self.empty = None
         self.ammo = None
+        self.aliveFSM.requestFinalState()
+        self.fsm.requestFinalState()
         self.fsm = None
         self.aliveFSM = None
         self.player_node = None

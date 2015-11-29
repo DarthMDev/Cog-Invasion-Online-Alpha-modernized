@@ -19,6 +19,7 @@ class TossTrapGag(TrapGag):
         self.particles = None
         self.particlesFx = particlesFx
         self.idleSfx = None
+        self.timeout = 5.0
 
         if game.process == 'client':
             if idleSfx:
@@ -71,6 +72,8 @@ class TossTrapGag(TrapGag):
 
     def release(self):
         TrapGag.release(self)
+        if self.isLocal():
+            self.startTimeout()
         throwPath = NodePath('ThrowPath')
         throwPath.reparentTo(self.avatar)
         throwPath.setScale(render, 1)

@@ -84,6 +84,8 @@ class LocalToon(DistributedToon):
         self.pieThrowBtn = None
         self.myBattle = None
         self.invGui = None
+        self.gagsTimedOut = False
+        self.needsToSwitchToGag = None
 
         self.pickerTrav = None
         self.pickerRay = None
@@ -611,9 +613,6 @@ class LocalToon(DistributedToon):
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
                 self.pieThrowBtn.unbind(DGG.B1PRESS)
-            if self.backpack.getActiveGag():
-                if self.backpack.getActiveGag().getState() != GagState.LOADED:
-                    return
             self.ignore(self.gagStartKey)
             self.backpack.getCurrentGag().setAvatar(self)
             self.resetHeadHpr()
@@ -634,7 +633,7 @@ class LocalToon(DistributedToon):
             if not activeGag:
                 activeGag = self.backpack.getCurrentGag()
             if not activeGag.doesAutoRelease():
-                Sequence(Wait(0.75), Func(self.releaseGag), Wait(0.3), Func(self.enablePieKeys)).start()
+                Sequence(Wait(0.75), Func(self.releaseGag)).start()
 
     def releaseGag(self):
         if not self.backpack or not self.backpack.getActiveGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':

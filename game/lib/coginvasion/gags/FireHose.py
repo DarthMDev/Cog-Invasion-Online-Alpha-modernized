@@ -25,6 +25,7 @@ class FireHose(SquirtGag):
         self.hydrantNode = None
         self.hydrantScale = None
         self.hoseTrack = None
+        self.timeout = 6
 
     def start(self):
         self.deleteHoseStuff()
@@ -35,6 +36,8 @@ class FireHose(SquirtGag):
                 self.hydrentNode = None
 
         SquirtGag.start(self)
+        if self.isLocal():
+            self.startTimeout()
         self.origin = self.getSprayStartPos()
         self.hydrant = loader.loadModel('phase_5/models/props/battle_hydrant.bam')
         self.gag.reparentTo(self.hydrant)

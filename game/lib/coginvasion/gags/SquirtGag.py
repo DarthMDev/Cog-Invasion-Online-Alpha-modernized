@@ -81,7 +81,6 @@ class SquirtGag(Gag):
         finishSeq.append(Func(self.cleanupSpray))
         finishSeq.start()
         if self.avatar == base.localAvatar:
-            base.localAvatar.enablePieKeys()
             if base.localAvatar.getBackpack().getSupply() == 0:
                 self.cleanupGag()
 

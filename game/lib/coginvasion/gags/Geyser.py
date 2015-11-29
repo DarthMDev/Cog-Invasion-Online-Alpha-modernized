@@ -22,6 +22,7 @@ class Geyser(SquirtGag, ChargeUpGag):
         ChargeUpGag.__init__(self, 24, 10, 50, 0.5, maxCogs = 4)
         self.setImage('phase_3.5/maps/geyser.png')
         self.entities = []
+        self.timeout = 3.0
 
     def start(self):
         SquirtGag.start(self)
@@ -135,4 +136,3 @@ class Geyser(SquirtGag, ChargeUpGag):
                     geyser = self.buildGeyser()
                     self.startEntity(geyser, cog)
                     self.avatar.d_trapActivate(self.getID(), self.avatar.doId, 0, cog.doId)
-            base.localAvatar.enablePieKeys()

@@ -60,7 +60,7 @@ class Shop(StateData):
         avID = base.localAvatar.getPUInventory()[1]
         hasTurret = False
         turretCount = 0
-    
+
         battle = base.localAvatar.getMyBattle()
         if battle and battle.getTurretManager():
             turret = battle.getTurretManager().getTurret()
@@ -69,12 +69,12 @@ class Shop(StateData):
                 hasTurret = True
                 if turret.getGagID() == upgradeID:
                     upgrades = 1
-        
+
         if avID == upgradeID:
             dataSupply = base.localAvatar.getPUInventory()[0]
             if dataSupply > 0:
                 upgrades = dataSupply
-        
+
         if upgrades < maxUpgrades and not hasTurret and turretCount < CogBattleGlobals.MAX_TURRETS:
             if upgrades < 0:
                 upgrades = 1
@@ -92,11 +92,10 @@ class Shop(StateData):
         supply = self.backpack.getSupply(name)
         maxSupply = self.backpack.getMaxSupply(name)
         if supply < maxSupply:
-            if not hasattr(self.originalSupply, 'keys') or gag.getID() not in self.originalSupply.keys() == None:
-                if not hasattr(self.originalSupply, 'keys'):
-                    self.originalSupply = {gag.getID() : supply}
-                else:
-                    self.originalSupply.update({gag.getID() : supply})
+            if not hasattr(self.originalSupply, 'keys'):
+                self.originalSupply = {gag.getID() : supply}
+            else:
+                self.originalSupply.update({gag.getID() : supply})
             base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
             self.window.showInfo('Purchased a %s' % (name), duration = 3)
             base.localAvatar.setGagAmmo(gag.getID(), supply + 1)
@@ -132,7 +131,7 @@ class Shop(StateData):
                 return Task.done
             return Task.again
         return Task.done
-    
+
     def updateTurrets(self, amount):
         if self.window:
             self.window.setTurrets(amount)
@@ -250,7 +249,7 @@ class Page(DirectFrame):
                 supply = 0
                 turretCount = 0
                 hasTurret = False
-            
+
                 battle = base.localAvatar.getMyBattle()
                 if battle and battle.getTurretManager():
                     turretCount = battle.getTurretCount()
@@ -259,15 +258,15 @@ class Page(DirectFrame):
                         hasTurret = True
                         if turret.getGagID() == upgradeID:
                             supply = 1
-                
+
                 if avID == upgradeID:
                     dataSupply = base.localAvatar.getPUInventory()[0]
                     if dataSupply > 0:
                         supply = dataSupply
-                
+
                 if supply > 0 or base.localAvatar.getPUInventory()[0] > 0 or hasTurret or turretCount == CogBattleGlobals.MAX_TURRETS:
                     button.setColorScale(GRAYED_OUT_COLOR)
-                
+
                 label['text'] = '%s\n%s/%s\n%s JBS' % (item, str(supply), str(maxSupply), str(price))
             elif itemType == ItemType.HEAL:
                 if base.localAvatar.getHealth() == base.localAvatar.getMaxHealth() or self.shop.hasCooldown(item):
@@ -318,10 +317,10 @@ class ShopWindow(DirectFrame):
         self.window = OnscreenImage(image = self.bgImage, scale = (0.9, 1, 0.7), parent = self)
         self.title = DirectLabel(text = title, relief = None, pos = (0, 0, 0.5), text_wordwrap = 10, text_font = font,
                                  text_fg = (1, 1, 0, 1), scale = 0.1, parent = self)
-        
+
         # Let's update the turret count.
         self.updateTurretCount()
-        
+
         self.infoLbl = DirectLabel(text = 'Welcome!', relief = None, text_scale = 0.075, text_fg = txtFg, text_shadow = (0, 0, 0, 0),
                                    pos = (0, 0, 0.215))
         self.okBtn = DirectButton(geom = CIGlobals.getOkayBtnGeom(), relief = None, text = 'OK', text_fg = txtFg,
@@ -332,27 +331,27 @@ class ShopWindow(DirectFrame):
         self.backBtn = DirectButton(geom = buttonGeom, relief = None, scale = 0.05, pos = (-0.3, 0, -0.25), parent = self, command = self.changePage, extraArgs = [0])
         self.nextBtn = DirectButton(geom = buttonGeom, relief = None, scale = 0.05, pos = (0.3, 0, -0.25), hpr = (0, 0, 180), command = self.changePage, extraArgs = [1], parent = self)
         self.hideInfo()
-        
+
     def setTurrets(self, amount):
         if self.shop.upgradesPurchased:
             amount += 1
         self.turretCount = amount
         self.updatePages()
-        
+
     def updateTurretCount(self):
         if self.turretLabel:
             self.turretLabel.destroy()
 
         if self.wantTurretCount:
             maxTurrets = CogBattleGlobals.MAX_TURRETS
-            
+
             if not self.turretImg:
-                self.turretImg = OnscreenImage(image = "phase_3.5/maps/cannon-icon.png", 
-                    scale = (0.05, 1, 0.05), 
+                self.turretImg = OnscreenImage(image = "phase_3.5/maps/cannon-icon.png",
+                    scale = (0.05, 1, 0.05),
                     pos = (-0.22, 0, 0.275)
                 )
                 self.turretImg.setTransparency(TransparencyAttrib.MAlpha)
-            
+
             self.turretLabel = DirectLabel(text = 'Turrets: %s/%s' % (str(self.turretCount), str(maxTurrets)),
                 relief = None,
                 text_scale = 0.07,
@@ -394,18 +393,18 @@ class ShopWindow(DirectFrame):
         upgradeID = values.get('upgradeID')
         avID = base.localAvatar.getPUInventory()[1]
         supply = 0
-    
+
         battle = base.localAvatar.getMyBattle()
         if battle and battle.getTurretManager():
             turret = battle.getTurretManager().getTurret()
             if turret and turret.getGagID() == upgradeID:
                 supply = 1
-        
+
         if avID == upgradeID:
             dataSupply = base.localAvatar.getPUInventory()[0]
             if dataSupply > 0:
                 supply = dataSupply
-                
+
         maxSupply = values.get('maxUpgrades')
         buttonLabel = DirectLabel(
                  text = '%s\n%s/%s\n%s JBS' % (item, str(supply), str(maxSupply),
@@ -484,7 +483,7 @@ class ShopWindow(DirectFrame):
 
     def updatePages(self):
         battle = base.localAvatar.getMyBattle()
-        
+
         if battle:
             self.shop.distShop.sendUpdate('requestTurretCount', [])
             self.updateTurretCount()

@@ -27,6 +27,8 @@ class ToonUpGag(Gag):
     def start(self):
         Gag.start(self)
         if self.isLocal():
+            self.startTimeout()
+        if self.isLocal():
             base.localAvatar.sendUpdate('usedGag', [self.id])
 
     def equip(self):

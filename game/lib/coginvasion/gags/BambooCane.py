@@ -2,7 +2,7 @@
 
   Filename: BambooCane.py
   Created by: DecodedLogic (17Jul15)
-  
+
 """
 
 from lib.coginvasion.gags.ToonUpGag import ToonUpGag
@@ -12,9 +12,9 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, Actor
 from panda3d.core import Point3
 
 class BambooCane(ToonUpGag):
-    
+
     def __init__(self):
-        ToonUpGag.__init__(self, CIGlobals.BambooCane, 
+        ToonUpGag.__init__(self, CIGlobals.BambooCane,
                            'phase_5/models/props/cane.bam', 40, 45, 100, GagGlobals.BAMBOO_CANE_SFX, 1)
         self.setImage('phase_3.5/maps/bamboo-cane.png')
         self.hatPath = 'phase_5/models/props/hat.bam'
@@ -24,22 +24,23 @@ class BambooCane(ToonUpGag):
         self.scaleUp = None
         self.scaleDown = None
         self.soundInterval = None
-        
+        self.timeout = 5.0
+
     def buildHat(self):
         self.cleanupHat()
         self.hat = loader.loadModel(self.hatPath)
-        
+
     def cleanupHat(self):
         if self.hat:
             self.hat.removeNode()
-            
+
     def buildScaleTracks(self):
         props = []
         props.append(self.hat)
         props.append(self.gag)
         self.scaleUp = self.getScaleTrack(props, self.scaleDuration, self.PNTNEARZERO, self.PNTNORMAL)
-        self.scaleDown = self.getScaleTrack(props, self.scaleDuration, self.PNTNORMAL, self.PNTNEARZERO)    
-            
+        self.scaleDown = self.getScaleTrack(props, self.scaleDuration, self.PNTNORMAL, self.PNTNEARZERO)
+
     def start(self):
         super(BambooCane, self).start()
         if not self.hat:
@@ -57,21 +58,21 @@ class BambooCane(ToonUpGag):
         propInterval.append(Wait(base.localAvatar.getDuration('happy-dance') - 2))
         if self.avatar == base.localAvatar:
             propInterval.append(Func(self.setHealAmount))
-            propInterval.append(Func(self.healNearbyAvatars, 25))  
+            propInterval.append(Func(self.healNearbyAvatars, 25))
         propInterval.append(self.scaleDown)
         propInterval.append(Func(self.cleanupGag))
         propInterval.append(Func(self.reset))
-        self.track = Parallel(propInterval, ActorInterval(self.avatar, 'happy-dance'), 
+        self.track = Parallel(propInterval, ActorInterval(self.avatar, 'happy-dance'),
                               Func(self.soundInterval.start))
         self.track.start()
-        
+
     def equip(self):
         # self.gag returns the cane object.
         super(BambooCane, self).equip()
         self.build()
         self.buildHat()
         self.buildScaleTracks()
-    
+
     def unEquip(self):
         if self.track:
             self.soundInterval.finish()
@@ -80,7 +81,7 @@ class BambooCane(ToonUpGag):
         self.reset()
         if self.scaleDown:
             Sequence(self.scaleDown, Func(self.cleanupGag)).start()
-        
+
     def cleanupGag(self):
         if self.gag:
             self.gag.removeNode()

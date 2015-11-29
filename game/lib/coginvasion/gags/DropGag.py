@@ -29,6 +29,7 @@ class DropGag(Gag, LocationGag):
         self.collHandlerF = CollisionHandlerFloor()
         self.fallDuration = 0.75
         self.isDropping = False
+        self.timeout = 3.0
         if game.process == 'client':
             self.missSfx = base.audio3d.loadSfx(missSfx)
             self.fallSfx = base.audio3d.loadSfx(self.fallSoundPath)
@@ -38,8 +39,6 @@ class DropGag(Gag, LocationGag):
         self.isDropping = False
         if game.process != 'client': return
         self.reset()
-        if self.isLocal():
-            base.localAvatar.enablePieKeys()
 
     def start(self):
         super(DropGag, self).start()
@@ -99,6 +98,8 @@ class DropGag(Gag, LocationGag):
 
     def release(self):
         LocationGag.release(self)
+        if self.isLocal():
+            self.startTimeout()
         self.build()
         self.isDropping = True
         self.fallSoundInterval = SoundInterval(self.fallSfx, node = self.avatar)

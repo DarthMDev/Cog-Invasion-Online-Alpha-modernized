@@ -41,11 +41,31 @@ class Gag(object):
         self.health = 0
         self.id = GagGlobals.getIDByName(name)
         self.image = None
+        self.timeout = 5
 
         if game.process == 'client':
             if gagType == GagType.THROW:
                 self.woosh = base.audio3d.loadSfx(GagGlobals.PIE_WOOSH_SFX)
             self.hitSfx = base.audio3d.loadSfx(hitSfx)
+
+    def startTimeout(self):
+        base.localAvatar.gagsTimedOut = True
+        base.taskMgr.doMethodLater(self.timeout, self.__timeoutDone, self.avatar.uniqueName('timeoutDone'))
+
+    def __timeoutDone(self, task):
+        base.localAvatar.gagsTimedOut = False
+        if base.localAvatar.needsToSwitchToGag != None:
+            if base.localAvatar.needsToSwitchToGag != self.getID() and base.localAvatar.needsToSwitchToGag != 'unequip':
+                base.localAvatar.b_equip(base.localAvatar.needsToSwitchToGag)
+            elif base.localAvatar.needsToSwitchToGag == 'unequip':
+                base.localAvatar.b_unEquip()
+        if base.localAvatar.avatarMovementEnabled:
+            print 'timeout complete: {0} seconds'.format(self.timeout)
+            base.localAvatar.enablePieKeys()
+        return task.done
+
+    def stopTimeout(self):
+        base.taskMgr.remove(self.avatar.uniqueName('timeoutDone'))
 
     @abc.abstractmethod
     def start(self):
@@ -147,7 +167,6 @@ class Gag(object):
                     item.removeNode()
             self.equipped = False
             self.reset()
-            base.localAvatar.enablePieKeys()
 
     def setHealth(self, health):
         self.health = health

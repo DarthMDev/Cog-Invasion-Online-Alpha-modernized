@@ -105,6 +105,12 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         if not hasattr(base, 'localAvatar') or not base.localAvatar == self:
             Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 3, 1)
 
+    def showAvId(self):
+        pass
+
+    def showName(self):
+        pass
+
     def getNametagJoints(self):
         joints = []
         for lodName in self.getLODNames():

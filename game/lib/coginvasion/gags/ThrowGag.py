@@ -21,6 +21,7 @@ class ThrowGag(Gag):
         self.splatScale = GagGlobals.splatSizes[self.name]
         self.splatColor = splatColor
         self.entities = []
+        self.timeout = 1.0
 
     def build(self):
         if not self.gag:
@@ -37,6 +38,8 @@ class ThrowGag(Gag):
         self.avatar.play('pie', fromFrame = 0, toFrame = 45)
 
     def throw(self):
+        if self.isLocal():
+            self.startTimeout()
         self.avatar.play('pie', fromFrame = 45, toFrame = 90)
         if not self.gag:
             self.build()

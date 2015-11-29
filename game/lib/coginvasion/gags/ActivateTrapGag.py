@@ -221,14 +221,10 @@ class ActivateTrapGag(TrapGag, LocationGag):
             self.buildProjCollisions()
             self.reset()
             self.avatar.acceptOnce('projSensor-into', self.onProjCollision)
-            if self.isLocal():
-                base.localAvatar.enablePieKeys()
 
     def completeTrap(self):
         LocationGag.complete(self)
         self.reset()
-        if self.isLocal():
-            base.localAvatar.enablePieKeys()
 
     def release(self):
         TrapGag.release(self)

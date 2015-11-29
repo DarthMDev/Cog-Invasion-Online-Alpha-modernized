@@ -22,6 +22,7 @@ class WaterGun(SquirtGag):
         self.scale = 1.0
         self.holdTime = 0.0
         self.shootSfx = None
+        self.timeout = 3.0
 
     def build(self):
         SquirtGag.build(self)
@@ -34,6 +35,8 @@ class WaterGun(SquirtGag):
         self.release()
 
     def release(self):
+        if self.isLocal():
+            self.startTimeout()
 
         def doSpray():
             if self.avatar.isEmpty():
