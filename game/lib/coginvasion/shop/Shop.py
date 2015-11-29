@@ -207,7 +207,7 @@ class Shop(StateData):
     def destroy(self):
         self.exit()
         for cooldown in self.healCooldowns.keys():
-            base.taskMgr.removeTask(cooldown)
+            base.taskMgr.remove(cooldown)
             if cooldown in self.healCooldowns:
                 del self.healCooldowns[cooldown]
             del self.gagsPurchased
