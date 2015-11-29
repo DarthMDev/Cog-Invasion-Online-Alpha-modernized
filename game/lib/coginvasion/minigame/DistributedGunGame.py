@@ -492,7 +492,6 @@ class DistributedGunGame(DistributedToonFPSGame):
 
     def disable(self):
         render.show()
-        DistributedToonFPSGame.disable(self)
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.taskMgr.remove(self.uniqueName('updateArrows'))
         self.playersByTeam = None
@@ -525,3 +524,4 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.toonFps.cleanup()
         self.toonFps = None
         self.spawnPoints = None
+        DistributedToonFPSGame.disable(self)

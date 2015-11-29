@@ -322,7 +322,7 @@ class Place(StateData):
         base.localAvatar.enablePicking()
         base.localAvatar.showFriendButton()
         NametagGlobals.setWantActiveNametags(True)
-        NametagGlobals.setWant2dNametags(True)
+        NametagGlobals.makeTagsReady()
         if self.useFirstPerson:
             if base.localAvatar.getMyBattle():
                 base.localAvatar.stopSmartCamera()
@@ -345,7 +345,7 @@ class Place(StateData):
         self.watchTunnelSeq.pause()
         del self.watchTunnelSeq
         NametagGlobals.setWantActiveNametags(False)
-        NametagGlobals.setWant2dNametags(False)
+        NametagGlobals.makeTagsInactive()
         base.localAvatar.setBusy(1)
         base.localAvatar.disablePicking()
         base.localAvatar.hideFriendButton()

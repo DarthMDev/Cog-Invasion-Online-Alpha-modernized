@@ -290,7 +290,6 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
 
     def disable(self):
-        DistributedObject.DistributedObject.disable(self)
         base.localAvatar.setPosHpr(0, 0, 0, 0, 0, 0)
         self.fsm.requestFinalState()
         del self.fsm
@@ -303,4 +302,4 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.finalScoreUI.unload()
         self.finalScoreUI = None
         base.minigame = None
-        return
+        DistributedObject.DistributedObject.disable(self)

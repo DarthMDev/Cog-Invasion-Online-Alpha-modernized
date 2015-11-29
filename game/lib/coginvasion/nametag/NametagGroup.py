@@ -385,10 +385,14 @@ class NametagGroup:
         nametag.setChatText(self.getChatText())
         nametag.setIcon(self.icon)
         nametag.update()
+        # Add this nametag to the global nametag pool.
+        NametagGlobals.appendNametag(nametag)
 
     def remove(self, nametag):
         nametag.destroy()
         self.nametags.remove(nametag)
+        # Remove this nametag from the global nametag pool.
+        NametagGlobals.removeNametag(nametag)
 
     def updateAll(self):
         for nametag in self.nametags:

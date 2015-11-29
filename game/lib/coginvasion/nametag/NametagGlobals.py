@@ -1,4 +1,4 @@
-from pandac.PandaModules import VBase4
+from pandac.PandaModules import VBase4, PGButton
 
 
 CCLocal = 0
@@ -43,6 +43,28 @@ forceOnscreenChat = False
 force2dNametags = False
 wantActiveNametags = True
 
+nametags = []
+
+def appendNametag(tag):
+    global nametags
+    nametags.append(tag)
+
+def removeNametag(tag):
+    global nametags
+    nametags.remove(tag)
+
+def makeTagsReady():
+    global nametags
+    # Make every single nametag in the nametag pool ready, if it's clickable.
+    for tag in nametags:
+        if tag.isClickable():
+            tag.setClickState(PGButton.SReady)
+
+def makeTagsInactive():
+    global nametags
+    # Make every single nametag in the nametag pool inactive.
+    for tag in nametags:
+        tag.setClickState(PGButton.SInactive)
 
 def setCardModel(model):
     global cardModel
@@ -136,10 +158,12 @@ def getModelWidthHeight(model):
     return (width, height)
 
 
+
+
 # Foreground, background:
 NametagColors = {
     CCLocal: (
-        (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
+        (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.9, 0.9, 0.9, 0.5)),   # Normal
         (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
         (VBase4(0.5, 0.5, 1.0, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0.3, 0.3, 0.7, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
@@ -151,13 +175,13 @@ NametagColors = {
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCNPC: (
-        (VBase4(0.0, 0.6, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
+        (VBase4(0.0, 0.4, 0.0, 1.0), VBase4(0.9, 0.9, 0.9, 0.5)),   # Normal
         (VBase4(0.0, 0.5, 0.0, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
         (VBase4(0.0, 0.7, 0.2, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
-        (VBase4(0.0, 0.6, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
+        (VBase4(0.0, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCSuit: (
-        (VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
+        (VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.9, 0.9, 0.9, 0.5)),   # Normal
         (VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
         (VBase4(0.4, 0.4, 0.4, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0, 0, 0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
@@ -181,7 +205,7 @@ NametagColors = {
         (VBase4(0.0, 0.6, 0.2, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled
     ),
     CCOtherPlayer: (
-        (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5)),   # Normal
+        (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.9, 0.9, 0.9, 0.5)),   # Normal
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.2, 0.2, 0.2, 0.5)),  # Down
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(1.0, 1.0, 1.0, 1.0)),  # Rollover
         (VBase4(0.8, 0.4, 0.0, 1.0), VBase4(0.8, 0.8, 0.8, 0.5))    # Disabled

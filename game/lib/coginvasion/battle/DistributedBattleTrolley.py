@@ -226,7 +226,7 @@ class DistributedBattleTrolley(DistributedObject):
         currToonPos = toon.getPos(render)
         toon.wrtReparentTo(render)
         slotPos = self.STAND_POSITIONS[index]
-        endPos = (-20, slotPos.getY(), 0.0)
+        endPos = (-20, slotPos.getY(), 1.4)
         toon.setPos(self.trolleyCar, endPos)
         endPosWrtRender = toon.getPos(render)
         toon.setPos(currToonPos)

@@ -60,7 +60,6 @@ class Gag(object):
             elif base.localAvatar.needsToSwitchToGag == 'unequip':
                 base.localAvatar.b_unEquip()
         if base.localAvatar.avatarMovementEnabled:
-            print 'timeout complete: {0} seconds'.format(self.timeout)
             base.localAvatar.enablePieKeys()
         return task.done
 

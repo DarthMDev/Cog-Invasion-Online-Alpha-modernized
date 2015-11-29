@@ -45,6 +45,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.track = None
         self.standWalkRunReverse = None
         self.playingAnim = None
+        self.playingRate = None
         self.tag = None
         self.money = 0
         self.lookAtTrack = None
@@ -159,8 +160,9 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             else:
                 action = CIGlobals.STAND_INDEX
             anim, rate = self.standWalkRunReverse[action]
-            if anim != self.playingAnim:
+            if anim != self.playingAnim or rate != self.playingRate:
                 self.playingAnim = anim
+                self.playingRate = rate
                 doingGagAnim = False
                 if self.backpack:
                     if self.backpack.getCurrentGag():
@@ -371,6 +373,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             self.lastAction = None
             self.lastState = None
             self.playingAnim = None
+            self.playingRate = None
             Avatar.Avatar.delete(self)
         return
 
