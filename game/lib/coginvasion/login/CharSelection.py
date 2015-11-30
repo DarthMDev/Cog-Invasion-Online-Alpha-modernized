@@ -346,7 +346,7 @@ class CharSelection(DirectObject):
         for prop in self.props:
             if not prop.isEmpty():
                 prop.removeNode()
-                self.props.remove(prop)
+        self.props = None
         if hasattr(self, 'particles'):
             self.particles.cleanup()
             self.particlesRender.removeNode()
