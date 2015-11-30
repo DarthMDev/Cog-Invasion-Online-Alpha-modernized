@@ -1,12 +1,10 @@
 # Filename: TTHood.py
 # Created by:  blach (25Oct15)
 
-import ToonHood
-import TTSafeZoneLoader
-import TTTownLoader
-import SkyUtil
 from lib.coginvasion.globals import CIGlobals
-from pandac.PandaModules import *
+from lib.coginvasion.holiday.HolidayManager import HolidayType
+import ToonHood, TTSafeZoneLoader, TTTownLoader, SkyUtil
+from panda3d.core import TransparencyAttrib
 
 class TTHood(ToonHood.ToonHood):
 
@@ -17,6 +15,9 @@ class TTHood(ToonHood.ToonHood):
         self.townLoader = TTTownLoader.TTTownLoader
         self.skyUtil = SkyUtil.SkyUtil()
         self.storageDNAFile = "phase_4/dna/storage_TT.pdna"
+        self.holidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.holidayDNAFile = "phase_4/dna/winter_storage_TT.pdna"
         self.skyFilename = "phase_3.5/models/props/TT_sky.bam"
         self.spookySkyFile = "phase_3.5/models/props/BR_sky.bam"
         self.titleColor = (1.0, 0.5, 0.4, 1.0)

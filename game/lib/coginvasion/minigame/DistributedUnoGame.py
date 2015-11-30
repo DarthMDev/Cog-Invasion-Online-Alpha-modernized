@@ -44,11 +44,11 @@ class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
 
     def deleteWorld(self):
         #if self.background:
-        #	self.background.removeNode()
-        #	self.background = None
+        #    self.background.removeNode()
+        #    self.background = None
         #if self.table:
-        #	self.table.removeNode()
-        #	self.table = None
+        #    self.table.removeNode()
+        #    self.table = None
         if self.background:
             self.background.destroy()
             self.background = None
@@ -81,11 +81,11 @@ class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
         DistributedMinigame.DistributedMinigame.enterPlay(self)
         self.createGui()
 
-    def enterGameOver(self, winner=0, winnerDoId=0, allPrize = 0):
+    def enterGameOver(self, winner=0, winnerDoId=0):
         self.cardDeck.disableAll()
         self.drawBtn['state'] = DGG.DISABLED
         self.callBtn['state'] = DGG.DISABLED
-        DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId, allPrize)
+        DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId)
 
     def createGui(self):
         self.deleteGui()
@@ -199,10 +199,10 @@ class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
             self.cardToFollow += id
 
     def placeCard(self, doId, cardId):
-        cards = None
-        card = None
         cards = loader.loadModel("phase_4/models/minigames/mg_uno_game_cards.egg")
         card = cards.find('**/' + UGG.cardId2cardTex[cardId])
+        holidayTexture = loader.loadTexture('winter/maps/uno/%s.png' % (card.getName()))
+        card.setTexture(holidayTexture, 1)
         card.setScale(0.4, 0.49, 0.49)
         card.reparentTo(aspect2d)
         self.cards.append(card)

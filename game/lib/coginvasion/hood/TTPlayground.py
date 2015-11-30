@@ -1,10 +1,11 @@
 # Filename: TTPlayground.py
 # Created by:  blach (25Oct15)
 
-import Playground
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.SoundInterval import SoundInterval
-import random
+
+from lib.coginvasion.holiday.HolidayManager import HolidayType
+import Playground, random
 
 class TTPlayground(Playground.Playground):
 	notify = directNotify.newCategory("TTPlayground")
@@ -12,12 +13,28 @@ class TTPlayground(Playground.Playground):
 	def __init__(self, loader, parentFSM, doneEvent):
 		Playground.Playground.__init__(self, loader, parentFSM, doneEvent)
 		self.birdSfx = None
+		self.christmasTree = None
 
 	def load(self):
 		Playground.Playground.load(self)
+		
+		if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+			# Let's make the Christmas Tree
+			self.christmasTree = loader.loadModel('phase_4/models/props/winter_tree_Christmas.bam')
+			self.christmasTree.reparentTo(self.loader.geom)
+			self.christmasTree.setPos(0.651558, 23.0954, 0.00864142)
+			self.christmasTree.setH(-183.108)
+			
+			# Winter ground
+			winterTxt = loader.loadTexture('winter/maps/tt_winter_ground.png')
+			self.loader.geom.find('**/ground_center').setTexture(winterTxt, 1)
 
 	def unload(self):
 		Playground.Playground.unload(self)
+		
+		if self.christmasTree:
+			self.christmasTree.removeNode()
+			self.christmasTree = None
 
 	def enter(self, requestStatus):
 		Playground.Playground.enter(self, requestStatus)

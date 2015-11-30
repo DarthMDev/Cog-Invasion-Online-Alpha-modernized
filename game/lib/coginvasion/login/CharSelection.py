@@ -8,6 +8,8 @@ from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.gui.DirectGui import OnscreenText, DirectButton, DGG, DirectScrolledList, DirectLabel
 
+from lib.coginvasion.holiday.HolidayManager import HolidayType
+from lib.coginvasion.toon import ParticleLoader
 from lib.coginvasion.toon.Toon import Toon
 from lib.coginvasion.globals import CIGlobals
 
@@ -146,7 +148,9 @@ class CharSelection:
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
 
         self.__setupStageToon()
-
+        holidayMgr = base.cr.holidayManager
+        
+        self.props = []
         self.world = loader.loadModel('phase_9/models/cogHQ/SellbotHQExterior.bam')
         self.world.reparentTo(base.render)
         self.world.setPos(0, 227.09, -25.36)
@@ -158,6 +162,38 @@ class CharSelection:
         self.fog.setColor(0.2, 0.2, 0.2)
         self.fog.setExpDensity(0.003)
         base.render.setFog(self.fog)
+        
+        if holidayMgr.getHoliday() == HolidayType.CHRISTMAS:
+            piles = {
+                'half' : {'pos' : (57.28, 86.47, -25.00), 'hpr' : (46.79, 0, 0)},
+                'full' : {'pos' : (71.23, 85.2, -25.00), 'hpr' : (290.82, 0, 0)},
+                'half_2' : {'pos' : (-15, 128.69, -25), 'hpr' : (60.26, 0, 0)}
+            }
+            
+            for pileType, info in piles.items():
+                if '_' in pileType:
+                    pileType = pileType[:-2]
+                pile = loader.loadModel('phase_8/models/props/snow_pile_%s.bam' % (pileType))
+                pile.reparentTo(render)
+                pile.setPos(info['pos'])
+                pile.setHpr(info['hpr'])
+                self.props.append(pile)
+            
+            self.world.find('**/TopRocks').removeNode()
+            
+            snowTxt = loader.loadTexture('winter/maps/sbhq_snow.png')
+            self.world.find('**/Ground').setTexture(snowTxt, 1)
+            
+            self.particles = ParticleLoader.loadParticleEffect('phase_8/etc/snowdisk.ptf')
+            self.particles.setPos(0, 0, 5)
+            self.particlesRender = self.world.attachNewNode('snowRender')
+            self.particlesRender.setDepthWrite(0)
+            self.particlesRender.setBin('fixed', 1)
+            self.particles.start(parent = camera, renderParent = self.particlesRender)
+            self.fog.setColor(0.486, 0.784, 1)
+            self.fog.setExpDensity(0.006)
+            base.render.setFog(self.fog)
+            
 
         self.title = DirectLabel(text=self.TITLE, text_font=CIGlobals.getMickeyFont(), text_fg=(1, 0.9, 0.1, 1),
                                 relief=None, text_scale=0.13, pos=(0, 0, 0.82))
@@ -275,6 +311,15 @@ class CharSelection:
         if self.title:
             self.title.destroy()
             self.title = None
+        for prop in self.props:
+            if not prop.isEmpty():
+                prop.removeNode()
+                self.props.remove(prop)
+        if hasattr(self, 'particles'):
+            self.particles.cleanup()
+            self.particlesRender.removeNode()
+            self.particles = None
+            del self.particlesRender
         base.render.clearFog()
         self.fog = None
         base.camera.setPos(0, 0, 0)

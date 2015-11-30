@@ -71,11 +71,12 @@ class PixieDust(ToonUpGag):
         ToonUpGag.start(self)
         if self.isLocal():
             target = self.getClosestAvatar(self.radius)
-            if target:
+            if target != None:
                 self.doPixieDust(target)
                 self.avatar.sendUpdate('setTarget', [self.getID(), target.doId])
-            else:
-                self.reset()
+                return
+            self.reset()
+            print 'Reset'
         
     def setTarget(self, target):
         ToonUpGag.setTarget(self, target)

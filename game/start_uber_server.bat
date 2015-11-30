@@ -7,6 +7,7 @@ set ASTRON_IP=127.0.0.1:7031
 set EVENT_LOGGER_IP=127.0.0.1:7030
 set ACCOUNT_LIMIT=2
 set ACC_LIMIT_PER_COMP=2
+set HOLIDAY=1
 
 echo Starting Cog Invasion Uber Server...
 echo -----------------------------------
@@ -19,5 +20,5 @@ echo -----------------------------------
 
 ..\Panda3D-CI\python\ppython.exe -B -m lib.coginvasion.uber.UberStart --base-channel %BASE_CHANNEL% ^
                      --max-channels %MAX_CHANNELS% --stateserver %STATE_SERVER% ^
-                     --astron-ip %ASTRON_IP% --eventlogger-ip %EVENT_LOGGER_IP% --acc-limit %ACCOUNT_LIMIT% --acc-limit-per-comp %ACC_LIMIT_PER_COMP%
+                     --astron-ip %ASTRON_IP% --eventlogger-ip %EVENT_LOGGER_IP% --acc-limit %ACCOUNT_LIMIT% --acc-limit-per-comp %ACC_LIMIT_PER_COMP% --holiday %HOLIDAY%
 pause

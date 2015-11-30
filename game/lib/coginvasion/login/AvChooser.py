@@ -5,13 +5,13 @@
 
 """
 
-from direct.distributed.PyDatagram import PyDatagram
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.fsm.StateData import StateData
-from lib.coginvasion.distributed.CogInvasionMsgTypes import *
-from lib.coginvasion.gui.PickAToon import PickAToon
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.holiday.HolidayManager import HolidayType, HolidayGlobals
+from lib.coginvasion.gui.Whisper import Whisper
 from AvChoice import AvChoice
 from CharSelection import CharSelection
 
@@ -69,6 +69,17 @@ class AvChooser(StateData):
         self.ignore(base.cr.csm.getSetAvatarsEvent())
 
     def enterAvChoose(self):
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            base.cr.music.stop()
+            base.cr.music = base.loadMusic(CIGlobals.getHolidayTheme())
+            base.cr.music.setLoop(True)
+            base.cr.music.setVolume(0.75)
+            base.cr.music.play()
+            
+            # Create message.
+            msg = Whisper()
+            msg.createSystemMessage(HolidayGlobals.CHRISTMAS_TIME)
+
         self.pickAToon = CharSelection(self)
         self.pickAToon.load()
 

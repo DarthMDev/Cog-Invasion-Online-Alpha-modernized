@@ -14,6 +14,7 @@ import ZoneUtil
 import HoodGui
 from QuietZoneState import QuietZoneState
 from lib.coginvasion.dna.DNALoader import *
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class Hood(StateData):
 
@@ -95,7 +96,12 @@ class Hood(StateData):
         StateData.load(self)
         if self.storageDNAFile:
             loadDNAFile(self.dnaStore, self.storageDNAFile)
-        self.createNormalSky()
+        if self.holidayDNAFile:
+            loadDNAFile(self.dnaStore, self.holidayDNAFile)
+        if not base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.createNormalSky()
+        else:
+            self.createSpookySky()
 
     def unload(self):
         self.notify.info("unload()")
@@ -229,7 +235,10 @@ class Hood(StateData):
         if self.suitFog:
             self.suitFog = None
         if newSky:
-            self.createNormalSky()
+            if not base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+                self.createNormalSky()
+            else:
+                self.createSpookySky()
             self.startSky()
 
     def startSky(self):

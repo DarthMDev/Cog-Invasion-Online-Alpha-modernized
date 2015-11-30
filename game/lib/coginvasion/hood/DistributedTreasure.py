@@ -8,6 +8,7 @@
 from direct.distributed.DistributedObject import DistributedObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, LerpPosInterval, LerpColorScaleInterval, Func
+from direct.task.Task import Task
 from panda3d.core import NodePath, CollisionSphere, CollisionNode, Point3, VBase4
 from panda3d.direct import HideInterval, ShowInterval
 from lib.coginvasion.globals import CIGlobals
@@ -32,9 +33,12 @@ class DistributedTreasure(DistributedObject):
         self.shadow = True
         self.billboard = False
         self.av = None
+        
+        self.spinTaskName = None
 
     def announceGenerate(self):
         DistributedObject.announceGenerate(self)
+        self.spinTaskName = self.uniqueName('treasureRotate')
         self.loadModel(self.modelPath, self.modelChildString)
         self.startAnimation()
         self.nodePath.reparentTo(render)
@@ -50,6 +54,10 @@ class DistributedTreasure(DistributedObject):
         if childString:
             model = model.find('**/' + childString)
         model.instanceTo(self.treasure)
+        if self.cr.holidayManager.getHoliday() != 0:
+            self.treasure.setScale(1.5, 1.5, 1.5)
+            self.treasure.setZ(0.8)
+            taskMgr.add(self.__spinTreasure, self.spinTaskName)
 
     def makeNodePath(self):
         self.nodePath = NodePath('treasure')
@@ -71,6 +79,10 @@ class DistributedTreasure(DistributedObject):
         collNode.addSolid(collSphere)
         self.collNodePath = self.nodePath.attachNewNode(collNode)
         self.collNodePath.stash()
+        
+    def __spinTreasure(self, task):
+        self.treasure.setH(20.0 * task.time)
+        return Task.cont
 
     def handleEnterSphere(self, collEntry = None):
         localAvId = base.localAvatar.doId
@@ -109,6 +121,7 @@ class DistributedTreasure(DistributedObject):
             self.nodePath.detachNode()
             return
         self.cleanupTrack()
+        taskMgr.remove(str(self.spinTaskName))
         avatarGoneName = self.av.uniqueName('disable')
         self.accept(avatarGoneName, self.handleUnexpectedExit)
         flyTime = 1.0
@@ -140,6 +153,7 @@ class DistributedTreasure(DistributedObject):
         if self.treasureTrack:
             self.treasureTrack.finish()
             self.treasureTrack = None
+        self.spinTaskName = None
 
     def delete(self):
         self.cleanupTrack()

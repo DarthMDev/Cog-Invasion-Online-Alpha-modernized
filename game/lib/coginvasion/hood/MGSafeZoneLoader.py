@@ -5,11 +5,9 @@
 
 """
 
-from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 import SafeZoneLoader
 import MGPlayground
-import random
 
 class MGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
     notify = directNotify.newCategory("MGSafeZoneLoader")

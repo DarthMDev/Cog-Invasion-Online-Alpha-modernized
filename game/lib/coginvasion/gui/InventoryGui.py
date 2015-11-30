@@ -54,6 +54,8 @@ class InventoryGui(DirectObject):
     def __init__(self):
         DirectObject.__init__(self)
         self.backpack = None
+        self.oneSlotPos = [(0, 0, 0)]
+        self.twoSlotsPos = [(0, 0, 0), (0, 0, -0.5)]
         self.threeSlotsPos = [(0, 0, 0.5), (0, 0, 0), (0, 0, -0.5)]
         self.fourSlotPos = [(0, 0, 0.45), (0, 0, 0.15), (0, 0, -0.15), (0, 0, -0.45)]
         self.availableSlot = 0

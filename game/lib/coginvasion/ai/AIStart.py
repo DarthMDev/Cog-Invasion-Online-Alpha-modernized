@@ -45,8 +45,6 @@ class game:
 	process = 'server'
 __builtins__.game = game
 
-from panda3d.core import *
-
 loadPrcFileData('', 'window-type none')
 loadPrcFileData('', 'audio-library-name none')
 

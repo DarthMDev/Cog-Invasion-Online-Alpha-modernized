@@ -6,6 +6,7 @@
 """
 
 from lib.coginvasion.hood.DistributedTreasure import DistributedTreasure
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class DistributedTTCTreasure(DistributedTreasure):
     __module__ = __name__
@@ -14,3 +15,6 @@ class DistributedTTCTreasure(DistributedTreasure):
         DistributedTreasure.__init__(self, cr)
         self.modelPath = 'phase_4/models/props/icecream.bam'
         self.grabSoundPath = 'phase_4/audio/sfx/SZ_DD_treasure.mp3'
+        
+        if self.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.modelPath = 'phase_6/models/karting/qbox.bam'

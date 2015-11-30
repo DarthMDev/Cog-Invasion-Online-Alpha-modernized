@@ -20,12 +20,18 @@ uberdogs:
     - id: 1004
       class: FriendsManager
       anonymous: false
+    - id: 1005
+      class: HolidayManager
+      anonymous: false
 
 roles:
     - type: clientagent
       bind: 0.0.0.0:7032
-      version: "ver-1.0.3"
-      manual_dc_hash: 0x1aa75486
+      version: "ver-1.0.7"
+      tls:
+        certificate: ../../phase_3/etc/gameserver.crt
+        key_file: ../rsakey.key
+      manual_dc_hash: 0x98589a45
       client:
        relocate: true
        add_interest: enabled
@@ -43,7 +49,7 @@ roles:
         max: 399999999
       backend:
         type: yaml
-        foldername: ../databases/astrondb
+        directory: ../databases/astrondb
 
     - type: dbss
       database: 4003

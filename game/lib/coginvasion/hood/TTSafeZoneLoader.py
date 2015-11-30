@@ -3,6 +3,7 @@
 
 from pandac.PandaModules import *
 from direct.actor.Actor import Actor
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 import SafeZoneLoader
 import TTPlayground
 import random
@@ -30,6 +31,9 @@ class TTSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_4/dna/new_ttc_sz.pdna'
         self.szStorageDNAFile = 'phase_4/dna/storage_TT_sz.pdna'
+        self.szHolidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.szHolidayDNAFile = 'phase_4/dna/winter_storage_TT_sz.pdna'
         self.telescope = None
         self.birdNoises = [
             'phase_4/audio/sfx/SZ_TC_bird1.mp3',

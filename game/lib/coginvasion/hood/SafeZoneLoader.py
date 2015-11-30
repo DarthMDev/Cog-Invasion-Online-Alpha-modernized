@@ -5,14 +5,14 @@
 
 """
 
-from pandac.PandaModules import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.StateData import StateData
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from QuietZoneState import QuietZoneState
+from panda3d.core import ModelPool, TexturePool, NodePath
+
 from lib.coginvasion.manager.SettingsManager import SettingsManager
-from direct.directnotify.DirectNotifyGlobal import directNotify
-from lib.coginvasion.base.ShadowCreator import ShadowCreator
+from QuietZoneState import QuietZoneState
 import ToonInterior
 import LinkTunnel
 
@@ -39,6 +39,7 @@ class SafeZoneLoader(StateData):
         self.music = None
         self.tournamentMusic = None
         self.linkTunnels = []
+        self.szHolidayDNAFile = None
         return
 
     def findAndMakeLinkTunnels(self):
@@ -63,7 +64,7 @@ class SafeZoneLoader(StateData):
             self.tournamentMusic = None
         self.createSafeZone(self.dnaFile)
         self.parentFSMState.addChild(self.fsm)
-        width, height, fs, music, sfx, tex_detail, model_detail, aa, af = SettingsManager().getSettings("settings.json")
+        _, _, _, _, _, _, _, _, af = SettingsManager().getSettings("settings.json")
         if af == "on":
             self.notify.info("Anisotropic Filtering is on, applying to textures.")
             for nodepath in self.geom.findAllMatches('*'):
@@ -125,6 +126,8 @@ class SafeZoneLoader(StateData):
     def createSafeZone(self, dnaFile):
         if self.szStorageDNAFile:
             loader.loadDNAFile(self.hood.dnaStore, self.szStorageDNAFile)
+        if self.szHolidayDNAFile:
+            loader.loadDNAFile(self.hood.dnaStore, self.szHolidayDNAFile)
         node = loader.loadDNAFile(self.hood.dnaStore, dnaFile)
         if node.getNumParents() == 1:
             self.geom = NodePath(node.getParent(0))
@@ -142,7 +145,7 @@ class SafeZoneLoader(StateData):
         self.nodeList = []
         for i in xrange(dnaStore.getNumDNAVisGroups()):
             groupFullName = dnaStore.getDNAVisGroupName(i)
-            groupName = base.cr.hoodMgr.extractGroupName(groupFullName)
+            #groupName = base.cr.hoodMgr.extractGroupName(groupFullName)
             groupNode = self.geom.find('**/' + groupFullName)
             if groupNode.isEmpty():
                 self.notify.error('Could not find visgroup')

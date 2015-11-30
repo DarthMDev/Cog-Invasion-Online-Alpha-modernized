@@ -2,7 +2,6 @@
 # Created by:  blach (01Jul15)
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.actor.Actor import Actor
 
 from lib.coginvasion.toon import ParticleLoader
 import SafeZoneLoader

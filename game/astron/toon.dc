@@ -64,6 +64,8 @@ from lib.coginvasion.friends import FriendsManager/UD
 from lib.coginvasion.cogtropolis import DistributedCityCart/AI
 from lib.coginvasion.tutorial import DistributedTutorial/AI
 from lib.coginvasion.tutorial import DistributedTutorialSuit/AI
+from lib.coginvasion.holiday import HolidayManager/UD
+from lib.coginvasion.holiday import DistributedWinterCoachActivity/AI
 
 struct AvChoice {
   uint32 avId;
@@ -496,6 +498,14 @@ dclass DistributedBattleShop : DistributedShop {
   confirmPurchase(int8[], int32) clsend airecv;
 };
 
+dclass DistributedWinterCoachActivity : DistributedNode {
+  requestEnter() clsend airecv;
+  enterAccepted();
+  requestExit() clsend airecv;
+  exitAccepted();
+  greetAvatar(string avatarName) broadcast;
+}
+
 dclass DistributedSuitManager : DistributedObject {
   requestSuitInfo() clsend airecv;
   newSuit() broadcast;
@@ -580,6 +590,11 @@ dclass FriendsManager : DistributedObject {
   requestFriendsList() clsend;
   friendsList(uint32[], string[], int8[]);
 };
+
+dclass HolidayManager : DistributedObject {
+  setHoliday(uint8 holidayIndex);
+  requestHoliday() clsend;
+}
 
 dclass DistributedCityCart : DistributedNode {
   setPathIndex(int8) required broadcast ram;

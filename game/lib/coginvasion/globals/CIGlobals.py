@@ -65,6 +65,7 @@ EagleGame = "Eagle Summit"
 DeliveryGame = "Delivery!"
 
 ThemeSong = None
+holidayTheme = None
 
 def getThemeSong():
     global ThemeSong
@@ -79,6 +80,12 @@ def getThemeSong():
         import random
         ThemeSong = random.choice(themeList)
     return ThemeSong
+
+def getHolidayTheme():
+    global holidayTheme
+    if not holidayTheme:
+        holidayTheme = 'phase_3/audio/bgm/ci_holiday_christmas_bgm.wav'
+    return holidayTheme
 
 FloorBitmask = BitMask32(2)
 WallBitmask = BitMask32(1)

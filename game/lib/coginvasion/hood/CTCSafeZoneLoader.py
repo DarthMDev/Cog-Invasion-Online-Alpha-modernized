@@ -5,11 +5,9 @@
 
 """
 
-from pandac.PandaModules import *
-from direct.actor.Actor import Actor
-import SafeZoneLoader
-import CTCPlayground
-import random
+from panda3d.core import TransparencyAttrib
+from lib.coginvasion.holiday.HolidayManager import HolidayType
+import SafeZoneLoader, CTCPlayground
 
 class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 
@@ -32,6 +30,9 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_4/dna/cog_toontown_central_sz.pdna'
         self.szStorageDNAFile = 'phase_4/dna/storage_TT_sz.pdna'
+        self.szHolidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.szHolidayDNAFile = 'phase_4/dna/winter_storage_TT_sz.pdna'
         self.telescope = None
         self.birdNoises = [
             'phase_4/audio/sfx/SZ_TC_bird1.mp3',
@@ -42,6 +43,9 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
     def load(self):
         SafeZoneLoader.SafeZoneLoader.load(self)
         self.geom.find('**/hill').setTransparency(TransparencyAttrib.MBinary, 1)
+        # It has to be to Toontown Central.
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.geom.find('**/mainFloor').setTexture(loader.loadTexture('winter/maps/winter_ground.jpg'), 1)
         #self.telescope = Actor(self.geom.find('**/*animated_prop_HQTelescopeAnimatedProp*'),
         #                    {"chan": "phase_3.5/models/props/HQ_telescope-chan.bam"}, copy=0)
         #self.telescope.reparentTo(self.geom.find('**/*toon_landmark_hqTT*'))
@@ -58,7 +62,7 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 
     def createSafeZone(self, dnaFile):
         # We need to load the town storage for the Cog buildings.
-        loader.loadDNAFile(self.hood.dnaStore, 'phase_5/dna/storage_town.dna')
+        loader.loadDNAFile(self.hood.dnaStore, 'phase_5/dna/storage_town.pdna')
         SafeZoneLoader.SafeZoneLoader.createSafeZone(self, dnaFile)
 
     def enter(self, requestStatus):

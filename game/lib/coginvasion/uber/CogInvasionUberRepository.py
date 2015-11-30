@@ -25,6 +25,7 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
         self.notify.setInfo(True)
         self.activeTokens = []
         self.parentMgr = ParentMgr()
+        self.holiday = 0
 
     def getParentMgr(self, zone):
         return self.parentMgr
@@ -58,7 +59,7 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
             #ip == tokenObj.getIP()):
 
                 # We got a match!
-                self.deleteToken(tokenObj)
+                #self.deleteToken(tokenObj)
                 return 1
         return 0
 
@@ -147,3 +148,6 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
                                 'DistrictNameManager')
         self.friendsManager = self.generateGlobalObject(DO_ID_FRIENDS_MANAGER,
                                 'FriendsManager')
+        self.holidayManager = self.generateGlobalObject(DO_ID_HOLIDAY_MANAGER,
+                                'HolidayManager')
+        self.holidayManager.setHoliday(self.holiday)

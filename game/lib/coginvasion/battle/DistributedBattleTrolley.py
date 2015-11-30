@@ -13,6 +13,7 @@ from direct.interval.IntervalGlobal import LerpPosInterval, LerpHprInterval, Ler
 from direct.interval.IntervalGlobal import SoundInterval, LerpFunctionInterval
 from direct.gui.DirectGui import DirectButton
 
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 from lib.coginvasion.globals import CIGlobals
 import math
 
@@ -51,6 +52,10 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyKey = None
         self.countdownText = None
         self.trolleyAwaySfx = base.loadSfx('phase_4/audio/sfx/SZ_trolley_away.mp3')
+        
+        if self.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.trolleyAwaySfx = base.loadSfx('winter/audio/sfx/SZ_trolley_away.mp3')
+        
         self.trolleyBellSfx = base.loadSfx('phase_4/audio/sfx/SZ_trolley_bell.mp3')
         self.hoodIndex = 0
         self.localAvOnTrolley = False

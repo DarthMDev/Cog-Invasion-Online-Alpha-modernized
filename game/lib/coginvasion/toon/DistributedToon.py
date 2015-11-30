@@ -9,7 +9,6 @@ from lib.coginvasion.toon import Toon
 from lib.coginvasion.avatar.DistributedAvatar import DistributedAvatar
 from lib.coginvasion.gags.backpack import BackpackManager
 from lib.coginvasion.gags import GagGlobals
-from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gui.LaffOMeter import LaffOMeter
 from lib.coginvasion.quests import QuestManager
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
