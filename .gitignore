@@ -11,9 +11,8 @@
 game/safe_test.py
 game/.pydevproject
 game/.project
-game/astron/databases/astrondb
-game/astron/databases/account-bridge.db
-game/astron/databases/astrondb/info.yaml
+# Ignore everything in the astron folder.
+game/astron/**
 game/tools/libcoginvasion.pyd
 game/tools/libcoginvasion.c
 game/tools/libcoginvasion.lib
@@ -26,6 +25,7 @@ game/settings.json
 game/uno_test.py
 game/mss'.py
 game/ct-test.py
+game/start_ci.bat
 game/lib/coginvasioncxx/*.obj
 game/lib/coginvasioncxx/*.pyd
 game/lib/coginvasioncxx/*.dll
