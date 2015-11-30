@@ -26,6 +26,7 @@ class HolidayManager(DistributedObjectGlobal):
     
     def announceGenerate(self):
         DistributedObjectGlobal.announceGenerate(self)
+        self.sendUpdate('requestHoliday', [])
     
     def setHoliday(self, holiday):
         self.holiday = holiday

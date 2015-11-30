@@ -16,10 +16,7 @@ class HolidayManagerUD(DistributedObjectGlobalUD):
         
     def setHoliday(self, holiday):
         self.holiday = holiday
-        print "HEY! I set the holiday to %s." % (self.holiday)
         
     def requestHoliday(self):
         sender = self.air.getAccountIdFromSender()
-        print type(self.holiday)
         self.sendUpdateToAccountId(sender, 'setHoliday', [self.holiday])
-        print "Sent: " + str(self.holiday)
