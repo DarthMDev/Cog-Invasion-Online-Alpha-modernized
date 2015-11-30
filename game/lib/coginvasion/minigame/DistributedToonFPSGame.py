@@ -64,7 +64,7 @@ class DistributedToonFPSGame(DistributedMinigame):
     def damage(self, amount, avId):
         self.toonFps.damageTaken(amount, avId)
 
-    def attachGunToAvatar(self, avId):
+    def setupRemoteAvatar(self, avId):
         # Should be overridden by inheritors.
         pass
 

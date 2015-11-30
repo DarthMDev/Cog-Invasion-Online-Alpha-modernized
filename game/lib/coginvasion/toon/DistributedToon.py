@@ -67,6 +67,11 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.defaultShard = 0
         return
 
+    def setupNameTag(self, tempName = None):
+        Toon.Toon.setupNameTag(self, tempName)
+        self.nametag.getNametag3d().setClickEvent('toonClicked', [self.doId])
+        self.nametag.getNametag2d().setClickEvent('toonClicked', [self.doId])
+
     def setDefaultShard(self, shardId):
         self.defaultShard = shardId
 
@@ -620,6 +625,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.ignore('showAvId')
         self.ignore('showName')
         self.token = None
+        self.stopSmooth()
         Toon.Toon.disable(self)
         DistributedAvatar.disable(self)
 
@@ -630,7 +636,6 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             self.DistributedToon_deleted = 1
             self.tutDone = None
             self.defaultShard = None
-            self.stopSmooth()
             Toon.Toon.delete(self)
             DistributedAvatar.delete(self)
             DistributedSmoothNode.delete(self)

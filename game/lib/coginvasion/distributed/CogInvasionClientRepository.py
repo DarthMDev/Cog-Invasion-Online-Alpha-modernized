@@ -112,14 +112,22 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.isShowingPlayerIds = False
         self.doBetaInform = True
         self.dTutorial = None
+        self.whisperNoise = base.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.mp3')
         self.checkHttp()
         self.http.addPreapprovedServerCertificateFilename(self.serverURL, Filename('phase_3/etc/gameserver.crt'))
         #self.tournamentMusicChunks = {}
         #self.threadedTaskChain = taskMgr.setupTaskChain("threadedTaskChainForSoundIntervals", numThreads = 2)
 
+        # Setup 3d audio
         base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)
         base.audio3d.setDistanceFactor(25)
         base.audio3d.setDropOffFactor(0.025)
+        # Setup collision handlers
+        base.lifter = CollisionHandlerFloor()
+        base.pusher = CollisionHandlerPusher()
+        base.queue = CollisionHandlerQueue()
+
+        base.minigame = None
 
         self.accountName = os.environ.get('ACCOUNT_NAME', '')
         self.csm = self.generateGlobalObject(DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
@@ -602,7 +610,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         # TEMPORARY:
         localAvatar.hoodsDiscovered = [1000, 2000, 3000, 4000, 5000, 9000]
         localAvatar.teleportAccess = [1000, 2000, 3000, 4000, 5000, 9000]
-        
+
         enterLoad.load()
         del enterLoad
 

@@ -95,7 +95,7 @@ class DistributedDistrictAI(DistributedObjectAI):
 
     def systemMessageCommand(self, adminToken, message):
         avId = self.air.getAvatarIdFromSender()
-        tokens = [0, 1]
+        tokens = [0, 1, 2]
         av = self.air.doId2do.get(avId, None)
         if av:
             if (adminToken in tokens and

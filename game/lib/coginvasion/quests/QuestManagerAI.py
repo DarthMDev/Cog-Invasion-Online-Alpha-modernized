@@ -26,6 +26,10 @@ class QuestManagerAI(QuestManagerBase):
         for questId in possibleQuestIds:
             if Quests.Quests[questId]["tier"] != self.avatar.getTier():
                 possibleQuestIds.remove(questId)
+                break
+            for reqQuest in Quests.Quests[questId].get('rq', []):
+                if not reqQuest in self.avatar.getQuestHistory() and questId in possibleQuestIds:
+                    possibleQuestIds.remove(questId)
         for questId in self.avatar.getQuestHistory():
             if questId in possibleQuestIds:
                 possibleQuestIds.remove(questId)
@@ -111,18 +115,30 @@ class QuestManagerAI(QuestManagerBase):
                 if not objective.isComplete():
                     if objective.type == Quests.DefeatCog:
                         if objective.subject == Quests.Any:
-                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                            if (objective.area == Quests.Any or
+                            ZoneUtil.getHoodId(objective.area, 1) == cog.getHood() or
+                            ZoneUtil.getHoodId(objective.area, 1) == CIGlobals.ToontownCentral and
+                            cog.getHood() == CIGlobals.BattleTTC):
                                 self.incrementQuestObjectiveProgress(questId)
                         elif objective.subject == cog.head:
-                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                            if (objective.area == Quests.Any or
+                            ZoneUtil.getHoodId(objective.area, 1) == cog.getHood() or
+                            ZoneUtil.getHoodId(objective.area, 1) == CIGlobals.ToontownCentral and
+                            cog.getHood() == CIGlobals.BattleTTC):
                                 self.incrementQuestObjectiveProgress(questId)
                     elif objective.type == Quests.DefeatCogLevel:
                         if cog.getLevel() >= objective.minCogLevel:
-                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                            if (objective.area == Quests.Any or
+                            ZoneUtil.getHoodId(objective.area, 1) == cog.getHood() or
+                            ZoneUtil.getHoodId(objective.area, 1) == CIGlobals.ToontownCentral and
+                            cog.getHood() == CIGlobals.BattleTTC):
                                 self.incrementQuestObjectiveProgress(questId)
                     elif objective.type == Quests.DefeatCogDept:
                         if objective.subject == cog.team:
-                            if objective.area == Quests.Any or ZoneUtil.getHoodId(objective.area, 1) == cog.getHood():
+                            if (objective.area == Quests.Any or
+                            ZoneUtil.getHoodId(objective.area, 1) == cog.getHood() or
+                            ZoneUtil.getHoodId(objective.area, 1) == CIGlobals.ToontownCentral and
+                            cog.getHood() == CIGlobals.BattleTTC):
                                 self.incrementQuestObjectiveProgress(questId)
 
                 self.checkIfObjectiveIsComplete(questId)
@@ -133,7 +149,10 @@ class QuestManagerAI(QuestManagerBase):
             objective = quest.getCurrentObjective()
             if objective.type == Quests.DefeatCogInvasion:
                 if not objective.isComplete():
-                    if ZoneUtil.getHoodId(objective.area, 1) == hood or objective.area == Quests.Any:
+                    if (objective.area == Quests.Any or
+                    ZoneUtil.getHoodId(objective.area, 1) == hood or
+                    ZoneUtil.getHoodId(objective.area, 1) == CIGlobals.ToontownCentral and
+                    hood == CIGlobals.BattleTTC):
                         self.incrementQuestObjectiveProgress(questId)
                         self.checkIfObjectiveIsComplete(questId)
 
@@ -143,7 +162,10 @@ class QuestManagerAI(QuestManagerBase):
             objective = quest.getCurrentObjective()
             if objective.type == Quests.DefeatCogTournament:
                 if not objective.isComplete():
-                    if ZoneUtil.getHoodId(objective.area, 1) == hood or objective.area == Quests.Any:
+                    if (objective.area == Quests.Any or
+                    ZoneUtil.getHoodId(objective.area, 1) == hood or
+                    ZoneUtil.getHoodId(objective.area, 1) == CIGlobals.ToontownCentral and
+                    hood == CIGlobals.BattleTTC):
                         self.incrementQuestObjectiveProgress(questId)
                         self.checkIfObjectiveIsComplete(questId)
 

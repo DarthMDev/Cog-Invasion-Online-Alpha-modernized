@@ -106,7 +106,6 @@ class ToonFPS(DirectObject):
 
     def enterAlive(self):
         if not self.mg.fsm.getCurrentState().getName() in ['gameOver', 'announceGameOver', 'finalScores']:
-            base.localAvatar.disableChatInput()
             self.start()
             self.resetHp()
             self.resetAmmo()
@@ -118,7 +117,6 @@ class ToonFPS(DirectObject):
         self.v_model.reparentTo(hidden)
         if self.mg.fsm.getCurrentState().getName() != "play":
             self.reallyEnd()
-        base.localAvatar.createChatInput()
 
     def updatePoints(self):
         self.points = self.kills - self.deaths
@@ -221,14 +219,6 @@ class ToonFPS(DirectObject):
             self.weapon.setScale(0.75)
             self.weapon.setPos(0.45, -1.03, -1.17)
             self.weapon.setHpr(9.46, 308.19, 75.78)
-            color = random.choice(
-                [
-                    VBase4(1, 0.25, 0.25, 1),
-                    VBase4(0.25, 1, 0.25, 1),
-                    VBase4(0.25, 0.25, 1, 1)
-                ]
-            )
-            self.weapon.setColorScale(color)
         self.gui.load()
 
     def start(self):
@@ -302,6 +292,8 @@ class ToonFPS(DirectObject):
         self.reload = None
         self.empty = None
         self.ammo = None
+        self.aliveFSM.requestFinalState()
+        self.fsm.requestFinalState()
         self.fsm = None
         self.aliveFSM = None
         self.player_node = None

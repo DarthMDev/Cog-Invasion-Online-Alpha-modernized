@@ -4,7 +4,9 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 
+from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.gui.Whisper import Whisper
+from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 
 class FriendsManager(DistributedObjectGlobal):
     notify = directNotify.newCategory("FriendsManager")
@@ -13,6 +15,15 @@ class FriendsManager(DistributedObjectGlobal):
     GoingOfflineMessage = "%s has logged out."
     LeftListMessage = "%s left your friends list."
     TeleportNotify = "%s is coming to visit you."
+
+    def d_sendWhisper(self, target, message):
+        self.sendUpdate('sendWhisper', [target, message])
+
+    def whisper(self, sender, message, name):
+        base.playSfx(self.cr.whisperNoise)
+        whisper = WhisperPopup(name + ': ' + message, CIGlobals.getToonFont(), ChatGlobals.WTNormal)
+        whisper.setClickable(name, sender, isPlayer = 1)
+        whisper.manage(base.marginManager)
 
     def getAvatarName(self, avId):
         av = self.cr.doId2do.get(avId)

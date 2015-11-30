@@ -64,7 +64,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
 
     def suitAdminCommand(self, adminToken, commandName):
         avId = self.air.getAvatarIdFromSender()
-        tokens = [0, 1]
+        tokens = [0, 1, 2]
         av = self.air.doId2do.get(avId, None)
         if av:
             if (adminToken in tokens and
@@ -139,7 +139,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if not levelRange:
                 levelRange = CogBattleGlobals.HoodIndex2LevelRange[self.battle.getHoodIndex()]
             availableSuits = []
-            level = random.randint(levelRange[0], levelRange[1])
+            level = random.choice(levelRange)
             for suit in SuitBank.getSuits():
                 if level >= suit.getLevelRange()[0] and level <= suit.getLevelRange()[1]:
                     availableSuits.append(suit)

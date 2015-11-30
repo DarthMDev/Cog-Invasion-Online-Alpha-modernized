@@ -13,6 +13,7 @@ from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.distributed.HoodMgr import HoodMgr
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.dna.DNALoader import *
+import GunGameGlobals as GGG
 
 hoodMgr = HoodMgr()
 
@@ -122,7 +123,27 @@ class GunGameLevelLoader:
             'model': 'phase_10/models/cogHQ/CashBotShippingStation.bam',
             'sky': None,
             'spawn_points': hoodMgr.dropPoints[CIGlobals.CashbotHQ]
-        }
+        },
+
+        'sbf': {
+            'name': CIGlobals.SellbotFactory,
+            'camera': (Point3(0, 0, 0), Vec3(0, 0, 0)),
+            'model': "phase_9/models/cogHQ/SelbotLegFactory.bam",
+            'sky': 'cog',
+            'sky_scale': 10.0,
+            'occluders': 'phase_9/models/cogHQ/factory_sneak_occluders.egg',
+            'spawn_points': {GGG.Teams.BLUE: [
+                    (Point3(13, 30, 3.73), Point3(0, 0, 0)), (Point3(21, 30, 3.73), Point3(0, 0, 0)), (Point3(29, 30, 3.73), Point3(0, 0, 0)),
+                    (Point3(13, 20, 3.73), Point3(0, 0, 0)), (Point3(21, 20, 3.73), Point3(0, 0, 0)), (Point3(29, 30, 3.73), Point3(0, 0, 0))],
+                GGG.Teams.RED: [
+                    (Point3(-644.43, 378.12, 8.73), Point3(270, 0, 0)), (Point3(-644.43, 370.75, 8.73), Point3(270, 0, 0)), (Point3(-644.43, 363.22, 8.73), Point3(270, 0, 0)),
+                    (Point3(-659.05, 378.12, 8.73), Point3(270, 0, 0)), (Point3(-659.05, 370.75, 8.73), Point3(270, 0, 0)), (Point3(-659.05, 363.22, 8.73), Point3(270, 0, 0))]
+            },
+            'flag_points': {GGG.Teams.BLUE: [Point3(213.23, 340.59, 19.73), Point3(90, 0, 0)],
+                GGG.Teams.RED: [Point3(-543.60, 595.79, 9.73), Point3(270, 0, 0)]},
+            'flagpoint_points': {GGG.Teams.BLUE: [Point3(-543.60, 595.79, 9.73), Point3(270, 0, 0)],
+                GGG.Teams.RED: [Point3(213.23, 340.59, 19.73), Point3(0, 0, 0)]}
+        },
     }
 
     SkyData = {
@@ -133,7 +154,8 @@ class GunGameLevelLoader:
         'MovingSkies': ['TT']
     }
 
-    def __init__(self):
+    def __init__(self, mg):
+        self.mg = mg
         self.levelName = None
         self.dnaStore = DNAStorage()
         self.loadingText = None
@@ -142,10 +164,17 @@ class GunGameLevelLoader:
         self.levelGeom = None
         self.skyUtil = None
         self.skyModel = None
+        self.occluders = None
 
         # for momada only:
         self.momadaAreas = []
         self.momadaAreaName2areaModel = {}
+
+    def getFlagPoint_Point(self, team):
+        return self.LevelData[self.levelName]['flagpoint_points'][team]
+
+    def getFlagPoint(self, team):
+        return self.LevelData[self.levelName]['flag_points'][team]
 
     def setLevel(self, level):
         self.levelName = level
@@ -162,28 +191,31 @@ class GunGameLevelLoader:
         if self.levelName == "momada":
             return pointData
         else:
-            # These points come from lib.coginvasion.distributed.HoodMgr,
-            # which is a tuple of a bunch of arrays with pos as first
-            # 3, and hpr as last 3 list elements.
-            #
-            # Disect the arrays and return a tuple holding a Point3 pos, and a Vec3 hpr.
-            array = []
-            for posAndHpr in pointData:
-                array.append(
-                    (
-                        Point3(
-                            posAndHpr[0],
-                            posAndHpr[1],
-                            posAndHpr[2]
-                        ),
+            if self.mg.gameMode == GGG.GameModes.CASUAL:
+                # These points come from lib.coginvasion.distributed.HoodMgr,
+                # which is a tuple of a bunch of arrays with pos as first
+                # 3, and hpr as last 3 list elements.
+                #
+                # Disect the arrays and return a tuple holding a Point3 pos, and a Vec3 hpr.
+                array = []
+                for posAndHpr in pointData:
+                    array.append(
+                        (
+                            Point3(
+                                posAndHpr[0],
+                                posAndHpr[1],
+                                posAndHpr[2]
+                            ),
 
-                        Vec3(
-                            posAndHpr[3],
-                            posAndHpr[4],
-                            posAndHpr[5]
+                            Vec3(
+                                posAndHpr[3],
+                                posAndHpr[4],
+                                posAndHpr[5]
+                            )
                         )
                     )
-                )
+            elif self.mg.gameMode == GGG.GameModes.CTF:
+                array = pointData[self.mg.team]
             return array
 
     def getNameOfCurrentLevel(self):
@@ -194,7 +226,7 @@ class GunGameLevelLoader:
         if self.loadingText:
             self.loadingText.destroy()
             self.loadingText = None
-        self.loadingText = OnscreenText(text = "Loading " + self.getNameOfCurrentLevel() + "...",
+        self.loadingText = OnscreenText(text = "",
             font = CIGlobals.getMinnieFont(), fg = (1, 1, 1, 1))
         self.loadingText.setBin('gui-popup', 0)
         base.graphicsEngine.renderFrame()
@@ -203,7 +235,7 @@ class GunGameLevelLoader:
             # momada is completely different from the other levels,
             # so it has it's own separate method for loading.
             self.__momadaLoad()
-        elif self.levelName in ['cbhq']:
+        elif self.levelName in ['cbhq', 'sbf']:
             # Cog hqs are just one model with everything in it. no dna loading needed.
             modelPath = self.LevelData[self.levelName]['model']
             self.levelGeom = loader.loadModel(modelPath)
@@ -214,6 +246,14 @@ class GunGameLevelLoader:
                 self.skyUtil = SkyUtil()
                 self.skyUtil.startSky(self.skyModel)
                 self.skyModel.reparentTo(render)
+                self.skyModel.setScale(self.LevelData[self.levelName].get('sky_scale', 1.0))
+            if self.LevelData[self.levelName].get('occluders'):
+                self.occluders = loader.loadModel(self.LevelData[self.levelName]['occluders'])
+                for occluderNode in self.occluders.findAllMatches('**/+OccluderNode'):
+                    base.render.setOccluder(occluderNode)
+                    occluderNode.node().setDoubleSided(True)
+            if self.levelName == 'sbf':
+                base.camLens.setFar(250)
         else:
             # It's a playground with dna and stuff. Just do the
             # normal loading procedure.
@@ -273,6 +313,9 @@ class GunGameLevelLoader:
             self.notify.info("Loaded and attached %s momada areas." % _numItems)
 
     def unload(self):
+        render.clearOccluder()
+        if self.levelName == "sbf":
+            base.camLens.setFar(CIGlobals.DefaultCameraFar)
         if self.levelName == "momada":
             for area in self.momadaAreas:
                 self.momadaAreas.remove(area)
@@ -281,6 +324,9 @@ class GunGameLevelLoader:
             self.momadaAreas = []
             self.momadaAreaName2areaModel = {}
         else:
+            if self.occluders:
+                self.occluders.removeNode()
+                self.occluders = None
             if self.skyUtil:
                 self.skyUtil.stopSky()
                 self.skyUtil = None

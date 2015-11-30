@@ -23,6 +23,8 @@ class SoundGag(Gag):
         self.soundRange = soundRange
         self.megaphonePath = 'phase_5/models/props/megaphone.bam'
         self.megaphone = None
+        self.tracks = None
+        self.timeout = 5.0
 
         if game.process == 'client':
             self.appearSfx = base.audio3d.loadSfx(appearSfx)
@@ -30,15 +32,19 @@ class SoundGag(Gag):
 
     def start(self):
         Gag.start(self)
+        if self.isLocal():
+            self.startTimeout()
+        if self.tracks:
+            self.tracks.pause()
+            self.tracks = None
         self.build()
         if self.isLocal():
             base.localAvatar.sendUpdate('usedGag', [self.id])
 
     def finish(self):
         self.reset()
+        self.tracks = None
         Sequence(Wait(1.5), Func(self.cleanupGag)).start()
-        if self.isLocal():
-            base.localAvatar.enablePieKeys()
 
     def unEquip(self):
         Gag.unEquip(self)

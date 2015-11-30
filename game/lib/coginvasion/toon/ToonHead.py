@@ -246,9 +246,10 @@ class ToonHead(Actor.Actor):
         taskMgr.doMethodLater(randomStart, self.blinkTask, self.blinkTaskName)
 
     def stopBlink(self):
-        taskMgr.remove(self.blinkTaskName)
-        taskMgr.remove(self.doBlinkTaskName)
-        taskMgr.remove(self.openEyesTaskName)
+        if hasattr(self, 'blinkTaskName') and hasattr(self, 'doBlinkTaskName') and hasattr(self, 'openEyesTaskName'):
+            taskMgr.remove(self.blinkTaskName)
+            taskMgr.remove(self.doBlinkTaskName)
+            taskMgr.remove(self.openEyesTaskName)
 
     def blinkTask(self, task):
         taskMgr.add(self.doBlink, self.doBlinkTaskName)
@@ -316,8 +317,9 @@ class ToonHead(Actor.Actor):
         taskMgr.doMethodLater(delay, self.lookAroundTask, self.lookAroundTaskName)
 
     def stopLookAround(self):
-        taskMgr.remove(self.lookAroundTaskName)
-        taskMgr.remove(self.doLookAroundTaskName)
+        if hasattr(self, 'lookAroundTaskName') and hasattr(self, 'doLookAroundTaskName'):
+            taskMgr.remove(self.lookAroundTaskName)
+            taskMgr.remove(self.doLookAroundTaskName)
 
     def lookAroundTask(self, task):
         taskMgr.add(self.doLookAround, self.doLookAroundTaskName)

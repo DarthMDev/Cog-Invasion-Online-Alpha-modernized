@@ -22,7 +22,7 @@ class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):
         self.cr = cr
         self.game = CIGlobals.RaceGame
         self.winnerY = 203.00
-        self.winnerPrize = 20
+        self.winnerPrize = 100
         self.loserPrize = 5
         return
 

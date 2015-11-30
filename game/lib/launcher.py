@@ -55,9 +55,10 @@ class Launcher:
     loginServer_port = 7033
     Server_host = "gameserver.coginvasion.com"
     timeout = 2000
-    version = 1.3
+    version = 1.4
     helpVideoLink = "http://download.coginvasion.com/videos/ci_launcher_crash_help.mp4"
     hashFileLink = "http://download.coginvasion.com/file_info.txt"
+    contactLink = "http://coginvasion.com/contact-us.html"
 
     def __init__(self):
         self.tk = base.tkRoot
@@ -72,7 +73,7 @@ class Launcher:
             State('accCreate', self.enterAccCreate, self.exitAccCreate, ['submitAcc', 'menu']),
             State('submitAcc', self.enterSubmitAcc, self.exitSubmitAcc, ['menu', 'accCreate']),
             State('login', self.enterLogin, self.exitLogin, ['play', 'menu']),
-            State('play', self.enterPlay, self.exitPlay, ['off']),
+            State('play', self.enterPlay, self.exitPlay, ['connect']),
             State('updateFiles', self.enterUpdateFiles, self.exitUpdateFiles, ['login']),
             State('off', self.enterOff, self.exitOff)], 'off', 'off')
         self.launcherFSM.enterInitialState()
@@ -291,6 +292,11 @@ class Launcher:
         #self.crashBtn.pack(side=BOTTOM)
         self.accBtn = Button(self.tk, text = "Create Account", command = self.__handleAccCreateButton)
         self.accBtn.place(x = 242, y = 265)
+        self.contactBtn = Button(self.tk, text = "Contact Us/Report A Bug", command = self.__handleContactButton)
+        self.contactBtn.place(x = 220, y = 405)
+
+    def __handleContactButton(self):
+        os.startfile(self.contactLink)
 
     def sendToHelpVideo(self):
         os.startfile(self.helpVideoLink)
@@ -310,6 +316,8 @@ class Launcher:
         self.passwordEntry.place_forget()
         self.loginBtn.place_forget()
         self.accBtn.place_forget()
+        self.contactBtn.place_forget()
+        del self.contactBtn
         del self.userNameEntryLbl
         del self.passwordEntryLbl
         del self.userNameEntry
@@ -466,19 +474,45 @@ class Launcher:
         del self.doneBtn
 
     def enterPlay(self):
-        self.playingLbl = canvas.create_text(287, 210, text = "Launching game...", fill = "white")
+        global files2Download
+        global baseLink
+
+        # Close connection to the login server.
         self.cMgr.closeConnection(self.Connection)
+
+        # Reset our variables for when the launcher opens back up.
+        self.alreadyUpdated = False
+        baseLink = ""
+        files2Download = []
+        self.downloadTime = {}
+
+        # Hide the launcher gui window.
+        self.tk.withdraw()
+
+        # Set the environment variables.
         os.environ['ACCOUNT_NAME'] = self.loginUserName.get()
         os.environ['GAME_SERVER'] = self.gameServer
         os.environ['GAME_VERSION'] = self.gameVersion
         os.environ['LOGIN_TOKEN'] = self.loginToken
-        os.system("start coginvasion.exe")
-        self.launcherFSM.requestFinalState()
-        sys.exit()
+
+        # Open the game.
+        subprocess.call('coginvasion.exe')
+
+        # This stuff happens after the game closes:
+
+        # Make sure we have the right folders present.
+        self.checkHasFolder("logs")
+        self.checkHasFolder("screenshots")
+        self.checkHasFolder("config")
+
+        # Show the launcher window again.
+        self.tk.deiconify()
+
+        # Re-connect to the login server.
+        self.launcherFSM.request('connect')
 
     def exitPlay(self):
-        canvas.delete(self.playingLbl)
-        del self.playingLbl
+        pass
 
     def handleDatagram(self, datagram):
         dgi = DatagramIterator(datagram)

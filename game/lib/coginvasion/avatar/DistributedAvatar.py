@@ -49,9 +49,9 @@ class DistributedAvatar(DistributedActor, Avatar):
     def showAndMoveHealthLabel(self):
         self.unstashHpLabel()
         self.stopMovingHealthLabel()
-        x = self.getNameTag().getX()
-        y = self.getNameTag().getY()
-        z = self.getNameTag().getZ()
+        x = self.nametag3d.getX()
+        y = self.nametag3d.getY()
+        z = self.nametag3d.getZ()
         moveTrack = LerpPosInterval(self.healthLabel,
                                 duration = 0.5,
                                 pos = (x, y, z + 0.5),

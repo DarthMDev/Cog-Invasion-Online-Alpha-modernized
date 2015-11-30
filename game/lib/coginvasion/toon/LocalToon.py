@@ -29,6 +29,8 @@ from lib.coginvasion.base.PositionExaminer import PositionExaminer
 from lib.coginvasion.friends.FriendsList import FriendsList
 from lib.coginvasion.suit import SuitAttacks
 
+from lib.coginvasion.nametag import NametagGlobals
+
 import random
 from lib.coginvasion.gags.GagState import GagState
 
@@ -42,6 +44,8 @@ class LocalToon(DistributedToon):
         except:
             self.LocalToon_initialized = 1
         DistributedToon.__init__(self, cr)
+        self.gagStartKey = config.GetString('gag-start-key')
+        self.gagThrowKey = config.GetString('gag-throw-key')
         self.avatarChoice = cr.localAvChoice
         self.smartCamera = SmartCamera()
         self.chatInput = ChatInput()
@@ -67,6 +71,7 @@ class LocalToon(DistributedToon):
         self.walkSfx.setLoop(True)
         self.controlManager = ControlManager.ControlManager(True, False)
         self.offset = 3.2375
+        self.firstPersonCamPos = None
         self.movementKeymap = {
             "forward": 0, "backward": 0,
             "left": 0, "right": 0, "jump": 0
@@ -79,6 +84,8 @@ class LocalToon(DistributedToon):
         self.pieThrowBtn = None
         self.myBattle = None
         self.invGui = None
+        self.gagsTimedOut = False
+        self.needsToSwitchToGag = None
 
         self.pickerTrav = None
         self.pickerRay = None
@@ -93,6 +100,23 @@ class LocalToon(DistributedToon):
         
         self.__snowballButton = None
         #base.cTrav.showCollisions(render)
+
+    def handleClickedWhisper(self, senderName, fromId, isPlayer, openPanel = False):
+        if self.cr.playGame.getPlace() == None or not hasattr(self.cr.playGame.getPlace(), 'fsm') or self.cr.playGame.getPlace().fsm == None:
+            return
+        if openPanel and self.cr.playGame.getPlace().fsm.getCurrentState().getName() in ['walk', 'shtickerBook']:
+            self.panel.makePanel(fromId)
+        self.chatInput.disableKeyboardShortcuts()
+        self.chatInput.fsm.request('input', ["", self.sendWhisper, [fromId]])
+
+    def handleClickedSentWhisper(self, senderName, fromId, isPlayer):
+        self.handleClickedWhisper(senderName, fromId, isPlayer, True)
+
+    def sendWhisper(self, message, target):
+        message = self.chatInput.chatInput.get()
+        self.cr.friendsManager.d_sendWhisper(target, message)
+        self.chatInput.fsm.request('idle')
+        self.chatInput.enableKeyboardShortcuts()
 
     def hasDiscoveredHood(self, zoneId):
         return zoneId in self.hoodsDiscovered
@@ -159,81 +183,11 @@ class LocalToon(DistributedToon):
     def d_requestAddFriend(self, avId):
         self.sendUpdate('requestAddFriend', [avId])
 
-    def setupPicker(self):
-        self.pickerTrav = CollisionTraverser('LT.pickerTrav')
-        self.pickerRay = CollisionRay()
-        rayNode = CollisionNode('LT.pickerNode')
-        rayNode.addSolid(self.pickerRay)
-        rayNode.setCollideMask(BitMask32(0))
-        rayNode.setFromCollideMask(CIGlobals.WallBitmask)
-        self.pickerRayNode = base.camera.attachNewNode(rayNode)
-        self.pickerHandler = CollisionHandlerQueue()
-        self.pickerTrav.addCollider(self.pickerRayNode, self.pickerHandler)
-
     def enablePicking(self):
-        self.accept('mouse1', self.pickedSomething_down)
-        self.accept('mouse1-up', self.pickedSomething_up)
-        base.taskMgr.add(self.__travMousePicker, 'LT.travMousePicker')
+        self.accept('toonClicked', self.toonClicked)
 
     def disablePicking(self):
-        base.taskMgr.remove('LT.travMousePicker')
-        self.ignore('mouse1')
-        self.ignore('mouse1-up')
-
-    def pickedSomething_down(self):
-        if self.rolledOverTag:
-            base.playSfx(DGG.getDefaultClickSound())
-            avatar = self.cr.doId2do.get(self.rolledOverTag)
-            if avatar:
-                avatar.nameTag.setPickerState('down')
-
-    def pickedSomething_up(self):
-        if self.rolledOverTag:
-            avatar = self.cr.doId2do.get(self.rolledOverTag)
-            if avatar:
-                avatar.nameTag.setPickerState('up')
-            self.panel.makePanel(self.rolledOverTag)
-
-    def __travMousePicker(self, task):
-        if not base.mouseWatcherNode.hasMouse():
-            return task.cont
-
-        mpos = base.mouseWatcherNode.getMouse()
-        self.pickerRay.setFromLens(base.camNode, mpos.getX(), mpos.getY())
-
-        self.pickerTrav.traverse(render)
-        if self.pickerHandler.getNumEntries() > 0:
-            self.pickerHandler.sortEntries()
-            pickedObject = self.pickerHandler.getEntry(0).getIntoNodePath()
-            avatarId = pickedObject.getParent().getPythonTag('avatar')
-            if avatarId != None:
-                for do in self.cr.doId2do.values():
-                    if do.__class__.__name__ == "DistributedToon":
-                        if do.doId == avatarId:
-                            if do.nameTag.getClickable() == 1:
-                                if (do.nameTag.fsm.getCurrentState().getName() != "rollover" and
-                                do.nameTag.fsm.getCurrentState().getName() != "down"):
-                                    do.nameTag.setPickerState('rollover')
-                                    base.playSfx(DGG.getDefaultRolloverSound())
-                                    self.rolledOverTag = avatarId
-                                    break
-                                else:
-                                    if (do.nameTag.fsm.getCurrentState().getName() == 'rollover'):
-                                        if self.rolledOverTag != do.doId:
-                                            do.nameTag.setPickerState('up')
-                    else:
-                        if do.__class__.__name__ == "DistributedToon":
-                            if do.nameTag.fsm.getCurrentState().getName() != "up":
-                                do.nameTag.setPickerState('up')
-            else:
-                if self.rolledOverTag:
-                    avatar = self.cr.doId2do.get(self.rolledOverTag)
-                    if avatar:
-                        if avatar.nameTag.fsm.getCurrentState().getName() != "up":
-                            avatar.nameTag.setPickerState('up')
-                    self.rolledOverTag = None
-
-        return task.cont
+        self.ignore('toonClicked')
     
     def loadImageAsPlane(self, filepath, yresolution = 600):
         from panda3d.core import Texture, CardMaker, NodePath, TransparencyAttrib, Vec4
@@ -277,7 +231,9 @@ class LocalToon(DistributedToon):
                 relief=None,
                 image_color=(0, 0.6, 1, 1), 
             pos=(0, 0.1, 0.7))
-        
+
+    def toonClicked(self, avId):
+        self.panel.makePanel(avId)
 
     def prepareToSwitchControlType(self):
         # Hack fix for getting stuck moving in one direction without pressing the movement keys.
@@ -352,17 +308,9 @@ class LocalToon(DistributedToon):
     def setupCamera(self):
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.camLens.setNearFar(CIGlobals.DefaultCameraNear, CIGlobals.DefaultCameraFar)
-        camHeight = max(self.getHeight(), 3.0)
-        heightScaleFactor = camHeight * 0.3333333333
-        defLookAt = Point3(0.0, 1.5, camHeight)
-        camPos = (Point3(0.0, -9.0 * heightScaleFactor, camHeight),
-            defLookAt,
-            Point3(0.0, camHeight, camHeight * 4.0),
-            Point3(0.0, camHeight, camHeight * -1.0),
-            0)
         self.smartCamera.initializeSmartCamera()
-        self.smartCamera.setIdealCameraPos(camPos[0])
-        self.smartCamera.setLookAtPoint(defLookAt)
+        self.smartCamera.initCameraPositions()
+        self.smartCamera.setCameraPositionByIndex(0)
 
     def setDNAStrand(self, dnaStrand):
         DistributedToon.setDNAStrand(self, dnaStrand)
@@ -375,8 +323,10 @@ class LocalToon(DistributedToon):
 
     def setupNameTag(self, tempName = None):
         DistributedToon.setupNameTag(self, tempName)
-        if self.nameTag:
-            self.nameTag.setColorLocal()
+        self.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCLocal])
+        self.nametag.unmanage(base.marginManager)
+        self.nametag.setActive(0)
+        self.nametag.updateAll()
 
     def d_broadcastPositionNow(self):
         self.d_clearSmoothing()
@@ -444,12 +394,20 @@ class LocalToon(DistributedToon):
         self.walkControls.enableAvatarControls()
         self.accept("control", self.updateMovementKeymap, ["jump", 1])
         self.accept("control-up", self.updateMovementKeymap, ["jump", 0])
+        self.accept('tab', self.smartCamera.nextCameraPos, [1])
+        self.accept('shift-tab', self.smartCamera.nextCameraPos, [0])
+        self.accept('page_up', self.smartCamera.pageUp)
+        self.accept('page_down', self.smartCamera.pageDown)
         taskMgr.add(self.movementTask, "avatarMovementTask")
         self.avatarMovementEnabled = True
         self.playMovementSfx(None)
 
     def disableAvatarControls(self):
         self.walkControls.disableAvatarControls()
+        self.ignore('tab')
+        self.ignore('shift-tab')
+        self.ignore('page_up')
+        self.ignore('page_down')
         self.ignore("arrow_up")
         self.ignore("arrow_up-up")
         self.ignore("arrow_down")
@@ -654,15 +612,15 @@ class LocalToon(DistributedToon):
                 self.backpack = DistributedToon.getBackpack(self)
             self.pieThrowBtn.bind(DGG.B1PRESS, self.startGag)
             self.pieThrowBtn.bind(DGG.B1RELEASE, self.throwGag)
-        self.accept("delete", self.startGag)
-        self.accept("delete-up", self.throwGag)
+        self.accept(self.gagStartKey, self.startGag)
+        self.accept(self.gagThrowKey, self.throwGag)
 
     def disablePieKeys(self):
         if self.pieThrowBtn:
             self.pieThrowBtn.unbind(DGG.B1PRESS)
             self.pieThrowBtn.unbind(DGG.B1RELEASE)
-        self.ignore("delete")
-        self.ignore("delete-up")
+        self.ignore(self.gagStartKey)
+        self.ignore(self.gagThrowKey)
 
     def disablePies(self):
         self.disablePieKeys()
@@ -695,26 +653,23 @@ class LocalToon(DistributedToon):
         self.b_lookAtObject(0, 0, 0, blink = 0)
 
     def startGag(self, start = True):
-        if not self.backpack or not self.backpack.getCurrentGag():
+        if not self.backpack or not self.backpack.getCurrentGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
                 self.pieThrowBtn.unbind(DGG.B1PRESS)
-            if self.backpack.getActiveGag():
-                if self.backpack.getActiveGag().getState() != GagState.LOADED:
-                    return
-            self.ignore("delete")
+            self.ignore(self.gagStartKey)
             self.backpack.getCurrentGag().setAvatar(self)
             self.resetHeadHpr()
             self.b_gagStart(self.backpack.getCurrentGag().getID())
 
     def throwGag(self, start = True):
-        if not self.backpack or not self.backpack.getCurrentGag() or not self.backpack.getActiveGag():
+        if not self.backpack or not self.backpack.getCurrentGag() or not self.backpack.getActiveGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
         if self.backpack.getSupply() > 0:
             if self.pieThrowBtn:
                 self.pieThrowBtn.unbind(DGG.B1RELEASE)
-            self.ignore("delete-up")
+            self.ignore(self.gagThrowKey)
             if self.backpack.getActiveGag().getType() == GagType.SQUIRT and self.backpack.getActiveGag().getName() in [CIGlobals.SeltzerBottle]:
                 self.b_gagRelease(self.backpack.getActiveGag().getID())
             else:
@@ -723,10 +678,10 @@ class LocalToon(DistributedToon):
             if not activeGag:
                 activeGag = self.backpack.getCurrentGag()
             if not activeGag.doesAutoRelease():
-                Sequence(Wait(0.75), Func(self.releaseGag), Wait(0.3), Func(self.enablePieKeys)).start()
+                Sequence(Wait(0.75), Func(self.releaseGag)).start()
 
     def releaseGag(self):
-        if not self.backpack or not self.backpack.getActiveGag():
+        if not self.backpack or not self.backpack.getActiveGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
         if self.backpack.getSupply() > 0:
             gag = self.backpack.getActiveGag()
@@ -879,6 +834,12 @@ class LocalToon(DistributedToon):
     def collisionsOff(self):
         self.controlManager.collisionsOff()
 
+    def toggleAspect2d(self):
+        if base.aspect2d.isHidden():
+            base.aspect2d.show()
+        else:
+            base.aspect2d.hide()
+
     def generate(self):
         DistributedToon.generate(self)
 
@@ -907,22 +868,26 @@ class LocalToon(DistributedToon):
         self.pieType = None
         self.myBattle = None
         self.ignore("gotLookSpot")
+        self.ignore("clickedWhisper")
+        self.ignore('f2')
         return
 
     def announceGenerate(self):
         DistributedToon.announceGenerate(self)
-        self.setupPicker()
         self.setupControls()
-        #self.createChatInput()
         self.startLookAround()
         self.friendRequestManager.watch()
-        self.accept('enter', self.printAvPos)
-        self.accept('p', self.enterPictureMode)
+        self.accept("gotLookSpot", self.handleLookSpot)
+        self.accept("clickedWhisper", self.handleClickedSentWhisper)
+        self.accept('f2', self.toggleAspect2d)
+        
+        # Unused developer methods.
+        #self.accept('enter', self.printAvPos)
+        #self.accept('p', self.enterPictureMode)
         #self.accept('c', self.teleportToCT)
         #posBtn = DirectButton(text = "Get Pos", scale = 0.08, pos = (0.3, 0, 0), parent = base.a2dLeftCenter, command = self.printAvPos)
-        self.accept("gotLookSpot", self.handleLookSpot)
         
-    def enterPictureMode(self):
+    def enterHiddenToonMode(self):
         self.laffMeter.stop()
         self.laffMeter.disable()
         self.laffMeter.destroy()

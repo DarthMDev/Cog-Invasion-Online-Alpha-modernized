@@ -17,6 +17,8 @@ from lib.coginvasion.globals import CIGlobals
 from PublicWalk import PublicWalk
 from lib.coginvasion.book.ShtickerBook import ShtickerBook
 from lib.coginvasion.gui.Dialog import GlobalDialog
+from lib.coginvasion.minigame.FirstPerson import FirstPerson
+from lib.coginvasion.nametag import NametagGlobals
 import LinkTunnel
 import ZoneUtil
 
@@ -28,6 +30,9 @@ class Place(StateData):
         self.loader = loader
         self.zoneId = None
         self.track = None
+        self.firstPerson = FirstPerson()
+        self.lastBookPage = 'mapPage'
+        self.useFirstPerson = config.GetBool('want-firstperson-battle')
         return
 
     def maybeUpdateAdminPage(self):
@@ -62,6 +67,7 @@ class Place(StateData):
 
     def exit(self):
         base.localAvatar.disableChatInput()
+        del self.lastBookPage
         StateData.exit(self)
 
     def enterDoorIn(self, distDoor):
@@ -154,7 +160,7 @@ class Place(StateData):
         self.shtickerBookStateData = ShtickerBook(self.fsm, doneEvent)
         self.acceptOnce(doneEvent, self.__shtickerBookDone)
         self.shtickerBookStateData.load()
-        self.shtickerBookStateData.enter()
+        self.shtickerBookStateData.enter(self.lastBookPage)
         base.localAvatar.showBookButton(1)
         base.localAvatar.b_setAnimState('readBook')
         self.acceptOnce('escape-up', base.localAvatar.bookButtonClicked, [0])
@@ -245,13 +251,13 @@ class Place(StateData):
         del self.loader
 
     def enterTeleportIn(self, requestStatus):
+        base.transitions.irisIn()
+        self.nextState = requestStatus.get('nextState', 'walk')
         if requestStatus['avId'] != base.localAvatar.doId:
             av = base.cr.doId2do.get(requestStatus['avId'])
             if av:
                 base.localAvatar.gotoNode(av)
                 base.localAvatar.b_setChat("Hi, %s." % av.getName())
-        base.transitions.irisIn()
-        self.nextState = requestStatus.get('nextState', 'walk')
         base.localAvatar.attachCamera()
         base.localAvatar.startSmartCamera()
         base.localAvatar.startPosHprBroadcast()
@@ -315,6 +321,21 @@ class Place(StateData):
         base.localAvatar.setBusy(0)
         base.localAvatar.enablePicking()
         base.localAvatar.showFriendButton()
+        NametagGlobals.setWantActiveNametags(True)
+        NametagGlobals.makeTagsReady()
+        if self.useFirstPerson:
+            if base.localAvatar.getMyBattle():
+                base.localAvatar.stopSmartCamera()
+                camera.setPos(base.localAvatar.smartCamera.firstPersonCamPos)
+                self.firstPerson.start()
+                self.firstPerson.reallyStart()
+                self.firstPerson.disableMouse()
+                base.localAvatar.getGeomNode().show()
+                base.localAvatar.getShadow().hide()
+                base.localAvatar.find('**/torso-top').hide()
+                base.localAvatar.find('**/torso-bot').hide()
+                base.localAvatar.getPart('head').hide()
+                base.localAvatar.chatInput.disableKeyboardShortcuts()
 
     def exitWalk(self):
         self.walkStateData.exit()
@@ -323,11 +344,22 @@ class Place(StateData):
             base.cr.playGame.hood.hideTitleText()
         self.watchTunnelSeq.pause()
         del self.watchTunnelSeq
+        NametagGlobals.setWantActiveNametags(False)
+        NametagGlobals.makeTagsInactive()
         base.localAvatar.setBusy(1)
         base.localAvatar.disablePicking()
         base.localAvatar.hideFriendButton()
         base.localAvatar.friendsList.fsm.requestFinalState()
         base.localAvatar.panel.fsm.requestFinalState()
+        if self.useFirstPerson:
+            if base.localAvatar.getMyBattle():
+                self.firstPerson.enableMouse()
+                self.firstPerson.end()
+                self.firstPerson.reallyEnd()
+                base.localAvatar.getShadow().show()
+                base.localAvatar.find('**/torso-top').show()
+                base.localAvatar.find('**/torso-bot').show()
+                base.localAvatar.getPart('head').show()
         return
 
     def handleWalkDone(self, doneStatus):

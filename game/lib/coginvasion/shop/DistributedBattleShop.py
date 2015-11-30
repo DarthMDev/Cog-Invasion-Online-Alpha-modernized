@@ -12,6 +12,7 @@ from lib.coginvasion.shop.DistributedShop import DistributedShop
 from lib.coginvasion.shop.BattleShop import BattleShop
 from lib.coginvasion.toon.Toon import Toon
 from lib.coginvasion.npc.NPCGlobals import NPC_DNA
+from lib.coginvasion.nametag import NametagGlobals
 
 class DistributedBattleShop(DistributedShop):
     notify = directNotify.newCategory('DistributedBattleShop')
@@ -26,6 +27,9 @@ class DistributedBattleShop(DistributedShop):
         self.clerk = Toon(self.cr)
         self.clerk.setName("Coach")
         self.clerk.setDNAStrand(NPC_DNA['Coach'])
+        self.clerk.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCNPC])
+        self.clerk.nametag.setActive(0)
+        self.clerk.nametag.updateAll()
         self.clerk.reparentTo(self)
         self.clerk.animFSM.request('neutral')
         self.clerk.setH(180)

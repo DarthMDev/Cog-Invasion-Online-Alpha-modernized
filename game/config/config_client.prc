@@ -1,8 +1,9 @@
 # Default window properties...
-window-title Cog Invasion
+window-title Cog Invasion Online (Alpha)
 win-origin -1 -1
 win-size 640 480
-load-display pandagl
+load-display pandadx9
+aux-display pandagl
 
 # Logging...
 notify-level warning
@@ -14,8 +15,9 @@ icon-filename icon.ico
 
 default-model-extension .egg
 
-model-cache-model #t
-model-cache-textures #t
+model-cache-dir
+model-cache-model #f
+model-cache-textures #f
 
 model-path .
 
@@ -57,6 +59,9 @@ want-weapons #t
 want-pies #t
 want-chat #t
 want-sa-reactions #f
+gag-start-key delete
+gag-throw-key delete-up
+want-firstperson-battle #f
 
 want-pstats 0
 

@@ -69,7 +69,7 @@ class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
         self.background.setBin("background", 10)
         self.setMinigameMusic("phase_4/audio/bgm/MG_Pairing.mid")
         self.setDescription("Play the Uno card game against the other players and win to get a big prize!")
-        self.setWinnerPrize(50)
+        self.setWinnerPrize(135)
         self.setLoserPrize(10)
         #camera.reparentTo(self.table)
         #camera.setP(-90)

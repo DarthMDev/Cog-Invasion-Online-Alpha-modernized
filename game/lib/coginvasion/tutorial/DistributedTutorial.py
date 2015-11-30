@@ -15,6 +15,7 @@ from libpandadna import *
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.gui.Whisper import Whisper
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.nametag import NametagGlobals
 
 class DistributedTutorial(DistributedObject):
     notify = directNotify.newCategory('DistributedTutorial')
@@ -401,6 +402,9 @@ class DistributedTutorial(DistributedObject):
         self.guide.parseDNAStrand(NPCGlobals.NPC_DNA[self.GUIDE_NAME])
         self.guide.setName(self.GUIDE_NAME)
         self.guide.generateToon()
+        self.guide.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCNPC])
+        self.guide.nametag.setActive(0)
+        self.guide.nametag.updateAll()
         self.guide.startBlink()
         self.guide.reparentTo(render)
         base.localAvatar.reparentTo(render)

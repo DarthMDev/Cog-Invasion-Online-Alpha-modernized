@@ -11,6 +11,7 @@ from direct.interval.SoundInterval import SoundInterval
 from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
+from lib.coginvasion.globals import CIGlobals
 from panda3d.core import TransparencyAttrib
 
 class Slot(DirectFrame):
@@ -79,11 +80,21 @@ class InventoryGui(DirectObject):
             self.prevSlot = self.activeSlot
         if self.backpack.getSupply(slot.getGag().getName()) > 0:
             if self.activeSlot != slot:
-                base.localAvatar.b_equip(GagGlobals.getIDByName(slot.getGag().getName()))
+                gagName = slot.getGag().getName()
+                gagId = GagGlobals.getIDByName(gagName)
+                # We need to wait until our current gag has finished its time
+                # out in order to equip the new gag.
+                base.localAvatar.needsToSwitchToGag = gagId
+                if base.localAvatar.gagsTimedOut == False:
+                    base.localAvatar.b_equip(gagId)
+                    base.localAvatar.enablePieKeys()
                 slot.setOutlineImage('selected')
                 self.activeSlot = slot
             elif self.activeSlot == slot and slot.getGag().getState() == GagState.LOADED:
-                base.localAvatar.b_unEquip()
+                base.localAvatar.needsToSwitchToGag = 'unequip'
+                if base.localAvatar.gagsTimedOut == False:
+                    base.localAvatar.b_unEquip()
+                    base.localAvatar.enablePieKeys()
                 self.activeSlot = None
             self.update()
             if self.switchSound and playSound: SoundInterval(self.switchSoundSfx).start()

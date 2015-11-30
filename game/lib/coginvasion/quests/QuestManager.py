@@ -51,13 +51,17 @@ class QuestManager(QuestManagerBase):
                     if objective.goal > 1:
                         if objective.type == Quests.DefeatCogDept:
                             taskInfo += QuestGlobals.AbbrToDept[objective.subject]
-                        else:
-                            taskInfo += QuestGlobals.makePlural(objective.subject)
+                        elif objective.type == Quests.DefeatCogInvasion:
+                            taskInfo += QuestGlobals.QuestSubjects[1]
+                        elif objective.type == Quests.DefeatCogTournament:
+                            taskInfo += QuestGlobals.QuestSubjects[6]
                     else:
                         if objective.type == Quests.DefeatCogDept:
                             taskInfo += QuestGlobals.makeSingular(QuestGlobals.AbbrToDept[objective.subject])
-                        else:
-                            taskInfo += objective.subject
+                        elif objective.type == Quests.DefeatCogInvasion:
+                            taskInfo += QuestGlobals.makeSingular(QuestGlobals.QuestSubjects[1])
+                        elif objective.type == Quests.DefeatCogTournament:
+                            taskInfo += QuestGlobals.makeSingular(QuestGlobals.QuestSubjects[6])
                 elif objective.type == Quests.DefeatCogLevel:
                     if objective.goal > 1:
                         taskInfo += "Level %d+ %s" % (objective.minCogLevel, CIGlobals.Suits)

@@ -26,6 +26,7 @@ class StormCloud(SquirtGag, LocationGag):
         self.setImage('phase_3.5/maps/storm-cloud.png')
         self.entities = []
         self.searchRadius = 6
+        self.timeout = 3.0
 
     def buildEntity(self):
         cloud = Actor(self.model, {'chan' : GagGlobals.getProp(4, 'stormcloud-chan')})
@@ -126,8 +127,6 @@ class StormCloud(SquirtGag, LocationGag):
         if game.process == 'client':
             LocationGag.complete(self)
             self.reset()
-            if self.isLocal():
-                base.localAvatar.enablePieKeys()
 
     def unEquip(self):
         LocationGag.cleanupLocationSeeker(self)
@@ -146,6 +145,8 @@ class StormCloud(SquirtGag, LocationGag):
 
     def release(self):
         LocationGag.release(self)
+        if self.isLocal():
+            self.startTimeout()
         actorTrack = LocationGag.getActorTrack(self)
         LocationGag.getSoundTrack(self).start()
         if actorTrack:

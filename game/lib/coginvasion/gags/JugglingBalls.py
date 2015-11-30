@@ -18,6 +18,7 @@ class JugglingBalls(ToonUpGag):
         self.setImage('phase_3.5/maps/juggling-cubes.png')
         self.track = None
         self.soundInterval = None
+        self.timeout = 8.0
 
     def start(self):
         super(JugglingBalls, self).start()

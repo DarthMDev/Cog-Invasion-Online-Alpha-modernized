@@ -21,7 +21,7 @@ REQUEST_BASE_LINK = 101
 BASE_LINK = 102
 STORE_LOGIN_TOKEN = 100
 SERVER_MSG = 103
-SERVER_VERSION = "1.0.7"
+SERVER_VERSION = "1.0.15"
 
 messages = {'tmaotc': 'At this time, only %d account(s) can be created on each computer.',
     'tmait': 'At this time, Cog Invasion Online only allows a total of %d game account(s) to be created. This amount has already been reached. We apologize for the inconvenience.',
@@ -30,7 +30,7 @@ messages = {'tmaotc': 'At this time, only %d account(s) can be created on each c
 baseLink = "http://download.coginvasion.com/"
 
 class LoginServer(MiniServer.MiniServer):
-    version = 1.3
+    version = 1.4
 
     def __init__(self, dataFileName = 'astron/databases/astrondb/loginAccData'):
         MiniServer.MiniServer.__init__(self, "localhost", 7033, 402000000, "login")

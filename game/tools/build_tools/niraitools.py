@@ -110,6 +110,10 @@ class NiraiCompilerWindows(NiraiCompilerBase):
         self.add_library('vorbis\\lib\\libogg_static', thirdparty=True)
         self.add_library('vorbis\\lib\\libvorbis_static', thirdparty=True)
         self.add_library('vorbis\\lib\\libvorbisfile_static', thirdparty=True)
+        # Add directx 9 libs
+        #self.add_library('C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\lib\\x86\\d3dx9')
+        #self.add_library('C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\lib\\x86\\DxErr')
+        #self.add_library('C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\lib\\x86\\dxguid')
 
     def compile(self, filename):
         out = '%s/%s.obj' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])

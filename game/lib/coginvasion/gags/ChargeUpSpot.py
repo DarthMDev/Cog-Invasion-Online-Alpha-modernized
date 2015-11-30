@@ -32,7 +32,7 @@ class ChargeUpSpot(LocationSeeker):
         self.maxCogs = maxCogs
         self.selectedCogs = []
         self.cleanedUp = False
-        
+
         if game.process == 'client':
             self.chargingSfx = base.audio3d.loadSfx(self.chargingSfxPath)
             self.tickSfx = base.audio3d.loadSfx(self.tickSfxPath)
@@ -114,6 +114,8 @@ class ChargeUpSpot(LocationSeeker):
         self.isCharging = True
 
     def onFullCharge(self):
+        if self.isLocal():
+            self.startTimeout()
         if self.shadowTrack:
             self.shadowTrack.finish()
             self.shadowTrack = None
@@ -123,6 +125,8 @@ class ChargeUpSpot(LocationSeeker):
             messenger.send(self.chargedCancelName)
 
     def stopCharging(self):
+        if self.isLocal():
+            self.startTimeout()
         self.isCharging = False
         if self.shadowTrack:
             self.shadowTrack.pause()

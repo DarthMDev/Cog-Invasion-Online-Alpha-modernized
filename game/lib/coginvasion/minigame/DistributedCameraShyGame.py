@@ -246,7 +246,7 @@ class DistributedCameraShyGame(DistributedMinigame):
             "Use WASD to move and the mouse to look around. Press the left mouse button to take a picture. " + \
             "Your camera takes some time to recharge after taking a picture. " + \
             "You know you have a good shot when the view finder is green!")
-        self.setWinnerPrize(30)
+        self.setWinnerPrize(150)
         self.setLoserPrize(15)
         base.render.hide()
         base.setBackgroundColor(0, 0, 0)

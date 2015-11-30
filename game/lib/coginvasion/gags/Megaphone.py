@@ -15,6 +15,7 @@ class Megaphone(ToonUpGag):
         self.setImage('phase_3.5/maps/megaphone.png')
         self.track = None
         self.soundInterval = None
+        self.timeout = 5.0
 
     def start(self):
         super(Megaphone, self).start()

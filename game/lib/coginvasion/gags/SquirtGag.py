@@ -32,6 +32,8 @@ class SquirtGag(Gag):
         self.enableReleaseFrame = enableReleaseFrame
         self.completeSquirtFrame = completeSquirtFrame
         self.lastFrame = 0
+        self.tracks = None
+        self.sprayTrack = None
 
         if game.process == 'client':
             if spraySfx:
@@ -41,6 +43,12 @@ class SquirtGag(Gag):
 
     def start(self):
         Gag.start(self)
+        if self.sprayTrack:
+            self.sprayTrack.pause()
+            self.sprayTrack = None
+        if self.tracks:
+            self.tracks.pause()
+            self.tracks = None
         if self.anim:
             self.build()
             self.equip()
@@ -59,10 +67,9 @@ class SquirtGag(Gag):
     def doSpray(self, scaleUp, scaleDown, hold):
         base.audio3d.attachSoundToObject(self.spraySfx, self.gag)
         self.spraySfx.play()
-        spraySequence = Sequence(Func(self.getSprayTrack(self.origin, self.sprayRange, scaleUp, hold, scaleDown).start))
-        sprayParallel = Parallel()
-        sprayParallel.append(Func(spraySequence.start))
-        sprayParallel.start()
+        spraySequence = self.getSprayTrack(self.origin, self.sprayRange, scaleUp, hold, scaleDown)
+        self.sprayTrack = spraySequence
+        self.sprayTrack.start()
 
     def completeSquirt(self):
         numFrames = base.localAvatar.getNumFrames(self.toonAnim)
@@ -74,7 +81,6 @@ class SquirtGag(Gag):
         finishSeq.append(Func(self.cleanupSpray))
         finishSeq.start()
         if self.avatar == base.localAvatar:
-            base.localAvatar.enablePieKeys()
             if base.localAvatar.getBackpack().getSupply() == 0:
                 self.cleanupGag()
 

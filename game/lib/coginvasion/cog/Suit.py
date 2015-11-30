@@ -72,6 +72,9 @@ class Suit(Avatar):
         self.animFSM.enterInitialState()
         self.initializeBodyCollisions()
 
+    def getNametagJoints(self):
+        return []
+
     """ BEGIN STATES """
 
     def enterOff(self, ts = 0):
@@ -252,7 +255,7 @@ class Suit(Avatar):
     def enterDie(self, ts = 0):
         self.show()
         self.generateCog(isLose = 1)
-        self.clearChatbox()
+        self.nametag.clearChatText()
         self.deleteNameTag()
         deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.mp3")
         base.audio3d.attachSoundToObject(deathSound, self)
@@ -554,11 +557,11 @@ class Suit(Avatar):
 
     def setupNameTag(self):
         Avatar.setupNameTag(self)
-        if self.nameTag:
+        if self.nametag:
             if self.level > 0:
-                self.nameTag.setText(self.nameTag.getText() + '\n%s\nLevel %s' % (self.dept.getName(), self.level))
+                self.nametag.setText(self.nametag.getText() + '\n%s\nLevel %s' % (self.dept.getName(), self.level))
             else:
-                self.nameTag.setText(self.nameTag.getText() + '\n%s' % (self.dept.getName()))
+                self.nametag.setText(self.nametag.getText() + '\n%s' % (self.dept.getName()))
 
     def setChat(self, chat):
         self.clearChatbox()

@@ -70,7 +70,7 @@ class ShtickerBook(StateData):
         del self.entered
         StateData.unload(self)
 
-    def enter(self):
+    def enter(self, page):
         if self.entered:
             return
         self.entered = 1
@@ -82,7 +82,7 @@ class ShtickerBook(StateData):
         if base.localAvatar.getAdminToken() > -1:
             self.fsm.request('adminPage')
         else:
-            self.fsm.request('mapPage')
+            self.fsm.request(page)
 
     def exit(self):
         if not self.entered:
@@ -472,6 +472,7 @@ class ShtickerBook(StateData):
         del self.adminPageStateData
 
     def pageDone(self, nextPage):
+        base.cr.playGame.getPlace().lastBookPage = nextPage
         self.fsm.request(nextPage)
         self.book_turn.play()
 

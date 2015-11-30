@@ -21,12 +21,15 @@ class SeltzerBottle(SquirtGag):
         self.anim = 'hold-bottle'
         self.holdTime = 2
         self.sprayScale = 0.2
+        self.timeout = 3.0
 
     def start(self):
         super(SeltzerBottle, self).start()
         self.origin = self.getSprayStartPos()
 
     def release(self):
+        if self.isLocal():
+            self.startTimeout()
         if self.canSquirt:
             self.sprayRange = self.avatar.getPos(render) + Point3(0, GagGlobals.SELTZER_RANGE, 0)
             self.startSquirt(self.sprayScale, self.holdTime)

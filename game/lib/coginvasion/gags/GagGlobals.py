@@ -7,6 +7,7 @@
 
 from panda3d.core import VBase4, Point4, Point3
 from lib.coginvasion.globals import CIGlobals
+import types
 
 # These ids are sent on the wire to capture gags.
 gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobals.BirthdayCake, 3 : CIGlobals.TNT,
@@ -218,3 +219,15 @@ def getIDByName(name):
     for gId, gName in gagIds.iteritems():
         if gName == name:
             return gId
+
+def getTrackOfGag(arg):
+    if type(arg) == types.IntType:
+        # This is a gag id.
+        for trackName, gagList in TrackGagNamesByTrackName.items():
+            if getGagByID(arg) in gagList:
+                return trackName
+    elif type(arg) == types.StringType:
+        # This is a gag name.
+        for trackName, gagList in TrackGagNamesByTrackName.items():
+            if arg in gagList:
+                return trackName

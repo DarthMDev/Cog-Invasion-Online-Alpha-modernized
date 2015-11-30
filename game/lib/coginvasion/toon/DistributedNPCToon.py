@@ -7,6 +7,7 @@ from direct.interval.IntervalGlobal import Parallel, LerpPosInterval, LerpQuatIn
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.quests import Quests
+from lib.coginvasion.nametag import NametagGlobals
 from DistributedToon import DistributedToon
 
 class DistributedNPCToon(DistributedToon):
@@ -93,8 +94,9 @@ class DistributedNPCToon(DistributedToon):
             self.currentQuestObjective = quest.currentObjectiveIndex
             self.currentQuestId = questData[0]
             self.currentChatIndex = 0
-            #if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_HQ:
-            #    self.doNPCChat(array = Quests.QuestHQOfficerDialogue)
+            if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_HQ:
+                if not quest.isComplete():
+                    self.doNPCChat(array = Quests.QuestHQOfficerDialogue)
             if CIGlobals.NPCToonDict[self.npcId][3] == CIGlobals.NPC_REGULAR:
                 self.doNPCChat(array = Quests.QuestNPCDialogue)
 
@@ -149,6 +151,12 @@ class DistributedNPCToon(DistributedToon):
     def stopNPCOriginPoll(self):
         base.taskMgr.remove(self.uniqueName('NPCOriginPoll'))
 
+    def setupNameTag(self, tempName = None):
+        DistributedToon.setupNameTag(self, tempName)
+        self.nametag.setNametagColor(NametagGlobals.NametagColors[NametagGlobals.CCNPC])
+        self.nametag.setActive(0)
+        self.nametag.updateAll()
+
     def announceGenerate(self):
         DistributedToon.announceGenerate(self)
         self.startLookAround()
@@ -159,7 +167,6 @@ class DistributedNPCToon(DistributedToon):
         else:
             self.startNPCOriginPoll()
         self.acceptCollisions()
-        self.nameTag.setClickable(0)
 
     def disable(self):
         self.ignore('mouse1-up')

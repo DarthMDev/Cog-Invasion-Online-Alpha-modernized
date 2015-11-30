@@ -369,7 +369,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         return self.token
 
     def usedGag(self, gag_id):
-        print 'Used gag: {0}'.format(GagGlobals.getGagByID(gag_id))
         supply = self.backpack.getSupply(GagGlobals.getGagByID(gag_id))
         amt = supply - 1
         if amt < 0:
@@ -467,6 +466,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         dmg = gag.getDamage()
         if obj:
             obj.b_setHealth(obj.getHealth() - dmg)
+            obj.d_announceHealth(0, dmg)
             if obj.getHealth() <= 0:
                 if gag.getType() == GagType.THROW or gag.getName() == CIGlobals.TNT:
                     obj.b_setAnimState('pie')
@@ -481,7 +481,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                         obj.b_setAnimState('soak')
                     else:
                         obj.b_setAnimState('squirt-small')
-                if obj.__class__.__name__ == 'DistributedSuit':
+                if obj.__class__.__name__ == 'DistributedSuitAI':
                     self.questManager.cogDefeated(obj)
 
     def suitKilled(self, avId):
@@ -499,7 +499,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         DistributedSmoothNodeAI.announceGenerate(self)
         if self.parentId != self.getDefaultShard():
             self.b_setDefaultShard(self.parentId)
-        
+
         if self.__class__.__name__ == "DistributedToonAI":
             self.setupGags = True
             # TEMPORARY: Any new gags that we make have to be given to toons automatically.

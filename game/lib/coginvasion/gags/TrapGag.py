@@ -15,6 +15,7 @@ class TrapGag(Gag):
         Gag.__init__(self, name, model, damage, GagType.TRAP, hitSfx, anim = anim, autoRelease = doesAutoRelease)
         self.hitSfx = None
         self.entity = None
+        self.timeout = 3.0
         if game.process == 'client':
             self.hitSfx = base.audio3d.loadSfx(hitSfx)
 

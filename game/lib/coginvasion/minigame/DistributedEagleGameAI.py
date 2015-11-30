@@ -35,7 +35,7 @@ class DistributedEagleGameAI(DistributedMinigameAI):
         self.eagleId2eagle = {}
         self.avId2score = {}
         self.round = 1
-        self.winnerPrize = 60
+        self.winnerPrize = 175
         self.loserPrize = 20
 
     def d_gameOver(self):

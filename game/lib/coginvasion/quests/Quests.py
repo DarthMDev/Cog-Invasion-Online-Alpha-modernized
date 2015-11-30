@@ -29,27 +29,42 @@ TierML = 16
 TierBR = 17
 TierDL = 18
 
+VisHQObj = [VisitHQOfficer, 1, 1, Any]
+
 Quests = {
     #0: {"objectives": [[DefeatCogLevel, 1, 3, Any]], "reward": (RewardHealth, 1), "tier": TierTT},
     #1: {"objectives": [[VisitNPC, 'visitanNPC', 2308, 2801], []]}
-    0: {"objectives": [[VisitNPC, 'visitanNPC', 2322, 2653],
-                    [DefeatCog, 'namedropper', 10, ToontownCentralId],
-                    [VisitNPC, 'visitanNPC', 2322, 2653]],
-        "reward": (RewardHealth, 3), "tier": TierTT},
-    1: {"objectives": [[DefeatCogDept, 'c', 5, Any], [VisitHQOfficer, 'visHQ', 0, 0]], "reward": (RewardHealth, 2), "tier": TierTT},
-    2: {"objectives": [[VisitNPC, 'visitanNPC', 2003, 2516],
-                    [DefeatCogDept, 'm', 4, Any],
+    0: {"objectives": [[VisitNPC, 'visitanNPC', 2003, 2516],
+                    [DefeatCog, Any, 1, Any],
                     [VisitNPC, 'visitanNPC', 2003, 2516]],
-        "reward": (RewardHealth, 1), "tier": TierTT}
+        "reward": (RewardHealth, 1), "tier": TierTT},
+    1: {'objectives': [[DefeatCogInvasion, '', 2, ToontownCentralId], VisHQObj], "reward": (RewardHealth, 2), "tier": TierTT, "rq": [0]},
+    2: {'objectives': [[DefeatCogLevel, 3, 25, ToontownCentralId], VisHQObj], "reward": (RewardJellybeans, 1000), "tier": TierTT, "rq": [0]},
+    3: {'objectives': [[DefeatCogTournament, '', 1, ToontownCentralId], VisHQObj], "reward": (RewardHealth, 2), "tier": TierTT, "rq": [0]},
+    4: {'objectives': [[DefeatCogInvasion, '', 10, DonaldsDreamlandId], VisHQObj], "reward": (RewardHealth, 5), "tier": TierTT, "rq": [0, 1, 2, 3]}
 }
 
 QuestNPCDialogue = {
-
+    0: [["Hello! My name is Professor Pete.", "I'm an expert in the field of pretty much everything around here.",
+        "You're new, so you definitely need to learn some things.", "Let's talk about the Cogs.",
+        "Pretty much, you take the Trolley in each playground in order to be taken to CogTropolis, which is where the Cogs are.",
+        "In CogTropolis, you are in the present day Toontown. Right now, you're in the past.",
+        "Show me that you know how to get to CogTropolis by defeating 1 Cog.",
+        "Once you've done that, come back here."], [], ["Great job defeating that Cog! You really have some potential.",
+        "Here, take your reward."]]
 }
 
-QuestHQOfficerDialogue = {}
+QuestHQOfficerDialogue = {
+    0: [["Professor Pete has some tips to help you get started in Cog Invasion Online.",
+            "Go see him, he's at the Schoolhouse in Toontown Central.", "Bye!"], [], []],
+    1: [['Defeat 2 Cog Invasions in Toontown Central.', 'Have fun!']],
+    2: [['Defeat 25 Level 3+ Cogs in Toontown Central', 'Have fun in Cog Invasion!']],
+    3: [['Defeat a Cog Tournament anywhere.', 'Bye!']],
+    4: [["Defeat 10 Cog Invasions in Donald's Dreamland.", "Good luck!"]]
+}
 
 HQOfficerQuestCongrats = "Nice job completing that Quest! You have earned your reward."
+HQOfficerNoQuests = "Sorry, but I don't have any quests for you."
 
 DefeatText = "Defeat"
 VisitText = "Visit"
@@ -97,7 +112,7 @@ class Quest:
         return self.tier
 
     def isComplete(self):
-        if self.currentObjective.type != VisitNPC:
+        if not self.currentObjective.type in [VisitNPC, VisitHQOfficer]:
             if self.currentObjective.isComplete() and self.currentObjectiveIndex >= self.numObjectives - 1:
                 return True
         else:

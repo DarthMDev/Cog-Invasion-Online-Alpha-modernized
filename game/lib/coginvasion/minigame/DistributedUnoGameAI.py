@@ -24,7 +24,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         DistributedMinigameAI.DistributedMinigameAI.__init__(self, air)
         self.setZeroCommand(self.doNextPlayerTurn)
         self.setInitialTime(10)
-        self.winnerPrize = 50
+        self.winnerPrize = 135
         self.loserPrize = 10
         self.playersDealed = 0 # The number of players who have been dealed cards.
         self.turnOrder = []

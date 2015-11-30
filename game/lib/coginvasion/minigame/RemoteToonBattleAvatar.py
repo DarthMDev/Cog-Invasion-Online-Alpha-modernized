@@ -5,7 +5,7 @@
 
 """
 
-from panda3d.core import VBase4
+from panda3d.core import VBase4, TextNode
 from lib.coginvasion.globals import CIGlobals
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import *
@@ -13,6 +13,7 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from Bullet import Bullet
 from RemoteAvatar import RemoteAvatar
+import GunGameGlobals as GGG
 
 class RemoteToonBattleAvatar(RemoteAvatar):
     notify = directNotify.newCategory("RemoteToonBattleAvatar")
@@ -21,6 +22,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         RemoteAvatar.__init__(self, mg, cr, avId)
         self.track = None
         self.gunName = gunName
+        self.team = None
+        self.teamText = None
         self.fsm = ClassicFSM(
             'RemoteToonBattleAvatar',
             [
@@ -52,9 +55,30 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         self.soundGrunt = None
         self.retrieveAvatar()
 
+    def setTeam(self, team):
+        self.team = team
+        if self.teamText:
+            self.teamText.removeNode()
+            self.teamText = None
+        textNode = TextNode('teamText')
+        textNode.setText(GGG.TeamNameById[team][0])
+        textNode.setTextColor(GGG.TeamColorById[team])
+        textNode.setAlign(TextNode.ACenter)
+        textNode.setFont(CIGlobals.getMickeyFont())
+        self.teamText = self.avatar.attachNewNode(textNode)
+        self.teamText.setBillboardAxis()
+        self.teamText.setZ(self.avatar.getNameTag().getZ() + 1.0)
+        self.teamText.setScale(5.0)
+
+    def getTeam(self):
+        return self.team
+
     def setGunName(self, gunName):
         self.gunName = gunName
         self.avatar.attachGun(gunName)
+        if self.gunName == 'shotgun':
+            color = GGG.TeamColorById[self.team]
+            self.avatar.gun.setColorScale(color)
 
     def getGunName(self):
         return self.gunName
@@ -62,7 +86,6 @@ class RemoteToonBattleAvatar(RemoteAvatar):
     def retrieveAvatar(self):
         RemoteAvatar.retrieveAvatar(self)
         if self.avatar:
-            self.avatar.attachGun(self.gunName)
             self.soundGrunt = base.loadSfx('phase_4/audio/sfx/target_impact_grunt1.mp3')
 
     def enterOff(self):
@@ -115,7 +138,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 ),
                 Func(self.fsm.request, 'dead')
             )
-            self.track.start(ts)
+            self.track.start()
             del dieSound
 
     def exitDie(self):
@@ -152,6 +175,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         if self.avatar:
 
             def createBullet():
+                if not self.avatar or not self.avatar.gun:
+                    return
                 if self.gunName == "pistol":
                     Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)
                 elif self.gunName == "shotgun":
@@ -159,6 +184,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                     b2 = Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)
 
             def changeToLegAnim():
+                if not self.avatar:
+                    return
                 self.avatar.loop(self.avatar.getCurrentAnim(partName = 'legs'))
 
             if self.gunName == "pistol":
@@ -186,7 +213,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 ),
                 Func(changeToLegAnim)
             )
-            self.track.start(ts)
+            self.track.start()
             del gunSound
 
             self.mg.makeSmokeEffect(self.avatar.gun.find('**/joint_nozzle').getPos(render))
@@ -195,6 +222,9 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         self.resetTrack()
 
     def cleanup(self):
+        if self.teamText:
+            self.teamText.removeNode()
+            self.teamText = None
         if self.avatar:
             self.avatar.detachGun()
         self.soundGrunt = None

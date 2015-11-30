@@ -22,6 +22,7 @@ class Lipstick(ToonUpGag):
         self.soundInterval = None
         self.lips = None
         self.radius = 25
+        self.timeout = 6.0
 
     def start(self):
         ToonUpGag.start(self)
@@ -34,13 +35,13 @@ class Lipstick(ToonUpGag):
                 self.avatar.sendUpdate('setTarget', [self.getID(), target.doId])
             else:
                 self.reset()
-        
+
     def doLipstick(self, target):
         dScale = 0.5
         tLips = 2.5
         animDuration = base.localAvatar.getDuration(self.avAnim)
         tThrow = 115.0 / base.localAvatar.getFrameRate(self.avAnim)
-            
+
         def doHeal():
             if self.isLocal():
                 self.setHealAmount()
@@ -53,7 +54,7 @@ class Lipstick(ToonUpGag):
         stickScaleUp = self.getScaleTrack([self.gag], dScale, GagGlobals.PNT3NEAR0, GagGlobals.PNT3NORMAL)
         stickScaleDn = self.getScaleTrack([self.gag], dScale, GagGlobals.PNT3NORMAL, GagGlobals.PNT3NEAR0)
         stickTrack = Sequence(stickScaleUp, Wait(animDuration - 2.0 * dScale), stickScaleDn)
-        
+
         lipsTrack = Sequence(
             Wait(tLips),
             Func(self.avatar.pose, self.avAnim, 57),
@@ -70,19 +71,19 @@ class Lipstick(ToonUpGag):
         mainTrack = Parallel(stickTrack, lipsTrack, self.getSoundTrack(delay, self.avatar, 2),
                              Sequence(ActorInterval(self.avatar, self.avAnim)))
         mainTrack.start()
-        
+
     def setTarget(self, target):
         ToonUpGag.setTarget(self, target)
         self.doLipstick(target)
-        
+
     def build(self):
         ToonUpGag.build(self)
         self.buildLips()
-        
+
     def buildLips(self):
         self.cleanupLips()
         self.lips = GagGlobals.loadProp(5, 'lips')
-        
+
     def cleanupLips(self):
         if self.lips:
             self.lips.removeNode()

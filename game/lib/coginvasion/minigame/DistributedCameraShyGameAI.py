@@ -26,21 +26,21 @@ class DistributedCameraShyGameAI(DistributedMinigameAI):
         DistributedMinigameAI.__init__(self, air)
         self.setZeroCommand(self.d_gameOver)
         self.setInitialTime(150)
-        self.winnerPrize = 30
+        self.winnerPrize = 150
         self.loserPrize = 15
         self.availableSpawnPoints = [0, 1, 2, 3, 4]
         self.levelLoader = CameraShyLevelLoaderAI(self)
 
         self.pictureData = {}
-        
+
     def generate(self):
         self.levelLoader.selectLevel()
         self.setInitialTime(self.levelLoader.getGameTime())
         DistributedMinigameAI.generate(self)
-        
+
     def d_setLevel(self, levelName):
         self.sendUpdate('setLevel', [levelName])
-        
+
     def getLevel(self):
         return self.levelLoader.getLevel()
 

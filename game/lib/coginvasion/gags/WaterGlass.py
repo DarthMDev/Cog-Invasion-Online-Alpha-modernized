@@ -23,6 +23,7 @@ class WaterGlass(SquirtGag):
         self.holdTime = 0.0
         self.spitSfx = None
         self.track = None
+        self.timeout = 4.0
 
     def delete(self):
         if self.track:
@@ -32,6 +33,8 @@ class WaterGlass(SquirtGag):
 
     def start(self):
         SquirtGag.start(self)
+        if self.isLocal():
+            self.startTimeout()
         self.origin = self.getSprayStartPos()
         self.spitSfx = base.loadSfx(GagGlobals.SPIT_SFX)
 

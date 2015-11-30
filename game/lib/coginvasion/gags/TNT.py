@@ -83,8 +83,6 @@ class TNT(TossTrapGag):
         backpack = self.avatar.getBackpack()
         if backpack.getSupply(self.getName()) > 0 and backpack.getCurrentGag() == self:
             self.equip()
-            if hasattr(self.avatar, 'enablePieKeys'):
-                self.avatar.enablePieKeys()
         Sequence(Wait(0.5), Func(self.cleanupExplosion)).start()
 
     def activate(self):
