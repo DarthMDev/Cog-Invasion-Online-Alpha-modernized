@@ -28,7 +28,7 @@ class Shop(StateData):
         self.avMoney = base.localAvatar.getMoney()
         self.healCooldownDoneSoundPath = 'phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3'
         self.healCooldownDoneSfx = None
-        self.newHealth = None
+        self.requestedHp = None
         self.pages = 1
         self.window = None
         self.upgradesPurchased = False
@@ -40,8 +40,8 @@ class Shop(StateData):
         self.newHealCooldowns = {}
 
     def confirmPurchase(self):
-        if self.newHealth != None:
-            self.distShop.d_requestHealth(base.localAvatar.getHealth() - self.origHealth)
+        if self.requestedHp != None:
+            self.distShop.d_requestHealth(self.requestedHp)
         messenger.send(self.doneEvent)
 
     def cancelPurchase(self):
@@ -103,11 +103,11 @@ class Shop(StateData):
     def __purchaseHealItem(self, item, values):
         health = base.localAvatar.getHealth()
         maxHealth = base.localAvatar.getMaxHealth()
-        healAmt = health + values.get('heal')
+        healAmt = values.get('heal')
         if health < maxHealth and not self.hasCooldown(item):
-            if healAmt > maxHealth:
-                healAmt = maxHealth
-            self.newHealth = healAmt
+            if health + healAmt > maxHealth:
+                healAmt = maxHealth - health
+            self.requestedHp = healAmt
             base.localAvatar.setHealth(healAmt)
             healDict = {item : [0, values.get('healCooldown')]}
             self.healCooldowns.update(healDict)
@@ -200,7 +200,7 @@ class Shop(StateData):
         if self.window:
             self.upgradesPurchased = False
             self.window.delete()
-            self.newHealth = None
+            self.requestedHp = None
             self.healCooldownDoneSfx = None
             self.originalSupply = {}
 

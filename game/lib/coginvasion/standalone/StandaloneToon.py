@@ -3,7 +3,7 @@
 
 from panda3d.core import *
 loadPrcFile('config/config_client.prc')
-loadPrcFileData('', 'framebuffer-multisample 0')
+loadPrcFileData('', 'framebuffer-multisample 1')
 loadPrcFileData('', 'multisamples 16')
 loadPrcFileData('', 'tk-main-loop 0')
 loadPrcFileData('', 'egg-load-old-curves 0')

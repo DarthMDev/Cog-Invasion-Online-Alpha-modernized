@@ -3,6 +3,7 @@
 
 from panda3d.core import Fog
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 import DDTownLoader
 import DDSafeZoneLoader
 from ToonHood import ToonHood
@@ -15,6 +16,9 @@ class DDHood(ToonHood):
         self.safeZoneLoader = DDSafeZoneLoader.DDSafeZoneLoader
         self.townLoader = DDTownLoader.DDTownLoader
         self.storageDNAFile = "phase_6/dna/storage_DD.pdna"
+        self.holidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.holidayDNAFile = "phase_6/dna/winter_storage_DD.pdna"
         self.skyFilename = "phase_3.5/models/props/BR_sky.bam"
         self.spookySkyFile = "phase_3.5/models/props/BR_sky.bam"
         self.titleColor = (0.80000000000000004, 0.59999999999999998, 0.5, 1.0)

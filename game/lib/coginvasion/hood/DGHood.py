@@ -9,6 +9,7 @@ import SkyUtil
 from DGSafeZoneLoader import DGSafeZoneLoader
 import DGTownLoader
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class DGHood(ToonHood):
     notify = directNotify.newCategory("DGHood")
@@ -20,8 +21,11 @@ class DGHood(ToonHood):
         self.townLoader = DGTownLoader.DGTownLoader
         self.skyUtil = SkyUtil.SkyUtil()
         self.storageDNAFile = "phase_8/dna/storage_DG.pdna"
+        self.holidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.holidayDNAFile = "phase_8/dna/winter_storage_DG.pdna"
         self.skyFilename = "phase_3.5/models/props/TT_sky.bam"
-        self.spookySkyFile = "phase_8/models/props/DL_sky.bam"
+        self.spookySkyFile = "phase_3.5/models/props/BR_sky.bam"
         self.titleColor = (0.4, 0.67, 0.18, 1.0)
         self.loaderDoneEvent = 'DGHood-loaderDone'
 

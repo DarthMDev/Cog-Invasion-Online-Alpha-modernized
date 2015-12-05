@@ -14,6 +14,10 @@ import random
 class DistributedSuitManagerAI(DistributedObjectAI):
     notify = directNotify.newCategory("DistributedSuitManagerAI")
 
+    chances = {'invasion': range(56, 100 + 1), 'cog': range(8, 55 + 1), 'tournament': range(1, 7 + 1)}
+    # The delays after a certain spawn type has ended
+    delayRangeBySpawn = {'invasion': [20, 40], 'cog': [5, 20], 'tournament': [20, 40]}
+
     def __init__(self, air):
         try:
             self.DistributedSuitManagerAI_initialized
@@ -203,45 +207,40 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             base.config.GetBool('want-suit-invasion'),
             base.config.GetBool('want-suit-tournament')
         ]
-        random_choice = random.randint(0, 7)
-        if self.lastChoice == 0 or self.lastChoice == 1 or self.lastChoice == 2 and self.numSuits > 0:
-            random_choice = random.randint(2, 6)
-        elif self.lastChoice == 7:
-            random_choice = random.randint(1, 6)
+        random_choice = random.randint(1, 100)
 
-        if random_choice == 0 or random_choice == 1 or random_choice == 2:
+        if random_choice in self.chances['invasion']:
             if configData[2]:
-                random_delay = random.randint(40, 80)
+                random_delay = random.randint(20, 40)
                 choice = "invasion"
             else:
                 self.suitSpawner(task)
                 return task.done
-        elif random_choice == 3 or random_choice == 4 or random_choice == 5 or random_choice == 6:
+        elif random_choice in self.chances['cog']:
             if configData[0]:
                 random_delay = random.randint(5, 20)
                 choice = "suit"
             else:
                 self.suitSpawner(task)
                 return task.done
-        elif random_choice == 7:
+        elif random_choice in self.chances['tournament']:
             if configData[1]:
                 choice = "tournament"
                 random_delay = random.randint(360, 700)
             else:
                 self.suitSpawner(task)
                 return task.done
-        self.lastChoice = random_choice
-        if self.lastChoice == 7 and self.getActiveInvasion() or self.numSuits > 0:
-            self.lastChoice = 1
-            random_delay = random.randint(5, 80)
+        if random_choice in self.chances['tournament'] and self.getActiveInvasion() or self.numSuits > 0:
+            random_delay = random.randint(5, 20)
         if self.air.toonsAreInZone(self.zoneId):
             self.createAutoSuit(choice)
         else:
-            random_delay = random.randint(20, 80)
+            random_delay = random.randint(20, 40)
         task.delayTime = random_delay
         return task.again
 
     def createAutoSuit(self, choice):
+        self.lastChoice = choice
         if choice == "invasion":
             if not self.isFullInvasion("large") and not self.tournament.inTournament and not self.getActiveInvasion() and self.numSuits == 0:
                 # Spawn invasion
@@ -253,8 +252,6 @@ class DistributedSuitManagerAI(DistributedObjectAI):
                 else:
                     skeleton = 0
                 self.startInvasion(suit, difficulty, size, skeleton)
-            else:
-                self.lastChoice = 3
         elif choice == "suit":
             if not self.isCogCountFull() and not self.tournament.inTournament:
                 # Spawn suit
@@ -263,19 +260,17 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if self.numSuits == 0 and not self.tournament.inTournament and not self.getActiveInvasion():
                 # Spawn tournament
                 self.tournament.initiateTournament()
-            else:
-                self.lastChoice = 1
 
     def isCogCountFull(self):
         return self.numSuits >= 25
 
     def isFullInvasion(self, size):
         if size == "large":
-            return self.numSuits >= 21
+            return self.suitsSpawnedThisInvasion >= 21
         elif size == "medium":
-            return self.numSuits >= 14
+            return self.suitsSpawnedThisInvasion >= 14
         elif size == "small":
-            return self.numSuits >= 7
+            return self.suitsSpawnedThisInvasion >= 7
 
     def startInvasion(self, suit, difficulty, size, skeleton, backup = 0):
         if not self.getActiveInvasion() and not self.tournament.inTournament:
@@ -283,6 +278,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         self.setActiveInvasion(1)
         if self.isFullInvasion(size) or self.isCogCountFull():
             return
+        self.suitsSpawnedThisInvasion = 0
         taskMgr.add(
             self.__doInvasion, self.uniqueName('doInvasion'),
             extraArgs = [suit, difficulty, size, skeleton, backup], appendTask = True
@@ -298,6 +294,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if suitType == "ABC":
                 suitType = random.choice(["A", "B", "C"])
             self.createSuit(levelRange = difficulty, anySuit = 1)
+            self.suitsSpawnedThisInvasion += 1
         task.delayTime = 4
         return task.again
 

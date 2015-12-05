@@ -35,7 +35,7 @@ HoodIndex2LevelRange = {
 }
 
 HoodIndex2TotalCogs = {
-    hi2hi[BattleTTC]: 40,
+    hi2hi[BattleTTC]: 5,
     hi2hi[TheBrrrgh]: 45,
     hi2hi[DonaldsDreamland]: 50,
     #hi2hi[MinniesMelodyland]: 45,

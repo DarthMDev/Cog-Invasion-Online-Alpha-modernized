@@ -31,6 +31,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         self.turnsReversed = False
         self.currentTurn = None
         self.turnSeq = None
+        self.aiTrack = None
         self.drawDeck = []
         self.availableCards = []
         self.singlePlayer = False
@@ -161,6 +162,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         seq.append(Wait(1.5))
         seq.append(Func(self.doNextPlayerTurn, draw=shouldDraw))
         seq.start()
+        self.turnSeq = seq
 
     def d_setNewCardColor(self, id):
         self.sendUpdate("setNewCardColor", [id])
@@ -216,6 +218,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                         track.append(Wait(waitTime))
                         track.append(Func(self.__handleWildCard, ai, id))
                         track.start()
+                        self.aiTrack = track
                 else:
                     seq.append(Func(self.doNextPlayerTurn, shouldSkip, shouldDraw, reversedNow))
                 self.turnSeq = seq
@@ -505,6 +508,9 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         except:
             self.DistributedUnoGameAI_deleted = 1
         DistributedMinigameAI.DistributedMinigameAI.delete(self)
+        if self.aiTrack:
+            self.aiTrack.pause()
+            self.aiTrack = None
         if self.turnSeq:
             self.turnSeq.pause()
             self.turnSeq = None

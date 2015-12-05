@@ -2,7 +2,7 @@
 
   Filename: UnoGameCardDeck.py
   Created by: blach (18Oct14)
- 
+
 """
 
 from panda3d.core import *
@@ -14,7 +14,7 @@ import UnoGameGlobals as UGG
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class UnoGameCardDeck(DirectFrame):
-    
+
     def __init__(self, ug):
         DirectFrame.__init__(self, relief=None, sortOrder=50, parent=base.a2dBottomCenter)
         self.initialiseoptions(UnoGameCardDeck)
@@ -30,14 +30,14 @@ class UnoGameCardDeck(DirectFrame):
         self.gui = None
         self.loadCards()
         return
-    
+
     def loadCards(self):
         self.gui = loader.loadModel("phase_4/models/minigames/mg_uno_game_cards.egg")
         if self.holiday == HolidayType.CHRISTMAS:
             cards = self.gui.find('**/mg_uno_numcards_green_7').getParent().getChildren()
             for child in cards:
                 child.setTexture(loader.loadTexture('winter/maps/uno/%s.png' % (child.getName())), 1)
-        
+
     def updateCardToFollowGui(self):
         self.deleteCardToFollowGui()
         if self.unoGame.cardToFollow[-2:] == str(UGG.CARD_BLUE):
@@ -54,19 +54,20 @@ class UnoGameCardDeck(DirectFrame):
                 parent = base.a2dRightCenter)
         self.cardToFollowGui.setScale(0.25, 0.3, 0.3)
         self.cardToFollowGui.setPos(-0.175, 0, -0.75)
-        
+
     def deleteCardToFollowGui(self):
         if self.cardToFollowGui:
             self.cardToFollowGui.destroy()
             self.cardToFollowGui = None
-            
+
     def getCard(self, cardType):
         cards = loader.loadModel("phase_4/models/minigames/mg_uno_game_cards.egg")
         card = cards.find('**/' + cardType)
-        holidayTexture = loader.loadTexture('winter/maps/uno/%s.png' % (card.getName()))
-        card.setTexture(holidayTexture, 1)
+        if self.holiday == HolidayType.CHRISTMAS:
+            holidayTexture = loader.loadTexture('winter/maps/uno/%s.png' % (card.getName()))
+            card.setTexture(holidayTexture, 1)
         return card
-    
+
     def generate(self):
         self.container["image"] = "phase_4/maps/mg_uno_card_deck.png"
         self.container.setTransparency(True)
@@ -100,7 +101,7 @@ class UnoGameCardDeck(DirectFrame):
             itemFrame_pos = (0.35, 0, 0.4),
             itemFrame_borderWidth=(0.02, 0.02),
         )
-        
+
     def disable(self):
         if self.deck:
             self.deck.destroy(); self.deck = None
@@ -108,7 +109,7 @@ class UnoGameCardDeck(DirectFrame):
             btn.destroy(); del btn
         self.deleteCardToFollowGui()
         return
-        
+
     def delete(self):
         DirectFrame.destroy(self)
         self.disable()
@@ -122,7 +123,7 @@ class UnoGameCardDeck(DirectFrame):
         self.unoGame = None
         self.deck = None
         return
-                            
+
     def drawCard(self, id):
         card = self.getCard(UGG.cardId2cardTex[id])
         card.setScale(0.225, 0.3, 0.3)
@@ -140,7 +141,7 @@ class UnoGameCardDeck(DirectFrame):
         self.deck.scrollTo(len(self.cardBtns))
         card.removeNode()
         del card
-        
+
     def enableAll(self, cardToFollow=None):
         for btn in self.cardBtns:
             if cardToFollow != None:
@@ -152,11 +153,11 @@ class UnoGameCardDeck(DirectFrame):
                     btn['state'] = DGG.DISABLED
             else:
                 btn['state'] = DGG.NORMAL
-            
+
     def disableAll(self):
         for btn in self.cardBtns:
             btn['state'] = DGG.DISABLED
-        
+
     def placeCard(self, id, btn):
         self.deck.removeItem(btn)
         self.cardBtns.remove(btn)

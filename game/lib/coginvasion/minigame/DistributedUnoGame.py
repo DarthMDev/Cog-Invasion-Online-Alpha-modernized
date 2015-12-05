@@ -12,6 +12,7 @@ import UnoGameCardDeck
 from lib.coginvasion.globals import CIGlobals
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
 
@@ -81,11 +82,11 @@ class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
         DistributedMinigame.DistributedMinigame.enterPlay(self)
         self.createGui()
 
-    def enterGameOver(self, winner=0, winnerDoId=0):
+    def enterGameOver(self, winner=0, winnerDoId=0, allPrize = 0):
         self.cardDeck.disableAll()
         self.drawBtn['state'] = DGG.DISABLED
         self.callBtn['state'] = DGG.DISABLED
-        DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId)
+        DistributedMinigame.DistributedMinigame.enterGameOver(self, winner, winnerDoId, allPrize)
 
     def createGui(self):
         self.deleteGui()
@@ -201,8 +202,9 @@ class DistributedUnoGame(DistributedMinigame.DistributedMinigame):
     def placeCard(self, doId, cardId):
         cards = loader.loadModel("phase_4/models/minigames/mg_uno_game_cards.egg")
         card = cards.find('**/' + UGG.cardId2cardTex[cardId])
-        holidayTexture = loader.loadTexture('winter/maps/uno/%s.png' % (card.getName()))
-        card.setTexture(holidayTexture, 1)
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            holidayTexture = loader.loadTexture('winter/maps/uno/%s.png' % (card.getName()))
+            card.setTexture(holidayTexture, 1)
         card.setScale(0.4, 0.49, 0.49)
         card.reparentTo(aspect2d)
         self.cards.append(card)

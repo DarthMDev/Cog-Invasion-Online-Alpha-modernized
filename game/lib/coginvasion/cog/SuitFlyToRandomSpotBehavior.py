@@ -85,7 +85,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         self.suit.headsUp(endPos)
         startPos = self.suit.getPos(render)
         duration = 3.5
-
+        self.suit.d_startProjInterval(startPos, endPos, duration, 0.25)
         self.flyIval = Parallel(
             # Server Information
             ProjectileInterval(self.suit,
@@ -97,14 +97,6 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
             Sequence(
                 Wait(6.0),
                 Func(self.exit)
-            ),
-            # Information sent to the client.
-            Sequence(
-                Func(self.suit.d_setSuitState, 3, -1, -1),
-                Wait(0.20),
-                Func(self.suit.d_startProjInterval, startPos, endPos, duration, 0.25),
-                Wait(duration - 0.25),
-                Func(self.suit.d_setSuitState, 2, -1, -1)
             ),
         )
         self.flyIval.start()

@@ -90,7 +90,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.makeAToon = MakeAToon()
         self.loginToken = os.environ.get("LOGIN_TOKEN")
         self.serverAddress = os.environ.get("GAME_SERVER")
-        self.serverURL = URLSpec("s://%s" % self.serverAddress)
+        self.serverURL = URLSpec("http://%s" % self.serverAddress)
         self.parentMgr.registerParent(CIGlobals.SPRender, render)
         self.parentMgr.registerParent(CIGlobals.SPHidden, hidden)
         self.adminAccess = False
@@ -114,7 +114,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.dTutorial = None
         self.whisperNoise = base.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.mp3')
         self.checkHttp()
-        self.http.addPreapprovedServerCertificateFilename(self.serverURL, Filename('phase_3/etc/gameserver.crt'))
+        #self.http.addPreapprovedServerCertificateFilename(self.serverURL, Filename('phase_3/etc/gameserver.crt'))
         #self.tournamentMusicChunks = {}
         #self.threadedTaskChain = taskMgr.setupTaskChain("threadedTaskChainForSoundIntervals", numThreads = 2)
 
@@ -132,7 +132,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.accountName = os.environ.get('ACCOUNT_NAME', '')
         self.csm = self.generateGlobalObject(DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
         self.friendsManager = self.generateGlobalObject(DO_ID_FRIENDS_MANAGER, 'FriendsManager')
-        
+
         SpeedHackChecker.startChecking()
         self.loginFSM.request('connect')
         return

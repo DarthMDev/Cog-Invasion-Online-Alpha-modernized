@@ -264,6 +264,11 @@ class ToonFPS(DirectObject):
             self.fsm.request('off')
 
     def reallyEnd(self):
+        try:
+            self.ToonFPS_reallyEnded
+            return
+        except:
+            self.ToonFPS_reallyEnded = 1
         if self.shooterRayNode:
             self.shooterRayNode.removeNode()
             self.shooterRayNode = None
@@ -282,6 +287,11 @@ class ToonFPS(DirectObject):
         base.camLens.setNear(1.0)
 
     def cleanup(self):
+        try:
+            self.ToonFPS_cleanedUp
+            return
+        except:
+            self.ToonFPS_cleanedUp = 1
         taskMgr.remove("lookAtKiller")
         taskMgr.remove("toonBattleMovement")
         if self.firstPerson:

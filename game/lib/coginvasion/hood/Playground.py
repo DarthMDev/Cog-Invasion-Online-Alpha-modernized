@@ -84,7 +84,7 @@ class Playground(Place.Place):
     def load(self):
         Place.Place.load(self)
         self.parentFSM.getStateNamed('playground').addChild(self.fsm)
-        
+
         if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
             self.particles = ParticleLoader.loadParticleEffect('phase_8/etc/snowdisk.ptf')
             self.particles.setPos(0, 0, 5)
@@ -107,6 +107,7 @@ class Playground(Place.Place):
             del self.particlesRender
             base.render.clearFog()
             self.fog = None
+            del self.particles
         self.ignoreAll()
         Place.Place.unload(self)
         return

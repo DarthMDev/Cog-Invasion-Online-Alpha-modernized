@@ -1,6 +1,7 @@
 # Filename: DDSafeZoneLoader.py
 # Created by:  blach (26Jul15)
 
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 import SafeZoneLoader
 import DDPlayground
 
@@ -25,6 +26,9 @@ class DDSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_6/dna/donalds_dock_sz.pdna'
         self.szStorageDNAFile = 'phase_6/dna/storage_DD_sz.pdna'
+        self.szHolidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.szHolidayDNAFile = 'phase_6/dna/winter_storage_DD_sz.pdna'
         self.telescope = None
         self.birdNoise = 'phase_6/audio/sfx/SZ_DD_Seagull.mp3'
 

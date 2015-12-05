@@ -3,6 +3,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 from lib.coginvasion.toon import ParticleLoader
 import SafeZoneLoader
 import BRPlayground
@@ -29,6 +30,7 @@ class BRSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_8/dna/the_burrrgh_sz.pdna'
         self.szStorageDNAFile = 'phase_8/dna/storage_BR_sz.pdna'
+        self.szHolidayDNAFile = None
         self.telescope = None
         self.snow = None
         self.windNoises = [

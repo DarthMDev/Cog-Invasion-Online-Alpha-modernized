@@ -9,7 +9,7 @@ from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.distributed.DelayDeletable import DelayDeletable
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import SoundInterval, LerpPosInterval, ProjectileInterval
-from direct.interval.IntervalGlobal import Sequence, LerpColorScaleInterval, Func, Wait
+from direct.interval.IntervalGlobal import Sequence, LerpColorScaleInterval, Func, Wait, Parallel
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
@@ -179,12 +179,21 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.stopMoveInterval()
         startPos = Point3(startX, startY, startZ)
         endPos = Point3(endX, endY, endZ)
-        self.headsUp(endPos)
-        self.moveIval = ProjectileInterval(self,
-            startPos = startPos,
-            endPos = endPos,
-            gravityMult = gravityMult,
-            duration = duration
+        self.moveIval = Parallel(
+             Sequence(
+                Func(self.animFSM.request, 'flyAway', [ts]),
+                Wait(1.0),
+                Func(self.animFSM.request, 'flyDown', [ts])
+            ),
+            Sequence(
+                Wait(0.5),
+                Func(self.headsUp, endPos),
+                ProjectileInterval(self,
+                    startPos = startPos,
+                    endPos = endPos,
+                    gravityMult = gravityMult,
+                    duration = duration)
+            )
         )
         self.moveIval.start(ts)
 
@@ -226,15 +235,15 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def setHealth(self, health):
         DistributedAvatar.setHealth(self, health)
-        
+
         def doBossFlash():
             if not self.isEmpty():
                 LerpColorScaleInterval(self, 0.2, VBase4(1, 0, 0, 1)).start()
-        
+
         def clearBossFlash():
             if not self.isEmpty():
                 self.clearColorScale()
-        
+
         if self.isDead():
             self.interruptAttack()
         if self.getLevel() > 12:
@@ -318,7 +327,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.suitState = self.stateIndex2suitState[index]
         self.startPoint = startPoint
         self.endPoint = endPoint
-        
+
         self.suitFSM.request(self.suitState, [startPoint, endPoint, ts])
 
     def getSuitState(self):

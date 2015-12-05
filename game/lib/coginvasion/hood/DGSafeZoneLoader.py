@@ -6,6 +6,7 @@ from direct.actor.Actor import Actor
 import SafeZoneLoader
 import DGPlayground
 import random
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class DGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 
@@ -28,6 +29,9 @@ class DGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_8/dna/daisys_garden_sz.pdna'
         self.szStorageDNAFile = 'phase_8/dna/storage_DG_sz.pdna'
+        self.szHolidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.szHolidayDNAFile = 'phase_8/dna/winter_storage_DG_sz.pdna'
         self.telescope = None
         self.birdNoises = [
             'phase_8/audio/sfx/SZ_DG_bird_01.mp3',

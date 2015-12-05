@@ -5,6 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from SafeZoneLoader import SafeZoneLoader
 from MLPlayground import MLPlayground
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class MLSafeZoneLoader(SafeZoneLoader):
     notify = directNotify.newCategory("MLSafeZoneLoader")
@@ -28,6 +29,9 @@ class MLSafeZoneLoader(SafeZoneLoader):
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_6/dna/minnies_melody_land_sz.pdna'
         self.szStorageDNAFile = 'phase_6/dna/storage_MM_sz.pdna'
+        self.szHolidayDNAFile = None
+        if base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
+            self.szHolidayDNAFile = 'phase_6/dna/winter_storage_MM_sz.pdna'
         self.telescope = None
 
     def load(self):

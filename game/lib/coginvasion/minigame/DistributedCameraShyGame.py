@@ -223,8 +223,6 @@ class DistributedCameraShyGame(DistributedMinigame):
         self.firstPerson.end()
         self.firstPerson.enableMouse()
         self.deleteTimer()
-        base.localAvatar.createChatInput()
-        base.localAvatar.chatInput.enableKeyboardShortcuts()
         DistributedMinigame.exitPlay(self)
 
     def createWorld(self):

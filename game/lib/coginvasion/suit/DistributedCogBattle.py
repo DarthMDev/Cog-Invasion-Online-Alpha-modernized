@@ -3,11 +3,13 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
-from direct.gui.DirectGui import DirectWaitBar, DGG, DirectFrame
+from direct.gui.DirectGui import DirectWaitBar, DGG, DirectFrame, OnscreenText
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gui.Whisper import Whisper
+from lib.coginvasion.minigame.Timer import Timer
+from lib.coginvasion.nametag import NametagGlobals
 import CogBattleGlobals
 
 class DistributedCogBattle(DistributedObject):
@@ -42,30 +44,40 @@ class DistributedCogBattle(DistributedObject):
         self.introMessageSeq = None
         self.victorySeq = None
         self.turretManager = None
+        self.isGettingBeans = False
+        self.getBeansLabel = OnscreenText(text = "Hurry and pick up all of the jellybeans!", fg = (1, 1, 1, 1),
+            shadow = (0, 0, 0, 1), pos = (0, 0.7), font = CIGlobals.getMinnieFont())
+        self.getBeansLabel.hide()
+        self.timer = Timer()
+        self.timer.setZeroCommand(self.getBeansTimeUp)
+        # Give toons 30 seconds to get the beans at the end.
+        self.timer.setInitialTime(60)
+        self.endMusic = base.loadMusic('phase_7/audio/bgm/encntr_toon_winning_indoor.mid')
+        self.balloonSound = base.loadSfx('phase_3/audio/bgm/GUI_balloon_popup.mp3')
 
     def setTurretManager(self, tmgr):
         self.turretManager = tmgr
 
     def getTurretManager(self):
         return self.turretManager
-    
+
     def getTurretCount(self):
         avatars = self.cr.doFindAll('DistributedToon')
         turrets = 0
-        
+
         if self.turretManager:
             if self.turretManager.getTurret():
                 turrets += 1
-    
+
         if base.localAvatar.getPUInventory()[0] > 0:
             turrets += 1
-        
+
         for avatar in avatars:
             if avatar.zoneId == base.localAvatar.zoneId:
                 battle = avatar.getMyBattle()
                 if avatar.getPUInventory()[0] > 0:
                     turrets += 1
-                    
+
                 if battle:
                     if battle.getTurretManager():
                         if battle.getTurretManager().getTurret():
@@ -75,10 +87,22 @@ class DistributedCogBattle(DistributedObject):
     def victory(self):
         self.cr.playGame.getPlace().fsm.request('stop')
         base.localAvatar.b_setAnimState('win')
-        self.victorySeq = Sequence(Wait(7.0), Func(self.finishVictory))
+        self.victorySeq = Sequence(Wait(5.0), Func(self.finishVictory))
         self.victorySeq.start()
 
     def finishVictory(self):
+        # Give the players some time to pick up jellybeans before they leave.
+        self.cr.playGame.getPlace().fsm.request('walk')
+        self.cr.playGame.hood.loader.music.stop()
+        base.playMusic(self.endMusic, volume = 0.8, looping = 1)
+        self.timer.load()
+        self.timer.startTiming()
+        self.getBeansLabel.show()
+        base.playSfx(self.balloonSound)
+
+    def getBeansTimeUp(self):
+        self.timer.unload()
+        self.getBeansLabel.hide()
         hoodId = self.cr.playGame.hood.hoodId
         if hoodId == CIGlobals.BattleTTC:
             hoodId = CIGlobals.ToontownCentral
@@ -156,7 +180,6 @@ class DistributedCogBattle(DistributedObject):
         bg.reparentTo(aspect2d)
         self.frame = DirectFrame(geom = bg, relief = None, pos = (0.2, 0, -0.6667))
 
-
     def constructArea(self):
         for data in self.DNCData[self.hoodIndex]:
             dnc = loader.loadModel("phase_3.5/models/props/do_not_cross.egg")
@@ -198,6 +221,14 @@ class DistributedCogBattle(DistributedObject):
         self.startPlacePoll()
 
     def disable(self):
+        self.endMusic.stop()
+        self.endMusic = None
+        self.getBeansLabel.destroy()
+        self.getBeansLabel = None
+        self.timer.unload()
+        self.timer.cleanup()
+        self.timer = None
+        self.balloonSound = None
         self.turretManager = None
         base.localAvatar.setMyBattle(None)
         self.stopPlacePoll()
