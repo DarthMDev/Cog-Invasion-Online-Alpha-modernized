@@ -144,4 +144,5 @@ class SuitTournament:
 
     def handleDeadSuit(self):
         if self.suitMgr.numSuits == 0:
+            self.suitMgr.suitsSpawnedThisInvasion = 0
             self.endRound()
