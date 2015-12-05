@@ -114,7 +114,7 @@ class ChargeUpSpot(LocationSeeker):
         self.isCharging = True
 
     def onFullCharge(self):
-        if self.isLocal():
+        if self.avatar == base.localAvatar:
             self.startTimeout()
         if self.shadowTrack:
             self.shadowTrack.finish()
@@ -125,7 +125,7 @@ class ChargeUpSpot(LocationSeeker):
             messenger.send(self.chargedCancelName)
 
     def stopCharging(self):
-        if self.isLocal():
+        if self.avatar == base.localAvatar:
             self.startTimeout()
         self.isCharging = False
         if self.shadowTrack:
