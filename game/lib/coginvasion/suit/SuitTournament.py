@@ -143,6 +143,6 @@ class SuitTournament:
         return self.round
 
     def handleDeadSuit(self):
-        if self.suitMgr.numSuits == 0:
+        if self.suitMgr.numSuits == 0 and self.suitMgr.isFullInvasion(self.suitMgr.currInvasionSize):
             self.suitMgr.suitsSpawnedThisInvasion = 0
             self.endRound()

@@ -36,6 +36,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         self.spawnerStatus = 0
         self.battle = None
         self.drops = []
+        self.currInvasionSize = None
         return
 
     def addDrop(self, drop):
@@ -119,13 +120,14 @@ class DistributedSuitManagerAI(DistributedObjectAI):
                         avatar.questManager.tournamentDefeated(CogBattleGlobals.HoodIndex2HoodName[self.battle.getHoodIndex()])
             return
         if self.numSuits == 0:
-            if self.getActiveInvasion():
+            if self.getActiveInvasion() and self.isFullInvasion(self.currInvasionSize):
                 for avId in self.battle.avIds:
                     avatar = self.air.doId2do.get(avId)
                     if avatar:
                         avatar.questManager.invasionDefeated(CogBattleGlobals.HoodIndex2HoodName[self.battle.getHoodIndex()])
                 self.setActiveInvasion(0)
                 self.suitsSpawnedThisInvasion = 0
+                self.currInvasionSize = None
             #if self.totalSuitsThisShift >= self.maxSuitsThisShift:
             #	self.sendSysMessage(random.choice(CIGlobals.SuitBreakMsgArray))
             #	if self.getSpawner():
@@ -275,6 +277,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
     def startInvasion(self, suit, difficulty, size, skeleton, backup = 0):
         if not self.getActiveInvasion() and not self.tournament.inTournament:
             self.sendSysMessage(CIGlobals.SuitInvasionMsg)
+        self.currInvasionSize = size
         self.setActiveInvasion(1)
         if self.isFullInvasion(size) or self.isCogCountFull():
             return
@@ -356,6 +359,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         self.maxSuitsThisShift = None
         self.spawnerStatus = None
         self.battle = None
+        self.currInvasionSize = None
 
     def delete(self):
         del self.suits
