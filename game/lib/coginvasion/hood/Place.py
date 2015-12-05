@@ -349,8 +349,10 @@ class Place(StateData):
         base.localAvatar.setBusy(1)
         base.localAvatar.disablePicking()
         base.localAvatar.hideFriendButton()
-        base.localAvatar.friendsList.fsm.requestFinalState()
-        base.localAvatar.panel.fsm.requestFinalState()
+        if base.localAvatar.friendsList:
+            base.localAvatar.friendsList.fsm.requestFinalState()
+        if base.localAvatar.panel:
+            base.localAvatar.panel.fsm.requestFinalState()
         if self.useFirstPerson:
             if base.localAvatar.getMyBattle():
                 self.firstPerson.enableMouse()

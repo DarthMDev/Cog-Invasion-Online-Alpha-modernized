@@ -10,7 +10,6 @@ from lib.coginvasion.gags.GagType import GagType
 from direct.interval.IntervalGlobal import ActorInterval
 from panda3d.core import Point3
 import random
-from lib.coginvasion.gags.GagState import GagState
 
 class ToonUpGag(Gag):
 
@@ -31,12 +30,6 @@ class ToonUpGag(Gag):
             self.startTimeout()
         if self.isLocal():
             base.localAvatar.sendUpdate('usedGag', [self.id])
-            
-    def reset(self):
-        Gag.reset(self)
-        self.state = GagState.LOADED
-        if self.avatar.getActiveGag() == self:
-            self.avatar.setActiveGag(None)
 
     def equip(self):
         self.setupHandJoints()

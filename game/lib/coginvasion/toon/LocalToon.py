@@ -97,7 +97,7 @@ class LocalToon(DistributedToon):
         self.hasDoneJump = False
         self.lastState = None
         self.lastAction = None
-        
+
         self.__snowballButton = None
         #base.cTrav.showCollisions(render)
 
@@ -188,17 +188,17 @@ class LocalToon(DistributedToon):
 
     def disablePicking(self):
         self.ignore('toonClicked')
-    
+
     def loadImageAsPlane(self, filepath, yresolution = 600):
         from panda3d.core import Texture, CardMaker, NodePath, TransparencyAttrib, Vec4
         """
         Load image as 3d plane
-        
+
         Arguments:
         filepath -- image file path
         yresolution -- pixel-perfect width resolution
         """
-        
+
         tex = loader.loadTexture(filepath)
         tex.setBorderColor(Vec4(0,0,0,0))
         tex.setWrapU(Texture.WMBorderColor)
@@ -211,7 +211,7 @@ class LocalToon(DistributedToon):
         card.flattenLight() # apply scale
         card.setTransparency(TransparencyAttrib.MBinary)
         return card
-    
+
     def updateSnowballButton(self):
         from panda3d.core import TextNode, Vec4
         if not self.__snowballButton:
@@ -219,17 +219,17 @@ class LocalToon(DistributedToon):
             upButton = gui.find('**/InventoryButtonUp')
             dnButton = gui.find('**/InventoryButtonDown')
             rlvrButton = gui.find('**/InventoryButtonRollover')
-            self.__snowballButton = DirectButton(image = (upButton, dnButton, rlvrButton), 
-                geom = self.loadImageAsPlane('winter/maps/snowball_icon.png'), 
-                text='50', 
-                text_scale=0.04, 
-                text_align=TextNode.ARight, 
-                geom_scale=0.85, 
-                geom_pos=(0, 0, 0), 
-                text_fg=Vec4(1, 1, 1, 1), 
-                text_pos=(0.07, -0.04), 
+            self.__snowballButton = DirectButton(image = (upButton, dnButton, rlvrButton),
+                geom = self.loadImageAsPlane('winter/maps/snowball_icon.png'),
+                text='50',
+                text_scale=0.04,
+                text_align=TextNode.ARight,
+                geom_scale=0.85,
+                geom_pos=(0, 0, 0),
+                text_fg=Vec4(1, 1, 1, 1),
+                text_pos=(0.07, -0.04),
                 relief=None,
-                image_color=(0, 0.6, 1, 1), 
+                image_color=(0, 0.6, 1, 1),
             pos=(0, 0.1, 0.7))
 
     def toonClicked(self, avId):
@@ -852,6 +852,8 @@ class LocalToon(DistributedToon):
         base.camLens.setMinFov(CIGlobals.OriginalCameraFov / (4./3.))
         self.friendsList.destroy()
         self.friendsList = None
+        self.panel.cleanup()
+        self.panel = None
         self.positionExaminer.delete()
         self.positionExaminer = None
         self.disablePicking()
@@ -880,13 +882,13 @@ class LocalToon(DistributedToon):
         self.accept("gotLookSpot", self.handleLookSpot)
         self.accept("clickedWhisper", self.handleClickedSentWhisper)
         self.accept('f2', self.toggleAspect2d)
-        
+
         # Unused developer methods.
         #self.accept('enter', self.printAvPos)
         #self.accept('p', self.enterPictureMode)
         #self.accept('c', self.teleportToCT)
         #posBtn = DirectButton(text = "Get Pos", scale = 0.08, pos = (0.3, 0, 0), parent = base.a2dLeftCenter, command = self.printAvPos)
-        
+
     def enterHiddenToonMode(self):
         self.laffMeter.stop()
         self.laffMeter.disable()
