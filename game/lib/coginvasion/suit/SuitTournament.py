@@ -54,7 +54,7 @@ class SuitTournament:
             self.cleanup()
             return task.done
         self.suitMgr.sendSysMessage("This is it, the Tournament has started! Good luck!")
-        self.startRound(None, 4)
+        self.startRound(None, 1)
 
     def startRound(self, task, round):
         self.setRound(round)
