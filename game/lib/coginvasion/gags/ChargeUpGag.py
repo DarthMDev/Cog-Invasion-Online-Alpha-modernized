@@ -38,7 +38,7 @@ class ChargeUpGag:
         track = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = 0, endFrame = self.chooseLocFrame,
                                        playRate = self.playRate))
         if self.avatar == base.localAvatar:
-            self.chargeUpSpot = ChargeUpSpot(self.avatar, self.selectionRadius,
+            self.chargeUpSpot = ChargeUpSpot(self, self.avatar, self.selectionRadius,
                                               self.minDistance, self.maxDistance, self.shadowScale, self.maxCogs)
             self.avatar.acceptOnce(self.chargeUpSpot.getChargedUpName(), base.localAvatar.releaseGag)
             self.avatar.acceptOnce(self.chargeUpSpot.getChargedCanceledName(), self.handleStopCharging)

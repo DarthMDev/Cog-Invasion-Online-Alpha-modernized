@@ -14,8 +14,9 @@ from panda3d.core import VBase4
 
 class ChargeUpSpot(LocationSeeker):
 
-    def __init__(self, avatar, selectionRadius, minDistance, maxDistance, shadowScale, maxCogs = 4):
+    def __init__(self, gag, avatar, selectionRadius, minDistance, maxDistance, shadowScale, maxCogs = 4):
         LocationSeeker.__init__(self, avatar, minDistance, maxDistance, shadowScale)
+        self.gag = gag
         self.pollMouseTaskName = 'Poll Mouse Hold Downs'
         self.chargedUpName = 'Charged Up'
         self.chargedCancelName = 'Charge Canceled'
@@ -114,8 +115,8 @@ class ChargeUpSpot(LocationSeeker):
         self.isCharging = True
 
     def onFullCharge(self):
-        if self.avatar == base.localAvatar:
-            self.startTimeout()
+        if self.gag.isLocal():
+            self.gag.startTimeout()
         if self.shadowTrack:
             self.shadowTrack.finish()
             self.shadowTrack = None
@@ -125,8 +126,8 @@ class ChargeUpSpot(LocationSeeker):
             messenger.send(self.chargedCancelName)
 
     def stopCharging(self):
-        if self.avatar == base.localAvatar:
-            self.startTimeout()
+        if self.gag.isLocal():
+            self.gag.startTimeout()
         self.isCharging = False
         if self.shadowTrack:
             self.shadowTrack.pause()
@@ -164,6 +165,7 @@ class ChargeUpSpot(LocationSeeker):
             del self.selectionRadius
             del self.selectedCogs
             del self.maxCogs
+            del self.gag
 
     def __pollMouseHeldDown(self, task):
         if not hasattr(self, 'mouseDownName'):
