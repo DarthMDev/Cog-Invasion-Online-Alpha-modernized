@@ -12,7 +12,7 @@ from panda3d.core import Point3
 from lib.coginvasion.globals import CIGlobals
 
 class LocationGag:
-    
+
     def __init__(self, minDistance, maxDistance, shadowScale = 1):
         self.buttonSoundPath = 'phase_5/audio/sfx/AA_drop_trigger_box.mp3'
         self.button = None
@@ -31,20 +31,20 @@ class LocationGag:
         self.isCircle = False
         self.shadowScale = 1
         self.helpInfo = None
-        
+
     def setShadowData(self, isCircle, shadowScale):
         self.isCircle = isCircle
         self.shadowScale = shadowScale
-        
+
     def getShadowScale(self):
         return self.shadowScale
-        
+
     def start(self, avatar):
         self.avatar = avatar
         self.cleanupLocationSeeker()
         self.buildButton()
-        self.button.reparentTo(self.avatar.find('**/def_joint_left_hold'))
-        track = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = 0, endFrame = self.chooseLocFrame, 
+        self.button.reparentTo(self.avatar.find('**/joint_Lhold'))
+        track = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = 0, endFrame = self.chooseLocFrame,
                                        playRate = self.playRate))
         if self.avatar == base.localAvatar:
             self.locationSeeker = LocationSeeker(self.avatar, self.minDistance, self.maxDistance)
@@ -52,33 +52,33 @@ class LocationGag:
             self.avatar.acceptOnce(self.locationSeeker.getLocationSelectedName(), base.localAvatar.releaseGag)
             track.append(Func(self.locationSeeker.startSeeking))
             
-            self.helpInfo = OnscreenText(text = 'Move the shadow with your mouse\nClick to release', 
-                pos = (0, -0.75), font = CIGlobals.getToonFont(), fg = (1, 1, 1, 1), 
+            self.helpInfo = OnscreenText(text = 'Move the shadow with your mouse\nClick to release',
+                pos = (0, -0.75), font = CIGlobals.getToonFont(), fg = (1, 1, 1, 1),
                 shadow = (0.25, 0.25, 0.25, 1))
-            
+
         track.start()
-        
+
     def release(self):
         if self.avatar:
             self.cleanupLocationSeeker()
             self.buildTracks()
-        
+
     def complete(self):
         if self.button:
             numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
             ActorInterval(self.avatar, self.buttonAnim, startFrame = self.completeFrame, endFrame = numFrames,
                           playRate = self.playRate).start()
         self.cleanupButton()
-        
+
     def buildTracks(self, mode=0):
-        if not self.avatar: 
+        if not self.avatar:
             return
         self.cleanupTracks()
         if mode == 0:
             self.actorTrack = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = self.chooseLocFrame,
                                endFrame = self.completeFrame, playRate = self.playRate))
             self.soundTrack = Sequence(Wait(self.buttonHold), SoundInterval(self.buttonSfx, self.avatar))
-            
+
     def cleanupTracks(self):
         if self.actorTrack:
             self.actorTrack.pause()
@@ -89,28 +89,28 @@ class LocationGag:
 
     def getActorTrack(self):
         return self.actorTrack
-    
+
     def getSoundTrack(self):
         return self.soundTrack
-                     
+
     def setDropLoc(self, x, y, z):
         self.dropLoc = Point3(x, y, z)
-        
+
     def buildButton(self):
         self.cleanupButton()
         self.button = loader.loadModel('phase_3.5/models/props/button.bam')
-        
+
     def setLocation(self, value):
         self.dropLoc = value
-        
+
     def getLocation(self):
         return self.dropLoc
-        
+
     def cleanupButton(self):
         if self.button:
             self.button.removeNode()
             self.button = None
-            
+
     def cleanupLocationSeeker(self):
         if self.locationSeeker:
             self.dropLoc = self.locationSeeker.getLocation()
@@ -118,7 +118,7 @@ class LocationGag:
             self.locationSeeker = None
         if self.helpInfo:
             self.helpInfo.destroy()
-            
+
     def cleanup(self):
         LocationSeeker.cleanup(self)
         self.cleanupButton()

@@ -266,14 +266,14 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.detachGun()
         if gunName == "pistol":
             self.gun = loader.loadModel("phase_4/models/props/water-gun.bam")
-            self.gun.reparentTo(self.find('**/def_joint_right_hold'))
+            self.gun.reparentTo(self.find('**/joint_Rhold'))
             self.gun.setPos(Point3(0.28, 0.1, 0.08))
             self.gun.setHpr(VBase3(85.6, -4.44, 94.43))
             self.gunAttached = True
         elif gunName == "shotgun":
             self.gun = loader.loadModel("phase_4/models/props/shotgun.egg")
             self.gun.setScale(0.75)
-            self.gun.reparentTo(self.find('**/def_joint_right_hold'))
+            self.gun.reparentTo(self.find('**/joint_Rhold'))
             self.gun.setPos(Point3(-0.5, -0.2, 0.19))
             self.gun.setHpr(Vec3(350, 272.05, 0))
             color = random.choice(
@@ -501,7 +501,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.pose("toss", 22, partName = "torso")
 
     def parentToonParts(self):
-        self.attach('head', 'torso', 'def_head')
+        self.attach('head', 'torso', 'joint_head')
         self.attach('torso', 'legs', 'joint_hips')
 
     def unparentToonParts(self):
@@ -517,6 +517,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         height = shoulderHeight + CIGlobals.headHeightDict[self.head] * headScale
         bodyScale = CIGlobals.toonBodyScales[animal]
         self.setAvatarScale(bodyScale)
+        self.getPart('head').setScale(headScale)
         self.setHeight(height)
 
     def setGloves(self):
@@ -540,102 +541,102 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
     def generateLegs(self):
         legtype = self.getLegs()
-        self.loadModel("phase_3/models/char/tt_a_chr_" + legtype + "_shorts_legs_" + str(CIGlobals.getModelDetail(self.avatarType)) + ".bam", 'legs')
-        self.loadAnims({"neutral": "phase_3/models/char/tt_a_chr_" + legtype + "_shorts_legs_neutral.bam",
-                            "run": "phase_3/models/char/tt_a_chr_" + legtype + "_shorts_legs_run.bam",
-                            "walk": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_walk.bam",
-                            "pie": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_pie-throw.bam",
-                            "fallb": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_slip-backward.bam",
-                            "fallf": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_slip-forward.bam",
-                            "lose": "phase_5/models/char/tt_a_chr_" + legtype + "_shorts_legs_lose.bam",
-                            "win": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_victory-dance.bam",
-                            "squirt": "phase_5/models/char/tt_a_chr_" + legtype + "_shorts_legs_water-gun.bam",
-                            "zend": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_jump-zend.bam",
-                            "tele": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_teleport.bam",
-                            "book": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_book.bam",
-                            "leap": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_leap_zhang.bam",
-                            "jump": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_jump-zhang.bam",
-                            "happy": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_jump.bam",
-                            "shrug": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_shrug.bam",
-                            "hdance": "phase_5/models/char/tt_a_chr_" + legtype + "_shorts_legs_happy-dance.bam",
-                            "wave": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_wave.bam",
+        self.loadModel("phase_3/models/char/dog" + legtype + "_Shorts-legs-" + str(CIGlobals.getModelDetail(self.avatarType)) + ".bam", 'legs')
+        self.loadAnims({"neutral": "phase_3/models/char/dog" + legtype + "_Shorts-legs-neutral.bam",
+                            "run": "phase_3/models/char/dog" + legtype + "_Shorts-legs-run.bam",
+                            "walk": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-walk.bam",
+                            "pie": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-pie-throw.bam",
+                            "fallb": "phase_4/models/char/dog" + legtype + "_Shorts-legs-slip-backward.bam",
+                            "fallf": "phase_4/models/char/dog" + legtype + "_Shorts-legs-slip-forward.bam",
+                            "lose": "phase_5/models/char/dog" + legtype + "_Shorts-legs-lose.bam",
+                            "win": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-victory-dance.bam",
+                            "squirt": "phase_5/models/char/dog" + legtype + "_Shorts-legs-water-gun.bam",
+                            "zend": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-jump-zend.bam",
+                            "tele": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-teleport.bam",
+                            "book": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-book.bam",
+                            "leap": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-leap_zhang.bam",
+                            "jump": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-jump-zhang.bam",
+                            "happy": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-jump.bam",
+                            "shrug": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-shrug.bam",
+                            "hdance": "phase_5/models/char/dog" + legtype + "_Shorts-legs-happy-dance.bam",
+                            "wave": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-wave.bam",
                             "scemcee": "phase_4/models/char/tt_a_chr_dgm_shorts_legs_scientistEmcee.bam",
                             "scwork": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_scientistWork.bam",
                             "scgame": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_scientistGame.bam",
                             "scjealous": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_scientistJealous.bam",
-                            "swim": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_swim.bam",
-                            "toss": "phase_5/models/char/tt_a_chr_" + legtype + "_shorts_legs_toss.bam",
-                            "cringe": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_cringe.bam",
-                            "conked": "phase_3.5/models/char/tt_a_chr_" + legtype + "_shorts_legs_conked.bam",
-                            "catchneutral": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_gameneutral.bam",
-                            "catchrun": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_gamerun.bam",
-                            "hold-bottle": "phase_5/models/char/tt_a_chr_" + legtype + "_shorts_legs_hold-bottle.bam",
-                            'push-button' : 'phase_3.5/models/char/tt_a_chr_' + legtype + '_shorts_legs_press-button.bam',
-                            'happy-dance' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_happy-dance.bam',
-                            'juggle' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_juggle.bam',
-                            'shout': 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_shout.bam',
-                            'dneutral': 'phase_4/models/char/tt_a_chr_' + legtype + '_shorts_legs_sad-neutral.bam',
-                            'dwalk': 'phase_4/models/char/tt_a_chr_' + legtype + '_shorts_legs_losewalk.bam',
-                            'smooch' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_smooch.bam',
-                            'conked' : 'phase_3.5/models/char/tt_a_chr_' + legtype + '_shorts_legs_conked.bam',
-                            'sound' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_shout.bam',
-                            'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_sprinkle-dust.bam',
-                            'start-sit' : 'phase_4/models/char/tt_a_chr_' + legtype + '_shorts_legs_intoSit.bam',
-                            'sit' : 'phase_4/models/char/char/tt_a_chr_' + legtype + '_shorts_legs_sit.bam',
-                            'water': 'phase_3.5/models/char/tt_a_chr_' + legtype + '_shorts_legs_water.bam',
-                            'spit': 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_spit.bam',
-                            'firehose': 'phase_5/models/char/tt_a_chr_' + legtype + '_shorts_legs_firehose.bam'}, 'legs')
-        self.findAllMatches('**/boots_long').stash()
-        self.findAllMatches('**/boots_short').stash()
-        self.findAllMatches('**/shoes').stash()
+                            "swim": "phase_4/models/char/dog" + legtype + "_Shorts-legs-swim.bam",
+                            "toss": "phase_5/models/char/dog" + legtype + "_Shorts-legs-toss.bam",
+                            "cringe": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-cringe.bam",
+                            "conked": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-conked.bam",
+                            "catchneutral": "phase_4/models/char/dog" + legtype + "_Shorts-legs-gameneutral.bam",
+                            "catchrun": "phase_4/models/char/dog" + legtype + "_Shorts-legs-gamerun.bam",
+                            "hold-bottle": "phase_5/models/char/dog" + legtype + "_Shorts-legs-hold-bottle.bam",
+                            "push-button" : "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-press-button.bam",
+                            "happy-dance" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-happy-dance.bam",
+                            "juggle" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-juggle.bam",
+                            "shout": "phase_5/models/char/dog" + legtype + "_Shorts-legs-shout.bam",
+                            "dneutral": "phase_4/models/char/dog" + legtype + "_Shorts-legs-sad-neutral.bam",
+                            "dwalk": "phase_4/models/char/dog" + legtype + "_Shorts-legs-losewalk.bam",
+                            "smooch" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-smooch.bam",
+                            "conked" : "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-conked.bam",
+                            "sound" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-shout.bam",
+                            "sprinkle-dust" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-sprinkle-dust.bam",
+                            "start-sit" : "phase_4/models/char/dog" + legtype + "_Shorts-legs-intoSit.bam",
+                            "sit" : "phase_4/models/char/char/dog" + legtype + "_Shorts-legs-sit.bam",
+                            "water": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-water.bam",
+                            "spit": "phase_5/models/char/dog" + legtype + "_Shorts-legs-spit.bam",
+                            "firehose": "phase_5/models/char/dog" + legtype + "_Shorts-legs-firehose.bam"}, 'legs')
+        #self.findAllMatches('**/boots_long').stash()
+        #self.findAllMatches('**/boots_short').stash()
+        #self.findAllMatches('**/shoes').stash()
 
     def generateTorso(self):
         torsotype = self.getTorso()
-        self.loadModel("phase_3/models/char/tt_a_chr_" + torsotype + "_torso_" + str(CIGlobals.getModelDetail(self.avatarType)) + ".bam", 'torso')
-        self.loadAnims({"neutral": "phase_3/models/char/tt_a_chr_" + torsotype + "_torso_neutral.bam",
-                            "run": "phase_3/models/char/tt_a_chr_" + torsotype + "_torso_run.bam",
-                            "walk": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_walk.bam",
-                            "pie": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_pie-throw.bam",
-                            "fallb": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_slip-backward.bam",
-                            "fallf": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_slip-forward.bam",
-                            "lose": "phase_5/models/char/tt_a_chr_" + torsotype + "_torso_lose.bam",
-                            "win": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_victory-dance.bam",
-                            "squirt": "phase_5/models/char/tt_a_chr_" + torsotype + "_torso_water-gun.bam",
-                            "zend": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_jump-zend.bam",
-                            "tele": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_teleport.bam",
-                            "book": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_book.bam",
-                            "leap": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_leap_zhang.bam",
-                            "jump": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_jump-zhang.bam",
-                            "happy": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_jump.bam",
-                            "shrug": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_shrug.bam",
-                            "hdance": "phase_5/models/char/tt_a_chr_" + torsotype + "_torso_happy-dance.bam",
-                            "wave": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_wave.bam",
+        self.loadModel("phase_3/models/char/dog" + torsotype + "-torso-" + str(CIGlobals.getModelDetail(self.avatarType)) + ".bam", 'torso')
+        self.loadAnims({"neutral": "phase_3/models/char/dog" + torsotype + "-torso-neutral.bam",
+                            "run": "phase_3/models/char/dog" + torsotype + "-torso-run.bam",
+                            "walk": "phase_3.5/models/char/dog" + torsotype + "-torso-walk.bam",
+                            "pie": "phase_3.5/models/char/dog" + torsotype + "-torso-pie-throw.bam",
+                            "fallb": "phase_4/models/char/dog" + torsotype + "-torso-slip-backward.bam",
+                            "fallf": "phase_4/models/char/dog" + torsotype + "-torso-slip-forward.bam",
+                            "lose": "phase_5/models/char/dog" + torsotype + "-torso-lose.bam",
+                            "win": "phase_3.5/models/char/dog" + torsotype + "-torso-victory-dance.bam",
+                            "squirt": "phase_5/models/char/dog" + torsotype + "-torso-water-gun.bam",
+                            "zend": "phase_3.5/models/char/dog" + torsotype + "-torso-jump-zend.bam",
+                            "tele": "phase_3.5/models/char/dog" + torsotype + "-torso-teleport.bam",
+                            "book": "phase_3.5/models/char/dog" + torsotype + "-torso-book.bam",
+                            "leap": "phase_3.5/models/char/dog" + torsotype + "-torso-leap_zhang.bam",
+                            "jump": "phase_3.5/models/char/dog" + torsotype + "-torso-jump-zhang.bam",
+                            "happy": "phase_3.5/models/char/dog" + torsotype + "-torso-jump.bam",
+                            "shrug": "phase_3.5/models/char/dog" + torsotype + "-torso-shrug.bam",
+                            "hdance": "phase_5/models/char/dog" + torsotype + "-torso-happy-dance.bam",
+                            "wave": "phase_3.5/models/char/dog" + torsotype + "-torso-wave.bam",
                             "scemcee": "phase_4/models/char/tt_a_chr_dgm_shorts_torso_scientistEmcee.bam",
                             "scwork": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_scientistWork.bam",
                             "scgame": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_scientistGame.bam",
                             "scjealous": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_scientistJealous.bam",
-                            "swim": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_swim.bam",
-                            "toss": "phase_5/models/char/tt_a_chr_" + torsotype + "_torso_toss.bam",
-                            "cringe": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_cringe.bam",
-                            "conked": "phase_3.5/models/char/tt_a_chr_" + torsotype + "_torso_conked.bam",
-                            "catchneutral": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_gameneutral.bam",
-                            "catchrun": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_gamerun.bam",
-                            "hold-bottle" : "phase_5/models/char/tt_a_chr_" + torsotype + "_torso_hold-bottle.bam",
-                            'push-button' : 'phase_3.5/models/char/tt_a_chr_' + torsotype + '_torso_press-button.bam',
-                            'happy-dance' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_happy-dance.bam',
-                            'juggle' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_juggle.bam',
-                            'shout': 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_shout.bam',
-                            'dneutral': 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_sad-neutral.bam',
-                            'dwalk': 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_losewalk.bam',
-                            'smooch' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_smooch.bam',
-                            'conked' : 'phase_3.5/models/char/tt_a_chr_' + torsotype + '_torso_conked.bam',
-                            'sound' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_shout.bam',
-                            'sprinkle-dust' : 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_sprinkle-dust.bam',
-                            'start-sit' : 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_intoSit.bam',
-                            'sit' : 'phase_4/models/char/tt_a_chr_' + torsotype + '_torso_sit.bam',
-                            'water': 'phase_3.5/models/char/tt_a_chr_' + torsotype + '_torso_water.bam',
-                            'spit': 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_spit.bam',
-                            'firehose': 'phase_5/models/char/tt_a_chr_' + torsotype + '_torso_firehose.bam'}, 'torso')
+                            "swim": "phase_4/models/char/dog" + torsotype + "-torso-swim.bam",
+                            "toss": "phase_5/models/char/dog" + torsotype + "-torso-toss.bam",
+                            "cringe": "phase_3.5/models/char/dog" + torsotype + "-torso-cringe.bam",
+                            "conked": "phase_3.5/models/char/dog" + torsotype + "-torso-conked.bam",
+                            "catchneutral": "phase_4/models/char/dog" + torsotype + "-torso-gameneutral.bam",
+                            "catchrun": "phase_4/models/char/dog" + torsotype + "-torso-gamerun.bam",
+                            "hold-bottle" : "phase_5/models/char/dog" + torsotype + "-torso-hold-bottle.bam",
+                            "push-button" : "phase_3.5/models/char/dog" + torsotype + "-torso-press-button.bam",
+                            "happy-dance" : "phase_5/models/char/dog" + torsotype + "-torso-happy-dance.bam",
+                            "juggle" : "phase_5/models/char/dog" + torsotype + "-torso-juggle.bam",
+                            "shout": "phase_5/models/char/dog" + torsotype + "-torso-shout.bam",
+                            "dneutral": "phase_4/models/char/dog" + torsotype + "-torso-sad-neutral.bam",
+                            "dwalk": "phase_4/models/char/dog" + torsotype + "-torso-losewalk.bam",
+                            "smooch" : "phase_5/models/char/dog" + torsotype + "-torso-smooch.bam",
+                            "conked" : "phase_3.5/models/char/dog" + torsotype + "-torso-conked.bam",
+                            "sound" : "phase_5/models/char/dog" + torsotype + "-torso-shout.bam",
+                            "sprinkle-dust" : "phase_5/models/char/dog" + torsotype + "-torso-sprinkle-dust.bam",
+                            "start-sit" : "phase_4/models/char/dog" + torsotype + "-torso-intoSit.bam",
+                            "sit" : "phase_4/models/char/dog" + torsotype + "-torso-sit.bam",
+                            "water": "phase_3.5/models/char/dog" + torsotype + "-torso-water.bam",
+                            "spit": "phase_5/models/char/dog" + torsotype + "-torso-spit.bam",
+                            "firehose": "phase_5/models/char/dog" + torsotype + "-torso-firehose.bam"}, 'torso')
 
     def generateHead(self, pat=0):
         gender = self.getGender()
@@ -815,7 +816,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.playingAnim = 'book'
         self.book1 = Actor("phase_3.5/models/props/book-mod.bam",
                     {"chan": "phase_3.5/models/props/book-chan.bam"})
-        self.book1.reparentTo(self.getPart('torso').find('**/def_joint_right_hold'))
+        self.book1.reparentTo(self.getPart('torso').find('**/joint_Rhold'))
         self.track = ActorInterval(self, "book", startFrame=CIGlobals.OpenBookFromFrame, endFrame=CIGlobals.OpenBookToFrame,
                 name = self.uniqueName('enterOpenBook'))
         self.track.setDoneEvent(self.track.getName())
@@ -837,7 +838,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.playingAnim = 'book'
         self.book2 = Actor("phase_3.5/models/props/book-mod.bam",
                     {"chan": "phase_3.5/models/props/book-chan.bam"})
-        self.book2.reparentTo(self.getPart('torso').find('**/def_joint_right_hold'))
+        self.book2.reparentTo(self.getPart('torso').find('**/joint_Rhold'))
 
         self.pingpong("book", fromFrame=CIGlobals.ReadBookFromFrame, toFrame=CIGlobals.ReadBookToFrame)
         self.book2.pingpong("chan", fromFrame=CIGlobals.ReadBookFromFrame, toFrame=CIGlobals.ReadBookToFrame)
@@ -852,7 +853,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.playingAnim = 'book'
         self.book3 = Actor("phase_3.5/models/props/book-mod.bam",
                     {"chan": "phase_3.5/models/props/book-chan.bam"})
-        self.book3.reparentTo(self.getPart('torso').find('**/def_joint_right_hold'))
+        self.book3.reparentTo(self.getPart('torso').find('**/joint_Rhold'))
         self.track = ActorInterval(self, "book", startFrame=CIGlobals.CloseBookFromFrame, endFrame=CIGlobals.CloseBookToFrame,
                 name = self.uniqueName('enterCloseBook'))
         self.track.setDoneEvent(self.track.getName())
@@ -876,7 +877,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.portal1 = Actor("phase_3.5/models/props/portal-mod.bam",
                             {"chan": "phase_3.5/models/props/portal-chan.bam"})
         self.portal1.play("chan")
-        self.portal1.reparentTo(self.getPart('legs').find('**/def_joint_right_hold'))
+        self.portal1.reparentTo(self.getPart('legs').find('**/joint_Rhold'))
         self.play("tele")
         if hasattr(self, 'uniqueName'):
             name = self.uniqueName('enterTeleportOut')
