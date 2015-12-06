@@ -59,7 +59,7 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
             #ip == tokenObj.getIP()):
 
                 # We got a match!
-                #self.deleteToken(tokenObj)
+                self.deleteToken(tokenObj)
                 return 1
         return 0
 

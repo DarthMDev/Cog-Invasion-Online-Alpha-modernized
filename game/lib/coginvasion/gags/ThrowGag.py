@@ -68,12 +68,19 @@ class ThrowGag(Gag):
             self.handJoint = self.avatar.find('**/joint_Rhold')
 
         track = ProjectileInterval(entity, startPos = self.handJoint.getPos(render), endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
+        event = self.avatar.uniqueName('throwIvalDone') + '-' + str(hash(entity))
+        track.setDoneEvent(event)
+        base.acceptOnce(event, self.__handlePieIvalDone, [entity])
         track.start()
         self.entities.append([entity, track])
         if self.isLocal():
             self.buildCollisions(entity)
             base.localAvatar.sendUpdate('usedGag', [self.id])
         self.reset()
+
+    def __handlePieIvalDone(self, pie):
+        if not pie.isEmpty():
+            pie.removeNode()
 
     def handleSplat(self):
         base.audio3d.detachSound(self.woosh)
@@ -89,12 +96,28 @@ class ThrowGag(Gag):
         return
 
     def cleanupEntity(self, pos):
+        closestPie = None
+        trackOfClosestPie = None
+        pieHash2range = {}
         for entity, track in self.entities:
-            if entity.getPos() == pos:
-                self.entities.remove([entity, track])
-                if isinstance(entity, Actor):
-                    entity.cleanup()
-                entity.removeNode()
+            pieHash2range[hash(entity)] = (entity.getPos(render) - pos).length()
+        ranges = []
+        for distance in pieHash2range.values():
+            ranges.append(distance)
+        ranges.sort()
+        for pieHash in pieHash2range.keys():
+            distance = pieHash2range[pieHash]
+            if distance == ranges[0]:
+                for entity, track in self.entities:
+                    if hash(entity) == pieHash:
+                        closestPie = entity
+                        trackOfClosestPie = track
+                        break
+            break
+        self.entities.remove([closestPie, trackOfClosestPie])
+        if isinstance(entity, Actor):
+            entity.cleanup()
+        entity.removeNode()
 
     def onCollision(self, entry):
         intoNP = entry.getIntoNodePath()
