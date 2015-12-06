@@ -13,8 +13,8 @@ class DistributedGunGameFlag(DistributedNode):
     notify = directNotify.newCategory('DistributedGunGameFlag')
     colors = {GGG.Teams.RED: (1, 0, 0, 1.0),  GGG.Teams.BLUE: (0, 0, 1, 1.0)}
     pole_color = (0.1, 0.1, 0.1, 1.0)
-    torsoType2flagY = {"dgs_shorts": -1.5, "dgs_skirt": -1.5, "dgm_shorts": -1.1,
-                       "dgm_skirt": -1.1, "dgl_shorts": -1.1, "dgl_skirt": -1.1}
+    torsoType2flagY = {"SS_Shorts": -1.5, "SS_Skirt": -1.5, "MM_Shorts": -1.1,
+                       "MM_Skirt": -1.1, "LL_Shorts": -1.1, "LL_Skirt": -1.1}
 
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)
