@@ -24,6 +24,7 @@ from lib.coginvasion.distributed.CogInvasionMsgTypes import *
 from AIZoneData import AIZoneDataStore
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.distributed.CogInvasionDoGlobals import DO_ID_DISTRICT_NAME_MANAGER
+import time
 
 #PStatClient.connect()
 
@@ -79,15 +80,23 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
         self.notify.info("Generating time manager...")
         self.timeManager = TimeManagerAI(self)
         self.timeManager.generateWithRequired(2)
-
+	time.sleep(0.5)
         TTHoodAI(self)
+	time.sleep(0.5)
         MGHoodAI(self)
+	time.sleep(0.5)
         BRHoodAI(self)
+	time.sleep(0.5)
         DLHoodAI(self)
+	time.sleep(0.5)
         MLHoodAI(self)
+	time.sleep(0.5)
         DGHoodAI(self)
+	time.sleep(0.5)
         DDHoodAI(self)
+	time.sleep(0.5)
         CTHoodAI(self)
+	time.sleep(0.5)
 
         self.notify.info("Setting shard available.")
         self.district.b_setAvailable(1)
