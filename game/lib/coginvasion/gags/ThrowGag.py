@@ -114,10 +114,12 @@ class ThrowGag(Gag):
                         trackOfClosestPie = track
                         break
             break
-        self.entities.remove([closestPie, trackOfClosestPie])
-        if isinstance(entity, Actor):
-            entity.cleanup()
-        entity.removeNode()
+        if [closestPie, trackOfClosestPie] in self.entities:
+            self.entities.remove([closestPie, trackOfClosestPie])
+        if not closestPie.isEmpty():
+            if isinstance(closestPie, Actor):
+                closestPie.cleanup()
+            closestPie.removeNode()
 
     def onCollision(self, entry):
         intoNP = entry.getIntoNodePath()
