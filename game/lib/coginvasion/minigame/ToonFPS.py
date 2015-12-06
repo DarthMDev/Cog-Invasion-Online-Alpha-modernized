@@ -255,7 +255,8 @@ class ToonFPS(DirectObject):
         taskMgr.add(self.movementTask, "toonBattleMovement")
 
     def end(self):
-        self.aliveFSM.request('off')
+        if self.aliveFSM.getCurrentState().getName() != 'off':
+            self.aliveFSM.request('off')
         if self.firstPerson:
             self.firstPerson.enableMouse()
             self.firstPerson.end()
@@ -302,8 +303,11 @@ class ToonFPS(DirectObject):
         self.reload = None
         self.empty = None
         self.ammo = None
-        self.aliveFSM.requestFinalState()
-        self.fsm.requestFinalState()
+        try:
+            self.aliveFSM.requestFinalState()
+            self.fsm.requestFinalState()
+        except:
+            self.notify.warning('Redundant call to enter the final state.')
         self.fsm = None
         self.aliveFSM = None
         self.player_node = None

@@ -34,11 +34,11 @@ class ChargeUpGag:
     def start(self, avatar):
         self.avatar = avatar
         self.buildButton()
-        self.button.reparentTo(self.avatar.find('**/def_joint_left_hold'))
+        self.button.reparentTo(self.avatar.find('**/joint_Lhold'))
         track = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = 0, endFrame = self.chooseLocFrame,
                                        playRate = self.playRate))
         if self.avatar == base.localAvatar:
-            self.chargeUpSpot = ChargeUpSpot(self.avatar, self.selectionRadius,
+            self.chargeUpSpot = ChargeUpSpot(self, self.avatar, self.selectionRadius,
                                               self.minDistance, self.maxDistance, self.shadowScale, self.maxCogs)
             self.avatar.acceptOnce(self.chargeUpSpot.getChargedUpName(), base.localAvatar.releaseGag)
             self.avatar.acceptOnce(self.chargeUpSpot.getChargedCanceledName(), self.handleStopCharging)

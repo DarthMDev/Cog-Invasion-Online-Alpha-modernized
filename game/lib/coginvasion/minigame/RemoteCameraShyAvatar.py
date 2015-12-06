@@ -33,7 +33,7 @@ class RemoteCameraShyAvatar(RemoteAvatar):
 		self.camera.setH(90)
 		self.camera.find('**/o2').setSx(5.0)
 		self.camera.setY(-1)
-		self.camera.reparentTo(self.avatar.find('**/def_joint_right_hold'))
+		self.camera.reparentTo(self.avatar.find('**/joint_Rhold'))
 		self.cameraFlash = loader.loadModel("phase_4/models/minigames/shine.egg")
 		self.cameraFlash.reparentTo(self.camera)
 		self.cameraFlash.setTwoSided(1)

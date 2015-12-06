@@ -65,7 +65,7 @@ class ThrowGag(Gag):
         self.gag = None
 
         if not self.handJoint:
-            self.handJoint = self.avatar.find('**/def_joint_right_hold')
+            self.handJoint = self.avatar.find('**/joint_Rhold')
 
         track = ProjectileInterval(entity, startPos = self.handJoint.getPos(render), endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
         track.start()

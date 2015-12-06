@@ -73,7 +73,7 @@ class DistributedGunGameFlag(DistributedNode):
                     self.acceptPointCollisions()
             self.flagCollNP.stash()
             self.ignore('enter' + self.uniqueName('flag_colnode'))
-            self.flagMdl.reparentTo(av.avatar.find('**/def_joint_attachFlower'))
+            self.flagMdl.reparentTo(av.avatar.find('**/joint_attachFlower'))
             self.flagMdl.setPos(0.2, self.torsoType2flagY[av.avatar.getTorso()], -1)
             self.flagMdl.setHpr(0, 0, 0)
 

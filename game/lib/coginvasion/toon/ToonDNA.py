@@ -58,10 +58,10 @@ class ToonDNA:
                     '01': '3',
                     '02': '4',
                     '03': '2',
-                    '04': 'dgm_skirt',
-                    '05': 'dgm_shorts',
-                    '06': 'dgl_shorts',
-                    '07': 'dgs_shorts'}
+                    '04': 'MM_Skirt',
+                    '05': 'MM_Shorts',
+                    '06': 'LL_Shorts',
+                    '07': 'SS_Shorts'}
     colorName2DNAcolor = {'white' : colors[0],
                           'peach' : colors[1],
                           'bright red' : colors[2],
@@ -117,15 +117,15 @@ class ToonDNA:
                     '24': colors[24],
                     '25': colors[25],
                     '26': colors[26]}
-    torsoDNA2torso = {'00': 'dgs_shorts',
-                    '01': 'dgm_shorts',
-                    '02': 'dgl_shorts',
-                    '03': 'dgs_skirt',
-                    '04': 'dgm_skirt',
-                    '05': 'dgl_skirt'}
-    legDNA2leg = {'00': 'dgs',
-                '01': 'dgm',
-                '02': 'dgl'}
+    torsoDNA2torso = {'00': 'SS_Shorts',
+                    '01': 'MM_Shorts',
+                    '02': 'LL_Shorts',
+                    '03': 'SS_Skirt',
+                    '04': 'MM_Skirt',
+                    '05': 'LL_Skirt'}
+    legDNA2leg = {'00': 'SS',
+                '01': 'MM',
+                '02': 'LL'}
     shirtDNA2shirt = {'00': 'phase_3/maps/desat_shirt_1.jpg',
                     '01': 'phase_3/maps/desat_shirt_2.jpg',
                     '02': 'phase_3/maps/desat_shirt_3.jpg',

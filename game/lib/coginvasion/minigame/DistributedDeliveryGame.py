@@ -95,7 +95,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         if av:
             av.setForcedTorsoAnim('catchneutral')
             barrel = loader.loadModel('phase_4/models/cogHQ/gagTank.bam')
-            barrel.reparentTo(av.find('**/def_joint_right_hold'))
+            barrel.reparentTo(av.find('**/joint_Rhold'))
             barrel.setP(90)
             barrel.setZ(0.25)
             barrel.setScale(0.2)
