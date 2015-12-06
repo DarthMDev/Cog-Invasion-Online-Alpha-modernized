@@ -25,7 +25,8 @@ SERVER_VERSION = "1.0.16"
 
 messages = {'tmaotc': 'At this time, only %d account(s) can be created on each computer.',
     'tmait': 'At this time, Cog Invasion Online only allows a total of %d game account(s) to be created. This amount has already been reached. We apologize for the inconvenience.',
-    'cwog': "NOTICE (as of 10/11/15): If you previously had Cog Invasion Online installed on your computer, you MUST COMPLETELY uninstall the old version, and install the new one at http://download.coginvasion.com/installers/setup.exe\n(if you haven't done so already)"}
+    'cwog': "NOTICE (as of 10/11/15): If you previously had Cog Invasion Online installed on your computer, you MUST COMPLETELY uninstall the old version, and install the new one at http://download.coginvasion.com/installers/setup.exe\n(if you haven't done so already)",
+    'ciac': 'Thank you for being apart of the Cog Invasion Online alpha. The server will be taken offline on Sunday, December 6, 2015, at 11:59 PM, Eastern Standard Time. Check the website for more information.'}
 
 baseLink = "http://download.coginvasion.com/"
 
