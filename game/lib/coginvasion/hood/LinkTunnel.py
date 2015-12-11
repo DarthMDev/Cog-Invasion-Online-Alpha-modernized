@@ -79,8 +79,8 @@ class SafeZoneLinkTunnel(LinkTunnel):
         self.toonOutPos = (-15, -5, 0)
         self.toonOutHpr = (180, 0, 0)
 
-        self.camPos = (60, 130.31, 25.34)
-        self.camHpr = (180, 342.9, 0)
+        self.camPos = (60, 115.0, 17.5)
+        self.camHpr = (180, 345.0, 0)
 
         toZoneFirstTwo = None
         # Look in the DNARoot string of this tunnel for the zoneId that it leads to.
@@ -114,7 +114,7 @@ class StreetLinkTunnel(LinkTunnel):
         self.inPivotStartX = 35
         self.inPivotEndX = 45
 
-        self.camPos = (19.7, -34.9, 19.08)
+        self.camPos = (19.7, -20.0, 10.0)
         self.camHpr = (0, 345.96, 0)
 
         for segment in dnaRootStr.split('_'):
@@ -146,7 +146,7 @@ class NeighborhoodLinkTunnel(LinkTunnel):
         self.inPivotStartX = 15
         self.inPivotEndX = 25
 
-        self.camPos = (0, -34.18, 15.32)
+        self.camPos = (0, -21.0, 8.0)
         self.camHpr = (0, 349.7, 0)
 
         for segment in dnaRootStr.split('_'):

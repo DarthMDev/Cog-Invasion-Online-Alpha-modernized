@@ -149,14 +149,14 @@ class CogInvasionClientRepository(AstronClientRepository):
         print "Showing player ids..."
         self.isShowingPlayerIds = True
         for av in self.doId2do.values():
-            if av.__class__.__name__ in ["DistributedToon", "LocalToon"]:
+            if av.__class__.__name__ in ["DistributedToon", "LocalToon", "DistributedSuit"]:
                 av.showAvId()
 
     def hidePlayerIds(self):
         print "Hiding player ids..."
         self.isShowingPlayerIds = False
         for av in self.doId2do.values():
-            if av.__class__.__name__ in ["DistributedToon", "LocalToon"]:
+            if av.__class__.__name__ in ["DistributedToon", "LocalToon", 'DistributedSuit']:
                 av.showName()
 
     def sendSetLocation(self, doId, parentId, zoneId):

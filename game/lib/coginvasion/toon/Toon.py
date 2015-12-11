@@ -582,7 +582,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                             "sound" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-shout.bam",
                             "sprinkle-dust" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-sprinkle-dust.bam",
                             "start-sit" : "phase_4/models/char/dog" + legtype + "_Shorts-legs-intoSit.bam",
-                            "sit" : "phase_4/models/char/char/dog" + legtype + "_Shorts-legs-sit.bam",
+                            "sit" : "phase_4/models/char/dog" + legtype + "_Shorts-legs-sit.bam",
                             "water": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-water.bam",
                             "spit": "phase_5/models/char/dog" + legtype + "_Shorts-legs-spit.bam",
                             "firehose": "phase_5/models/char/dog" + legtype + "_Shorts-legs-firehose.bam"}, 'legs')

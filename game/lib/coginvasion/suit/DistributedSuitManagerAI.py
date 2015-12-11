@@ -98,11 +98,29 @@ class DistributedSuitManagerAI(DistributedObjectAI):
     def killAllSuits(self, andVP = 0):
         for suit in self.suits.values():
             if not andVP:
-                if not suit.isDead() and suit.head != "vp":
+                if not suit.isDead() and not suit.suitPlan in [SuitBank.VicePresident,
+                                                               SuitBank.LucyCrossbill]:
                     suit.b_setHealth(0)
             else:
                 if not suit.isDead():
                     suit.b_setHealth(0)
+
+    def flyAwayAllSuits(self):
+        for suit in self.suits.values():
+            if not suit.isDead() and not suit.suitPlan in [SuitBank.VicePresident,
+                                                           SuitBank.LucyCrossbill]:
+                base.taskMgr.remove(suit.uniqueName('monitorHealth'))
+                if hasattr(suit, 'brain'):
+                    suit.brain.stopThinking()
+                    suit.brain.unloadBehaviors()
+                    suit.brain = None
+                suit.clearTrack()
+                suit.b_setSuitState(3, -1, -1)
+                base.taskMgr.doMethodLater(7.0, self.__suitFlyAwayDone, suit.uniqueName('flyawayDone'), extraArgs = [suit], appendTask = True)
+
+    def __suitFlyAwayDone(self, suit, task):
+        suit.closeSuit(False)
+        return task.done
 
     def deadSuit(self, avId):
         if avId in self.suits:

@@ -11,8 +11,8 @@ from direct.fsm.State import State
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.gui.Whisper import Whisper
+from lib.coginvasion.globals import CIGlobals, ChatGlobals
+from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 from lib.coginvasion.minigame.GunGameToonFPS import GunGameToonFPS
 from RemoteToonBattleAvatar import RemoteToonBattleAvatar
 from DistributedToonFPSGame import DistributedToonFPSGame
@@ -217,7 +217,9 @@ class DistributedGunGame(DistributedToonFPSGame):
 
     def acceptedIntoTeam(self):
         # Yay, we're on the team! Let's choose our gun!
-        Whisper().createSystemMessage(GGG.MSG_WELCOME.format(GGG.TeamNameById[self.team]))
+        message = GGG.MSG_WELCOME.format(GGG.TeamNameById[self.team])
+        whisper = WhisperPopup(message, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
         self.fsm.request('chooseGun')
         pos, hpr = self.pickSpawnPoint()
         base.localAvatar.setPos(pos)

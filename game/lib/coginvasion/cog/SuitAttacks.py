@@ -937,12 +937,10 @@ class ParticleAttack(Attack):
         if handObjPath and handObjParent:
             self.handObj = loader.loadModel(handObjPath)
             self.handObj.reparentTo(handObjParent)
-        self.suit.setPlayRate(animationSpeed, animation_name)
-        self.suit.play(animation_name)
         if hasattr(self.suit, 'uniqueName'):
             track_name = self.suit.uniqueName(track_name)
             particleCollId = self.suit.uniqueName(particleCollId)
-        self.suitTrack = Parallel(ActorInterval(self.suit, animation_name), name = track_name)
+        self.suitTrack = Parallel(ActorInterval(self.suit, animation_name, playRate = animationSpeed), name = track_name)
         seq = Sequence()
         seq.append(Wait(delayUntilRelease))
         seq.append(Func(self.releaseAttack))

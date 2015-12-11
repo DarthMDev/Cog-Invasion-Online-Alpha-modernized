@@ -9,9 +9,9 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.fsm.StateData import StateData
-from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType, HolidayGlobals
-from lib.coginvasion.gui.Whisper import Whisper
+from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 from AvChoice import AvChoice
 from CharSelection import CharSelection
 
@@ -75,10 +75,10 @@ class AvChooser(StateData):
             base.cr.music.setLoop(True)
             base.cr.music.setVolume(0.75)
             base.cr.music.play()
-            
+
             # Create message.
-            msg = Whisper()
-            msg.createSystemMessage(HolidayGlobals.CHRISTMAS_TIME)
+            whisper = WhisperPopup(HolidayGlobals.CHRISTMAS_TIME, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+            whisper.manage(base.marginManager)
 
         self.pickAToon = CharSelection(self)
         self.pickAToon.load()

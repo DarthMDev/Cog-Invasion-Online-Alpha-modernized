@@ -84,7 +84,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         endPos = CIGlobals.SuitSpawnPoints[self.suit.getHood()][spot]
         self.suit.headsUp(endPos)
         startPos = self.suit.getPos(render)
-        duration = 3.5
+        duration = 5.0
         self.suit.d_startProjInterval(startPos, endPos, duration, 0.25)
         self.flyIval = Parallel(
             # Server Information
@@ -95,7 +95,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
                 duration = duration
             ),
             Sequence(
-                Wait(6.0),
+                Wait(9.0),
                 Func(self.exit)
             ),
         )

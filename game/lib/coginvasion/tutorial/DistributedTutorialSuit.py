@@ -14,10 +14,18 @@ class DistributedTutorialSuit(DistributedSuit):
     notify = directNotify.newCategory('DistributedTutorialSuit')
 
     def enterFlyingDown(self, startIndex, endIndex, ts = 0.0):
-        startPos = TutorialGlobals.SUIT_POINTS[startIndex] + (0, 0, 50)
+        startPos = TutorialGlobals.SUIT_POINTS[startIndex] + (0, 0, 6.5 * 4.8)
         endPos = TutorialGlobals.SUIT_POINTS[endIndex]
-        duration = 3
-        self.moveIval = LerpPosInterval(self, duration = duration, pos = endPos, startPos = startPos, fluid = 1)
+        groundF = 28
+        dur = self.getDuration('land')
+        fr = self.getFrameRate('land')
+        if fr:
+            animTimeInAir = groundF / fr
+        else:
+            animTimeInAir = groundF
+        impactLength = dur - animTimeInAir
+        timeTillLanding = 6.5 - impactLength
+        self.moveIval = LerpPosInterval(self, duration = timeTillLanding, pos = endPos, startPos = startPos, fluid = 1)
         self.moveIval.start(ts)
         self.animFSM.request('flyDown', [ts])
         yaw = random.uniform(0.0, 360.0)

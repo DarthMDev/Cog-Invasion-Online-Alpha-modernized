@@ -20,7 +20,7 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.showbase.Audio3DManager import Audio3DManager
 from direct.task.Task import Task
-from panda3d.core import Vec4, Texture
+from panda3d.core import Vec4, VBase4, Texture
 import random
 
 class Suit(Avatar):
@@ -190,22 +190,35 @@ class Suit(Avatar):
             self.generatePropeller()
         sfx = self.propellerSounds['in']
         sfx.play()
+        groundF = 28
         dur = self.getDuration('land')
+        fr = self.getFrameRate('land')
+        if fr:
+            animTimeInAir = groundF / fr
+        else:
+            animTimeInAir = groundF
+        impactLength = dur - animTimeInAir
+        timeTillLanding = 6.5 - impactLength
+        waitTime = timeTillLanding - animTimeInAir
+        lastSpinFrame = 8
+        propDur = self.propeller.getDuration('chan')
+        fr = self.propeller.getFrameRate('chan')
+        spinTime = lastSpinFrame / fr
+        openTime = (lastSpinFrame + 1) / fr
         if hasattr(self, 'uniqueName'):
             name = self.uniqueName('enterFlyDown')
         else:
             name = 'enterFlyDown'
-        self.suitTrack = Parallel(Sequence(Func(self.pose, 'land', 0), Func(self.propeller.loop, 'chan', fromFrame=0, toFrame=3),
-                            Wait(1.75),
-                            Func(self.propeller.play, 'chan', fromFrame=3),
-                            Wait(0.15),
-                            ActorInterval(self, 'land', duration=dur)), name = name)
+        animTrack = Sequence(Func(self.pose, 'land', 0), Wait(waitTime), ActorInterval(self, 'land', duration=dur))
+        propTrack = Parallel(SoundInterval(sfx, duration=waitTime + dur, node=self), Sequence(ActorInterval(self.propeller, 'chan', constrainedLoop=1, duration=waitTime + spinTime, startTime=0.0, endTime=spinTime), ActorInterval(self.propeller, 'chan', duration=propDur - openTime, startTime=openTime)))
+        self.suitTrack = Parallel(animTrack, propTrack, name=self.taskName('flyDown'))
         if not self.hasSpawned:
-            showSuit = Sequence(Func(self.hideSuit), Wait(0.3), Func(self.showSuit))
+            self.show()
+            fadeInTrack = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1, colorScale=VBase4(1, 1, 1, 1), startColorScale=VBase4(1, 1, 1, 0)), Func(self.clearColorScale), Func(self.clearTransparency))
             self.hasSpawned = True
-            self.suitTrack.append(showSuit)
+            self.suitTrack.append(fadeInTrack)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
-        self.acceptOnce(self.suitTrack.getDoneEvent(), self.exitFlyAway)
+        self.acceptOnce(self.suitTrack.getDoneEvent(), self.exitFlyDown)
         self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, name)
         self.suitTrack.start(ts)
 
@@ -219,28 +232,34 @@ class Suit(Avatar):
         self.exitGeneral()
         self.cleanupPropeller()
 
-    def enterFlyAway(self, ts = 0):
+    def enterFlyAway(self, ts = 0, doFadeOut = 0):
         self.show()
         if not self.propeller:
             self.generatePropeller()
         sfx = self.propellerSounds['out']
-        sfx.play()
-        self.propeller.setPlayRate(-1.0, 'chan')
         if hasattr(self, 'uniqueName'):
             name = self.uniqueName('enterFlyAway')
         else:
             name = 'enterFlyAway'
-        self.suitTrack = Sequence(
-            Func(self.propeller.play, 'chan', fromFrame=3),
-            Wait(1.75),
-            Func(self.propeller.play, 'chan', fromFrame=0, toFrame=3),
-        name = name)
+        dur = self.getDuration('land')
+        actInt = ActorInterval(self, 'land', loop=0, startTime=dur, endTime=0.0)
+        lastSpinFrame = 8
+        propDur = self.propeller.getDuration('chan')
+        fr = self.propeller.getFrameRate('chan')
+        spinTime = lastSpinFrame / fr
+        openTime = (lastSpinFrame + 1) / fr
+        propTrack = Parallel(SoundInterval(sfx, node=self), Sequence(Func(self.propeller.show),
+            ActorInterval(self.propeller, 'chan', endTime=openTime, startTime=propDur),
+            ActorInterval(self.propeller, 'chan', constrainedLoop=1, duration=propDur - openTime,
+            startTime=spinTime, endTime=0.0)))
+        self.suitTrack = Parallel(actInt, propTrack, name=self.taskName('trackName'))
+        if doFadeOut:
+            fadeOut = Sequence(Wait(4.0), Func(self.setTransparency, 1), self.colorScaleInterval(1, colorScale=VBase4(1, 1, 1, 0), startColorScale=VBase4(1, 1, 1, 1)), Func(self.clearColorScale), Func(self.clearTransparency), Func(self.reparentTo, hidden))
+            self.suitTrack.append(fadeOut)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
         self.acceptOnce(self.suitTrack.getDoneEvent(), self.exitFlyAway)
         self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, name)
         self.suitTrack.start(ts)
-        self.setPlayRate(-1.0, 'land')
-        self.play('land')
         self.disableRay()
 
     def exitFlyAway(self):
@@ -555,8 +574,8 @@ class Suit(Avatar):
     def setName(self, nameString, charName):
         Avatar.setName(self, nameString, avatarType = self.avatarType, charName = charName, createNow = 1)
 
-    def setupNameTag(self):
-        Avatar.setupNameTag(self)
+    def setupNameTag(self, tempName = None):
+        Avatar.setupNameTag(self, tempName = tempName)
         if self.nametag:
             if self.level > 0:
                 self.nametag.setText(self.nametag.getText() + '\n%s\nLevel %s' % (self.dept.getName(), self.level))

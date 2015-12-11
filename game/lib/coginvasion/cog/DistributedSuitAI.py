@@ -277,8 +277,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.track = Sequence(Wait(6.0), Func(self.closeSuit))
             self.track.start()
 
-    def closeSuit(self):
-        self.itemDropper.drop()
+    def closeSuit(self, dropItem = True):
+        if dropItem:
+            self.itemDropper.drop()
         if self.getManager():
             self.getManager().deadSuit(self.doId)
         self.disable()
@@ -292,25 +293,27 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.brain.addBehavior(SuitAttackBehavior(self), priority = 3)
         if self.suitPlan.getName() != SuitGlobals.VicePresident:
             self.brain.addBehavior(SuitPanicBehavior(self), priority = 2)
+            self.brain.addBehavior(SuitRandomStrollBehavior(self), priority = 1)
         else:
             self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 2)
             self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 4)
-        self.brain.addBehavior(SuitRandomStrollBehavior(self), priority = 1)
         place = CIGlobals.SuitSpawnPoints[self.hood]
         landspot = random.choice(place.keys())
         path = place[landspot]
         index = place.keys().index(landspot)
         self.currentPath = landspot
-        self.setH(random.uniform(0.0, 360.0))
+        yaw = random.uniform(0.0, 360.0)
+        self.setH(yaw)
+        self.d_setH(yaw)
         self.clearTrack()
         self.track = Sequence()
         if spawnMode == SpawnMode.FLYDOWN:
-            flyTrack = self.posInterval(3,
-                path, startPos = path + (0, 0, 50)
+            flyTrack = self.posInterval(3.5,
+                path, startPos = path + (0, 0, 6.5 * 4.8)
             )
             flyTrack.start()
             self.b_setSuitState(2, index, index)
-            self.track.append(Wait(5.4))
+            self.track.append(Wait(6.5))
         self.track.append(Func(self.b_setAnimState, 'neutral'))
         self.track.append(Wait(1.0))
         self.track.append(Func(self.brain.startThinking))
@@ -348,6 +351,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         taskMgr.remove(self.uniqueName('monitorHealth'))
         if self.brain:
             self.brain.stopThinking()
+            self.brain.unloadBehaviors()
             self.brain = None
         self.itemDropper.cleanup()
         self.itemDropper = None

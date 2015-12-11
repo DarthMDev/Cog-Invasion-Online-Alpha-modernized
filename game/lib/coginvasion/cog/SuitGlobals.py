@@ -111,6 +111,7 @@ animations = [
     Anim(5, 'finger-wag', name = 'fingerwag'),
     Anim(5, 'speak'),
     Anim(5, 'lured'),
+    Anim(5, 'magic1', suitTypes = [SuitType.A]),
     Anim(12, 'sit'),
     Anim(12, 'tray-neutral'),
     Anim(12, 'tray-walk')

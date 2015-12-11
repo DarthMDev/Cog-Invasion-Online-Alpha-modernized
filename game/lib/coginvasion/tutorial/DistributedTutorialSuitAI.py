@@ -54,7 +54,7 @@ class DistributedTutorialSuitAI(DistributedSuitAI):
             startPos = pos + (0, 0, 50))
         flyTrack.start()
         self.track = Sequence()
-        self.track.append(Wait(5.4))
+        self.track.append(Wait(6.5))
         self.track.append(Func(self.b_setAnimState, 'neutral'))
         self.track.append(Wait(1.0))
         self.track.append(Func(self.startAI))

@@ -7,8 +7,8 @@
 
 from direct.distributed.DistributedObject import DistributedObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.gui.Whisper import Whisper
+from lib.coginvasion.globals import CIGlobals, ChatGlobals
+from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 import random
 
 class DistributedSuitManager(DistributedObject):
@@ -38,7 +38,8 @@ class DistributedSuitManager(DistributedObject):
         self.sendUpdate('requestSuitInfo', [])
 
     def systemMessage(self, message):
-        Whisper().createSystemMessage(message)
+        whisper = WhisperPopup('Toon HQ: ' + message, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
 
     def noSuits(self):
         self.notify.info("There are no suits!")

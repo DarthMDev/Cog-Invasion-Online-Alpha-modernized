@@ -226,6 +226,8 @@ class WhisperPopup(Clickable2d, MarginVisible):
     def manage(self, marginManager):
         MarginVisible.manage(self, marginManager)
 
+        base.playSfx(base.cr.whisperNoise)
+
         self.timeoutTask = taskMgr.doMethodLater(
             self.timeout, self.unmanage, self.timeoutTaskName, [marginManager])
 

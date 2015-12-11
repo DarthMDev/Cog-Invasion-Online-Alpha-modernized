@@ -6,7 +6,8 @@
 """
 
 from direct.distributed.DistributedObject import DistributedObject
-from lib.coginvasion.gui.Whisper import Whisper
+from lib.coginvasion.gui.WhisperPopup import WhisperPopup
+from lib.coginvasion.globals import CIGlobals, ChatGlobals
 
 class DistributedDistrict(DistributedObject):
 
@@ -45,7 +46,8 @@ class DistributedDistrict(DistributedObject):
         self.sendUpdate('joining', [])
 
     def systemMessage(self, message):
-        Whisper().createSystemMessage(message)
+        whisper = WhisperPopup('ADMIN: ' + message, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
 
     def setAvailable(self, available):
         self.available = available

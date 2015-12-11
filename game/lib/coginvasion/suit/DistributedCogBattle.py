@@ -6,8 +6,8 @@ from direct.distributed.DistributedObject import DistributedObject
 from direct.gui.DirectGui import DirectWaitBar, DGG, DirectFrame, OnscreenText
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.gui.Whisper import Whisper
+from lib.coginvasion.globals import CIGlobals, ChatGlobals
+from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 from lib.coginvasion.minigame.Timer import Timer
 from lib.coginvasion.nametag import NametagGlobals
 import CogBattleGlobals
@@ -194,8 +194,8 @@ class DistributedCogBattle(DistributedObject):
             dnc.removeNode()
 
     def createWhisper(self, msg):
-        whisper = Whisper()
-        whisper.createSystemMessage(msg)
+        whisper = WhisperPopup('Toon HQ: ' + msg, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
 
     def __doIntroMessages(self):
         self.introMessageSeq = Sequence(name = "DistributedCogBattle-introMessageSeq")

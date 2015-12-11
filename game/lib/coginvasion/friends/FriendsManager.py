@@ -20,7 +20,6 @@ class FriendsManager(DistributedObjectGlobal):
         self.sendUpdate('sendWhisper', [target, message])
 
     def whisper(self, sender, message, name):
-        base.playSfx(self.cr.whisperNoise)
         whisper = WhisperPopup(name + ': ' + message, CIGlobals.getToonFont(), ChatGlobals.WTNormal)
         whisper.setClickable(name, sender, isPlayer = 1)
         whisper.manage(base.marginManager)
@@ -37,21 +36,26 @@ class FriendsManager(DistributedObjectGlobal):
         messenger.send('gotFriendsList', [idArray, nameArray, flags])
 
     def teleportNotify(self, name):
-        Whisper().createSystemMessage(self.TeleportNotify % name)
+        whisper = WhisperPopup(self.TeleportNotify % name, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
 
     def friendLeftYourList(self, avatarId):
-        Whisper().createSystemMessage(self.LeftListMessage % self.getAvatarName(avatarId))
+        whisper = WhisperPopup(self.LeftListMessage % self.getAvatarName(avatarId), CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
         base.localAvatar.panel.maybeUpdateFriendButton()
         self.d_requestFriendsList()
 
     def toonOnline(self, avatarId, name):
         if avatarId in base.localAvatar.friends:
-            Whisper().createSystemMessage(self.ComingOnlineMessage % name)
+            whisper = WhisperPopup(self.ComingOnlineMessage % name, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+            whisper.setClickable(name, avatarId, isPlayer = 1)
+            whisper.manage(base.marginManager)
             self.d_requestFriendsList()
 
     def toonOffline(self, avatarId, name):
         if avatarId in base.localAvatar.friends:
-            Whisper().createSystemMessage(self.GoingOfflineMessage % name)
+            whisper = WhisperPopup(self.GoingOfflineMessage % name, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+            whisper.manage(base.marginManager)
             self.d_requestFriendsList()
 
     def avatarInfo(self, name, dna, maxHP, hp, zoneId, shardId, isOnline):

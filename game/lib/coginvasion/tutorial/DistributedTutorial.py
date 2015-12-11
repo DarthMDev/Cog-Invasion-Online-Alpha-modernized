@@ -13,8 +13,8 @@ from lib.coginvasion.toon.Toon import Toon
 from lib.coginvasion.npc import NPCGlobals
 from libpandadna import *
 from lib.coginvasion.hood.SkyUtil import SkyUtil
-from lib.coginvasion.gui.Whisper import Whisper
-from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.gui.WhisperPopup import WhisperPopup
+from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.nametag import NametagGlobals
 
 class DistributedTutorial(DistributedObject):
@@ -193,6 +193,10 @@ class DistributedTutorial(DistributedObject):
         self.camMoveIval.finish()
         del self.camMoveIval
 
+    def makeWhisper(self, msg):
+        whisper = WhisperPopup(msg, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
+
     def enterTrainingPT1(self):
         self.music.stop()
         base.playMusic(self.battleMusic, volume = 0.8, looping = 1)
@@ -207,17 +211,17 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.enablePies(1)
         base.localAvatar.showPieButton()
         base.localAvatar.startTrackAnimToSpeed()
-        Whisper().createSystemMessage("This should be pretty simple. Just throw a gag at this dummy bot to defeat it.")
+        self.makeWhisper("This should be pretty simple. Just throw a gag at this dummy bot to defeat it.")
 
     def suitNoHealth(self, index):
         if index == 0:
-            Whisper().createSystemMessage("Good job, {0}!".format(base.localAvatar.getName()))
+            self.makeWhisper("Good job, {0}!".format(base.localAvatar.getName()))
         elif index == 1:
-            Whisper().createSystemMessage("Wow, you're doing very well!")
+            self.makeWhisper("Wow, you're doing very well!")
 
     def suitExploded(self, index):
         if index == 0:
-            Whisper().createSystemMessage("Pick up the jellybean that he dropped. You can use them to buy more gags for your Toon.")
+            self.makeWhisper("Pick up the jellybean that he dropped. You can use them to buy more gags for your Toon.")
         self.battleMusic.stop()
         base.playMusic(self.music, looping = 1, volume = 0.8)
 

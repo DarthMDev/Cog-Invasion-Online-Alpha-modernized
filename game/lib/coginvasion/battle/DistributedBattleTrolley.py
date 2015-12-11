@@ -52,10 +52,10 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyKey = None
         self.countdownText = None
         self.trolleyAwaySfx = base.loadSfx('phase_4/audio/sfx/SZ_trolley_away.mp3')
-        
+
         if self.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
             self.trolleyAwaySfx = base.loadSfx('winter/audio/sfx/SZ_trolley_away.mp3')
-        
+
         self.trolleyBellSfx = base.loadSfx('phase_4/audio/sfx/SZ_trolley_bell.mp3')
         self.hoodIndex = 0
         self.localAvOnTrolley = False
@@ -163,9 +163,11 @@ class DistributedBattleTrolley(DistributedObject):
                     LerpPosInterval(toon, 0.75, Point3(-5, -4.5 + index * 3, 1.4)),
                     LerpHprInterval(toon, 0.25, Point3(90, 0, 0)),
                     Parallel(
+                        ActorInterval(toon, 'start-sit'),
                         Sequence(Wait(sitStartDuration * 0.25),
-                            LerpPosInterval(toon, sitStartDuration * 0.25, Point3(-3.9, -4.5 + index * 3, 3.0)),
-                            ActorInterval(toon, 'start-sit'), Func(toon.loop, 'sit'))))
+                            LerpPosInterval(toon, sitStartDuration * 0.25, Point3(-3.9, -4.5 + index * 3, 3.0)))),
+                    Func(toon.loop, 'sit')
+                )
             else:
                 slotPos = self.STAND_POSITIONS[index]
                 toon.headsUp(slotPos)

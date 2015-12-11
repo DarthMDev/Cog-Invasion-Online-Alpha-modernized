@@ -8,7 +8,7 @@
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.distributed.DelayDeletable import DelayDeletable
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import SoundInterval, LerpPosInterval, ProjectileInterval
+from direct.interval.IntervalGlobal import SoundInterval, LerpPosInterval, ProjectileInterval, LerpHprInterval
 from direct.interval.IntervalGlobal import Sequence, LerpColorScaleInterval, Func, Wait, Parallel
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm.ClassicFSM import ClassicFSM
@@ -45,6 +45,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.suitPlan = None
         self.level = None
         self.moveIval = None
+        self.hpFlash = None
 
         self.suitFSM = ClassicFSM('DistributedSuit',
             [
@@ -60,7 +61,14 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.suitFSM.enterInitialState()
         self.makeStateDict()
 
-    """ BEGIN STATES """
+    def showAvId(self):
+        self.setDisplayName(self.getName() + "\n" + str(self.doId))
+
+    def showName(self):
+        self.setDisplayName(self.getName())
+
+    def setDisplayName(self, name):
+        self.setupNameTag(tempName = name)
 
     def enterWalking(self, startIndex, endIndex, ts = 0.0):
         durationFactor = 0.2
@@ -87,35 +95,56 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def enterFlyingDown(self, startIndex, endIndex, ts = 0.0):
         if self.getHood() != '' and startIndex != -1 and endIndex != -1:
-            duration = 3
+            duration = 3.5
             startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
-            startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint] + (0, 0, 50)
+            startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint] + (0, 0, 6.5 * 4.8)
             endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
             endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint]
             self.stopMoving(finish = 1)
-            self.moveIval = LerpPosInterval(self, duration = duration, pos = endPos, startPos = startPos, fluid = 1)
+            groundF = 28
+            dur = self.getDuration('land')
+            fr = self.getFrameRate('land')
+            if fr:
+                animTimeInAir = groundF / fr
+            else:
+                animTimeInAir = groundF
+            impactLength = dur - animTimeInAir
+            timeTillLanding = 6.5 - impactLength
+            self.moveIval = LerpPosInterval(self, duration = timeTillLanding, pos = endPos, startPos = startPos, fluid = 1)
             self.moveIval.start(ts)
         self.animFSM.request('flyDown', [ts])
-        yaw = random.uniform(0.0, 360.0)
-        self.setH(yaw)
 
     def exitFlyingDown(self):
         self.stopMoving(finish = 1)
         self.animFSM.request('off')
 
     def enterFlyingUp(self, startIndex, endIndex, ts = 0.0):
-        if self.getHood() != '' and startIndex != -1 and endIndex != -1:
+        if self.getHood() != '':
             duration = 3
-            startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
-            endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
-            startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint]
-            endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint] + (0, 0, 50)
+            if startIndex > -1:
+                startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
+                startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint]
+            else:
+                startPos = self.getPos(render)
+            if endIndex > -1:
+                endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
+                endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint] + (0, 0, 6.5 * 4.8)
+            else:
+                endPos = self.getPos(render) + (0, 0, 6.5 * 4.8)
 
             self.stopMoving(finish = 1)
-
-            self.moveIval = LerpPosInterval(self, duration = duration, pos = endPos, startPos = startPos, fluid = 1)
+            groundF = 28
+            dur = self.getDuration('land')
+            fr = self.getFrameRate('land')
+            if fr:
+                animTimeInAir = groundF / fr
+            else:
+                animTimeInAir = groundF
+            impactLength = dur - animTimeInAir
+            timeTillLanding = 6.5 - impactLength
+            self.moveIval = Sequence(Wait(impactLength), LerpPosInterval(self, duration = timeTillLanding, pos = endPos, startPos = startPos, fluid = 1))
             self.moveIval.start(ts)
-        self.animFSM.request('flyAway', [ts])
+        self.animFSM.request('flyAway', [ts, 1])
 
     def exitFlyingUp(self):
         if self.moveIval:
@@ -134,8 +163,6 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def exitSuitOff(self):
         pass
-
-    """ END STATES """
 
     def setName(self, name):
         Suit.setName(self, name, self.suitPlan.getName())
@@ -179,14 +206,19 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.stopMoveInterval()
         startPos = Point3(startX, startY, startZ)
         endPos = Point3(endX, endY, endZ)
+        oldHpr = self.getHpr(render)
+        self.headsUp(endPos)
+        newHpr = self.getHpr(render)
+        self.setHpr(oldHpr)
         self.moveIval = Parallel(
-             Sequence(
+            LerpHprInterval(self, duration = 0.5, hpr = newHpr, startHpr = oldHpr, blendType = 'easeInOut'),
+            Sequence(
                 Func(self.animFSM.request, 'flyAway', [ts]),
-                Wait(1.0),
-                Func(self.animFSM.request, 'flyDown', [ts])
+                Wait(3.5),
+                Func(self.animFSM.request, 'flyDown', [1.0])
             ),
             Sequence(
-                Wait(0.5),
+                Wait(2.0),
                 Func(self.headsUp, endPos),
                 ProjectileInterval(self,
                     startPos = startPos,
@@ -234,11 +266,17 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         Suit.initializeRay(self, self.avatarType, 2)
 
     def setHealth(self, health):
+        if health > self.health:
+            # We got an hp boost. Flash green.
+            flashColor = VBase4(0, 1, 0, 1)
+        elif health < self.health:
+            # We got an hp loss. Flash red.
+            flashColor = VBase4(1, 0, 0, 1)
         DistributedAvatar.setHealth(self, health)
 
         def doBossFlash():
             if not self.isEmpty():
-                LerpColorScaleInterval(self, 0.2, VBase4(1, 0, 0, 1)).start()
+                LerpColorScaleInterval(self, 0.2, flashColor).start()
 
         def clearBossFlash():
             if not self.isEmpty():
@@ -247,11 +285,15 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         if self.isDead():
             self.interruptAttack()
         if self.getLevel() > 12:
-            Sequence(
+            if self.hpFlash:
+                self.hpFlash.finish()
+                self.hpFlash = None
+            self.hpFlash = Sequence(
                 Func(doBossFlash),
                 Wait(0.2),
                 Func(clearBossFlash)
-            ).start()
+            )
+            self.hpFlash.start()
         self.updateHealthBar(health)
 
     def announceHealth(self, level, hp):
@@ -367,7 +409,11 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         attackName = SuitAttacks.SuitAttackLengths.keys()[attackId]
         attackTaunt = CIGlobals.SuitAttackTaunts[attackName][random.randint(0, len(CIGlobals.SuitAttackTaunts[attackName]) - 1)]
         avatar = self.cr.doId2do.get(avId)
-        self.setChat(attackTaunt)
+        shouldChat = 0
+        if self.suitPlan in [SuitBank.VicePresident, SuitBank.LucyCrossbill]:
+            shouldChat = random.randint(0, 2)
+        if shouldChat == 0:
+            self.setChat(attackTaunt)
         self.animFSM.request('attack', [attackName, avatar, ts])
 
     def throwObject(self):
@@ -399,6 +445,9 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.dept = None
         self.variant = None
         self.suitPlan = None
+        if self.hpFlash:
+            self.hpFlash.finish()
+            self.hpFlash = None
         if self.moveIval:
             self.moveIval.pause()
             self.moveIval = None
