@@ -104,7 +104,7 @@ class Backpack:
     def setLoadout(self, loadoutList):
         self.loadout = loadoutList
         if hasattr(base, 'cr'):
-            if base.cr.playGame.getPlace() and base.cr.playGame.getPlace().fsm.getCurrentState().getName() == 'walk':
+            if base.cr.playGame.world and base.cr.playGame.world.getPlace() and base.cr.playGame.world.getPlace().fsm.getCurrentState().getName() == 'walk':
                 base.localAvatar.disablePies()
                 base.localAvatar.enablePies(1)
 

@@ -217,7 +217,8 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
             'how': 'teleportIn',
             'avId': base.localAvatar.doId,
             'shardId': None,
-            'loader': loaderName}
+            'loader': loaderName,
+            'world': base.cr.playGame.getCurrentWorldName()}
         self.cr.playGame.hood.fsm.request('quietZone', [requestStatus])
 
     def abort(self):

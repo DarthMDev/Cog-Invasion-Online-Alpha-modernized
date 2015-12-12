@@ -78,6 +78,7 @@ class Place(StateData):
         requestStatus['how'] = 'doorOut'
         requestStatus['shardId'] = None
         requestStatus['doorIndex'] = distDoor.getDoorIndex()
+        requestStatus['world'] = base.cr.playGame.getCurrentWorldName()
         foundBlock = False
         for interior in base.cr.doFindAll("DistributedToonInterior"):
             if interior.zoneId == base.localAvatar.zoneId:
@@ -443,9 +444,11 @@ class Place(StateData):
 
         requestStatus = {}
         requestStatus['zoneId'] = linkTunnel.data['zoneId']
+        requestStatus['world'] = base.cr.playGame.getCurrentWorldName()
 
         # Goes from safe zone to street.
         if linkTunnel.__class__.__name__ == "SafeZoneLinkTunnel":
+            print "It's a safe zone tunnel (sz to street)"
             requestStatus['where'] = 'street'
             requestStatus['loader'] = 'townLoader'
             requestStatus['hoodId'] = base.cr.playGame.hood.id
@@ -455,6 +458,7 @@ class Place(StateData):
             requestStatus['fromZone'] = base.localAvatar.zoneId
         # Goes from street to safe zone.
         elif linkTunnel.__class__.__name__ == "StreetLinkTunnel":
+            print "It's a street tunnel (street to street)"
             requestStatus['where'] = 'playground'
             requestStatus['loader'] = 'safeZoneLoader'
             requestStatus['hoodId'] = base.cr.playGame.hood.id
@@ -464,6 +468,7 @@ class Place(StateData):
             requestStatus['fromZone'] = base.localAvatar.zoneId
         # Goes from street to street.
         elif linkTunnel.__class__.__name__ == "NeighborhoodLinkTunnel":
+            print "it's a neighborhood tunnel (street to street)"
             requestStatus['where'] = 'street'
             requestStatus['loader'] = 'townLoader'
             hoodId = ZoneUtil.getHoodId(linkTunnel.data['zoneId'], 1)

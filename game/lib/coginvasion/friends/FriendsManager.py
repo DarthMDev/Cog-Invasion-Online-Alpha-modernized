@@ -64,14 +64,14 @@ class FriendsManager(DistributedObjectGlobal):
     def friendRequest(self, sender, name, dna):
         messenger.send('newFriendRequest', [sender, name, dna])
 
-    def avatarLocation(self, avatarId, shardId, zoneId):
-        messenger.send('gotAvatarTeleportResponse', [avatarId, shardId, zoneId])
+    def avatarLocation(self, avatarId, shardId, zoneId, worldId):
+        messenger.send('gotAvatarTeleportResponse', [avatarId, shardId, zoneId, worldId])
 
-    def d_myAvatarLocation(self, avatarId, shardId, zoneId):
-        self.sendUpdate('myAvatarLocation', [avatarId, shardId, zoneId])
+    def d_myAvatarLocation(self, avatarId, shardId, zoneId, worldId):
+        self.sendUpdate('myAvatarLocation', [avatarId, shardId, zoneId, worldId])
 
     def avatarWantsYourLocation(self, avatarId):
-        self.d_myAvatarLocation(avatarId, base.localAvatar.parentId, base.localAvatar.zoneId)
+        self.d_myAvatarLocation(avatarId, base.localAvatar.parentId, base.localAvatar.zoneId, CIGlobals.World2Id[base.cr.playGame.getCurrentWorldName()])
 
     def d_requestAvatarInfo(self, avatarId):
         self.sendUpdate('requestAvatarInfo', [avatarId])

@@ -45,7 +45,7 @@ def getCanonicalZoneId(zoneId):
     return zoneId
 
 def getTrueZoneId(zoneId, currentZoneId):
-    hoodId = getHoodId(zoneId)
+    hoodId = getHoodId(zoneId, street = 1)
     offset = currentZoneId - currentZoneId % 2000
     if hoodId == ToontownCentral:
         return zoneId - ToontownCentralId + offset
@@ -53,60 +53,45 @@ def getTrueZoneId(zoneId, currentZoneId):
         return zoneId - GoofySpeedwayId + offset + 1000
     return zoneId
 
-def getHoodId(zoneId, street = 0):
+def getHoodId(zoneId, street = 0, world = None):
+	if world is None:
+		world = base.cr.playGame.getCurrentWorldName()
 	if street:
-		if str(zoneId)[0] == '1' and len(str(zoneId)) == 4:
-			return DonaldsDock
-		elif str(zoneId)[:2] == '10' and len(str(zoneId)) == 5:
-			return MinigameArea
-		elif str(zoneId)[:2] == '12' and len(str(zoneId)) == 5:
-			return CogTropolis
-		elif str(zoneId)[0] == '2':
-			return ToontownCentral
-		elif str(zoneId)[0] == '3':
-			return TheBrrrgh
-		elif str(zoneId)[0] == '4':
-			return MinniesMelodyland
-		elif str(zoneId)[0] == '5':
-			return DaisyGardens
-		elif str(zoneId)[0] == '9':
-			return DonaldsDreamland
+		if world == OToontown:
+			if str(zoneId)[0] == '1' and len(str(zoneId)) == 4:
+				return DonaldsDock
+			elif str(zoneId)[:2] == '10' and len(str(zoneId)) == 5:
+				return MinigameArea
+			elif str(zoneId)[:2] == '12' and len(str(zoneId)) == 5:
+				return CogTropolis
+			elif str(zoneId)[0] == '2':
+				return ToontownCentral
+			elif str(zoneId)[0] == '3':
+				return TheBrrrgh
+			elif str(zoneId)[0] == '4':
+				return MinniesMelodyland
+			elif str(zoneId)[0] == '5':
+				return DaisyGardens
+			elif str(zoneId)[0] == '9':
+				return DonaldsDreamland
+		elif world == CogTropolis:
+			if str(zoneId)[1] == '1':
+				return DonaldsDock
+			elif str(zoneId)[1] == '2':
+				return ToontownCentral
+			elif str(zoneId)[1] == '3':
+				return TheBrrrgh
+			elif str(zoneId)[1] == '4':
+				return MinniesMelodyland
+			elif str(zoneId)[1] == '5':
+				return DaisyGardens
+			elif str(zoneId)[1] == '9':
+				return DonaldsDreamland
 	else:
-		if zoneId == ToontownCentralId:
-			return ToontownCentral
-		elif zoneId == MinigameAreaId:
-			return MinigameArea
-		elif zoneId == RecoverAreaId:
-			return RecoverArea
-		elif zoneId == TheBrrrghId:
-			return TheBrrrgh
-		elif zoneId == DonaldsDreamlandId:
-			return DonaldsDreamland
-		elif zoneId == MinniesMelodylandId:
-			return MinniesMelodyland
-		elif zoneId == DaisyGardensId:
-			return DaisyGardens
-		elif zoneId == DonaldsDockId:
-			return DonaldsDock
-		elif zoneId == CogTropolisId:
-			return CogTropolis
+		return World2ZoneId2Hood[world][zoneId]
 
-def getZoneId(hoodId):
-	if hoodId == ToontownCentral or hoodId == BattleTTC:
-		return ToontownCentralId
-	elif hoodId == MinigameArea:
-		return MinigameAreaId
-	elif hoodId == RecoverArea:
-		return RecoverAreaId
-	elif hoodId == TheBrrrgh:
-		return TheBrrrghId
-	elif hoodId == DonaldsDreamland:
-		return DonaldsDreamlandId
-	elif hoodId == MinniesMelodyland:
-		return MinniesMelodylandId
-	elif hoodId == DaisyGardens:
-		return DaisyGardensId
-	elif hoodId == DonaldsDock:
-		return DonaldsDockId
-	elif hoodId == CogTropolis:
-		return CogTropolisId
+def getZoneId(hoodId, world = None):
+	if world is None:
+		# If no world is specified, use the current world we are in.
+		world = base.cr.playGame.getCurrentWorldName()
+	return World2Hood2ZoneId[world][hoodId]

@@ -15,6 +15,7 @@ from direct.gui.DirectGui import DirectButton
 
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.hood import ZoneUtil
 import math
 
 TROLLEY_ENTER_TIME = 3.0
@@ -62,18 +63,17 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyEnterTrack = None
         self.trolleyExitTrack = None
 
-    def headOff(self, zoneId):
+    def headOff(self, foo):
         hoodId = self.cr.playGame.hood.hoodId
-        if hoodId == CIGlobals.ToontownCentral:
-            hoodId = CIGlobals.BattleTTC
-        requestStatus = {'zoneId': zoneId,
+        requestStatus = {'zoneId': ZoneUtil.getZoneId(hoodId, world = CIGlobals.CogTropolis),
                     'hoodId': hoodId,
                     'where': 'playground',
                     'avId': base.localAvatar.doId,
                     'loader': 'safeZoneLoader',
                     'shardId': None,
                     'wantLaffMeter': 1,
-                    'how': 'teleportIn'}
+                    'how': 'teleportIn',
+                    'world': CIGlobals.CogTropolis}
         self.cr.playGame.getPlace().doneStatus = requestStatus
         messenger.send(self.cr.playGame.getPlace().doneEvent)
         base.localAvatar.reparentTo(render)

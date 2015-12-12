@@ -63,20 +63,20 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
         return task.done
 
     def createBattle(self):
-		zone = base.air.allocateZone()
-		avIdArray = []
+		#zone = base.air.allocateZone()
+		#avIdArray = []
+		#for avId in self.slotTakenByAvatarId.keys():
+		#	avIdArray.append(avId)
+		#battle = DistributedCogBattleAI(self.air)
+		#battle.generateWithRequired(zone)
+		#battle.setNumPlayers(len(self.slotTakenByAvatarId))
+		#battle.b_setHoodIndex(self.getHoodIndex())
+		#battle.b_setTotalCogs(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
+		#battle.b_setCogsRemaining(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
+		#battle.setAvIdArray(avIdArray)
+		#battle.startWatchingAvatars()
 		for avId in self.slotTakenByAvatarId.keys():
-			avIdArray.append(avId)
-		battle = DistributedCogBattleAI(self.air)
-		battle.generateWithRequired(zone)
-		battle.setNumPlayers(len(self.slotTakenByAvatarId))
-		battle.b_setHoodIndex(self.getHoodIndex())
-		battle.b_setTotalCogs(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
-		battle.b_setCogsRemaining(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
-		battle.setAvIdArray(avIdArray)
-		battle.startWatchingAvatars()
-		for avId in self.slotTakenByAvatarId.keys():
-			self.sendUpdateToAvatarId(avId, 'headOff', [zone])
+			self.sendUpdateToAvatarId(avId, 'headOff', [0])
 
     def exitLeaving(self):
         base.taskMgr.remove(self.uniqueName('trolleyLeft'))

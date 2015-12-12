@@ -261,7 +261,7 @@ class ShtickerBook(StateData):
             self.clouds.append(cloud)
 
         for pos, scale, hpr, hood in hoodclouds:
-            if not base.localAvatar.hasDiscoveredHood(ZoneUtil.getZoneId(hood)):
+            if not base.localAvatar.hasDiscoveredHood(ZoneUtil.getZoneId(hood, world = CIGlobals.OToontown)):
                 cloud = loader.loadModel('phase_3.5/models/gui/cloud.bam')
                 cloud.reparentTo(self.frame)
                 cloud.setPos(pos)
@@ -277,16 +277,16 @@ class ShtickerBook(StateData):
                      [(-0.37, 0, -0.525), CIGlobals.DaisyGardens]]
 
         for pos, name in labeldata:
-            if base.localAvatar.hasDiscoveredHood(ZoneUtil.getZoneId(name)):
+            if base.localAvatar.hasDiscoveredHood(ZoneUtil.getZoneId(name, world = CIGlobals.OToontown)):
                 text = name
-                if base.localAvatar.hasTeleportAccess(ZoneUtil.getZoneId(name)):
+                if base.localAvatar.hasTeleportAccess(ZoneUtil.getZoneId(name, world = CIGlobals.OToontown)):
                     text = 'Go To\n' + text
                 label = DirectButton(
                     parent=self.frame,
                     relief=None,
                     pos=pos,
                     pad=(0.2, 0.16),
-                    text=('', text, text),
+                    text=('', text, text, ''),
                     text_bg=Vec4(1, 1, 1, 0.4),
                     text_scale=0.055,
                     text_wordwrap=8,
@@ -295,18 +295,24 @@ class ShtickerBook(StateData):
                     pressEffect=0,
                     sortOrder=1,
                     text_font = CIGlobals.getToonFont())
-                if base.localAvatar.hasTeleportAccess(ZoneUtil.getZoneId(name)):
+                if base.localAvatar.hasTeleportAccess(ZoneUtil.getZoneId(name, world = CIGlobals.OToontown)):
                     label['command'] = self.finished
-                    label['extraArgs'] = [ZoneUtil.getZoneId(name)]
+                    label['extraArgs'] = [ZoneUtil.getZoneId(name, world = CIGlobals.OToontown)]
                 label.resetFrameSize()
                 self.labels.append(label)
+
+        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
+            for label in self.labels:
+                label['state'] = DGG.DISABLED
+            self.frame.setTransparency(1)
+            self.frame.setColorScale(0.5, 0.5, 0.5, 0.5)
 
         currHoodName = base.cr.playGame.hood.id
         currLocation = ''
         if base.localAvatar.zoneId == CIGlobals.MinigameAreaId:
             currLocation = ''
-        elif base.localAvatar.getMyBattle() != None:
-            currLocation = 'CogTropolis'
+        elif base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
+            currLocation = CIGlobals.CogTropolis
         elif ZoneUtil.getWhereName(base.localAvatar.zoneId) == 'playground':
             currLocation = 'Playground'
         elif ZoneUtil.getWhereName(base.localAvatar.zoneId) in ['street', 'interior']:
@@ -314,13 +320,18 @@ class ShtickerBook(StateData):
         self.infoLabel = DirectLabel(relief = None, text = 'You are in: {0}\n{1}'.format(currHoodName, currLocation),
                                      scale = 0.06, pos = (-0.4, 0, -0.74), parent = self.frame, text_align = TextNode.ACenter)
 
-        if currHoodName in [CIGlobals.MinigameArea, CIGlobals.BattleTTC]:
+        if currHoodName in [CIGlobals.MinigameArea]:
             currHoodName = base.cr.playGame.lastHood
-        self.BTPButton = DirectButton(relief = None, text = "Back to Playground", geom = CIGlobals.getDefaultBtnGeom(),
+        btpText = "Back to Playground"
+        btpEA = [ZoneUtil.getZoneId(currHoodName)]
+        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
+            btpText = "Back to %s" % CIGlobals.OToontown
+            btpEA = [ZoneUtil.getZoneId(currHoodName, CIGlobals.OToontown), None, CIGlobals.OToontown]
+        self.BTPButton = DirectButton(relief = None, text = btpText, geom = CIGlobals.getDefaultBtnGeom(),
                                       text_pos = (0, -0.018), geom_scale = (1.3, 1.11, 1.11), text_scale = 0.06, parent = self.frame,
                                       text_font = CIGlobals.getToonFont(), pos = (0.25, 0, -0.75), command = self.finished,
-                                      extraArgs = [ZoneUtil.getZoneId(currHoodName)], scale = 0.7)
-        if base.localAvatar.zoneId != CIGlobals.MinigameAreaId:
+                                      extraArgs = btpEA, scale = 0.7)
+        if base.localAvatar.zoneId != CIGlobals.MinigameAreaId and base.cr.playGame.getCurrentWorldName() == CIGlobals.OToontown:
             self.MGAButton = DirectButton(relief = None, text = "Minigame Area", geom = CIGlobals.getDefaultBtnGeom(),
                                           text_pos = (0, -0.018), geom_scale = (1, 1.11, 1.11), text_scale = 0.06, parent = self.frame,
                                           text_font = CIGlobals.getToonFont(), pos = (0.625, 0, -0.75), command = self.finished,
@@ -511,21 +522,24 @@ class ShtickerBook(StateData):
         for m in base.bookpgnode.getChildren():
             m.removeNode()
 
-    def finished(self, zone, shardId = None):
+    def finished(self, zone, shardId = None, world = None):
         if base.localAvatar.getHealth() < 1 and type(zone) == type(1):
             return
+        if world is None:
+            world = base.cr.playGame.getCurrentWorldName()
         doneStatus = {}
         if zone in [CIGlobals.ToontownCentralId, CIGlobals.MinigameAreaId,
         CIGlobals.TheBrrrghId, CIGlobals.DonaldsDreamlandId, CIGlobals.MinniesMelodylandId,
         CIGlobals.DaisyGardensId, CIGlobals.DonaldsDockId]:
             doneStatus["mode"] = 'teleport'
             doneStatus["zoneId"] = zone
-            doneStatus["hoodId"] = ZoneUtil.getHoodId(zone)
+            doneStatus["hoodId"] = ZoneUtil.getHoodId(zone, world = CIGlobals.OToontown)
             doneStatus["where"] = ZoneUtil.getWhereName(zone)
             doneStatus["how"] = 'teleportIn'
             doneStatus["avId"] = base.localAvatar.doId
             doneStatus["shardId"] = None
             doneStatus["loader"] = ZoneUtil.getLoaderName(zone)
+            doneStatus['world'] = world
         else:
             doneStatus["mode"] = zone
             if zone == "switchShard":

@@ -96,6 +96,9 @@ DialogColor = (1, 1, 0.75, 1)
 DefaultBackgroundColor = (0, 0, 0, 1)
 PositiveTextColor = (0, 1, 0, 1)
 NegativeTextColor = (1, 0, 0, 1)
+
+OToontown = "OToontown"
+CogTropolis = "CogTropolis"
 Estate = "The Estate"
 ToontownCentral = "Toontown Central"
 BattleTTC = "CogTropolis Central"
@@ -114,7 +117,18 @@ GolfZone = "Minigolf Area"
 DaisyGardens = "Daisy Gardens"
 Minigame = "Minigame"
 RecoverArea = "Recover Area"
-CogTropolis = "CogTropolis"
+
+World2Hood2ZoneId = {OToontown:   {ToontownCentral: 2000, BattleTTC: 2000, DonaldsDock: 1000, TheBrrrgh: 3000,
+                                   MinniesMelodyland: 4000, DaisyGardens: 5000, DonaldsDreamland: 9000},
+                     CogTropolis: {ToontownCentral: 22000, BattleTTC: 22000, DonaldsDock: 21000, TheBrrrgh: 23000,
+                                   MinniesMelodyland: 24000, DaisyGardens: 25000, DonaldsDreamland: 29000}}
+World2ZoneId2Hood = {OToontown:   {2000: ToontownCentral, 1000: DonaldsDock, 3000: TheBrrrgh,
+                                   4000: MinniesMelodyland, 5000: DaisyGardens, 9000: DonaldsDreamland},
+                     CogTropolis: {22000: ToontownCentral, 21000: DonaldsDock, 23000: TheBrrrgh,
+                                   24000: MinniesMelodyland, 25000: DaisyGardens, 29000: DonaldsDreamland}}
+World2Id = {OToontown: 0, CogTropolis: 1}
+Id2World = {0: OToontown, 1: CogTropolis}
+
 SellbotFactory = "Sellbot Factory"
 ToonBattleOriginalLevel = "Original Level"
 ToontownCentralId = 2000
@@ -3386,6 +3400,9 @@ WalrusWay = "Walrus Way"
 PolarPlace = "Polar Place"
 LullabyLane = "Lullaby Lane"
 PajamaPlace = "Pajama Place"
+WallStreet = "Wall Street"
+ProprietaryPlace = "Proprietary Place"
+LimitedLiabilityLane = "Limited Liability Lane"
 BranchZone2StreetName = {
     2100: SillyStreet,
     2300: PunchlinePlace,
@@ -3403,5 +3420,23 @@ BranchZone2StreetName = {
     9200: PajamaPlace,
     5100: ElmStreet,
     5200: MapleStreet,
-    5300: OakStreet
+    5300: OakStreet,
+
+    22100: WallStreet,
+    22300: ProprietaryPlace,
+    22200: LimitedLiabilityLane,
+    21300: LighthouseLane,
+    21200: SeaweedStreet,
+    21100: BarnacleBoulevard,
+    24100: AltoAvenue,
+    24200: BaritoneBoulevard,
+    24300: TenorTerrace,
+    23100: WalrusWay,
+    23200: SleetStreet,
+    23300: PolarPlace,
+    29100: LullabyLane,
+    29200: PajamaPlace,
+    25100: ElmStreet,
+    25200: MapleStreet,
+    25300: OakStreet
 }

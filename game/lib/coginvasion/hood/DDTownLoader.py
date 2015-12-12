@@ -4,6 +4,8 @@
 import TownLoader
 import DDStreet
 
+from lib.coginvasion.globals import CIGlobals
+
 class DDTownLoader(TownLoader.TownLoader):
 
     def __init__(self, hood, parentFSM, doneEvent):
@@ -15,7 +17,10 @@ class DDTownLoader(TownLoader.TownLoader):
 
     def load(self, zoneId):
         TownLoader.TownLoader.load(self, zoneId)
-        dnaFile = 'phase_6/dna/donalds_dock_' + str(self.branchZone) + '.pdna'
+        zone4File = str(self.branchZone)
+        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
+            zone4File = str(self.branchZone - 20000)
+        dnaFile = 'phase_6/dna/donalds_dock_' + zone4File + '.pdna'
         self.createHood(dnaFile)
 
     def enter(self, requestStatus):

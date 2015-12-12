@@ -35,6 +35,7 @@ class DistributedMinigameStation(DistributedGroupStation, MinigameStation.Miniga
                     'avId': base.localAvatar.doId,
                     'loader': 'minigame',
                     'shardId': None,
-                    'wantLaffMeter': laffMeter}
+                    'wantLaffMeter': laffMeter,
+                    'world': base.cr.playGame.getCurrentWorldName()}
         self.cr.playGame.getPlace().fsm.request('teleportOut', [requestStatus])
         Sequence(Wait(5.0), Func(self.d_leaving)).start()

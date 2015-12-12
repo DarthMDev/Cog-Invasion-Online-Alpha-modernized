@@ -138,8 +138,16 @@ class ToonPanel(DirectFrame):
         self.acceptOnce('gotAvatarTeleportResponse', self.handleTeleportResponse)
         base.cr.friendsManager.d_iWantToTeleportToAvatar(self.avatarInfo[0])
 
-    def handleTeleportResponse(self, avatarId, shardId, zoneId):
+    def handleTeleportResponse(self, avatarId, shardId, zoneId, worldId):
         if self.avatarInfo[0] == avatarId:
+            if worldId != CIGlobals.World2Id[base.cr.playGame.getCurrentWorldName()]:
+                self.notify.warning("Can't teleport to {0} ({1}). Your world: {2}; {3}'s world: {4}'".format(self.getAvatarName(),
+                                    avId, base.cr.playGame.getCurrentWorldName(), self.getAvatarName(), CIGlobals.Id2World[worldId]))
+                self.setActionText("You can't teleport to {0} because they are in {1} when you are in {2}!".format(self.getAvatarName(),
+                                   CIGlobals.Id2World[worldId], base.cr.playGame.getCurrentWorldName()))
+                self.clearActionButtons()
+                self.makeButtons('Okay')
+                return
             requestStatus = {}
             whereName = ZoneUtil.getWhereName(zoneId)
             loaderName = ZoneUtil.getLoaderName(zoneId)
@@ -153,6 +161,7 @@ class ToonPanel(DirectFrame):
             requestStatus['loader'] = loaderName
             requestStatus['how'] = 'teleportIn'
             requestStatus['avId'] = avatarId
+            requestStatus['world'] = base.cr.playGame.getCurrentWorldName()
             base.cr.playGame.getPlace().fsm.request('teleportOut', [requestStatus])
             self.cleanup()
 

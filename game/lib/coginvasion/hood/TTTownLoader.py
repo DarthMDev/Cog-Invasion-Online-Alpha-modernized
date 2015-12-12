@@ -4,6 +4,8 @@
 import TownLoader
 import TTStreet
 
+from lib.coginvasion.globals import CIGlobals
+
 class TTTownLoader(TownLoader.TownLoader):
 
     def __init__(self, hood, parentFSM, doneEvent):
@@ -15,7 +17,10 @@ class TTTownLoader(TownLoader.TownLoader):
 
     def load(self, zoneId):
         TownLoader.TownLoader.load(self, zoneId)
-        dnaFile = 'phase_5/dna/toontown_central_' + str(self.branchZone) + '.pdna'
+        zone4File = str(self.branchZone)
+        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
+            zone4File = str(self.branchZone - 20000)
+        dnaFile = 'phase_5/dna/toontown_central_' + zone4File + '.pdna'
         self.createHood(dnaFile)
 
     def unload(self):

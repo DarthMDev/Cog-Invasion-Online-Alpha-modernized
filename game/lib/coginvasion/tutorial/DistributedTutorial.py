@@ -392,7 +392,8 @@ class DistributedTutorial(DistributedObject):
             'how': 'teleportIn',
             'avId': avId,
             'shardId': None,
-            'loader': loaderName}])
+            'loader': loaderName,
+            'world': CIGlobals.OToontown}])
 
     def exitLeaveTutorial(self):
         base.localAvatar.stopSmartCamera()

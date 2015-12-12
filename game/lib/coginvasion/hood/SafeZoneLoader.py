@@ -159,10 +159,6 @@ class SafeZoneLoader(StateData):
         self.hood.dnaStore.resetDNAVisGroupsAI()
 
     def enterPlayground(self, requestStatus):
-        try:
-            self.hood.stopSuitEffect()
-        except:
-            pass
         self.acceptOnce(self.placeDoneEvent, self.handlePlaygroundDone)
         self.place = self.playground(self, self.fsm, self.placeDoneEvent)
         self.place.load()
@@ -176,8 +172,9 @@ class SafeZoneLoader(StateData):
         return
 
     def handlePlaygroundDone(self):
+        print 'playground done'
         status = self.place.doneStatus
-        if self.hood.isSameHood(status) and status['loader'] == 'safeZoneLoader' and not status['where'] in ['minigame']:
+        if self.hood.isSameHood(status) and status['loader'] == 'safeZoneLoader' and not status['where'] in ['minigame'] and status['world'] == base.cr.playGame.getCurrentWorldName():
             self.fsm.request('quietZone', [status])
         else:
             self.doneStatus = status
@@ -206,7 +203,7 @@ class SafeZoneLoader(StateData):
         if (status['loader'] == 'safeZoneLoader' and
         self.hood.isSameHood(status) and
         status['shardId'] == None or
-        status['how'] == 'doorOut'):
+        status['how'] == 'doorOut' and status['world'] == base.cr.playGame.getCurrentWorldName()):
             self.fsm.request('quietZone', [status])
         else:
             self.doneStatus = status

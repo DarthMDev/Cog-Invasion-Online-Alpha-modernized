@@ -60,7 +60,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
                     newNP.setColorScale(self.generator.choice(self.colors[category]))
 
     def makeInterior(self, roomIndex = None):
-        self.dnaStore = self.cr.playGame.dnaStore
+        self.dnaStore = self.cr.playGame.world.dnaStore
         self.generator = random.Random()
         self.generator.seed(self.zoneId)
         if roomIndex == None:

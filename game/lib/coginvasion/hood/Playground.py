@@ -59,8 +59,8 @@ class Playground(Place.Place):
         self.loader.geom.reparentTo(render)
         self.loader.hood.startSky()
         self.zoneId = requestStatus['zoneId']
-        if base.cr.playGame.suitManager:
-            base.cr.playGame.suitManager.d_requestSuitInfo()
+        #if base.cr.playGame.suitManager:
+        #    base.cr.playGame.suitManager.d_requestSuitInfo()
         how = requestStatus['how']
         self.fsm.request(how, [requestStatus])
 

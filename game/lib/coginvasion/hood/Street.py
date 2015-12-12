@@ -8,6 +8,8 @@ from direct.fsm.ClassicFSM import ClassicFSM
 
 from Place import Place
 
+from lib.coginvasion.globals import CIGlobals
+
 class Street(Place):
     notify = directNotify.newCategory("Street")
 
@@ -85,20 +87,31 @@ class Street(Place):
                 return
         else:
             newZoneId = newZone
+        print 'Entering vis group: {0}'.format(newZoneId)
+        print 'Current self.zoneId: {0}'.format(self.zoneId)
         self.doEnterZone(newZoneId)
 
     def doEnterZone(self, newZoneId):
+        similarZoneId = newZoneId
+        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis and similarZoneId != None and similarZoneId > 20000:
+            print 'fixed vis group zone'
+            similarZoneId -= 20000
+            print similarZoneId
+        elif base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis and similarZoneId != None and similarZoneId < 20000:
+            print 'fixed zoneId'
+            newZoneId += 20000
+            print newZoneId
         visualizeZones = 0
         if self.zoneId != None:
             for i in self.loader.nodeDict[self.zoneId]:
                 if newZoneId:
-                    if i not in self.loader.nodeDict[newZoneId]:
+                    if i not in self.loader.nodeDict[similarZoneId]:
                         self.loader.fadeOutDict[i].start()
                 else:
                     i.stash()
 
-        if newZoneId != None:
-            for i in self.loader.nodeDict[newZoneId]:
+        if similarZoneId != None:
+            for i in self.loader.nodeDict[similarZoneId]:
                 if self.zoneId:
                     if i not in self.loader.nodeDict[self.zoneId]:
                         self.loader.fadeInDict[i].start()
@@ -109,19 +122,28 @@ class Street(Place):
                         self.loader.fadeInDict[i].finish()
                     i.unstash()
 
-        if newZoneId != self.zoneId:
+        if similarZoneId != self.zoneId:
             if visualizeZones:
                 if self.zoneId != None:
                     self.loader.zoneDict[self.zoneId].clearColor()
                 if newZoneId != None:
-                    self.loader.zoneDict[newZoneId].setColor(0, 0, 1, 1, 100)
-            if newZoneId is not None:
+                    self.loader.zoneDict[similarZoneId].setColor(0, 0, 1, 1, 100)
+            if similarZoneId is not None:
                 loader = base.cr.playGame.getPlace().loader
-                if newZoneId in loader.zoneVisDict:
-                    base.cr.sendSetZoneMsg(newZoneId, loader.zoneVisDict[newZoneId])
-                else:
-                    visList = [newZoneId] + loader.zoneVisDict.values()[0]
+                if similarZoneId in loader.zoneVisDict:
+                    print 'it is in it'
+                    visList = []
+                    for vis in loader.zoneVisDict[similarZoneId]:
+                        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
+                            visList.append(vis + 20000)
+                        else:
+                            visList.append(vis)
+                    print visList
                     base.cr.sendSetZoneMsg(newZoneId, visList)
-            self.zoneId = newZoneId
+                else:
+                    print 'it is not in it'
+                    visList = [similarZoneId] + loader.zoneVisDict.values()[0]
+                    base.cr.sendSetZoneMsg(newZoneId, visList)
+            self.zoneId = similarZoneId
         geom = base.cr.playGame.getPlace().loader.geom
         return
