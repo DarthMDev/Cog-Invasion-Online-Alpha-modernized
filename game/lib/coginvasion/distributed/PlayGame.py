@@ -31,6 +31,7 @@ class PlayGame(StateData):
         self.world = None
         self.hood = None
         self.lastWorld = None
+        self.suitManager = None
 
     def enter(self, hoodId, zoneId, avId, world):
         StateData.enter(self)
