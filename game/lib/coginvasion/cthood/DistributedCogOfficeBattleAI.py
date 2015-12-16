@@ -10,13 +10,26 @@ from DistributedCogOfficeElevatorAI import DistributedCogOfficeElevatorAI
 class DistributedCogOfficeBattleAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedCogOfficeBattleAI')
 
-    def __init__(self, air, raiders, numFloors):
+    def __init__(self, air, avatars, numFloors):
         DistributedObjectAI.__init__(self, air)
-        self.raiders = raiders
+        self.avatars = avatars
         self.numFloors = numFloors
+        self.currentFloor = 0
         self.readyAvatars = []
         self.entranceElevator = None
         self.exitElevator = None
+        
+    def getAvatars(self):
+        return self.avatars
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
+
+    def readyToStart(self):
+        avId = self.air.getAvatarIdFromSender()
+        self.readyAvatars.append(avId)
+        if len(self.readyAvatars) == len(self.raiders):
+            # We're ready to go!
+            self.currentFloor = 0
+            self.sendUpdate('loadFloor', [self.currentFloor])
+            self.b_setState('rideElevator')
