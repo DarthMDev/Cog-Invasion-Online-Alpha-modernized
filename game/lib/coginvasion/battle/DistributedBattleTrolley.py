@@ -65,6 +65,8 @@ class DistributedBattleTrolley(DistributedObject):
 
     def headOff(self, foo):
         hoodId = self.cr.playGame.hood.hoodId
+        if hoodId == CIGlobals.ToontownCentral:
+            hoodId = CIGlobals.CogTropCentral
         requestStatus = {'zoneId': ZoneUtil.getZoneId(hoodId, world = CIGlobals.CogTropolis),
                     'hoodId': hoodId,
                     'where': 'playground',
@@ -148,6 +150,9 @@ class DistributedBattleTrolley(DistributedObject):
         self.notify.info('Waiting for response from server to enter trolley')
         self.sendUpdate('requestBoard')
         base.localAvatar.walkControls.setCollisionsActive(0)
+
+    def rejectBoard(self):
+        self.cr.playGame.getPlace().fsm.request('walk')
 
     def fillSlot(self, index, avId):
         toon = self.cr.doId2do.get(avId)

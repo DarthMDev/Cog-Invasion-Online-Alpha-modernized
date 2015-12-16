@@ -449,7 +449,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                     sfx = self.chatSoundDict['medium']
                 elif len(chatString) >= 20:
                     sfx = self.chatSoundDict['long']
-                sfx.play()
+                base.playSfx(sfx, node = self)
 
         Avatar.Avatar.setChat(self, chatString)
 
@@ -680,7 +680,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.sfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_Win.mp3")
         self.sfx.setLoop(True)
         base.audio3d.attachSoundToObject(self.sfx, self)
-        base.playSfx(self.sfx)
+        base.playSfx(self.sfx, node = self)
         self.loop("win")
 
     def exitWin(self):
@@ -903,7 +903,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
     def teleportOutSfx(self):
         self.outSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/AV_teleport.mp3")
         base.audio3d.attachSoundToObject(self.outSfx, self.portal1)
-        self.outSfx.play()
+        base.playSfx(self.outSfx, node = self)
 
     def throwPortal(self):
         self.doPortalBins(self.portal1)
@@ -988,7 +988,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
     def enterFallFWD(self, ts = 0, callback = None, extraArgs = []):
         self.playingAnim = 'fallf'
         self.play("fallf")
-        Sequence(Wait(0.5), Func(self.fallSfx.play)).start()
+        Sequence(Wait(0.5), SoundInterval(self.fallSfx, node = self)).start()
 
     def exitFallFWD(self):
         self.exitGeneral()
@@ -997,7 +997,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
     def enterFallBCK(self, ts = 0, callback = None, extraArgs = []):
         self.playingAnim = 'fallb'
         self.play("fallb")
-        Sequence(Wait(0.5), Func(self.fallSfx.play)).start()
+        Sequence(Wait(0.5), SoundInterval(self.fallSfx, node = self)).start()
 
     def exitFallBCK(self):
         self.playingAnim = 'neutral'
@@ -1056,7 +1056,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
     def dieSfx(self):
         self.Losesfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_Lose.mp3")
         base.audio3d.attachSoundToObject(self.Losesfx, self)
-        self.Losesfx.play()
+        base.playSfx(self.Losesfx, node = self)
 
     def delToon(self):
         self.isdead = True

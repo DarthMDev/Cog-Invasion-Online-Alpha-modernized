@@ -3,18 +3,13 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from ToonHoodAI import ToonHoodAI
+from CTHoodAI import CTHoodAI
 from lib.coginvasion.globals import CIGlobals
 
-class CTDGHoodAI(ToonHoodAI):
+class CTDGHoodAI(CTHoodAI):
     notify = directNotify.newCategory('DGHoodAI')
 
     def __init__(self, air):
-        ToonHoodAI.__init__(self, air, CIGlobals.DaisyGardensId, CIGlobals.DaisyGardens)
-        self.startup()
-
-    def startup(self):
-        self.dnaFiles = []
-        #self.dnaFiles = ['phase_8/dna/daisys_garden_5100.pdna', #'phase_8/dna/daisys_garden_5200.dna',
-        #    'phase_8/dna/daisys_garden_5300.pdna', 'phase_8/dna/daisys_garden_sz.pdna']
-        ToonHoodAI.startup(self)
+        self.dnaFiles = ['phase_8/dna/daisys_garden_5100.pdna', #'phase_8/dna/daisys_garden_5200.dna',
+            'phase_8/dna/daisys_garden_5300.pdna']
+        CTHoodAI.__init__(self, air, CIGlobals.World2Hood2ZoneId[CIGlobals.CogTropolis][CIGlobals.DaisyGardens], CIGlobals.DaisyGardens)

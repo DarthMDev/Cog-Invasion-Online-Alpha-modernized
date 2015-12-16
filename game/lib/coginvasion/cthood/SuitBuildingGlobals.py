@@ -1,0 +1,12 @@
+# Filename: SuitBuildingGlobals.py
+# Created by:  blach (13Dec15)
+
+from ElevatorConstants import *
+
+VICTORY_RUN_TIME = ElevatorData[ELEVATOR_NORMAL]['openTime'] + TOON_VICTORY_EXIT_TIME
+TO_TOON_BLDG_TIME = 8
+VICTORY_SEQUENCE_TIME = VICTORY_RUN_TIME + TO_TOON_BLDG_TIME
+CLEAR_OUT_TOON_BLDG_TIME = 4
+TO_SUIT_BLDG_TIME = 8
+
+SWITCH_BACK_TO_SUIT_TIME = (1000, 2500)

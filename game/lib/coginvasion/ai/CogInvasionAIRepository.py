@@ -15,6 +15,12 @@ from lib.coginvasion.hood.DLHoodAI import DLHoodAI
 from lib.coginvasion.hood.MLHoodAI import MLHoodAI
 from lib.coginvasion.hood.DGHoodAI import DGHoodAI
 from lib.coginvasion.hood.DDHoodAI import DDHoodAI
+from lib.coginvasion.cthood.CTCHoodAI import CTCHoodAI
+from lib.coginvasion.cthood.CTBRHoodAI import CTBRHoodAI
+from lib.coginvasion.cthood.CTDLHoodAI import CTDLHoodAI
+from lib.coginvasion.cthood.CTMLHoodAI import CTMLHoodAI
+from lib.coginvasion.cthood.CTDGHoodAI import CTDGHoodAI
+from lib.coginvasion.cthood.CTDDHoodAI import CTDDHoodAI
 from lib.coginvasion.cogtropolis.CTHoodAI import CTHoodAI
 from lib.coginvasion.hood.RecoverHoodAI import RecoverHoodAI
 from panda3d.core import *
@@ -80,23 +86,31 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
         self.notify.info("Generating time manager...")
         self.timeManager = TimeManagerAI(self)
         self.timeManager.generateWithRequired(2)
-	time.sleep(0.5)
+        time.sleep(0.1)
         TTHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
         MGHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
         BRHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
         DLHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
         MLHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
         DGHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
         DDHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
         CTHoodAI(self)
-	time.sleep(0.5)
+        time.sleep(0.1)
+
+        # Load cogtropolis areas
+        CTCHoodAI(self)
+        CTBRHoodAI(self)
+        CTDLHoodAI(self)
+        CTDGHoodAI(self)
+        CTDDHoodAI(self)
+        CTMLHoodAI(self)
 
         self.notify.info("Setting shard available.")
         self.district.b_setAvailable(1)

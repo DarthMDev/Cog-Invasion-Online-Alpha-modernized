@@ -14,13 +14,13 @@ from World import World
 
 class CogTropolis(World):
     notify = directNotify.newCategory('CogTropolis')
-    Hood2HoodClass = {CIGlobals.ToontownCentral: CTCHood.CTCHood,
+    Hood2HoodClass = {CIGlobals.CogTropCentral: CTCHood.CTCHood,
                 CIGlobals.TheBrrrgh: CTBRHood.CTBRHood,
                 CIGlobals.DonaldsDreamland: CTDLHood.CTDLHood,
                 CIGlobals.MinniesMelodyland: CTMLHood.CTMLHood,
                 CIGlobals.DaisyGardens: CTDGHood.CTDGHood,
                 CIGlobals.DonaldsDock: CTDDHood.CTDDHood}
-    Hood2HoodState = {CIGlobals.ToontownCentral: 'TTHood',
+    Hood2HoodState = {CIGlobals.CogTropCentral: 'TTHood',
                 CIGlobals.TheBrrrgh: 'BRHood',
                 CIGlobals.DonaldsDreamland: 'DLHood',
                 CIGlobals.MinniesMelodyland: 'MLHood',
@@ -107,7 +107,7 @@ class CogTropolis(World):
 
     def handleHoodDone(self):
         doneStatus = self.hood.getDoneStatus()
-        if doneStatus['zoneId'] == None or doneStatus['world'] != 'cogtropolis':
+        if doneStatus['zoneId'] == None or doneStatus['world'] != CIGlobals.CogTropolis:
             self.doneStatus = doneStatus
             messenger.send(self.doneEvent)
         else:

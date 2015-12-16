@@ -58,7 +58,7 @@ class TNT(TossTrapGag):
             emitter = self.entity.find('**/joint_attachEmitter')
             self.particles.start(parent = emitter, renderParent = emitter)
         base.audio3d.attachSoundToObject(self.idleSfx, self.gag)
-        self.idleSfx.play()
+        base.playSfx(self.idleSfx, node = self.gag)
         if self.entity and self.anim: self.entity.play('chan')
         if self.track:
             self.track.pause()
@@ -76,7 +76,7 @@ class TNT(TossTrapGag):
         if self.idleSfx:
             self.idleSfx.stop()
         base.audio3d.attachSoundToObject(self.hitSfx, self.explosion)
-        SoundInterval(self.hitSfx).start()
+        SoundInterval(self.hitSfx, node = self.explosion).start()
         self.cleanupParticles()
         self.cleanupEntity()
         self.setState(GagState.LOADED)

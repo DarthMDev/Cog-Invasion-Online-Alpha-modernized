@@ -66,7 +66,7 @@ class SquirtGag(Gag):
 
     def doSpray(self, scaleUp, scaleDown, hold):
         base.audio3d.attachSoundToObject(self.spraySfx, self.gag)
-        self.spraySfx.play()
+        base.playSfx(self.spraySfx, node = self.gag)
         spraySequence = self.getSprayTrack(self.origin, self.sprayRange, scaleUp, hold, scaleDown)
         self.sprayTrack = spraySequence
         self.sprayTrack.start()
@@ -87,7 +87,7 @@ class SquirtGag(Gag):
     def onCollision(self, entry):
         self.hitSomething = True
         base.audio3d.attachSoundToObject(self.hitSfx, self.sprayNP)
-        self.hitSfx.play()
+        base.playSfx(self.hitSfx, node = self.sprayNP)
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
         if self.avatar.doId == base.localAvatar.doId:
@@ -109,7 +109,7 @@ class SquirtGag(Gag):
     def handleMiss(self):
         if self.spray and self.hitSomething == False:
             base.audio3d.attachSoundToObject(self.missSfx, self.spray)
-            self.missSfx.play()
+            base.playSfx(self.missSfx, node = self.spray)
             self.cleanupSpray()
 
     def handleSplat(self):

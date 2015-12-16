@@ -386,14 +386,8 @@ class DistributedTutorial(DistributedObject):
         avId = base.localAvatar.doId
         loaderName = 'safeZoneLoader'
         self.sendUpdate('finishedTutorial')
-        self.cr.playGame.fsm.request('quietZone', [{'zoneId': zoneId,
-            'hoodId': hoodId,
-            'where': whereName,
-            'how': 'teleportIn',
-            'avId': avId,
-            'shardId': None,
-            'loader': loaderName,
-            'world': CIGlobals.OToontown}])
+        self.cr.playGame.load()
+        self.cr.playGame.enter(hoodId, zoneId, base.localAvatar.doId, CIGlobals.OToontown)
 
     def exitLeaveTutorial(self):
         base.localAvatar.stopSmartCamera()

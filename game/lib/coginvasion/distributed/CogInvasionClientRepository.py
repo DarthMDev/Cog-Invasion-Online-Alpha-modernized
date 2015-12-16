@@ -120,8 +120,9 @@ class CogInvasionClientRepository(AstronClientRepository):
 
         # Setup 3d audio
         base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)
-        base.audio3d.setDistanceFactor(25)
-        base.audio3d.setDropOffFactor(0.025)
+        #base.audio3d.setDistanceFactor(25)
+        base.audio3d.setDropOffFactor(0)
+        base.audio3d.setDopplerFactor(3.0)
         # Setup collision handlers
         base.lifter = CollisionHandlerFloor()
         base.pusher = CollisionHandlerPusher()

@@ -48,7 +48,7 @@ class HoodMgr(DirectObject):
       -265.639,
       0,
       0])
-    GagShopClerkPoints = {CIGlobals.BattleTTC: [-80,
+    GagShopClerkPoints = {CIGlobals.CogTropCentral: [-80,
       -85.57,
       0.5,
       -13.5,
@@ -76,7 +76,7 @@ class HoodMgr(DirectObject):
       270.35,
       0.0,
       0.0]}
-    BattleShopClerkPoints = {CIGlobals.BattleTTC: [72.95,
+    BattleShopClerkPoints = {CIGlobals.CogTropCentral: [72.95,
       -152.49,
       2.50,
       180.00,
@@ -235,7 +235,7 @@ class HoodMgr(DirectObject):
                                     9.1,
                                     -0.0,
                                     0.0]),
-     CIGlobals.BattleTTC: ([-60,
+     CIGlobals.CogTropCentral: ([-60,
                                         -8,
                                         1.3,
                                         -90,

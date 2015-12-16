@@ -321,7 +321,7 @@ class ShtickerBook(StateData):
                                      scale = 0.06, pos = (-0.4, 0, -0.74), parent = self.frame, text_align = TextNode.ACenter)
 
         if currHoodName in [CIGlobals.MinigameArea]:
-            currHoodName = base.cr.playGame.lastHood
+            currHoodName = base.cr.playGame.world.lastHood
         btpText = "Back to Playground"
         btpEA = [ZoneUtil.getZoneId(currHoodName)]
         if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:

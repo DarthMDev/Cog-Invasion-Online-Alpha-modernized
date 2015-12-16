@@ -1,0 +1,264 @@
+# Filename: DistributedElevator.py
+# Created by:  blach (14Dec15)
+
+from panda3d.core import Point3, TextNode, VBase4, CollisionSphere, CollisionNode
+
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.distributed.DistributedObject import DistributedObject
+from direct.distributed.ClockDelta import globalClockDelta
+from direct.fsm import ClassicFSM, State
+from direct.interval.IntervalGlobal import LerpPosHprInterval, Sequence, Wait, Func, LerpPosInterval, LerpHprInterval
+from direct.gui.DirectGui import DirectButton
+
+from lib.coginvasion.globals import CIGlobals
+from ElevatorConstants import *
+from ElevatorUtils import *
+
+class DistributedElevator(DistributedObject):
+    notify = directNotify.newCategory('DistributedElevator')
+
+    def __init__(self, cr):
+        DistributedObject.__init__(self, cr)
+        self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.mp3')
+        self.closeSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_close.mp3')
+        self.elevatorPoints = ElevatorPoints
+        self.type = ELEVATOR_NORMAL
+        self.countdownTime = ElevatorData[self.type]['countdown']
+        self.localAvOnElevator = False
+        self.thebldg = None
+        self.bldgDoId = None
+        self.toZoneId = None
+        self.elevatorModel = None
+        self.countdownTextNP = None
+        self.toonsInElevator = []
+        self.hopOffButton = None
+        self.fsm = ClassicFSM.ClassicFSM('DistributedElevator', [State.State('off', self.enterOff, self.exitOff),
+         State.State('opening', self.enterOpening, self.exitOpening),
+         State.State('waitEmpty', self.enterWaitEmpty, self.exitWaitEmpty),
+         State.State('waitCountdown', self.enterWaitCountdown, self.exitWaitCountdown),
+         State.State('closing', self.enterClosing, self.exitClosing),
+         State.State('closed', self.enterClosed, self.exitClosed)], 'off', 'off')
+        self.fsm.enterInitialState()
+
+    def setElevatorType(self, etype):
+        self.type = etype
+
+    def getElevatorType(self):
+        return self.type
+
+    def setBldgDoId(self, doId):
+        self.bldgDoId = doId
+
+    def getBldgDoId(self):
+        return self.bldgDoId
+
+    def setToZoneId(self, zoneId):
+        self.toZoneId = zoneId
+
+    def getToZoneId(self):
+        return self.toZoneId
+
+    def enterOpening(self, ts = 0):
+        self.openDoors.start(ts)
+
+    def exitOpening(self):
+        self.openDoors.finish()
+
+    def enterClosing(self, ts = 0):
+        if self.localAvOnElevator:
+            self.hideHopOffButton()
+        self.closeDoors.start(ts)
+
+    def exitClosing(self):
+        self.closeDoors.finish()
+
+    def enterClosed(self, ts = 0):
+        closeDoors(self.leftDoor, self.rightDoor)
+
+    def exitClosed(self):
+        pass
+
+    def __handleElevatorTrigger(self, entry):
+        if not self.localAvOnElevator:
+            self.cr.playGame.getPlace().fsm.request('stop')
+            self.sendUpdate('requestEnter')
+
+    def enterWaitEmpty(self, ts = 0):
+        if not self.localAvOnElevator:
+            self.acceptOnce('enter' + self.uniqueName('elevatorSphere'), self.__handleElevatorTrigger)
+        openDoors(self.leftDoor, self.rightDoor)
+
+    def exitWaitEmpty(self):
+        self.ignore('enter' + self.uniqueName('elevatorSphere'))
+
+    def enterWaitCountdown(self, ts = 0):
+        if not self.localAvOnElevator:
+            self.acceptOnce('enter' + self.uniqueName('elevatorSphere'), self.__handleElevatorTrigger)
+        openDoors(self.leftDoor, self.rightDoor)
+        if self.countdownTextNP:
+            self.countdownTextNP.show()
+            self.countdownTrack = Sequence()
+            time = int(ElevatorData[self.type]['countdown'])
+            for i in range(time):
+                self.countdownTrack.append(Func(self.countdownTextNP.node().setText, str(time - i)))
+                self.countdownTrack.append(Wait(1.0))
+            self.countdownTrack.start(ts)
+
+    def exitWaitCountdown(self):
+        if self.countdownTextNP:
+            self.countdownTextNP.hide()
+        self.countdownTrack.finish()
+        del self.countdownTrack
+
+    def enterOff(self):
+        pass
+
+    def exitOff(self):
+        pass
+
+    def announceGenerate(self):
+        DistributedObject.announceGenerate(self)
+        self.getTheBldg()
+        self.leftDoor = self.thebldg.leftDoor
+        self.rightDoor = self.thebldg.rightDoor
+        self.setupElevator()
+        self.setupCountdownText()
+        self.sendUpdate('requestStateAndTimestamp')
+
+    def setState(self, state, timestamp):
+        self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
+
+    def stateAndTimestamp(self, state, timestamp):
+        self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
+
+    def setupCountdownText(self):
+        tn = TextNode('countdownText')
+        tn.setFont(CIGlobals.getMickeyFont())
+        tn.setTextColor(VBase4(0.5, 0.5, 0.5, 1.0))
+        tn.setAlign(TextNode.ACenter)
+        self.countdownTextNP = self.getElevatorModel().attachNewNode(tn)
+        self.countdownTextNP.setScale(2)
+        self.countdownTextNP.setPos(0, 1, 7)
+        #self.countdownTextNP.setH(180)
+
+    def setupElevator(self):
+        collisionRadius = ElevatorData[self.type]['collRadius']
+        self.elevatorSphere = CollisionSphere(0, 5, 0, collisionRadius)
+        self.elevatorSphere.setTangible(0)
+        self.elevatorSphereNode = CollisionNode(self.uniqueName('elevatorSphere'))
+        self.elevatorSphereNode.setIntoCollideMask(CIGlobals.WallBitmask)
+        self.elevatorSphereNode.addSolid(self.elevatorSphere)
+        self.elevatorSphereNodePath = self.getElevatorModel().attachNewNode(self.elevatorSphereNode)
+        self.elevatorSphereNodePath.reparentTo(self.getElevatorModel())
+        self.openDoors = getOpenInterval(self, self.leftDoor, self.rightDoor, self.openSfx, None, self.type)
+        self.closeDoors = getCloseInterval(self, self.leftDoor, self.rightDoor, self.closeSfx, None, self.type)
+        self.closeDoors = Sequence(self.closeDoors, Func(self.onDoorCloseFinish))
+
+    def disable(self):
+        if hasattr(self, 'openDoors'):
+            self.openDoors.pause()
+        if hasattr(self, 'closeDoors'):
+            self.closeDoors.pause()
+        self.elevatorSphereNodePath.removeNode()
+        del self.elevatorSphereNodePath
+        del self.elevatorSphereNode
+        del self.elevatorSphere
+        self.fsm.request('off')
+        DistributedObject.disable(self)
+
+    def onDoorCloseFinish(self):
+        base.transitions.fadeScreen(1.0)
+        self.cr.playGame.world.hood.loader.music.stop()
+        Sequence(Wait(1.0), Func(self.doMusic)).start()
+
+    def doMusic(self):
+        self.elevMusic = base.loadMusic('phase_7/audio/bgm/tt_elevator.mid')
+        base.playMusic(self.elevMusic, looping = 1, volume = 0.8)
+
+    def fillSlot(self, index, avId):
+        toon = self.cr.doId2do.get(avId)
+        if toon:
+            point = ElevatorPoints[index]
+            toon.stopSmooth()
+            toon.wrtReparentTo(self.thebldg.elevatorModel)
+            toon.headsUp(point)
+            track = Sequence()
+            track.append(Func(toon.animFSM.request, 'run'))
+            track.append(LerpPosInterval(toon, duration = 0.5, pos = point,
+                         startPos = toon.getPos(self.thebldg.elevatorModel)))
+            track.append(LerpHprInterval(toon, duration = 0.1, hpr = (180, 0, 0),
+                         startHpr = toon.getHpr(self.thebldg.elevatorModel)))
+            track.append(Func(toon.animFSM.request, 'neutral'))
+            if avId == base.localAvatar.doId:
+                self.localAvOnElevator = True
+                track.append(Func(self.showHopOffButton))
+                base.localAvatar.stopSmartCamera()
+                base.localAvatar.walkControls.setCollisionsActive(0)
+                base.camera.wrtReparentTo(self.thebldg.elevatorModel)
+                cameraBoardTrack = LerpPosHprInterval(camera, 1.5, Point3(0, -16, 5.5), Point3(0, 0, 0))
+                cameraBoardTrack.start()
+            track.start()
+
+    def emptySlot(self, index, avId):
+        toon = self.cr.doId2do.get(avId)
+        if toon:
+            OutPoint = ElevatorOutPoints[index]
+            InPoint = ElevatorPoints[index]
+            toon.stopSmooth()
+            toon.headsUp(OutPoint)
+            track = Sequence(
+                Func(toon.animFSM.request, 'run'),
+                LerpPosInterval(toon, duration = 0.5, pos = OutPoint, startPos = InPoint),
+                Func(toon.animFSM.request, 'neutral'),
+                Func(toon.startSmooth))
+            if avId == base.localAvatar.doId:
+                self.localAvOnElevator = False
+                track.append(Func(self.freedom))
+            track.start()
+
+    def freedom(self):
+        if self.fsm.getCurrentState().getName() in ['waitEmpty', 'waitCountdown']:
+            self.acceptOnce('enter' + self.uniqueName('elevatorSphere'), self.__handleElevatorTrigger)
+        base.localAvatar.walkControls.setCollisionsActive(1)
+        self.cr.playGame.getPlace().fsm.request('walk')
+
+    def setToonsInElevator(self, toonsInElevator):
+        for i in xrange(len(toonsInElevator)):
+            avId = toonsInElevator[i]
+            toon = self.cr.doId2do.get(avId)
+            if toon:
+                toon.reparentTo(self.thebldg.elevatorModel)
+                toon.stopSmooth()
+                point = ElevatorPoints[index]
+                toon.setPos(point)
+                toon.setHpr(0, 0, 0)
+                toon.animFSM.request('neutral')
+
+    def getTheBldg(self):
+        self.thebldg = self.cr.doId2do.get(self.bldgDoId)
+
+    def getElevatorModel(self):
+        return self.thebldg.elevatorModel
+
+    def enterRejected(self):
+        self.cr.playGame.getPlace().fsm.request('walk')
+
+    def showHopOffButton(self):
+        gui = loader.loadModel('phase_3.5/models/gui/inventory_gui.bam')
+        upButton = gui.find('**/InventoryButtonUp')
+        downButton = gui.find('**/InventoryButtonDown')
+        rlvrButton = gui.find('**/InventoryButtonRollover')
+        self.hopOffBtn = DirectButton(
+            relief = None, text = "Hop off", text_fg = (0.9, 0.9, 0.9, 1),
+            text_pos = (0, -0.23), text_scale = 0.75, image = (upButton, downButton, rlvrButton),
+            image_color = (0.5, 0.5, 0.5, 1), image_scale = (20, 1, 11), pos = (0, 0, 0.8),
+            scale = 0.15, command = self.handleHopOffButton)
+
+    def hideHopOffButton(self):
+        if hasattr(self, 'hopOffBtn'):
+            self.hopOffBtn.destroy()
+            del self.hopOffBtn
+
+    def handleHopOffButton(self):
+        self.hideHopOffButton()
+        self.sendUpdate('requestExit')

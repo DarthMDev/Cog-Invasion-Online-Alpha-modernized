@@ -84,7 +84,7 @@ class ChargeUpSpot(LocationSeeker):
                     LerpColorScaleInterval(cog, tickDuration, VBase4(1, 0, 0, 1)),
                     Func(cog.clearColorScale),
                     Func(cog.d_disableMovement)
-                ), SoundInterval(self.tickSfx, duration = tickDuration)))
+                ), SoundInterval(self.tickSfx, duration = tickDuration, node = cog)))
             else:
                 self.selectedCogs.remove(cog)
         return tickTrack
@@ -106,7 +106,7 @@ class ChargeUpSpot(LocationSeeker):
                 blendType = 'easeInOut'
             ),
             Func(base.audio3d.attachSoundToObject, self.chargingSfx, self.dropShadow),
-            SoundInterval(self.chargingSfx, duration = self.chargeDuration)
+            SoundInterval(self.chargingSfx, duration = self.chargeDuration, node = self.dropShadow)
         )
         self.shadowTrack.append(chargeTrack)
         self.shadowTrack.append(self.__tickNearbyCogs())

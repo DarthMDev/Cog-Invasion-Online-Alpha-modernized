@@ -143,9 +143,14 @@ class Hood(StateData):
     def enterQuietZone(self, requestStatus):
         base.transitions.noTransitions()
         loaderName = requestStatus['loader']
+        zoneID = requestStatus['zoneId']
+        if ZoneUtil.getWhereName(zoneID) == 'playground':
+            name = self.id
+        else:
+            name = CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(zoneID)]
         if loaderName == 'safeZoneLoader' or loaderName == 'townLoader':
             if not loader.inBulkBlock:
-                loader.beginBulkLoad('hood', self.id, CIGlobals.safeZoneLSRanges.get(self.id, 6))
+                loader.beginBulkLoad('hood', name, CIGlobals.safeZoneLSRanges.get(self.id, 6))
             self.loadLoader(requestStatus)
         else:
             base.transitions.fadeScreen(1.0)
@@ -187,10 +192,8 @@ class Hood(StateData):
         del self.loader
 
     def handleSafeZoneLoaderDone(self):
-        print 'sz loader done'
         doneStatus = self.loader.getDoneStatus()
         if self.isSameHood(doneStatus) and doneStatus['world'] == base.cr.playGame.getCurrentWorldName() or doneStatus['where'] == 'minigame':
-            print 'enter quiet zone'
             self.fsm.request('quietZone', [doneStatus])
         else:
             self.doneStatus = doneStatus
@@ -218,7 +221,6 @@ class Hood(StateData):
                 del self.sky
 
     def startSuitEffect(self):
-        print 'startsuiteffect'
         self.stopSuitEffect()
         light = AmbientLight("suitLight")
         light.setColor(Vec4(*self.suitLightColor))
@@ -232,7 +234,6 @@ class Hood(StateData):
         Hood.startSky(self)
 
     def stopSuitEffect(self, newSky = 1):
-        print 'stopsuiteffect'
         render.clearFog()
         if self.suitLight:
             render.clearLight(self.suitLight)

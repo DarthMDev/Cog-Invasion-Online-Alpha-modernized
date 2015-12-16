@@ -193,7 +193,7 @@ class ThrowAttack(Attack):
     def playWeaponSound(self):
         if self.weapon and self.weaponSfx:
             base.audio3d.attachSoundToObject(self.weaponSfx, self.suit)
-            self.weaponSfx.play()
+            base.playSfx(self.weaponSfx, node = self.suit)
 
     def throwObject(self, projectile = True):
         if not self.weapon:
@@ -511,7 +511,7 @@ class FountainPenAttack(Attack):
     def playWeaponSound(self):
         self.spraySfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_fountain_pen.mp3")
         base.audio3d.attachSoundToObject(self.spraySfx, self.pen)
-        self.spraySfx.play()
+        base.playSfx(self.spraySfx, node = self.pen)
 
     def cleanup(self):
         Attack.cleanup(self)
@@ -609,7 +609,7 @@ class HangUpAttack(Attack):
         self.suitTrack.append(
             Sequence(
                 Wait(delay2playSound),
-                SoundInterval(self.phoneSfx, duration = 2.1),
+                SoundInterval(self.phoneSfx, duration = 2.1, node = self.suit),
                 Wait(delayAfterSoundToPlaceDownReceiver),
                 Func(self.receiver.setPos, 0, 0, 0),
                 Func(self.receiver.setH, 0.0),
@@ -617,7 +617,7 @@ class HangUpAttack(Attack):
                 Func(self.acceptOnce, "enter" + self.collNP.node().getName(), self.handleCollision),
                 Func(self.shootOut),
                 Parallel(
-                    SoundInterval(self.hangupSfx),
+                    SoundInterval(self.hangupSfx, node = self.suit),
                     Sequence(
                         Wait(delayAfterShootToIgnoreCollisions),
                         Func(self.ignore, "enter" + self.collNP.node().getName())
@@ -994,7 +994,7 @@ class ParticleAttack(Attack):
     def playParticleSound(self):
         if self.particleSound:
             base.audio3d.attachSoundToObject(self.particleSound, self.suit)
-            base.playSfx(self.particleSound)
+            base.playSfx(self.particleSound, node = self.suit)
 
     def cleanup(self):
         Attack.cleanup(self)

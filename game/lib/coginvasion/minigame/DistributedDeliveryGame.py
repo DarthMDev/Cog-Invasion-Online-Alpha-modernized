@@ -155,7 +155,7 @@ class DistributedDeliveryGame(DistributedMinigame):
     def enterStart(self):
         DistributedMinigame.enterStart(self)
         beepSound = base.loadSfx('phase_4/audio/sfx/MG_delivery_truck_beep.mp3')
-        base.playSfx(beepSound)
+        SoundInterval(beepSound).start()
 
     def enterPlay(self):
         DistributedMinigame.enterPlay(self)

@@ -116,8 +116,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
             base.audio3d.attachSoundToObject(dieSound, self.avatar)
             self.avatar.setTransparency(1)
             self.avatar.getGeomNode().setTransparency(1)
+            SoundInterval(dieSound, node = self.avatar).start()
             self.track = Sequence(
-                Func(dieSound.play),
                 Parallel(
                     LerpColorScaleInterval(
                         self.avatar.getGeomNode(),
@@ -193,9 +193,9 @@ class RemoteToonBattleAvatar(RemoteAvatar):
             elif self.gunName == "shotgun":
                 gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
             base.audio3d.attachSoundToObject(gunSound, self.avatar)
+            SoundInterval(gunSound, node = self.avatar).start()
             self.track = Sequence(
                 Func(createBullet),
-                Func(gunSound.play),
                 ActorInterval(
                     self.avatar,
                     "squirt",

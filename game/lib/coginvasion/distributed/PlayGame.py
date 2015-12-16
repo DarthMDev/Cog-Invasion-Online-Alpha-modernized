@@ -91,7 +91,6 @@ class PlayGame(StateData):
         self.world = None
 
     def handleWorldDone(self):
-        print 'world done'
         doneStatus = self.world.getDoneStatus()
         if doneStatus['zoneId'] == None or doneStatus['world'] == None:
             self.doneStatus = doneStatus

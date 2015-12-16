@@ -8,18 +8,25 @@
 from lib.coginvasion.globals import CIGlobals
 from direct.directnotify.DirectNotify import DirectNotify
 from panda3d.core import TextNode
-from direct.gui.DirectGui import OnscreenImage, DirectWaitBar, DirectLabel
+from direct.gui.DirectGui import OnscreenImage, DirectWaitBar, DirectLabel, DirectFrame, OnscreenText
+
+import random
 
 notify = DirectNotify().newCategory("CIProgressScreen")
 
 class CIProgressScreen:
 
     def __init__(self):
+        self.defaultLogoScale = 0.85
+        self.defaultLogoZ = 0.65
         self.bgm = loader.loadModel("phase_3/models/gui/progress-background.bam")
         self.bgm.find('**/logo').stash()
         self.bg = self.bgm.find('**/bg')
         self.logo = loader.loadTexture("phase_3/maps/CogInvasion_Logo.png")
-        self.logoImg = OnscreenImage(image = self.logo, scale = (0.5, 0, 0.3), pos = (0, 0, 0), parent=hidden)
+        self.logoNode = hidden.attachNewNode('logoNode')
+        self.logoNode.setScale(self.defaultLogoScale)
+        self.logoNode.setPos(0, self.defaultLogoZ, 0)
+        self.logoImg = OnscreenImage(image = self.logo, scale = (0.685, 0, 0.3), parent=self.logoNode)
         self.logoImg.setTransparency(True)
         self.bg_img = OnscreenImage(image=self.bg, parent=hidden)
         self.bg_img.setSx(1.35)
@@ -27,6 +34,11 @@ class CIProgressScreen:
         self.progress_bar = DirectWaitBar(value=0, pos=(0, 0, -0.85), parent=hidden, text_pos = (0, 0, 0.2))
         self.progress_bar.setSx(1.064)
         self.progress_bar.setSz(0.38)
+        toontipgui = loader.loadModel('phase_3.5/models/gui/stickerbook_gui.bam')
+        poster = toontipgui.find('**/questCard')
+        self.toontipFrame = DirectFrame(image = poster, image_scale = (1.4, 1, 1), parent = hidden, relief = None, pos = (0, 0, -0.1), scale = 0.85)
+        self.toontipLbl = OnscreenText(text = "", parent = self.toontipFrame, fg = (0.35, 0.35, 0.35, 1),
+            font = CIGlobals.getToonFont(), wordwrap = 14.5, pos = (-0.59, 0.25), align = TextNode.ALeft, scale = 0.08)
         self.loading_lbl = DirectLabel(text="",
                                     relief=None,
                                     scale=0.08,
@@ -58,8 +70,11 @@ class CIProgressScreen:
         self.bg.reparentTo(render2d)
         self.bg_img.reparentTo(hidden)
         self.loading_lbl.reparentTo(aspect2d)
-        self.logoImg.reparentTo(aspect2d)
+        self.logoNode.reparentTo(aspect2d)
         self.progress_bar.reparentTo(aspect2d)
+        tip = random.choice(CIGlobals.ToonTips)
+        self.toontipLbl.setText("TOON TIP:\n" + tip)
+        self.toontipFrame.reparentTo(aspect2d)
         self.__count = 0
         self.__expectedCount = range
         #taskMgr.add(self.renderFramesTask, "renderFrames")
@@ -75,11 +90,12 @@ class CIProgressScreen:
         render.show()
         self.progress_bar.finish()
         self.bg_img.reparentTo(hidden)
-        self.logoImg.reparentTo(hidden)
+        self.logoNode.reparentTo(hidden)
         self.bg.reparentTo(hidden)
         self.bgm.reparentTo(hidden)
         self.loading_lbl.reparentTo(hidden)
         self.progress_bar.reparentTo(hidden)
+        self.toontipFrame.reparentTo(hidden)
         self.renderFrames()
 
     def destroy(self):

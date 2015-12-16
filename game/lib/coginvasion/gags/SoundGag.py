@@ -38,6 +38,8 @@ class SoundGag(Gag):
             self.tracks.pause()
             self.tracks = None
         self.build()
+        base.audio3d.attachSoundToObject(self.soundSfx, self.avatar)
+        base.audio3d.attachSoundToObject(self.appearSfx, self.avatar)
         if self.isLocal():
             base.localAvatar.sendUpdate('usedGag', [self.id])
 
@@ -51,6 +53,8 @@ class SoundGag(Gag):
         self.finish()
 
     def damageCogsNearby(self, radius = None):
+        if self.avatar.doId != base.localAvatar.doId:
+            return
         if not radius:
             radius = self.soundRange
         suits = []

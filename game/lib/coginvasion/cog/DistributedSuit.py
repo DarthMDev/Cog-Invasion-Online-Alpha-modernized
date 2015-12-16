@@ -299,18 +299,18 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def announceHealth(self, level, hp):
         DistributedAvatar.announceHealth(self, level, hp)
         if level == 1:
-            healthSfx = base.loadSfx(SuitGlobals.healedSfx)
+            healthSfx = base.audio3d.loadSfx(SuitGlobals.healedSfx)
+            base.audio3d.attachSoundToObject(healthSfx, self)
             SoundInterval(healthSfx, node = self).start()
             del healthSfx
 
-    """
-        'setSuit' sets the suit type and generates it.
-        'arg' is an id for a SuitPlan as defined in SuitBank or
-            an instance of SuitPlan.
-        'variant' is an optional argument that sets the variant.
-            It takes an id for the variant or an instance of Variant.
-            Default is Variant.NORMAL.
-    """
+    #
+    #    'setSuit' sets the suit type and generates it.
+    #    'arg' is an id for a SuitPlan as defined in SuitBank or
+    #        an instance of SuitPlan.
+    #    'variant' is an optional argument that sets the variant.
+    #        It takes an id for the variant or an instance of Variant.
+    #        Default is Variant.NORMAL.
 
     def setSuit(self, arg, variant = 0):
         if isinstance(arg, SuitPlan):

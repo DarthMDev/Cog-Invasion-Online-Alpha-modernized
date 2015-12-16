@@ -67,6 +67,7 @@ class World(StateData):
         self.dnaStore.storeFont('humanist', CIGlobals.getToonFont())
         self.dnaStore.storeFont('mickey', CIGlobals.getMickeyFont())
         self.dnaStore.storeFont('suit', CIGlobals.getSuitFont())
+        base.cr.playGame.dnaStore = self.dnaStore
         loadDNAFile(self.dnaStore, 'phase_3.5/dna/storage_interior.pdna')
 
     def enterQuietZone(self, requestStatus):

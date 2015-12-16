@@ -119,6 +119,8 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
                     break
             self.sendUpdate('fillSlot', [slotToFill, avId])
             self.slotTakenByAvatarId[avId] = slotToFill
+        else:
+            self.sendUpdateToAvatarId(avId, 'rejectBoard', [])
 
     def requestHopOff(self):
         avId = self.air.getAvatarIdFromSender()

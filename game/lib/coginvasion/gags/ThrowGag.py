@@ -47,7 +47,7 @@ class ThrowGag(Gag):
     def release(self):
         Gag.release(self)
         base.audio3d.attachSoundToObject(self.woosh, self.gag)
-        self.woosh.play()
+        base.playSfx(self.woosh, node = self.gag)
 
         throwPath = NodePath('ThrowPath')
         throwPath.reparentTo(self.avatar)
@@ -89,7 +89,7 @@ class ThrowGag(Gag):
         base.audio3d.attachSoundToObject(self.hitSfx, self.splat)
         self.splat.reparentTo(render)
         self.splat.setPos(self.splatPos)
-        self.hitSfx.play()
+        base.playSfx(self.hitSfx, node = self.splat)
         self.cleanupEntity(self.splatPos)
         self.splatPos = None
         taskMgr.doMethodLater(0.5, self.delSplat, 'Delete Splat')

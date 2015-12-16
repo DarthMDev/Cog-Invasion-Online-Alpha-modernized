@@ -176,7 +176,7 @@ class Suit(Avatar):
             self.generatePropeller()
         sfx = self.propellerSounds['neutral']
         sfx.setLoop(True)
-        sfx.play()
+        base.playSfx(sfx, node = self)
         self.propeller.loop('chan', fromFrame = 0, toFrame = 3)
         self.setPlayRate(0.8, 'land')
         self.pingpong('land', fromFrame = 0, toFrame = 10)
@@ -189,7 +189,7 @@ class Suit(Avatar):
         if not self.propeller:
             self.generatePropeller()
         sfx = self.propellerSounds['in']
-        sfx.play()
+        base.playSfx(sfx, node = self)
         groundF = 28
         dur = self.getDuration('land')
         fr = self.getFrameRate('land')
@@ -304,7 +304,7 @@ class Suit(Avatar):
         self.bigGearExp = bigGearExplosion
 
         gearTrack = Sequence(Wait(0.7), Func(self.doSingleGear), Wait(1.5), Func(self.doSmallGears), Wait(3.0), Func(self.doBigExp))
-        self.suitTrack = Parallel(Sequence(Wait(0.8), SoundInterval(deathSound)),
+        self.suitTrack = Parallel(Sequence(Wait(0.8), SoundInterval(deathSound, node = self)),
                 Sequence(Wait(0.7), Func(self.doSingleGear), Wait(4.3),
                 Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions)), gearTrack, Sequence(ActorInterval(self, 'lose', duration = 6), Func(self.getGeomNode().hide)), name = trackName)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
@@ -609,7 +609,7 @@ class Suit(Avatar):
             self.audio3d.attachSoundToObject(self.chatDial, self)
         else:
             self.audio3d.attachSoundToObject(self.chatDial, self.headModel)
-        self.chatDial.play()
+        base.playSfx(self.chatDial, node = self)
 
     def clearChatbox(self):
         self.clearChat()

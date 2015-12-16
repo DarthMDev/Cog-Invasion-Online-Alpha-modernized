@@ -125,7 +125,6 @@ class OToontown(World):
         self.lastHood = CIGlobals.MinigameArea
 
     def handleHoodDone(self):
-        print 'hood done'
         doneStatus = self.hood.getDoneStatus()
         if doneStatus['zoneId'] == None or doneStatus['world'] != CIGlobals.OToontown:
             self.doneStatus = doneStatus

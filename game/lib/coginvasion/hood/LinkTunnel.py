@@ -170,7 +170,7 @@ def getRecommendedTunnelClassFromZone(zone):
     if ZoneUtil.getWhereName(zone) == 'playground':
         return StreetLinkTunnel
     elif ZoneUtil.getWhereName(zone) == 'street':
-        if ZoneUtil.getHoodId(zone, street = 1) == base.cr.playGame.hood.id:
+        if ZoneUtil.getHoodId(zone, street = 1, world = CIGlobals.OToontown) == base.cr.playGame.hood.id:
             return SafeZoneLinkTunnel
         else:
             return NeighborhoodLinkTunnel

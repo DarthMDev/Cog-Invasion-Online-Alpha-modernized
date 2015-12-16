@@ -77,7 +77,7 @@ class LocationGag:
         if mode == 0:
             self.actorTrack = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = self.chooseLocFrame,
                                endFrame = self.completeFrame, playRate = self.playRate))
-            self.soundTrack = Sequence(Wait(self.buttonHold), SoundInterval(self.buttonSfx, self.avatar))
+            self.soundTrack = Sequence(Wait(self.buttonHold), SoundInterval(self.buttonSfx, node = self.avatar))
 
     def cleanupTracks(self):
         if self.actorTrack:

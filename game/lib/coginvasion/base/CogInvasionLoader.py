@@ -11,7 +11,7 @@ from lib.coginvasion.gui.CIProgressScreen import CIProgressScreen
 from lib.coginvasion.dna.DNALoader import *
 
 class CogInvasionLoader(Loader.Loader):
-	TickPeriod = 0.2
+	TickPeriod = 0.0
 
 	def __init__(self, base):
 		Loader.Loader.__init__(self, base)
@@ -47,29 +47,17 @@ class CogInvasionLoader(Loader.Loader):
 
 	def tick(self):
 		if self.inBulkBlock:
-			now = globalClock.getRealTime()
-			if now - self._lastTickT > self.TickPeriod:
-				self._lastTickT += self.TickPeriod
-				if self.wantAutoTick:
-					self.progressScreen.tick()
-				try:
-					base.cr.considerHeartbeat()
-				except:
-					pass
-			base.graphicsEngine.renderFrame()
+			self.progressScreen.tick()
+			try:
+				base.cr.considerHeartbeat()
+			except:
+				pass
 
 	def loadDNAFile(self, dnaStore, filename):
 		return loadDNAFile(dnaStore, filename)
 
 	def loadModel(self, *args, **kw):
 		ret = Loader.Loader.loadModel(self, *args, **kw)
-		try:
-			if ret:
-				gsg = base.win.getGsg()
-				if gsg:
-					ret.prepareScene(gsg)
-		except:
-			pass
 		self.tick()
 		return ret
 

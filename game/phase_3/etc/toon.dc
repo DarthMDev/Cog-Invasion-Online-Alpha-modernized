@@ -44,6 +44,7 @@ from lib.coginvasion.suit import DistributedDroppableCollectableHealth/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableIceCream/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableBackpack/AI
 from lib.coginvasion.suit import DistributedCogBattle/AI
+from lib.coginvasion.suit import DistributedCogStation/AI
 from lib.coginvasion.hood import DistributedTreasure/AI
 from lib.coginvasion.hood import DistributedTTCTreasure/AI
 from lib.coginvasion.hood import DistributedTBTreasure/AI
@@ -67,6 +68,8 @@ from lib.coginvasion.tutorial import DistributedTutorial/AI
 from lib.coginvasion.tutorial import DistributedTutorialSuit/AI
 from lib.coginvasion.holiday import HolidayManager/UD
 from lib.coginvasion.holiday import DistributedWinterCoachActivity/AI
+from lib.coginvasion.cthood import DistributedBuilding/AI
+from lib.coginvasion.cthood import DistributedElevator/AI
 
 struct AvChoice {
   uint32 avId;
@@ -355,6 +358,7 @@ dclass DistributedCogBattle : DistributedObject {
 dclass DistributedBattleTrolley : DistributedObject {
   requestBoard() clsend airecv;
   requestHopOff() clsend airecv;
+  rejectBoard();
   fillSlot(int8, uint32) broadcast;
   emptySlot(int8, uint32) broadcast;
   setState(string, int16) required broadcast ram;
@@ -651,4 +655,27 @@ dclass DistributedCityCart : DistributedNode {
   setIvalTDisplace(uint8) required broadcast ram;
   setState(string, int16) required broadcast ram;
   hitByCar() clsend airecv;
+};
+
+dclass DistributedBuilding : DistributedObject {
+  setBlock(uint16, uint32) required broadcast ram;
+  setSuitData(string, int8, int8) required broadcast ram;
+  setVictorList(uint32[]) broadcast ram;
+  setState(string, int16) broadcast ram required;
+  setVictorReady() clsend airecv;
+};
+
+dclass DistributedElevator : DistributedObject {
+  setBldgDoId(uint32) required broadcast ram;
+  setToZoneId(uint32) required broadcast ram;
+  setElevatorType(int8) required broadcast ram;
+  setState(string, int16) broadcast ram;
+  setToonsInElevator(uint32[]);
+  requestEnter() clsend airecv;
+  enterRejected();
+  requestExit() clsend airecv;
+  fillSlot(int8, uint32) broadcast;
+  emptySlot(int8, uint32) broadcast;
+  requestStateAndTimestamp() clsend airecv;
+  stateAndTimestamp(string, int16);
 };

@@ -11,6 +11,7 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from panda3d.core import ModelPool, TexturePool, NodePath
 
+from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.manager.SettingsManager import SettingsManager
 from QuietZoneState import QuietZoneState
 import ToonInterior
@@ -97,7 +98,7 @@ class SafeZoneLoader(StateData):
 
     def enter(self, requestStatus):
         StateData.enter(self)
-        if base.localAvatar.zoneId < 61000:
+        if base.localAvatar.zoneId < CIGlobals.DynamicZonesBegin:
             self.findAndMakeLinkTunnels()
         self.fsm.enterInitialState()
         messenger.send('enterSafeZone')
@@ -172,7 +173,6 @@ class SafeZoneLoader(StateData):
         return
 
     def handlePlaygroundDone(self):
-        print 'playground done'
         status = self.place.doneStatus
         if self.hood.isSameHood(status) and status['loader'] == 'safeZoneLoader' and not status['where'] in ['minigame'] and status['world'] == base.cr.playGame.getCurrentWorldName():
             self.fsm.request('quietZone', [status])

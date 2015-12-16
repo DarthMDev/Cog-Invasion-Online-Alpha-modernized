@@ -32,9 +32,9 @@ class DistributedEagleSuit(DistributedSuit):
         self.fallingPropProjectile = None
         self.mg = None
         self.flySpeed = 0.0
-        
+
     # A work around to prevent the weird standing eagles in the air.
-        
+
     def enterNeutral(self, ts=0):
         self.show()
         self.timestampAnimTrack = Sequence(Wait(ts), Func(self.loop, "flyNeutral"))
@@ -128,11 +128,11 @@ class DistributedEagleSuit(DistributedSuit):
 
         self.updateHealthBar(0)
         self.ignoreHit()
-        self.fallWhistle.play()
+        base.playSfx(self.fallWhistle, node = self)
         taskMgr.doMethodLater(4.0, self.doExplodeSound, self.uniqueName("DEagleSuit-doExplodeSound"))
 
     def doExplodeSound(self, task):
-        self.explode.play()
+        base.playSfx(self.explode, node = self)
         return Task.done
 
     def __initializeEventSphere(self):
@@ -171,7 +171,7 @@ class DistributedEagleSuit(DistributedSuit):
         self.setAnimState('flyNeutral')
 
     def __doEagleCry(self, task):
-        self.eagleCry.play()
+        base.playSfx(self.eagleCry, node = self)
         task.delayTime = random.uniform(3, 30)
         return Task.again
 

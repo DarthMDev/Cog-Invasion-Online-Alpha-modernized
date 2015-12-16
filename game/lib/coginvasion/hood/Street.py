@@ -87,20 +87,14 @@ class Street(Place):
                 return
         else:
             newZoneId = newZone
-        print 'Entering vis group: {0}'.format(newZoneId)
-        print 'Current self.zoneId: {0}'.format(self.zoneId)
         self.doEnterZone(newZoneId)
 
     def doEnterZone(self, newZoneId):
         similarZoneId = newZoneId
         if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis and similarZoneId != None and similarZoneId > 20000:
-            print 'fixed vis group zone'
             similarZoneId -= 20000
-            print similarZoneId
         elif base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis and similarZoneId != None and similarZoneId < 20000:
-            print 'fixed zoneId'
             newZoneId += 20000
-            print newZoneId
         visualizeZones = 0
         if self.zoneId != None:
             for i in self.loader.nodeDict[self.zoneId]:
@@ -131,17 +125,15 @@ class Street(Place):
             if similarZoneId is not None:
                 loader = base.cr.playGame.getPlace().loader
                 if similarZoneId in loader.zoneVisDict:
-                    print 'it is in it'
                     visList = []
                     for vis in loader.zoneVisDict[similarZoneId]:
                         if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
                             visList.append(vis + 20000)
                         else:
                             visList.append(vis)
-                    print visList
                     base.cr.sendSetZoneMsg(newZoneId, visList)
+                    print base.localAvatar.zoneId
                 else:
-                    print 'it is not in it'
                     visList = [similarZoneId] + loader.zoneVisDict.values()[0]
                     base.cr.sendSetZoneMsg(newZoneId, visList)
             self.zoneId = similarZoneId

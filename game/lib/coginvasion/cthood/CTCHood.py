@@ -17,7 +17,7 @@ class CTCHood(ToonHood.ToonHood):
 
     def __init__(self, parentFSM, doneEvent, dnaStore, hoodId):
         ToonHood.ToonHood.__init__(self, parentFSM, doneEvent, dnaStore, hoodId)
-        self.id = CIGlobals.BattleTTC
+        self.id = CIGlobals.CogTropCentral
         self.safeZoneLoader = CTCSafeZoneLoader.CTCSafeZoneLoader
         self.townLoader = TTTownLoader.TTTownLoader
         self.skyUtil = SkyUtil.SkyUtil()

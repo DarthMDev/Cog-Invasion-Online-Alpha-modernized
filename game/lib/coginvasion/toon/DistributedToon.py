@@ -23,7 +23,7 @@ import random
 import numbers
 import types
 
-from lib.coginvasion.suit import SuitAttacks
+from lib.coginvasion.cog import SuitAttacks
 
 notify = DirectNotify().newCategory("DistributedToon")
 
@@ -401,13 +401,16 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
     def handleSuitAttack(self, attack_id, suit_id):
         attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
         if attack == "canned":
-            sfx = base.loadSfx("phase_5/audio/sfx/SA_canned_impact_only.mp3")
+            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_impact_only.mp3")
+            base.audio3d.attachSoundToObject(sfx, self)
             SoundInterval(sfx, node = self).start()
         elif attack == "playhardball":
-            sfx = base.loadSfx("phase_5/audio/sfx/SA_hardball_impact_only_alt.mp3")
+            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_impact_only_alt.mp3")
+            base.audio3d.attachSoundToObject(sfx, self)
             SoundInterval(sfx, node = self).start()
         elif attack == "clipontie":
-            sfx = base.loadSfx("phase_5/audio/sfx/SA_powertie_impact.mp3")
+            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_impact.mp3")
+            base.audio3d.attachSoundToObject(sfx, self)
             SoundInterval(sfx, node = self).start()
         if not self.isDead():
             if attack in ["fountainpen"]:
@@ -598,7 +601,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         DistributedAvatar.announceHealth(self, level, hp)
         hpSfx = base.audio3d.loadSfx("phase_11/audio/sfx/LB_toonup.mp3")
         base.audio3d.attachSoundToObject(hpSfx, self)
-        SoundInterval(hpSfx).start()
+        SoundInterval(hpSfx, node = self).start()
         del hpSfx
 
     def announceGenerate(self):
