@@ -47,7 +47,7 @@ class DistributedBuildingAI(DistributedObjectAI):
             del self.interior
         if hasattr(self, 'elevator'):
             self.elevator.requestDelete()
-            del self.Elevator
+            del self.elevator
         self.requestDelete()
 
     def delete(self):

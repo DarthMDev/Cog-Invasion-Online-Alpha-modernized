@@ -7,6 +7,21 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpPosInterval
 
 from ElevatorConstants import *
 
+def getRightDoor(model):
+    door = model.find('**/right-door')
+    if door.isEmpty():
+        door = model.find('**/right_door')
+    return door
+
+def getLeftDoor(model):
+    door = model.find('**/left-door')
+    if door.isEmpty():
+        door = model.find('**/left_door')
+    return door
+
+def getDoors(model):
+    return [getLeftDoor(model), getRightDoor(model)]
+
 def getLeftClosePoint(type):
     width = ElevatorData[type]['width']
     return Point3(width, 0, 0)

@@ -18,9 +18,12 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.readyAvatars = []
         self.entranceElevator = None
         self.exitElevator = None
-        
+
     def getAvatars(self):
         return self.avatars
+
+    def getCurrentFloor(self):
+        return self.currentFloor
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
@@ -28,7 +31,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
     def readyToStart(self):
         avId = self.air.getAvatarIdFromSender()
         self.readyAvatars.append(avId)
-        if len(self.readyAvatars) == len(self.raiders):
+        if len(self.readyAvatars) == len(self.avatars):
             # We're ready to go!
             self.currentFloor = 0
             self.sendUpdate('loadFloor', [self.currentFloor])

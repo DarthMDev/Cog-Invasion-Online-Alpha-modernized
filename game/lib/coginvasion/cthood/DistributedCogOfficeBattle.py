@@ -41,7 +41,8 @@ class DistributedCogOfficeBattle(DistributedObject):
                     'elevators': [
                         [0.74202, -9.50081, 0, 180, 0, 0],
                         [-39.49848, 20.74907, 0, 90, 0, 0]
-                    ]
+                    ],
+                    'room_mdl': 'cog-bldg-modles/cog_bldg_reception_flr.egg'
                 }
     }
 
@@ -58,11 +59,46 @@ class DistributedCogOfficeBattle(DistributedObject):
          State.State('rideElevator', self.enterRideElevator, self.exitRideElevator)], 'off', 'off')
         self.fsm.enterInitialState()
 
-    def loadProps(self):
+    def enterOff(self):
+        pass
+
+    def exitOff(self):
+        pass
+
+    def announceGenerate(self):
+        DistributedObject.__init__(self, cr)
+        self.loadElevators()
+        self.sendUpdate('readyToStart')
+
+    def loadFloor(self, floorNum):
+        self.cleanupFloor()
+        self.currentFloor = floorNum
+        self.loadRoom()
+        self.loadProps()
+        self.repositionElevators()
+
+    def cleanupFloor(self):
+        for prop in self.props:
+            prop.removeNode()
+        self.props = []
+        if self.currentFloor:
+            self.currentFloor.removeNode()
+            self.currentFloor = None
+
+    def getRoomData(self, name):
         if self.currentFloor in self.UNIQUE_FLOORS:
-            dataList = self.ROOM_DATA[self.deptClass][self.currentFloor]
+            dataList = self.ROOM_DATA[self.deptClass][self.currentFloor][name]
         else:
-            dataList = self.ROOM_DATA[self.currentFloor]
+            dataList = self.ROOM_DATA[self.currentFloor][name]
+        return dataList
+
+    def loadRoom(self):
+        path = self.getRoomData('room_mdl')
+        self.floorModel = loader.loadModel(path)
+        self.floorModel.reparentTo(render)
+
+    def loadProps(self):
+        dataList = self.getRoomData('props')
         for propData in dataList:
             name = propData[0]
             otherProps = []
@@ -82,3 +118,15 @@ class DistributedCogOfficeBattle(DistributedObject):
                 oPropMdl = loader.loadModel(oPropPath)
                 oPropMdl.reparentTo(propMdl)
             self.props.append(propMdl)
+
+    def loadElevators(self):
+        for i in xrange(2):
+            elevMdl = loader.loadModel('phase_4/models/modules/elevator.bam')
+            elevMdl.reparentTo(render)
+            self.elevatorModels.append(elevMdl)
+
+    def repositionElevators(self):
+        dataList = self.getRoomData('elevators')
+        for i in xrange(len(dataList)):
+            x, y, z, h, p, r = dataList[i]
+            self.elevatorModels[i].setPosHpr(x, y, z, h, p, r)
