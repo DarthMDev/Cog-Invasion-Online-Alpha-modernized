@@ -59,7 +59,7 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
             #ip == tokenObj.getIP()):
 
                 # We got a match!
-                #self.deleteToken(tokenObj)
+                self.deleteToken(tokenObj)
                 return 1
         return 0
 
@@ -98,8 +98,8 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
         print "Tokens: %s" % self.activeTokens
 
         # Then, start the deactivateToken task.
-        #taskMgr.doMethodLater(self.getActiveTokenLength(), self.deleteTokenTask,
-        #		tokenObj.getDeleteTask(), extraArgs = [tokenObj], appendTask = True)
+        taskMgr.doMethodLater(self.getActiveTokenLength(), self.deleteTokenTask,
+        		tokenObj.getDeleteTask(), extraArgs = [tokenObj], appendTask = True)
 
         # We're done! Tell the LauncherLoginManager.
         return 1

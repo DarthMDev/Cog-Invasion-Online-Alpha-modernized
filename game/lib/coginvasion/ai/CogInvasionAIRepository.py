@@ -86,32 +86,24 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
         self.notify.info("Generating time manager...")
         self.timeManager = TimeManagerAI(self)
         self.timeManager.generateWithRequired(2)
-        time.sleep(0.1)
-        TTHoodAI(self)
-        time.sleep(0.1)
-        MGHoodAI(self)
-        time.sleep(0.1)
-        BRHoodAI(self)
-        time.sleep(0.1)
-        DLHoodAI(self)
-        time.sleep(0.1)
-        MLHoodAI(self)
-        time.sleep(0.1)
-        DGHoodAI(self)
-        time.sleep(0.1)
-        DDHoodAI(self)
-        time.sleep(0.1)
-        CTHoodAI(self)
-        time.sleep(0.1)
-
-        # Load cogtropolis areas
-        CTCHoodAI(self)
-        CTBRHoodAI(self)
-        CTDLHoodAI(self)
-        CTDGHoodAI(self)
-        CTDDHoodAI(self)
-        CTMLHoodAI(self)
-
+        
+        self.areas = [TTHoodAI, MGHoodAI, BRHoodAI, DLHoodAI, MLHoodAI, DGHoodAI, DDHoodAI, CTHoodAI, CTCHoodAI,
+                      CTBRHoodAI, CTDLHoodAI, CTDGHoodAI, CTDDHoodAI, CTMLHoodAI]
+        self.areaIndex = 0
+                      
+        taskMgr.add(self.makeAreasTask, 'makeAreasTask')
+        
+    def makeAreasTask(self, task):
+        if self.areaIndex >= len(self.areas):
+           self.done()
+           return task.done
+        area = self.areas[self.areaIndex]
+        area(self)
+        self.areaIndex += 1
+        task.delayTime = 0.5
+        return task.again
+        
+    def done(self):
         self.notify.info("Setting shard available.")
         self.district.b_setAvailable(1)
         self.notify.info("Done.")

@@ -98,9 +98,9 @@ class MiniServer:
                     print "IP Address: %s" % newConnection.getAddress()
                     print "ConnectionID: %s" % newConnection.this
                     self.displayServerStatus()
-                    if self.__class__.__name__ == 'LoginServer':
-                        self.sendServerMessage('ciac',
-                                               newConnection)
+                    #if self.__class__.__name__ == 'LoginServer':
+                     #   self.sendServerMessage('ciac',
+                      #                         newConnection)
         return Task.cont
 
     def datagramPoll(self, task):
