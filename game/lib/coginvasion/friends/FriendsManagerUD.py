@@ -266,7 +266,7 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
         sender = self.air.getAvatarIdFromSender()
         self.sendUpdateToAvatarId(avatarId, 'avatarWantsYourLocation', [sender])
 
-    def myAvatarLocation(self, avatarId, shardId, zoneId):
+    def myAvatarLocation(self, avatarId, shardId, zoneId, worldId):
         sender = self.air.getAvatarIdFromSender()
 
         def teleportingAvatarResponse(dclass, fields):
@@ -281,4 +281,4 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
             avatarId,
             teleportingAvatarResponse
         )
-        self.sendUpdateToAvatarId(avatarId, 'avatarLocation', [sender, shardId, zoneId])
+        self.sendUpdateToAvatarId(avatarId, 'avatarLocation', [sender, shardId, zoneId, worldId])
