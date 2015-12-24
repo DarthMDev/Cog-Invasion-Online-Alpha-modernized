@@ -92,10 +92,13 @@ WallBitmask = BitMask32(1)
 EventBitmask = BitMask32(3)
 CameraBitmask = BitMask32(4)
 ShadowCameraBitmask = BitMask32.bit(5)
+WeaponBitmask = BitMask32.bit(6)
 DialogColor = (1, 1, 0.75, 1)
 DefaultBackgroundColor = (0, 0, 0, 1)
 PositiveTextColor = (0, 1, 0, 1)
 NegativeTextColor = (1, 0, 0, 1)
+
+SuitClasses = ["DistributedSuit", "DistributedTutorialSuit", "DistributedCogOfficeSuit"]
 
 OToontown = "OToontown"
 CogTropolis = "CogTropolis"
@@ -3459,7 +3462,7 @@ ToonTips = [
     "Be sure to report a bug or crash when you run into one!",
     "Play Minigames at the Minigame Area to earn more Jellybeans!",
     "The only Minigame that works as single player is UNO.",
-    "Different Minigames give different amounts jellybeans.",
+    "Different Minigames give different amounts of jellybeans.",
     "You can choose between Capture the Flag and Casual Mode in Toon Battle!",
     "You can choose between the Pistol and the Shotgun in Toon Battle!",
     "You can play with up to 7 other Toons in Toon Battle!",

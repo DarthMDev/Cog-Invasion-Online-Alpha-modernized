@@ -54,7 +54,7 @@ class LocationGag:
 
             self.helpInfo = OnscreenText(text = 'Move the shadow with your mouse\nClick to release',
                 pos = (0, -0.75), font = CIGlobals.getToonFont(), fg = (1, 1, 1, 1),
-                shadow = (1, 1, 1, 1))
+                shadow = (0, 0, 0, 1))
 
         track.start()
 

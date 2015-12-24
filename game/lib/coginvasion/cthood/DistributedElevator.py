@@ -116,16 +116,45 @@ class DistributedElevator(DistributedObject):
     def exitOff(self):
         pass
 
+    def getLeftDoor(self):
+        # Can be overridden by inheritors.
+        return self.thebldg.leftDoor
+
+    def getRightDoor(self):
+        return self.thebldg.rightDoor
+
+    def startPoll(self):
+        # Start polling for the building
+        taskMgr.add(self.__pollBuilding, self.uniqueName('pollBuilding'))
+
+    def __pollBuilding(self, task):
+        self.getTheBldg()
+        if self.thebldg:
+            self.postAnnounceGenerate()
+            return task.done
+        return task.cont
+
+    def stopPoll(self):
+        taskMgr.remove(self.uniqueName('pollBuilding'))
+
     def announceGenerate(self):
         DistributedObject.announceGenerate(self)
         self.getTheBldg()
-        self.leftDoor = self.thebldg.leftDoor
-        self.rightDoor = self.thebldg.rightDoor
+        if not self.thebldg:
+            self.startPoll()
+            return
+        self.postAnnounceGenerate()
+
+    def postAnnounceGenerate(self):
+        self.leftDoor = self.getLeftDoor()
+        self.rightDoor = self.getRightDoor()
         self.setupElevator()
         self.setupCountdownText()
         self.sendUpdate('requestStateAndTimestamp')
 
     def setState(self, state, timestamp):
+        if not self.thebldg:
+            return
         self.fsm.request(state, [globalClockDelta.localElapsedTime(timestamp)])
 
     def stateAndTimestamp(self, state, timestamp):
@@ -155,21 +184,53 @@ class DistributedElevator(DistributedObject):
         self.closeDoors = Sequence(self.closeDoors, Func(self.onDoorCloseFinish))
 
     def disable(self):
+        self.stopPoll()
         if hasattr(self, 'openDoors'):
             self.openDoors.pause()
         if hasattr(self, 'closeDoors'):
             self.closeDoors.pause()
+        self.ignore('enter' + self.uniqueName('elevatorSphere'))
         self.elevatorSphereNodePath.removeNode()
         del self.elevatorSphereNodePath
         del self.elevatorSphereNode
         del self.elevatorSphere
         self.fsm.request('off')
+        self.openSfx = None
+        self.closeSfx = None
+        self.elevatorPoints = None
+        self.type = None
+        self.countdownTime = None
+        self.localAvOnElevator = None
+        self.thebldg = None
+        self.bldgDoId = None
+        self.toZoneId = None
+        self.elevatorModel = None
+        self.toonsInElevator = None
+        self.hopOffButton = None
+        self.leftDoor = None
+        self.rightDoor = None
+        self.openDoors = None
+        self.closeDoors = None
+        if self.countdownTextNP:
+            self.countdownTextNP.removeNode()
+            self.countdownTextNP = None
         DistributedObject.disable(self)
 
     def onDoorCloseFinish(self):
-        base.transitions.fadeScreen(1.0)
-        self.cr.playGame.world.hood.loader.music.stop()
-        Sequence(Wait(1.0), Func(self.doMusic)).start()
+        if self.localAvOnElevator:
+            base.transitions.fadeScreen(1.0)
+            base.localAvatar.wrtReparentTo(render)
+            requestStatus = {'zoneId': self.getToZoneId(),
+                        'hoodId': self.cr.playGame.hood.hoodId,
+                        'where': 'suitInterior',
+                        'avId': base.localAvatar.doId,
+                        'loader': 'suitInterior',
+                        'shardId': None,
+                        'wantLaffMeter': 1,
+                        'world': base.cr.playGame.getCurrentWorldName(),
+                        'how': 'IDK'}
+            self.cr.playGame.getPlace().doneStatus = requestStatus
+            messenger.send(self.cr.playGame.getPlace().doneEvent)
 
     def doMusic(self):
         self.elevMusic = base.loadMusic('phase_7/audio/bgm/tt_elevator.mid')
@@ -180,21 +241,21 @@ class DistributedElevator(DistributedObject):
         if toon:
             point = ElevatorPoints[index]
             toon.stopSmooth()
-            toon.wrtReparentTo(self.thebldg.elevatorModel)
+            toon.wrtReparentTo(self.getElevatorModel())
             toon.headsUp(point)
             track = Sequence()
             track.append(Func(toon.animFSM.request, 'run'))
             track.append(LerpPosInterval(toon, duration = 0.5, pos = point,
-                         startPos = toon.getPos(self.thebldg.elevatorModel)))
+                         startPos = toon.getPos(self.getElevatorModel())))
             track.append(LerpHprInterval(toon, duration = 0.1, hpr = (180, 0, 0),
-                         startHpr = toon.getHpr(self.thebldg.elevatorModel)))
+                         startHpr = toon.getHpr(self.getElevatorModel())))
             track.append(Func(toon.animFSM.request, 'neutral'))
             if avId == base.localAvatar.doId:
                 self.localAvOnElevator = True
                 track.append(Func(self.showHopOffButton))
                 base.localAvatar.stopSmartCamera()
                 base.localAvatar.walkControls.setCollisionsActive(0)
-                base.camera.wrtReparentTo(self.thebldg.elevatorModel)
+                base.camera.wrtReparentTo(self.getElevatorModel())
                 cameraBoardTrack = LerpPosHprInterval(camera, 1.5, Point3(0, -16, 5.5), Point3(0, 0, 0))
                 cameraBoardTrack.start()
             track.start()
@@ -227,11 +288,11 @@ class DistributedElevator(DistributedObject):
             avId = toonsInElevator[i]
             toon = self.cr.doId2do.get(avId)
             if toon:
-                toon.reparentTo(self.thebldg.elevatorModel)
+                toon.reparentTo(self.getElevatorModel())
                 toon.stopSmooth()
-                point = ElevatorPoints[index]
+                point = ElevatorPoints[i]
                 toon.setPos(point)
-                toon.setHpr(0, 0, 0)
+                toon.setHpr(180, 0, 0)
                 toon.animFSM.request('neutral')
 
     def getTheBldg(self):

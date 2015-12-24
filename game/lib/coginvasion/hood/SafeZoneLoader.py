@@ -188,7 +188,8 @@ class SafeZoneLoader(StateData):
 
     def enterThePlace(self, requestStatus):
         base.cr.playGame.setPlace(self.place)
-        self.place.enter(requestStatus)
+        if self.place is not None:
+            self.place.enter(requestStatus)
 
     def exitToonInterior(self):
         self.ignore(self.placeDoneEvent)

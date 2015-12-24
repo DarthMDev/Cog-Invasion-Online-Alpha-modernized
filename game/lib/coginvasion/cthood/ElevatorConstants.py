@@ -4,6 +4,7 @@
 from panda3d.core import Vec4, Point3
 
 ELEVATOR_NORMAL = 0
+ELEVATOR_INT = 1
 REJECT_NOREASON = 0
 REJECT_SHUFFLE = 1
 REJECT_NOSEAT = 2
@@ -13,6 +14,12 @@ ElevatorData = {ELEVATOR_NORMAL: {'openTime': 2.0,
     'closeTime': 2.0,
     'width': 3.5,
     'countdown': 15.0,
+    'sfxVolume': 1.0,
+    'collRadius': 5},
+    ELEVATOR_INT: {'openTime': 2.0,
+    'closeTime': 2.0,
+    'width': 3.5,
+    'countdown': 65.0,
     'sfxVolume': 1.0,
     'collRadius': 5}}
 

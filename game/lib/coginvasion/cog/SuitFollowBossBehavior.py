@@ -147,10 +147,7 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
 
         # Let's adjust the release time.
         if attackName != 'glowerpower':
-            if self.suit.suitPlan.getSuitType() == 'C':
-                timeUntilRelease = 2.2
-            else:
-                timeUntilRelease = 3.0
+            timeUntilRelease = 2.2
 
         self.suitHealTrack = Sequence(
             Wait(timeUntilRelease + timeUntilHeal),

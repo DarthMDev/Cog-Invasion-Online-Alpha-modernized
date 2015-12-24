@@ -7,7 +7,7 @@
 
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
 from lib.coginvasion.cog.SuitType import SuitType
-from lib.coginvasion.suit import SuitAttacks
+from lib.coginvasion.cog import SuitAttacks
 from lib.coginvasion.cog import SuitGlobals
 
 from direct.distributed.ClockDelta import globalClockDelta
@@ -51,6 +51,9 @@ class SuitAttackBehavior(SuitHabitualBehavior):
 
     def exit(self):
         SuitHabitualBehavior.exit(self)
+        
+        taskMgr.remove(self.suit.uniqueName('attackTask'))
+        taskMgr.remove(self.suit.uniqueName('finalAttack'))
         
         if hasattr(self, 'isAttacking') and hasattr(self, 'suit'):
             if self.isAttacking and self.suit:

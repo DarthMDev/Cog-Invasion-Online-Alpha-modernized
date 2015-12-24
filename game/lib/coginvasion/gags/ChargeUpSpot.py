@@ -11,6 +11,7 @@ from direct.interval.IntervalGlobal import Sequence, Parallel, LerpScaleInterval
 from direct.interval.IntervalGlobal import Func, LerpColorScaleInterval
 from direct.task.Task import Task
 from panda3d.core import VBase4
+from lib.coginvasion.globals import CIGlobals
 
 class ChargeUpSpot(LocationSeeker):
 
@@ -61,7 +62,7 @@ class ChargeUpSpot(LocationSeeker):
     def __selectNearbyCogs(self):
         self.selectedCogs = []
         for obj in base.cr.doId2do.values():
-            if obj.__class__.__name__ == 'DistributedSuit':
+            if obj.__class__.__name__ in CIGlobals.SuitClasses:
                 if obj.getPlace() == self.avatar.zoneId:
                     if obj.getDistance(self.dropShadow) <= self.selectionRadius:
                         if self.avatar.doId == self.avatar.doId:

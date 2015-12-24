@@ -28,6 +28,18 @@ class DistributedElevatorAI(DistributedObjectAI):
         self.slots = [0, 1, 2, 3]
         self.slotTakenByAvatarId = {}
         self.stateTimestamp = 0
+        
+    def delete(self):
+        self.fsm.requestFinalState()
+        self.fsm = None
+        self.bldg = None
+        self.bldgDoId = None
+        self.toZoneId = None
+        self.type = None
+        self.slots = None
+        self.slotTakenByAvatarId = None
+        self.stateTimeStamp = None
+        DistributedObjectAI.delete(self)
 
     def enterOff(self):
         pass
@@ -39,7 +51,10 @@ class DistributedElevatorAI(DistributedObjectAI):
         base.taskMgr.doMethodLater(ElevatorData[self.type]['openTime'], self.openingTask, self.uniqueName('openingTask'))
 
     def openingTask(self, task):
-        self.b_setState('waitEmpty')
+        state = 'waitEmpty'
+        if self.type == ELEVATOR_INT:
+            state = 'waitCountdown'
+        self.b_setState(state)
         return Task.done
 
     def exitOpening(self):
@@ -62,10 +77,13 @@ class DistributedElevatorAI(DistributedObjectAI):
         base.taskMgr.remove(self.uniqueName('waitCountdownTask'))
 
     def enterClosing(self):
-        base.taskMgr.doMethodLater(ElevatorData[self.type]['closeTime'] + 0.5, self.closingTask, self.uniqueName('closingTask'))
+        base.taskMgr.doMethodLater(ElevatorData[self.type]['closeTime'], self.closingTask, self.uniqueName('closingTask'))
 
     def closingTask(self, task):
+        self.bldg.battle.b_setAvatars(self.getSortedAvatarList())
+        self.slotTakenByAvatarId = {}
         self.b_setState('closed')
+        return task.done
 
     def exitClosing(self):
         base.taskMgr.remove(self.uniqueName('closingTask'))
@@ -90,11 +108,15 @@ class DistributedElevatorAI(DistributedObjectAI):
     def requestStateAndTimestamp(self):
         avId = self.air.getAvatarIdFromSender()
         self.sendUpdateToAvatarId(avId, 'stateAndTimestamp', [self.fsm.getCurrentState().getName(), self.stateTimestamp])
+        array = self.getSortedAvatarList()
+        self.sendUpdateToAvatarId(avId, 'setToonsInElevator', [array])
+
+    def getSortedAvatarList(self):
         array = []
         for avId, slot in self.slotTakenByAvatarId.items():
             array.append(avId)
         array.sort(key = lambda avId: self.slotTakenByAvatarId[avId])
-        self.sendUpdateToAvatarId(avId, 'setToonsInElevator', [array])
+        return array
 
     def getBldgDoId(self):
         return self.bldgDoId
@@ -104,11 +126,17 @@ class DistributedElevatorAI(DistributedObjectAI):
 
     def getElevatorType(self):
         return self.type
+        
+    def allAvatarsBoardedTask(self, task):
+        if self.type == ELEVATOR_INT:
+            if len(self.slotTakenByAvatarId.values()) == len(self.bldg.avatars):
+                self.b_setState('closing')
+        return task.done
 
     def requestEnter(self):
         avId = self.air.getAvatarIdFromSender()
         if len(self.slotTakenByAvatarId) < len(ElevatorPoints) and not avId in self.slotTakenByAvatarId.keys() and self.fsm.getCurrentState().getName() in ['waitEmpty', 'waitCountdown']:
-            if len(self.slotTakenByAvatarId) == 0:
+            if len(self.slotTakenByAvatarId) == 0 and self.type != ELEVATOR_INT:
                 # First avatar aboard! Start counting down!
                 self.b_setState('waitCountdown')
             slotToFill = -1
@@ -118,6 +146,10 @@ class DistributedElevatorAI(DistributedObjectAI):
                     break
             self.sendUpdate('fillSlot', [slotToFill, avId])
             self.slotTakenByAvatarId[avId] = slotToFill
+            if self.type == ELEVATOR_INT:
+                if len(self.slotTakenByAvatarId.values()) == len(self.bldg.avatars):
+                    base.taskMgr.remove(self.uniqueName('allAvatarsBoardedTask'))
+                    base.taskMgr.doMethodLater(0.7, self.allAvatarsBoardedTask, self.uniqueName('allAvatarsBoardedTask'))
         else:
             self.sendUpdateToAvatarId(avId, 'enterRejected', [])
 
@@ -127,6 +159,6 @@ class DistributedElevatorAI(DistributedObjectAI):
             slot = self.slotTakenByAvatarId[avId]
             del self.slotTakenByAvatarId[avId]
             self.sendUpdate('emptySlot', [slot, avId])
-            if len(self.slotTakenByAvatarId) == 0:
+            if len(self.slotTakenByAvatarId) == 0 and self.type != ELEVATOR_INT:
                 # Everyone left! Stop the timer!
                 self.b_setState('waitEmpty')

@@ -465,6 +465,8 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         gag = self.gagMgr.getGagByName(GagGlobals.getGagByID(gag_id))
         dmg = gag.getDamage()
         if obj:
+            if not obj.canGetHit():
+                return
             obj.b_setHealth(obj.getHealth() - dmg)
             obj.d_announceHealth(0, dmg)
             if obj.getHealth() <= 0:

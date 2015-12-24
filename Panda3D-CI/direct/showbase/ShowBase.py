@@ -2800,7 +2800,11 @@ class ShowBase(DirectObject.DirectObject):
         import Pmw
 
         # Create a new Tk root.
-        self.tkRoot = Pmw.initialise()
+        try:
+            self.tkRoot = Pmw.initialise()
+        except:
+            from Pmw import Pmw
+            self.tkRoot = Pmw.initialise()
         builtins.tkroot = self.tkRoot
 
         init_app_for_gui()

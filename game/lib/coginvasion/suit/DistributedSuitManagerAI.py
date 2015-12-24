@@ -174,6 +174,8 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             level = random.randint(plan.getLevelRange()[0], plan.getLevelRange()[1])
         if self.battle.getHoodIndex() == CogBattleGlobals.SkeletonHoodIndex:
             variant = Variant.SKELETON
+        elif self.battle.getHoodIndex() == CogBattleGlobals.WaiterHoodIndex:
+            variant = Variant.WAITER
         suit = DistributedSuitAI(self.air)
         suit.setManager(self)
         suit.generateWithRequired(self.zoneId)
@@ -202,7 +204,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if self.suitsSpawnedThisInvasion == 1:
                 if not self.tournament.inTournament:
                     self.sendUpdate('invasionSpawned', [])
-        if plan == SuitBank.VicePresident or plan == SuitBank.LucyCrossbill:
+        if plan in [SuitBank.VicePresident, SuitBank.LucyCrossbill]:
             self.sendUpdate('bossSpawned', [])
         return suit
 

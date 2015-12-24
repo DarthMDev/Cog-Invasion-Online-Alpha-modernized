@@ -113,7 +113,7 @@ class StormCloud(SquirtGag, LocationGag):
     def getClosestCog(self, radius = 6):
         loc = LocationGag.getLocation(self)
         for cog in base.cr.doId2do.values():
-            if cog.__class__.__name__ == "DistributedSuit":
+            if cog.__class__.__name__ in CIGlobals.SuitClasses:
                 if cog.getPlace() == base.localAvatar.zoneId:
                     distance = (cog.getPos(render) - loc).length()
                     if distance <= radius:

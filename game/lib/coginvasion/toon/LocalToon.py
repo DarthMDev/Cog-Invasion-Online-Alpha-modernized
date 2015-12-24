@@ -291,6 +291,7 @@ class LocalToon(DistributedToon):
             CIGlobals.ToonReverseSpeed, CIGlobals.ToonRotateSpeed
         )
         self.walkControls.initializeCollisions(base.cTrav, self, floorOffset=0.025, reach=4.0)
+        self.walkControls.cEventSphereNodePath.node().setFromCollideMask(CIGlobals.WallBitmask | CIGlobals.WeaponBitmask)
         self.walkControls.setAirborneHeightFunc(self.getAirborneHeight)
 
     def setWalkSpeedNormal(self):
@@ -760,7 +761,9 @@ class LocalToon(DistributedToon):
     def monitorHealth(self, task):
         if self.isDead():
             base.taskMgr.remove("LT.attackReactionDone")
-            if self.cr.playGame.hood.id != ZoneUtil.getHoodId(self.zoneId):
+            if (self.cr.playGame.getCurrentWorldName() == CIGlobals.OToontown and
+            self.cr.playGame.hood.id != ZoneUtil.getHoodId(self.zoneId) or
+            self.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis):
                 self.cr.playGame.getPlace().fsm.request('died', [{}, self.diedStateDone])
             return task.done
         return task.cont

@@ -284,6 +284,7 @@ class DistributedBattleTrolley(DistributedObject):
         tn = TextNode('trolleycountdowntext')
         tn.setFont(CIGlobals.getMickeyFont())
         tn.setTextColor(1, 0, 0, 1)
+        tn.setAlign(TextNode.ACenter)
 
         self.keys = self.trolleyCar.findAllMatches('**/key')
         self.numKeys = self.keys.getNumPaths()

@@ -88,7 +88,7 @@ class TNT(TossTrapGag):
     def activate(self):
         if not self.entity: return
         for obj in base.cr.doId2do.values():
-            if obj.__class__.__name__ == "DistributedSuit":
+            if obj.__class__.__name__ in CIGlobals.SuitClasses:
                 if obj.getPlace() == base.localAvatar.zoneId:
                     if obj.getDistance(self.entity) <= self.maxDistance:
                         if self.avatar.doId == base.localAvatar.doId:

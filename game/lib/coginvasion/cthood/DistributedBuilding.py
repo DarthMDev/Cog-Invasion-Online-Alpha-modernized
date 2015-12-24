@@ -116,6 +116,7 @@ class DistributedBuilding(DistributedObject):
         pass
 
     def enterWaitForVictors(self, ts):
+        print 'wait for victors'
         if self.mode != 'suit':
             self.setToSuit()
         victorCount = self.victorList.count(base.localAvatar.doId)
@@ -223,10 +224,17 @@ class DistributedBuilding(DistributedObject):
         self.normalizeElevator()
 
     def loadAnimToSuitSfx(self):
+        if self.cogDropSound == None:
+            self.cogDropSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_drop.mp3')
+            self.cogLandSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_land.mp3')
+            self.cogSettleSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_settle.mp3')
+            self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.mp3')
+            
+    def loadAnimToToonSfx(self):
         if self.cogWeakenSound == None:
-            self.cogWeakenSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + "cogbldg_weaken.mp3")
+            self.cogWeakenSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_weaken.mp3')
             self.toonGrowSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'toonbldg_grow.mp3')
-            self.toonSettleSound = base.loadSfx(self.TAKEOVER_SFX_PRIFIX + 'toonbldg_settle.mp3')
+            self.toonSettleSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'toonbldg_settle.mp3')
             self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.mp3')
 
     def unloadSfx(self):
@@ -385,7 +393,7 @@ class DistributedBuilding(DistributedObject):
                 hideTrack.append(Func(i.setScale, Vec3(1, 1, 0.01)))
                 if not toonSoundPlayed:
                     hideTrack.append(Func(base.playSfx, self.toonSettleSound, 0, 1, None, 0.0))
-                hideTrack.append(self.createBounceTrack(i, 11, 1.2, TO_TOON_BLDG_TIME * 0.05, slowInitBounce=4.0))
+                hideTrack.append(self.createBounceTrack(i, 11, 1.2, TO_TOON_BLDG_TIME * 0.5, slowInitBounce=4.0))
                 tracks.append(hideTrack)
                 if not toonSoundPlayed:
                     toonSoundPlayed = 1
@@ -414,7 +422,7 @@ class DistributedBuilding(DistributedObject):
         track = Sequence(Func(camera.reparentTo, render), Func(camera.setPosHpr, self.elevatorNodePath, 0, -32.5, 9.4, 0, 348, 0),
                          Func(base.camLens.setMinFov, 52.0 / (4./3.)), Wait(VICTORY_RUN_TIME),
                          Func(camera.setPosHpr, self.elevatorNodePath, 0, -32.5, 17, 0, 347, 0),
-                         Func(base.camLems.setMinFov, 75.0 / (4./3)), Wait(TO_TOON_BLDG_TIME),
+                         Func(base.camLens.setMinFov, 75.0 / (4./3)), Wait(TO_TOON_BLDG_TIME),
                          Func(base.camLens.setMinFov, 52.0 / (4./3.)))
         return track
 
@@ -455,7 +463,7 @@ class DistributedBuilding(DistributedObject):
             if victor != 0 and victor in self.cr.doId2do:
                 toon = self.cr.doId2do[victor]
                 p0 = Point3(0, 0, 0)
-                p1 = Point3(ElevatorPoints[i][0], ElevatorPoints[i][1], - 5.0, ElevatorPoints[i][2])
+                p1 = Point3(ElevatorPoints[i][0], ElevatorPoints[i][1] - 5.0, ElevatorPoints[i][2])
                 if useFarExitPoints:
                     p2 = Point3(ElevatorOutPointsFar[i][0], ElevatorOutPointsFar[i][1], ElevatorOutPointsFar[i][2])
                 else:
@@ -488,11 +496,11 @@ class DistributedBuilding(DistributedObject):
         result = Sequence()
         numBounces += 1
         if slowInitBounce:
-            bounceTIme = totalTime / (numBounces + slowInitBounce - 1.0)
+            bounceTime = totalTime / (numBounces + slowInitBounce - 1.0)
         else:
             bounceTime = totalTime / float(numBounces)
         if slowInitBounce:
-            currTime = bounceTIme * float(slowInitBounce)
+            currTime = bounceTime * float(slowInitBounce)
         else:
             currTime = bounceTime
         realScale = nodeObj.getScale()

@@ -12,6 +12,7 @@ from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.cog import Dept
 import SuitBuildingGlobals
 from DistributedElevatorAI import DistributedElevatorAI
+from DistributedCogOfficeBattleAI import DistributedCogOfficeBattleAI
 
 from ElevatorConstants import *
 
@@ -20,10 +21,11 @@ import random
 class DistributedBuildingAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedBuildingAI')
 
-    def __init__(self, air, blockNumber, zoneId, canonicalZoneId):
+    def __init__(self, air, blockNumber, zoneId, canonicalZoneId, hood):
         DistributedObjectAI.__init__(self, air)
         self.block = blockNumber
         self.zoneId = zoneId
+        self.hood = hood
         self.canonicalZoneId = canonicalZoneId
         self.victorResponses = None
         self.fsm = ClassicFSM.ClassicFSM('DistributedBuildingAI', [State.State('off', self.enterOff, self.exitOff),
@@ -37,6 +39,7 @@ class DistributedBuildingAI(DistributedObjectAI):
         self.difficulty = 1
         self.numFloors = 0
         self.frontDoorPoint = None
+        self.victorList = [0, 0, 0, 0]
 
     def cleanup(self):
         if self.isDeleted():
@@ -115,6 +118,8 @@ class DistributedBuildingAI(DistributedObjectAI):
         self.elevator = DistributedElevatorAI(self.air, self, self.getBlock()[1], ELEVATOR_NORMAL)
         self.elevator.generateWithRequired(exteriorZoneId)
         self.elevator.b_setState('opening')
+        self.battle = DistributedCogOfficeBattleAI(self.air, self.numFloors, self.suitDept, self.hood, self, exteriorZoneId)
+        self.battle.generateWithRequired(interiorZoneId)
 
     def exitSuit(self):
         if hasattr(self, 'interior'):
@@ -173,7 +178,7 @@ class DistributedBuildingAI(DistributedObjectAI):
             SuitBuildingGlobals.SWITCH_BACK_TO_SUIT_TIME[1]), self.toonTimeoutTask,
             self.taskName(str(self.block) + 'toonBldg-timer'))
 
-    def toonTimeoutTask(self):
+    def toonTimeoutTask(self, task):
         self.suitTakeOver(random.choice([Dept.SALES, Dept.CASH, Dept.LAW, Dept.BOSS]), 0, 0)
         return Task.done
 

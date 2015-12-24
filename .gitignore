@@ -50,6 +50,10 @@ Panda3D-CI/tmp
 python-master
 cio-panda3d
 game/built
+game/cog-bldg-modles
+game/tex
+cog-invasion-online.geany
+game/coginvasion.bin
 *.yaml
 *.bat
 .project

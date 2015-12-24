@@ -114,7 +114,8 @@ animations = [
     Anim(5, 'magic1', suitTypes = [SuitType.A]),
     Anim(12, 'sit'),
     Anim(12, 'tray-neutral'),
-    Anim(12, 'tray-walk')
+    Anim(12, 'tray-walk'),
+    Anim(12, 'sit')
 ]
 
 def getAnimById(animId):

@@ -28,7 +28,7 @@ SuitAttackLengths = {"canned": 4,
                     "marketcrash": 4,
                     "pickpocket": 3,
                     "fountainpen": 3,
-                    "hangup": 4,
+                    "hangup": 5,
                     'redtape': 4,
                     'powertie': 4,
                     'halfwindsor': 4,
@@ -70,6 +70,9 @@ SuitAttackDamageFactors = {"canned": 5.5,
                 'schmooze': 8,
                 'fingerwag': 8
                 }
+    
+THROW_ATTACK_IVAL_TIME = 0.75
+GLOWER_POWER_IVAL_TIME = 0.5
 
 def setEffectTexture(effect, texture, color):
     particles = effect.getParticlesNamed('particles-1')
@@ -155,8 +158,8 @@ class ThrowAttack(Attack):
         self.targetZ = self.attacksClass.target.getZ(render)
 
         if not self.attack in ['glowerpower']:
-            actorIval = ActorInterval(self.suit, animation_name, playRate = 2.0, duration = 1.2)
-            actorIval2 = ActorInterval(self.suit, animation_name, startTime = 2.4)
+            actorIval = ActorInterval(self.suit, animation_name, playRate = 3.0, duration = 0.7)
+            actorIval2 = ActorInterval(self.suit, animation_name, playRate = 2.0, startTime = 1.0)
         else:
             actorIval = ActorInterval(self.suit, animation_name)
 
@@ -165,11 +168,12 @@ class ThrowAttack(Attack):
         if not self.attack in ['glowerpower']:
             self.suitTrack = Parallel(Sequence(actorIval, actorIval2), name = track_name)
             self.weapon.reparentTo(self.suit.find('**/joint_Rhold'))
-            seq.append(Wait(1.2))
+            waitTime = 0.9
             if self.suit.suitPlan.getSuitType() == "C":
-                seq.append(Wait(0))
-            else:
-                seq.append(Wait(0.7))
+                waitTime -= 0.05
+            seq.append(Wait(waitTime))
+            if self.suit.suitPlan.getSuitType() != "C":
+                seq.append(Wait(0.3))
             seq.append(Func(self.throwObject))
             seq.append(Wait(1.0))
             seq.append(Func(self.delWeapon))
@@ -183,7 +187,7 @@ class ThrowAttack(Attack):
 
         wsnode = CollisionNode(weapon_coll_id)
         wsnode.addSolid(self.wss)
-        wsnode.setCollideMask(CIGlobals.WallBitmask)
+        wsnode.setCollideMask(CIGlobals.WeaponBitmask)
         self.wsnp = self.weapon.attachNewNode(wsnode)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
         self.acceptOnce(self.suitTrack.getDoneEvent(), self.finishedAttack)
@@ -225,14 +229,14 @@ class ThrowAttack(Attack):
                 startPos = self.suit.find('**/joint_Rhold').getPos(render),
                 endPos = pathNP.getPos(render),
                 gravityMult = 0.7,
-                duration = 1.0
+                duration = THROW_ATTACK_IVAL_TIME
             )
         else:
             self.weapon.setH(pathNP.getH(render))
             self.throwTrajectory = LerpPosInterval(
                 self.weapon,
-                duration = 0.5,
-                pos = pathNP.getPos(render),
+                duration = GLOWER_POWER_IVAL_TIME,
+                pos = pathNP.getPos(render) + (0, 0, 2),
                 startPos = startNP.getPos(render) + (0, 3, 0)
             )
 
@@ -456,7 +460,7 @@ class FountainPenAttack(Attack):
             collName = 'fountainPenCollNode'
         collNode = CollisionNode(collName)
         collNode.addSolid(sphere)
-        collNode.setCollideMask(CIGlobals.WallBitmask)
+        collNode.setCollideMask(CIGlobals.WeaponBitmask)
         self.wsnp = self.spray.attachNewNode(collNode)
         self.wsnp.setY(1)
         #self.wsnp.show()
@@ -574,7 +578,7 @@ class HangUpAttack(Attack):
         collSphere.setTangible(0)
         collNode = CollisionNode('phone_shootout')
         collNode.addSolid(collSphere)
-        collNode.setCollideMask(CIGlobals.WallBitmask)
+        collNode.setCollideMask(CIGlobals.WeaponBitmask)
         self.collNP = self.phone.attachNewNode(collNode)
         #self.collNP.show()
 
@@ -921,11 +925,11 @@ class ParticleAttack(Attack):
         for path in particlePaths:
             particle = ParticleLoader.loadParticleEffect(path)
             self.particles.append(particle)
-        sphere = CollisionSphere(0, 0, 0, 1)
+        sphere = CollisionSphere(0, 0, 0, 2)
         sphere.setTangible(0)
         node = CollisionNode(particleCollId)
         node.addSolid(sphere)
-        node.setCollideMask(CIGlobals.WallBitmask)
+        node.setCollideMask(CIGlobals.WeaponBitmask)
 
         self.targetX = self.attacksClass.target.getX(render)
         self.targetY = self.attacksClass.target.getY(render)
@@ -1041,7 +1045,7 @@ class BuzzWordAttack(ParticleAttack):
     attack = 'buzzword'
     particleIvalDur = 1.5
     afterIvalDur = 1.5
-    shooterDistance = 32.0
+    shooterDistance = 50.0
 
     def doAttack(self, ts):
         texturesList = ['buzzwords-crash',
@@ -1079,7 +1083,7 @@ class JargonAttack(ParticleAttack):
     attack = 'jargon'
     particleIvalDur = 1.5
     afterIvalDur = 1.5
-    shooterDistance = 31.0
+    shooterDistance = 50.0
 
     def doAttack(self, ts):
         texturesList = ['jargon-brow',
@@ -1115,7 +1119,7 @@ class MumboJumboAttack(ParticleAttack):
     attack = 'mumbojumbo'
     particleIvalDur = 2.5
     afterIvalDur = 1.5
-    shooterDistance = 25.0
+    shooterDistance = 50.0
 
     def doAttack(self, ts):
         texturesList = ['mumbojumbo-boiler',
@@ -1153,7 +1157,7 @@ class FilibusterAttack(ParticleAttack):
     attack = 'filibuster'
     particleIvalDur = 1.5
     afterIvalDur = 1.5
-    shooterDistance = 20.0
+    shooterDistance = 40.0
 
     def doAttack(self, ts):
         texturesList = ['filibuster-cut',
@@ -1188,7 +1192,7 @@ class DoubleTalkAttack(ParticleAttack):
     attack = 'doubletalk'
     particleIvalDur = 3.0
     afterIvalDur = 1.5
-    shooterDistance = 40.0
+    shooterDistance = 50.0
 
     def doAttack(self, ts):
         texturesList = ['doubletalk-double',
@@ -1221,7 +1225,7 @@ class SchmoozeAttack(ParticleAttack):
     attack = 'schmooze'
     particleIvalDur = 1.5
     afterIvalDur = 1.5
-    shooterDistance = 23.0
+    shooterDistance = 40.0
 
     def doAttack(self, ts):
         texturesList = ['schmooze-genius',
@@ -1254,9 +1258,9 @@ class SchmoozeAttack(ParticleAttack):
 class FingerWagAttack(ParticleAttack):
     notify = directNotify.newCategory('FingerWagAttack')
     attack = 'fingerwag'
-    particleIvalDur = 2.75
+    particleIvalDur = 2
     afterIvalDur = 1.5
-    shooterDistance = 30.0
+    shooterDistance = 35.0
 
     def doAttack(self, ts):
         ParticleAttack.doAttack(

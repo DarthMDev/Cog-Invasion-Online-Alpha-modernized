@@ -27,7 +27,7 @@ class CTHoodAI:
         self.startup()
 
     def startup(self):
-        if CogBattleGlobals.HoodId2HoodIndex.get(self.hood, None) != None:
+        if CogBattleGlobals.HoodId2WantBattles.get(self.hood, False) is True:
             self.notify.info('Making station in {0}'.format(self.hood))
             hoodIndex = CogBattleGlobals.HoodId2HoodIndex[self.hood]
             self.cogStation = DistributedCogStationAI(self.air)
@@ -61,7 +61,7 @@ class CTHoodAI:
             for block, exteriorZone in blockZoneByNumber.items():
                 buildingType = dnaStore.get_block_building_type(block)
                 if not buildingType in ['animbldg', 'hq']:
-                    bldg = DistributedBuildingAI(self.air, block, exteriorZone, zoneId)
+                    bldg = DistributedBuildingAI(self.air, block, exteriorZone, zoneId, self.hood)
                     bldg.generateWithRequired(exteriorZone)
                     bldg.suitTakeOver(random.choice([Dept.SALES, Dept.CASH, Dept.LAW, Dept.BOSS]), 0, 0)
                     self.buildings.append(bldg)

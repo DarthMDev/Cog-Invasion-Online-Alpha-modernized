@@ -90,7 +90,7 @@ TheBigCheese = SuitPlan(
     scale = 7.0,
     nametagZ = 9.8,
     handColor = VBase4(0.75, 0.95, 0.75, 1.0),
-    levelRange = (8, 12)
+    levelRange = (8, 13)
 )
 CorporateRaider = SuitPlan(
     SuitGlobals.CorporateRaider,
@@ -164,7 +164,7 @@ BigWig = SuitPlan(
     'bigwig',
     scale = 7.0,
     nametagZ = 9.2,
-    levelRange = (8, 12)
+    levelRange = (8, 13)
 )
 LegalEagle = SuitPlan(
     SuitGlobals.LegalEagle,
@@ -244,7 +244,7 @@ RobberBaron = SuitPlan(
     headTex = 'phase_3.5/maps/robberbaron.jpg',
     scale = 7.0,
     nametagZ = 9.4,
-    levelRange = (8, 12)
+    levelRange = (8, 13)
 )
 LoanShark = SuitPlan(
     SuitGlobals.LoanShark,
@@ -318,7 +318,7 @@ MrHollywood = SuitPlan(
     'yesman',
     scale = 7.0,
     nametagZ = 9.4,
-    levelRange = (8, 12)
+    levelRange = (8, 13)
 )
 TheMingler = SuitPlan(
     SuitGlobals.TheMingler,

@@ -16,7 +16,7 @@ class Street(Place):
     def __init__(self, loader, parentFSM, doneEvent):
         self.parentFSM = parentFSM
         Place.__init__(self, loader, doneEvent)
-        self.fsm = ClassicFSM('Street', [State('start', self.enterStart, self.exitStart, ['walk', 'doorOut', 'teleportIn', 'tunnelOut']),
+        self.fsm = ClassicFSM('Street', [State('start', self.enterStart, self.exitStart, ['walk', 'doorOut', 'teleportIn', 'tunnelOut', 'elevatorIn']),
             State('walk', self.enterWalk, self.exitWalk, ['stop', 'tunnelIn', 'shtickerBook', 'teleportOut']),
             State('shtickerBook', self.enterShtickerBook, self.exitShtickerBook, ['teleportOut', 'walk']),
             State('teleportOut', self.enterTeleportOut, self.exitTeleportOut, ['teleportIn', 'stop']),
@@ -26,8 +26,30 @@ class Street(Place):
             State('doorIn', self.enterDoorIn, self.exitDoorIn, ['stop']),
             State('doorOut', self.enterDoorOut, self.exitDoorOut, ['walk']),
             State('teleportIn', self.enterTeleportIn, self.exitTeleportIn, ['walk', 'stop']),
+            State('elevatorIn', self.enterElevatorIn, self.exitElevatorIn, ['walk', 'stop']),
             State('final', self.enterFinal, self.exitFinal, ['final'])],
             'start', 'final')
+            
+    def enterElevatorIn(self, requestStatus):
+        taskMgr.add(
+            self.elevatorInTask, 'Street.elevatorInTask', extraArgs = [requestStatus['bldgDoId']], appendTask = True)
+        
+    def elevatorInTask(self, bldgDoId, task):
+        bldg = base.cr.doId2do.get(bldgDoId)
+        if bldg:
+            if bldg.elevatorNodePath is not None:
+                if self._enterElevatorGotElevator():
+                    return task.done
+        return task.cont
+
+    def _enterElevatorGotElevator(self):
+        if not messenger.whoAccepts('insideVictorElevator'):
+            return False
+        messenger.send('insideVictorElevator')
+        return True
+        
+    def exitElevatorIn(self):
+        taskMgr.remove('Street.elevatorInTask')
 
     def enter(self, requestStatus, visibilityFlag = 1):
         Place.enter(self)
@@ -132,10 +154,8 @@ class Street(Place):
                         else:
                             visList.append(vis)
                     base.cr.sendSetZoneMsg(newZoneId, visList)
-                    print base.localAvatar.zoneId
                 else:
                     visList = [similarZoneId] + loader.zoneVisDict.values()[0]
-                    base.cr.sendSetZoneMsg(newZoneId, visList)
             self.zoneId = similarZoneId
         geom = base.cr.playGame.getPlace().loader.geom
         return

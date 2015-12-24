@@ -12,6 +12,7 @@ from QuietZoneState import QuietZoneState
 import LinkTunnel
 import ZoneUtil
 import ToonInterior
+from lib.coginvasion.cthood import CogOfficeInterior
 
 class TownLoader(StateData):
     notify = directNotify.newCategory("TownLoader")
@@ -23,7 +24,8 @@ class TownLoader(StateData):
         self.fsm = ClassicFSM('TownLoader', [State('start', self.enterStart, self.exitStart, ['quietZone', 'street']),
             State('street', self.enterStreet, self.exitStreet, ['quietZone']),
             State('toonInterior', self.enterToonInterior, self.exitToonInterior, ['quietZone']),
-            State('quietZone', self.enterQuietZone, self.exitQuietZone, ['street', 'toonInterior']),
+            State('suitInterior', self.enterSuitInterior, self.exitSuitInterior, ['quietZone']),
+            State('quietZone', self.enterQuietZone, self.exitQuietZone, ['street', 'toonInterior', 'suitInterior']),
             State('final', self.enterFinal, self.exitFinal, ['start'])],
             'start', 'final')
         self.branchZone = None
@@ -113,7 +115,7 @@ class TownLoader(StateData):
         if (status['loader'] == 'townLoader' and
         ZoneUtil.getBranchZone(status['zoneId']) == self.branchZone and
         status['shardId'] == None or
-        status['how'] == 'doorOut' and status['world'] == base.cr.playGame.getCurrentWorldName()):
+        status['how'] == 'doorOut' and status['world'] == base.cr.playGame.getCurrentWorldName() or status['where'] == 'suitInterior'):
             self.fsm.request('quietZone', [status])
         else:
             self.doneStatus = status
@@ -132,9 +134,22 @@ class TownLoader(StateData):
         base.cr.playGame.setPlace(self.place)
         return
 
+    def enterSuitInterior(self, requestStatus):
+        self.acceptOnce(self.placeDoneEvent, self.handleSuitInteriorDone)
+        self.place = CogOfficeInterior.CogOfficeInterior(self, self.fsm, self.placeDoneEvent)
+        self.place.load()
+
+    def exitSuitInterior(self):
+        self.ignore(self.placeDoneEvent)
+        self.place.exit()
+        self.place.unload()
+        self.place = None
+        base.cr.playGame.setPlace(self.place)
+
     def enterThePlace(self, requestStatus):
         base.cr.playGame.setPlace(self.place)
-        self.place.enter(requestStatus)
+        if self.place is not None:
+            self.place.enter(requestStatus)
 
     def handleToonInteriorDone(self):
         status = self.place.doneStatus
@@ -147,6 +162,9 @@ class TownLoader(StateData):
             self.doneStatus = status
             messenger.send(self.doneEvent)
         return
+
+    def handleSuitInteriorDone(self):
+        self.handleToonInteriorDone()
 
     def enterQuietZone(self, requestStatus):
         self.fsm.request(requestStatus['where'], [requestStatus], exitCurrent = 0)

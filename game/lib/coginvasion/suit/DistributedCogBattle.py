@@ -104,11 +104,7 @@ class DistributedCogBattle(DistributedObject):
         self.timer.unload()
         self.getBeansLabel.hide()
         hoodId = self.cr.playGame.hood.hoodId
-        if hoodId == CIGlobals.BattleTTC:
-            hoodId = CIGlobals.ToontownCentral
-            zoneId = CIGlobals.ToontownCentralId
-        else:
-            zoneId = CogBattleGlobals.HoodIndex2HoodId[self.getHoodIndex()]
+        zoneId = CogBattleGlobals.HoodIndex2HoodId[self.getHoodIndex()]
         requestStatus = {'zoneId': zoneId,
                     'hoodId': hoodId,
                     'where': 'playground',

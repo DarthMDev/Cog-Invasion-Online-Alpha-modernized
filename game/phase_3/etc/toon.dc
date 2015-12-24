@@ -70,6 +70,9 @@ from lib.coginvasion.holiday import HolidayManager/UD
 from lib.coginvasion.holiday import DistributedWinterCoachActivity/AI
 from lib.coginvasion.cthood import DistributedBuilding/AI
 from lib.coginvasion.cthood import DistributedElevator/AI
+from lib.coginvasion.cthood import DistributedCogOfficeElevator/AI
+from lib.coginvasion.cthood import DistributedCogOfficeBattle/AI
+from lib.coginvasion.cthood import DistributedCogOfficeSuit/AI
 
 struct AvChoice {
   uint32 avId;
@@ -660,7 +663,7 @@ dclass DistributedCityCart : DistributedNode {
 dclass DistributedBuilding : DistributedObject {
   setBlock(uint16, uint32) required broadcast ram;
   setSuitData(string, int8, int8) required broadcast ram;
-  setVictorList(uint32[]) broadcast ram;
+  setVictorList(uint32[]) broadcast ram required;
   setState(string, int16) broadcast ram required;
   setVictorReady() clsend airecv;
 };
@@ -670,7 +673,7 @@ dclass DistributedElevator : DistributedObject {
   setToZoneId(uint32) required broadcast ram;
   setElevatorType(int8) required broadcast ram;
   setState(string, int16) broadcast ram;
-  setToonsInElevator(uint32[]);
+  setToonsInElevator(uint32[]) broadcast;
   requestEnter() clsend airecv;
   enterRejected();
   requestExit() clsend airecv;
@@ -678,4 +681,27 @@ dclass DistributedElevator : DistributedObject {
   emptySlot(int8, uint32) broadcast;
   requestStateAndTimestamp() clsend airecv;
   stateAndTimestamp(string, int16);
+};
+
+dclass DistributedCogOfficeElevator : DistributedElevator {
+  setIndex(int8) required broadcast ram;
+  putToonsInElevator() broadcast;
+};
+
+dclass DistributedCogOfficeBattle : DistributedObject {
+  setAvatars(uint32[]) required broadcast ram;
+  setDept(string) required broadcast ram;
+  setState(string, int16) broadcast ram;
+  setNumFloors(int8) required broadcast ram;
+  setBldgDoId(uint32) required broadcast ram;
+  setExteriorZoneId(uint32) required broadcast ram;
+  readyToStart() clsend airecv;
+  loadFloor(int8) broadcast;
+  readyForNextFloor() clsend airecv;
+  iAmDead() clsend airecv;
+};
+
+dclass DistributedCogOfficeSuit : DistributedSuit {
+  setBattleDoId(uint32) required broadcast ram;
+  setState(string, int8[], int16) required broadcast ram;
 };

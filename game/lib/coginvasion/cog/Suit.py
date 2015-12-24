@@ -102,8 +102,7 @@ class Suit(Avatar):
 
     def enterNeutral(self, ts = 0):
         self.show()
-        self.timestampAnimTrack = Sequence(Wait(ts), Func(self.loop, "neutral"))
-        self.timestampAnimTrack.start()
+        self.loop("neutral")
 
     def exitNeutral(self):
         self.exitTimestampAnimTrack()
@@ -111,8 +110,7 @@ class Suit(Avatar):
 
     def enterWalk(self, ts = 0):
         self.show()
-        self.timestampAnimTrack = Sequence(Wait(ts), Func(self.loop, "walk"))
-        self.timestampAnimTrack.start()
+        self.loop("walk")
         self.disableShadowRay()
 
     def exitWalk(self):

@@ -25,7 +25,7 @@ from lib.coginvasion.cog.Suit import Suit
 from lib.coginvasion.cog.SpawnMode import SpawnMode
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
-from lib.coginvasion.suit import SuitAttacks
+from lib.coginvasion.cog import SuitAttacks
 
 from panda3d.core import Point3, VBase4
 import types, random
@@ -436,10 +436,8 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def generate(self):
         DistributedAvatar.generate(self)
         DistributedSmoothNode.generate(self)
-        self.startSmooth()
 
     def disable(self):
-        self.stopSmooth()
         self.anim = None
         self.state = None
         self.dept = None

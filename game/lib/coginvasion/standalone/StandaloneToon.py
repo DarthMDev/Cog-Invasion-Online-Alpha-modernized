@@ -4,9 +4,10 @@
 from panda3d.core import *
 loadPrcFile('config/config_client.prc')
 loadPrcFileData('', 'framebuffer-multisample 1')
-loadPrcFileData('', 'multisamples 16')
+loadPrcFileData('', 'multisamples 2048')
 loadPrcFileData('', 'tk-main-loop 0')
 loadPrcFileData('', 'egg-load-old-curves 0')
+loadPrcFileData('', 'textures-power-2 none')
 
 cbm = CullBinManager.getGlobalPtr()
 cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
@@ -88,6 +89,9 @@ from lib.coginvasion.login.AvChoice import AvChoice
 
 base.cTrav = CollisionTraverser()
 base.shadowTrav = CollisionTraverser()
+base.lifter = CollisionHandlerFloor()
+base.pusher = CollisionHandlerPusher()
+base.queue = CollisionHandlerQueue()
 base.cr = ClientRepository(['phase_3/etc/direct.dc', 'phase_3/etc/toon.dc'])
 base.cr.isShowingPlayerIds = False
 base.cr.localAvChoice = AvChoice("00/08/00/10/01/12/01/10/18/18/07/00/00/00/00", "Ducky", 0, 0)

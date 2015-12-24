@@ -117,7 +117,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
         if self.avatar.doId == base.localAvatar.doId:
             for key in base.cr.doId2do.keys():
                 obj = base.cr.doId2do[key]
-                if obj.__class__.__name__ == "DistributedSuit":
+                if obj.__class__.__name__ in CIGlobals.SuitClasses:
                     if obj.getKey() == avNP.getKey():
                         if obj.getHealth() > 0:
                             index = self.getEntityIndex(entry.getFromNodePath().getParent())

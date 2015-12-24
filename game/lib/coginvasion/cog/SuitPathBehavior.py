@@ -53,6 +53,9 @@ class SuitPathBehavior(SuitBehaviorBase):
             oldPath = currentPath
             startIndex = CIGlobals.SuitSpawnPoints[self.suit.getHood()].keys().index(oldPath)
         self.suit.currentPath = pathKey
+        self.startPath(path, durationFactor, startIndex, endIndex)
+            
+    def startPath(self, path, durationFactor, startIndex, endIndex):
         startPos = self.suit.getPos(render)
         pathName = self.suit.uniqueName('suitPath')
         self.walkTrack = NPCWalkInterval(self.suit, path, startPos = startPos,

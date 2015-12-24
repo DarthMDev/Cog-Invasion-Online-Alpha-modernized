@@ -59,6 +59,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.deathAnim = None
         self.deathTimeLeft = 0
         self.deathTaskName = None
+        
+    def canGetHit(self):
+        return True
 
     def b_setSuit(self, plan, variant = 0):
         self.d_setSuit(plan, variant)
@@ -328,7 +331,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
     def setManager(self, suitMgr):
         self.suitMgr = suitMgr
-        self.hood = CogBattleGlobals.HoodIndex2HoodName[self.getManager().getBattle().getHoodIndex()]
+        if hasattr(self.getManager(), 'getBattle'):
+            self.hood = CogBattleGlobals.HoodIndex2HoodName[self.getManager().getBattle().getHoodIndex()]
 
     def getManager(self):
         if hasattr(self, 'suitMgr'):
@@ -348,6 +352,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     def disable(self):
         DistributedAvatarAI.disable(self)
         self.clearTrack()
+        taskMgr.remove(self.uniqueName('__handleDeath'))
+        taskMgr.remove(self.uniqueName('Resume Thinking'))
         taskMgr.remove(self.uniqueName('monitorHealth'))
         if self.brain:
             self.brain.stopThinking()
