@@ -199,8 +199,8 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         else:
             Suit.disableRay(self)
 
-    def startProjInterval(self, startX, startY, startZ, endX, endY, endZ, duration, gravityMult, ts = 0.0):
-        if ts != 0.0:
+    def startProjInterval(self, startX, startY, startZ, endX, endY, endZ, duration, gravityMult, ts = 0):
+        if isinstance(ts, int) and ts != 0:
             ts = globalClockDelta.localElapsedTime(ts)
 
         self.stopMoveInterval()
