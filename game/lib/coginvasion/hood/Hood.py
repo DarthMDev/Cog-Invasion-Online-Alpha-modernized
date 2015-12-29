@@ -144,9 +144,12 @@ class Hood(StateData):
         base.transitions.noTransitions()
         loaderName = requestStatus['loader']
         zoneID = requestStatus['zoneId']
-        if ZoneUtil.getWhereName(zoneID) == 'playground':
+        where = requestStatus['where']
+        if where == 'playground' or where == 'toonInterior':
             name = self.id
-        else:
+        elif where == 'minigame':
+            name = 'Minigame'
+        elif where == 'street':
             name = CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(zoneID)]
         if loaderName == 'safeZoneLoader' or loaderName == 'townLoader':
             if not loader.inBulkBlock:

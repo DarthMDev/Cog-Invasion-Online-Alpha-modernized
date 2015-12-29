@@ -32,9 +32,11 @@ class DistributedCogBattleAI(DistributedObjectAI):
         self.battleShop = None
         self.turretMgr = None
         self.arrivedAvatars = []
+        self.avId2suitsTargeting = {}
 
     def setAvIdArray(self, array):
         self.avIds = array
+        self.avId2suitsTargeting = {avId: [] for avId in array}
 
     def getAvIdArray(self):
         return self.avIds
@@ -123,6 +125,7 @@ class DistributedCogBattleAI(DistributedObjectAI):
                         # left because it will raise issues.
                         self.turretMgr.killTurret(turret.doId)
                 self.avIds.remove(avId)
+                del self.avId2suitsTargeting[avId]
         if len(self.avIds) == 0:
             self.notify.warning("All avatars have left DistributedCogBattleAI-{0}, deleting DO...".format(self.doId))
             self.disable()

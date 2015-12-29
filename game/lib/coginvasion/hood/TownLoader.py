@@ -32,6 +32,7 @@ class TownLoader(StateData):
         self.canonicalBranchZone = None
         self.placeDoneEvent = 'placeDone'
         self.linkTunnels = []
+        self.place = None
         return
 
     def findAndMakeLinkTunnels(self, requestStatus):

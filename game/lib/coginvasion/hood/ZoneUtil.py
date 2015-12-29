@@ -6,7 +6,7 @@ def isInInterior(zoneId):
 def getWhereName(zoneId):
     if str(zoneId)[-3:] == '000':
         return 'playground'
-    elif int(str(zoneId)[1:]) < 400:
+    elif int(str(zoneId)[-3:]) < 400:
         return 'street'
     elif isInInterior(zoneId):
         return 'toonInterior'
@@ -22,7 +22,7 @@ def getBranchZone(zoneId):
 def getLoaderName(zoneId):
     if str(getBranchZone(zoneId))[-3:] == '000':
         return 'safeZoneLoader'
-    elif int(str(getBranchZone(zoneId))[1:]) >= 100 and int(str(getBranchZone(zoneId))[1:]) <= 300:
+    elif int(str(getBranchZone(zoneId))[-3:]) >= 100 and int(str(getBranchZone(zoneId))[-3:]) <= 999:
         return 'townLoader'
     else:
         return None

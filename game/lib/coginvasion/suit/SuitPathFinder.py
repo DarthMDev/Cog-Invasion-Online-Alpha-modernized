@@ -42,16 +42,16 @@ def find_path(pointDict, pathData, start_key, target_key):
     nodes = []
     open_nodes = []
     closed_nodes = []
+    node_class_by_key = {}
 
     for key, point in pointDict.items():
         g_cost = get_distance(point, start_point)
         h_cost = get_distance(point, target_point)
         node = Node(g_cost, h_cost, key, point)
+        node_class_by_key[key] = node
         nodes.append(node)
 
-    for node in nodes:
-        if node.key == start_key:
-            open_nodes.append(node)
+    open_nodes.append(node_class_by_key[start_key])
 
     while len(open_nodes):
         f_cost_list = []
@@ -82,11 +82,7 @@ def find_path(pointDict, pathData, start_key, target_key):
             if isClosed:
                 continue
 
-            neighbor = None
-            for node in nodes:
-                if node.key == neighbor_key:
-                    neighbor = node
-                    break
+            neighbor = node_class_by_key[neighbor_key]
 
             nm_cost_2_neighbor = current.g_cost + get_distance(current.point, neighbor.point)
             if (not neighbor in open_nodes) or \

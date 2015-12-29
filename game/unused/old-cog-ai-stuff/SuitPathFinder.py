@@ -18,14 +18,11 @@ class Node:
 def get_distance(point1, point2):
     return (point1.getXy() - point2.getXy()).length()
 
-def get_path(start_key, target_key, nodes):
+def get_path(start_key, target_key, node_class_by_key):
     path = []
 
-    for node in nodes:
-        if node.key == start_key:
-            start_node = node
-        elif node.key == target_key:
-            target_node = node
+    start_node = node_class_by_key[start_key]
+    target_node = node_class_by_key[target_key]
 
     current_node = target_node
     while (current_node.parent != start_node):
@@ -41,16 +38,16 @@ def find_path(area, start_key, target_key):
     nodes = []
     open_nodes = []
     closed_nodes = []
+    node_class_by_key = {}
 
     for key, point in CIGlobals.SuitSpawnPoints[area].items():
         g_cost = get_distance(point, start_point)
         h_cost = get_distance(point, target_point)
         node = Node(g_cost, h_cost, key, point)
+        node_class_by_key[key] = node
         nodes.append(node)
 
-    for node in nodes:
-        if node.key == start_key:
-            open_nodes.append(node)
+    open_nodes.append(node_class_by_key[start_key])
 
     while len(open_nodes):
         f_cost_list = []
@@ -68,7 +65,7 @@ def find_path(area, start_key, target_key):
         closed_nodes.append(current)
 
         if current.key == target_key:
-            return get_path(start_key, target_key, nodes)
+            return get_path(start_key, target_key, node_class_by_key)
 
         neighbor_keys = CIGlobals.SuitPathData[area][current.key]
         for neighbor_key in neighbor_keys:
@@ -81,11 +78,7 @@ def find_path(area, start_key, target_key):
             if isClosed:
                 continue
 
-            neighbor = None
-            for node in nodes:
-                if node.key == neighbor_key:
-                    neighbor = node
-                    break
+            neighbor = node_class_by_key[neighbor_key]
 
             nm_cost_2_neighbor = current.g_cost + get_distance(current.point, neighbor.point)
             if (not neighbor in open_nodes) or \
