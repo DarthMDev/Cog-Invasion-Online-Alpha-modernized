@@ -11,7 +11,6 @@ from direct.interval.SoundInterval import SoundInterval
 from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
-from lib.coginvasion.globals import CIGlobals
 from panda3d.core import TransparencyAttrib
 
 class Slot(DirectFrame):

@@ -9,7 +9,6 @@ from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.showbase.DirectObject import *
 from direct.fsm import ClassicFSM, State, StateData
-import commands
 
 class ChatInput(DirectObject, StateData.StateData):
 
@@ -86,7 +85,7 @@ class ChatInput(DirectObject, StateData.StateData):
 
     def openChatInput(self, key):
         if "shift-" in key:
-            shift, keyName = key.split('-')
+            _, keyName = key.split('-')
             key = self.keyToShiftKey.get(keyName, None)
             if not key:
                 key = keyName.upper()
@@ -99,6 +98,9 @@ class ChatInput(DirectObject, StateData.StateData):
             self.ignore("shift-" + key)
 
     def enterInput(self, key, command = None, extraArgs = []):
+        if base.localAvatar.invGui:
+            base.localAvatar.invGui.disableWeaponSwitch()
+        
         if command == None:
             command = self.sendChat
         if not self.chatBx:
@@ -133,10 +135,20 @@ class ChatInput(DirectObject, StateData.StateData):
         chat = self.chatInput.get()
         if hasattr(base, 'localAvatar'):
             if len(chat) > 0:
+                
+                for word in chat.split(" "):
+                    checkWord = word
+                    if word and len(word) > 1 and word[len(word) - 1] in ['?', '!', '.']:
+                        checkWord = word.replace(word[len(word) - 1], '')
+                    if not (checkWord.lower() in open('phase_3/etc/ciwhitelist.dat').read().split()):
+                        chat = chat.replace(word, "***")
+                
                 base.localAvatar.b_setChat(chat)
         self.fsm.request('idle')
 
     def exitInput(self):
+        if base.localAvatar.invGui:
+            base.localAvatar.invGui.enableWeaponSwitch()
         if self.chatBx:
             self.chatBx.hide()
         if self.chatBx_close:
