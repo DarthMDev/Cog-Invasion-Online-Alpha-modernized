@@ -104,6 +104,7 @@ class SuitBrain(DirectObject):
         return self.isThinking
 
     def __think(self, task = None):
+        print 'think'
         # Let's delay our next behavior.
         if task and self.currentBehavior:
             task.delayTime = 1
@@ -125,7 +126,9 @@ class SuitBrain(DirectObject):
                 continue
             if behavior.shouldStart():
                 readyBehaviors.append(behavior)
+                print 'appending ready behavior {0}'.format(behavior)
         if len(readyBehaviors) > 0:
+            print 'has a ready behavior'
             # Sort our list of ready behaviors so the ready behavior with the highest priority is entered.
             readyBehaviors.sort(key = lambda behavior: self.behaviors[behavior], reverse = True)
             # Now, enter the highest priority ready behavior.

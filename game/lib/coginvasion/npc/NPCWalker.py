@@ -17,8 +17,6 @@ class NPCWalkInterval(LerpPosInterval):
                 bakeInStart = 1, fluid = 0, name = None, lookAtTarget = True):
         self.nodePath = nodePath
         self.pos = pos
-        if startPos:
-            nodePath.setPos(startPos)
         if type(pos) != type(Point3()):
             self.notify.warning("pos argument must be of type %s, not of type %s"
                             % (type(Point3()), type(pos)))

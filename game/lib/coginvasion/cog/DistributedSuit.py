@@ -15,17 +15,17 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 
 from lib.coginvasion.avatar.DistributedAvatar import DistributedAvatar
-from lib.coginvasion.cog.SuitState import SuitState
-from lib.coginvasion.cog import SuitBank
-from lib.coginvasion.cog.SuitBank import SuitPlan
-from lib.coginvasion.cog import SuitGlobals
-from lib.coginvasion.cog import Voice
-from lib.coginvasion.cog import Variant
-from lib.coginvasion.cog.Suit import Suit
-from lib.coginvasion.cog.SpawnMode import SpawnMode
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
-from lib.coginvasion.cog import SuitAttacks
+from SuitState import SuitState
+from SuitBank import SuitPlan
+from Suit import Suit
+from SpawnMode import SpawnMode
+import SuitBank
+import SuitGlobals
+import Voice
+import Variant
+import SuitAttacks
 
 from panda3d.core import Point3, VBase4
 import types, random
@@ -60,6 +60,10 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.stateIndex2suitState = {}
         self.suitFSM.enterInitialState()
         self.makeStateDict()
+        
+    def setWalkPath(self, path, timestamp):
+        elapsedT = globalClockDelta.localElapsedTime(timestamp)
+        self.suitFSM.request('walking', [path, elapsedT])
 
     def showAvId(self):
         self.setDisplayName(self.getName() + "\n" + str(self.doId))
@@ -70,28 +74,40 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def setDisplayName(self, name):
         self.setupNameTag(tempName = name)
 
-    def enterWalking(self, startIndex, endIndex, ts = 0.0):
-        durationFactor = 0.2
-        if startIndex > -1:
-            startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
-            startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint]
-        else:
-            startPos = self.getPos(render)
-        endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
-        endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint]
+    def enterWalking(self, path, elapsedT):
+        # path: A list of point2s.
+        #
+        # We will make a sequence of NPCWalkIntervals for each point2 in the path.
+        
+        self.path = path
 
         self.stopMoving()
-
-        self.moveIval = NPCWalkInterval(self, endPos, durationFactor, startPos, fluid = 1)
-        self.moveIval.start(ts)
         self.animFSM.request('walk')
+        self._doWalk()
+        
+    def _doWalk(self):
+        waypoint = self.path[0]
+        print 'walking to {0} from {1}'.format(waypoint, self.getPos(render))
+        self.moveIval = NPCWalkInterval(self, Point3(waypoint[0], waypoint[1], 0), startPos = self.getPos(render),
+            durationFactor = 0.2, fluid = 1, name = self.uniqueName('walkIval'))
+        self.moveIval.setDoneEvent(self.moveIval.getName())
+        self.acceptOnce(self.moveIval.getDoneEvent(), self._handleWalkDone)
+        self.path.remove(waypoint)
+        self.moveIval.start()
+        
+    def _handleWalkDone(self):
+        if len(self.path) == 0:
+            self.animFSM.request('neutral')
+            return
+        self._doWalk()
 
     def exitWalking(self):
         if self.moveIval:
+            self.ignore(self.moveIval.getDoneEvent())
             self.moveIval.pause()
             self.moveIval = None
         if not self.isDead():
-            self.animFSM.request('off')
+            self.animFSM.request('neutral')
 
     def enterFlyingDown(self, startIndex, endIndex, ts = 0.0):
         if self.getHood() != '' and startIndex != -1 and endIndex != -1:
@@ -116,7 +132,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def exitFlyingDown(self):
         self.stopMoving(finish = 1)
-        self.animFSM.request('off')
+        self.animFSM.request('neutral')
 
     def enterFlyingUp(self, startIndex, endIndex, ts = 0.0):
         if self.getHood() != '':
@@ -150,7 +166,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         if self.moveIval:
             self.moveIval.finish()
             self.moveIval = None
-        self.animFSM.request('off')
+        self.animFSM.request('neutral')
 
     def enterLured(self, _, __, ___):
         self.loop('lured')

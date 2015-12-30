@@ -1,13 +1,9 @@
-"""
-
-  Filename: DistributedSuitAI.py
-  Created by: DecodedLogic (01Sep15)
-
-"""
+# Filename: DistributedSuitAI.py
+# Created by:  DecodedLogic (01Sep15)
 
 from direct.distributed.DistributedSmoothNodeAI import DistributedSmoothNodeAI
-from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import globalClockDelta
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.task.Task import Task
 
@@ -15,19 +11,21 @@ from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.suit.SuitItemDropper import SuitItemDropper
-from lib.coginvasion.cog import SuitBank
-from lib.coginvasion.cog import SuitGlobals
-from lib.coginvasion.cog.SpawnMode import SpawnMode
-from lib.coginvasion.cog.SuitBrainAI import SuitBrain
-from lib.coginvasion.cog import SuitAttacks
-from lib.coginvasion.cog.SuitBank import SuitPlan
-from lib.coginvasion.cog.SuitRandomStrollBehavior import SuitRandomStrollBehavior
-from lib.coginvasion.cog.SuitPanicBehavior import SuitPanicBehavior
-from lib.coginvasion.cog.SuitAttackBehavior import SuitAttackBehavior
-from lib.coginvasion.cog import Variant
+from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
+from SuitCallInBackupBehavior import SuitCallInBackupBehavior
+from SpawnMode import SpawnMode
+from SuitBrainAI import SuitBrain
+from SuitBank import SuitPlan
+from SuitRandomStrollBehavior import SuitRandomStrollBehavior
+from SuitPanicBehavior import SuitPanicBehavior
+from SuitAttackBehavior import SuitAttackBehavior
+from SuitPursueToonBehavior import SuitPursueToonBehavior
+import SuitAttacks
+import SuitBank
+import SuitGlobals
+import Variant
+
 import types, random
-from lib.coginvasion.cog.SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
-from lib.coginvasion.cog.SuitCallInBackupBehavior import SuitCallInBackupBehavior
 
 class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     notify = directNotify.newCategory('DistributedSuitAI')
@@ -59,6 +57,11 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.deathAnim = None
         self.deathTimeLeft = 0
         self.deathTaskName = None
+        
+    def d_setWalkPath(self, path):
+        # Send out a list of Point2s for the client to create a path for the suit to walk.
+        timestamp = globalClockDelta.getRealNetworkTime()
+        self.sendUpdate('setWalkPath', [path, timestamp])
         
     def canGetHit(self):
         return True
@@ -293,10 +296,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         for behavior, priority in self.requestedBehaviors:
             self.brain.addBehavior(behavior, priority)
         self.requestedBehaviors = []
-        self.brain.addBehavior(SuitAttackBehavior(self), priority = 3)
         if self.suitPlan.getName() != SuitGlobals.VicePresident:
-            self.brain.addBehavior(SuitPanicBehavior(self), priority = 2)
-            self.brain.addBehavior(SuitRandomStrollBehavior(self), priority = 1)
+            self.brain.addBehavior(SuitPursueToonBehavior(self), priority = 2)
         else:
             self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 2)
             self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 4)

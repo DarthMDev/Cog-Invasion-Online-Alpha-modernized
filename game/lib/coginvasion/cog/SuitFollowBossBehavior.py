@@ -8,7 +8,8 @@ from lib.coginvasion.cog import SuitAttacks
 from lib.coginvasion.globals import CIGlobals
 from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
 from SuitAttackBehavior import SuitAttackBehavior
-import SuitPathFinder
+import SuitPathFinderAI
+import SuitUtils
 
 from direct.fsm import ClassicFSM, State
 from direct.task.Task import Task
@@ -17,7 +18,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 
 import random
 
-class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
+class SuitFollowBossBehavior(SuitPathBehavior):
 
     LEEWAY_DISTANCE = 4
     MAX_BOSS_HELPERS = 5

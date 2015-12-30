@@ -5,10 +5,11 @@
 
 """
 
-from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
-from lib.coginvasion.cog.SuitType import SuitType
-from lib.coginvasion.cog import SuitAttacks
-from lib.coginvasion.cog import SuitGlobals
+from SuitHabitualBehavior import SuitHabitualBehavior
+from SuitType import SuitType
+import SuitAttacks
+import SuitGlobals
+import SuitUtils
 
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
@@ -104,17 +105,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
 
         # Let's select a target and look at them.
         target = self.avatarsInRange[0]
-        self.suit.b_setAnimState('neutral')
-        self.suit.headsUp(target)
-
-        # Choose a random attack and start it.
-        attack = random.choice(self.suit.suitPlan.getAttacks())
-        attackIndex = SuitAttacks.SuitAttackLengths.keys().index(attack)
-        timestamp = globalClockDelta.getFrameNetworkTime()
-        if self.suit.isDead():
-            self.stopAttacking()
-            return
-        self.suit.sendUpdate('doAttack', [attackIndex, target.doId, timestamp])
+        attack = SuitUtils.attack(self.suit, target)
         
         # Let's handle when we're attacking a turret.
         if target.__class__.__name__ == 'DistributedPieTurretAI':
@@ -153,11 +144,6 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         self.attacksThisSession += 1
         self.attacksDone += 1
 
-        # Let's setup the attack cooldown.
-        #if target.__class__.__name__ == 'DistributedToonAI':
-        #    self.ATTACK_COOLDOWN = random.randint(6, 12)
-        #else:
-        #    self.ATTACK_COOLDOWN = random.randint(2, 6)
         self.ATTACK_COOLDOWN = SuitAttacks.SuitAttackLengths[attack]
 
         # Are we allowed to continue attacking?

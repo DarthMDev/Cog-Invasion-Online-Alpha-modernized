@@ -5,9 +5,14 @@
 
 """
 
+from panda3d.core import Point3
+
 from lib.coginvasion.cog.SuitBehaviorBase import SuitBehaviorBase
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
+from direct.interval.IntervalGlobal import Sequence
+
+from SuitPathDataAI import *
 
 import random
 
@@ -18,6 +23,7 @@ class SuitPathBehavior(SuitBehaviorBase):
         self.walkTrack = None
         self.exitOnWalkFinish = exitOnWalkFinish
         self.isEntered = 0
+        self.pathFinder = getPathFinder(self.suit.hood)
 
     def unload(self):
         SuitBehaviorBase.unload(self)
@@ -25,35 +31,34 @@ class SuitPathBehavior(SuitBehaviorBase):
         del self.exitOnWalkFinish
         del self.walkTrack
 
-    def createPath(self, pathKey = None, durationFactor = 0.2, fromCurPos = False):
-        currentPathQueue = self.suit.getCurrentPathQueue()
-        currentPath = self.suit.getCurrentPath()
-        if pathKey == None and not len(currentPathQueue):
-            pathKeyList = CIGlobals.SuitPathData[self.suit.getHood()][self.suit.getCurrentPath()]
-            pathKey = random.choice(pathKeyList)
-        elif len(currentPathQueue):
-            pathKey = currentPathQueue[0]
-            currentPathQueue.remove(pathKey)
-        endIndex = CIGlobals.SuitSpawnPoints[self.suit.getHood()].keys().index(pathKey)
-        path = CIGlobals.SuitSpawnPoints[self.suit.getHood()][pathKey]
-        self.clearWalkTrack()
-        if not currentPath or fromCurPos:
-            startIndex = -1
-        else:
-            oldPath = currentPath
-            startIndex = CIGlobals.SuitSpawnPoints[self.suit.getHood()].keys().index(oldPath)
-        self.suit.currentPath = pathKey
-        self.startPath(path, durationFactor, startIndex, endIndex)
+    def createPath(self, node = None, durationFactor = 0.2, fromCurPos = False):
+        x1, y1 = node.getX(render), node.getY(render)
+        x2, y2 = self.suit.getX(render), self.suit.getY(render)
+        path = self.pathFinder.planPath((x2, y2), (x1, y1))
+        if path is None:
+            return
+        self.startPath(path, durationFactor)
             
-    def startPath(self, path, durationFactor, startIndex, endIndex):
-        startPos = self.suit.getPos(render)
+    def startPath(self, path, durationFactor):
         pathName = self.suit.uniqueName('suitPath')
-        self.walkTrack = NPCWalkInterval(self.suit, path, startPos = startPos,
-            name = pathName, durationFactor = durationFactor, fluid = 1
-        )
+        self.path = path
+        self.suit.d_setWalkPath(path)
+        self._doWalk()
+        
+    def _doWalk(self):
+        waypoint = self.path[0]
+        print 'walking to: {0}'.format(waypoint)
+        self.walkTrack = NPCWalkInterval(self.suit, Point3(waypoint[0], waypoint[1], 0), startPos = self.suit.getPos(render),
+            durationFactor = 0.2, fluid = 1, name = self.suit.uniqueName('walkIval'))
         self.walkTrack.setDoneEvent(self.walkTrack.getName())
+        self.acceptOnce(self.walkTrack.getDoneEvent(), self._handleWalkDone)
+        self.path.remove(waypoint)
         self.startFollow()
-        self.suit.b_setSuitState(1, startIndex, endIndex)
+        
+    def _handleWalkDone(self):
+        if len(self.path) == 0:
+            return
+        self._doWalk()
 
     def clearWalkTrack(self):
         if self.walkTrack:
@@ -64,15 +69,13 @@ class SuitPathBehavior(SuitBehaviorBase):
                 self.suit.d_stopMoveInterval()
 
     def startFollow(self):
-        self.suit.b_setAnimState('walk')
         if self.walkTrack:
-            self.acceptOnce(self.walkTrack.getName(), self._walkDone)
+            #self.acceptOnce(self.walkTrack.getName(), self._walkDone)
             self.walkTrack.start()
 
     def _walkDone(self):
         self.clearWalkTrack()
         if not self.suit.isDead():
-            self.suit.b_setAnimState('neutral')
             if self.exitOnWalkFinish == True:
                 self.exit()
 
