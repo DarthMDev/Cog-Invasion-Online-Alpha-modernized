@@ -63,6 +63,19 @@ FactoryGame = "Factory Prowl"
 CameraShyGame = "Camera Shy"
 EagleGame = "Eagle Summit"
 DeliveryGame = "Delivery!"
+ChatGarblerDog = ['woof', 'arf', 'rruff']
+ChatGarblerCat = ['meow', 'mew']
+ChatGarblerMouse = ['squeak', 'squeaky', 'squeakity']
+ChatGarblerHorse = ['neigh', 'brrr']
+ChatGarblerRabbit = ['eek',
+ 'eepr',
+ 'eepy',
+ 'eeky']
+ChatGarblerDuck = ['quack', 'quackity', 'quacky']
+ChatGarblerMonkey = ['ooh', 'ooo', 'ahh']
+ChatGarblerBear = ['growl', 'grrr']
+ChatGarblerPig = ['oink', 'oik', 'snort']
+ChatGarblerDefault = ['blah']
 
 ThemeSong = None
 holidayTheme = None

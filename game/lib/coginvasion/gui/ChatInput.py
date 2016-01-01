@@ -9,6 +9,8 @@ from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.showbase.DirectObject import *
 from direct.fsm import ClassicFSM, State, StateData
+from lib.coginvasion.globals import ChatGlobals
+import random
 
 class ChatInput(DirectObject, StateData.StateData):
 
@@ -141,7 +143,8 @@ class ChatInput(DirectObject, StateData.StateData):
                     if word and len(word) > 1 and word[len(word) - 1] in ['?', '!', '.']:
                         checkWord = word.replace(word[len(word) - 1], '')
                     if not (checkWord.lower() in open('phase_3/etc/ciwhitelist.dat').read().split()):
-                        chat = chat.replace(word, "***")
+                        garble = ChatGlobals.getGarble()
+                        chat = chat.replace(checkWord, garble[random.randrange(0, len(garble))])
                 
                 base.localAvatar.b_setChat(chat)
         self.fsm.request('idle')

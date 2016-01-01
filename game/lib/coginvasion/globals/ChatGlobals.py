@@ -1,3 +1,4 @@
+from lib.coginvasion.globals import CIGlobals
 CFSpeech       = 1 << 0
 CFThought      = 1 << 1
 CFQuicktalker  = 1 << 2
@@ -53,3 +54,21 @@ WhisperColors = {
         ((0.0, 0.0, 0.0, 1.0), (0.9, 0.6, 0.1, 0.6))   # Disabled
     ),
 }
+
+def getGarble():
+    garbleData = {
+        'dog' : CIGlobals.ChatGarblerDog,
+        'rabbit' : CIGlobals.ChatGarblerRabbit,
+        'cat' : CIGlobals.ChatGarblerCat,
+        'mouse' : CIGlobals.ChatGarblerMouse,
+        'monkey' : CIGlobals.ChatGarblerMonkey,
+        'duck' : CIGlobals.ChatGarblerDuck,
+        'bear' : CIGlobals.ChatGarblerBear,
+        'horse' : CIGlobals.ChatGarblerHorse,
+        'pig' : CIGlobals.ChatGarblerPig
+    }
+    
+    garble = garbleData[base.localAvatar.animal]
+    if garble:
+        return garble
+    return CIGlobals.ChatGarblerDefault
