@@ -28,6 +28,9 @@ class NPCWalkInterval(LerpPosInterval):
                                 other, blendType, bakeInStart, fluid, name)
         if lookAtTarget:
             self.nodePath.headsUp(self.pos)
+    
+    def setDuration(self, duration):
+        self.duration = duration
 
 class NPCLookInterval(LerpHprInterval):
     notify = directNotify.newCategory("NPCLookInterval")

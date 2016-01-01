@@ -82,9 +82,9 @@ struct AvChoice {
 };
 
 struct Point3 {
-  float64;
-  float64;
-  float64;
+  int16 / 10;
+  int16 / 10;
+  int16 / 10;
 };
 
 struct Point2 {
@@ -317,7 +317,7 @@ dclass DistributedSuit : DistributedAvatar {
   setLatePos(int16 / 10, int16 / 10) required ram;
 
   setSuitState(int8, int8, int8, int16) broadcast ram;
-  setWalkPath(Point2[], int16) broadcast;
+  setWalkPath(Point3[], int16) broadcast;
 };
 
 dclass DistributedTutorial : DistributedObject {

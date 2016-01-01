@@ -11,21 +11,20 @@ from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.suit.SuitItemDropper import SuitItemDropper
-from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
-from SuitCallInBackupBehavior import SuitCallInBackupBehavior
 from SpawnMode import SpawnMode
 from SuitBrainAI import SuitBrain
 from SuitBank import SuitPlan
-from SuitRandomStrollBehavior import SuitRandomStrollBehavior
-from SuitPanicBehavior import SuitPanicBehavior
-from SuitAttackBehavior import SuitAttackBehavior
+from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
+from SuitCallInBackupBehavior import SuitCallInBackupBehavior
 from SuitPursueToonBehavior import SuitPursueToonBehavior
+from SuitAttackTurretBehavior import SuitAttackTurretBehavior
 import SuitAttacks
 import SuitBank
 import SuitGlobals
 import Variant
 
-import types, random
+import types
+import random
 
 class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     notify = directNotify.newCategory('DistributedSuitAI')
@@ -296,11 +295,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         for behavior, priority in self.requestedBehaviors:
             self.brain.addBehavior(behavior, priority)
         self.requestedBehaviors = []
-        if self.suitPlan.getName() != SuitGlobals.VicePresident:
-            self.brain.addBehavior(SuitPursueToonBehavior(self), priority = 2)
+        if self.suitPlan.getName() in [SuitGlobals.VicePresident]:
+            self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 1)
+            self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 2)
         else:
-            self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 2)
-            self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 4)
+            self.brain.addBehavior(SuitPursueToonBehavior(self), priority = 1)
+            self.brain.addBehavior(SuitAttackTurretBehavior(self), priority = 2)
         place = CIGlobals.SuitSpawnPoints[self.hood]
         landspot = random.choice(place.keys())
         path = place[landspot]

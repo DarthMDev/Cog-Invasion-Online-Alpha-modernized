@@ -137,15 +137,6 @@ class ChatInput(DirectObject, StateData.StateData):
         chat = self.chatInput.get()
         if hasattr(base, 'localAvatar'):
             if len(chat) > 0:
-                
-                for word in chat.split(" "):
-                    checkWord = word
-                    if word and len(word) > 1 and word[len(word) - 1] in ['?', '!', '.']:
-                        checkWord = word.replace(word[len(word) - 1], '')
-                    if not (checkWord.lower() in open('phase_3/etc/ciwhitelist.dat').read().split()):
-                        garble = ChatGlobals.getGarble()
-                        chat = chat.replace(checkWord, garble[random.randrange(0, len(garble))])
-                
                 base.localAvatar.b_setChat(chat)
         self.fsm.request('idle')
 

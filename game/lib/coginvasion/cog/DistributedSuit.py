@@ -27,7 +27,7 @@ import Voice
 import Variant
 import SuitAttacks
 
-from panda3d.core import Point3, VBase4
+from panda3d.core import Point3, VBase4, Point2
 import types, random
 
 class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDeletable):
@@ -78,34 +78,31 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         # path: A list of point2s.
         #
         # We will make a sequence of NPCWalkIntervals for each point2 in the path.
-        
-        self.path = path
 
-        self.stopMoving()
-        self.animFSM.request('walk')
-        self._doWalk()
+        self.clearMoveTrack()
+        self.moveIval = Sequence()
+        self.moveIval.append(Func(self.animFSM.request, 'walk'))
+        for i in xrange(len(path)):
+            waypoint = path[i]
+            self.moveIval.append(Func(self.headsUp, Point3(*waypoint)))
+            ival = NPCWalkInterval(self, Point3(*waypoint),
+                startPos = lambda self = self: self.getPos(render),
+                durationFactor = 0.2, fluid = 1, name = self.uniqueName('doWalkIval' + str(i)))
+            if i > 0:
+                lastWP = path[i - 1]
+                self.moveIval.append(Func(ival.setDuration, (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2))
+            self.moveIval.append(ival)
+        self.moveIval.append(Func(self.animFSM.request, 'neutral'))
+        self.moveIval.start(elapsedT)
         
-    def _doWalk(self):
-        waypoint = self.path[0]
-        print 'walking to {0} from {1}'.format(waypoint, self.getPos(render))
-        self.moveIval = NPCWalkInterval(self, Point3(waypoint[0], waypoint[1], 0), startPos = self.getPos(render),
-            durationFactor = 0.2, fluid = 1, name = self.uniqueName('walkIval'))
-        self.moveIval.setDoneEvent(self.moveIval.getName())
-        self.acceptOnce(self.moveIval.getDoneEvent(), self._handleWalkDone)
-        self.path.remove(waypoint)
-        self.moveIval.start()
-        
-    def _handleWalkDone(self):
-        if len(self.path) == 0:
-            self.animFSM.request('neutral')
-            return
-        self._doWalk()
-
-    def exitWalking(self):
+    def clearMoveTrack(self):
         if self.moveIval:
             self.ignore(self.moveIval.getDoneEvent())
             self.moveIval.pause()
             self.moveIval = None
+
+    def exitWalking(self):
+        self.clearMoveTrack()
         if not self.isDead():
             self.animFSM.request('neutral')
 

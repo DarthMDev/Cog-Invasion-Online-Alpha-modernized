@@ -130,7 +130,9 @@ DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialo
 from lib.coginvasion.nametag import NametagGlobals
 from lib.coginvasion.margins.MarginManager import MarginManager
 from lib.coginvasion.margins import MarginGlobals
+from lib.coginvasion.globals import ChatGlobals
 
+ChatGlobals.loadWhiteListData()
 NametagGlobals.setMe(base.cam)
 NametagGlobals.setCardModel('phase_3/models/props/panel.bam')
 NametagGlobals.setArrowModel('phase_3/models/props/arrow.bam')

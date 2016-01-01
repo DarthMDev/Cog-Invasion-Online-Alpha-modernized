@@ -11,6 +11,7 @@ from lib.coginvasion.gags.backpack import BackpackManager
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gui.LaffOMeter import LaffOMeter
 from lib.coginvasion.quests import QuestManager
+from lib.coginvasion.globals import ChatGlobals
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DelayDeletable import DelayDeletable
@@ -300,6 +301,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.sendUpdate('lookAtObject', [h, p, r, blink])
 
     def setChat(self, chat):
+        chat = ChatGlobals.filterChat(chat, self.animal)
         Toon.Toon.setChat(self, chat)
 
     def setTarget(self, gagId, targetId):

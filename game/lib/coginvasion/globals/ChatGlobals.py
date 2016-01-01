@@ -1,4 +1,7 @@
 from lib.coginvasion.globals import CIGlobals
+
+import random
+
 CFSpeech       = 1 << 0
 CFThought      = 1 << 1
 CFQuicktalker  = 1 << 2
@@ -55,20 +58,52 @@ WhisperColors = {
     ),
 }
 
-def getGarble():
-    garbleData = {
-        'dog' : CIGlobals.ChatGarblerDog,
-        'rabbit' : CIGlobals.ChatGarblerRabbit,
-        'cat' : CIGlobals.ChatGarblerCat,
-        'mouse' : CIGlobals.ChatGarblerMouse,
-        'monkey' : CIGlobals.ChatGarblerMonkey,
-        'duck' : CIGlobals.ChatGarblerDuck,
-        'bear' : CIGlobals.ChatGarblerBear,
-        'horse' : CIGlobals.ChatGarblerHorse,
-        'pig' : CIGlobals.ChatGarblerPig
-    }
+WhiteListData = None
+
+def loadWhiteListData():
+    global WhiteListData
+    if WhiteListData is None:
+        whitelistFile = open('phase_3/etc/ciwhitelist.dat', 'r')
+        WhiteListData = set()
+        for word in whitelistFile.read().split():
+            WhiteListData.add(word)
+        whitelistFile.close()
+        del whitelistFile
+
+def getWhiteListData():
+    return WhiteListData
     
-    garble = garbleData[base.localAvatar.animal]
+garbleData = None
+
+def getGarble(animal):
+    global garbleData
+    if garbleData is None:
+        garbleData = {
+            'dog' : CIGlobals.ChatGarblerDog,
+            'rabbit' : CIGlobals.ChatGarblerRabbit,
+            'cat' : CIGlobals.ChatGarblerCat,
+            'mouse' : CIGlobals.ChatGarblerMouse,
+            'monkey' : CIGlobals.ChatGarblerMonkey,
+            'duck' : CIGlobals.ChatGarblerDuck,
+            'bear' : CIGlobals.ChatGarblerBear,
+            'horse' : CIGlobals.ChatGarblerHorse,
+            'pig' : CIGlobals.ChatGarblerPig
+        }
+    
+    garble = garbleData[animal]
     if garble:
         return garble
     return CIGlobals.ChatGarblerDefault
+
+def filterChat(chat, animal):
+    whiteList = getWhiteListData()
+    for word in chat.split(" "):
+        if len(word) == 0:
+            continue
+        checkWord = word
+        if word and len(word) > 1 and word[len(word) - 1] in ['?', '!', '.']:
+            checkWord = word.replace(word[len(word) - 1], '')
+        if not (checkWord.lower() in whiteList):
+            garble = getGarble(animal)
+            chat = chat.replace(checkWord, random.choice(garble))
+    return chat
