@@ -53,6 +53,7 @@ class DistributedSuitManager(DistributedObject):
                 self.hood.loader.invasionMusic.stop()
             if self.hood.loader.tournamentMusic:
                 self.hood.loader.tournamentMusic.stop()
+                base.cr.music = None
             self.hood.loader.bossBattleMusic.stop()
             base.playMusic(self.hood.loader.music, looping = 1, volume = 0.9)
         #self.hood.stopSuitEffect()
@@ -88,6 +89,7 @@ class DistributedSuitManager(DistributedObject):
             if self.hood.loader.tournamentMusic:
                 self.hood.loader.tournamentMusic.stop()
                 self.hood.loader.tournamentMusic = None
+                base.cr.music = None
             base.playMusic(self.hood.loader.bossBattleMusic, looping = 1, volume = 0.9)
 
     def invasionSpawned(self):
@@ -124,6 +126,8 @@ class DistributedSuitManager(DistributedObject):
                 self.hood.loader.invasionMusic.stop()
             self.hood.loader.tournamentMusic = None
             self.hood.loader.tournamentMusic = base.loadMusic(random.choice(self.hood.loader.tournamentMusicFiles))
+            # Make .mp3 music files base.cr.music so we can replay it when the window gets minimized and comes back.
+            base.cr.music = self.hood.loader.tournamentMusic
             base.playMusic(self.hood.loader.tournamentMusic, looping = 1, volume = 0.9)
 
     def invasionInProgress(self):
@@ -138,6 +142,7 @@ class DistributedSuitManager(DistributedObject):
 
     def disable(self):
         base.cr.playGame.suitManager = None
+        base.cr.music = None
         del self.hood
         del self.spawnerStatus
         DistributedObject.disable(self)

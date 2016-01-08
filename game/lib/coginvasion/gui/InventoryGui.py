@@ -8,22 +8,37 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotify import DirectNotify
 from direct.interval.SoundInterval import SoundInterval
-from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel
+from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel, OnscreenText
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
-from panda3d.core import TransparencyAttrib
+from panda3d.core import TransparencyAttrib, TextNode
 
 class Slot(DirectFrame):
 
     def __init__(self, index, pos, parent):
-        DirectFrame.__init__(self, pos = pos, parent = parent, scale = 0.15, sortOrder = 0)
+        DirectFrame.__init__(self, pos = pos, parent = parent, scale = 0.15)
         self.index = index
         self.outline = None
+        self.gagImage = None
         self.gag = None
+        self.noAmmoText = OnscreenText(text = "No\nAmmo", fg = (1, 0, 0, 1), parent = self,
+                                       scale = 0.5, shadow = (0, 0, 0, 1), align = TextNode.ACenter,
+                                       pos = (0, 0.1))
+        self.noAmmoText.setBin('unsorted', 50)
+        self.noAmmoText.hide()
+        
+    def showNoAmmo(self):
+        self.noAmmoText.show()
+        
+    def hideNoAmmo(self):
+        self.noAmmoText.hide()
 
     def setSlotImage(self, gagImage):
-        self['image'] = gagImage
-        self.setTransparency(TransparencyAttrib.MAlpha)
+        if self.gagImage:
+            self.gagImage.destroy()
+            self.gagImage = None
+        self.gagImage = OnscreenImage(image = gagImage, parent = self)
+        self.gagImage.setTransparency(TransparencyAttrib.MAlpha)
 
     def setOutline(self, outline):
         self.outline = outline
@@ -33,6 +48,18 @@ class Slot(DirectFrame):
         phase = 'phase_3.5/maps/'
         self.outline['image'] = loader.loadTexture(phase + 'slot_%s_%s.png' % (str(self.index), image))
         self.setOutline(self.outline)
+        if image == 'no_ammo':
+            # Show the no ammo text.
+            self.showNoAmmo()
+            # When we have no ammo, render the frame in front of the gag image.
+            self.outline.setBin('fixed', 40)
+            self.gagImage.setBin('transparent', 30)
+        else:
+            # Hide the no ammo text if we're not out of ammo.
+            self.hideNoAmmo()
+            # Render the gag image in front of the frame.
+            self.gagImage.setBin('fixed', 40)
+            self.outline.setBin('transparent', 30)
 
     def getOutline(self):
         return self.outline
@@ -96,24 +123,27 @@ class InventoryGui(DirectObject):
                     base.localAvatar.enablePieKeys()
                 self.activeSlot = None
             self.update()
-            if self.switchSound and playSound: SoundInterval(self.switchSoundSfx).start()
-        else: return
+            if self.switchSound and playSound:
+                base.playSfx(self.switchSoundSfx)
 
     def createGui(self):
         self.deleteGui()
         phase = 'phase_3.5/maps/'
         posGroup = self.threeSlotsPos
         self.inventoryFrame = DirectFrame(parent = base.a2dRightCenter, pos = (-0.2, 0, 0))
-        if self.defaultSlots == 4: posGroup = self.fourSlotPos
+        if self.defaultSlots == 4:
+            posGroup = self.fourSlotPos
         for slot in range(len(posGroup) + 1):
-            if slot == 3: posGroup = self.fourSlotPos
+            if slot == 3:
+                posGroup = self.fourSlotPos
             slotIdle = loader.loadTexture(phase + ('slot_%s_idle.png' % (str(slot + 1))))
             slotObj = Slot(slot + 1, posGroup[slot], self.inventoryFrame)
             slotOutline = OnscreenImage(image = slotIdle, color = (1, 1, 1, 0.5), parent = slotObj)
             slotOutline.setTransparency(TransparencyAttrib.MAlpha)
             slotObj.setOutline(slotOutline)
             self.slots.append(slotObj)
-            if slot == 3: slotObj.hide()
+            if slot == 3:
+                slotObj.hide()
         self.ammoLabel = DirectLabel(text = "Ammo: 0", text_fg=(1,1,1,1), relief=None, text_shadow=(0,0,0,1), text_scale=0.08, pos=(0.2, 0, 0.35), parent=base.a2dBottomLeft)
         self.ammoLabel.hide()
         self.enableWeaponSwitch()
@@ -136,8 +166,10 @@ class InventoryGui(DirectObject):
         nextGag = 0
         prevGag = -1
         curGag = -1
-        if self.prevSlot: prevGag = self.slots.index(self.prevSlot)
-        if self.activeSlot: curGag = self.slots.index(self.activeSlot)
+        if self.prevSlot:
+            prevGag = self.slots.index(self.prevSlot)
+        if self.activeSlot:
+            curGag = self.slots.index(self.activeSlot)
         if curGag == (len(self.slots) - 1):
             nextGag = 0
             prevGag = curGag - 1
@@ -149,8 +181,8 @@ class InventoryGui(DirectObject):
         else:
             nextGag = curGag + 1
             prevGag = curGag - 1
-        self.accept('wheel_down', self.setWeapon, extraArgs = [self.slots[prevGag]])
-        self.accept('wheel_up', self.setWeapon, extraArgs = [self.slots[nextGag]])
+        self.accept('wheel_down', self.setWeapon, extraArgs = [self.slots[nextGag]])
+        self.accept('wheel_up', self.setWeapon, extraArgs = [self.slots[prevGag]])
 
     def update(self):
         if not self.backpack: return
@@ -209,14 +241,17 @@ class InventoryGui(DirectObject):
 
     def reseatSlots(self, slots = 3):
         for slot in range(len(self.slots) - 1):
-            if slots == 4: self.slots[slot].setPos(self.fourSlotPos[slot])
+            if slots == 4:
+                self.slots[slot].setPos(self.fourSlotPos[slot])
             else: self.slots[slot].setPos(self.threeSlotsPos[slot])
 
     def enableWeaponSwitch(self):
-        for index in range(len(self.slots)): self.accept(str(index + 1), self.setWeapon, extraArgs = [self.slots[index]])
+        for index in range(len(self.slots)):
+            self.accept(str(index + 1), self.setWeapon, extraArgs = [self.slots[index]])
 
     def disableWeaponSwitch(self):
-        for key in ['1', '2', '3', '4', 'wheel_down', 'wheel_up']: self.ignore(key)
+        for key in ['1', '2', '3', '4', 'wheel_down', 'wheel_up']:
+            self.ignore(key)
 
     def getSlots(self):
         return self.slots

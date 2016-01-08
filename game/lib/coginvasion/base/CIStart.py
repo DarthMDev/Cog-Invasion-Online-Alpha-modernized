@@ -196,8 +196,13 @@ def maybeDoSomethingWithMusic(condition):
         if music == True:
             base.enableMusic(True)
 
+def handleMusicEnabled():
+    if base.cr.music is not None:
+        base.cr.music.play()
+
 base.accept("PandaPaused", maybeDoSomethingWithMusic, [0])
 base.accept("PandaRestarted", maybeDoSomethingWithMusic, [1])
+base.accept('MusicEnabled', handleMusicEnabled)
 
 def doneInitLoad():
     print "CIStart: Initial game load finished."

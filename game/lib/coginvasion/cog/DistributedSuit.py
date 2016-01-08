@@ -84,13 +84,15 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.moveIval.append(Func(self.animFSM.request, 'walk'))
         for i in xrange(len(path)):
             waypoint = path[i]
+            if i > 0:
+                lastWP = path[i - 1]
+            else:
+                lastWP = [self.getX(render), self.getY(render), self.getZ(render)]
             self.moveIval.append(Func(self.headsUp, Point3(*waypoint)))
             ival = NPCWalkInterval(self, Point3(*waypoint),
                 startPos = lambda self = self: self.getPos(render),
-                durationFactor = 0.2, fluid = 1, name = self.uniqueName('doWalkIval' + str(i)))
-            if i > 0:
-                lastWP = path[i - 1]
-                self.moveIval.append(Func(ival.setDuration, (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2))
+                fluid = 1, name = self.uniqueName('doWalkIval' + str(i)),
+                duration = (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2)
             self.moveIval.append(ival)
         self.moveIval.append(Func(self.animFSM.request, 'neutral'))
         self.moveIval.start(elapsedT)

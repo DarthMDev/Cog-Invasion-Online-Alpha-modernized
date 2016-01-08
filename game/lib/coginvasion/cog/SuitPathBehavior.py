@@ -61,12 +61,14 @@ class SuitPathBehavior(SuitBehaviorBase):
         self.walkTrack = Sequence()
         for i in xrange(len(self.path)):
             waypoint = self.path[i]
-            ival = NPCWalkInterval(self.suit, Point3(*waypoint),
-                startPos = lambda self = self: self.suit.getPos(render),
-                durationFactor = 0.2, fluid = 1, name = self.suit.uniqueName('doWalkIval' + str(i)))
             if i > 0:
                 lastWP = self.path[i - 1]
-                self.walkTrack.append(Func(ival.setDuration, (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2))
+            else:
+                lastWP = [self.suit.getX(render), self.suit.getY(render), self.suit.getZ(render)]
+            ival = NPCWalkInterval(self.suit, Point3(*waypoint),
+                startPos = lambda self = self: self.suit.getPos(render),
+                fluid = 1, name = self.suit.uniqueName('doWalkIval' + str(i)),
+                duration = (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2)
             self.walkTrack.append(ival)
         self.startFollow()
 

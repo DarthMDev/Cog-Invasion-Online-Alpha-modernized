@@ -17,7 +17,7 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.dna.DNALoader import *
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 
-import yaml
+import yaml, os
 
 base.cTrav = CollisionTraverser()
 
@@ -278,16 +278,17 @@ class SuitPathEditor(FSM):
                 self.geom = geom
             else:
                 loadDNAFile(self.dnaStore, dnaFile)
-        with open(self.getFileName(), 'r') as stream:
-            data = yaml.load(stream)
-            self.yamlData = data
-            for waypointId, waypointData in data.items():
-                waypoint = Waypoint()
-                x, y, z = data[waypointId]['pos']
-                pos = Point3(x, y, z)
-                waypoint.setPos(pos)
-                self.waypoints.append(waypoint)
-            stream.close()
+        if os.path.exists(self.getFileName()):
+            with open(self.getFileName(), 'r') as stream:
+                data = yaml.load(stream)
+                self.yamlData = data
+                for waypointId, waypointData in data.items():
+                    waypoint = Waypoint()
+                    x, y, z = data[waypointId]['pos']
+                    pos = Point3(x, y, z)
+                    waypoint.setPos(pos)
+                    self.waypoints.append(waypoint)
+                stream.close()
         if self.mode == 0:
             self.demand('Test')
         elif self.mode == 1:
