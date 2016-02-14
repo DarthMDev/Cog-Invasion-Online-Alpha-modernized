@@ -115,7 +115,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                         [0.23007, 60.47556, 0, 0, 0, 0],
                         [0.74202, -9.50081, 0, 180, 0, 0]
                     ],
-                    'room_mdl': 'phase_7/models/modules/cog_bldg_executive_flr.egg',
+                    'room_mdl': 'phase_7/models/modules/cog_bldg_executive_flr.bam',
                     'grounds': ['**/floor']
                 }
     }
