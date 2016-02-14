@@ -59,9 +59,11 @@ want-weapons #t
 want-pies #t
 want-chat #t
 want-sa-reactions #f
-gag-start-key delete
-gag-throw-key delete-up
+gag-start-key control
+gag-throw-key control-up
 want-firstperson-battle #f
+chat-key t
+want-WASD #t
 
 want-pstats 0
 

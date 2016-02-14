@@ -1,9 +1,11 @@
 from pandac.PandaModules import *
+loadPrcFile('config/Confauto.prc')
 loadPrcFile('config/config_client.prc')
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 from direct.distributed.ClientRepository import ClientRepository
 from direct.interval.IntervalGlobal import *
+from direct.gui.DirectGui import *
 
 vfs = VirtualFileSystem.getGlobalPtr()
 vfs.mount(Filename("phase_0.mf"), ".", VirtualFileSystem.MFReadOnly)
@@ -26,8 +28,8 @@ class game:
 	process = 'client'
 __builtin__.game = game
 
-from lib.toontown.makeatoon.MakeAToon import MakeAToon
-from lib.toontown.toon.Toon import Toon
+#from lib.toontown.makeatoon.MakeAToon import MakeAToon
+#from lib.toontown.toon.Toon import Toon
 
 base.cr = ClientRepository(['astron/direct.dc'])
 base.cr.isShowingPlayerIds = False
@@ -35,78 +37,44 @@ base.cTrav = CollisionTraverser()
 
 base.camLens.setMinFov(70.0 / (4./3.))
 
+DGG.setDefaultRolloverSound(base.loadSfx('phase_3/audio/sfx/GUI_rollover.mp3'))
+DGG.setDefaultClickSound(base.loadSfx('phase_3/audio/sfx/GUI_create_toon_fwd.mp3'))
+DGG.setDefaultFont(loader.loadFont('phase_3/models/fonts/ImpressBT.ttf'))
+
+def make_light(btn, foo):
+    btn['text_fg'] = (1, 1, 1, 1)
+    
+def make_dark(btn, foo):
+    btn['text_fg'] = (0.8, 0.8, 0.8, 1)
+
+def make_button(text, pos, parent, command = None):
+    btn = DirectButton(text = text, relief = None, scale = 0.15, pressEffect = 0,
+                       text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1), pos = pos,
+                       text_align = TextNode.ACenter, parent = parent, command = command)
+    btn.bind(DGG.ENTER, make_dark, [btn])
+    btn.bind(DGG.EXIT, make_light, [btn])
+
 from direct.actor.Actor import Actor
 
-dgmRoot = camera.attachNewNode('root')
+base.transitions.fadeScreen(0.5)
 
-dgm = Actor("phase_4/models/minigames/v_dgm.egg", {"sgunidle": "phase_4/models/minigames/v_dgm-shotgun-idle.egg",
-	"sgunshoot": "phase_4/models/minigames/v_dgm-shotgun-shoot.egg",
-	"sgundraw": "phase_4/models/minigames/v_dgm-shotgun-draw.egg"})
-dgm.reparentTo(dgmRoot)
-dgm.loop("sgunidle")
-dgm.setDepthWrite(True)
-dgm.setDepthTest(True)
+cbm = CullBinManager.getGlobalPtr()
+cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
+cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
+cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
 
-drawSfx = base.loadSfx("phase_4/audio/sfx/draw_primary.wav")
-shootSfx = base.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
-shootSfx.setVolume(0.5)
-cockBack = base.loadSfx("phase_4/audio/sfx/shotgun_cock_back.wav")
-cockFwd = base.loadSfx("phase_4/audio/sfx/shotgun_cock_forward.wav")
+menuFrame = DirectFrame(scale = 0.5, pos = (0, 0, 0.3))
+menuFrame.setBin('gui-popup', 60)
 
-Sequence(
-	Func(base.playSfx, drawSfx),
-	LerpQuatInterval(dgm, duration = 0.5, quat = (0, 0, 0), startHpr = (70, -50, 0), blendType = 'easeOut'),
-	Wait(3.0),
-	Func(base.playSfx, shootSfx),
-	ActorInterval(dgm, "sgunshoot", playRate = 1),
-	Func(dgm.loop, "sgunidle"),
-	Wait(1.0),
-	Func(base.playSfx, shootSfx),
-	ActorInterval(dgm, "sgunshoot", playRate = 1),
-	Func(dgm.loop, "sgunidle"),
-	Wait(5.0),
-	Func(base.playSfx, shootSfx),
-	ActorInterval(dgm, "sgunshoot", playRate = 1),
-	Wait(0.1),
-	Func(base.playSfx, shootSfx),
-	ActorInterval(dgm, "sgunshoot", playRate = 1),
-	Wait(0.1),
-	Func(base.playSfx, shootSfx),
-	ActorInterval(dgm, "sgunshoot", playRate = 1),
-	Func(dgm.loop, "sgunidle"),
-	Wait(2.0),
-	Func(drawSfx.play),
-	LerpQuatInterval(dgm, duration = 0.5, quat = (70, -50, 0), startHpr = (0, 0, 0), blendType = 'easeIn'),
-	SoundInterval(cockBack),
-	SoundInterval(cockFwd),
-)
+logo = loader.loadTexture("phase_3/maps/CogInvasion_Logo.png")
+logoNode = menuFrame.attachNewNode('logoNode')
+logoNode.setPos(0, 0.3, 0)
+logoImg = OnscreenImage(image = logo, scale = (0.685, 0, 0.3), parent = logoNode)
+logoImg.setTransparency(True)
 
+make_button('Resume Game', (0, 0, -0.5), menuFrame)
 
-from lib.toontown.npc import NPCGlobals
+#legs.place()
 
-toon = Toon(base.cr)
-toon.setDNAStrand(NPCGlobals.NPC_DNA["Flippy"])
-toon.generateToon()
-toon.reparentTo(render)
-toon.loop("squirt")
-shotgun = loader.loadModel("shotgun.egg")
-shotgun.setScale(0.75)
-shotgun.setPos(-0.5, -0.2, 0.19)
-shotgun.setHpr(350, 272.05, 0)
-#shotgun.reparentTo(dgm.exposeJoint(None, "modelRoot", "Bone.029"))
-#shotgun.setColorScale(0.25, 0.25, 1, 1)
-shotgun.reparentTo(toon.find('**/def_joint_right_hold'))
-#shotgun.place()
-
-#base.disableMouse()
-
-#dgmRoot.setPos(-0.42, -0.81, -1.77)
-#dgmRoot.setHpr(355, 352.87, 0.00)
-
-#dgmRoot.place()
-
-base.camLens.setNear(0.1)
-
-#base.oobe()
-
+base.oobe()
 base.run()

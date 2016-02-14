@@ -1,6 +1,7 @@
 # Filename: suitPathFinding.py
 # Created by:  blach (20Aug15)
-
+from panda3d.core import *
+loadPrcFile('config/config_client.prc')
 from direct.showbase.ShowBase import ShowBase
 base = ShowBase()
 from lib.coginvasion.globals import CIGlobals
@@ -97,11 +98,15 @@ def find_path(area, start_key, target_key):
                 if not neighbor in open_nodes:
                     open_nodes.append(neighbor)
 
+import timeit
+                    
+print timeit.timeit("find_path(CIGlobals.ToontownCentral, '31', '31')", number = 1)
+
 from lib.coginvasion.suit.Suit import Suit
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from direct.distributed.ClientRepository import ClientRepository
 from panda3d.core import *
-
+"""
 base.cr = ClientRepository([])
 base.cTrav = CollisionTraverser()
 base.shadowTrav = CollisionTraverser()
@@ -126,6 +131,7 @@ def checkInView(task):
     return task.cont
 
 taskMgr.add(checkInView, "checkInView")
+"""
 """
 current_path_index = 0
 

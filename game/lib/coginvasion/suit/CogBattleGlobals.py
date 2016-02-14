@@ -45,7 +45,7 @@ HoodId2WantBattles = {
 }
 
 HoodIndex2TotalCogs = {
-    hi2hi[CogTropCentral]: 1,
+    hi2hi[CogTropCentral]: 45,
     hi2hi[TheBrrrgh]: 45,
     hi2hi[DonaldsDreamland]: 50,
     hi2hi[MinniesMelodyland]: 45,

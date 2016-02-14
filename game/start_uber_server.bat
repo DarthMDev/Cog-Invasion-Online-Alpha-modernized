@@ -7,7 +7,7 @@ set ASTRON_IP=127.0.0.1:7031
 set EVENT_LOGGER_IP=127.0.0.1:7030
 set ACCOUNT_LIMIT=2
 set ACC_LIMIT_PER_COMP=2
-set HOLIDAY=1
+set HOLIDAY=0
 
 echo Starting Cog Invasion Uber Server...
 echo -----------------------------------
