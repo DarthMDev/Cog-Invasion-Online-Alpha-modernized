@@ -58,3 +58,4 @@ game/coginvasion.bin
 *.bat
 .project
 .pydevproject
+astron/databases
