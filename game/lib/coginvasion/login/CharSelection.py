@@ -6,7 +6,7 @@ from panda3d.core import Vec4, TextNode, Fog
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
-from direct.gui.DirectGui import OnscreenText, DirectButton, DGG, DirectScrolledList, DirectLabel
+from direct.gui.DirectGui import OnscreenText, DirectButton, DGG, DirectScrolledList, DirectLabel, DirectFrame
 from direct.showbase.DirectObject import DirectObject
 
 from lib.coginvasion.holiday.HolidayManager import HolidayType
@@ -44,6 +44,7 @@ class CharSelection(DirectObject):
         self.title = None
         self.stageToon = None
         self.deleteConf = None
+        self.frame = None
         self.selectionFSM = ClassicFSM.ClassicFSM(
             'CharSelection',
             [
@@ -178,7 +179,7 @@ class CharSelection(DirectObject):
 
         self.__setupStageToon()
         holidayMgr = base.cr.holidayManager
-        
+
         self.props = []
         self.world = loader.loadModel('phase_9/models/cogHQ/SellbotHQExterior.bam')
         self.world.reparentTo(base.render)
@@ -191,14 +192,14 @@ class CharSelection(DirectObject):
         self.fog.setColor(0.2, 0.2, 0.2)
         self.fog.setExpDensity(0.003)
         base.render.setFog(self.fog)
-        
+
         if holidayMgr.getHoliday() == HolidayType.CHRISTMAS:
             piles = {
                 'half' : {'pos' : (57.28, 86.47, -25.00), 'hpr' : (46.79, 0, 0)},
                 'full' : {'pos' : (71.23, 85.2, -25.00), 'hpr' : (290.82, 0, 0)},
                 'half_2' : {'pos' : (-15, 128.69, -25), 'hpr' : (60.26, 0, 0)}
             }
-            
+
             for pileType, info in piles.items():
                 if '_' in pileType:
                     pileType = pileType[:-2]
@@ -207,12 +208,12 @@ class CharSelection(DirectObject):
                 pile.setPos(info['pos'])
                 pile.setHpr(info['hpr'])
                 self.props.append(pile)
-            
+
             self.world.find('**/TopRocks').removeNode()
-            
+
             snowTxt = loader.loadTexture('winter/maps/sbhq_snow.png')
             self.world.find('**/Ground').setTexture(snowTxt, 1)
-            
+
             self.particles = ParticleLoader.loadParticleEffect('phase_8/etc/snowdisk.ptf')
             self.particles.setPos(0, 0, 5)
             self.particlesRender = self.world.attachNewNode('snowRender')
@@ -222,18 +223,23 @@ class CharSelection(DirectObject):
             self.fog.setColor(0.486, 0.784, 1)
             self.fog.setExpDensity(0.006)
             base.render.setFog(self.fog)
-            
+
 
         self.title = DirectLabel(text=self.TITLE, text_font=CIGlobals.getMickeyFont(), text_fg=(1, 0.9, 0.1, 1),
                                 relief=None, text_scale=0.13, pos=(0, 0, 0.82))
         self.charNameLabel = OnscreenText(text = "", font = CIGlobals.getMickeyFont(),
                                         pos = (-0.25, 0.5, 0), fg = (1, 0.9, 0.1, 1.0))
         self.charNameLabel.hide()
-        self.playOrCreateButton = DirectButton(text = "", pos = (0.8125, 0, -0.735), command = self.__action,
+        self.frame = DirectFrame()
+        self.frame['image'] = DGG.getDefaultDialogGeom()
+        self.frame['image_color'] = CIGlobals.DialogColor
+        self.frame['image_scale'] = (-0.9, -0.9, 0.8)
+        self.frame['image_pos'] = (0.82, 0, -0.125)
+        self.playOrCreateButton = DirectButton(text = "", pos = (0.8125, 0, -0.35), command = self.__action,
                                             geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.06,
                                             relief = None, text_pos = (0, -0.01))
         self.playOrCreateButton.hide()
-        self.deleteButton = DirectButton(text = "Delete", pos = (0.8125, 0, -0.835),
+        self.deleteButton = DirectButton(text = "Delete", pos = (0.8125, 0, -0.45),
                                         command = self.__action, extraArgs = ['delete'],
                                         geom = CIGlobals.getDefaultBtnGeom(), text_scale = 0.06,
                                         relief = None, text_pos = (0, -0.01))
@@ -265,32 +271,26 @@ class CharSelection(DirectObject):
         gui = loader.loadModel('phase_3.5/models/gui/friendslist_gui.bam')
         listXorigin = -0.02
         listFrameSizeX = 0.625
-        listZorigin = -0.96
-        listFrameSizeZ = 1.04
-        arrowButtonScale = 1.3
+        listZorigin = -0.43
+        listFrameSizeZ = 0.51
+        arrowButtonScale = 0.0
         itemFrameXorigin = -0.237
         itemFrameZorigin = 0.365
         buttonXstart = itemFrameXorigin + 0.293
 
         self.charList = DirectScrolledList(
             relief=None,
-            pos=(0.75, 0, 0.08),
-            incButton_image=(gui.find('**/FndsLst_ScrollUp'),
-                gui.find('**/FndsLst_ScrollDN'),
-                gui.find('**/FndsLst_ScrollUp_Rllvr'),
-                gui.find('**/FndsLst_ScrollUp')),
-            incButton_relief=None,
+            pos=(0.75, 0, -0.225),
+            incButton_image=None,
+            #incButton_relief=None,
             incButton_scale=(arrowButtonScale, arrowButtonScale, -arrowButtonScale),
-            incButton_pos=(buttonXstart, 0, itemFrameZorigin - 0.999),
-            incButton_image3_color=Vec4(1, 1, 1, 0.2),
-            decButton_image=(gui.find('**/FndsLst_ScrollUp'),
-                gui.find('**/FndsLst_ScrollDN'),
-                gui.find('**/FndsLst_ScrollUp_Rllvr'),
-                gui.find('**/FndsLst_ScrollUp')),
-            decButton_relief=None,
+            #incButton_pos=(buttonXstart, 0, itemFrameZorigin - 0.999),
+            #incButton_image3_color=Vec4(1, 1, 1, 0.2),
+            decButton_image=None,
+            #decButton_relief=None,
             decButton_scale=(arrowButtonScale, arrowButtonScale, arrowButtonScale),
-            decButton_pos=(buttonXstart, 0, itemFrameZorigin + 0.125),
-            decButton_image3_color=Vec4(1, 1, 1, 0.2),
+            #decButton_pos=(buttonXstart, 0, itemFrameZorigin + 0.125),
+            #decButton_image3_color=Vec4(1, 1, 1, 0.2),
             itemFrame_pos=(itemFrameXorigin, 0, itemFrameZorigin),
             itemFrame_scale=1.0,
             itemFrame_relief=DGG.SUNKEN,
@@ -302,7 +302,8 @@ class CharSelection(DirectObject):
             itemFrame_borderWidth=(0.01, 0.01),
             numItemsVisible=15,
             forceHeight=0.075,
-            items=self.charButtons
+            items=self.charButtons,
+            parent = self.frame
         )
 
         base.camera.setPos(75.12, 63.22, -23)
@@ -312,6 +313,9 @@ class CharSelection(DirectObject):
         self.selectionFSM.requestFinalState()
         self.cleanupStageToon()
         self.choice = None
+        if self.frame:
+            self.frame.destroy()
+            self.frame = None
         if self.charButtons:
             for btn in self.charButtons:
                 btn.destroy()

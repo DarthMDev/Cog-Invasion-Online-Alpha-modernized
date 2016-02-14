@@ -7,19 +7,19 @@ from lib.coginvasion.cog.SuitPathBehavior import SuitPathBehavior
 from CogOfficeConstants import *
 
 class CogOfficeSuitWalkBehavior(SuitPathBehavior):
-    
+
     def __init__(self, suit, spot):
         SuitPathBehavior.__init__(self, suit)
         self.spot = spot
-        
+
     def unload(self):
         del self.spot
         SuitPathBehavior.unload(self)
-        
+
     def enter(self):
         SuitPathBehavior.enter(self)
         self.createPath()
-        
+
     def createPath(self):
         if self.suit.battle.currentFloor in self.suit.battle.UNIQUE_FLOORS:
             points = POINTS[self.suit.battle.deptClass][self.suit.battle.currentFloor]['battle']
@@ -29,5 +29,5 @@ class CogOfficeSuitWalkBehavior(SuitPathBehavior):
         durationFactor = 0.1
         startIndex = -1
         endIndex = self.spot
-        self.startPath(path, durationFactor, startIndex, endIndex)
-        
+        pathList = [[path.getX(), path.getY()]]
+        self.startPath(pathList, 0, durationFactor)
