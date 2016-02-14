@@ -82,7 +82,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                         [0.74202, -9.50081, 0, 180, 0, 0],
                         [-39.49848, 20.74907, 0, 90, 0, 0]
                     ],
-                    'room_mdl': 'phase_7/models/modules/cog_bldg_reception_flr.egg',
+                    'room_mdl': 'phase_7/models/modules/cog_bldg_reception_flr.bam',
                     'grounds': ['**/floor']
                 },
                 EXECUTIVE_FLOOR: {'props': [
