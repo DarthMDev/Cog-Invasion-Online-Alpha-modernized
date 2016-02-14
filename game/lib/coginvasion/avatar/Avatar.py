@@ -49,6 +49,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         self.nametag3d = self.attachNewNode('nametag3d')
         self.nametag3d.setTag('cam', 'nametag')
         self.setTwoSided(False)
+        self.setBlend(frameBlend = True)
 
         self.avatarType = None
         self.charName = None

@@ -146,12 +146,12 @@ class DistributedCogOfficeBattle(DistributedObject):
          State.State('faceOff', self.enterFaceOff, self.exitFaceOff),
          State.State('victory', self.enterVictory, self.exitVictory)], 'off', 'off')
         self.fsm.enterInitialState()
-        
+
     def enterVictory(self, ts):
         self.cr.playGame.getPlace().fsm.request('stop')
         base.localAvatar.b_setAnimState('win')
         base.taskMgr.doMethodLater(5.0, self.victoryTask, self.uniqueName('victoryTask'))
-        
+
     def victoryTask(self, task):
         requestStatus = {
             'zoneId': self.exteriorZoneId,
@@ -167,26 +167,26 @@ class DistributedCogOfficeBattle(DistributedObject):
         }
         self.cr.playGame.getPlace().fsm.request('teleportOut', [requestStatus])
         return task.done
-        
+
     def exitVictory(self):
         base.taskMgr.remove(self.uniqueName('victoryTask'))
-        
+
     def setExteriorZoneId(self, zoneId):
         self.exteriorZoneId = zoneId
-        
+
     def setBldgDoId(self, doId):
         self.bldgDoId = doId
-        
+
     def d_readyForNextFloor(self):
         self.sendUpdate('readyForNextFloor')
-        
+
     def elevatorReady(self):
         # We have to wait until all of our elevators are ready before
         # telling the AI that we're ready to begin the battle.
         self.elevatorResponses += 1
         if self.elevatorResponses >= len(self.elevators):
             self.sendUpdate('readyToStart')
-        
+
     def setNumFloors(self, num):
         self.numFloors = num
 
@@ -212,14 +212,14 @@ class DistributedCogOfficeBattle(DistributedObject):
 
     def exitOff(self):
         base.transitions.noTransitions()
-        
+
     def getPoints(self, name):
         if self.currentFloor in self.UNIQUE_FLOORS:
             points = POINTS[self.deptClass][self.currentFloor][name]
         else:
             points = POINTS[self.currentFloor][name]
         return points
-        
+
     def enterFaceOff(self, ts):
         base.localAvatar.attachCamera()
         camera.lookAt(base.localAvatar.smartCamera.getLookAtPoint())
@@ -246,7 +246,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                     Func(toon.setAnimState, 'neutral'))
                 self.faceOffTracks.append(track)
                 track.start(ts)
-    
+
     def exitFaceOff(self):
         for track in self.faceOffTracks:
             track.finish()
@@ -281,13 +281,13 @@ class DistributedCogOfficeBattle(DistributedObject):
         base.localAvatar.walkControls.setCollisionsActive(1)
         self.cr.playGame.getPlace().fsm.request('walk')
         taskMgr.add(self.monitorHP, self.uniqueName('monitorHP'))
-        
+
     def monitorHP(self, task):
         if base.localAvatar.getHealth() < 1:
             taskMgr.doMethodLater(7.0, self.diedTask, self.uniqueName('diedTask'))
             return task.done
         return task.cont
-        
+
     def diedTask(self, task):
         self.sendUpdate('iAmDead')
         return task.done

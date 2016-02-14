@@ -53,7 +53,7 @@ class Launcher:
     notify = directNotify.newCategory("Launcher")
     appTitle = "Cog Invasion Launcher"
     loginServer_port = 7033
-    Server_host = "gameserver.coginvasion.com"
+    Server_host = "gameserver-dev.coginvasion.com"
     timeout = 2000
     version = 1.4
     helpVideoLink = "http://download.coginvasion.com/videos/ci_launcher_crash_help.mp4"

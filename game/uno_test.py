@@ -5,20 +5,21 @@ loadPrcFileData('', 'multisamples 2048')
 loadPrcFileData('', 'tk-main-loop 0')
 #loadPrcFileData('', 'notify-level debug')
 loadPrcFileData('', 'audio-library-name p3fmod_audio')
+loadPrcFileData('', 'egg-load-old-curves 0')
+#loadPrcFileData('', 'interpolate-frames 1')
 from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 from direct.gui.DirectGui import *
 from direct.actor.Actor import Actor
 from direct.particles.ParticleEffect import ParticleEffect
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.suit.Suit import Suit
 from direct.interval.IntervalGlobal import *
-from lib.coginvasion.suit.DistributedSuit import DistributedSuit
 from direct.distributed.ClientRepository import ClientRepository
 from lib.coginvasion.toon.Toon import Toon
 from lib.coginvasion.toon import NameTag, ToonDNA, ToonHead
 from direct.directutil import Mopath
 from direct.showbase.Audio3DManager import Audio3DManager
+from direct.showutil.Rope import Rope
 import glob
 
 base.enableParticles()
@@ -69,8 +70,8 @@ smiley.setHpr(-90, 0, 0)
 
 ival = Sequence(LerpPosInterval(smiley, duration = 1.0, pos = (35, 5, 0), startPos = (45, 5, 0)), LerpHprInterval(smiley, duration = 2.0, hpr = (0, 0, 0), startHpr = (-90, 0, 0)))
 Sequence(Wait(3.0), Func(ival.start)).start()
-"""
-"""
+
+
 torsoType2flagY = {"dgs_shorts": -1.5, "dgs_skirt": -1.5, "dgm_shorts": -1.1, "dgm_skirt": -1.1, "dgl_shorts": -1.1, "dgl_skirt": -1.1}
 
 flag = loader.loadModel('phase_4/models/minigames/flag.egg')
@@ -123,56 +124,88 @@ toon3.setX(5)
 flag3.reparentTo(toon3.find('**/def_joint_attachFlower'))
 flag3.setPos(0.2, torsoType2flagY[toon3.torso], -1)
 """
-"""
-dna = ToonDNA.ToonDNA()
-dna.parseDNAStrand(dna.dnaStrand)
-
-head = ToonHead.ToonHead(base.cr)
-head.generateHead(dna.gender, dna.animal, dna.head, 1)
-head.getGeomNode().setDepthWrite(1)
-head.getGeomNode().setDepthTest(1)
-head.setH(180)
-head.setScale(0.7)
-#head.reparentTo(aspect2d)
-
-
-from lib.coginvasion.base.SectionedSound import AudioClip
-
-nextClip = None
-testClip = None
-
-def handlePartDone():
-	global nextClip
-	global testClip
-	if nextClip:
-		testClip.cleanup()
-		testClip = AudioClip(1, nextClip)
-		testClip.makeData()
-		testClip.playAllParts()
-	nextClip = None
-
-
-testClip = AudioClip(1, "5050_orchestra")
-testClip.makeData()
-testClip.playAllParts()
-
-def setNextClip(clip):
-	global nextClip
-	nextClip = clip
-
-base.accept('AudioClip_partDone', handlePartDone)
-base.accept('l', setNextClip, ['located_orchestra'])
-"""
-
-suit = DistributedSuit(base.cr)
-suit.doId = 0
-suit.generate()
-suit.announceGenerate()
-suit.setSuit("A", "mrhollywood", "s", 0)
-suit.reparentTo(render)
-suit.animFSM.request('die')
 
 base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
+	
+
+smiley = loader.loadModel('models/smiley.egg.pz')
+#smiley.reparentTo(render)
+
+arrow = loader.loadModel('phase_3/models/props/arrow.bam')
+arrow.reparentTo(aspect2d)
+arrow.setScale(0.1)
+arrow.setZ(-0.7)
+
+import math
+
+def update(task):
+	bLocation = smiley.getPos(base.cam)
+	bRotation = base.cam.getQuat(base.cam)
+	bCamSpacePos = bRotation.xform(bLocation)
+	bArrowRadians = math.atan2(bCamSpacePos[0], bCamSpacePos[1])
+	bArrowDegrees = (bArrowRadians/math.pi) * 180
+	arrow.setR(bArrowDegrees - 90)
+	
+	return task.cont
+	
+taskMgr.add(update, 'u')
+
+render.setAntialias(AntialiasAttrib.MMultisample)
+
+toon = Toon(base.cr)
+toon.setDNAStrand("00/03/00/00/02/00/02/00/00/00/00/00/00/00/00")
+toon.generateToon()
+toon.reparentTo(render)
+neutral = 0.6
+run = 0.4
+#toon.enableBlend()
+#toon.setControlEffect('shout', neutral)
+#toon.setControlEffect('run', run)
+#toon.loop('shout')
+#toon.loop('run')
+
+#toon.enableBlend()
+#toon.setControlEffect('toss', 0.4)
+#toon.setControlEffect('run', 0.6)
+
+toon.setBlend(frameBlend = False)
+
+joints = ["forSleeveL", "forSleeveR", "endarmL", "endarmR", "Rh_wrist", "Lh_wrist",
+								"midsleeveL", "midsleeveR", "scale_jnt20_1", "scale_jnt23_1", "jnt7_3", "jnt7_4",
+								"jnt20_2", "jnt23_2", "joint_theNeck", "joint_head", "joint_Lhold", "joint_Rhold"]
+
+toon.listJoints('torso')
+
+#toon.makeSubpart("torso-shorts", ["Lpant_Top", "Rpant_Top"], parent = "torso")
+#toon.makeSubpart("torso-body", ["Body1a"],
+#				["Lpant_Top", "Rpant_Top"], parent = "torso")
+toon.loop('run')
+#toon.loop('run', partName = 'torso-shorts')
+#toon.loop('pie', partName = 'torso', fromFrame = 63)
+
+def blendTask(task):
+	global neutral
+	global run
+	print run
+	if run <= 0.0:
+		toon.setControlEffect('neutral', 1.0)
+		toon.setControlEffect('run', 0.0)
+		return task.done
+	if str(run) == "0.1":
+		run = 0.0
+	else:
+		run -= 0.1
+	neutral += 0.1
+	toon.setControlEffect('neutral', neutral)
+	toon.setControlEffect('run', run)
+	task.delayTime = 0.05
+	return task.again
+
+#taskMgr.doMethodLater(1.0, blendTask, "blend")
+
+#base.disableMouse()
+camera.setPos(0, -10, 3)
+
 
 #base.oobe()
 base.run()
