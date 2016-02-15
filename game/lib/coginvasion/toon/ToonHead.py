@@ -6,11 +6,13 @@
 
 """
 
-from panda3d.core import *
-from lib.coginvasion.globals import CIGlobals
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import *
+from direct.interval.IntervalGlobal import Parallel, Sequence, LerpHprInterval
 from direct.actor import Actor
+
+from panda3d.core import Texture
+from lib.coginvasion.toon import ToonGlobals
+from lib.coginvasion.globals import CIGlobals
 import random
 
 class ToonHead(Actor.Actor):
@@ -37,7 +39,7 @@ class ToonHead(Actor.Actor):
         Actor.Actor.__init__(self)
         self.cr = cr
         self.head = None
-        self.headtype = None
+        self.headType = None
         self.gender = None
         self.__eyelashOpened = None
         self.__eyelashClosed = None
@@ -52,7 +54,7 @@ class ToonHead(Actor.Actor):
         self.openEyesTaskName = "openEyes" + str(id(self))
         return
 
-    def generateHead(self, gender, head, headtype, forGui = 0):
+    def generateHead(self, gender, head, headType, forGui = 0):
 
         def stashMuzzles(length, stashNeutral=0):
             if stashNeutral:
@@ -77,61 +79,43 @@ class ToonHead(Actor.Actor):
 
         self.gender = gender
         self.animal = head
-        self.head = headtype
+        self.head = headType
         _modelDetail = str(CIGlobals.getModelDetail(CIGlobals.Toon))
         if head != "dog":
             self.loadModel("phase_3/models/char/%s-heads-%s.bam" % (head, _modelDetail), 'head')
         else:
-            self.loadModel("phase_3/models/char/dog%s-head-%s.bam" % (headtype, _modelDetail), 'head')
-            self.loadAnims({"neutral": "phase_3/models/char/dog" + headtype + "-head-neutral.bam",
-                "run": "phase_3/models/char/dog" + headtype + "-head-run.bam",
-                "walk": "phase_3.5/models/char/dog" + headtype + "-head-walk.bam",
-                "pie": "phase_3.5/models/char/dog" + headtype + "-head-pie-throw.bam",
-                "fallb": "phase_4/models/char/dog" + headtype + "-head-slip-backward.bam",
-                "fallf": "phase_4/models/char/dog" + headtype + "-head-slip-forward.bam",
-                "lose": "phase_5/models/char/dog" + headtype + "-head-lose.bam",
-                "win": "phase_3.5/models/char/dog" + headtype + "-head-victory-dance.bam",
-                "squirt": "phase_5/models/char/dog" + headtype + "-head-water-gun.bam",
-                "zend": "phase_3.5/models/char/dog" + headtype + "-head-jump-zend.bam",
-                "tele": "phase_3.5/models/char/dog" + headtype + "-head-teleport.bam",
-                "book": "phase_3.5/models/char/dog" + headtype + "-head-book.bam",
-                "leap": "phase_3.5/models/char/dog" + headtype + "-head-leap_zhang.bam",
-                "jump": "phase_3.5/models/char/dog" + headtype + "-head-jump-zhang.bam",
-                "happy": "phase_3.5/models/char/dog" + headtype + "-head-jump.bam",
-                "shrug": "phase_3.5/models/char/dog" + headtype + "-head-shrug.bam",
-                "hdance": "phase_5/models/char/dog" + headtype + "-head-happy-dance.bam",
-                "wave": "phase_3.5/models/char/dog" + headtype + "-head-wave.bam",
-                "swim": "phase_4/models/char/dog" + headtype + "-head-swim.bam",
-                "toss": "phase_5/models/char/dog" + headtype + "-head-toss.bam",
-                "cringe": "phase_3.5/models/char/dog" + headtype + "-head-cringe.bam",
-                "conked": "phase_3.5/models/char/dog" + headtype + "-head-conked.bam",
-                "catchneutral": "phase_4/models/char/dog" + headtype + "-head-gameneutral.bam",
-                "catchrun": "phase_4/models/char/dog" + headtype + "-head-gamerun.bam",
-                "hold-bottle": "phase_5/models/char/dog" + headtype + "-head-hold-bottle.bam",
-                "push-button" : "phase_3.5/models/char/dog" + headtype + "-head-press-button.bam",
-                "happy-dance" : "phase_5/models/char/dog" + headtype + "-head-happy-dance.bam",
-                "juggle" : "phase_5/models/char/dog" + headtype + "-head-juggle.bam",
-                "shout": "phase_5/models/char/dog" + headtype + "-head-shout.bam",
-                "dneutral": "phase_4/models/char/dog" + headtype + "-head-sad-neutral.bam",
-                "dwalk": "phase_4/models/char/dog" + headtype + "-head-losewalk.bam",
-                "smooch" : "phase_5/models/char/dog" + headtype + "-head-smooch.bam",
-                "conked" : "phase_3.5/models/char/dog" + headtype + "-head-conked.bam",
-                "sound" : "phase_5/models/char/dog" + headtype + "-head-shout.bam",
-                "sprinkle-dust" : "phase_5/models/char/dog" + headtype + "-head-sprinkle-dust.bam",
-                "start-sit" : "phase_4/models/char/dog" + headtype + "-head-intoSit.bam",
-                "sit" : "phase_4/models/char/dog" + headtype + "-head-sit.bam",
-                "water": "phase_3.5/models/char/dog" + headtype + "-head-water.bam",
-                "spit": "phase_5/models/char/dog" + headtype + "-head-spit.bam",
-                "firehose": "phase_5/models/char/dog" + headtype + "-head-firehose.bam"}, 'head')
+            self.loadModel("phase_3/models/char/dog%s-head-%s.bam" % (headType, _modelDetail), 'head')
+            partAnimations = {}
+            
+            # Load the body part animations.
+            for animName in ToonGlobals.ANIMATIONS:
+                animationData = list(ToonGlobals.ANIMATIONS[animName])
+                animPath = None
+                
+                if len(animationData) == 2:
+                    animPhase = animationData[1]
+                    animFile = animationData[0]
+                    
+                    # Let's create the path for the animation.
+                    animPath = ToonGlobals.BASE_MODEL % (animPhase, headType, '', 
+                        'head', animFile)
+                    
+                    if '_-' in animPath:
+                        animPath = animPath.replace('_-', '-')
+                    
+                partAnimations[animName] = animPath
+                
+            self.loadAnims(partAnimations, 'head')
+
             _pupilL = self.findAllMatches('**/joint_pupilL')
             _pupilR = self.findAllMatches('**/joint_pupilR')
-        if headtype == "1":
+        if headType == "1":
             stashParts("long")
             stashMuzzles("long", stashNeutral=0)
             stashMuzzles("short", stashNeutral=1)
             _pupilL = self.findAllMatches('**/joint_pupilL_short')
             _pupilR = self.findAllMatches('**/joint_pupilR_short')
-        elif headtype == "2":
+        elif headType == "2":
             if head == "mouse":
                 stashParts("short")
                 stashMuzzles("short", stashNeutral=1)
@@ -149,7 +133,7 @@ class ToonHead(Actor.Actor):
                 self.findAllMatches('**/head-front-long').show()
                 self.findAllMatches('**/head-front-short').hide()
                 self.findAllMatches('**/head-short').hide()
-        elif headtype == "3":
+        elif headType == "3":
             stashParts("short")
             stashMuzzles("long", stashNeutral=0)
             stashMuzzles("short", stashNeutral=1)
@@ -160,7 +144,7 @@ class ToonHead(Actor.Actor):
                 self.findAllMatches('**/head-front-long').hide()
                 self.findAllMatches('**/head-front-short').show()
                 self.findAllMatches('**/head-short').show()
-        elif headtype == "4":
+        elif headType == "4":
             stashParts("short")
             stashMuzzles("short", stashNeutral=0)
             stashMuzzles("long", stashNeutral=1)
@@ -411,5 +395,5 @@ class ToonHead(Actor.Actor):
             del self.openEyesTaskName
             self.gender = None
             self.head = None
-            self.headtype = None
+            self.headType = None
         return

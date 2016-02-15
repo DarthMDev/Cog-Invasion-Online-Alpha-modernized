@@ -5,25 +5,25 @@
 
 """
 
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.avatar import Avatar
+
 from direct.actor.Actor import Actor
 from direct.directnotify.DirectNotify import DirectNotify
-from lib.coginvasion.toon.ToonHead import ToonHead
-from lib.coginvasion.gags.GagState import GagState
-from direct.showbase.ShadowPlacer import ShadowPlacer
-from panda3d.core import *
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.showbase import Audio3DManager
-from direct.interval.IntervalGlobal import *
+from direct.interval.IntervalGlobal import Sequence, LerpScaleInterval
+from direct.interval.IntervalGlobal import Wait, Parallel, SoundInterval
+from direct.interval.IntervalGlobal import ActorInterval, LerpHprInterval, Func
 from direct.distributed import DelayDelete
-from LabelScaler import LabelScaler
-from direct.showbase.ShadowDemo import *
-import ToonDNA
-import random
 
 from lib.coginvasion.gags.GagState import GagState
+from lib.coginvasion.toon import ToonGlobals
+from lib.coginvasion.toon.ToonHead import ToonHead
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.avatar import Avatar
+
+from panda3d.core import VBase3, VBase4, Point3, Vec3
+from panda3d.core import BitMask32, CollisionHandlerPusher
+import ToonDNA, random
 
 notify = DirectNotify().newCategory("Toon")
 
@@ -413,10 +413,9 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         return
 
     def setAdminToken(self, tokenId):
-        tokens = {0 : 500, 2 : 300}
-        if tokenId in tokens.keys():
+        if tokenId in ToonGlobals.STAFF_TOKENS.keys():
             icons = loader.loadModel("phase_3/models/props/gm_icons.bam")
-            self.tokenIcon = icons.find('**/access_level_%s' % (tokens[tokenId]))
+            self.tokenIcon = icons.find('**/access_level_%s' % (ToonGlobals.STAFF_TOKENS[tokenId]))
             self.tokenIcon.reparentTo(self)
             x = self.nametag3d.getX()
             y = self.nametag3d.getY()
@@ -472,19 +471,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.rescaleToon()
         if makeTag:
             self.setupNameTag()
-        #self.tag.hide(BitMask32.bit(1))
-        #objectPath = self.getGeomNode()
-        #shadowCamera = objectPath.attachNewNode('shadowCamera')
-        #lightPath = shadowCamera.attachNewNode('lightPath')
-        #lightPath.setPos(50, 0, 50)
-        #if self.shadowCaster:
-        #   self.shadowCaster.clear()
-        #   self.shadowCaster = None
-        #self.shadowCaster = ShadowCaster(lightPath, objectPath, 100, 100)
-        #self.shadowCaster.setGround(render)
-        #arbitraryShadow(self)
         Avatar.Avatar.initShadow(self)
-        #self.getGeomNode().flattenStrong()
         if self.cr.isShowingPlayerIds:
             self.showAvId()
         self.updateChatSoundDict()
@@ -538,105 +525,44 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         torsot.setColor(shirtcolor)
         sleeves.setColor(sleevecolor)
         torsob.setColor(shortcolor)
+        
+    def generateBodyPart(self, bodyPart, partType, partPhase, pantType):
+        partAnimations = {}
+        
+        # Load the body part.
+        mdlPath = ToonGlobals.BASE_MODEL % (partPhase, partType, pantType, bodyPart,
+            str(CIGlobals.getModelDetail(self.avatarType)))
+        
+        if '_-' in mdlPath:
+            mdlPath = mdlPath.replace('_-', '-')
+        
+        self.loadModel(mdlPath, bodyPart)
+        
+        # Load the body part animations.
+        for animName in ToonGlobals.ANIMATIONS:
+            animationData = list(ToonGlobals.ANIMATIONS[animName])
+            animPath = None
+            
+            if len(animationData) == 2:
+                animPhase = animationData[1]
+                animFile = animationData[0]
+                
+                # Let's create the path for the animation.
+                animPath = ToonGlobals.BASE_MODEL % (animPhase, partType, pantType, 
+                    bodyPart, animFile)
+                
+                if '_-' in animPath:
+                    animPath = animPath.replace('_-', '-')
+                
+            partAnimations[animName] = animPath
+            
+        self.loadAnims(partAnimations, bodyPart)
 
     def generateLegs(self):
-        legtype = self.getLegs()
-        self.loadModel("phase_3/models/char/dog" + legtype + "_Shorts-legs-" + str(CIGlobals.getModelDetail(self.avatarType)) + ".bam", 'legs')
-        self.loadAnims({"neutral": "phase_3/models/char/dog" + legtype + "_Shorts-legs-neutral.bam",
-                            "run": "phase_3/models/char/dog" + legtype + "_Shorts-legs-run.bam",
-                            "walk": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-walk.bam",
-                            "pie": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-pie-throw.bam",
-                            "fallb": "phase_4/models/char/dog" + legtype + "_Shorts-legs-slip-backward.bam",
-                            "fallf": "phase_4/models/char/dog" + legtype + "_Shorts-legs-slip-forward.bam",
-                            "lose": "phase_5/models/char/dog" + legtype + "_Shorts-legs-lose.bam",
-                            "win": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-victory-dance.bam",
-                            "squirt": "phase_5/models/char/dog" + legtype + "_Shorts-legs-water-gun.bam",
-                            "zend": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-jump-zend.bam",
-                            "tele": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-teleport.bam",
-                            "book": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-book.bam",
-                            "leap": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-leap_zhang.bam",
-                            "jump": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-jump-zhang.bam",
-                            "happy": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-jump.bam",
-                            "shrug": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-shrug.bam",
-                            "hdance": "phase_5/models/char/dog" + legtype + "_Shorts-legs-happy-dance.bam",
-                            "wave": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-wave.bam",
-                            "scemcee": "phase_4/models/char/tt_a_chr_dgm_shorts_legs_scientistEmcee.bam",
-                            "scwork": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_scientistWork.bam",
-                            "scgame": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_scientistGame.bam",
-                            "scjealous": "phase_4/models/char/tt_a_chr_" + legtype + "_shorts_legs_scientistJealous.bam",
-                            "swim": "phase_4/models/char/dog" + legtype + "_Shorts-legs-swim.bam",
-                            "toss": "phase_5/models/char/dog" + legtype + "_Shorts-legs-toss.bam",
-                            "cringe": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-cringe.bam",
-                            "conked": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-conked.bam",
-                            "catchneutral": "phase_4/models/char/dog" + legtype + "_Shorts-legs-gameneutral.bam",
-                            "catchrun": "phase_4/models/char/dog" + legtype + "_Shorts-legs-gamerun.bam",
-                            "hold-bottle": "phase_5/models/char/dog" + legtype + "_Shorts-legs-hold-bottle.bam",
-                            "push-button" : "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-press-button.bam",
-                            "happy-dance" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-happy-dance.bam",
-                            "juggle" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-juggle.bam",
-                            "shout": "phase_5/models/char/dog" + legtype + "_Shorts-legs-shout.bam",
-                            "dneutral": "phase_4/models/char/dog" + legtype + "_Shorts-legs-sad-neutral.bam",
-                            "dwalk": "phase_4/models/char/dog" + legtype + "_Shorts-legs-losewalk.bam",
-                            "smooch" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-smooch.bam",
-                            "conked" : "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-conked.bam",
-                            "sound" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-shout.bam",
-                            "sprinkle-dust" : "phase_5/models/char/dog" + legtype + "_Shorts-legs-sprinkle-dust.bam",
-                            "start-sit" : "phase_4/models/char/dog" + legtype + "_Shorts-legs-intoSit.bam",
-                            "sit" : "phase_4/models/char/dog" + legtype + "_Shorts-legs-sit.bam",
-                            "water": "phase_3.5/models/char/dog" + legtype + "_Shorts-legs-water.bam",
-                            "spit": "phase_5/models/char/dog" + legtype + "_Shorts-legs-spit.bam",
-                            "firehose": "phase_5/models/char/dog" + legtype + "_Shorts-legs-firehose.bam"}, 'legs')
-        #self.findAllMatches('**/boots_long').stash()
-        #self.findAllMatches('**/boots_short').stash()
-        #self.findAllMatches('**/shoes').stash()
-
+        self.generateBodyPart('legs', self.getLegs(), 3, 'Shorts')
+        
     def generateTorso(self):
-        torsotype = self.getTorso()
-        self.loadModel("phase_3/models/char/dog" + torsotype + "-torso-" + str(CIGlobals.getModelDetail(self.avatarType)) + ".bam", 'torso')
-        self.loadAnims({"neutral": "phase_3/models/char/dog" + torsotype + "-torso-neutral.bam",
-                            "run": "phase_3/models/char/dog" + torsotype + "-torso-run.bam",
-                            "walk": "phase_3.5/models/char/dog" + torsotype + "-torso-walk.bam",
-                            "pie": "phase_3.5/models/char/dog" + torsotype + "-torso-pie-throw.bam",
-                            "fallb": "phase_4/models/char/dog" + torsotype + "-torso-slip-backward.bam",
-                            "fallf": "phase_4/models/char/dog" + torsotype + "-torso-slip-forward.bam",
-                            "lose": "phase_5/models/char/dog" + torsotype + "-torso-lose.bam",
-                            "win": "phase_3.5/models/char/dog" + torsotype + "-torso-victory-dance.bam",
-                            "squirt": "phase_5/models/char/dog" + torsotype + "-torso-water-gun.bam",
-                            "zend": "phase_3.5/models/char/dog" + torsotype + "-torso-jump-zend.bam",
-                            "tele": "phase_3.5/models/char/dog" + torsotype + "-torso-teleport.bam",
-                            "book": "phase_3.5/models/char/dog" + torsotype + "-torso-book.bam",
-                            "leap": "phase_3.5/models/char/dog" + torsotype + "-torso-leap_zhang.bam",
-                            "jump": "phase_3.5/models/char/dog" + torsotype + "-torso-jump-zhang.bam",
-                            "happy": "phase_3.5/models/char/dog" + torsotype + "-torso-jump.bam",
-                            "shrug": "phase_3.5/models/char/dog" + torsotype + "-torso-shrug.bam",
-                            "hdance": "phase_5/models/char/dog" + torsotype + "-torso-happy-dance.bam",
-                            "wave": "phase_3.5/models/char/dog" + torsotype + "-torso-wave.bam",
-                            "scemcee": "phase_4/models/char/tt_a_chr_dgm_shorts_torso_scientistEmcee.bam",
-                            "scwork": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_scientistWork.bam",
-                            "scgame": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_scientistGame.bam",
-                            "scjealous": "phase_4/models/char/tt_a_chr_" + torsotype + "_torso_scientistJealous.bam",
-                            "swim": "phase_4/models/char/dog" + torsotype + "-torso-swim.bam",
-                            "toss": "phase_5/models/char/dog" + torsotype + "-torso-toss.bam",
-                            "cringe": "phase_3.5/models/char/dog" + torsotype + "-torso-cringe.bam",
-                            "conked": "phase_3.5/models/char/dog" + torsotype + "-torso-conked.bam",
-                            "catchneutral": "phase_4/models/char/dog" + torsotype + "-torso-gameneutral.bam",
-                            "catchrun": "phase_4/models/char/dog" + torsotype + "-torso-gamerun.bam",
-                            "hold-bottle" : "phase_5/models/char/dog" + torsotype + "-torso-hold-bottle.bam",
-                            "push-button" : "phase_3.5/models/char/dog" + torsotype + "-torso-press-button.bam",
-                            "happy-dance" : "phase_5/models/char/dog" + torsotype + "-torso-happy-dance.bam",
-                            "juggle" : "phase_5/models/char/dog" + torsotype + "-torso-juggle.bam",
-                            "shout": "phase_5/models/char/dog" + torsotype + "-torso-shout.bam",
-                            "dneutral": "phase_4/models/char/dog" + torsotype + "-torso-sad-neutral.bam",
-                            "dwalk": "phase_4/models/char/dog" + torsotype + "-torso-losewalk.bam",
-                            "smooch" : "phase_5/models/char/dog" + torsotype + "-torso-smooch.bam",
-                            "conked" : "phase_3.5/models/char/dog" + torsotype + "-torso-conked.bam",
-                            "sound" : "phase_5/models/char/dog" + torsotype + "-torso-shout.bam",
-                            "sprinkle-dust" : "phase_5/models/char/dog" + torsotype + "-torso-sprinkle-dust.bam",
-                            "start-sit" : "phase_4/models/char/dog" + torsotype + "-torso-intoSit.bam",
-                            "sit" : "phase_4/models/char/dog" + torsotype + "-torso-sit.bam",
-                            "water": "phase_3.5/models/char/dog" + torsotype + "-torso-water.bam",
-                            "spit": "phase_5/models/char/dog" + torsotype + "-torso-spit.bam",
-                            "firehose": "phase_5/models/char/dog" + torsotype + "-torso-firehose.bam"}, 'torso')
+        self.generateBodyPart('torso', self.getTorso(), 3, '')
 
     def generateHead(self, pat=0):
         gender = self.getGender()

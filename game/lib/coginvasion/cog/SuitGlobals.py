@@ -1,7 +1,7 @@
 """
 
   Filename: SuitGlobals.py
-  Created by: DecodedLogic (31July14)
+  Created by: DecodedLogic (31July15)
 
 """
 
