@@ -540,12 +540,12 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         
         # Load the body part animations.
         for animName in ToonGlobals.ANIMATIONS:
-            animationData = list(ToonGlobals.ANIMATIONS[animName])
+            animationData = ToonGlobals.ANIMATIONS[animName]
             animPath = None
             
             if len(animationData) == 2:
-                animPhase = animationData[1]
-                animFile = animationData[0]
+                animPhase = animationData[0]
+                animFile = animationData[1]
                 
                 # Let's create the path for the animation.
                 animPath = ToonGlobals.BASE_MODEL % (animPhase, partType, pantType, 
