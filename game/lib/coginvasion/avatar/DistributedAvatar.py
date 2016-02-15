@@ -119,6 +119,7 @@ class DistributedAvatar(DistributedActor, Avatar):
         self.setPythonTag('avatar', self.doId)
         self.setupHealthLabel()
         self.setParent(CIGlobals.SPHidden)
+        self.setBlend(frameBlend = True)
 
     def generate(self):
         DistributedActor.generate(self)
