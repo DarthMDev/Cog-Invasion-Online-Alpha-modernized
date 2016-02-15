@@ -24,7 +24,7 @@ class SuitPathBehavior(SuitBehaviorBase):
         self.exitOnWalkFinish = exitOnWalkFinish
         self.isEntered = 0
         self.pathFinder = getPathFinder(self.suit.hood)
-        
+
     def exit(self):
         self.clearWalkTrack()
         SuitBehaviorBase.exit(self)
@@ -45,20 +45,18 @@ class SuitPathBehavior(SuitBehaviorBase):
         if len(path) > 1:
             path.remove(path[0])
         self.startPath(path, z, durationFactor)
-            
+
     def startPath(self, path, z, durationFactor):
-        pathName = self.suit.uniqueName('suitPath')
         correctedPath = []
         for i in xrange(len(path)):
             waypoint = path[i]
             correctedPath.append([waypoint[0], waypoint[1], z])
         self.suit.d_setWalkPath(correctedPath)
         self.path = correctedPath
-        print self.path
-        self._doWalk()
-        
-    def _doWalk(self):
-        self.walkTrack = Sequence()
+        self._doWalk(durationFactor)
+
+    def _doWalk(self, durationFactor):
+        self.walkTrack = Sequence(name = self.suit.uniqueName('suitPath'))
         for i in xrange(len(self.path)):
             waypoint = self.path[i]
             if i > 0:
@@ -68,8 +66,9 @@ class SuitPathBehavior(SuitBehaviorBase):
             ival = NPCWalkInterval(self.suit, Point3(*waypoint),
                 startPos = lambda self = self: self.suit.getPos(render),
                 fluid = 1, name = self.suit.uniqueName('doWalkIval' + str(i)),
-                duration = (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2)
+                duration = (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * durationFactor)
             self.walkTrack.append(ival)
+        self.walkTrack.setDoneEvent(self.walkTrack.getName())
         self.startFollow()
 
     def clearWalkTrack(self):
@@ -82,7 +81,7 @@ class SuitPathBehavior(SuitBehaviorBase):
 
     def startFollow(self):
         if self.walkTrack:
-            #self.acceptOnce(self.walkTrack.getName(), self._walkDone)
+            self.acceptOnce(self.walkTrack.getDoneEvent(), self._walkDone)
             self.walkTrack.start()
 
     def _walkDone(self):
