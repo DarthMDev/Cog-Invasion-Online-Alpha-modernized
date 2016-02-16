@@ -8,22 +8,20 @@ from direct.distributed.ClockDelta import globalClockDelta
 from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
 from lib.coginvasion.globals import CIGlobals
 from CogOfficeSuitBrainAI import CogOfficeSuitBrainAI
-from CogOfficeConstants import *
-
-import random
+from CogOfficeConstants import POINTS
 
 CHAIR_2_BATTLE_TIME = 9.0
 
 class DistributedCogOfficeSuitAI(DistributedSuitAI):
     notify = directNotify.newCategory('DistributedSuitAI')
     
-    def __init__(self, air, battle, guardPoint, isChair, hood):
+    def __init__(self, air, battle, guardPoint, flyToPoint, isChair, hood):
         DistributedSuitAI.__init__(self, air)
         self.hood = hood
         self.battle = battle
         self.battleDoId = self.battle.doId
         self.guardPoint = guardPoint
-        self.battleStartPoint = None
+        self.battleStartPoint = flyToPoint
         self.isChair = isChair
         self.fsm = ClassicFSM.ClassicFSM('DistributedCogOfficeSuitAI', [State.State('off', self.enterOff, self.exitOff),
          State.State('guard', self.enterGuard, self.exitGuard, ['think']),
@@ -76,9 +74,6 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         self.b_setAnimState('sit')
         
     def allStandSuitsDead(self):
-        points = self.getPoints('battle')
-        point = random.choice(points)
-        self.battleStartPoint = points.index(point)
         self.b_setState('chair2battle', [self.battleStartPoint])
         
     def exitChair(self):

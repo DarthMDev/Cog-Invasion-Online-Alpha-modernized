@@ -3,6 +3,7 @@
 
 from panda3d.core import *
 loadPrcFile('config/config_client.prc')
+loadPrcFileData('', 'model-path ../../../')
 loadPrcFileData('', 'framebuffer-multisample 1')
 loadPrcFileData('', 'multisamples 2048')
 loadPrcFileData('', 'tk-main-loop 0')
@@ -14,7 +15,7 @@ cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
 cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
 cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
 
-from direct.showbase.ShowBaseWide import ShowBase
+from direct.showbase.ShowBase import ShowBase
 base = ShowBase()
 from direct.showbase.Audio3DManager import Audio3DManager
 base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)

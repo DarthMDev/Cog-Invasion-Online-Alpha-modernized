@@ -525,44 +525,12 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         torsot.setColor(shirtcolor)
         sleeves.setColor(sleevecolor)
         torsob.setColor(shortcolor)
-        
-    def generateBodyPart(self, bodyPart, partType, partPhase, pantType):
-        partAnimations = {}
-        
-        # Load the body part.
-        mdlPath = ToonGlobals.BASE_MODEL % (partPhase, partType, pantType, bodyPart,
-            str(CIGlobals.getModelDetail(self.avatarType)))
-        
-        if '_-' in mdlPath:
-            mdlPath = mdlPath.replace('_-', '-')
-        
-        self.loadModel(mdlPath, bodyPart)
-        
-        # Load the body part animations.
-        for animName in ToonGlobals.ANIMATIONS:
-            animationData = ToonGlobals.ANIMATIONS[animName]
-            animPath = None
-            
-            if len(animationData) == 2:
-                animPhase = animationData[0]
-                animFile = animationData[1]
-                
-                # Let's create the path for the animation.
-                animPath = ToonGlobals.BASE_MODEL % (animPhase, partType, pantType, 
-                    bodyPart, animFile)
-                
-                if '_-' in animPath:
-                    animPath = animPath.replace('_-', '-')
-                
-            partAnimations[animName] = animPath
-            
-        self.loadAnims(partAnimations, bodyPart)
 
     def generateLegs(self):
-        self.generateBodyPart('legs', self.getLegs(), 3, 'Shorts')
+        ToonGlobals.generateBodyPart(self, 'legs', self.getLegs(), 3, 'Shorts')
         
     def generateTorso(self):
-        self.generateBodyPart('torso', self.getTorso(), 3, '')
+        ToonGlobals.generateBodyPart(self, 'torso', self.getTorso(), 3, '')
 
     def generateHead(self, pat=0):
         gender = self.getGender()

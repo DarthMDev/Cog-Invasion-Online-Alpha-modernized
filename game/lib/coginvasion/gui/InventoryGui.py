@@ -7,25 +7,48 @@
 
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotify import DirectNotify
-from direct.interval.SoundInterval import SoundInterval
-from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel, OnscreenText
+from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel, OnscreenText, DGG
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
 from panda3d.core import TransparencyAttrib, TextNode
+from direct.gui.DirectButton import DirectButton
 
 class Slot(DirectFrame):
 
     def __init__(self, index, pos, parent):
-        DirectFrame.__init__(self, pos = pos, parent = parent, scale = 0.15)
+        DirectFrame.__init__(self, pos = pos, parent = parent, image = loader.loadTexture('phase_3.5/maps/slot_%s_%s.png' % (str(index), 'idle')), scale = 0.15, 
+            frameSize = (-1, 1, -1, 1), frameColor = (0, 0, 0, 0.5), sortOrder = 0)
         self.index = index
-        self.outline = None
+        self.hoverObj = None
         self.gagImage = None
         self.gag = None
+        self.mouseRlvrSfx = loader.loadSfx('phase_3/audio/sfx/GUI_rollover.mp3')
+        
+        # The no ammo text over the gag when you run out of ammo.
         self.noAmmoText = OnscreenText(text = "No\nAmmo", fg = (1, 0, 0, 1), parent = self,
                                        scale = 0.5, shadow = (0, 0, 0, 1), align = TextNode.ACenter,
                                        pos = (0, 0.1))
-        self.noAmmoText.setBin('unsorted', 50)
+        self.noAmmoText.setBin('unsorted', 100)
         self.noAmmoText.hide()
+        
+        # The gag label underneath the gag icon.
+        self.gagLabel = OnscreenText(text = "Birthday Cake", fg = (1, 1, 1, 1), parent = self,
+                                       scale = 0.25, shadow = (0, 0, 0, 1), align = TextNode.ACenter,
+                                       pos = (0, -0.9), mayChange = 1)
+        self.gagLabel.setBin('fixed', 40)
+        self.gagLabel.hide()
+        
+        self.hoverObj = DirectButton(relief = None, parent = self, frameSize = self['frameSize'])
+        
+        self.setBin('transparent', 30)
+        self.setOutlineImage('idle')
+        
+        self['state'] = DGG.NORMAL
+        
+        # Let's handle mouse entering and leaving.
+        self.hoverObj.guiItem.setActive(True)
+        self.hoverObj.bind(DGG.WITHIN, self.mouseEntered)
+        self.hoverObj.bind(DGG.WITHOUT, self.mouseExited)
         
     def showNoAmmo(self):
         self.noAmmoText.show()
@@ -40,37 +63,50 @@ class Slot(DirectFrame):
         self.gagImage = OnscreenImage(image = gagImage, parent = self)
         self.gagImage.setTransparency(TransparencyAttrib.MAlpha)
 
-    def setOutline(self, outline):
-        self.outline = outline
-        self.outline.setTransparency(TransparencyAttrib.MAlpha)
+    def setOutline(self):
+        self.setTransparency(TransparencyAttrib.MAlpha)
 
     def setOutlineImage(self, image):
         phase = 'phase_3.5/maps/'
-        self.outline['image'] = loader.loadTexture(phase + 'slot_%s_%s.png' % (str(self.index), image))
-        self.setOutline(self.outline)
+        self['image'] = loader.loadTexture(phase + 'slot_%s_%s.png' % (str(self.index), image))
+        self.setOutline()
+        
         if image == 'no_ammo':
             # Show the no ammo text.
             self.showNoAmmo()
             # When we have no ammo, render the frame in front of the gag image.
-            self.outline.setBin('fixed', 40)
-            self.gagImage.setBin('transparent', 30)
+            self.setBin('fixed', 40)
+            
+            if self.gagImage:
+                self.gagImage.setBin('transparent', 30)
         else:
             # Hide the no ammo text if we're not out of ammo.
             self.hideNoAmmo()
             # Render the gag image in front of the frame.
-            self.gagImage.setBin('fixed', 40)
-            self.outline.setBin('transparent', 30)
+            if self.gagImage:
+                self.gagImage.setBin('fixed', 40)
+            self.setBin('transparent', 30)
 
     def getOutline(self):
         return self.outline
+    
+    def mouseEntered(self, cmd):
+        if self.gag:
+            self.gagLabel.show()
+            self.mouseRlvrSfx.play()
+            
+    def mouseExited(self, cmd):
+        self.gagLabel.hide()
 
     def setGag(self, gag):
         self.gag = gag
         if gag:
             self.show()
             self.setSlotImage(self.gag.getImage())
+            self.gagLabel['text'] = self.gag.getName()
         else:
             self.hide()
+            self.gagLabel['text'] = ''
 
     def getGag(self):
         return self.gag
@@ -128,7 +164,6 @@ class InventoryGui(DirectObject):
 
     def createGui(self):
         self.deleteGui()
-        phase = 'phase_3.5/maps/'
         posGroup = self.threeSlotsPos
         self.inventoryFrame = DirectFrame(parent = base.a2dRightCenter, pos = (-0.2, 0, 0))
         if self.defaultSlots == 4:
@@ -136,11 +171,7 @@ class InventoryGui(DirectObject):
         for slot in range(len(posGroup) + 1):
             if slot == 3:
                 posGroup = self.fourSlotPos
-            slotIdle = loader.loadTexture(phase + ('slot_%s_idle.png' % (str(slot + 1))))
             slotObj = Slot(slot + 1, posGroup[slot], self.inventoryFrame)
-            slotOutline = OnscreenImage(image = slotIdle, color = (1, 1, 1, 0.5), parent = slotObj)
-            slotOutline.setTransparency(TransparencyAttrib.MAlpha)
-            slotObj.setOutline(slotOutline)
             self.slots.append(slotObj)
             if slot == 3:
                 slotObj.hide()

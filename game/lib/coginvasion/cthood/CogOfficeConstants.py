@@ -6,6 +6,11 @@ from lib.coginvasion.cog import Dept
 RECEPTION_FLOOR = 0
 EXECUTIVE_FLOOR = 4
 
+# Faceoff: Position of Toons during faceoff
+# Battle: A Position a Cog flies to or walks to.
+# Guard: Position of a standing Cog when a battle begins.
+# Chairs: Position of a Cog in a chair.
+
 POINTS = {RECEPTION_FLOOR: {'chairs': [[0.91, 16.92, 0, 149.53, 0, 0]],
                   'battle': [[-24.8844, 14.6984, 0.025, 270, 0, 0],
                              [-24.7556, 9.97378, 0.025, 270, 0, 0],

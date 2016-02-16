@@ -2,6 +2,7 @@
 # Filename: ToonGlobals.py
 # Created by: DecodedLogic (14Feb16)
 ########################################
+from lib.coginvasion.globals import CIGlobals
 
 # First argument is phase, next is type, body part, pant type, and finally model detail.
 # Pant type is either: Shorts, Skirt, or Naked.
@@ -63,3 +64,34 @@ ANIMATIONS = {
 # Key is token id, value is the actual model id.
 STAFF_TOKENS = {0 : 500, 2 : 300}
 
+def generateBodyPart(toon, bodyPart, partType, partPhase, pantType):
+    partAnimations = {}
+    
+    # Load the body part.
+    mdlPath = BASE_MODEL % (partPhase, partType, pantType, bodyPart,
+        str(CIGlobals.getModelDetail(toon.avatarType)))
+    
+    if '_-' in mdlPath:
+        mdlPath = mdlPath.replace('_-', '-')
+    
+    toon.loadModel(mdlPath, bodyPart)
+    
+    # Load the body part animations.
+    for animName in ANIMATIONS:
+        animationData = ANIMATIONS[animName]
+        animPath = None
+        
+        if len(animationData) == 2:
+            animPhase = animationData[0]
+            animFile = animationData[1]
+            
+            # Let's create the path for the animation.
+            animPath = BASE_MODEL % (animPhase, partType, pantType, 
+                bodyPart, animFile)
+            
+            if '_-' in animPath:
+                animPath = animPath.replace('_-', '-')
+            
+        partAnimations[animName] = animPath
+        
+    toon.loadAnims(partAnimations, bodyPart)

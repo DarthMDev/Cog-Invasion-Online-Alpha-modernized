@@ -15,9 +15,7 @@ from DistributedCogOfficeElevatorAI import DistributedCogOfficeElevatorAI
 from DistributedCogOfficeSuitAI import DistributedCogOfficeSuitAI
 from CogOfficeConstants import *
 from ElevatorConstants import *
-import SuitBuildingGlobals
-
-import random
+import SuitBuildingGlobals, random
 
 RIDE_ELEVATOR_TIME = 6.5
 FACE_OFF_TIME = 3.0
@@ -43,6 +41,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.exteriorZoneId = exteriorZoneId
         self.avId2suitsAttacking = {}
         self.spotTaken2suitId = {}
+        self.availableBattlePoints = {}
         self.guardSuits = []
         self.chairSuits = []
         self.numFloors = numFloors
@@ -197,6 +196,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         elevator1.generateWithRequired(self.zoneId)
         elevator1.b_setState('closed')
         self.elevators.append(elevator1)
+        self.resetBattlePoints()
+        
+    def resetBattlePoints(self):
+        self.availableBattlePoints = self.getPoints('battle')
         
     def getPoints(self, name):
         if self.currentFloor in self.UNIQUE_FLOORS:
@@ -265,6 +268,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.bldg = None
         self.bldgDoId = None
         self.exteriorZoneId = None
+        self.availableBattlePoints = None
         DistributedObjectAI.delete(self)
         
     def deadSuit(self, doId):
@@ -297,6 +301,8 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         availableSuits = []
         minLevel = levelRange[0]
         maxLevel = levelRange[1]
+        battlePoint = None
+        
         if not boss:
             maxLevel -= 1
         else:
@@ -309,8 +315,11 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             for suit in availableSuits:
                 if suit.getSuitType() == SuitType.B:
                     availableSuits.remove(suit)
+            battlePoint = self.availableBattlePoints.index(random.choice(self.availableBattlePoints))
+            self.availableBattlePoints.pop(battlePoint)
+        
         plan = random.choice(availableSuits)
-        suit = DistributedCogOfficeSuitAI(self.air, self, guardPoint, isChair, self.hood)
+        suit = DistributedCogOfficeSuitAI(self.air, self, guardPoint, battlePoint, isChair, self.hood)
         suit.setManager(self)
         suit.generateWithRequired(self.zoneId)
         suit.d_setHood(suit.hood)
