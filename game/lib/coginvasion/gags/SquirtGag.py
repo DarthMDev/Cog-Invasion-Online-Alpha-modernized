@@ -34,6 +34,7 @@ class SquirtGag(Gag):
         self.lastFrame = 0
         self.tracks = None
         self.sprayTrack = None
+        self.sprayAttempt = None
 
         if game.process == 'client':
             if spraySfx:
@@ -53,7 +54,7 @@ class SquirtGag(Gag):
             self.build()
             self.equip()
             duration = base.localAvatar.getDuration(self.toonAnim, toFrame = self.enableReleaseFrame)
-            Parallel(ActorInterval(self.avatar, self.toonAnim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate),
+            self.sprayAttempt = Parallel(ActorInterval(self.avatar, self.toonAnim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate),
                      Wait(duration - 0.15), Func(self.setSquirtEnabled, True)).start()
 
     def startSquirt(self, sprayScale, containerHold):
@@ -63,6 +64,7 @@ class SquirtGag(Gag):
 
     def setSquirtEnabled(self, flag):
         self.canSquirt = flag
+        self.sprayAttempt = None
 
     def doSpray(self, scaleUp, scaleDown, hold):
         base.audio3d.attachSoundToObject(self.spraySfx, self.gag)
@@ -195,5 +197,8 @@ class SquirtGag(Gag):
         if self.spray:
             self.spray.removeNode()
             self.spray = None
+        if self.sprayAttempt:
+            self.sprayAttempt.pause()
+            self.sprayAttempt = None
         self.hitSomething = False
         self.canSquirt = False

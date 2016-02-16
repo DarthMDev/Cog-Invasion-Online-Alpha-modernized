@@ -590,7 +590,8 @@ dclass DistributedDroppableCollectableJellybeans : DistributedDroppableCollectab
 };
 
 dclass DistributedDroppableCollectableJellybean : DistributedDroppableCollectableJellybeans {
-
+  requestGrab() airecv clsend;
+  handlePickup(uint32) broadcast ram;
 };
 
 dclass DistributedDroppableCollectableJellybeanJar : DistributedDroppableCollectableJellybeans {

@@ -5,11 +5,14 @@
 
 """
 
-from panda3d.core import *
 from direct.distributed.DistributedNode import DistributedNode
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.controls.ControlManager import CollisionHandlerRayStart
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from lib.coginvasion.globals import CIGlobals
+
+from panda3d.core import NodePath, CollisionSphere, CollisionNode, CollisionRay
+from panda3d.core import BitMask32, CollisionHandlerFloor, ModelPool, TexturePool
 
 class DistributedDroppableCollectableObject(DistributedNode):
     notify = directNotify.newCategory("DistributedDroppableCollectableObject")
@@ -67,9 +70,13 @@ class DistributedDroppableCollectableObject(DistributedNode):
         ModelPool.garbageCollect()
         TexturePool.garbageCollect()
 
-    def handleCollisions(self, entry):
+    def handleCollisions(self, avId, wait = None):
         # May be overridden if needed.
-        self.sendUpdate("collectedObject", [])
+        if base.localAvatar.doId == avId:
+            if wait:
+                Sequence(Wait(wait), Func(self.sendUpdate, 'collectedObject', [])).start()
+            else:
+                self.sendUpdate("collectedObject", [])
 
     def acceptCollisions(self):
         self.acceptOnce("enter" + self.collSensorNodePath.node().getName(), self.handleCollisions)
