@@ -167,7 +167,7 @@ class FactorySneakWorld(DirectObject):
             sectionNode = self.worldMdl.find('**/' + sectionName)
             if (not sectionNode.isEmpty()):
                 sectionNode.removeNode()
-        self.occluderData = base.loader.loadModel("factory_sneak_occluders.egg")
+        self.occluderData = base.loader.loadModel("phase_9/models/cogHQ/factory_sneak_occluders.egg")
         for occluderNode in self.occluderData.findAllMatches('**/+OccluderNode'):
             base.render.setOccluder(occluderNode)
             occluderNode.node().setDoubleSided(True)
