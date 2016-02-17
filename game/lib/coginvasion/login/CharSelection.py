@@ -192,6 +192,12 @@ class CharSelection(DirectObject):
         self.fog.setColor(0.2, 0.2, 0.2)
         self.fog.setExpDensity(0.003)
         base.render.setFog(self.fog)
+        
+        # Let's fix the flickering doors.
+        doors = self.world.find('**/doors').getChildren()
+        
+        for door in doors:
+            for frameHole in door.findAllMatches('**/doorFrameHole*'): frameHole.removeNode()
 
         if holidayMgr.getHoliday() == HolidayType.CHRISTMAS:
             piles = {
