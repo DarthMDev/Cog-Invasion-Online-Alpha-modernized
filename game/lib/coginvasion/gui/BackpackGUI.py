@@ -1,7 +1,7 @@
 # Filename: BackpackGUI.py
 # Created by:  blach (20Sep15)
 
-from panda3d.core import Vec4
+from panda3d.core import Vec4, TextNode
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import DGG, DirectButton, DirectFrame, OnscreenText
@@ -172,8 +172,10 @@ class BackpackGUI(DirectFrame):
         xValue = GagButtonXValues[index]
         button = DirectButton(relief = None, image = (gui.find('**/InventoryButtonUp'),
          gui.find('**/InventoryButtonDown'),
-         gui.find('**/InventoryButtonRollover'),
-         gui.find('**/InventoryButtonFlat')), geom = icon, geom_scale = 0.6, parent = self.trackByName[trackName])
+         gui.find('**/InventoryButtonRollover')),
+         geom = icon, geom_scale = 0.6, parent = self.trackByName[trackName],
+         text = str(base.localAvatar.getBackpack().getSupply(gagName)), text_align = TextNode.ARight, text_scale = 0.04,
+         text_fg=Vec4(1, 1, 1, 1), text_pos=(0.07, -0.04))
         button.setX(xValue)
         self.gagButtonByName[gagName] = button
 

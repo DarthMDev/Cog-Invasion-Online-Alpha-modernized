@@ -15,9 +15,10 @@ from direct.gui.DirectButton import DirectButton
 
 class Slot(DirectFrame):
 
-    def __init__(self, index, pos, parent):
+    def __init__(self, baseGui, index, pos, parent):
         DirectFrame.__init__(self, pos = pos, parent = parent, image = loader.loadTexture('phase_3.5/maps/slot_%s_%s.png' % (str(index), 'idle')), scale = 0.15, 
             frameSize = (-1, 1, -1, 1), frameColor = (0, 0, 0, 0.5), sortOrder = 0)
+        self.gui = baseGui
         self.index = index
         self.hoverObj = None
         self.gagImage = None
@@ -43,12 +44,11 @@ class Slot(DirectFrame):
         self.setBin('transparent', 30)
         self.setOutlineImage('idle')
         
-        self['state'] = DGG.NORMAL
-        
         # Let's handle mouse entering and leaving.
         self.hoverObj.guiItem.setActive(True)
         self.hoverObj.bind(DGG.WITHIN, self.mouseEntered)
         self.hoverObj.bind(DGG.WITHOUT, self.mouseExited)
+        self.hoverObj.bind(DGG.B1CLICK, self.gui.setWeapon, [self])
         
     def showNoAmmo(self):
         self.noAmmoText.show()
@@ -171,7 +171,7 @@ class InventoryGui(DirectObject):
         for slot in range(len(posGroup) + 1):
             if slot == 3:
                 posGroup = self.fourSlotPos
-            slotObj = Slot(slot + 1, posGroup[slot], self.inventoryFrame)
+            slotObj = Slot(self, slot + 1, posGroup[slot], self.inventoryFrame)
             self.slots.append(slotObj)
             if slot == 3:
                 slotObj.hide()
