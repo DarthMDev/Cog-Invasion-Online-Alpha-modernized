@@ -34,7 +34,7 @@ class DistributedBattleTrolley(DistributedObject):
         Point3(-4.75, 1.6, 1.4),
         Point3(-4.75, 5, 1.4)
     ]
-    TROLLEY_NEUTRAL_POS = Point3(15.751, 14.1588, -0.984615)
+    TROLLEY_NEUTRAL_POS = Point3(15, 14, -1)
     TROLLEY_GONE_POS = Point3(50, 14.1588, -0.984615)
     TROLLEY_ARRIVING_START_POS = Point3(-20, 14.1588, -0.984615)
     CAM_POS = Point3(-36.1269, 0.742999, 7.3503)

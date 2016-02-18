@@ -3468,7 +3468,7 @@ ToonTips = [
     "Make sure you know where you're going! You cannot teleport around anywhere when you're in CogTropolis.",
     "Try to use weaker gags when around weaker Cogs to conserve Jellybeans.",
     "You can use the Gags page in your Shticker Book to change the Gags you can use.",
-    "Press DELETE or click the Throw Gag button to use a Gag!",
+    "Press ALT or click the Throw Gag button to use a Gag!",
     "You can click on other Toons to make friends with them!",
     "The Friends List is unlimited for now!",
     "Any blank spots you see on the Gags page in your Shticker Book represent Gags that are not implemented yet.",
@@ -3509,5 +3509,5 @@ ToonTips = [
     "You can enter a playground Cog battle with up to 8 Toons!",
     "You must wait until a used Gag has completed before being able to use another one.",
     "Use Toon-Up gags to heal fellow Toons at any time!",
-    "You can throw pies at other Toons to heal them up.",
+    "Use Squirt or Throw gags on fellow Toons to heal them up!",
     "Some gags (mostly Drop gags) require you to aim where you want them to go using your mouse."]

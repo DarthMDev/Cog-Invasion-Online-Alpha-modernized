@@ -9,6 +9,7 @@ from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
 from lib.coginvasion.globals import CIGlobals
 from CogOfficeSuitBrainAI import CogOfficeSuitBrainAI
 from CogOfficeConstants import POINTS
+import random
 
 CHAIR_2_BATTLE_TIME = 9.0
 
@@ -83,6 +84,8 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         taskMgr.remove(self.uniqueName('monitorHealth'))
         taskMgr.doMethodLater(CHAIR_2_BATTLE_TIME, self.chair2BattleTask, self.uniqueName('chair2BattleTask'))
         points = self.getPoints('battle')
+        if self.battleStartPoint < 0 or self.battleStartPoint >= len(points):
+            self.battleStartPoint = points.index(random.choice(points))
         point = points[self.battleStartPoint]
         self.setPosHpr(*point)
         

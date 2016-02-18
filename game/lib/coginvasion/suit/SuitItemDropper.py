@@ -69,7 +69,7 @@ class SuitItemDropper:
             drop = self.suitDrops[i]
             x, y, z = self.suit.getPos(render)
             if i > 0:
-                x += random.uniform(-5.0, 5.0)
+                x += random.uniform(-2.5, 2.5)
                 y += random.uniform(-5.0, 5.0)
             drop.d_setX(x)
             drop.d_setY(y)

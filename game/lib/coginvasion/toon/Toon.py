@@ -408,10 +408,6 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.removePart('legs')
         self.detachGun()
 
-    def enterGagShop(self):
-        DirectLabel(text="ENTERED GAG SHOP", relief=None, text_scale=0.08)
-        return
-
     def setAdminToken(self, tokenId):
         if tokenId in ToonGlobals.STAFF_TOKENS.keys():
             icons = loader.loadModel("phase_3/models/props/gm_icons.bam")

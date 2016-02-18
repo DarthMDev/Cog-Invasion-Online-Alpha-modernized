@@ -871,7 +871,6 @@ class LocalToon(DistributedToon):
         self.disablePies()
         self.disableChatInput()
         self.weaponType = None
-        self.pieType = None
         self.myBattle = None
         self.ignore("gotLookSpot")
         self.ignore("clickedWhisper")

@@ -91,13 +91,20 @@ class Shop(StateData):
         name = gag.getName()
         supply = self.backpack.getSupply(name)
         maxSupply = self.backpack.getMaxSupply(name)
+        vowels = ['a', 'e', 'i', 'o', 'u']
         if supply < maxSupply:
             if not hasattr(self.originalSupply, 'keys'):
                 self.originalSupply = {gag.getID() : supply}
             else:
                 self.originalSupply.update({gag.getID() : supply})
             base.localAvatar.setMoney(base.localAvatar.getMoney() - values.get('price'))
-            self.window.showInfo('Purchased a %s' % (name), duration = 3)
+            
+            # Let's check the first letter of the name for a vowel.
+            infoPrefix = 'Purchased a %s'
+            if name[0].lower() in vowels:
+                infoPrefix = 'Purchased an %s'
+            
+            self.window.showInfo('%s' % ((infoPrefix % (name))), duration = 3)
             base.localAvatar.setGagAmmo(gag.getID(), supply + 1)
 
     def __purchaseHealItem(self, item, values):
