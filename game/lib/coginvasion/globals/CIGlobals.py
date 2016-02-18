@@ -3477,7 +3477,7 @@ ToonTips = [
     "The only Minigame that works as single player is UNO.",
     "Different Minigames give different amounts of jellybeans.",
     "You can choose between Capture the Flag and Casual Mode in Toon Battle!",
-    "You can choose between the Pistol and the Shotgun in Toon Battle!",
+    "You can choose between the Pistol, Shotgun, and the Sniper in Toon Battle!",
     "You can play with up to 7 other Toons in Toon Battle!",
     "You can choose between the Blue Bloodsuckers and the Red Robber Barons in Toon Battle!",
     "Wild Cards in UNO allow you to choose any color you want.",

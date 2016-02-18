@@ -15,6 +15,8 @@ class Bullet(DirectObject):
     damageFactor = 15.0
     max_dmg = 36
     ShotgunBulletSpeed = 300.0
+    SniperBulletSpeed = 400.0	
+	
 
     def __init__(self, mg, gunNozzle, local, gunName):
         self.mg = mg
@@ -65,6 +67,10 @@ class Bullet(DirectObject):
             self.bullet.setHpr(self.gunNozzle, random.uniform(89, 91), random.uniform(-1.0, 1.0), 0)
             self.bullet.setPos(self.gunNozzle.getPos(render))
             taskMgr.add(self.fireShotgunBulletTask, "shotgunBulletTask" + str(id(self)))
+        elif self.gunName == "sniper":
+            self.bullet.setHpr(self.gunNozzle, random.uniform(89, 91), random.uniform(-1.0, 1.0), 0)
+            self.bullet.setPos(self.gunNozzle.getPos(render))
+            taskMgr.add(self.fireSniperBulletTask, "snipergunBulletTask" + str(id(self)))				
         if self.local:
             self.acceptOnce('bulletCollNode-' + str(id(self)) + '-into', self.handleCollision)
         self.removeTrack = Sequence()
@@ -76,6 +82,10 @@ class Bullet(DirectObject):
     def fireShotgunBulletTask(self, task):
         self.bullet.setY(self.bullet, self.ShotgunBulletSpeed * globalClock.getDt())
         return task.cont
+		
+    def fireSniperBulletTask(self, task):
+        self.bullet.setY(self.bullet, self.SniperBulletSpeed * globalClock.getDt())
+        return task.cont				
 
     def calculateDamage(self, task):
         self.timeSinceShoot += 0.01
@@ -85,6 +95,7 @@ class Bullet(DirectObject):
     def deleteBullet(self):
         self.ignore('bulletCollNode-' + str(id(self)) + '-into')
         taskMgr.remove("shotgunBulletTask" + str(id(self)))
+        taskMgr.remove("snipergunBulletTask" + str(id(self)))			
         taskMgr.remove("calculateBulletDamage" + str(id(self)))
         if hasattr(self, 'timeSinceShoot'):
             del self.timeSinceShoot
@@ -107,3 +118,5 @@ class Bullet(DirectObject):
     def handleCollision(self, entry):
         taskMgr.remove("calculateBulletDamage" + str(id(self)))
         taskMgr.remove("shotgunBulletTask" + str(id(self)))
+        taskMgr.remove("snipergunBulletTask" + str(id(self)))
+		

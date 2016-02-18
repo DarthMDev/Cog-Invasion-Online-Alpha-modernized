@@ -79,6 +79,9 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         if self.gunName == 'shotgun':
             color = GGG.TeamColorById[self.team]
             self.avatar.gun.setColorScale(color)
+        elif self.gunName == 'sniper':
+            color = GGG.TeamColorById[self.team]
+            self.avatar.gun.setColorScale(color)			
 
     def getGunName(self):
         return self.gunName
@@ -182,6 +185,9 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 elif self.gunName == "shotgun":
                     b1 = Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)
                     b2 = Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)
+                elif self.gunName == "sniper":
+                    b1 = Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)
+                    b2 = Bullet(self.mg, self.avatar.gun.find('**/joint_nozzle'), 0, self.gunName)						
 
             def changeToLegAnim():
                 if not self.avatar:
@@ -192,6 +198,8 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/pistol_shoot.wav")
             elif self.gunName == "shotgun":
                 gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
+            elif self.gunName == "sniper":
+                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")					
             base.audio3d.attachSoundToObject(gunSound, self.avatar)
             SoundInterval(gunSound, node = self.avatar).start()
             self.track = Sequence(

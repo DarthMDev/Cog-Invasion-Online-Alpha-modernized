@@ -273,6 +273,8 @@ class DistributedGunGame(DistributedToonFPSGame):
             command = self.__gunChoice, extraArgs = ["pistol"], pos = (0, 0, 0.35), parent = self.container)
         self.shotgunBtn = DirectButton(geom = geom, text = "Shotgun", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
             command = self.__gunChoice, extraArgs = ["shotgun"], pos = (0, 0, 0.25), parent = self.container)
+        self.sniperBtn = DirectButton(geom = geom, text = "Sniper", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
+            command = self.__gunChoice, extraArgs = ["sniper"], pos = (0, 0, 0.15), parent = self.container)			
 
     def __gunChoice(self, choice):
         self.toonFps.cleanup()
@@ -283,6 +285,8 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.fsm.request('waitForOthers')
 
     def exitChooseGun(self):
+        self.sniperBtn.destroy()
+        del self.sniperBtn		
         self.shotgunBtn.destroy()
         del self.shotgunBtn
         self.pistolBtn.destroy()

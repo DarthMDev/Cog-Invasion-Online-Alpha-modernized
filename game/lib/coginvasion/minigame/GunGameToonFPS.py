@@ -23,7 +23,10 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         if self.weaponName == 'shotgun':
             color = GGG.TeamColorById[self.mg.team]
             self.weapon.setColorScale(color)
-
+        elif self.weaponName == 'sniper':
+            color = GGG.TeamColorById[self.mg.team]
+            self.weapon.setColorScale(color)			
+			
     def resetStats(self):
         self.points = 0
         self.kills = 0
@@ -101,6 +104,9 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         elif self.weaponName == "shotgun":
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
+        elif self.weaponName == "sniper":
+            GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
+            GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)			
         self.mg.d_gunShot()
 
     def traverse(self):

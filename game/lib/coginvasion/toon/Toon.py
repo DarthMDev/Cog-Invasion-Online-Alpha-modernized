@@ -285,6 +285,22 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
             )
             self.gun.setColorScale(color)
             self.gunAttached = True
+        elif gunName == "sniper":
+            self.gun = loader.loadModel("phase_4/models/props/sniper.egg")
+            self.gun.setScale(0.75)
+            self.gun.reparentTo(self.find('**/joint_Rhold'))
+            self.gun.setPos(Point3(-0.5, -0.2, 0.19))
+            self.gun.setHpr(Vec3(350, 272.05, 0))
+            color = random.choice(
+                [
+                    VBase4(1, 0.25, 0.25, 1),
+                    VBase4(0.25, 1, 0.25, 1),
+                    VBase4(0.25, 0.25, 1, 1)
+                ]
+            )
+            self.gun.setColorScale(color)
+            self.gunAttached = True
+						
 
     def detachGun(self):
         if self.gun and self.gunAttached:
