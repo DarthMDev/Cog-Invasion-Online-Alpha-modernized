@@ -31,9 +31,9 @@ class ShtickerBook(StateData):
          State('districtPage', self.enterDistrictPage, self.exitDistrictPage, ['optionPage', 'questPage', 'off']),
          State('questPage', self.enterQuestPage, self.exitQuestPage, ['inventoryPage', 'districtPage', 'off']),
          State('inventoryPage', self.enterInventoryPage, self.exitInventoryPage, ['mapPage', 'questPage', 'off']),
-         State('mapPage', self.enterMapPage, self.exitMapPage, ['releaseNotesPage', 'inventoryPage', 'off']),
+         State('mapPage', self.enterMapPage, self.exitMapPage, ['inventoryPage', 'off']),
          State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['mapPage', 'off']),
-         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['releaseNotesPage', 'off'])], 'off', 'off')
+         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'off'])], 'off', 'off')
         if base.localAvatar.getAdminToken() > -1:
             self.fsm.getStateNamed('releaseNotesPage').addTransition('adminPage')
         self.fsm.enterInitialState()
@@ -229,7 +229,10 @@ class ShtickerBook(StateData):
         self.clearTitle()
 
     def enterMapPage(self):
-        self.createPageButtons('inventoryPage', 'releaseNotesPage')
+        if base.localAvatar.getAdminToken() > -1:
+            self.createPageButtons('inventoryPage', 'adminPage')
+        else:
+            self.createPageButtons('inventoryPage', None)
         self.setTitle("")
 
         themap = loader.loadModel('phase_3.5/models/gui/toontown_map.bam')
@@ -353,7 +356,10 @@ class ShtickerBook(StateData):
         if hasattr(self, 'MGAButton'):
             self.MGAButton.destroy()
             del self.MGAButton
-        self.deletePageButtons(True, True)
+        if base.localAvatar.getAdminToken() > -1:
+            self.deletePageButtons(True, True)
+        else:
+            self.deletePageButtons(True, False)
         self.clearTitle()
 
     def enterZonePage(self):

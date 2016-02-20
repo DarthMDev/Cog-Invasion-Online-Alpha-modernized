@@ -23,7 +23,7 @@ VICTORY_TIME = 5.0
 
 class DistributedCogOfficeBattleAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedCogOfficeBattleAI')
-    UNIQUE_FLOORS = [1, 2, 3]
+    UNIQUE_FLOORS = []
 
     def __init__(self, air, numFloors, dept, hood, bldg, exteriorZoneId):
         DistributedObjectAI.__init__(self, air)
@@ -60,17 +60,17 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             self.deptClass = Dept.SALES
         elif dept == 'm':
             self.deptClass = Dept.CASH
-            
+
     def getExteriorZoneId(self):
         return self.exteriorZoneId
-    
+
     def getBldgDoId(self):
         return self.bldgDoId
-            
+
     def iAmDead(self):
         avId = self.air.getAvatarIdFromSender()
         self.handleToonLeft(avId, 1)
-        
+
     def handleToonLeft(self, avId, died = 0):
         if avId in self.avatars:
             self.avatars.remove(avId)
@@ -84,13 +84,13 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         if len(self.avatars) == 0:
             self.resetEverything()
             self.bldg.elevator.b_setState('opening')
-            
+
     def getDrops(self):
         return self.drops
 
     def getDept(self):
         return self.dept
-        
+
     def getNumFloors(self):
         return self.numFloors
 
@@ -99,28 +99,28 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
 
     def exitOff(self):
         pass
-        
+
     def enterVictory(self):
         base.taskMgr.doMethodLater(VICTORY_TIME, self.victoryTask, self.uniqueName('victoryTask'))
-        
+
     def victoryTask(self, task):
         while len(self.avatars) < 4:
             self.avatars.append(None)
         self.bldg.fsm.request('waitForVictors', [self.avatars])
         return task.done
-        
+
     def exitVictory(self):
         base.taskMgr.remove(self.uniqueName('victoryTask'))
-        
+
     def enterFaceOff(self):
         base.taskMgr.doMethodLater(FACE_OFF_TIME, self.faceOffTask, self.uniqueName('faceOffTask'))
-        
+
     def faceOffTask(self, task):
         self.b_setState('battle')
         for suit in self.guardSuits:
             suit.toonsArrivedFromElevator()
         return task.done
-        
+
     def exitFaceOff(self):
         base.taskMgr.remove(self.uniqueName('faceOffTask'))
 
@@ -145,13 +145,16 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.elevators[1].b_setState('opening')
         self.elevators[0].b_setState('closed')
         self.readyAvatars = []
-        
+
     def readyForNextFloor(self):
         avId = self.air.getAvatarIdFromSender()
         if not avId in self.readyAvatars:
             self.readyAvatars.append(avId)
         if len(self.readyAvatars) == len(self.avatars):
-            self.startFloor(EXECUTIVE_FLOOR)
+            if self.currentFloor == RECEPTION_FLOOR:
+                self.startFloor(CONFERENCE_FLOOR)
+            elif self.currentFloor == CONFERENCE_FLOOR:
+                self.startFloor(EXECUTIVE_FLOOR)
 
     def exitFloorIntermission(self):
         pass
@@ -197,39 +200,39 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         elevator1.b_setState('closed')
         self.elevators.append(elevator1)
         self.resetBattlePoints()
-        
+
     def resetBattlePoints(self):
         self.availableBattlePoints = self.getPoints('battle')
-        
+
     def getPoints(self, name):
         if self.currentFloor in self.UNIQUE_FLOORS:
             dataList = POINTS[self.deptClass][self.currentFloor][name]
         else:
             dataList = POINTS[self.currentFloor][name]
         return dataList
-        
+
     def cleanupDrops(self):
         for drop in self.drops:
             drop.requestDelete()
         self.drops = []
-        
+
     def cleanupChairSuits(self):
         for suit in self.chairSuits:
             suit.disable()
             suit.requestDelete()
         self.chairSuits = []
-        
+
     def cleanupGuardSuits(self):
         for suit in self.guardSuits:
             suit.disable()
             suit.requestDelete()
         self.guardSuits = []
-        
+
     def cleanupElevators(self):
         for elevator in self.elevators:
             elevator.requestDelete()
         self.elevators = []
-        
+
     def resetEverything(self):
         self.currentFloor = 0
         self.avId2suitsAttacking = {}
@@ -242,7 +245,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         for elevator in self.elevators:
             elevator.b_setState('closed')
         self.b_setState('off')
-        
+
     def delete(self):
         self.fsm.requestFinalState()
         self.fsm = None
@@ -270,7 +273,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.exteriorZoneId = None
         self.availableBattlePoints = None
         DistributedObjectAI.delete(self)
-        
+
     def deadSuit(self, doId):
         foundIt = False
         for suit in self.guardSuits:
@@ -286,23 +289,23 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             for suit in self.chairSuits:
                 if suit.doId == doId:
                     self.chairSuits.remove(suit)
-        
+
         if len(self.guardSuits) + len(self.chairSuits) == 0:
             if self.currentFloor < self.numFloors - 1:
                 self.b_setState('floorIntermission')
             else:
                 self.b_setState('victory')
-                    
+
     def getHoodIndex(self):
         return CogBattleGlobals.hi2hi[self.hood]
-        
+
     def makeSuit(self, guardPoint, isChair, boss = False):
         levelRange = SuitBuildingGlobals.buildingMinMax[CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(self.zoneId)]]
         availableSuits = []
         minLevel = levelRange[0]
         maxLevel = levelRange[1]
         battlePoint = None
-        
+
         if not boss:
             maxLevel -= 1
         else:
@@ -317,7 +320,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                     availableSuits.remove(suit)
             battlePoint = self.availableBattlePoints.index(random.choice(self.availableBattlePoints))
             self.availableBattlePoints.pop(battlePoint)
-        
+
         plan = random.choice(availableSuits)
         suit = DistributedCogOfficeSuitAI(self.air, self, guardPoint, battlePoint, isChair, self.hood)
         suit.setManager(self)

@@ -54,7 +54,7 @@ class DistributedCogOfficeBattle(DistributedObject):
     notify = directNotify.newCategory('DistributedCogOfficeBattle')
     CEILING_COLOR = (187.0 / 255, 174.0 / 255, 155.0 / 255)
     FLOOR_NAMES = {RECEPTION_FLOOR: 'Reception Floor', EXECUTIVE_FLOOR: 'Executive Floor'}
-    UNIQUE_FLOORS = [1, 2, 3]
+    UNIQUE_FLOORS = []
     UNIQUE_FLOOR_NAMES = {
         Dept.BOSS: {1: 'Stock Floor', 2: 'Board of Directors Floor', 3: 'Human Resources Floor'},
         Dept.SALES: {1: 'Marketing Floor', 2: 'Advertising Floor', 3: 'Telemarketing Floor'},
@@ -84,6 +84,59 @@ class DistributedCogOfficeBattle(DistributedObject):
                     ],
                     'room_mdl': 'phase_7/models/modules/cog_bldg_reception_flr.bam',
                     'grounds': ['**/floor']
+                },
+                CONFERENCE_FLOOR: {'props': [
+                        # Small room:
+                        ['rug', -65.579, 10.385, 0, 0, 0, 0, 1],
+                        ['computer_monitor', -54.654, -3.465, 2.936, -71.131, 0, 0, 1],
+                        ['coffee_cup', -54.86, 0.737, 2.944, 0, 0, 0, 1],
+                        ['phone', -50.311, -9.308, 2.924, 135.085, 0, 0, 1],
+                        ['fax_paper', -52.981, -6.703, 2.999, 136.571, 0, 0, 1],
+                        ['fax_paper', -53.37, -5.966, 3.03, 95.802, 0, 0, 1],
+                        ['clock', -23.238, 9.498, 9.774, 0, 0, -90, 1],
+                        ['plant', -69.375, -15.463, 0, 0, 0, 0, 12],
+
+                        # Large room:
+                        ['rug', -0.154, 97.92, 0, -90, 0, 0, 1],
+                        ['computer_monitor', -7.03, 38.038, 4.041, -19.157, 0, 0, 1],
+                        ['computer_monitor', 8.556, 61.953, 4.041, 151.592, 0, 0, 1],
+                        ['phone', 0.248, 37.86, 4.029, 187.058, 0, 0, 1],
+                        ['phone', 1.401, 62.189, 4.029, -2.193, 0, 0, 1],
+                        ['coffee_cup', -10.467, 40.465, 4.048, 51.974, 0, 0, 1],
+                        ['coffee_cup', 11.361, 57.896, 4.048, 222.722, 0, 0, 1],
+                        ['coffee_cup', -0.512, 61.659, 4.006, 22.722, 0, 0, 1],
+                        ['fax_paper', 5.12, 62.087, 4.104, -0.707, 0, 0, 1],
+                        ['fax_paper', 5.916, 61.809, 4.136, -41.476, 0, 0, 1],
+                        ['fax_paper', 11.564, 55.186, 4.104, -59.581, 0, 0, 1],
+                        ['fax_paper', 11.298, 53.671, 4.136, 259.65, 0, 0, 1],
+                        ['fax_paper', -4.269, 37.509, 4.136, -56.235, 0, 0, 1],
+                        ['fax_paper', -3.449, 37.361, 4.104, 188.545, 0, 0, 1],
+                        ['fax_paper', 2.398, 37.509, 4.136, 240.206, 0, 0, 1],
+                        ['fax_paper', 3.218, 37.361, 4.104, 188.545, 0, 0, 1],
+                        ['LB_chairA', -4.365, 45.791, 0, -26.36, 0, 0, 1],
+                        ['LB_chairA', 4.786, 53.639, 0, 154.075, 0, 0, 1],
+                        ['LB_chairA', -46.244, 0.138, 0, -67.991, 0, 0, 1],
+                        ['photo_frame', 27.72, 43.508, 8.515, 180, 0, 90, 1],
+                        ['clock', 1.507, -20.368, 9.956, 90, 180, 90, 1],
+                        ['plant', -19.403, 102.276, 0, 0, 0, 0, 12],
+                        ['plant', 20.816, 101.992, 0, 0, 0, 0, 12],
+                        ['meeting_table', 17.88, 1.69, 0, 0, 0, 0, 1],
+                        ['square_shadow', 17.88, 1.69, 0, 0, 0, 0, Point3(2, 3.5, 1)],
+                        ['LB_chairA', 17.86, -12.04, 0, 180, 0, 0, 1],
+                        ['LB_chairA', 17.86, 14.93, 0, 0, 0, 0, 1],
+                        ['LB_chairA', 8.932, -2.7, 0, 90, 0, 0, 1],
+                        ['LB_chairA', 8.932, 5.559, 0, 90, 0, 0, 1],
+                        ['fax_paper', 17.91, -7.17, 3.42, 0, 0, 0, 1],
+                        ['fax_paper', 13.67, -2.82, 3.389, 280.499, 0, 0, 1],
+                        ['fax_paper', 13.67, 5.33, 3.412, 270, 0, 0, 1],
+                        ['fax_paper', 17.681, 10.56, 3.424, 180, 0, 0, 1]
+                    ],
+                    'elevators': [
+                        [-73.22, 11.08, 0, 90, 0, 0],
+                        [0.22, 105.86, 0, 0, 0, 0],
+                    ],
+                    'room_mdl': 'phase_7/models/modules/cog_bldg_confrence_flr.bam',
+                    'grounds': []
                 },
                 EXECUTIVE_FLOOR: {'props': [
                         ['BR_sky', 0, 0, -100, 0, 0, 0, 1],
