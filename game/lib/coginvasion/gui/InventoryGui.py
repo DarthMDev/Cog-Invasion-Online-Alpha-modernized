@@ -36,7 +36,7 @@ class Slot(DirectFrame):
         self.gagLabel = OnscreenText(text = "Birthday Cake", fg = (1, 1, 1, 1), parent = self,
                                        scale = 0.25, shadow = (0, 0, 0, 1), align = TextNode.ACenter,
                                        pos = (0, -0.9), mayChange = 1)
-        self.gagLabel.setBin('fixed', 40)
+        self.gagLabel.setBin('fixed', 50)
         self.gagLabel.hide()
         
         self.hoverObj = DirectButton(relief = None, parent = self, frameSize = self['frameSize'])

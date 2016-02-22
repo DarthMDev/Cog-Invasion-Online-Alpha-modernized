@@ -353,7 +353,7 @@ class CogInvasionClientRepository(AstronClientRepository):
             obj = self.doId2do[doId]
             if hasattr(base, 'localAvatar'):
                 if doId != base.localAvatar.doId:
-                    if not obj.__class__.__name__ in ['ClientServicesManager', 'DistributedDistrict', 'FriendsManager', 'HolidayManager']:
+                    if not obj.__class__.__name__ in ['ClientServicesManager', 'DistributedDistrict', 'FriendsManager', 'HolidayManager', 'NameServicesManager']:
                         self.deleteObject(doId)
             else:
                 self.deleteObject(doId)
@@ -372,6 +372,7 @@ class CogInvasionClientRepository(AstronClientRepository):
     def handleLoginAccepted(self):
         self.notify.info("Woo-hoo, I am authenticated!")
         base.cr.holidayManager = self.generateGlobalObject(DO_ID_HOLIDAY_MANAGER, 'HolidayManager')
+        base.cr.nameServicesManager = self.generateGlobalObject(DO_ID_NAME_SERVICES_MANAGER, 'NameServicesManager')
         self.loginFSM.request('waitForShardList')
 
     def handleConnectFail(self, foo1, foo2):

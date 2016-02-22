@@ -8,7 +8,7 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.SoundGag import SoundGag
-from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval, ActorInterval, ParticleInterval
+from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval, ParticleInterval
 from panda3d.core import Vec3, Point3
 from direct.particles.ParticleEffect import ParticleEffect
 
@@ -26,11 +26,10 @@ class Opera(SoundGag):
         sprayEffect.setDepthWrite(0)
         sprayEffect.setDepthTest(0)
         sprayEffect.setTwoSided(1)
-        I1 = 2.8
-        track.append(ActorInterval(self.avatar, 'sound', playRate=1.0, startTime=0.0, endTime=I1))
+        track.append(Func(self.avatar.play, 'sound', toFrame = 66))
         track.append(Func(self.setPosFromOther, sprayEffect, self.gag, Point3(0, 1.6, -0.18)))
         track.append(self.__getPartTrack(sprayEffect, 0.0, 6.0, [sprayEffect, self.avatar, 0], softStop=-3.5))
-        track.append(ActorInterval(self.avatar, 'sound', playRate=1.0, startTime=I1))
+        track.append(Func(self.avatar.play, 'sound', fromFrame = 66))
         return track
 
     def __getPartTrack(self, particleEffect, startDelay, durationDelay, partExtraArgs, softStop = 0):

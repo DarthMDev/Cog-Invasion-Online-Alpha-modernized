@@ -69,7 +69,7 @@ class Lipstick(ToonUpGag):
         )
         delay = tThrow + dScale
         mainTrack = Parallel(stickTrack, lipsTrack, self.getSoundTrack(delay, self.avatar, 2),
-                             Sequence(ActorInterval(self.avatar, self.avAnim)))
+                             Sequence(Func(self.avatar.play, self.avAnim)))
         mainTrack.start()
 
     def setTarget(self, target):

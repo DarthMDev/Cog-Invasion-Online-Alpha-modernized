@@ -9,7 +9,7 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.ToonUpGag import ToonUpGag
 from direct.particles.ParticleEffect import ParticleEffect
-from direct.interval.IntervalGlobal import Parallel, Sequence, Func, ActorInterval, Wait, ParticleInterval
+from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, ParticleInterval
 from panda3d.core import Point3
 
 class PixieDust(ToonUpGag):
@@ -53,7 +53,7 @@ class PixieDust(ToonUpGag):
                           self.__getPartTrack(explodeEffect, 2.7, 1.0, [explodeEffect, self.avatar, 0]),
                           self.__getPartTrack(poofEffect, 3.4, 1.0, [poofEffect, target, 0]),
                           self.__getPartTrack(wallEffect, 4.05, 1.2, [wallEffect, self.avatar, 0]),
-                          self.getSoundTrack(0, self.avatar, 4.1), Sequence(Func(face90), ActorInterval(self.avatar, 'sprinkle-dust')),
+                          self.getSoundTrack(0, self.avatar, 4.1), Sequence(Func(face90), Func(self.avatar.play, 'sprinkle-dust')),
                           Sequence(Wait(delay), Func(doHeal)))
         track.append(mtrack)
         track.append(Func(self.reset))

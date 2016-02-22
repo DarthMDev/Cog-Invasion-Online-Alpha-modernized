@@ -32,6 +32,7 @@ prevShops = {"body": "gender",
 
 class MakeAToon:
     MSG_BADNAME = 'Sorry, that name will not work.'
+    MSG_NAMEPENDING = 'Great! Until your name is accepted by Toon Council, your name will be %s.'
 
     def __init__(self):
         self.toonMade = 0
@@ -218,7 +219,30 @@ class MakeAToon:
             base.acceptOnce('badNameAck', self.__handleBadNameAck)
             self.badNameDialog.show()
             return
-        self.__handleExit("finished")
+        else:
+            dialogMsg = self.MSG_NAMEPENDING
+            toon = self.toonGen.toon
+            headColor = toon.getHeadColor()
+            requestedName = self.toonName
+            
+            # We need to get the name of the head color.
+            for colorName, color in toon.colorName2DNAcolor.iteritems():
+                if headColor == color:
+                    colorName = colorName.title()
+                    self.toonName = "%s %s" % (colorName, toon.getAnimal().title())
+                    dialogMsg = dialogMsg % self.toonName
+                    break
+
+            self.nameInfoDialog = Dialog.GlobalDialog(message = dialogMsg,
+                doneEvent = 'nameInfoAck', style = Dialog.Ok)
+            base.acceptOnce('nameInfoAck', self.__handleNameInfoAck, [requestedName])
+            base.cr.nameServicesManager.d_requestName(requestedName)
+            self.nameInfoDialog.show()
+        
+    def __handleNameInfoAck(self, requestedName):
+        self.__handleExit('finished')
+        self.nameInfoDialog.cleanup()
+        del self.nameInfoDialog
 
     def __handleBadNameAck(self):
         self.badNameDialog.cleanup()

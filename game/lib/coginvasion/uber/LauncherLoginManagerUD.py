@@ -5,7 +5,7 @@
 
 """
 
-from panda3d.core import *
+from panda3d.core import NetDatagram, Datagram
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from lib.coginvasion.uber import LoginTokenGenerator
 

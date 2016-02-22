@@ -64,7 +64,7 @@ class FireHose(SquirtGag):
         dHoseHold = 0.7
         tSprayDelay = 2.8
         track = Parallel()
-        toonTrack = Sequence(Wait(tAppearDelay), ActorInterval(self.avatar, 'firehose'), Func(self.avatar.loop, 'neutral'))
+        toonTrack = Sequence(Wait(tAppearDelay), Func(self.avatar.play, 'firehose'), Func(self.avatar.loop, 'neutral'))
         sprayTrack = Sequence(Wait(tSprayDelay), Func(self.release))
         propTrack = Sequence(Func(self.hydrantNode.reparentTo, self.avatar), LerpScaleInterval(self.hydrantScale, tAppearDelay * 0.5, Point3(1, 1, 1.4),
             startScale=Point3(1, 1, 0.01)), LerpScaleInterval(self.hydrantScale, tAppearDelay * 0.3, Point3(1, 1, 0.8), startScale=Point3(1, 1, 1.4)),

@@ -3,7 +3,7 @@
 
 from panda3d.core import Point3, VBase3
 
-from direct.interval.IntervalGlobal import Sequence, ActorInterval, Parallel, Wait, Func
+from direct.interval.IntervalGlobal import Sequence, Parallel, Wait, Func
 
 from lib.coginvasion.globals import CIGlobals
 from SquirtGag import SquirtGag
@@ -48,21 +48,26 @@ class WaterGun(SquirtGag):
 
         track = Parallel(
             Sequence(
-                ActorInterval(
-                    self.avatar,
-                    "squirt",
-                    #partName = 'torso',
-                    startFrame = 48,
-                    endFrame = 58
+                Func(self.avatar.setPlayRate, 
+                    1.0, 
+                    'squirt'
+                ),
+                Func(self.avatar.play,
+                    'squirt',
+                    fromFrame = 48,
+                    toFrame = 58,
+                    partName = 'torso'
                 ),
                 Wait(1.0),
-                ActorInterval(
-                    self.avatar,
-                    "squirt",
-                    #partName = 'torso',
-                    startFrame = 107,
-                    endFrame = 126,
-                    playRate = 3
+                Func(self.avatar.setPlayRate, 
+                    3.0, 
+                    'squirt'
+                ),
+                Func(self.avatar.play,
+                    'squirt',
+                    fromFrame = 107,
+                    toFrame = 126,
+                    partName = 'torso'
                 )
             ),
             Sequence(

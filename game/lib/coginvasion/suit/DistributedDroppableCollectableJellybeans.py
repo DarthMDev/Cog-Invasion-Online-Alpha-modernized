@@ -16,7 +16,7 @@ class DistributedDroppableCollectableJellybeans(DistributedDroppableCollectableO
         DistributedDroppableCollectableObject.__init__(self, cr)
     
     # Use wait to delay the actual delete of the object.
-    def handleCollisions(self, avId, wait = None):
+    def handleCollisions(self, avId, wait = 0):
         SoundInterval(self.collectSfx).start()
         DistributedDroppableCollectableObject.handleCollisions(self, avId, wait)
         

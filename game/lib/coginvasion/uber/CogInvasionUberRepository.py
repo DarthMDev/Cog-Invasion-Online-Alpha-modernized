@@ -10,7 +10,6 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.distributed.DistributedRootAI import DistributedRootAI
 from lib.coginvasion.distributed.CogInvasionDoGlobals import *
 from direct.distributed.ParentMgr import ParentMgr
-from direct.task import Task
 import LoginToken
 
 STORE_LOGIN_TOKEN = 100
@@ -151,3 +150,5 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
         self.holidayManager = self.generateGlobalObject(DO_ID_HOLIDAY_MANAGER,
                                 'HolidayManager')
         self.holidayManager.setHoliday(self.holiday)
+        self.nsm = self.generateGlobalObject(DO_ID_NAME_SERVICES_MANAGER,
+                                'NameServicesManager')

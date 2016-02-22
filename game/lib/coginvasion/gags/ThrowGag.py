@@ -143,6 +143,10 @@ class ThrowGag(Gag):
                         else:
                             self.avatar.acceptOnce('gagSensor-into', self.onCollision)
                             return
+            elif obj.__class__.__name__ == "DistributedPieTurret":
+                if obj.getKey() == avNP.getKey():
+                    if obj.getHealth() < obj.getMaxHealth():
+                        self.avatar.sendUpdate('toonHitByPie', [obj.doId, self.getID()])
 
         self.splatPos = fromNP.getPos()
         self.avatar.sendUpdate('setSplatPos', [self.getID(), self.splatPos.getX(), self.splatPos.getY(), self.splatPos.getZ()])

@@ -6,7 +6,7 @@
 """
 
 from LocationSeeker import LocationSeeker
-from direct.interval.IntervalGlobal import Sequence, ActorInterval, Func, Wait, SoundInterval
+from direct.interval.IntervalGlobal import Sequence, Func, Parallel, SoundInterval, Wait
 from direct.gui.DirectGui import OnscreenText
 from panda3d.core import Point3
 from lib.coginvasion.globals import CIGlobals
@@ -44,13 +44,19 @@ class LocationGag:
         self.cleanupLocationSeeker()
         self.buildButton()
         self.button.reparentTo(self.avatar.find('**/joint_Lhold'))
-        track = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = 0, endFrame = self.chooseLocFrame,
-                                       playRate = self.playRate))
+        buttonAnimDuration = self.avatar.getDuration(self.buttonAnim, toFrame = self.chooseLocFrame)
+        
+        track = Parallel(
+            Sequence(Func(self.avatar.setPlayRate, self.playRate, self.buttonAnim),
+            Func(self.avatar.play, self.buttonAnim, toFrame = self.chooseLocFrame),
+            Wait(buttonAnimDuration),
+            Func(self.avatar.pose, self.buttonAnim, self.chooseLocFrame))
+        )
         if self.avatar == base.localAvatar:
             self.locationSeeker = LocationSeeker(self.avatar, self.minDistance, self.maxDistance)
             self.locationSeeker.setShadowType(self.isCircle, self.shadowScale)
             self.avatar.acceptOnce(self.locationSeeker.getLocationSelectedName(), base.localAvatar.releaseGag)
-            track.append(Func(self.locationSeeker.startSeeking))
+            track.append(Sequence(Func(self.locationSeeker.startSeeking)))
 
             self.helpInfo = OnscreenText(text = 'Move the shadow with your mouse\nClick to release',
                 pos = (0, -0.75), font = CIGlobals.getToonFont(), fg = (1, 1, 1, 1),
@@ -66,8 +72,11 @@ class LocationGag:
     def complete(self):
         if self.button:
             numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
-            ActorInterval(self.avatar, self.buttonAnim, startFrame = self.completeFrame, endFrame = numFrames,
-                          playRate = self.playRate).start()
+            waitDuration = self.avatar.getDuration(self.buttonAnim, fromFrame = self.completeFrame, toFrame = numFrames)
+            Sequence(Func(self.avatar.setPlayRate, self.playRate, self.buttonAnim),
+                Func(self.avatar.play, self.buttonAnim, fromFrame = self.completeFrame, toFrame = numFrames),
+                Wait(waitDuration)
+            )
         self.cleanupButton()
 
     def buildTracks(self, mode=0):
@@ -75,8 +84,11 @@ class LocationGag:
             return
         self.cleanupTracks()
         if mode == 0:
-            self.actorTrack = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = self.chooseLocFrame,
-                               endFrame = self.completeFrame, playRate = self.playRate))
+            waitDuration = self.avatar.getDuration(self.buttonAnim, fromFrame = self.chooseLocFrame, toFrame = self.completeFrame)
+            self.actorTrack = Sequence(Func(self.avatar.setPlayRate, self.playRate, self.buttonAnim),
+                Func(self.avatar.play, self.buttonAnim, fromFrame = self.chooseLocFrame, toFrame = self.completeFrame),
+                Wait(waitDuration)
+            )
             self.soundTrack = Sequence(Wait(self.buttonHold), SoundInterval(self.buttonSfx, node = self.avatar))
 
     def cleanupTracks(self):

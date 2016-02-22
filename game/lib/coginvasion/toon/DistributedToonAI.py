@@ -494,7 +494,13 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         hp = self.gagMgr.getGagByName(GagGlobals.getGagByID(gag_id)).getHealth()
         if obj:
             if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
-                obj.toonUp(hp)
+                if obj.__class__.__name__ == 'DistributedToonAI':
+                    obj.toonUp(hp)
+                else:
+                    if obj.getHealth() + hp > obj.getMaxHealth():
+                        hp = obj.getMaxHealth() - obj.getHealth()
+                    obj.b_setHealth(obj.getHealth() + hp)
+                    obj.d_announceHealth(1, hp)
 
     def announceGenerate(self):
         DistributedAvatarAI.announceGenerate(self)

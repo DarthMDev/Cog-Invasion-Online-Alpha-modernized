@@ -5,10 +5,9 @@
 
 """
 
-from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from DistributedDroppableCollectableJellybeans import DistributedDroppableCollectableJellybeans
-from direct.interval.IntervalGlobal import *
+from direct.interval.IntervalGlobal import SoundInterval
 
 class DistributedDroppableCollectableJellybeanJar(DistributedDroppableCollectableJellybeans):
 	notify = directNotify.newCategory("DistributedDroppableCollectableJellybeanJar")
@@ -32,7 +31,7 @@ class DistributedDroppableCollectableJellybeanJar(DistributedDroppableCollectabl
 
 	def handleCollisions(self, entry):
 		SoundInterval(self.tickSfx, startTime = 0.05, volume = 2.0).start()
-		DistributedDroppableCollectableJellybeans.handleCollisions(self, entry)
+		DistributedDroppableCollectableJellybeans.handleCollisions(self, base.localAvatar.doId)
 
 	def load(self):
 		self.tickSfx = base.loadSfx("phase_4/audio/sfx/MG_maze_pickup.mp3")

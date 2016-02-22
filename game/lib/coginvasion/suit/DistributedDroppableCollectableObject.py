@@ -70,13 +70,10 @@ class DistributedDroppableCollectableObject(DistributedNode):
         ModelPool.garbageCollect()
         TexturePool.garbageCollect()
 
-    def handleCollisions(self, avId, wait = None):
+    def handleCollisions(self, avId, wait = 0):
         # May be overridden if needed.
         if base.localAvatar.doId == avId:
-            if wait:
-                Sequence(Wait(wait), Func(self.sendUpdate, 'collectedObject', [])).start()
-            else:
-                self.sendUpdate("collectedObject", [])
+            Sequence(Wait(wait), Func(self.sendUpdate, 'collectedObject', [])).start()
 
     def acceptCollisions(self):
         self.acceptOnce("enter" + self.collSensorNodePath.node().getName(), self.handleCollisions)

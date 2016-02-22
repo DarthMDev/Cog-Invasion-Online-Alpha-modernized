@@ -5,12 +5,7 @@
   
 """
 
-from lib.coginvasion.globals import CIGlobals
-from direct.gui.DirectGui import *
-from panda3d.core import *
-from pandac.PandaModules import *
 from direct.directnotify.DirectNotify import DirectNotify
-from direct.actor.Actor import Actor
 from lib.coginvasion.toon import Toon
 import random
 

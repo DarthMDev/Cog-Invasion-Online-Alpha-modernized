@@ -11,7 +11,7 @@ from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.globals import CIGlobals
 from LocationGag import LocationGag
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import Sequence, Func, SoundInterval, Wait, LerpScaleInterval
+from direct.interval.IntervalGlobal import Sequence, Func, SoundInterval, Wait, LerpScaleInterval, Parallel
 from panda3d.core import CollisionHandlerFloor, Point3
 import abc
 
@@ -63,7 +63,7 @@ class DropGag(Gag, LocationGag):
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
         hitCog = False
-        self.fallSoundInterval.finish()
+        self.fallSoundInterval.pause()
         self.fallSoundInterval = None
         shrinkTrack = Sequence()
         if self.avatar.doId == base.localAvatar.doId:
@@ -103,14 +103,13 @@ class DropGag(Gag, LocationGag):
             self.startTimeout()
         self.build()
         self.isDropping = True
-        self.fallSoundInterval = SoundInterval(self.fallSfx, node = self.avatar)
         actorTrack = LocationGag.getActorTrack(self)
-        soundTrack = LocationGag.getSoundTrack(self)
+        self.fallSoundInterval = LocationGag.getSoundTrack(self)
         if actorTrack:
             actorTrack.append(Func(self.startDrop))
             actorTrack.start()
-            soundTrack.append(self.fallSoundInterval)
-            soundTrack.start()
+            self.fallSoundInterval.append(Parallel(SoundInterval(self.fallSfx, node = self.avatar)))
+            self.fallSoundInterval.start()
         if self.isLocal():
             base.localAvatar.sendUpdate('usedGag', [self.id])
 

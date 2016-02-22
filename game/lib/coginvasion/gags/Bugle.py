@@ -8,7 +8,7 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.SoundGag import SoundGag
-from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval, ActorInterval
+from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval
 from panda3d.core import Vec3
 
 class Bugle(SoundGag):
@@ -53,6 +53,6 @@ class Bugle(SoundGag):
         megaphoneTrack = Parallel(Sequence(Wait(1.7), SoundInterval(self.soundSfx, node=self.avatar)), Sequence(megaphoneShow, Wait(1.7), instrumentAppear, Wait(1),
                                            Func(self.damageCogsNearby), instrumentshrink, Wait(0.4), Func(self.finish)))
         tracks.append(megaphoneTrack)
-        tracks.append(ActorInterval(self.avatar, 'sound'))
+        tracks.append(Func(self.avatar.play, 'sound'))
         tracks.start()
         self.tracks = tracks

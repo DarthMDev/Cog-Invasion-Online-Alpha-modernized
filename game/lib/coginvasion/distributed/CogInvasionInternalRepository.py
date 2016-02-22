@@ -7,7 +7,7 @@
 
 from direct.distributed.AstronInternalRepository import AstronInternalRepository
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from lib.coginvasion.distributed.CogInvasionDoGlobals import *
+from lib.coginvasion.distributed.CogInvasionDoGlobals import DO_ID_COGINVASION
 
 class CogInvasionInternalRepository(AstronInternalRepository):
 	notify = directNotify.newCategory("CIInternalRepository")

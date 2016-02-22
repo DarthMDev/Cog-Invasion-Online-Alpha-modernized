@@ -34,6 +34,7 @@ from lib.coginvasion.minigame import DistributedDeliveryGameSuit/AI
 from lib.coginvasion.uber import ClientServicesManager/UD
 from lib.coginvasion.uber import LauncherLoginManager/UD
 from lib.coginvasion.uber import DistrictNameManager/AI/UD
+from lib.coginvasion.uber import NameServicesManager/UD
 from lib.coginvasion.cog import DistributedSuit/AI
 from lib.coginvasion.suit import DistributedSuitManager/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableObject/AI
@@ -119,6 +120,10 @@ dclass DistrictNameManager : DistributedObject {
   noAvailableNames();
   toonJoined(uint32) clsend;
   toonLeft(uint32) clsend;
+};
+
+dclass NameServicesManager : DistributedObject {
+  requestName(string name) clsend;
 };
 
 dclass LauncherLoginManager : DistributedObject {

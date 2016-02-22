@@ -6,7 +6,7 @@
 """
 
 from lib.coginvasion.gags.ChargeUpSpot import ChargeUpSpot
-from direct.interval.IntervalGlobal import Sequence, ActorInterval, Func
+from direct.interval.IntervalGlobal import Sequence, Func
 from direct.interval.IntervalGlobal import Wait, SoundInterval
 
 class ChargeUpGag:
@@ -35,8 +35,7 @@ class ChargeUpGag:
         self.avatar = avatar
         self.buildButton()
         self.button.reparentTo(self.avatar.find('**/joint_Lhold'))
-        track = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = 0, endFrame = self.chooseLocFrame,
-                                       playRate = self.playRate))
+        track = Sequence(Func(self.avatar.play, self.buttonAnim, toFrame = self.chooseLocFrame))
         if self.avatar == base.localAvatar:
             self.chargeUpSpot = ChargeUpSpot(self, self.avatar, self.selectionRadius,
                                               self.minDistance, self.maxDistance, self.shadowScale, self.maxCogs)
@@ -70,16 +69,15 @@ class ChargeUpGag:
 
     def complete(self):
         numFrames = base.localAvatar.getNumFrames(self.buttonAnim)
-        ActorInterval(self.avatar, self.buttonAnim, startFrame = self.completeFrame, endFrame = numFrames,
-                      playRate = self.playRate).start()
+        self.avatar.play(self.buttonAnim, fromFrame = self.completeFrame, toFrame = numFrames)
         self.cleanupButton()
 
     def buildTracks(self):
         if not self.avatar:
             return
         self.cleanupTracks()
-        self.actorTrack = Sequence(ActorInterval(self.avatar, self.buttonAnim, startFrame = self.chooseLocFrame,
-                           endFrame = self.completeFrame, playRate = self.playRate))
+        self.actorTrack = Sequence(Func(self.avatar.play, self.buttonAnim, fromFrame = self.chooseLocFrame,
+            toFrame = self.completeFrame, playRate = self.playRate))
         self.soundTrack = Sequence(Wait(self.buttonHold), SoundInterval(self.buttonSfx, node = self.avatar))
         self.actorTrack.start()
         self.soundTrack.start()

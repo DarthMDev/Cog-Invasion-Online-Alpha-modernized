@@ -23,15 +23,18 @@ uberdogs:
     - id: 1005
       class: HolidayManager
       anonymous: false
+    - id: 1006
+      class: NameServicesManager
+      anonymous: false
 
 roles:
     - type: clientagent
       bind: 0.0.0.0:7032
-      version: "ver-1.0.7"
+      version: "ver-1.1.0"
       #tls:
       #  certificate: ../../phase_3/etc/gameserver.crt
       #  key_file: ../rsakey.key
-      manual_dc_hash: 0x1d95b324
+      manual_dc_hash: 0x474331dc
       client:
        relocate: true
        add_interest: enabled
