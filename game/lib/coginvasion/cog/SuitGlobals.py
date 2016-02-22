@@ -1,15 +1,13 @@
-"""
-
-  Filename: SuitGlobals.py
-  Created by: DecodedLogic (31July15)
-
-"""
+########################################
+# Filename: SuitGlobals.py
+# Created by: DecodedLogic (31Jul15)
+########################################
 
 from lib.coginvasion.cog import Dept
 from lib.coginvasion.cog.SuitType import SuitType
 from panda3d.core import Vec4
 
-""" The following are all the suit names """
+# The following are all the suit names
 
 TheBigCheese = 'The Big Cheese'
 CorporateRaider = 'Corporate Raider'
@@ -46,9 +44,7 @@ ColdCaller = 'Cold Caller'
 VicePresident = 'Senior V.P.'
 LucyCrossbill = 'Lucy Crossbill'
 
-"""
-    These are names for events.
-"""
+# These are names for events.
 
 healthChangeEvent = 'suit%s-hpChangeEvt'
 animStateChangeEvent = 'suit%s-animStateChangeEvt'
@@ -57,9 +53,7 @@ suitDespawnedEvent = 'suit%s-despawnedEvt'
 
 scaleFactors = {'A' : 6.06, 'B' : 5.29, 'C' : 4.14}
 
-"""
-    These are all the animations for suits.
-"""
+# These are all the animations for suits.
 
 class Anim:
 

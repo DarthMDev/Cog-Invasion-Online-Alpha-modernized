@@ -1,9 +1,7 @@
-"""
-
-  Filename: Dept.py
-  Created by: DecodedLogic (31July14)
-
-"""
+########################################
+# Filename: Dept.py
+# Created by: DecodedLogic (31Jul15)
+########################################
 
 from panda3d.core import VBase4
 

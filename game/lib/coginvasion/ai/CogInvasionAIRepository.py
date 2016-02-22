@@ -1,9 +1,7 @@
-"""
-
-  Filename: CogInvasionAIRepository.py
-  Created by: blach (14Dec14)
-
-"""
+########################################
+# Filename: CogInvasionAIRepository.py
+# Created by: blach (14Feb14)
+########################################
 
 from lib.coginvasion.distributed.CogInvasionInternalRepository import CogInvasionInternalRepository
 from lib.coginvasion.distributed.DistributedDistrictAI import DistributedDistrictAI

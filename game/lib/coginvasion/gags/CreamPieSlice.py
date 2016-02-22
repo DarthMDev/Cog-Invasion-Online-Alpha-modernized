@@ -1,9 +1,7 @@
-"""
-
-  Filename: CreamPieSlice.py
-  Created by: DecodedLogic (07Jul15)
-
-"""
+########################################
+# Filename: CreamPieSlice.py
+# Created by: DecodedLogic (07Jul15)
+########################################
 
 from lib.coginvasion.gags.ThrowGag import ThrowGag
 from lib.coginvasion.gags import GagGlobals

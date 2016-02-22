@@ -1,9 +1,7 @@
-"""
-
-  Filename: FileUtility.py
-  Created by: blach (18Apr15)
-
-"""
+########################################
+# Filename: FileUtility.py
+# Created by: blach (18Apr15)
+########################################
 
 from panda3d.core import VirtualFileSystem, Filename
 

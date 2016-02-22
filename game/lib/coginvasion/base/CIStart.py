@@ -1,9 +1,7 @@
-"""
-
-  Filename: CIStart.py
-  Created by: blach (17June14)
-
-"""
+########################################
+# Filename: CIStart.py
+# Created by: blach (17Jun14)
+########################################
 
 from panda3d.core import *
 import __builtin__

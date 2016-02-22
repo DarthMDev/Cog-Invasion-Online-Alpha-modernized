@@ -1,9 +1,7 @@
-"""
-
-  Filename: LoadUtility.py
-  Created by: blach (18Apr15)
-
-"""
+########################################
+# Filename: LoadUtility.py
+# Created by: blach (18Apr15)
+########################################
 
 class LoadUtility:
 

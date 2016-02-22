@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedSuit.py
-  Created by: DecodedLogic (01Sep15)
-
-"""
+########################################
+# Filename: DistributedSuit.py
+# Created by: DecodedLogic (01Sep15)
+########################################
 
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.distributed.DelayDeletable import DelayDeletable

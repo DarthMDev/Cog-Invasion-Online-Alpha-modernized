@@ -1,9 +1,7 @@
-"""
-
-  Filename: AccountAI.py
-  Created by: blach (10Dec14)
-
-"""
+########################################
+# Filename: AccountAI.py
+# Created by: blach (10Dec14)
+########################################
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 

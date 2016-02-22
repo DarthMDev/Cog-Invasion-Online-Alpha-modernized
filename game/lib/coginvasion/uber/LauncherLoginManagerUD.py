@@ -1,10 +1,7 @@
-"""
-
-  Filename: LauncherLoginManagerUD.py
-  Created by: DuckyDuck1553 (08Dec14)
-
-"""
-
+########################################
+# Filename: LauncherLoginManagerUD.py
+# Created by: blach (08Dec14)
+########################################
 from panda3d.core import NetDatagram, Datagram
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from lib.coginvasion.uber import LoginTokenGenerator

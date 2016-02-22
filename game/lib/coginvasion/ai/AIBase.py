@@ -1,9 +1,7 @@
-"""
-
-  Filename: AIBase.py
-  Created by: blach (25Jan15)
-
-"""
+########################################
+# Filename: AIBase.py
+# Created by: blach (25Jan15)
+########################################
 
 import time
 

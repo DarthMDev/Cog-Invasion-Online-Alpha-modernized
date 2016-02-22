@@ -1,9 +1,7 @@
-"""
-  
-  Filename: DistributedTrolley.py
-  Created by: blach (??July14)
-  
-"""
+########################################
+# Filename: DistributedTrolley.py
+# Created by: blach (??Jul14)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from direct.distributed.DistributedNode import DistributedNode

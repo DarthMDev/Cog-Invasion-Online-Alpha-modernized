@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedDistrictUD.py
-  Created by: blach (14Dec14)
-
-"""
+########################################
+# Filename: DistributedDistrictUD.py
+# Created by: blach (14Dec14)
+########################################
 
 from direct.distributed.DistributedObjectUD import DistributedObjectUD
 

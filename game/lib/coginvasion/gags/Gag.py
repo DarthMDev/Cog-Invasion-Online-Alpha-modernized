@@ -1,10 +1,7 @@
-"""
-
-  Filename: Gag.py
-  Created by: DecodedLogic (07Jul15)
-
-"""
-
+########################################
+# Filename: Gag.py
+# Created by: DecodedLogic (07Jul15)
+########################################
 
 from direct.task.Task import Task
 from direct.actor.Actor import Actor

@@ -1,9 +1,7 @@
-"""
-
-  Filename: AccountUD.py
-  Created by: blach (10Dec14)
-
-"""
+########################################
+# Filename: AccountUD.py
+# Created by: blach (10Dec14)
+########################################
 
 from direct.distributed.DistributedObjectUD import DistributedObjectUD
 

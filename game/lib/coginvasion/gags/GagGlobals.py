@@ -1,9 +1,7 @@
-"""
-
-  Filename: GagGlobals.py
-  Created by: DecodedLogic (07Jul15)
-
-"""
+########################################
+# Filename: GagGlobals.py
+# Created by: DecodedLogic (07Jul15)
+########################################
 
 from panda3d.core import VBase4, Point4, Point3
 from lib.coginvasion.globals import CIGlobals

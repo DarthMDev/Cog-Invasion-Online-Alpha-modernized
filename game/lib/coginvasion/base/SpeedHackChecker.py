@@ -1,9 +1,7 @@
-"""
-
-  Filename: SpeedHackChecker.py
-  Created by: blach (19Apr15)
-
-"""
+########################################
+# Filename: SpeedHackChecker.py
+# Created by: blach (19Apr15)
+########################################
 
 import sys
 import time

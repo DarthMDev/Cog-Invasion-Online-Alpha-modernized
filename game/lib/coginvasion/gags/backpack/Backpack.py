@@ -1,9 +1,7 @@
-"""
-
-  Filename: Backpack.py
-  Created by: DecodedLogic (07Jul15)
-
-"""
+########################################
+# Filename: Backpack.py
+# Created by: DecodedLogic (07Jul15)
+########################################
 
 from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags.GagState import GagState

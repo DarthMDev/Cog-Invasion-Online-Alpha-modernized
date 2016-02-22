@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedDistrictAI.py
-  Created by: blach (14Dec14)
-
-"""
+########################################
+# Filename: DistributedDistrictAI.py
+# Created by: blach (14Dec14)
+########################################
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 import time

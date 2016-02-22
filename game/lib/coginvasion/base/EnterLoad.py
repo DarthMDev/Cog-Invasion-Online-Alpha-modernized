@@ -1,11 +1,7 @@
-"""
-
-  Filename: EnterLoad.py
-  Created by: blach (18Apr15)
-
-"""
-
-from panda3d.core import VirtualFileSystem, Filename
+########################################
+# Filename: EnterLoad.py
+# Created by: blach (18Apr15)
+########################################
 
 import FileUtility
 from LoadUtility import LoadUtility

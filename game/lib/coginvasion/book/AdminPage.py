@@ -1,9 +1,7 @@
-"""
-
-  Filename: AdminPage.py
-  Created by: blach (13Apr15)
-
-"""
+########################################
+# Filename: AdminPage.py
+# Created by: blach (13Apr15)
+########################################
 
 from direct.fsm.StateData import StateData
 from direct.fsm.ClassicFSM import ClassicFSM

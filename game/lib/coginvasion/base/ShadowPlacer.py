@@ -1,9 +1,7 @@
-"""
-  
-  Filename: ShadowPlacer.py
-  Created by: blach (11Aug14)
-  
-"""
+########################################
+# Filename: ShadowPlacer.py
+# Created by: blach (11Aug14)
+########################################
 
 from panda3d.core import *
 from pandac.PandaModules import *

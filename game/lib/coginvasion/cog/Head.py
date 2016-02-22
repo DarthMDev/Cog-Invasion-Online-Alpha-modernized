@@ -1,20 +1,16 @@
-"""
-
-  Filename: Head.py
-  Created by: DecodedLogic (31July14)
-
-"""
+########################################
+# Filename: Head.py
+# Created by: DecodedLogic (31Jul14)
+########################################
 
 from lib.coginvasion.cog.SuitType import SuitType
 from direct.actor.Actor import Actor
 
 class Head:
 
-    """
-        The 'suit' variable should only be set if we are working with a
-        normal COG. Setting 'suit' to None will make this load what
-        the 'head' variable is set to.
-    """
+    # The 'suit' variable should only be set if we are working with a
+    # normal COG. Setting 'suit' to None will make this load what
+    # the 'head' variable is set to.
 
     def __init__(self, suit, head, headTex = None, headColor = None, headAnims = None):
         self.suit = suit

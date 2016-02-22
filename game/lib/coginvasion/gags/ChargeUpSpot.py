@@ -1,9 +1,7 @@
-"""
-
-  Filename: ChargeUpSpot.py
-  Created by: DecodedLogic (17Aug15)
-
-"""
+########################################
+# Filename: ChargeUpSpot.py
+# Created by: DecodedLogic (17Aug15)
+########################################
 
 from lib.coginvasion.gags.LocationSeeker import LocationSeeker
 from direct.showbase.InputStateGlobal import inputState
@@ -70,8 +68,8 @@ class ChargeUpSpot(LocationSeeker):
                                 if not obj.isDead():
                                     self.selectedCogs.append(obj)
 
-    """ This returns a track that
-        does a quick red flash effect with a sound. """
+    # This returns a track that
+    # does a quick red flash effect with a sound.
 
     def __tickNearbyCogs(self):
         self.__selectNearbyCogs()

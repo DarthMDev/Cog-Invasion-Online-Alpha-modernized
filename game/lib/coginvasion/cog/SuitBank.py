@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitBank.py
-  Created by: DecodedLogic (01Sep15)
-
-"""
+########################################
+# Filename: SuitBank.py
+# Created by: DecodedLogic (01Sep15)
+########################################
 
 from lib.coginvasion.cog import SuitGlobals
 from lib.coginvasion.cog.SuitType import SuitType

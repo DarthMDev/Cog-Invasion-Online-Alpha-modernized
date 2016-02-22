@@ -1,9 +1,7 @@
-"""
-
-  Filename: DropGag.py
-  Created by: DecodedLogic (16Jul15)
-
-"""
+########################################
+# Filename: DropGag.py
+# Created by: DecodedLogic (16Jul15)
+########################################
 
 from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType

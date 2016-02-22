@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitHabitualBehavior.py
-  Created by: DecodedLogic (03Sep15)
-
-"""
+########################################
+# Filename: SuitHabitualBehavior.py
+# Created by: DecodedLogic (03Sep15)
+########################################
 
 from lib.coginvasion.cog.SuitBehaviorBase import SuitBehaviorBase
 

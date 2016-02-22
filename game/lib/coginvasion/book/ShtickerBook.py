@@ -1,9 +1,7 @@
-"""
-
-  Filename: ShtickerBook.py
-  Created by: blach (20June14)
-
-"""
+########################################
+# Filename: ShtickerBook.py
+# Created by: blach (20Jun14)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from panda3d.core import *

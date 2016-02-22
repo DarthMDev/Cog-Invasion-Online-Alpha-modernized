@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitAttacks.py
-  Created by: blach (04Apr15)
-
-"""
+########################################
+# Filename: SuitAttacks.py
+# Created by: blach (04Apr15)
+########################################
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpPosInterval, SoundInterval

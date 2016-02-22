@@ -1,9 +1,7 @@
-"""
-
-  Filename: AIStart.py
-  Created by: blach (14Dec14)
-
-"""
+########################################
+# Filename: AIStart.py
+# Created by: blach (14Dec14)
+########################################
 
 import __builtin__
 

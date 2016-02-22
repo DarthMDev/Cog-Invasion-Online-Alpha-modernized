@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitHealBossBehavior.py
-  Created by: DecodedLogic (20Sep15)
-
-"""
+########################################
+# Filename: SuitHealBossBehavior.py
+# Created by: DecodedLogic (20Sep15)
+########################################
 
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
 from lib.coginvasion.cog import SuitAttacks

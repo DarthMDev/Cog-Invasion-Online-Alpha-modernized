@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitRandomStrollBehavior.py
-  Created by: DecodedLogic (03Sep15)
-
-"""
+########################################
+# Filename: SuitRandomStrollBehavior.py
+# Created by: DecodedLogic (03Sep15)
+########################################
 
 from lib.coginvasion.cog.SuitPathBehavior import SuitPathBehavior
 

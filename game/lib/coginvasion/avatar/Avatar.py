@@ -1,9 +1,7 @@
-"""
-
-  Filename: Avatar.py
-  Created by: blach (??July14)
-
-"""
+########################################
+# Filename: Avatar.py
+# Created by: blach (??Jul14)
+########################################
 
 #from libccoginvasion import LabelScaler
 
@@ -322,11 +320,9 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         self.shadowPlacer.setup_shadow_ray(self.shadow, self.mat)
 
     def loopFromFrameToZero(self, animName, restart = 1, partName = None, fromFrame = None):
-        """
-        Loop an animation from a frame, restarting at 0.
-        This is only used in Make A Toon, but could be used in other things,
-        that are not distributed.
-        """
+        # Loop an animation from a frame, restarting at 0.
+        # This is only used in Make A Toon, but could be used in other things,
+        # that are not distributed.
         dur = self.getDuration(animName, fromFrame = fromFrame)
         self.play(animName, partName = partName, fromFrame = fromFrame)
         if hasattr(self, 'cr'):

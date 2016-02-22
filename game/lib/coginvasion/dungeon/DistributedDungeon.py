@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedDungeon.py
-  Created by: DecodedLogic (14Aug15)
-
-"""
+########################################
+# Filename: DistributedDungeon.py
+# Created by: DecodedLogic (14Aug15)
+########################################
 
 from direct.distributed.DistributedObject import DistributedObject
 from direct.directnotify.DirectNotifyGlobal import directNotify

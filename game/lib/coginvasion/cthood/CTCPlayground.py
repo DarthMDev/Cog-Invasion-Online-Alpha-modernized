@@ -1,9 +1,7 @@
-"""
-
-  Filename: CTCPlayground.py
-  Created by: blach (14Dec14)
-
-"""
+########################################
+# Filename: CTCPlayground.py
+# Created by: blach (14Dec14)
+########################################
 
 from lib.coginvasion.hood import Playground
 from direct.directnotify.DirectNotifyGlobal import directNotify

@@ -1,9 +1,7 @@
-"""
-  
-  Filename: DisplayOptions.py
-  Created by: blach (??July14)
-  
-"""
+########################################
+# Filename: DisplayOptions.py
+# Created by: blach (??Jul14)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from panda3d.core import *

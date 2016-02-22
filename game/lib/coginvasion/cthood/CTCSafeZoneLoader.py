@@ -1,9 +1,7 @@
-"""
-
-  Filename: CTCSafeZoneLoader.py
-  Created by: blach (14Dec14)
-
-"""
+########################################
+# Filename: CTCSafeZoneLoader.py
+# Created by: blach (14Dec14)
+########################################
 
 from panda3d.core import TransparencyAttrib
 from lib.coginvasion.holiday.HolidayManager import HolidayType

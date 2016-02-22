@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitFlyToRandomSpotBehavior.py
-  Created by: DecodedLogic (06Sep15)
-
-"""
+########################################
+# Filename: SuitFlyToRandomSpotBehavior.py
+# Created by: DecodedLogic (06Sep15)
+########################################
 
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
 from lib.coginvasion.globals import CIGlobals

@@ -1,9 +1,7 @@
-"""
-
-  Filename: Suit.py
-  Created by: DecodedLogic (31Jul15)
-
-"""
+########################################
+# Filename: Suit.py
+# Created by: DecodedLogic (31Jul15)
+########################################
 
 from lib.coginvasion.avatar.Avatar import Avatar
 from lib.coginvasion.globals import CIGlobals
@@ -75,7 +73,7 @@ class Suit(Avatar):
     def getNametagJoints(self):
         return []
 
-    """ BEGIN STATES """
+    # BEGIN STATES
 
     def enterOff(self, ts = 0):
         self.anim = None
@@ -361,7 +359,7 @@ class Suit(Avatar):
     def exitWin(self):
         self.exitGeneral()
 
-    """ END STATES """
+    # END STATES
 
     def generate(self, suitPlan, variant, voice = None, hideFirst = True):
         self.suitPlan = suitPlan

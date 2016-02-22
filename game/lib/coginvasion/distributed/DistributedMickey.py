@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedMickey.py
-  Created by: blach (??June14)
-
-"""
+########################################
+# Filename: DistributedMickey.py
+# Created by: blach (??Jun14)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from direct.actor.Actor import *

@@ -1,10 +1,7 @@
-"""
-
-  Filename: Variant.py
-  Created by: DecodedLogic (31July14)
-
-"""
-
+########################################
+# Filename: Variant.py
+# Created by: DecodedLogic (31Jul15)
+########################################
 
 NORMAL, SKELETON, WAITER, MINIGAME, ZOMBIE = range(5)
 

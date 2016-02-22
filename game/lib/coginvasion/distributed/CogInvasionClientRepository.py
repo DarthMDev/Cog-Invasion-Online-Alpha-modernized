@@ -1,9 +1,7 @@
-"""
-
-  Filename: CogInvasionClientRepository.py
-  Created by: blach (07Nov14)
-
-"""
+########################################
+# Filename: CogInvasionClientRepository.py
+# Created by: blach (07Nov14)
+########################################
 
 from panda3d.core import *
 from lib.coginvasion.gui.Dialog import *

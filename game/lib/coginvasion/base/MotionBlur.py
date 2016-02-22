@@ -1,9 +1,7 @@
-"""
-
-  Filename: MotionBlur.py
-  Created by: blach (07Feb15)
-
-"""
+########################################
+# Filename: MotionBlur.py
+# Created by: blach (07Feb15)
+########################################
 
 from pandac.PandaModules import *
 from direct.task import Task

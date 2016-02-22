@@ -1,9 +1,7 @@
-"""
-
-  Filename: BambooCane.py
-  Created by: DecodedLogic (17Jul15)
-
-"""
+########################################
+# Filename: BambooCane.py
+# Created by: DecodedLogic (17Jul15)
+########################################
 
 from lib.coginvasion.gags.ToonUpGag import ToonUpGag
 from lib.coginvasion.gags import GagGlobals

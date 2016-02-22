@@ -1,13 +1,10 @@
-"""
-
-  Filename: GameDeveloperConsole.py
-  Created by: blach (CI 2.0.0 - (07June14), CIO - (27Sep14))
-  
-"""
+########################################
+# Filename: GameDeveloperConsole.py
+# Created by: blach (27Sep14)
+# (CI 2.0.0 - (07Jun14), CIO - (27Sep14))
+########################################
 
 import Tkinter
-import sys
-import os
 
 def excecuteCode():
 	global app_textbox

@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitBrainAI.py
-  Created by: DecodedLogic (03Sep15)
-
-"""
+########################################
+# Filename: SuitBrainAI.py
+# Created by: DecodedLogic (03Sep15)
+########################################
 
 from direct.showbase.DirectObject import DirectObject
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior

@@ -1,9 +1,7 @@
-"""
-
-  Filename: BackpackManager.py
-  Created by: DecodedLogic (08Jul15)
-
-"""
+########################################
+# Filename: BackpackManager.py
+# Created by: DecodedLogic (08Jul15)
+########################################
 
 from lib.coginvasion.gags.backpack.SmallPouch import SmallPouch
 from lib.coginvasion.gags.backpack.AdminPouch import AdminPouch

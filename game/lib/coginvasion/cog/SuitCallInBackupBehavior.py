@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitCallInBackupBehavior.py
-  Created by: DecodedLogic (14Sep15)
-
-"""
+########################################
+# Filename: SuitCallInBackupBehavior.py
+# Created by: DecodedLogic (14Sep15)
+########################################
 
 from lib.coginvasion.cog.SuitBehaviorBase import SuitBehaviorBase
 from lib.coginvasion.cog.SuitFollowBossBehavior import SuitFollowBossBehavior

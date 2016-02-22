@@ -1,9 +1,7 @@
-"""
-
-  Filename: OptionPage.py
-  Created by: blach (11Jan15)
-
-"""
+########################################
+# Filename: OptionPage.py
+# Created by: blach (11Jan15)
+########################################
 
 from pandac.PandaModules import *
 from lib.coginvasion.globals import CIGlobals

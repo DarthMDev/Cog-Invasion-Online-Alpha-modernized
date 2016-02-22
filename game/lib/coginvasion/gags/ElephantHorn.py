@@ -1,9 +1,7 @@
-"""
-
-  Filename: ElephantHorn.py
-  Created by: DecodedLogic (08Aug15)
-
-"""
+########################################
+# Filename: ElephantHorn.py
+# Created by: DecodedLogic (08Aug15)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals

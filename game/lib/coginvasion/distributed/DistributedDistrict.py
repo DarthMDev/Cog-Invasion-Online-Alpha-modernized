@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedDistrict.py
-  Created by: blach (14Dec14)
-
-"""
+########################################
+# Filename: DistributedDistrict.py
+# Created by: blach (14Dec14)
+########################################
 
 from direct.distributed.DistributedObject import DistributedObject
 from lib.coginvasion.gui.WhisperPopup import WhisperPopup

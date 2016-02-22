@@ -1,9 +1,7 @@
-"""
-  
-  Filename: DistributedRootAI.py
-  Created by: blach (04Dec14)
-  
-"""
+########################################
+# Filename: DistributedRootAI.py
+# Created by: blach (04Dec14)
+########################################
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectAI import DistributedObjectAI

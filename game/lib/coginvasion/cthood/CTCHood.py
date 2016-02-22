@@ -1,9 +1,7 @@
-"""
-
-  Filename: CTCHood.py
-  Created by: blach (01Dec14)
-
-"""
+########################################
+# Filename: CTCHood.py
+# Created by: blach (01Dec14)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType

@@ -1,9 +1,7 @@
-"""
-
-  Filename: FruitPieSlice.py
-  Created by: DecodedLogic (15Jul15)
-
-"""
+########################################
+# Filename: FruitPieSlice.py
+# Created by: DecodedLogic (15Jul15)
+########################################
 
 from lib.coginvasion.gags.ThrowGag import ThrowGag
 from lib.coginvasion.gags import GagGlobals

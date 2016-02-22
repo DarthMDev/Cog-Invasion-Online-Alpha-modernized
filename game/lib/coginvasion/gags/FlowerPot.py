@@ -1,9 +1,7 @@
-"""
-
-  Filename: FlowerPot.py
-  Created by: DecodedLogic (13Aug15)
-
-"""
+########################################
+# Filename: FlowerPot.py
+# Created by: DecodedLogic (13Aug15)
+########################################
 
 from lib.coginvasion.gags.LightDropGag import LightDropGag
 from lib.coginvasion.globals import CIGlobals

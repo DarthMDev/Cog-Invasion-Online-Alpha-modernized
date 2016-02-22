@@ -1,9 +1,7 @@
-"""
-
-  Filename: ChargeUpGag.py
-  Created by: DecodedLogic (17Aug15)
-
-"""
+########################################
+# Filename: ChargeUpGag.py
+# Created by: DecodedLogic (17Aug15)
+########################################
 
 from lib.coginvasion.gags.ChargeUpSpot import ChargeUpSpot
 from direct.interval.IntervalGlobal import Sequence, Func

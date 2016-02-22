@@ -1,6 +1,8 @@
+########################################
 # Filename: DistributedPieTurret.py
-# Created by:  blach (14Jun15)
-# Updated by:  DecodedLogic (10Aug15)
+# Created by: blach (14Jun15)
+# Updated by: DecodedLogic (10Aug15)
+########################################
 
 from panda3d.core import Point3, Vec3, Vec4, CollisionSphere, CollisionNode
 
@@ -119,7 +121,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         self.healthLabelTrack = Sequence(moveTrack, Wait(1.0), Func(self.stashHpLabel))
         self.healthLabelTrack.start()
 
-    """ BEGIN STATES """
+    # BEGIN STATES
 
     def enterShoot(self, suitId):
         if self.cannon:
@@ -192,7 +194,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
     def exitOff(self):
         pass
 
-    """ END STATES """
+    # END STATES
 
     def _afterShootTrackDone(self):
         self.track = None

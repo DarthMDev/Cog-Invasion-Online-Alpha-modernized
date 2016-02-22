@@ -1,9 +1,7 @@
-"""
-  
-  Filename: ToontownClientRepository.py
-  Created by: blach (17June14)
-  
-"""
+########################################
+# Filename: ToontownClientRepository.py
+# Created by: blach (17Jun14)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gui.ToontownLoadingScreen import ToontownLoadingScreen

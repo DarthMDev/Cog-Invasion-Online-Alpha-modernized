@@ -1,9 +1,7 @@
-"""
-
-  Filename: HoodMgr.py
-  Created by: blach (15Dec14)
-
-"""
+########################################
+# Filename: HoodMgr.py
+# Created by: blach (15Dec14)
+########################################
 
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify

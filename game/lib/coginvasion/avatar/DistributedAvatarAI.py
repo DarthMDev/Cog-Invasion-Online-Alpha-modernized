@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedAvatarAI.py
-  Created by: blach (02Nov14)
-
-"""
+########################################
+# Filename: DistributedAvatarAI.py
+# Created by: blach (02Nov14)
+########################################
 
 from panda3d.core import *
 from direct.distributed import DistributedNodeAI

@@ -1,9 +1,7 @@
-"""
-
-  Filename: TurretGag.py
-  Created by: DecodedLogic (10Aug15)
-
-"""
+########################################
+# Filename: TurretGag.py
+# Created by: DecodedLogic (10Aug15)
+########################################
 
 from panda3d.core import CollisionSphere, CollisionNode, BitMask32, CollisionHandlerEvent, NodePath
 

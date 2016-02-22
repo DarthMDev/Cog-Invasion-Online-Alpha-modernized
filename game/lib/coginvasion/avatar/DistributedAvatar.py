@@ -1,9 +1,7 @@
-"""
-
-  Filename: DistributedAvatar.py
-  Created by: blach (02Nov14)
-
-"""
+########################################
+# Filename: DistributedAvatar.py
+# Created by: blach (02Nov14)
+########################################
 
 from panda3d.core import *
 from lib.coginvasion.avatar.Avatar import Avatar

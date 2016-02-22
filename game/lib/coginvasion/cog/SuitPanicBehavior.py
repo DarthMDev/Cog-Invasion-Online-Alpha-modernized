@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitPanicBehavior.py
-  Created by: DecodedLogic (02Sep15)
-
-"""
+########################################
+# Filename: SuitPanicBehavior.py
+# Created by: DecodedLogic (02Sep15)
+########################################
 
 from lib.coginvasion.cog.SuitPathBehavior import SuitPathBehavior
 import random

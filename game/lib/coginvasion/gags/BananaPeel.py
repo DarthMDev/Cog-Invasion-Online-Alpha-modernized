@@ -1,9 +1,7 @@
-"""
-
-  Filename: BananaPeel.py
-  Created by: DecodedLogic (26Jul15)
-
-"""
+########################################
+# Filename: BananaPeel.py
+# Created by: DecodedLogic (26Jul15)
+########################################
 
 from lib.coginvasion.gags.ActivateTrapGag import ActivateTrapGag
 from lib.coginvasion.gags import GagGlobals

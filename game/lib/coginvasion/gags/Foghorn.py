@@ -1,9 +1,7 @@
-"""
-
-  Filename: Foghorn.py
-  Created by: DecodedLogic (07Aug15)
-
-"""
+########################################
+# Filename: Foghorn.py
+# Created by: DecodedLogic (07Aug15)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags.SoundGag import SoundGag

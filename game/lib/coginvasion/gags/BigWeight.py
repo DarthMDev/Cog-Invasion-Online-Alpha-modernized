@@ -1,9 +1,7 @@
-"""
-
-  Filename: BigWeight.py
-  Created by: DecodedLogic (Aug3015)
-
-"""
+########################################
+# Filename: BigWeight.py
+# Created by: DecodedLogic (30Aug15)
+########################################
 
 from lib.coginvasion.gags.DropGag import DropGag
 from lib.coginvasion.gags import GagGlobals

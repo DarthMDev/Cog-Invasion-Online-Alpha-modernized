@@ -1,9 +1,7 @@
-"""
-
-  Filename: AdminPouch.py
-  Created by: DecodedLogic (15Jul15)
-
-"""
+########################################
+# Filename: AdminPouch.py
+# Created by: DecodedLogic (15Jul15)
+########################################
 
 from lib.coginvasion.gags.backpack.Backpack import Backpack
 from lib.coginvasion.gags.GagManager import GagManager

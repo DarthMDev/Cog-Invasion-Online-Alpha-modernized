@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitAttackBehavior.py
-  Created by: DecodedLogic (13Sep15)
-
-"""
+########################################
+# Filename: SuitAttackBehavior.py
+# Created by: DecodedLogic (13Sep15)
+########################################
 
 from SuitHabitualBehavior import SuitHabitualBehavior
 from SuitType import SuitType

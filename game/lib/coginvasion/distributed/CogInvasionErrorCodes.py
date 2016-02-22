@@ -1,9 +1,7 @@
-"""
-
-  Filename: CogInvasionErrorCodes.py
-  Created by: blach (25Jan15)
-
-"""
+########################################
+# Filename: CogInvasionErrorCodes.py
+# Created by: blach (25Jan15)
+########################################
 
 EC_MULTIPLE_LOGINS = 110
 EC_BAD_TOKEN = 111

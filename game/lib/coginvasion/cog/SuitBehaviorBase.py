@@ -1,9 +1,7 @@
-"""
-
-  Filename: SuitBehaviorBase.py
-  Created by: DecodedLogic (02Sep15)
-
-"""
+########################################
+# Filename: SuitBehaviorBase.py
+# Created by: DecodedLogic (02Sep15)
+########################################
 
 from direct.showbase.DirectObject import DirectObject
 

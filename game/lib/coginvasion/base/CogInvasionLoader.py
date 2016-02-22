@@ -1,9 +1,7 @@
-"""
-
-  Filename: CogInvasionLoader.py
-  Created by: blach (28Nov14)
-
-"""
+########################################
+# Filename: CogInvasionLoader.py
+# Created by: blach (28Nov14)
+########################################
 
 from panda3d.core import *
 from direct.showbase import Loader

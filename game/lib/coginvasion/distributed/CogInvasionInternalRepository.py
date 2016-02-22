@@ -1,9 +1,7 @@
-"""
-
-  Filename: CogInvasionUberRepository.py
-  Created by: blach (10Dec14)
-
-"""
+########################################
+# Filename: CogInvasionUberRepository.py
+# Created by: blach (10Dec14)
+########################################
 
 from direct.distributed.AstronInternalRepository import AstronInternalRepository
 from direct.directnotify.DirectNotifyGlobal import directNotify

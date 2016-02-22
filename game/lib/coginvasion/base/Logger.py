@@ -1,9 +1,7 @@
-"""
-  
-  Filename: Logger.py
-  Created by: blach (27July14)
-  
-"""
+########################################
+# Filename: Logger.py
+# Created by: blach (27Jul14)
+########################################
 
 import os
 import sys

@@ -1,9 +1,7 @@
-"""
-
-  Filename: ActivateTrapGag.py
-  Created by: DecodedLogic (24Jul15)
-
-"""
+########################################
+# Filename: ActivateTrapGag.py
+# Created by: DecodedLogic (24Jul15)
+########################################
 
 from lib.coginvasion.gags.TrapGag import TrapGag
 from lib.coginvasion.gags.LocationGag import LocationGag

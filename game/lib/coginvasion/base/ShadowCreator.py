@@ -1,9 +1,7 @@
-"""
-
-  Filename: ShadowCreator.py
-  Created by: blach (06Apr15)
-
-"""
+########################################
+# Filename: ShadowCreator.py
+# Created by: blach (06Apr15)
+########################################
 
 from pandac.PandaModules import BitMask32, NodePath
 from direct.filter.CommonFilters import CommonFilters
