@@ -13,6 +13,10 @@ public static class Constants
     public const int CL_REQ_PLAY = 3;
     public const int CL_REQ_BASE_LINK = 4;
     public const int SV_BASE_LINK = 5;
+    public const int CL_REQ_CREATE_ACC = 6;
+    public const int SV_CREATE_ACC_RESP = 7;
+    public const int SV_PLAY_RESP = 8;
+    public const int SV_MSG = 9;
 
     public const string LAUNCHER_VER = "1.0";
 
@@ -29,4 +33,13 @@ public static class Constants
     public const int STATE_GEN_DL_LIST = 8;
 
     public const string CONTACT_LINK = "http://coginvasion.com/contact-us.html";
+
+    public const string STATUS_CONNECTING = "Connecting...";
+    public const string STATUS_VALIDATING = "Validating...";
+    public const string STATUS_FETCHING = "Fetching download list...";
+    public const string STATUS_SUBMIT = "Submitting...";
+    public const string STATUS_LOGGING = "Logging in...";
+    public const string STATUS_STARTING = "Starting game...";
+    public const string STATUS_FILE_DATA = "File {0} of {1}... ({2})";
+    public const string UPDATING_FILES = "Updating files...";
 }

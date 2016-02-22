@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace cio_launcher
 {
@@ -48,8 +49,83 @@ namespace cio_launcher
                         Globals.dl_base_link = base_link;
 
                         // Now that we have the base link begin to generate a download list.
+                        launcher.lf.ShowStatus(Constants.STATUS_FETCHING);
                         Globals.current_state = Constants.STATE_GEN_DL_LIST;
                         launcher.BeginGenerateDLList();
+                    }
+
+                    else if (split_msg[0] == Constants.SV_CREATE_ACC_RESP.ToString() && Globals.current_state == Constants.STATE_ACC_SUBMITTING)
+                    {
+                        int response = Int32.Parse(split_msg[1]);
+                        if (response == 1)
+                        {
+                            // Account successfully created!
+                            Globals.current_state = Constants.STATE_LOGIN_MENU;
+                            launcher.lf.ShowAll();
+                        }
+                        else if (response == 0)
+                        {
+                            // Account not created! Name already exists.
+                            MessageBox.Show("An account with that name already exists.", "Account Already Exists", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            Globals.current_state = Constants.STATE_ACC_CREATE_MENU;
+                            launcher.lf.ShowAll();
+                        }
+                    }
+
+                    else if (split_msg[0] == Constants.SV_PLAY_RESP.ToString() && Globals.current_state == Constants.STATE_LOGGING_IN)
+                    {
+                        int response = Int32.Parse(split_msg[1]);
+                        if (response == 1)
+                        {
+                            Console.WriteLine("Accepted!");
+                            // Login accepted!
+                            string gameServer = split_msg[2];
+                            string gameVersion = split_msg[3];
+                            string loginToken = "asdasdasbsdf";
+                            string username = launcher.lf.GetUsername();
+                            // Reset our variables for when the launcher opens back up.
+                            launcher.ResetVars();
+                            // Set the environment variables.
+                            Environment.SetEnvironmentVariable("ACCOUNT_NAME", username);
+                            Environment.SetEnvironmentVariable("GAME_SERVER", gameServer);
+                            Environment.SetEnvironmentVariable("GAME_VERSION", gameVersion);
+                            Environment.SetEnvironmentVariable("LOGIN_TOKEN", loginToken);
+
+                            //launcher.CloseConnection();
+
+                            Process ciProcess = new Process();
+                            ciProcess.StartInfo.FileName = "coginvasion.exe";
+                            ciProcess.Start();
+                            ciProcess.WaitForExit();
+
+
+                        }
+                        else if (response == 0)
+                        {
+                            // Login rejected! Invalid credentials.
+                            MessageBox.Show("Username and/or password is incorrect.", "Invalid Credentials", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            Globals.current_state = Constants.STATE_LOGIN_MENU;
+                            launcher.lf.ShowAll();
+                        }
+                        else if (response == 2)
+                        {
+                            // Login rejected! Banned account.
+                            MessageBox.Show("This account has been banned.", "Banned", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            Globals.current_state = Constants.STATE_LOGIN_MENU;
+                            launcher.lf.ShowAll();
+                        }
+                    }
+
+                    else if (split_msg[0] == Constants.SV_MSG.ToString())
+                    {
+                        string svMsg = split_msg[1];
+                        MessageBox.Show(svMsg, "Message From Server", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        launcher.lf.HideAll();
+                        if (Globals.current_state == Constants.STATE_LOGIN_MENU)
+                            Globals.current_state = Constants.STATE_LOGIN_MENU;
+                        else if (Globals.current_state == Constants.STATE_ACC_SUBMITTING)
+                            Globals.current_state = Constants.STATE_ACC_CREATE_MENU;
+                        launcher.lf.ShowAll();
                     }
 
                 }
@@ -60,20 +136,20 @@ namespace cio_launcher
         {
             // Download the hash file (synchronous)
             Console.WriteLine("Downloading hash file");
-            WebRequest req = WebRequest.Create(Globals.dl_base_link + "file_info.txt");
-            WebResponse resp = req.GetResponse();
-            Stream stream = resp.GetResponseStream();
-            StreamReader dlSr = new StreamReader(stream);
-            ProcessHashFile(dlSr);
+            WebClient dlClient = new WebClient();
+            dlClient.DownloadDataCompleted += ProcessHashFile;
+            dlClient.DownloadDataAsync(new Uri(Globals.dl_base_link + "file_info.txt"));
         }
 
-        private void ProcessHashFile(StreamReader dlSr)
+        private void ProcessHashFile(object sender, DownloadDataCompletedEventArgs e)
         {
+            byte[] data = e.Result;
+            string strData = System.Text.Encoding.UTF8.GetString(data, 0, data.Length);
             Console.WriteLine("Processing hash file");
-            while (dlSr.Peek() >= 0)
+            string[] lines = strData.Split('\n');
+            foreach (string fileData in lines)
             {
-                string fileData = dlSr.ReadLine();
-                if (fileData.Length == 0 || fileData.Substring(0, 2) == "//")
+                if (string.IsNullOrWhiteSpace(fileData) || fileData.Substring(0, 2) == "//")
                     continue;
 
                 string[] split_data = fileData.Split(' ');
@@ -103,8 +179,9 @@ namespace cio_launcher
             else
                 Console.WriteLine("All files are up to date!");
 
-            // We're good to go! Start the windows forms!
-            LaunchWindowsForms();
+            // We're good to go! Show the log-in menu.
+            Globals.current_state = Constants.STATE_LOGIN_MENU;
+            lf.ShowAll();
         }
 
         private bool IsSameMD5(string filename, string md5)
@@ -118,17 +195,80 @@ namespace cio_launcher
             }
         }
 
-        private void LaunchWindowsForms()
+        public void StartUpdatingFiles()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            LoginForm lf = new LoginForm();
-            this.lf = lf;
-            Application.Run(lf);
+            lf.ShowLoginLbl();
+            lf.ShowDlProgressBar();
+            lf.SetLoginLblText(Constants.UPDATING_FILES);
+            NextFile();
+        }
+
+        public void NextFile()
+        {
+            currentFile++;
+            if (currentFile > dl_list.Count - 1)
+            {
+                // We're done updating!
+                alreadyUpdated = true;
+                lf.HideDlProgressBar();
+                lf.HideAll();
+                Globals.current_state = Constants.STATE_LOGGING_IN;
+                lf.ShowStatus(Constants.STATUS_LOGGING);
+                lf.SendLoginRequest();
+                return;
+            }
+            string fileName = dl_list[currentFile];
+            lf.ShowStatus(string.Format(Constants.STATUS_FILE_DATA, currentFile + 1, dl_list.Count, fileName));
+            string fullLink = Globals.dl_base_link + fileName;
+            WebClient dlClient = new WebClient();
+            dlClient.DownloadDataCompleted += DownloadDataCompleted;
+            dlClient.DownloadProgressChanged += DownloadProgressChanged;
+            dlClient.DownloadDataAsync(new Uri(fullLink));
+        }
+
+        private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            lf.SetDlProgressBarValue(e.ProgressPercentage);
+        }
+
+        private void DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            byte[] data = e.Result;
+            string name = dl_list[currentFile];
+            File.WriteAllBytes(name, data);
+            NextFile();
+        }
+
+        public bool HasAlreadyUpdated()
+        {
+            return alreadyUpdated;
+        }
+
+        public void ResetVars()
+        {
+            alreadyUpdated = true;
+            Globals.dl_base_link = "";
+            dl_list.Clear();
+        }
+
+        public void CloseConnection()
+        {
+            client.Close();
         }
 
         public Launcher()
         {
+            Globals.launcher = this;
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            LoginForm lf = new LoginForm();
+            lf.Show();
+            this.lf = lf;
+
+            lf.HideAll(true);
+            lf.ShowStatus(Constants.STATUS_CONNECTING);
+
             string gameserver = Constants.LOGIN_SERVER + ":" + Constants.LOGIN_PORT.ToString();
             Console.WriteLine("Connecting to login server at " + gameserver);
 
@@ -142,6 +282,8 @@ namespace cio_launcher
             catch (SocketException)
             {
                 Console.WriteLine("Could not connect to the login server.");
+                MessageBox.Show("Yikes! It seems the Cog Invasion Online servers are down right now.\nTry again later.",
+                    "Could Not Connect", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -164,12 +306,13 @@ namespace cio_launcher
             Console.WriteLine("Now sending server info req");
 
             // We are now validating our launcher
+            lf.ShowStatus(Constants.STATUS_VALIDATING);
             Globals.current_state = Constants.STATE_VALIDATING;
             // Send the server info req
-            sw.WriteLine(Constants.CL_SERVER_INFO);
+            sw.WriteLine(Constants.CL_SERVER_INFO.ToString());
             sw.Flush();
 
-            Application.Run();
+            Application.Run(lf);
 
         }
 
@@ -179,6 +322,10 @@ namespace cio_launcher
         private CancellationTokenSource cts;
         private LoginForm lf;
         private List<string> dl_list;
+
+        private int currentFile = -1;
+        private int filesDownloaded = 0;
+        private bool alreadyUpdated = true;
 
     }
 }

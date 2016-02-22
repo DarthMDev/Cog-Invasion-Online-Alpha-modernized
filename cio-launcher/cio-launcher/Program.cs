@@ -13,7 +13,6 @@ namespace cio_launcher
         {
 
             Launcher launcher = new Launcher();
-            Globals.launcher = launcher;
         }
     }
 }
