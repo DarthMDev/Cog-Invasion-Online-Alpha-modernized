@@ -124,6 +124,8 @@ dclass DistrictNameManager : DistributedObject {
 
 dclass NameServicesManager : DistributedObject {
   requestName(string name) clsend;
+  requestNameData() clsend;
+  nameDataRequest(string[], uint32[], string[], uint8[]);
 };
 
 dclass LauncherLoginManager : DistributedObject {

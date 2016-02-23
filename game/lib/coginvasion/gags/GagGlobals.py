@@ -16,7 +16,8 @@ gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobal
           19 : CIGlobals.Aoogah, 20 : CIGlobals.ElephantHorn, 21 : CIGlobals.Opera, 22 : CIGlobals.BikeHorn,
           23 : CIGlobals.Whistle, 24 : CIGlobals.Bugle, 25 : CIGlobals.PixieDust, 26 : CIGlobals.FlowerPot,
           27 : CIGlobals.Sandbag, 28 : CIGlobals.Anvil, 29 : CIGlobals.Geyser, 30 : CIGlobals.BigWeight,
-          31 : CIGlobals.StormCloud, 32 : CIGlobals.WaterGlass, 33 : CIGlobals.WaterGun, 34 : CIGlobals.FireHose}
+          31 : CIGlobals.StormCloud, 32 : CIGlobals.WaterGlass, 33 : CIGlobals.WaterGun, 34 : CIGlobals.FireHose,
+          35 : CIGlobals.SquirtFlower}
 gagIdByName = {v: k for k, v in gagIds.items()}
 
 InventoryIconByName = {CIGlobals.WholeCreamPie : '**/inventory_creampie',
@@ -53,7 +54,8 @@ InventoryIconByName = {CIGlobals.WholeCreamPie : '**/inventory_creampie',
  CIGlobals.BananaPeel : '**/inventory_bannana_peel',
  CIGlobals.WaterGlass : '**/inventory_glass_of_water',
  CIGlobals.WaterGun : '**/inventory_water_gun',
- CIGlobals.FireHose : '**/inventory_firehose'}
+ CIGlobals.FireHose : '**/inventory_firehose',
+ CIGlobals.SquirtFlower : '**/inventory_squirt_flower'}
 
 Throw = "Throw"
 Squirt = "Squirt"
@@ -95,7 +97,8 @@ TrackGagNamesByTrackName = {Throw : [CIGlobals.Cupcake,
   CIGlobals.BigWeight,
   CIGlobals.Safe,
   CIGlobals.GrandPiano],
- Squirt : [CIGlobals.WaterGlass,
+ Squirt : [CIGlobals.SquirtFlower,
+  CIGlobals.WaterGlass,
   CIGlobals.WaterGun,
   CIGlobals.SeltzerBottle,
   CIGlobals.FireHose,
@@ -114,7 +117,7 @@ splatSizes = {
     CIGlobals.WeddingCake: 0.7, CIGlobals.FruitPieSlice: 0.35,
     CIGlobals.SeltzerBottle: 0.6, CIGlobals.Cupcake: 0.25,
     CIGlobals.WaterGlass: 0.35, CIGlobals.WaterGun : 0.35,
-    CIGlobals.FireHose: 0.6
+    CIGlobals.FireHose: 0.6, CIGlobals.SquirtFlower: 0.2
 }
 
 # Let's define some gag sounds.
@@ -167,6 +170,8 @@ CLOUD_MISS_SFX = "phase_5/audio/sfx/AA_throw_stormcloud_miss.mp3"
 SPIT_SFX = "phase_5/audio/sfx/AA_squirt_glasswater.mp3"
 WATERGUN_SFX = "phase_5/audio/sfx/AA_squirt_neonwatergun.mp3"
 FIREHOSE_SFX = "phase_5/audio/sfx/firehose_spray.mp3"
+FLOWER_HIT_SFX = "phase_3.5/audio/sfx/AA_squirt_flowersquirt.mp3"
+FLOWER_MISS_SFX = "phase_5/audio/sfx/AA_squirt_flowersquirt_miss.mp3"
 NULL_SFX = "phase_3/audio/sfx/null.wav"
 
 # These are globals for splats.

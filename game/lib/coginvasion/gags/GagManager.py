@@ -1,9 +1,7 @@
-"""
-
-  Filename: GagManager.py
-  Created by: DecodedLogic (07Jul15)
-
-"""
+########################################
+# Filename: GagManager.py
+# Created by: DecodedLogic (07Jul15)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags.BirthdayCake import BirthdayCake
@@ -41,6 +39,7 @@ from lib.coginvasion.gags.StormCloud import StormCloud
 from lib.coginvasion.gags.WaterGlass import WaterGlass
 from lib.coginvasion.gags.WaterGun import WaterGun
 from lib.coginvasion.gags.FireHose import FireHose
+from lib.coginvasion.gags.SquirtingFlower import SquirtingFlower
 
 class GagManager:
 
@@ -79,7 +78,8 @@ class GagManager:
                      CIGlobals.StormCloud : StormCloud,
                      CIGlobals.WaterGlass : WaterGlass,
                      CIGlobals.WaterGun : WaterGun,
-                     CIGlobals.FireHose : FireHose}
+                     CIGlobals.FireHose : FireHose,
+                     CIGlobals.SquirtFlower : SquirtingFlower}
 
     def getGagByName(self, name):
         for gName in self.gags.keys():

@@ -1,5 +1,7 @@
+########################################
 # Filename: WaterGlass.py
-# Created by:  blach (14Nov15)
+# Created by: blach (14Nov15)
+########################################
 
 from panda3d.core import Point3
 

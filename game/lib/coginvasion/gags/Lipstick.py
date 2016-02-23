@@ -1,14 +1,12 @@
-"""
-
-  Filename: Lipstick.py
-  Created by: DecodedLogic (27Jul15)
-
-"""
+########################################
+# Filename: Lipstick.py
+# Created by: DecodedLogic (27Jul15)
+########################################
 
 from lib.coginvasion.gags.ToonUpGag import ToonUpGag
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.globals import CIGlobals
-from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, ActorInterval, LerpPosInterval, LerpScaleInterval
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, LerpPosInterval, LerpScaleInterval
 from panda3d.core import Point3
 
 class Lipstick(ToonUpGag):
@@ -48,7 +46,7 @@ class Lipstick(ToonUpGag):
                 self.healAvatar(target, 'conked')
                 base.localAvatar.sendUpdate('gagRelease', [self.getID()])
             else:
-                ActorInterval(target, 'conked').start()
+                Func(target.play, 'conked').start()
 
         self.placeProp(self.handJoint, self.gag, Point3(-0.27, -0.24, -0.95), Point3(-118, -10.6, -25.9))
         stickScaleUp = self.getScaleTrack([self.gag], dScale, GagGlobals.PNT3NEAR0, GagGlobals.PNT3NORMAL)

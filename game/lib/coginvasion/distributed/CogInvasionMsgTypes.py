@@ -2,6 +2,7 @@
 # Filename: CogInvasionMsgTypes.py
 # Created by: blach (07Nov14)
 ########################################
+from direct.distributed.MsgTypes import *
 
 # Launcher related message types
 ACC_VALIDATE = 10

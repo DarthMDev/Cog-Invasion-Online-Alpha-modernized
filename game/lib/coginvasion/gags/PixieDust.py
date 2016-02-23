@@ -1,9 +1,7 @@
-"""
-
-  Filename: PixieDust.py
-  Created by: DecodedLogic (10Aug15)
-
-"""
+########################################
+# Filename: PixieDust.py
+# Created by: DecodedLogic (10Aug15)
+########################################
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals

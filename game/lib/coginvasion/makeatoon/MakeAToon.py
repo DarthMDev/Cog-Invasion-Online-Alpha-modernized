@@ -14,6 +14,8 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
+from panda3d.core import Vec4, TextNode
+
 it = loader.loadFont("phase_3/models/fonts/ImpressBT.ttf")
 
 nextShops = {"gender": "body",
