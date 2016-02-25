@@ -6,13 +6,11 @@
 from lib.coginvasion.globals import CIGlobals
 from panda3d.core import *
 from direct.gui.DirectGui import *
-from lib.coginvasion.manager.SettingsManager import SettingsManager
 from direct.fsm.StateData import StateData
 from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
 from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.gui.BackpackGUI import BackpackGUI
-import types
 
 from OptionPage import OptionPage
 from AdminPage import AdminPage
