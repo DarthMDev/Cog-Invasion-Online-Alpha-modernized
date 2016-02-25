@@ -6,12 +6,14 @@
 # I hate .pyc!
 
 *.pyc
+*.yaml
 
 !*.lib
 game/resourcepack
 game/safe_test.py
 game/.pydevproject
 game/.project
+game/winter
 # Ignore everything in the astron folder.
 game/astron/**
 game/tools/libcoginvasion.pyd
