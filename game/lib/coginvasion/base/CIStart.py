@@ -5,6 +5,39 @@
 
 from panda3d.core import *
 import __builtin__
+import os.path
+
+vfs = VirtualFileSystem.getGlobalPtr()
+
+phases = ['phase_3', 'phase_3.5', 'phase_4', 'phase_5', 'phase_5.5', 'phase_6', 'phase_7', 'phase_8', 'phase_9',
+    'phase_10', 'phase_11', 'phase_12', 'phase_13']
+packExtensions = ['.jpg', '.jpeg', '.png', '.mp3', '.rgb']
+
+for phase in phases:
+    mf = Multifile()
+    mf.openReadWrite(Filename(phase + '.mf'))
+    packMf = None
+    
+    if os.path.exists('resourcepack/%s.mf' % phase):
+        # Let's remove the unneeded files.
+        for subFile in mf.getSubfileNames():
+            ext = os.path.splitext(subFile)[1]
+            if ext in packExtensions:
+                mf.removeSubfile(subFile)
+        
+        packMf = Multifile()
+        packMf.openReadWrite(Filename('resourcepack/%s.mf' % phase))
+        
+        # Let's remove all the default files.
+        for subFile in packMf.getSubfileNames():
+            ext = os.path.splitext(subFile)[1]
+            if ext not in packExtensions:
+                packMf.removeSubfile(subFile)
+    vfs.mount(mf, '.', 0)
+    print 'Mounted %s from default.' % phase
+    if packMf:
+        vfs.mount(packMf, '.', 0)
+        print 'Mounted %s from resource pack.' % phase
 
 import Logger
 Logger.Starter()
@@ -50,7 +83,6 @@ except:
     loadPrcFile('config/Confauto.prc')
     loadPrcFile('config/config_client.prc')
     print "CIStart: Running dev"
-
 sm.maybeFixAA()
 
 from direct.showbase.ShowBaseWide import ShowBase
@@ -75,21 +107,6 @@ from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.filter.CommonFilters import CommonFilters
 
-vfs = VirtualFileSystem.getGlobalPtr()
-vfs.mount(Filename("phase_0.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_3.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_3.5.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_4.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_5.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_5.5.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_6.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_7.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_8.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_9.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_10.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_11.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_12.mf"), ".", VirtualFileSystem.MFReadOnly)
-vfs.mount(Filename("phase_13.mf"), ".", VirtualFileSystem.MFReadOnly)
 
 import CogInvasionLoader
 base.loader = CogInvasionLoader.CogInvasionLoader(base)

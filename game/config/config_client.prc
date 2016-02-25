@@ -2,7 +2,7 @@
 window-title Cog Invasion Online (Alpha)
 win-origin -1 -1
 win-size 640 480
-load-display pandadx9
+load-display pandagl
 aux-display pandagl
 
 # Logging...
@@ -27,19 +27,19 @@ model-path .
 audio-library-name p3miles_audio
 
 # Virtual file system...
-vfs-mount phase_3.mf /
-vfs-mount phase_3.5.mf /
-vfs-mount phase_4.mf /
-vfs-mount phase_5.mf /
-vfs-mount phase_5.5.mf /
-vfs-mount phase_6.mf /
-vfs-mount phase_7.mf /
-vfs-mount phase_8.mf /
-vfs-mount phase_9.mf /
-vfs-mount phase_10.mf /
-vfs-mount phase_11.mf /
-vfs-mount phase_12.mf /
-vfs-mount phase_13.mf /
+vfs-mount resourcepack/phase_3 phase_3
+vfs-mount resourcepack/phase_3.5 phase_3.5
+vfs-mount resourcepack/phase_4 phase_4
+vfs-mount resourcepack/phase_5 phase_5
+vfs-mount resourcepack/phase_5.5 phase_5.5
+vfs-mount resourcepack/phase_6 phase_6
+vfs-mount resourcepack/phase_7 phase_7
+vfs-mount resourcepack/phase_8 phase_8
+vfs-mount resourcepack/phase_9 phase_9
+vfs-mount resourcepack/phase_10 phase_10
+vfs-mount resourcepack/phase_11 phase_11
+vfs-mount resourcepack/phase_12 phase_12
+vfs-mount resourcepack/phase_13 phase_13
 
 # Server...
 server-port 7032
