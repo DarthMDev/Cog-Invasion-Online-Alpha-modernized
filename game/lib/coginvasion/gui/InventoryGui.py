@@ -1,17 +1,17 @@
-"""
-
-  Filename: InventoryGui.py
-  Created by: DecodedLogic (12Jul15)
-
-"""
+########################################
+# Filename: InventoryGui.py
+# Created by: DecodedLogic (12Jul15)
+########################################
 
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotify import DirectNotify
 from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel, OnscreenText, DGG
+from direct.gui.DirectButton import DirectButton
+
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
+
 from panda3d.core import TransparencyAttrib, TextNode
-from direct.gui.DirectButton import DirectButton
 
 class Slot(DirectFrame):
 
@@ -118,7 +118,7 @@ class InventoryGui(DirectObject):
         DirectObject.__init__(self)
         self.backpack = None
         self.oneSlotPos = [(0, 0, 0)]
-        self.twoSlotsPos = [(0, 0, 0), (0, 0, -0.5)]
+        self.twoSlotsPos = [(0, 0, -0.35), (0, 0, -0.55)]
         self.threeSlotsPos = [(0, 0, 0.5), (0, 0, 0), (0, 0, -0.5)]
         self.fourSlotPos = [(0, 0, 0.45), (0, 0, 0.15), (0, 0, -0.15), (0, 0, -0.45)]
         self.availableSlot = 0
@@ -219,9 +219,12 @@ class InventoryGui(DirectObject):
         if not self.backpack: return
         for element in [self.ammoLabel, self.inventoryFrame]:
             if not element: return
+        updateSlots = list(self.slots)
         for slot in self.slots:
             gag = slot.getGag()
             if not gag:
+                updateSlots.remove(slot)
+                slot.hide()
                 continue
             supply = self.backpack.getSupply(gag.getName())
             index = self.slots.index(slot)
@@ -247,6 +250,14 @@ class InventoryGui(DirectObject):
                     slot.setOutlineImage('idle')
                 else:
                     slot.setOutlineImage('no_ammo')
+        
+        numSlots = len(updateSlots)
+        posGroup = {1 : self.oneSlotPos, 2 : self.twoSlotsPos, 3 : self.threeSlotsPos, 4 : self.fourSlotPos}.get(numSlots)
+        
+        for i in xrange(len(updateSlots)):
+            updateSlots[i]['pos'] = posGroup[i]
+            updateSlots[i].show()
+        
         if self.activeSlot == None:
             self.ammoLabel.hide()
             self.ammoLabel['text'] = 'Ammo: 0'

@@ -31,8 +31,8 @@ class ShtickerBook(StateData):
          State('inventoryPage', self.enterInventoryPage, self.exitInventoryPage, ['mapPage', 'questPage', 'off']),
          State('mapPage', self.enterMapPage, self.exitMapPage, ['inventoryPage', 'off']),
          State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['mapPage', 'off']),
-         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'off'],
-         State('namePage', self.enterNamePage, self.exitNamePage, ['mapPage', 'off']))], 'off', 'off')
+         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'off'])], 
+        'off', 'off')
         if base.localAvatar.getAdminToken() > -1:
             self.fsm.getStateNamed('releaseNotesPage').addTransition('adminPage')
         self.fsm.enterInitialState()

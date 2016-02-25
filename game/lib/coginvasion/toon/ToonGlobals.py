@@ -57,7 +57,9 @@ ANIMATIONS = {
     "sit" : [4, "sit"],
     "water": [3.5, "water"],
     "spit": [5, "spit"],
-    "firehose": [5, "firehose"]
+    "firehose": [5, "firehose"],
+    "applause": [4, "applause"],
+    "left" : [4, "left"]
 }
 
 # These are the admin tokens

@@ -124,7 +124,7 @@ class BackpackGUI(DirectFrame):
     def exitEditGags(self):
         self.switchButton.destroy()
         del self.switchButton
-        if len(self.newLoadout) == 4:
+        if len(self.newLoadout) > 0:
             base.localAvatar.sendUpdate('requestSetLoadout', [self.newLoadout])
         del self.newLoadout
         del self.initialLoadout

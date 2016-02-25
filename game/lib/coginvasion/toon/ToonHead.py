@@ -93,8 +93,8 @@ class ToonHead(Actor.Actor):
                 animPath = None
                 
                 if len(animationData) == 2:
-                    animPhase = animationData[1]
-                    animFile = animationData[0]
+                    animPhase = animationData[0]
+                    animFile = animationData[1]
                     
                     # Let's create the path for the animation.
                     animPath = ToonGlobals.BASE_MODEL % (animPhase, headType, '', 

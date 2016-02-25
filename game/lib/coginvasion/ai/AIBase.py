@@ -17,7 +17,7 @@ from direct.showbase.MessengerGlobal import *
 from direct.showbase.PythonUtil import *
 from direct.task import Task
 from direct.task.TaskManagerGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 class AIBase:
 	notify = directNotify.newCategory("AIBase")
