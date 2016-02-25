@@ -8,6 +8,7 @@
 *.pyc
 
 !*.lib
+game/resourcepack
 game/safe_test.py
 game/.pydevproject
 game/.project

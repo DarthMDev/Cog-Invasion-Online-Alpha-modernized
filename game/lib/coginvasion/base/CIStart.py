@@ -5,7 +5,7 @@
 
 from panda3d.core import *
 import __builtin__
-import os.path
+import os
 
 vfs = VirtualFileSystem.getGlobalPtr()
 
@@ -47,7 +47,6 @@ jsonfile = "settings.json"
 print "CIStart: Reading settings file " + jsonfile
 sm = SettingsManager()
 
-import os
 class game:
     name = 'coginvasion'
     process = 'client'
@@ -56,15 +55,8 @@ class game:
 
 
 __builtin__.game = game()
-import time
-import os
-import sys
-import random
-
-import __builtin__
 
 print "CIStart: Starting the game."
-from panda3d.core import *
 print "CIStart: Using Panda3D version {0}".format(PandaSystem.getVersionString())
 
 try:
@@ -89,23 +81,27 @@ from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 base.cTrav = CollisionTraverser()
 
-if base.config.GetString('load-display') == 'pandagl':
-    print "CIStart: Using OpenGL graphics library."
-elif base.config.GetString('load-display') == 'pandadx9':
-    print "CIStart: Using DirectX 9 graphics library."
-else:
-    print "CIStart: Using an unknown graphics library."
+display = base.config.GetString('load-display')
+audio = base.config.GetString('audio-library-name').replace('p3', '').replace('_audio', '')
 
-if base.config.GetString('audio-library-name') == 'p3miles_audio':
-    print "CIStart: Using Miles audio library."
-elif base.config.GetString('audio-library-name') == 'p3fmod_audio':
-    print "CIStart: Using FMOD audio library."
-elif base.config.GetString('audio-library-name') == 'p3openal_audio':
-    print "CIStart: Using OpenAL audio library."
+if display == 'pandagl':
+    display = 'OpenGL'
+elif 'pandadx' in display:
+    display = 'DirectX %s' % (str(display.replace('pandadx', '')))
+else:
+    display = 'unknown'
+print 'CIStart: Using %s graphics library.' % display
+
+if audio == 'miles':
+    audio = 'Miles'
+elif audio == 'fmod':
+    audio = 'FMOD'
+elif audio == 'openal':
+    audio = 'OpenAL'
+print 'CIStart: Using %s audio library.' % audio
 
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from direct.filter.CommonFilters import CommonFilters
 
 
 import CogInvasionLoader
@@ -125,7 +121,7 @@ base.transitions.IrisModelName = "phase_3/models/misc/iris.bam"
 base.transitions.FadeModelName = "phase_3/models/misc/fade.bam"
 base.setFrameRateMeter(False)
 base.accept('f9', base.screenshot, ['screenshots/screenshot'])
-from direct.filter.CommonFilters import CommonFilters
+
 print "CIStart: Setting display preferences..."
 sm.applySettings(jsonfile)
 if base.win == None:
@@ -144,7 +140,6 @@ DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialo
 
 from lib.coginvasion.nametag import NametagGlobals
 from lib.coginvasion.margins.MarginManager import MarginManager
-from lib.coginvasion.margins import MarginGlobals
 from lib.coginvasion.globals import ChatGlobals
 
 ChatGlobals.loadWhiteListData()
@@ -203,13 +198,9 @@ base.mouseWatcherNode.setButtonUpPattern('button-up-%r')
 def maybeDoSomethingWithMusic(condition):
     # 0 = paused
     # 1 = restarted
-    width, height, fs, music, sfx, tex_detail, model_detail, aa, af = sm.getSettings(jsonfile)
-    if condition == 0:
-        if music == True:
-            base.enableMusic(False)
-    elif condition == 1:
-        if music == True:
-            base.enableMusic(True)
+    _, _, _, music, _, _, _, _, _ = sm.getSettings(jsonfile)
+    if music == True:
+        base.enableMusic(condition)
 
 def handleMusicEnabled():
     if base.cr.music is not None:
