@@ -1,12 +1,9 @@
 ########################################
 # Filename: MakeAToon.py
-# Created by: blach (??July14)
+# Created by:  blach (??July14)
 ########################################
 
-
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.makeatoon.ToonGenerator import ToonGenerator
-from lib.coginvasion.gui import Dialog
+from panda3d.core import Vec4, TextNode
 
 from direct.gui.DirectGui import DirectButton, DirectFrame, DirectEntry
 from direct.gui.DirectGui import OnscreenImage, DirectLabel, DGG
@@ -14,7 +11,9 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
-from panda3d.core import Vec4, TextNode
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.makeatoon.ToonGenerator import ToonGenerator
+from lib.coginvasion.gui import Dialog
 
 it = loader.loadFont("phase_3/models/fonts/ImpressBT.ttf")
 

@@ -164,7 +164,7 @@ class AdminPage(StateData):
 		self.book.clearTitle()
 		
 	def enterBasePage(self):
-		self.book.createPageButtons('releaseNotesPage', None)
+		self.book.createPageButtons('mapPage', None)
 		self.book.setTitle('Admin Stuff')
 		geom = CIGlobals.getDefaultBtnGeom()
 		self.suitSpawnerBtn = DirectButton(

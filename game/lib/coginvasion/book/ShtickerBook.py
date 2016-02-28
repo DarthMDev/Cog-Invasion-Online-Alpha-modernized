@@ -1,6 +1,6 @@
 ########################################
 # Filename: ShtickerBook.py
-# Created by: blach (20Jun14)
+# Created by:  blach (20Jun14)
 ########################################
 
 from lib.coginvasion.globals import CIGlobals
@@ -32,7 +32,7 @@ class ShtickerBook(StateData):
          State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'off'])], 
         'off', 'off')
         if base.localAvatar.getAdminToken() > -1:
-            self.fsm.getStateNamed('releaseNotesPage').addTransition('adminPage')
+            self.fsm.getStateNamed('mapPage').addTransition('adminPage')
         self.fsm.enterInitialState()
         self.entered = 0
         self.parentFSM.getStateNamed('shtickerBook').addChild(self.fsm)
