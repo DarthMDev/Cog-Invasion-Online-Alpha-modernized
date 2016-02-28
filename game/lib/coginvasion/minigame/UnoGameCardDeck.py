@@ -52,8 +52,10 @@ class UnoGameCardDeck(DirectFrame):
         elif self.unoGame.cardToFollow[-2:] == str(UGG.CARD_YELLOW):
             self.cardToFollowGui = OnscreenImage(image = self.getCard('mg_uno_numcards_yellow_blank'),
                 parent = base.a2dRightCenter)
-        self.cardToFollowGui.setScale(0.25, 0.3, 0.3)
-        self.cardToFollowGui.setPos(-0.175, 0, -0.75)
+            
+        if self.cardToFollowGui:
+            self.cardToFollowGui.setScale(0.25, 0.3, 0.3)
+            self.cardToFollowGui.setPos(-0.175, 0, -0.75)
 
     def deleteCardToFollowGui(self):
         if self.cardToFollowGui:

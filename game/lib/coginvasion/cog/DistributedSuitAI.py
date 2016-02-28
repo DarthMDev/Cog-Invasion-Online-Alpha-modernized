@@ -11,6 +11,8 @@ from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.suit.SuitItemDropper import SuitItemDropper
+from lib.coginvasion.gags.GagType import GagType
+
 from SpawnMode import SpawnMode
 from SuitBrainAI import SuitBrain
 from SuitBank import SuitPlan
@@ -56,6 +58,16 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.deathAnim = None
         self.deathTimeLeft = 0
         self.deathTaskName = None
+        
+        # This is for handling combos.
+        # Combo data stores an avId and gag type pair.
+        # Avatar Ids are cheaper to store, so we use those.
+        # comboDataTaskName is the name of the task that clears the data.
+        self.comboData = dict()
+        self.comboDataTaskName = None
+        self.clearComboDataTime = 3
+        self.showComboDamageTime = 0.75
+        self.comboDamage = 0
         
     def d_setWalkPath(self, path):
         # Send out a list of Point2s for the client to create a path for the suit to walk.
@@ -207,6 +219,83 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 self.killSuit()
             return Task.done
         return Task.cont
+    
+    def __clearComboData(self, task):
+        self.comboData = dict()
+        return Task.done
+    
+    def __handleCombos(self, avId, gag):
+        self.comboData.update({avId : {gag.getType() : gag.getDamage()}})
+        
+        data = self.comboData.values()
+        tracks = list()
+        damages = list()
+        
+        for hitData in data:
+            for track, damage in hitData.iteritems():
+                tracks.append(track)
+                damages.append(damage)
+        
+        isCombo = False
+        comboPerct = 0.35
+        totalDamage = 0
+        totalGags = 0
+        
+        for track in tracks:
+            if tracks.count(track) > 1 and track == gag.getType():
+                # Get the indexes of each occurrence of this track in the tracks list.
+                # For example, tracks could equal [GagType.THROW, GagType.SQUIRT, GagType.THROW]
+                # If, the variable 'track' equaled GagType.THROW, then the next line would
+                # return: [0, 2]
+                damageIndices = [i for i, x in enumerate(tracks) if x == track]
+                totalGags = len(damageIndices)
+                for i in damageIndices:
+                    totalDamage += damages[damageIndices[i]]
+                isCombo = True
+                break
+            continue
+        
+        if isCombo:
+            self.comboDamage = int((float(totalDamage) / float(totalGags)) * comboPerct)
+            self.b_setHealth(self.getHealth() - self.comboDamage)
+            self.comboData.clear()
+            taskMgr.remove(self.comboDataTaskName)
+            
+    def __showComboLabel(self):
+        if self.comboDamage > 0:
+            self.d_announceHealth(2, self.comboDamage)
+            
+    # The new method for handling gags.
+    def hitByGag(self, gagId):
+        from lib.coginvasion.gags.GagManager import GagManager
+        from lib.coginvasion.gags import GagGlobals
+        
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender(), None)
+        gag = GagManager().getGagByName(GagGlobals.getGagByID(gagId))
+        dmg = gag.getDamage()
+        track = gag.getType()
+        
+        if self.canGetHit():
+            self.b_setHealth(self.getHealth() - dmg)
+            Sequence(Func(self.d_announceHealth, 0, dmg), Wait(self.showComboDamageTime), Func(self.__showComboLabel)).start()
+            self.__handleCombos(avatar.doId, gag)
+            taskMgr.doMethodLater(self.clearComboDataTime, self.__clearComboData, self.comboDataTaskName)
+            
+            if self.isDead():
+                if track == GagType.THROW or gag.getName() == CIGlobals.TNT:
+                    self.b_setAnimState('pie')
+                elif track == GagType.DROP:
+                    majorDrops = [CIGlobals.GrandPiano, CIGlobals.Safe, CIGlobals.BigWeight]
+                    if gag.getName() in majorDrops:
+                        self.b_setAnimState('drop')
+                    else:
+                        self.b_setAnimState('drop-react')
+                elif track == GagType.SQUIRT or track == GagType.SOUND:
+                    if gag.getName() == CIGlobals.StormCloud:
+                        self.b_setAnimState('soak')
+                    else:
+                        self.b_setAnimState('squirt-small')
+                avatar.questManager.cogDefeated(self)
 
     def __handleDeath(self, task):
         if hasattr(self, 'deathTimeLeft'):
@@ -349,6 +438,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.clearTrack()
         self.track = Sequence(Wait(0.1), Func(self.spawn))
         self.track.start()
+        
+        # Let's set the combo data task name and start the task.
+        self.comboDataTaskName = self.uniqueName('clearComboData')
 
     def disable(self):
         DistributedAvatarAI.disable(self)
@@ -356,6 +448,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         taskMgr.remove(self.uniqueName('__handleDeath'))
         taskMgr.remove(self.uniqueName('Resume Thinking'))
         taskMgr.remove(self.uniqueName('monitorHealth'))
+        taskMgr.remove(self.comboDataTaskName)
         if self.brain:
             self.brain.stopThinking()
             self.brain.unloadBehaviors()
@@ -380,6 +473,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.requestedBehaviors = None
         self.deathAnim = None
         self.deathTimeLeft = None
+        self.comboData = None
+        self.clearComboDataTime = None
+        self.showComboDamageTime = None
 
     def delete(self):
         self.DELETED = True
@@ -404,6 +500,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         del self.track
         del self.deathAnim
         del self.deathTimeLeft
+        del self.comboData
+        del self.comboDataTaskName
+        del self.clearComboDataTime
+        del self.showComboDamageTime
         DistributedAvatarAI.delete(self)
         DistributedSmoothNodeAI.delete(self)
 

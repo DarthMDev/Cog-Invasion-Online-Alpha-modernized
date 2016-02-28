@@ -86,7 +86,7 @@ class Geyser(SquirtGag, ChargeUpGag):
         def __getCogTrack():
             def handleHit():
                 if self.isLocal():
-                    self.avatar.sendUpdate('suitHitByPie', [cog.doId, self.getID()])
+                    cog.sendUpdate('hitByGag', [self.getID()])
             startPos = cog.getPos(render)
             cogFloat = Point3(0, 0, 14)
             cogEndPos = Point3(startPos[0] + cogFloat[0], startPos[1] + cogFloat[1], startPos[2] + cogFloat[2])

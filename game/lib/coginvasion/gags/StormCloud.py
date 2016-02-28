@@ -62,7 +62,7 @@ class StormCloud(SquirtGag, LocationGag):
         cloud02.reparentTo(cloud01)
         def damageCog():
             if self.isLocal():
-                self.avatar.sendUpdate('suitHitByPie', [cog.doId, self.getID()])
+                cog.sendUpdate('hitByGag', [self.getID()])
 
         def __getCloudTrack(cloud, useEffect = 1):
             track = Sequence(

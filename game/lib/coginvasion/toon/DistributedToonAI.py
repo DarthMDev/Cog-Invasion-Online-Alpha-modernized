@@ -457,35 +457,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def died(self):
         self.b_setHealth(self.getMaxHealth())
 
-    def suitHitByPie(self, avId, gag_id):
-        # The id of the weapon must be provided so the player
-        # can't cheat and switch weapons while it is in mid-air
-        # to do a different damage amount.
-        obj = self.air.doId2do.get(avId, None)
-        gag = self.gagMgr.getGagByName(GagGlobals.getGagByID(gag_id))
-        dmg = gag.getDamage()
-        if obj:
-            if not obj.canGetHit():
-                return
-            obj.b_setHealth(obj.getHealth() - dmg)
-            obj.d_announceHealth(0, dmg)
-            if obj.getHealth() <= 0:
-                if gag.getType() == GagType.THROW or gag.getName() == CIGlobals.TNT:
-                    obj.b_setAnimState('pie')
-                elif gag.getType() == GagType.DROP:
-                    majorDrops = [CIGlobals.GrandPiano, CIGlobals.Safe, CIGlobals.BigWeight]
-                    if gag.getName() in majorDrops:
-                        obj.b_setAnimState('drop')
-                    else:
-                        obj.b_setAnimState('drop-react')
-                elif gag.getType() == GagType.SQUIRT or gag.getType() == GagType.SOUND:
-                    if gag.getName() == CIGlobals.StormCloud:
-                        obj.b_setAnimState('soak')
-                    else:
-                        obj.b_setAnimState('squirt-small')
-                if obj.__class__.__name__ == 'DistributedSuitAI':
-                    self.questManager.cogDefeated(obj)
-
     def suitKilled(self, avId):
         pass
 

@@ -97,7 +97,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
 
     def damageSuit(self, suit):
         if self.isLocal():
-            self.avatar.sendUpdate('suitHitByPie', [suit.doId, self.getID()])
+            suit.sendUpdate('hitByGag', [self.getID()])
 
     def onActivate(self, entity, suit):
         self.removeEntity(entity)

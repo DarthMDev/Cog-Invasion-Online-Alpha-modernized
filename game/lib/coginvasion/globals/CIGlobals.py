@@ -110,6 +110,8 @@ DialogColor = (1, 1, 0.75, 1)
 DefaultBackgroundColor = (0, 0, 0, 1)
 PositiveTextColor = (0, 1, 0, 1)
 NegativeTextColor = (1, 0, 0, 1)
+OrangeTextColor = (1, 0.5, 0, 1)
+YellowTextColor = (1, 1, 0, 1)
 
 SuitClasses = ["DistributedSuit", "DistributedTutorialSuit", "DistributedCogOfficeSuit"]
 

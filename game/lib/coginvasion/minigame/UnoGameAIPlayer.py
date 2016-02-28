@@ -1,9 +1,7 @@
-"""
-
-  Filename: UnoGameAIPlayer.py
-  Created by: mliberty (01Apr15)
-
-"""
+########################################
+# Filename: UnoGameAIPlayer.py
+# Created by:   DecodedLogic (01Apr15)
+########################################
 
 from lib.coginvasion.npc import NPCGlobals
 from lib.coginvasion.toon.ToonDNA import ToonDNA

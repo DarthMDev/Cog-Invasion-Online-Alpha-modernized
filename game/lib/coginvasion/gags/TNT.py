@@ -92,7 +92,7 @@ class TNT(TossTrapGag):
                 if obj.getPlace() == base.localAvatar.zoneId:
                     if obj.getDistance(self.entity) <= self.maxDistance:
                         if self.avatar.doId == base.localAvatar.doId:
-                            self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
+                            obj.sendUpdate('hitByGag', [self.getID()])
         self.explode()
 
     def cleanupEntity(self):

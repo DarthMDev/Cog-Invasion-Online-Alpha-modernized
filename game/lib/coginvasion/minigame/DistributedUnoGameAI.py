@@ -376,7 +376,8 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
                     else:
                         self.requestPlaceCard(card, doId = player.getID())
                     return
-            if not hasPlaceableCardBeingDealt() and player.getDrawsThisTurn() < player.getMaxDrawsPerTurn() or player.getMaxDrawsPerTurn() == -1 and not hasPlaceableCardBeingDealt():
+            placeableCard = hasPlaceableCardBeingDealt()
+            if not placeableCard and player.getMaxDrawsPerTurn() == -1 or not placeableCard and player.getDrawsThisTurn() < player.getMaxDrawsPerTurn():
                 new_card = self.pickNewCard()
                 player.addDealingCard(new_card)
                 player.setDrawsThisTurn(player.getDrawsThisTurn() + 1)

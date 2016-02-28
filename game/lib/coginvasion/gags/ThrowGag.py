@@ -134,7 +134,7 @@ class ThrowGag(Gag):
             obj = base.cr.doId2do[key]
             if obj.__class__.__name__ in CIGlobals.SuitClasses:
                 if obj.getKey() == avNP.getKey():
-                    self.avatar.sendUpdate('suitHitByPie', [obj.doId, self.getID()])
+                    obj.sendUpdate('hitByGag', [self.getID()])
             elif obj.__class__.__name__ == "DistributedToon":
                 if obj.getKey() == avNP.getKey():
                     if obj.getHealth() < obj.getMaxHealth():
