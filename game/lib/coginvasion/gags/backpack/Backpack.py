@@ -24,6 +24,7 @@ class Backpack:
         CIGlobals.CreamPieSlice : 10,
         CIGlobals.Megaphone : 7,
         CIGlobals.Cupcake: 15,
+        CIGlobals.SquirtFlower : 15,
         CIGlobals.TrapDoor : 7,
         CIGlobals.Quicksand : 7,
         CIGlobals.BananaPeel : 10,
