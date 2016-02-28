@@ -29,7 +29,7 @@ class NameServicesManagerUD(DistributedObjectGlobalUD):
         avId = self.air.getAvatarIdFromSender()
         avatar = self.air.doId2do.get(avId)
         if avatar.getAdminToken() > -1:
-            names, avatarIds, dates, statuses = []
+            names, avatarIds, dates, statuses = [], [], [], []
             for i in xrange((len(self.requestedNames))):
                 nameRequest = self.requestedNames[i]
                 names.append(nameRequest['name'])
@@ -46,7 +46,7 @@ class NameServicesManagerUD(DistributedObjectGlobalUD):
             
     def loadData(self):
         with open(self.dataPath, 'r') as dataFile:
-            self.requestedNames = json.load(dataFile)
+            self.requestedNames = list(json.load(dataFile))
     
     def announceGenerate(self):
         DistributedObjectGlobalUD.announceGenerate(self)
