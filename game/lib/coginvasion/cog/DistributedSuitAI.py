@@ -20,6 +20,7 @@ from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
 from SuitCallInBackupBehavior import SuitCallInBackupBehavior
 from SuitPursueToonBehavior import SuitPursueToonBehavior
 from SuitAttackTurretBehavior import SuitAttackTurretBehavior
+from SuitPathDataAI import *
 import SuitAttacks
 import SuitBank
 import SuitGlobals
@@ -388,7 +389,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 1)
             self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 2)
         else:
-            self.brain.addBehavior(SuitPursueToonBehavior(self), priority = 1)
+            pursue = SuitPursueToonBehavior(self, getPathFinder(self.hood))
+            pursue.battle = self.getManager().getBattle()
+            self.brain.addBehavior(pursue, priority = 1)
             self.brain.addBehavior(SuitAttackTurretBehavior(self), priority = 2)
         place = CIGlobals.SuitSpawnPoints[self.hood]
         landspot = random.choice(place.keys())

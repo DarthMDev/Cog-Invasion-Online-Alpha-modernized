@@ -6,9 +6,11 @@ from direct.fsm import ClassicFSM, State
 from direct.distributed.ClockDelta import globalClockDelta
 
 from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
+from lib.coginvasion.cog.SuitBrainAI import SuitBrain
+from lib.coginvasion.cog.SuitPursueToonBehavior import SuitPursueToonBehavior
 from lib.coginvasion.globals import CIGlobals
-from CogOfficeSuitBrainAI import CogOfficeSuitBrainAI
 from CogOfficeConstants import POINTS
+from CogOfficePathDataAI import *
 import random
 
 CHAIR_2_BATTLE_TIME = 9.0
@@ -16,13 +18,18 @@ CHAIR_2_BATTLE_TIME = 9.0
 class DistributedCogOfficeSuitAI(DistributedSuitAI):
     notify = directNotify.newCategory('DistributedSuitAI')
     
-    def __init__(self, air, battle, guardPoint, flyToPoint, isChair, hood):
+    def __init__(self, air, battle, initPointData, isChair, hood):
         DistributedSuitAI.__init__(self, air)
         self.hood = hood
         self.battle = battle
         self.battleDoId = self.battle.doId
-        self.guardPoint = guardPoint
-        self.battleStartPoint = flyToPoint
+        self.flyToPoint = None
+        self.initPointIndex = initPointData[0]
+        initPoint = initPointData[1]
+        self.floorSection = initPoint[0]
+        self.initPoint = initPoint[1]
+        if isChair:
+            self.flyToPoint = initPoint[2]
         self.isChair = isChair
         self.fsm = ClassicFSM.ClassicFSM('DistributedCogOfficeSuitAI', [State.State('off', self.enterOff, self.exitOff),
          State.State('guard', self.enterGuard, self.exitGuard, ['think']),
@@ -52,8 +59,7 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         pass
         
     def enterGuard(self):
-        points = self.getPoints('guard')
-        self.setPos(points[self.guardPoint][0], points[self.guardPoint][1], points[self.guardPoint][2])
+        self.setPos(self.initPoint[0], self.initPoint[1], self.initPoint[2])
         self.b_setAnimState('neutral')
         
     def toonsArrivedFromElevator(self):
@@ -71,11 +77,11 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         
     def enterChair(self):
         points = self.getPoints('chairs')
-        self.setPos(points[self.guardPoint][0], points[self.guardPoint][1], points[self.guardPoint][2])
+        self.setPos(self.initPoint[0], self.initPoint[1], self.initPoint[2])
         self.b_setAnimState('sit')
         
     def allStandSuitsDead(self):
-        self.b_setState('chair2battle', [self.battleStartPoint])
+        self.b_setState('chair2battle', [self.initPointIndex])
         
     def exitChair(self):
         pass
@@ -83,11 +89,7 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
     def enterChair2Battle(self):
         taskMgr.remove(self.uniqueName('monitorHealth'))
         taskMgr.doMethodLater(CHAIR_2_BATTLE_TIME, self.chair2BattleTask, self.uniqueName('chair2BattleTask'))
-        points = self.getPoints('battle')
-        if self.battleStartPoint < 0 or self.battleStartPoint >= len(points):
-            self.battleStartPoint = points.index(random.choice(points))
-        point = points[self.battleStartPoint]
-        self.setPosHpr(*point)
+        self.setPosHpr(*self.flyToPoint)
         
     def chair2BattleTask(self, task):
         self.b_setState('think')
@@ -112,16 +114,18 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         return [self.fsm.getCurrentState().getName(), self.stateExtraArgs, globalClockDelta.getRealNetworkTime()]
         
     def spawn(self):
-        self.brain = CogOfficeSuitBrainAI(self)
+        self.brain = SuitBrain(self)
+        pursue = SuitPursueToonBehavior(self, getPathFinder(self.battle.currentFloor))
+        pursue.battle = self.battle
+        self.brain.addBehavior(pursue, priority = 1)
         if not self.isChair:
-            self.b_setState('guard', [self.guardPoint])
+            self.b_setState('guard', [self.initPointIndex])
         else:
-            self.b_setState('chair', [self.guardPoint])
+            self.b_setState('chair', [self.initPointIndex])
         self.b_setParent(CIGlobals.SPRender)
         taskMgr.add(self.monitorHealth, self.uniqueName('monitorHealth'))
             
     def delete(self):
-        del self.guardPoint
         del self.isChair
         self.fsm.requestFinalState()
         del self.fsm

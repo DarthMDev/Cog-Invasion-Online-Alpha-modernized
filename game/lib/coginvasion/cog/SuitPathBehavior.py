@@ -21,7 +21,7 @@ class SuitPathBehavior(SuitBehaviorBase):
         self.walkTrack = None
         self.exitOnWalkFinish = exitOnWalkFinish
         self.isEntered = 0
-        self.pathFinder = getPathFinder(self.suit.hood)
+        self.pathFinder = None
 
     def exit(self):
         self.clearWalkTrack()

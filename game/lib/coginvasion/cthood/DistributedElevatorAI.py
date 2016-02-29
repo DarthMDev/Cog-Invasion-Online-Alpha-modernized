@@ -129,7 +129,7 @@ class DistributedElevatorAI(DistributedObjectAI):
         
     def allAvatarsBoardedTask(self, task):
         if self.type == ELEVATOR_INT:
-            if len(self.slotTakenByAvatarId.values()) == len(self.bldg.avatars):
+            if len(self.slotTakenByAvatarId.values()) == len(self.bldg.avIds):
                 self.b_setState('closing')
         return task.done
 
@@ -147,7 +147,7 @@ class DistributedElevatorAI(DistributedObjectAI):
             self.sendUpdate('fillSlot', [slotToFill, avId])
             self.slotTakenByAvatarId[avId] = slotToFill
             if self.type == ELEVATOR_INT:
-                if len(self.slotTakenByAvatarId.values()) == len(self.bldg.avatars):
+                if len(self.slotTakenByAvatarId.values()) == len(self.bldg.avIds):
                     base.taskMgr.remove(self.uniqueName('allAvatarsBoardedTask'))
                     base.taskMgr.doMethodLater(0.7, self.allAvatarsBoardedTask, self.uniqueName('allAvatarsBoardedTask'))
         else:

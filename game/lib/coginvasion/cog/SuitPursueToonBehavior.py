@@ -15,17 +15,16 @@ class SuitPursueToonBehavior(SuitPathBehavior):
     
     RemakePathDistance = 20.0
     
-    def __init__(self, suit):
+    def __init__(self, suit, pathFinder):
         SuitPathBehavior.__init__(self, suit, False)
         self.fsm = ClassicFSM.ClassicFSM('SuitPursueToonBehavior', [State.State('off', self.enterOff, self.exitOff),
          State.State('pursue', self.enterPursue, self.exitPursue),
          State.State('attack', self.enterAttack, self.exitAttack)], 'off', 'off')
         self.fsm.enterInitialState()
-        self.mgr = self.suit.getManager()
-        self.battle = self.mgr.getBattle()
         self.air = self.suit.air
         self.target = None
         self.targetId = None
+        self.pathFinder = pathFinder
         
     def enter(self):
         print 'enter SuitPursueToonBehavior'

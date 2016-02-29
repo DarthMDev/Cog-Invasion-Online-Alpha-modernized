@@ -35,7 +35,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
          State.State('victory', self.enterVictory, self.exitVictory)], 'off', 'off')
         self.fsm.enterInitialState()
         self.hood = hood
-        self.avatars = []
+        self.avIds = []
         self.bldg = bldg
         self.bldgDoId = self.bldg.doId
         self.exteriorZoneId = exteriorZoneId
@@ -72,16 +72,16 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.handleToonLeft(avId, 1)
 
     def handleToonLeft(self, avId, died = 0):
-        if avId in self.avatars:
-            self.avatars.remove(avId)
-        self.b_setAvatars(self.avatars)
+        if avId in self.avIds:
+            self.avIds.remove(avId)
+        self.b_setAvatars(self.avIds)
         if avId in self.avId2suitsAttacking.keys():
             del self.avId2suitsAttacking[avId]
         if died:
             toon = self.air.doId2do.get(avId)
             if toon:
                 self.ignore(toon.getDeleteEvent())
-        if len(self.avatars) == 0:
+        if len(self.avIds) == 0:
             self.resetEverything()
             self.bldg.elevator.b_setState('opening')
 
@@ -104,9 +104,9 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         base.taskMgr.doMethodLater(VICTORY_TIME, self.victoryTask, self.uniqueName('victoryTask'))
 
     def victoryTask(self, task):
-        while len(self.avatars) < 4:
-            self.avatars.append(None)
-        self.bldg.fsm.request('waitForVictors', [self.avatars])
+        while len(self.avIds) < 4:
+            self.avIds.append(None)
+        self.bldg.fsm.request('waitForVictors', [self.avIds])
         return task.done
 
     def exitVictory(self):
@@ -150,9 +150,9 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         avId = self.air.getAvatarIdFromSender()
         if not avId in self.readyAvatars:
             self.readyAvatars.append(avId)
-        if len(self.readyAvatars) == len(self.avatars):
+        if len(self.readyAvatars) == len(self.avIds):
             if self.currentFloor == RECEPTION_FLOOR:
-                self.startFloor(CONFERENCE_FLOOR)
+                self.startFloor(EXECUTIVE_FLOOR)
             elif self.currentFloor == CONFERENCE_FLOOR:
                 self.startFloor(EXECUTIVE_FLOOR)
 
@@ -171,9 +171,9 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.setState(state)
 
     def setAvatars(self, avatars):
-        self.avatars = avatars
-        self.avId2suitsAttacking = {avId: [] for avId in self.avatars}
-        for avId in self.avatars:
+        self.avIds = avatars
+        self.avId2suitsAttacking = {avId: [] for avId in self.avIds}
+        for avId in self.avIds:
             toon = self.air.doId2do.get(avId)
             if toon:
                 self.ignore(toon.getDeleteEvent())
@@ -184,7 +184,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.setAvatars(avatars)
 
     def getAvatars(self):
-        return self.avatars
+        return self.avIds
 
     def getCurrentFloor(self):
         return self.currentFloor
@@ -199,7 +199,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         elevator1.generateWithRequired(self.zoneId)
         elevator1.b_setState('closed')
         self.elevators.append(elevator1)
-        self.resetBattlePoints()
+        #self.resetBattlePoints()
 
     def resetBattlePoints(self):
         self.availableBattlePoints = self.getPoints('battle')
@@ -240,7 +240,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.cleanupDrops()
         self.cleanupChairSuits()
         self.cleanupGuardSuits()
-        self.avatars = []
+        self.avIds = []
         self.readyAvatars = []
         for elevator in self.elevators:
             elevator.b_setState('closed')
@@ -258,7 +258,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.chairSuits = None
         self.cleanupGuardSuits()
         self.guardSuits = None
-        self.avatars = None
+        self.avIds = None
         self.readyAvatars = None
         self.cleanupElevators()
         self.elevators = None
@@ -299,7 +299,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
     def getHoodIndex(self):
         return CogBattleGlobals.hi2hi[self.hood]
 
-    def makeSuit(self, guardPoint, isChair, boss = False):
+    def makeSuit(self, initPointData, isChair, boss = False):
         levelRange = SuitBuildingGlobals.buildingMinMax[CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(self.zoneId)]]
         availableSuits = []
         minLevel = levelRange[0]
@@ -318,11 +318,9 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             for suit in availableSuits:
                 if suit.getSuitType() == SuitType.B:
                     availableSuits.remove(suit)
-            battlePoint = self.availableBattlePoints.index(random.choice(self.availableBattlePoints))
-            self.availableBattlePoints.pop(battlePoint)
 
         plan = random.choice(availableSuits)
-        suit = DistributedCogOfficeSuitAI(self.air, self, guardPoint, battlePoint, isChair, self.hood)
+        suit = DistributedCogOfficeSuitAI(self.air, self, initPointData, isChair, self.hood)
         suit.setManager(self)
         suit.generateWithRequired(self.zoneId)
         suit.d_setHood(suit.hood)
@@ -346,7 +344,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         # Make the Cogs for this floor.
         chairPoints = self.getPoints('chairs')
         for point in chairPoints:
-            suit = self.makeSuit(chairPoints.index(point), 1)
+            suit = self.makeSuit([chairPoints.index(point), point], 1)
             self.chairSuits.append(suit)
         guardPoints = self.getPoints('guard')
         for point in guardPoints:
@@ -354,7 +352,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             if wantBoss:
                 isBoss = True
                 wantBoss = False
-            suit = self.makeSuit(guardPoints.index(point), 0, isBoss)
+            suit = self.makeSuit([guardPoints.index(point), point], 0, isBoss)
             self.guardSuits.append(suit)
         self.sendUpdate('loadFloor', [self.currentFloor])
         self.elevators[0].sendUpdate('putToonsInElevator')
@@ -363,6 +361,6 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
     def readyToStart(self):
         avId = self.air.getAvatarIdFromSender()
         self.readyAvatars.append(avId)
-        if len(self.readyAvatars) == len(self.avatars):
+        if len(self.readyAvatars) == len(self.avIds):
             # We're ready to go!
             self.startFloor(RECEPTION_FLOOR)

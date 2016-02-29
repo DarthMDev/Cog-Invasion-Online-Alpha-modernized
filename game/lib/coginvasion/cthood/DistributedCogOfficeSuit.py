@@ -57,7 +57,7 @@ class DistributedCogOfficeSuit(DistributedSuit):
         self.show()
         self.cleanupPropeller()
         points = self.getPoints('guard')
-        self.setPosHpr(*points[extraArgs[0]])
+        self.setPosHpr(*points[extraArgs[0]][1])
         self.setAnimState('neutral')
 
     def exitGuard(self):
@@ -73,16 +73,16 @@ class DistributedCogOfficeSuit(DistributedSuit):
         self.show()
         self.cleanupPropeller()
         points = self.getPoints('chairs')
-        self.setPosHpr(*points[extraArgs[0]])
+        self.setPosHpr(*points[extraArgs[0]][1])
         self.setAnimState('sit')
 
     def exitChair(self):
         pass
 
     def enterChair2Battle(self, extraArgs, ts):
-        points = self.getPoints('battle')
+        points = self.getPoints('chairs')
         pointIndex = extraArgs[0]
-        point = points[pointIndex]
+        point = points[pointIndex][2]
         self.startProjInterval(self.getX(), self.getY(), self.getZ(), point[0], point[1], point[2], 5.0, 0.05, ts)
 
     def exitChair2Battle(self):
