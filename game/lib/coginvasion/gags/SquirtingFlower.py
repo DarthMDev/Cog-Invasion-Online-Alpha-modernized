@@ -15,7 +15,7 @@ class SquirtingFlower(SquirtGag):
     
     def __init__(self):
         SquirtGag.__init__(self, CIGlobals.SquirtFlower, GagGlobals.getProp(3.5, 'button'), 
-            3, GagGlobals.FLOWER_HIT_SFX, GagGlobals.FLOWER_HIT_SFX, GagGlobals.FLOWER_MISS_SFX, None, 0, 0, 0)
+            3, GagGlobals.FLOWER_HIT_SFX, GagGlobals.FLOWER_HIT_SFX, GagGlobals.NULL_SFX, None, 0, 0, 0)
         self.setImage('phase_3.5/maps/squirting-flower.png')
         self.flower = None
         self.flowerScale = 1.5
@@ -37,6 +37,7 @@ class SquirtingFlower(SquirtGag):
             if flowerJoint.isEmpty():
                 flowerJoint = self.avatar.find('**/joint_attachFlower')
             self.flower.reparentTo(flowerJoint)
+            self.flower.setY(self.flower.getY() + 4)
         
         # The variables we'll need.
         totalAnimationTime = 2.5
