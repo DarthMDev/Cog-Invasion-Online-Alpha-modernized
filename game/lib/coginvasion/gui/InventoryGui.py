@@ -18,6 +18,7 @@ class Slot(DirectFrame):
     def __init__(self, baseGui, index, pos, parent):
         DirectFrame.__init__(self, pos = pos, parent = parent, image = loader.loadTexture('phase_3.5/maps/slot_%s_%s.png' % (str(index), 'idle')), scale = 0.15, 
             frameSize = (-1, 1, -1, 1), frameColor = (0, 0, 0, 0.5), sortOrder = 0)
+        self.initialiseoptions(Slot)
         self.gui = baseGui
         self.index = index
         self.hoverObj = None
@@ -58,7 +59,7 @@ class Slot(DirectFrame):
 
     def setSlotImage(self, gagImage):
         if self.gagImage:
-            self.gagImage.cleanup()
+            self.gagImage.destroy()
             self.gagImage = None
         self.gagImage = OnscreenImage(image = gagImage, parent = self)
         self.gagImage.setTransparency(TransparencyAttrib.MAlpha)
@@ -188,12 +189,12 @@ class InventoryGui(DirectObject):
         self.disableWeaponSwitch()
         for slot in self.slots:
             self.slots.remove(slot)
-            slot.cleanup()
+            slot.destroy()
         if self.ammoLabel:
-            self.ammoLabel.cleanup()
+            self.ammoLabel.destroy()
             self.ammoLabel = None
         if self.inventoryFrame:
-            self.inventoryFrame.cleanup()
+            self.inventoryFrame.destroy()
             self.inventoryFrame = None
 
     def resetScroll(self):
