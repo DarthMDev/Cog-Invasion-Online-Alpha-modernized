@@ -58,7 +58,7 @@ class Slot(DirectFrame):
 
     def setSlotImage(self, gagImage):
         if self.gagImage:
-            self.gagImage.destroy()
+            self.gagImage.cleanup()
             self.gagImage = None
         self.gagImage = OnscreenImage(image = gagImage, parent = self)
         self.gagImage.setTransparency(TransparencyAttrib.MAlpha)
@@ -188,12 +188,12 @@ class InventoryGui(DirectObject):
         self.disableWeaponSwitch()
         for slot in self.slots:
             self.slots.remove(slot)
-            slot.destroy()
+            slot.cleanup()
         if self.ammoLabel:
-            self.ammoLabel.destroy()
+            self.ammoLabel.cleanup()
             self.ammoLabel = None
         if self.inventoryFrame:
-            self.inventoryFrame.destroy()
+            self.inventoryFrame.cleanup()
             self.inventoryFrame = None
 
     def resetScroll(self):
