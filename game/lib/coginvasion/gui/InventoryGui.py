@@ -131,7 +131,7 @@ class InventoryGui(DirectObject):
         self.switchSound = True
         self.switchSoundSfx = base.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.mp3")
         
-    def click_setWeapon(self, slot):
+    def click_setWeapon(self, slot, cmd):
         self.setWeapon(slot, playSound = False)
 
     def setWeapon(self, slot, playSound = True):
