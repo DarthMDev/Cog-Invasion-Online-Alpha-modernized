@@ -48,7 +48,7 @@ class Slot(DirectFrame):
         self.hoverObj.guiItem.setActive(True)
         self.hoverObj.bind(DGG.WITHIN, self.mouseEntered)
         self.hoverObj.bind(DGG.WITHOUT, self.mouseExited)
-        self.hoverObj.bind(DGG.B1CLICK, self.gui.setWeapon, [self, False])
+        self.hoverObj.bind(DGG.B1CLICK, self.gui.click_setWeapon, [self])
         
     def showNoAmmo(self):
         self.noAmmoText.show()
@@ -130,6 +130,9 @@ class InventoryGui(DirectObject):
         self.inventoryFrame = None
         self.switchSound = True
         self.switchSoundSfx = base.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.mp3")
+        
+    def click_setWeapon(self, slot):
+        self.setWeapon(slot, playSound = False)
 
     def setWeapon(self, slot, playSound = True):
         if isinstance(slot, str):
