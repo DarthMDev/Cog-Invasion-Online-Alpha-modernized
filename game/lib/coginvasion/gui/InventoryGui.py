@@ -48,7 +48,7 @@ class Slot(DirectFrame):
         self.hoverObj.guiItem.setActive(True)
         self.hoverObj.bind(DGG.WITHIN, self.mouseEntered)
         self.hoverObj.bind(DGG.WITHOUT, self.mouseExited)
-        self.hoverObj.bind(DGG.B1CLICK, self.gui.setWeapon, [self])
+        self.hoverObj.bind(DGG.B1CLICK, self.gui.setWeapon, [self, False])
         
     def showNoAmmo(self):
         self.noAmmoText.show()

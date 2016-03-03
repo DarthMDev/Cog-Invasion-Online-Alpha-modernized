@@ -43,6 +43,7 @@ from lib.coginvasion.gags.StormCloud import StormCloud
 from lib.coginvasion.gags.WaterGlass import WaterGlass
 from lib.coginvasion.gags.WaterGun import WaterGun
 from lib.coginvasion.gags.FireHose import FireHose
+from lib.coginvasion.gags.SquirtingFlower import SquirtingFlower
 from lib.coginvasion.globals import CIGlobals
 
 class GagShop(Shop):
@@ -90,6 +91,7 @@ class GagShop(Shop):
         self.distShop.addItem(WaterGlass, ItemType.GAG, 1, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.WaterGlass]))
         self.distShop.addItem(WaterGun, ItemType.GAG, 1, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.WaterGun]))
         self.distShop.addItem(FireHose, ItemType.GAG, 3, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.FireHose]))
+        self.distShop.addItem(SquirtingFlower, ItemType.GAG, 1, invIcons.find(GagGlobals.InventoryIconByName[CIGlobals.SquirtFlower]))
         self.items = self.distShop.getItems()
         Shop.setup(self)
         invIcons.removeNode()

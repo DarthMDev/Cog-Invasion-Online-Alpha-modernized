@@ -8,9 +8,11 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.task.Task import Task
 
 from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
-from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.suit.SuitItemDropper import SuitItemDropper
+
+from lib.coginvasion.gags.GagManager import GagManager
+from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagType import GagType
 
 from SpawnMode import SpawnMode
@@ -265,12 +267,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     def __showComboLabel(self):
         if self.comboDamage > 0:
             self.d_announceHealth(2, self.comboDamage)
+            self.comboDamage = 0
             
     # The new method for handling gags.
     def hitByGag(self, gagId):
-        from lib.coginvasion.gags.GagManager import GagManager
-        from lib.coginvasion.gags import GagGlobals
-        
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender(), None)
         gag = GagManager().getGagByName(GagGlobals.getGagByID(gagId))
         dmg = gag.getDamage()
@@ -479,6 +479,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.comboData = None
         self.clearComboDataTime = None
         self.showComboDamageTime = None
+        self.comboDamage = None
 
     def delete(self):
         self.DELETED = True
@@ -507,6 +508,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         del self.comboDataTaskName
         del self.clearComboDataTime
         del self.showComboDamageTime
+        del self.comboDamage
         DistributedAvatarAI.delete(self)
         DistributedSmoothNodeAI.delete(self)
 
