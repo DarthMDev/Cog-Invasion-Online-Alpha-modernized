@@ -252,7 +252,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 # For example, tracks could equal [GagType.THROW, GagType.SQUIRT, GagType.THROW]
                 # If, the variable 'track' equaled GagType.THROW, then the next line would
                 # return: [0, 2]
-                damageIndices = [i for i, x in tracks if x == track]
+                damageIndices = [i for i, x in enumerate(tracks) if x == track]
                 totalGags = len(damageIndices)
                 for i in damageIndices:
                     totalDamage += damages[damageIndices[i]]
