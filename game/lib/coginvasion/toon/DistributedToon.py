@@ -17,7 +17,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DelayDeletable import DelayDeletable
 from direct.distributed import DelayDelete
 from direct.interval.SoundInterval import SoundInterval
-from direct.interval.IntervalGlobal import Sequence, Wait, Func
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpColorScaleInterval
 from direct.directnotify.DirectNotify import DirectNotify
 from panda3d.core import Point3
 import random
@@ -66,6 +66,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.teleportAccess = []
         self.lastHood = 0
         self.defaultShard = 0
+        self.dmgFadeIval = None
         return
 
     def setupNameTag(self, tempName = None):
@@ -419,6 +420,20 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                 self.getPart("head").setColorScale(0, 0, 0, 1)
                 Sequence(Wait(3.0), Func(self.resetHeadColor)).start()
 
+        # Stop the current fade interval if it exists.
+        if self.dmgFadeIval:
+            self.dmgFadeIval.finish()
+            self.dmgFadeIval = None
+        
+        geomNode = self.getGeomNode()
+        # Do a fade effect when we get hit so we are more aware that we were damaged.
+        self.dmgFadeIval = Sequence(
+            Func(geomNode.setTransparency, 1),
+            LerpColorScaleInterval(geomNode, 0.3, (1, 1, 1, 0.5), (1, 1, 1, 1), blendType = 'easeOut'),
+            LerpColorScaleInterval(geomNode, 0.3, (1, 1, 1, 1), (1, 1, 1, 0.5), blendType = 'easeIn'),
+            Func(geomNode.setTransparency, 0))
+        self.dmgFadeIval.start()
+
     def resetHeadColor(self):
         head = self.getPart('head')
         if head:
@@ -618,6 +633,9 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.startSmooth()
 
     def disable(self):
+        if self.dmgFadeIval:
+            self.dmgFadeIval.finish()
+            self.dmgFadeIval = None
         self.busy = None
         taskMgr.remove(self.uniqueName('sBAL'))
         taskMgr.remove(self.uniqueName('blinkOnTurn'))

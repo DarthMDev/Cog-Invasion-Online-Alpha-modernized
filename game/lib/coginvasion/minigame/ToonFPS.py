@@ -368,6 +368,10 @@ class ToonFPS(DirectObject):
             self.v_model.pose('sidle', 15)
             self.track = LerpQuatInterval(self.v_model, duration = 0.5, quat = (0, 0, 0),
                 startHpr = (70, -50, 0), blendType = 'easeOut', name = 'drawTrack')
+        elif self.weaponName == "sniper":
+            self.v_model.pose('sidle', 15)
+            self.track = LerpQuatInterval(self.v_model, duration = 0.5, quat = (0, 0, 0),
+                startHpr = (70, -50, 0), blendType = 'easeOut', name = 'drawTrack')
         self.track.setDoneEvent(self.track.getName())
         self.acceptOnce(self.track.getDoneEvent(), self.aliveFSM.request, ['idle'])
         self.track.start()
@@ -383,6 +387,10 @@ class ToonFPS(DirectObject):
         if self.weaponName == "pistol":
             self.v_model.loop('pidle')
         elif self.weaponName == "shotgun":
+            self.track = Sequence(LerpQuatInterval(self.v_model, duration = 2.0, quat = (0, 1, 0), startHpr = (0, 0, 0), blendType = 'easeInOut'),
+                LerpQuatInterval(self.v_model, duration = 2.0, quat = (0, 0, 0), startHpr = (0, 1, 0), blendType = 'easeInOut'))
+            self.track.loop()
+        elif self.weaponName == "sniper":
             self.track = Sequence(LerpQuatInterval(self.v_model, duration = 2.0, quat = (0, 1, 0), startHpr = (0, 0, 0), blendType = 'easeInOut'),
                 LerpQuatInterval(self.v_model, duration = 2.0, quat = (0, 0, 0), startHpr = (0, 1, 0), blendType = 'easeInOut'))
             self.track.loop()
@@ -413,6 +421,18 @@ class ToonFPS(DirectObject):
         if self.weaponName == "pistol":
             self.track = ActorInterval(self.v_model, 'pshoot', playRate = 2, name = 'shootTrack')
         elif self.weaponName == "shotgun":
+            self.track = Parallel(
+                Sequence(
+                    LerpQuatInterval(self.v_model, duration = 0.05, quat = (0, 3, 0), startHpr = (0, 0, 0)),
+                    LerpQuatInterval(self.v_model, duration = 0.1, quat = (0, 0, 0), startHpr = (0, 3, 0))
+                ),
+                Sequence(
+                    LerpPosInterval(self.v_model, duration = 0.05, pos = (0, -0.3, 0), startPos = (0, 0, 0)),
+                    LerpPosInterval(self.v_model, duration = 0.1, pos = (0, 0, 0), startPos = (0, -0.3, 0)),
+                    Wait(0.1)
+                ),
+            )
+        elif self.weaponName == "sniper":
             self.track = Parallel(
                 Sequence(
                     LerpQuatInterval(self.v_model, duration = 0.05, quat = (0, 3, 0), startHpr = (0, 0, 0)),
@@ -473,6 +493,15 @@ class ToonFPS(DirectObject):
                 Func(self.draw.play),
                 LerpQuatInterval(self.v_model, duration = 0.5, quat = (0, 0, 0), startHpr = (70, -50, 0),
                     blendType = 'easeOut'), name = 'reloadTrack')
+        elif self.weaponName == "sniper":
+            self.track = Sequence(Func(self.draw.play), LerpQuatInterval(self.v_model, duration = 0.5,
+                quat = (70, -50, 0), startHpr = (0, 0, 0), blendType = 'easeIn'),
+                SoundInterval(self.cockBack),
+                SoundInterval(self.cockFwd),
+                Func(self.resetAmmo),
+                Func(self.draw.play),
+                LerpQuatInterval(self.v_model, duration = 0.5, quat = (0, 0, 0), startHpr = (70, -50, 0),
+                    blendType = 'easeOut'), name = 'reloadTrack')
         self.track.setDoneEvent('reloadTrack')
         self.acceptOnce(self.track.getDoneEvent(), self.aliveFSM.request, ['idle'])
         self.track.start()
@@ -488,6 +517,8 @@ class ToonFPS(DirectObject):
         if self.weaponName == "pistol":
             self.ammo = 14
         elif self.weaponName == "shotgun":
+            self.ammo = 7
+        elif self.weaponName == "sniper":
             self.ammo = 7
         self.gui.resetAmmo()
 

@@ -38,7 +38,7 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
     def __init__(self, baseChannel, stateServerChannel):
         CogInvasionInternalRepository.__init__(
             self, baseChannel, stateServerChannel,
-            ['astron/direct.dc', 'astron/toon.dc'], dcSuffix = 'AI'
+            ['phase_3/etc/direct.dc', 'phase_3/etc/toon.dc'], dcSuffix = 'AI'
         )
         self.notify.setInfo(True)
         self.district = None

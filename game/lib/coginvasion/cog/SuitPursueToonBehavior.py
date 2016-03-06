@@ -27,7 +27,6 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         self.pathFinder = pathFinder
         
     def enter(self):
-        print 'enter SuitPursueToonBehavior'
         SuitPathBehavior.enter(self)
         # Choose the toon that is the closest to this suit as the target.
         avIds = list(self.battle.avIds)
@@ -40,7 +39,6 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         self.fsm.request('pursue')
         
     def exit(self):
-        print 'exit SuitPursueToonBehavior'
         self.target = None
         self.targetId = None
         self.fsm.request('off')
@@ -78,21 +76,17 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         
     def enterPursue(self):
         # Make our initial path to the toon.
-        print 'enter pursue'
         self.lastCheckedPos = self.target.getPos(render)
         self.createPath(self.target)
         taskMgr.add(self._pursueTask, self.suit.uniqueName('pursueToonTask'))
         
     def _pursueTask(self, task):
-        print 'pursue task'
         currPos = self.target.getPos(render)
         if self.suit.getDistance(self.target) <= self.attackSafeDistance:
-            print 'safe to attack'
             # We're a good distance to attack this toon. Let's do it.
             self.fsm.request('attack')
             return task.done
         elif (currPos.getXy() - self.lastCheckedPos.getXy()).length() >= SuitPursueToonBehavior.RemakePathDistance:
-            print 'new path'
             # They're too far from where we're trying to go! Make a new path to where they are!
             self.lastCheckedPos = self.target.getPos(render)
             self.createPath(self.target)
@@ -100,7 +94,6 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         return task.again
         
     def exitPursue(self):
-        print 'exit pursue'
         taskMgr.remove(self.suit.uniqueName('pursueToonTask'))
         del self.lastCheckedPos
         self.clearWalkTrack()

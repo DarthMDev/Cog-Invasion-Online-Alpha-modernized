@@ -6,9 +6,10 @@ from panda3d.core import Point3, Vec3
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
 from direct.distributed.ClockDelta import globalClockDelta
-from direct.interval.IntervalGlobal import LerpPosInterval, LerpHprInterval, Sequence, Wait, Func, LerpQuatInterval
+from direct.interval.IntervalGlobal import LerpPosInterval, LerpHprInterval, Sequence, Wait, Func, LerpQuatInterval, Parallel
 from direct.fsm import ClassicFSM, State
 
+from lib.coginvasion.minigame import DistributedMinigame
 from lib.coginvasion.nametag import NametagGlobals
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog import Dept
@@ -53,7 +54,7 @@ class Elevator:
 class DistributedCogOfficeBattle(DistributedObject):
     notify = directNotify.newCategory('DistributedCogOfficeBattle')
     CEILING_COLOR = (187.0 / 255, 174.0 / 255, 155.0 / 255)
-    FLOOR_NAMES = {RECEPTION_FLOOR: 'Reception Floor', EXECUTIVE_FLOOR: 'Executive Floor'}
+    FLOOR_NAMES = {RECEPTION_FLOOR: 'Reception Floor', EXECUTIVE_FLOOR: 'Executive Floor', CONFERENCE_FLOOR: 'Conference Floor'}
     UNIQUE_FLOORS = []
     UNIQUE_FLOOR_NAMES = {
         Dept.BOSS: {1: 'Stock Floor', 2: 'Board of Directors Floor', 3: 'Human Resources Floor'},
@@ -82,10 +83,14 @@ class DistributedCogOfficeBattle(DistributedObject):
                         [0.74202, -9.50081, 0, 180, 0, 0],
                         [-39.49848, 20.74907, 0, 90, 0, 0]
                     ],
+                    # No need to provide any room sections when it's a single-sectioned room
+                    'room_sections': [],
                     'room_mdl': 'phase_7/models/modules/cog_bldg_reception_flr.bam',
                     'grounds': ['**/floor']
                 },
-                CONFERENCE_FLOOR: {'props': [
+                EXECUTIVE_FLOOR: {'props': [
+                        ['BR_sky', 0, 0, -125, 0, 0, 0, 1],
+                        
                         # Small room:
                         ['rug', -65.579, 10.385, 0, 0, 0, 0, 1],
                         ['computer_monitor', -54.654, -3.465, 2.936, -71.131, 0, 0, 1],
@@ -135,10 +140,11 @@ class DistributedCogOfficeBattle(DistributedObject):
                         [-73.22, 11.08, 0, 90, 0, 0],
                         [0.22, 105.86, 0, 0, 0, 0],
                     ],
+                    'room_sections': ['short_floor_coll', 'long_floor_coll_part1', 'long_floor_coll_part2'],
                     'room_mdl': 'phase_7/models/modules/cog_bldg_confrence_flr.bam',
                     'grounds': []
                 },
-                EXECUTIVE_FLOOR: {'props': [
+                CONFERENCE_FLOOR: {'props': [
                         ['BR_sky', 0, 0, -100, 0, 0, 0, 1],
                         ['photo_frame', 16.26, 63.84, 8.34, 270.0, 0, 90.0, 1],
                         ['bookshelfA', -22.11, 49.88, 0.01, 90.0, 0, 0, 1.5],
@@ -168,6 +174,8 @@ class DistributedCogOfficeBattle(DistributedObject):
                         [0.23007, 60.47556, 0, 0, 0, 0],
                         [0.74202, -9.50081, 0, 180, 0, 0]
                     ],
+                    # No need to provide any room sections when it's a single-sectioned room
+                    'room_sections': [],
                     'room_mdl': 'phase_7/models/modules/cog_bldg_executive_flr.bam',
                     'grounds': ['**/floor']
                 }
@@ -183,6 +191,8 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.exteriorZoneId = None
         self.bldgDoId = None
         self.avatars = None
+        # Use the same text from eagle summit
+        self.floorNameText = DistributedMinigame.getAlertText((0.75, 0.75, 0.75, 1.0), 0.15)
         self.props = []
         self.elevators = []
         self.elevatorResponses = 0
@@ -232,6 +242,10 @@ class DistributedCogOfficeBattle(DistributedObject):
 
     def d_readyForNextFloor(self):
         self.sendUpdate('readyForNextFloor')
+
+    # Tell the AI that we've finished loading the floor
+    def d_loadedFloor(self):
+        self.sendUpdate('loadedFloor')
 
     def elevatorReady(self):
         # We have to wait until all of our elevators are ready before
@@ -307,15 +321,26 @@ class DistributedCogOfficeBattle(DistributedObject):
 
     def enterRideElevator(self, ts):
         elevator = self.elevators[0]
-        base.camLens.setFov(CIGlobals.DefaultCameraFov)
+
         NametagGlobals.setWant2dNametags(False)
+
+        base.camLens.setFov(CIGlobals.DefaultCameraFov)
         camera.reparentTo(elevator.getElevatorModel())
+        camera.setPos(0, 14, 4)
         camera.setHpr(180, 0, 0)
+
+        base.transitions.noTransitions()
+        base.playMusic(self.rideElevatorMusic, volume = 0.8, looping = 1)
+        self.__doFloorTextPulse()
+
         self.elevatorTrack = getRideElevatorInterval()
         self.elevatorTrack.append(getOpenInterval(self, elevator.getLeftDoor(), elevator.getRightDoor(), self.openSfx, None))
         self.elevatorTrack.start(ts)
-        base.transitions.noTransitions()
-        base.playMusic(self.rideElevatorMusic, volume = 0.8, looping = 1)
+
+    def __doFloorTextPulse(self):
+        self.floorNameText.setText(DistributedCogOfficeBattle.FLOOR_NAMES[self.currentFloor])
+        ival = DistributedMinigame.getAlertPulse(self.floorNameText, 0.17, 0.15)
+        ival.start()
 
     def exitRideElevator(self):
         if hasattr(self, 'elevatorTrack'):
@@ -325,6 +350,16 @@ class DistributedCogOfficeBattle(DistributedObject):
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         NametagGlobals.setWant2dNametags(True)
 
+    def __handleEnteredRoomSection(self, entry):
+        name = entry.getIntoNodePath().getName()
+        index = self.getRoomData('room_sections').index(name)
+
+        print 'entered room section {0}'.format(index)
+
+        # Tell the AI we've entered this section.
+        # Maybe activate some cogs?
+        self.sendUpdate('enterSection', [index])
+
     def enterBattle(self, ts):
         if self.currentFloor < self.numFloors - 1:
             song = self.bottomFloorsMusic
@@ -333,7 +368,11 @@ class DistributedCogOfficeBattle(DistributedObject):
         base.playMusic(song, looping = 1, volume = 0.8)
         base.localAvatar.walkControls.setCollisionsActive(1)
         self.cr.playGame.getPlace().fsm.request('walk')
+        base.localAvatar.hideBookButton()
         taskMgr.add(self.monitorHP, self.uniqueName('monitorHP'))
+
+        for path in self.getRoomData('room_sections'):
+            self.accept('enter' + path, self.__handleEnteredRoomSection)
 
     def monitorHP(self, task):
         if base.localAvatar.getHealth() < 1:
@@ -346,11 +385,14 @@ class DistributedCogOfficeBattle(DistributedObject):
         return task.done
 
     def exitBattle(self):
+        for path in self.getRoomData('room_sections'):
+            self.ignore('enter' + path)
         self.bottomFloorsMusic.stop()
         taskMgr.remove(self.uniqueName('monitorHP'))
 
     def enterFloorIntermission(self, ts):
         self.topFloorMusic.stop()
+        base.localAvatar.showBookButton()
         base.playMusic(self.intermissionMusic, looping = 1, volume = 0.8)
 
     def exitFloorIntermission(self):
@@ -360,7 +402,6 @@ class DistributedCogOfficeBattle(DistributedObject):
         DistributedObject.announceGenerate(self)
         base.setBackgroundColor(self.CEILING_COLOR)
         self.cr.playGame.hood.stopSuitEffect()
-        self.cr.playGame.hood.sky.hide()
         self.loadElevators()
 
     def disable(self):
@@ -373,6 +414,9 @@ class DistributedCogOfficeBattle(DistributedObject):
             self.cr.playGame.hood.sky.show()
         self.cleanupFloor()
         self.cleanupElevators()
+        if self.floorNameText:
+            self.floorNameText.destroy()
+            self.floorNameText = None
         self.props = None
         self.currentFloor = None
         self.floorModel = None
@@ -394,11 +438,15 @@ class DistributedCogOfficeBattle(DistributedObject):
         DistributedObject.disable(self)
 
     def loadFloor(self, floorNum):
+        base.transitions.fadeScreen(1.0)
         self.cleanupFloor()
         self.currentFloor = floorNum
         self.loadRoom()
         self.loadProps()
         self.repositionElevators()
+
+        # Tell the AI that we've finished loading the floor
+        self.d_loadedFloor()
 
     def cleanupFloor(self):
         for prop in self.props:

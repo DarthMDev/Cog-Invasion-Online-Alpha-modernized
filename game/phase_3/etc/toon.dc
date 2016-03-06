@@ -713,6 +713,16 @@ dclass DistributedCogOfficeBattle : DistributedObject {
   loadFloor(int8) broadcast;
   readyForNextFloor() clsend airecv;
   iAmDead() clsend airecv;
+
+  // Sent when a player runs over the collision mesh of a certain floor section
+  // Used for activating cogs that are in certain places of the room
+  enterSection(int8) clsend airecv;
+
+  // Sent by the AI to all the clients to open up the locked doors to the restock room
+  openRestockDoors(int16) broadcast;
+
+  // Sent by the player when they finish loading a floor
+  loadedFloor() clsend airecv;
 };
 
 dclass DistributedCogOfficeSuit : DistributedSuit {

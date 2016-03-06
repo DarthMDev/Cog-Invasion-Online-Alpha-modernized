@@ -67,6 +67,17 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
     def getBldgDoId(self):
         return self.bldgDoId
 
+    # Sent by the client when they enter a certain floor section
+    def enterSection(self, sectionIndex):
+        print 'toon entered section {0}'.format(sectionIndex)
+        # Get the guard suits associated with this section
+        for guard in self.getGuardsBySection(sectionIndex):
+            # Make sure this guard isn't already activated
+            if not guard.isActivated():
+               # Activate this guard!
+                print 'activating guard'
+                guard.activate()
+
     def iAmDead(self):
         avId = self.air.getAvatarIdFromSender()
         self.handleToonLeft(avId, 1)
@@ -117,8 +128,11 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
 
     def faceOffTask(self, task):
         self.b_setState('battle')
-        for suit in self.guardSuits:
-            suit.toonsArrivedFromElevator()
+
+        # Activate all of the guards in section 0 (the first section).
+        for guard in self.getGuardsBySection(0):
+            guard.activate()
+
         return task.done
 
     def exitFaceOff(self):
@@ -152,7 +166,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             self.readyAvatars.append(avId)
         if len(self.readyAvatars) == len(self.avIds):
             if self.currentFloor == RECEPTION_FLOOR:
-                self.startFloor(EXECUTIVE_FLOOR)
+                self.startFloor(CONFERENCE_FLOOR)
             elif self.currentFloor == CONFERENCE_FLOOR:
                 self.startFloor(EXECUTIVE_FLOOR)
 
@@ -276,13 +290,15 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
 
     def deadSuit(self, doId):
         foundIt = False
+        section = 0
         for suit in self.guardSuits:
             if suit.doId == doId:
+                section = suit.floorSection
                 self.guardSuits.remove(suit)
                 foundIt = True
                 break
-        if foundIt and len(self.guardSuits) == 0:
-            for suit in self.chairSuits:
+        if foundIt and len(self.getGuardsBySection(section)) == 0:
+            for suit in self.getChairsBySection(section):
                 if suit.getHealth() > 0:
                     suit.allStandSuitsDead()
         if not foundIt:
@@ -333,6 +349,20 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         suit.b_setName(plan.getName())
         return suit
 
+    def getGuardsBySection(self, sectionIndex):
+        guards = []
+        for guard in self.guardSuits:
+            if guard.floorSection == sectionIndex:
+                guards.append(guard)
+        return guards
+
+    def getChairsBySection(self, sectionIndex):
+        chairs = []
+        for chair in self.chairSuits:
+            if chair.floorSection == sectionIndex:
+                chairs.append(chair)
+        return chairs
+
     def startFloor(self, floorNum):
         for drop in self.drops:
             drop.requestDelete()
@@ -354,9 +384,21 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 wantBoss = False
             suit = self.makeSuit([guardPoints.index(point), point], 0, isBoss)
             self.guardSuits.append(suit)
+
+        # We need to wait for a response from all players telling us that they finished loading the floor.
+        # Once they all finish loading the floor, we ride the elevator.
+        self.readyAvatars = []
         self.sendUpdate('loadFloor', [self.currentFloor])
         self.elevators[0].sendUpdate('putToonsInElevator')
-        self.b_setState('rideElevator')
+
+    # Sent by the player telling us that they have finished loading/setting up the floor.
+    def loadedFloor(self):
+        avId = self.air.getAvatarIdFromSender()
+        if not avId in self.readyAvatars:
+            self.readyAvatars.append(avId)
+        if len(self.readyAvatars) == len(self.avIds):
+            # Let's ride!
+            self.b_setState('rideElevator')
 
     def readyToStart(self):
         avId = self.air.getAvatarIdFromSender()

@@ -10,9 +10,9 @@ class LoadUtility:
         self.models = []
 
     def load(self):
-        #for modelFile in self.models:
-        #    loader.loadModel(modelFile)
-        #    loader.progressScreen.tick()
+        for modelFile in self.models:
+            loader.loadModel(modelFile)
+            loader.progressScreen.tick()
         self.done()
 
     def done(self):

@@ -3,14 +3,14 @@
 # Created by: DecodedLogic (28Feb16)
 ########################################
 
+from panda3d.core import CollisionSphere, CollisionNode
+
 from direct.distributed.DistributedNode import DistributedNode
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, LerpScaleInterval, Func
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals
-
-from panda3d.core import CollisionSphere, CollisionNode
 
 class DistributedRestockBarrel(DistributedNode):
     notify = directNotify.newCategory('DistributedRestockBarrel')

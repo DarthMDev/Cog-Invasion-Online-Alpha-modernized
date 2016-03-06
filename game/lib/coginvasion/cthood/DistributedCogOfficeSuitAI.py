@@ -38,9 +38,15 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
          State.State('chair2battle', self.enterChair2Battle, self.exitChair2Battle, ['think'])], 'off', 'off')
         self.fsm.enterInitialState()
         self.stateExtraArgs = []
+
+    def isActivated(self):
+        return (self.fsm.getCurrentState().getName() == 'think')
         
     def canGetHit(self):
-        return (not self.isChair) or (self.isChair and self.fsm.getCurrentState().getName() == 'think')
+        if not self.allowHits:
+           return False
+        else:
+            return (not self.isChair) or (self.isChair and self.fsm.getCurrentState().getName() == 'think')
         
     def getBattleDoId(self):
         return self.battleDoId
@@ -59,10 +65,10 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         pass
         
     def enterGuard(self):
-        self.setPos(self.initPoint[0], self.initPoint[1], self.initPoint[2])
+        self.setPosHpr(*self.initPoint)
         self.b_setAnimState('neutral')
         
-    def toonsArrivedFromElevator(self):
+    def activate(self):
         self.b_setState('think')
         
     def exitGuard(self):
@@ -76,8 +82,7 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
             self.brain.stopThinking()
         
     def enterChair(self):
-        points = self.getPoints('chairs')
-        self.setPos(self.initPoint[0], self.initPoint[1], self.initPoint[2])
+        self.setPosHpr(*self.initPoint)
         self.b_setAnimState('sit')
         
     def allStandSuitsDead(self):

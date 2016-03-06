@@ -23,6 +23,34 @@ import random
 
 transitions = Transitions(loader)
 
+def getAlertText(fg = (1, 0.9, 0.3, 1), scale = 0.08):
+    return OnscreenText(text = '', font = CIGlobals.getMickeyFont(), fg = fg, pos = (0, 0.8, 0), scale = scale)
+
+def getAlertPulse(text, toScale1 = 0.12, toScale2 = 0.1):
+
+    def change_text_scale(num):
+        text.setScale(num)
+
+    seq = Sequence(
+        LerpFunc(
+            change_text_scale,
+            duration = 0.3,
+            toData = toScale1,
+            fromData = 0.01,
+            blendType = 'easeOut'
+        ),
+        LerpFunc(
+            change_text_scale,
+            duration = 0.2,
+            toData = toScale2,
+            fromData = toScale1,
+            blendType = 'easeInOut'
+        ),
+        Wait(3.0),
+        Func(text.setText, '')
+    )
+    return seq
+
 class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
 
     def __init__(self, cr):
@@ -69,29 +97,9 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
     def showAlert(self, text):
         self.stopPulse()
 
-        def change_text_scale(num):
-            self.alertText.setScale(num)
-
         base.playSfx(self.popupSound)
         self.alertText.setText(text)
-        self.alertPulse = Sequence(
-            LerpFunc(
-                change_text_scale,
-                duration = 0.3,
-                toData = 0.12,
-                fromData = 0.01,
-                blendType = 'easeOut'
-            ),
-            LerpFunc(
-                change_text_scale,
-                duration = 0.2,
-                toData = 0.1,
-                fromData = 0.12,
-                blendType = 'easeInOut'
-            ),
-            Wait(3.0),
-            Func(self.alertText.setText, '')
-        )
+        self.alertPulse = getAlertPulse(self.alertText)
         self.alertPulse.start()
 
     def stopPulse(self):
@@ -287,7 +295,7 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
         base.minigame = self
-        self.alertText = OnscreenText(text = '', font = CIGlobals.getMickeyFont(), fg = (1, 0.9, 0.3, 1), pos = (0, 0.8, 0))
+        self.alertText = getAlertText()
         self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
 
     def disable(self):

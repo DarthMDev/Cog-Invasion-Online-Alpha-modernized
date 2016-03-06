@@ -19,6 +19,7 @@ from SuitState import SuitState
 from SuitBank import SuitPlan
 from Suit import Suit
 from SpawnMode import SpawnMode
+from SuitUtils import getMoveIvalFromPath
 import SuitBank
 import SuitGlobals
 import Voice
@@ -78,21 +79,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         # We will make a sequence of NPCWalkIntervals for each point2 in the path.
 
         self.clearMoveTrack()
-        self.moveIval = Sequence()
-        self.moveIval.append(Func(self.animFSM.request, 'walk'))
-        for i in xrange(len(path)):
-            waypoint = path[i]
-            if i > 0:
-                lastWP = path[i - 1]
-            else:
-                lastWP = [self.getX(render), self.getY(render), self.getZ(render)]
-            self.moveIval.append(Func(self.headsUp, Point3(*waypoint)))
-            ival = NPCWalkInterval(self, Point3(*waypoint),
-                startPos = lambda self = self: self.getPos(render),
-                fluid = 1, name = self.uniqueName('doWalkIval' + str(i)),
-                duration = (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2)
-            self.moveIval.append(ival)
-        self.moveIval.append(Func(self.animFSM.request, 'neutral'))
+        self.moveIval = getMoveIvalFromPath(self, path, elapsedT, True, 'suitMoveIval')
         self.moveIval.start(elapsedT)
         
     def clearMoveTrack(self):
@@ -203,7 +190,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def stopMoveInterval(self):
         if self.moveIval:
-            self.moveIval.clearToInitial()
+            self.moveIval.pause()
             self.moveIval = None
 
     def toggleRay(self, ray = 1):

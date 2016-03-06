@@ -11,6 +11,7 @@ from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from direct.interval.IntervalGlobal import Sequence, Func
 
 from SuitPathDataAI import *
+from SuitUtils import getMoveIvalFromPath
 
 import random
 
@@ -28,7 +29,6 @@ class SuitPathBehavior(SuitBehaviorBase):
         SuitBehaviorBase.exit(self)
 
     def unload(self):
-        self.clearWalkTrack()
         del self.exitOnWalkFinish
         del self.walkTrack
         SuitBehaviorBase.unload(self)
@@ -40,8 +40,8 @@ class SuitPathBehavior(SuitBehaviorBase):
         path = self.pathFinder.planPath((x2, y2), (x1, y1))
         if path is None:
             return
-        if len(path) > 1:
-            path.remove(path[0])
+        if len(path) < 2:
+            path.insert(0, (x2, y2))
         self.startPath(path, z, durationFactor)
 
     def startPath(self, path, z, durationFactor):
@@ -54,25 +54,14 @@ class SuitPathBehavior(SuitBehaviorBase):
         self._doWalk(durationFactor)
 
     def _doWalk(self, durationFactor):
-        self.walkTrack = Sequence(name = self.suit.uniqueName('suitPath'))
-        for i in xrange(len(self.path)):
-            waypoint = self.path[i]
-            if i > 0:
-                lastWP = self.path[i - 1]
-            else:
-                lastWP = [self.suit.getX(render), self.suit.getY(render), self.suit.getZ(render)]
-            ival = NPCWalkInterval(self.suit, Point3(*waypoint),
-                startPos = lambda self = self: self.suit.getPos(render),
-                fluid = 1, name = self.suit.uniqueName('doWalkIval' + str(i)),
-                duration = (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * durationFactor)
-            self.walkTrack.append(ival)
+        self.walkTrack = getMoveIvalFromPath(self.suit, self.path, 0.0, False, 'suitMoveIval')
         self.walkTrack.setDoneEvent(self.walkTrack.getName())
         self.startFollow()
 
     def clearWalkTrack(self):
         if self.walkTrack:
             self.ignore(self.walkTrack.getDoneEvent())
-            self.walkTrack.clearToInitial()
+            self.walkTrack.pause()
             self.walkTrack = None
             if hasattr(self, 'suit'):
                 self.suit.d_stopMoveInterval()
@@ -83,7 +72,6 @@ class SuitPathBehavior(SuitBehaviorBase):
             self.walkTrack.start()
 
     def _walkDone(self):
-        self.clearWalkTrack()
         if not self.suit.isDead():
             if self.exitOnWalkFinish == True:
                 self.exit()

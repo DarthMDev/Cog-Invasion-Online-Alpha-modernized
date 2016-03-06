@@ -17,7 +17,7 @@ class Slot(DirectFrame):
 
     def __init__(self, baseGui, index, pos, parent):
         DirectFrame.__init__(self, pos = pos, parent = parent, image = loader.loadTexture('phase_3.5/maps/slot_%s_%s.png' % (str(index), 'idle')), scale = 0.15, 
-            frameSize = (-1, 1, -1, 1), frameColor = (0, 0, 0, 0.5), sortOrder = 0)
+            frameSize = (-1, 1, -1, 1), frameColor = (0, 0, 0, 0), sortOrder = 0)
         self.initialiseoptions(Slot)
         self.gui = baseGui
         self.index = index

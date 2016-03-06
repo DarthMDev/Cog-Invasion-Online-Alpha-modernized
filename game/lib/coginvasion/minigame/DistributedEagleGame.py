@@ -14,29 +14,29 @@ from FlightProjectileInterval import FlightProjectileInterval
 from DistributedMinigame import DistributedMinigame
 import EagleGameGlobals as EGG
 
-def getGameText():
-	return OnscreenText(text = "", scale = 0.15, fg = (1.0, 0.5, 0.0, 1.0), font = CIGlobals.getMickeyFont())
+def getGameText(fg = (1.0, 0.5, 0.0, 1.0)):
+	return OnscreenText(text = "", scale = 0.15, fg = fg, font = CIGlobals.getMickeyFont())
 
 def getIval(text, duration1, duration2, duration3):
 	ival = Sequence(
 		LerpPosInterval(
 			text,
 			duration = duration1,
-			pos = (0, 0, 0.3),
-			startPos = (0, 0, 1.5),
+			pos = (0, 0, 0.5),
+			startPos = (0, 0, 1.7),
 			blendType = 'easeIn'
 		),
 		LerpPosInterval(
 			text,
 			duration = duration2,
-			pos = (0.0, 0, -0.2),
-			startPos = (0, 0, 0.3),
+			pos = (0.0, 0, 0),
+			startPos = (0, 0, 0.5),
 		),
 		LerpPosInterval(
 			text,
 			duration = duration3,
-			pos = (0, 0, -1.5),
-			startPos = (0, 0, -0.2),
+			pos = (0, 0, -1.3),
+			startPos = (0, 0, 0),
 			blendType = 'easeOut'
 		)
 	)

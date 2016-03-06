@@ -66,11 +66,13 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         # Combo data stores an avId and gag type pair.
         # Avatar Ids are cheaper to store, so we use those.
         # comboDataTaskName is the name of the task that clears the data.
-        self.comboData = dict()
+        self.comboData = {}
         self.comboDataTaskName = None
         self.clearComboDataTime = 3
         self.showComboDamageTime = 0.75
         self.comboDamage = 0
+
+        self.allowHits = True
         
     def d_setWalkPath(self, path):
         # Send out a list of Point2s for the client to create a path for the suit to walk.
@@ -78,7 +80,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.sendUpdate('setWalkPath', [path, timestamp])
         
     def canGetHit(self):
-        return True
+        return self.allowHits
 
     def b_setSuit(self, plan, variant = 0):
         self.d_setSuit(plan, variant)
@@ -224,15 +226,15 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         return Task.cont
     
     def __clearComboData(self, task):
-        self.comboData = dict()
+        self.comboData = {}
         return Task.done
     
     def __handleCombos(self, avId, gag):
         self.comboData.update({avId : {gag.getType() : gag.getDamage()}})
         
         data = self.comboData.values()
-        tracks = list()
-        damages = list()
+        tracks = []
+        damages = []
         
         for hitData in data:
             for track, damage in hitData.iteritems():
@@ -250,7 +252,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 # For example, tracks could equal [GagType.THROW, GagType.SQUIRT, GagType.THROW]
                 # If, the variable 'track' equaled GagType.THROW, then the next line would
                 # return: [0, 2]
-                damageIndices = [i for i, x in enumerate(tracks) if x == track]
+                damageIndices = [i for i, x in tracks if x == track]
                 totalGags = len(damageIndices)
                 for i in damageIndices:
                     totalDamage += damages[damageIndices[i]]
@@ -367,6 +369,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
     def killSuit(self):
         if self.level > 0 and self.health <= 0:
+            self.allowHits = False
             self.b_setAnimState('die')
             self.clearTrack()
             self.track = Sequence(Wait(6.0), Func(self.closeSuit))

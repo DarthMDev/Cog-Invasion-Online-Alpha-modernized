@@ -402,6 +402,7 @@ class DistributedBuilding(DistributedObject):
         bldgMTrack = tracks
         localToonIsVictor = self.localToonIsVictor()
         if localToonIsVictor:
+            base.localAvatar.loop('neutral')
             camTrack = self.walkOutCameraTrack()
         victoryRunTrack, delayDeletes = self.getVictoryRunTrack()
         trackName = self.taskName('toToonTrack')

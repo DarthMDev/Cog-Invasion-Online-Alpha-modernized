@@ -1,3 +1,5 @@
+from panda3d.core import *
+
 from lib.coginvasion.globals import CIGlobals
 
 import random
@@ -63,11 +65,11 @@ WhiteListData = None
 def loadWhiteListData():
     global WhiteListData
     if WhiteListData is None:
-        whitelistFile = open('phase_3/etc/ciwhitelist.dat', 'r')
+        vfs = VirtualFileSystem.getGlobalPtr()
+        whitelistFile = vfs.readFile('phase_3/etc/ciwhitelist.dat', False)
         WhiteListData = set()
-        for word in whitelistFile.read().split():
+        for word in whitelistFile.split():
             WhiteListData.add(word)
-        whitelistFile.close()
         del whitelistFile
 
 def getWhiteListData():

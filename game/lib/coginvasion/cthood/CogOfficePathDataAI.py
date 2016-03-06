@@ -6,7 +6,7 @@ from CogOfficeConstants import *
 from lib.coginvasion.cog.SuitPathFinderAI import SuitPathFinderAI
 
 PathPolygons = {
-    CONFERENCE_FLOOR: [
+    EXECUTIVE_FLOOR: [
         # Outermost loop, in CCW order
         [
             (-23.6198, 105.99),
@@ -135,7 +135,7 @@ PathPolygons = {
         ]
     ],
 
-    EXECUTIVE_FLOOR: [
+    CONFERENCE_FLOOR: [
         # Outermost loop, in CCW order
         [
             (-23.2364, -9.51548),
