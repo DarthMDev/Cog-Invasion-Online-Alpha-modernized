@@ -301,7 +301,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
                 if obj.__class__.__name__ == 'DistributedSuit':
                     if obj.getKey() == avNP.getKey():
                         if obj.getHealth() > 0:
-                            base.localAvatar.sendUpdate('suitHitByPie', [obj.doId, ent.getID()])
+                            obj.sendUpdate('hitByGag', [ent.getID()])
         ent.cleanup()
 
     def setHealth(self, hp):

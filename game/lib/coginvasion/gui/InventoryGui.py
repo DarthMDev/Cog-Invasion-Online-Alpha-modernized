@@ -259,7 +259,7 @@ class InventoryGui(DirectObject):
         posGroup = {1 : self.oneSlotPos, 2 : self.twoSlotsPos, 3 : self.threeSlotsPos, 4 : self.fourSlotPos}.get(numSlots)
         
         for i in xrange(len(updateSlots)):
-            updateSlots[i]['pos'] = posGroup[i]
+            updateSlots[i].setPos(posGroup[i])
             updateSlots[i].show()
         
         if self.activeSlot == None:
