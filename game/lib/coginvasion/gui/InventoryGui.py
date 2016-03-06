@@ -188,8 +188,8 @@ class InventoryGui(DirectObject):
     def deleteGui(self):
         self.disableWeaponSwitch()
         for slot in self.slots:
-            self.slots.remove(slot)
             slot.destroy()
+        self.slots = []
         if self.ammoLabel:
             self.ammoLabel.destroy()
             self.ammoLabel = None

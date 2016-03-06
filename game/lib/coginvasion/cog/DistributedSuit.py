@@ -414,7 +414,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             shouldChat = random.randint(0, 2)
         if shouldChat == 0:
             self.setChat(attackTaunt)
-        self.animFSM.request('attack', [attackName, avatar, ts])
+        self.animFSM.request('attack', [attackName, avatar, 0.0])
 
     def throwObject(self):
         self.acceptOnce('enter' + self.wsnp.node().getName(), self.__handleWeaponCollision)
