@@ -19,7 +19,7 @@ def do(mtype, filename):
     if mtype == "decompile":
         cmd += " -x -f %s" % filename
     elif mtype == "compile":
-        cmd += " -c -f %s %s" % (filename + '.mf', filename)
+        cmd += " -c -f %s %s -ep \"cio-03-06-16_lsphases\"" % (filename + '.mf', filename)
     os.system(cmd)
 
 def do_phase0():
