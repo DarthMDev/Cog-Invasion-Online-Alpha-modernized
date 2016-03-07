@@ -6,6 +6,7 @@ from panda3d.core import Point3
 from lib.coginvasion.cog import Dept
 
 RECEPTION_FLOOR = 0
+BREAK_FLOOR = 1
 CONFERENCE_FLOOR = 3
 EXECUTIVE_FLOOR = 4
 

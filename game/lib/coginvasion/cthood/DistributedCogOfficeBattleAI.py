@@ -39,9 +39,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.bldg = bldg
         self.bldgDoId = self.bldg.doId
         self.exteriorZoneId = exteriorZoneId
-        self.avId2suitsAttacking = {}
-        self.spotTaken2suitId = {}
-        self.availableBattlePoints = {}
+        self.toonId2suitsTargeting = {}
         self.guardSuits = []
         self.chairSuits = []
         self.numFloors = numFloors
@@ -69,13 +67,11 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
 
     # Sent by the client when they enter a certain floor section
     def enterSection(self, sectionIndex):
-        print 'toon entered section {0}'.format(sectionIndex)
         # Get the guard suits associated with this section
         for guard in self.getGuardsBySection(sectionIndex):
             # Make sure this guard isn't already activated
             if not guard.isActivated():
                # Activate this guard!
-                print 'activating guard'
                 guard.activate()
 
     def iAmDead(self):
@@ -86,8 +82,8 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         if avId in self.avIds:
             self.avIds.remove(avId)
         self.b_setAvatars(self.avIds)
-        if avId in self.avId2suitsAttacking.keys():
-            del self.avId2suitsAttacking[avId]
+        if avId in self.toonId2suitsTargeting.keys():
+            del self.toonId2suitsTargeting[avId]
         if died:
             toon = self.air.doId2do.get(avId)
             if toon:
@@ -186,7 +182,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
 
     def setAvatars(self, avatars):
         self.avIds = avatars
-        self.avId2suitsAttacking = {avId: [] for avId in self.avIds}
+        self.toonId2suitsTargeting = {avId: [] for avId in self.avIds}
         for avId in self.avIds:
             toon = self.air.doId2do.get(avId)
             if toon:
@@ -249,7 +245,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
 
     def resetEverything(self):
         self.currentFloor = 0
-        self.avId2suitsAttacking = {}
+        self.toonId2suitsTargeting = {}
         self.spotTaken2suitId = {}
         self.cleanupDrops()
         self.cleanupChairSuits()
@@ -264,7 +260,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.fsm.requestFinalState()
         self.fsm = None
         self.currentFloor = None
-        self.avId2suitsAttacking = None
+        self.toonId2suitsTargeting = None
         self.spotTaken2suitId = None
         self.cleanupDrops()
         self.drops = None

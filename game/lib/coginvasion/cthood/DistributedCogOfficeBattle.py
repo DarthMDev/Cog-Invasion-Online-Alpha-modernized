@@ -18,6 +18,7 @@ from ElevatorConstants import *
 from CogOfficeConstants import *
 
 PROPS = {'photo_frame':     'phase_7/models/props/photo_frame.egg',
+        'photo_frame_bh':  'phase_7/models/props/photo_frame_blackholes.bam',
         'rug':              'phase_3.5/models/modules/rug.bam',
         'couch_2person':    'phase_3.5/models/modules/couch_2person.bam',
         'LB_chairA':        'phase_11/models/lawbotHQ/LB_chairA.bam',
@@ -141,7 +142,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                         [0.22, 105.86, 0, 0, 0, 0],
                     ],
                     'room_sections': ['short_floor_coll', 'long_floor_coll_part1', 'long_floor_coll_part2'],
-                    'room_mdl': 'phase_7/models/modules/cog_bldg_confrence_flr.bam',
+                    'room_mdl': 'phase_7/models/modules/cog_bldg_executive_flr.bam',
                     'grounds': []
                 },
                 CONFERENCE_FLOOR: {'props': [
@@ -176,8 +177,30 @@ class DistributedCogOfficeBattle(DistributedObject):
                     ],
                     # No need to provide any room sections when it's a single-sectioned room
                     'room_sections': [],
-                    'room_mdl': 'phase_7/models/modules/cog_bldg_executive_flr.bam',
+                    'room_mdl': 'phase_7/models/modules/cog_bldg_conference_flr.bam',
                     'grounds': ['**/floor']
+                },
+                BREAK_FLOOR: {'props': [
+                        ['rug', -41.879, 34.818, 0, 0, 0, 0, 1],
+                        ['rug', 1.578, 55.649, 0, 90, 0, 0, 1],
+                        #['meeting_table', -35.19, 52.182, 0, 0, 0, 0, 1],
+                        #['square_shadow', -35.19, 52.182, 0, 0, 0, 0, Point3(2, 3.5, 1)],
+                        ['meeting_table', 18.28, 9.91, 0, 0, 0, 0, 1],
+                        ['square_shadow', 18.28, 9.91, 0, 0, 0, 0, Point3(2, 3.5, 1)],
+                        ['clock', -35.99, 61.99, 10.16, 90, 0, 90, 1],
+                        ['photo_frame_bh', -19.06, 45.58, 8.979, 0, 180, 270, 1],
+                        ['photo_frame', 27.72, 10.28, 8.98, 180, 0, 90, 1],
+                        ['plant', 14.035, 59.197, 0, 0, 0, 0, 12],
+                        ['plant', -10.499, 59.144, 0, 0, 0, 0, 12],
+                        ['plant', -45.962, 46.716, 0, 0, 0, 0, 12],
+                        ['plant', -45.962, 22.103, 0, 0, 0, 0, 12],
+                        ['couch_2person', -7.69, 31.11, 0, 180, 0, 0, 1.25],
+                        ['LB_chairA', 11.93, 29.85, 0, 180, 0, 0, 1]
+                    ],
+                    'elevators': [],
+                    'room_sections': [],
+                    'room_mdl': 'phase_7/models/modules/cog_bldg_breakroom_flr.bam',
+                    'grounds': []
                 }
     }
 
@@ -331,9 +354,9 @@ class DistributedCogOfficeBattle(DistributedObject):
 
         base.transitions.noTransitions()
         base.playMusic(self.rideElevatorMusic, volume = 0.8, looping = 1)
-        self.__doFloorTextPulse()
 
         self.elevatorTrack = getRideElevatorInterval()
+        self.elevatorTrack.append(Func(self.__doFloorTextPulse))
         self.elevatorTrack.append(getOpenInterval(self, elevator.getLeftDoor(), elevator.getRightDoor(), self.openSfx, None))
         self.elevatorTrack.start(ts)
 
@@ -353,8 +376,6 @@ class DistributedCogOfficeBattle(DistributedObject):
     def __handleEnteredRoomSection(self, entry):
         name = entry.getIntoNodePath().getName()
         index = self.getRoomData('room_sections').index(name)
-
-        print 'entered room section {0}'.format(index)
 
         # Tell the AI we've entered this section.
         # Maybe activate some cogs?

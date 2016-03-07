@@ -33,9 +33,13 @@ class SuitPathBehavior(SuitBehaviorBase):
         del self.walkTrack
         SuitBehaviorBase.unload(self)
 
-    def createPath(self, node = None, durationFactor = 0.2, fromCurPos = False):
-        x1, y1 = node.getX(render), node.getY(render)
-        z = node.getZ(render)
+    def createPath(self, node = None, durationFactor = 0.2, fromCurPos = False, pos = None):
+        if node is not None and pos is None:
+            x1, y1 = node.getX(render), node.getY(render)
+            z = node.getZ(render)
+        elif pos is not None and node is None:
+            x1, y1 = pos
+            z = self.suit.getZ(render)
         x2, y2 = self.suit.getX(render), self.suit.getY(render)
         path = self.pathFinder.planPath((x2, y2), (x1, y1))
         if path is None:
@@ -68,10 +72,10 @@ class SuitPathBehavior(SuitBehaviorBase):
 
     def startFollow(self):
         if self.walkTrack:
-            self.acceptOnce(self.walkTrack.getDoneEvent(), self._walkDone)
+            self.acceptOnce(self.walkTrack.getDoneEvent(), self.walkDone)
             self.walkTrack.start()
 
-    def _walkDone(self):
+    def walkDone(self):
         if not self.suit.isDead():
             if self.exitOnWalkFinish == True:
                 self.exit()

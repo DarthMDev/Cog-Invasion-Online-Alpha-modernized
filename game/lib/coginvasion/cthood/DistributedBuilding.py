@@ -298,7 +298,7 @@ class DistributedBuilding(DistributedObject):
                 hideTrack.append(LerpScaleInterval(i, timeForDrop - timeTillSquish, Vec3(1, 1, 0.01)))
                 hideTrack.append(Func(i.stash))
                 hideTrack.append(Func(i.setScale, Vec3(1)))
-                hideTrack.append(Func(i.clearColorSCale))
+                hideTrack.append(Func(i.clearColorScale))
                 tracks.append(hideTrack)
 
         self.stopTransition()

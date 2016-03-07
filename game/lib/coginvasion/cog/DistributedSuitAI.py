@@ -393,6 +393,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 2)
         else:
             pursue = SuitPursueToonBehavior(self, getPathFinder(self.hood))
+            pursue.setSuitDict(self.getManager().suits)
             pursue.battle = self.getManager().getBattle()
             self.brain.addBehavior(pursue, priority = 1)
             self.brain.addBehavior(SuitAttackTurretBehavior(self), priority = 2)

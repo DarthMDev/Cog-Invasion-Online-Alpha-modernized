@@ -121,6 +121,7 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
     def spawn(self):
         self.brain = SuitBrain(self)
         pursue = SuitPursueToonBehavior(self, getPathFinder(self.battle.currentFloor))
+        pursue.setSuitList(self.getManager().guardSuits)
         pursue.battle = self.battle
         self.brain.addBehavior(pursue, priority = 1)
         if not self.isChair:
