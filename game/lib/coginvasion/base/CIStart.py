@@ -15,8 +15,6 @@ packExtensions = ['.jpg', '.jpeg', '.png', '.mp3', '.rgb']
 
 for phase in phases:
     mf = Multifile()
-    mf.setEncryptionFlag(True)
-    mf.setEncryptionPassword('cio-03-06-16_lsphases')
     mf.openReadWrite(Filename(phase + '.mf'))
     packMf = None
     
