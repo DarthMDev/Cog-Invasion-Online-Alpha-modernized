@@ -99,7 +99,10 @@ def getGarble(animal):
 
 def filterChat(chat, animal):
     whiteList = getWhiteListData()
-    for word in chat.split(" "):
+    words = chat.split(' ')
+    if not len(words):
+        words = list(chat)
+    for word in words:
         if len(word) == 0:
             continue
         checkWord = word
