@@ -17,9 +17,9 @@ multify = '..\\Panda3D-CI\\bin\\multify.exe'
 def do(mtype, filename):
     cmd = os.path.join(multify)
     if mtype == "decompile":
-        cmd += " -x -f %s" % filename
+        cmd += " -x -f %s -p \"cio-03-06-16_lsphases\"" % filename
     elif mtype == "compile":
-        cmd += " -c -f %s %s" % (filename + '.mf', filename)
+        cmd += " -c -f %s %s -p \"cio-03-06-16_lsphases\"" % (filename + '.mf', filename)
     os.system(cmd)
 
 def do_phase0():
