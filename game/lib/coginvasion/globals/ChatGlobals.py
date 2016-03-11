@@ -106,7 +106,7 @@ def filterChat(chat, animal):
         if len(word) == 0:
             continue
         checkWord = word
-        if word and len(word) > 1 and word[len(word) - 1] in ['?', '!', '.']:
+        if word and len(word) > 1 and word[len(word) - 1] in ['?', '!', '.', ',']:
             checkWord = word.replace(word[len(word) - 1], '')
         if not (checkWord.lower() in whiteList):
             garble = getGarble(animal)
