@@ -51,11 +51,11 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         self.fsm.request('pursue')
         
     def exit(self):
+        self.fsm.request('off')
         self.target = None
         self.targetId = None
         self.suitList = None
         self.suitDict = None
-        self.fsm.request('off')
         SuitPathBehavior.exit(self)
         
     def unload(self):
