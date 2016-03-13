@@ -36,7 +36,7 @@ def getMoveIvalFromPath(suit, path, elapsedT, isClient, seqName):
         lastWP = path[i - 1]
         moveIval.append(Func(suit.headsUp, Point3(*waypoint)))
         ival = NPCWalkInterval(suit, Point3(*waypoint),
-            startPos = lambda suit = suit: suit.getPos(render),
+            startPos = Point3(*lastWP),
             fluid = 1, name = suit.uniqueName('doWalkIval' + str(i)),
             duration = (Point2(waypoint[0], waypoint[1]) - Point2(lastWP[0], lastWP[1])).length() * 0.2)
         moveIval.append(ival)

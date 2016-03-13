@@ -87,6 +87,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             self.ignore(self.moveIval.getDoneEvent())
             self.moveIval.pause()
             self.moveIval = None
+        self.animFSM.request('neutral')
 
     def exitWalking(self):
         self.clearMoveTrack()
@@ -188,10 +189,13 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             durationFactor = duration, fluid = 1)
         self.moveIval.start()
 
-    def stopMoveInterval(self):
+    def stopMoveInterval(self, andTurnAround = 0):
         if self.moveIval:
             self.moveIval.pause()
             self.moveIval = None
+        if andTurnAround == 1:
+            self.animFSM.request('neutral')
+            self.setH(self.getH() - 180)
 
     def toggleRay(self, ray = 1):
         if ray:

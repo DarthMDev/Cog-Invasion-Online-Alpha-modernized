@@ -22,6 +22,7 @@ from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
 from SuitCallInBackupBehavior import SuitCallInBackupBehavior
 from SuitPursueToonBehavior import SuitPursueToonBehavior
 from SuitAttackTurretBehavior import SuitAttackTurretBehavior
+from SuitAttackBehavior import SuitAttackBehavior
 from SuitPathDataAI import *
 import SuitAttacks
 import SuitBank
@@ -159,8 +160,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.sendUpdate('startMoveInterval', [startPos.getX(), startPos.getY(), startPos.getZ(),
                 endPos.getX(), endPos.getY(), endPos.getZ(), durationFactor])
 
-    def d_stopMoveInterval(self):
-        self.sendUpdate('stopMoveInterval', [])
+    def d_stopMoveInterval(self, andTurnAround = 0):
+        self.sendUpdate('stopMoveInterval', [andTurnAround])
 
     def d_startProjInterval(self, startPos, endPos, duration, gravityMult):
         timestamp = globalClockDelta.getFrameNetworkTime()
@@ -392,6 +393,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if self.suitPlan.getName() in [SuitGlobals.VicePresident]:
             self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 1)
             self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 2)
+            self.brain.addBehavior(SuitAttackBehavior(self), priority = 3)
         else:
             pursue = SuitPursueToonBehavior(self, getPathFinder(self.hood))
             pursue.setSuitDict(self.getManager().suits)
@@ -530,6 +532,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
     def getCurrentPath(self):
         return self.currentPath
+
+    def getPosFromCurrentPath(self):
+        # Get the position of the path we are going to.
+        return CIGlobals.SuitSpawnPoints[self.getHood()][self.getCurrentPath()]
 
     def getCurrentPathQueue(self):
         return self.currentPathQueue

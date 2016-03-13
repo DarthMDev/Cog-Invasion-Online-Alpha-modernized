@@ -4,19 +4,19 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
-from SuitBehaviorBase import SuitBehaviorBase
+from SuitHabitualBehavior import SuitHabitualBehavior
 from SuitType import SuitType
 import SuitAttacks
 import SuitUtils
 import SuitGlobals
 
-class SuitAttackTurretBehavior(SuitBehaviorBase):
+class SuitAttackTurretBehavior(SuitHabitualBehavior):
     notify = directNotify.newCategory('SuitAttackTurretBehavior')
     
     MAX_DISTANCE = 40.0
     
     def __init__(self, suit):
-        SuitBehaviorBase.__init__(self, suit)
+        SuitHabitualBehavior.__init__(self, suit)
         self.isEntered = 0
         self.targetId = None
         self.target = None
@@ -33,12 +33,16 @@ class SuitAttackTurretBehavior(SuitBehaviorBase):
         return turrets
         
     def enter(self):
-        SuitBehaviorBase.enter(self)
+        SuitHabitualBehavior.enter(self)
         self.target = self.getSortedTurretList()[0]
         self.targetId = self.target.doId
         taskMgr.add(self._doAttack, self.suit.uniqueName('doAttackTurret'))
         
     def _doAttack(self, task):
+        if self.target.isEmpty():
+            self.exit()
+            return task.done
+
         attack = SuitUtils.attack(self.suit, self.target)
         distance = self.suit.getDistance(self.target)
         speed = 50.0
@@ -86,7 +90,7 @@ class SuitAttackTurretBehavior(SuitBehaviorBase):
             self.suitAttackTurretTrack = None
         self.target = None
         self.targetId = None
-        SuitBehaviorBase.exit(self)
+        SuitHabitualBehavior.exit(self)
         
     def unload(self):
         self.suitAttackTurretTrack = None
@@ -96,7 +100,7 @@ class SuitAttackTurretBehavior(SuitBehaviorBase):
         self.mgr = None
         self.battle = None
         self.turretMgr = None
-        SuitBehaviorBase.unload(self)
+        SuitHabitualBehavior.unload(self)
         
     def shouldStart(self):
         turretList = self.getSortedTurretList()

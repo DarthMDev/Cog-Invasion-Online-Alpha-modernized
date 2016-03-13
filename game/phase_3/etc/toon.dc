@@ -320,7 +320,7 @@ dclass DistributedSuit : DistributedAvatar {
   startMoveInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 duration) broadcast ram;
   startProjInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 / 10, uint8 / 10, int16 timestamp) broadcast ram;
   startPosInterval(int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, int16 / 10, uint8 / 10, string blendType, int16 timestamp) broadcast ram;
-  stopMoveInterval() broadcast ram;
+  stopMoveInterval(int8 turnAround = 0) broadcast ram;
 
   // This field is for setting the position of a Cog for a toon that
   // comes in while the Cog is standing still.

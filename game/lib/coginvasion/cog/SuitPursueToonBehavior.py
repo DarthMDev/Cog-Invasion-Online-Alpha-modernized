@@ -161,7 +161,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         
     def _pursueTask(self, task):
         currPos = self.target.getPos(render)
-        if self.suit.getDistance(self.target) <= self.attackSafeDistance:
+        if self.suit.getDistance(self.target) <= self.attackSafeDistance and not self.target.isDead():
             # We're a good distance to attack this toon. Let's do it.
             self.fsm.request('attack')
             return task.done

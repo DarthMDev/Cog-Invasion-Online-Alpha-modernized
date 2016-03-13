@@ -145,7 +145,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         self.ATTACK_COOLDOWN = SuitAttacks.SuitAttackLengths[attack]
 
         # Are we allowed to continue attacking?
-        if self.attacksThisSession < self.maxAttacksPerSession and not self.target.isDead():
+        if self.attacksThisSession < self.maxAttacksPerSession and not target.isDead():
             taskMgr.doMethodLater(self.ATTACK_COOLDOWN, self.startAttacking, self.suit.uniqueName('attackTask'))
         else:
             taskMgr.doMethodLater(self.ATTACK_COOLDOWN, self.stopAttacking, self.suit.uniqueName('finalAttack'))

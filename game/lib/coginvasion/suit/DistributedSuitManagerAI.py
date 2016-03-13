@@ -172,9 +172,9 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if not plan:
                 return
             level = random.randint(plan.getLevelRange()[0], plan.getLevelRange()[1])
-        if self.battle.getHoodIndex() == CogBattleGlobals.SkeletonHoodIndex:
+        if self.battle.getHoodIndex() == CogBattleGlobals.SkeletonHoodIndex and variant == Variant.NORMAL:
             variant = Variant.SKELETON
-        elif self.battle.getHoodIndex() == CogBattleGlobals.WaiterHoodIndex:
+        elif self.battle.getHoodIndex() == CogBattleGlobals.WaiterHoodIndex and variant == Variant.NORMAL:
             variant = Variant.WAITER
         suit = DistributedSuitAI(self.air)
         suit.setManager(self)

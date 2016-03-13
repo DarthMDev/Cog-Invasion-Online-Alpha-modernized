@@ -22,6 +22,8 @@ class SuitBehaviorBase(DirectObject):
         if self.isEntered:
             self.isEntered = 0
             messenger.send(self.doneEvent)
+            if self.suit.brain.currentBehavior == self:
+                self.suit.brain.currentBehavior = None
             
     def canEnter(self):
         return not self.isEntered

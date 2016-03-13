@@ -62,13 +62,13 @@ class SuitPathBehavior(SuitBehaviorBase):
         self.walkTrack.setDoneEvent(self.walkTrack.getName())
         self.startFollow()
 
-    def clearWalkTrack(self):
+    def clearWalkTrack(self, andTurnAround = 0):
         if self.walkTrack:
             self.ignore(self.walkTrack.getDoneEvent())
             self.walkTrack.pause()
             self.walkTrack = None
             if hasattr(self, 'suit'):
-                self.suit.d_stopMoveInterval()
+                self.suit.d_stopMoveInterval(andTurnAround)
 
     def startFollow(self):
         if self.walkTrack:

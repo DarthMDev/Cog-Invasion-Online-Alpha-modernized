@@ -84,7 +84,7 @@ class HoodMgr(DirectObject):
       CIGlobals.TheBrrrgh: [32.35,
       70.06,
       6.20,
-      -135.15,
+      135.15 - 180,
       0.00,
       0.00],
 

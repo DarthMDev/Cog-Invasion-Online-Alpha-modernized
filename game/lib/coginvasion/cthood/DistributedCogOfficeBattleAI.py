@@ -88,6 +88,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             self.avIds.remove(avId)
         self.b_setAvatars(self.avIds)
 
+        if avId in self.toonId2suitsTargeting.keys():
+            del self.toonId2suitsTargeting[avId]
+
+        if len(self.avIds) > 0:
         allSuits = self.guardSuits + self.chairSuits
         for suit in allSuits:
             if suit.isActivated():
@@ -95,9 +99,6 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                     # Uh oh, this cog was targeting this toon.
                     # We have to make them pick a new target.
                     suit.brain.currentBehavior.pickTarget()
-
-        if avId in self.toonId2suitsTargeting.keys():
-            del self.toonId2suitsTargeting[avId]
 
         if died:
             toon = self.air.doId2do.get(avId)

@@ -493,11 +493,14 @@ class DistributedGunGame(DistributedToonFPSGame):
 
     def announceGenerate(self):
         DistributedToonFPSGame.announceGenerate(self)
+        base.localAvatar.walkControls.setWalkSpeed(GGG.ToonForwardSpeed, GGG.ToonJumpForce,
+                                                   GGG.ToonReverseSpeed, GGG.ToonRotateSpeed)
         self.load()
         base.camLens.setMinFov(CIGlobals.GunGameFOV / (4./3.))
 
     def disable(self):
         render.show()
+        base.localAvatar.setWalkSpeedNormal()
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.taskMgr.remove(self.uniqueName('updateArrows'))
         self.playersByTeam = None

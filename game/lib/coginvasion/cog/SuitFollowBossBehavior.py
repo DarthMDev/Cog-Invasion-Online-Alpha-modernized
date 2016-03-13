@@ -8,7 +8,7 @@ from lib.coginvasion.cog import SuitAttacks
 from lib.coginvasion.globals import CIGlobals
 from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
 from SuitAttackBehavior import SuitAttackBehavior
-import SuitPathFinderAI
+import SuitPathDataAI
 import SuitUtils
 
 from direct.fsm import ClassicFSM, State
@@ -18,7 +18,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 
 import random
 
-class SuitFollowBossBehavior(SuitPathBehavior):
+class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
 
     LEEWAY_DISTANCE = 4
     MAX_BOSS_HELPERS = 5
@@ -35,6 +35,7 @@ class SuitFollowBossBehavior(SuitPathBehavior):
         self.healInProgress = False
         self.suitHealTrack = None
         self.followBossTaskName = self.suit.uniqueName('followBoss')
+        self.pathFinder = SuitPathDataAI.getPathFinder(self.suit.hood)
 
     def isHealing(self):
         return self.healInProgress
@@ -186,23 +187,17 @@ class SuitFollowBossBehavior(SuitPathBehavior):
             self.exit()
             return task.done
 
+        self.clearWalkTrack()
+
         if hasattr(self.boss, 'currentPath'):
             bossSpot = self.boss.getCurrentPath()
             self.bossSpotKey = bossSpot
 
             # Let's create a path.
-            if self.suit.getCurrentPath() == bossSpot:
-                self.createPath(pathKey = bossSpot, fromCurPos = True)
-            else:
-                self.suit.currentPathQueue = SuitPathFinder.find_path(self.suit.getHood(), self.suit.getCurrentPath(), bossSpot)
-                self.suit.currentPathQueue.remove(self.suit.currentPathQueue[0])
-                self.createPath(fromCurPos = True)
+            pos = self.boss.getPosFromCurrentPath()
+            self.createPath(pos = (pos[0], pos[1]))
         else:
             self.exit()
-
-    def _walkDone(self):
-        SuitPathBehavior._walkDone(self)
-        self.createPath()
 
     def __followBoss(self, task):
         # Let's cancel the task if the behavior was unloaded
@@ -217,14 +212,12 @@ class SuitFollowBossBehavior(SuitPathBehavior):
 
         # We need to stop in front of the boss to protect him. Make sure that he's not flying when we're close enough.
         if self.suit.getDistance(self.boss) <= self.LEEWAY_DISTANCE and self.boss.brain.currentBehavior.__class__ != SuitFlyToRandomSpotBehavior:
-            self.suit.d_stopMoveInterval()
-            if self.walkTrack:
-                self.clearWalkTrack()
-                self.suit.b_setAnimState('neutral')
-                self.suit.setH(self.suit.getH() - 180)
-                self.suit.d_setH(self.suit.getH())
-                # Now, let's protect him.
-                self.fsm.request('protect')
+            self.clearWalkTrack(andTurnAround = 1)
+            self.suit.b_setAnimState('neutral')
+            self.suit.setH(self.suit.getH() - 180)
+            self.suit.d_setH(self.suit.getH())
+            # Now, let's protect him.
+            self.fsm.request('protect')
             return Task.done
         return Task.cont
 

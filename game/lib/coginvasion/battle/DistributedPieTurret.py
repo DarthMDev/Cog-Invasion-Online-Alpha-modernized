@@ -317,7 +317,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         self.explosion.setScale(0.5)
         self.explosion.reparentTo(render)
         self.explosion.setBillboardPointEye()
-        self.explosion.setPos(turretPos + (0, 0, 1))
+        self.explosion.setPos(turretPos + (0, 0, 5))
         sfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_cogfall_apart.mp3")
         base.audio3d.attachSoundToObject(sfx, self)
         base.playSfx(sfx)
