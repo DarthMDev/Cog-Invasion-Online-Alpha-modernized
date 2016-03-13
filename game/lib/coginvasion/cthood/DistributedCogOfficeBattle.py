@@ -16,6 +16,7 @@ from lib.coginvasion.cog import Dept
 from ElevatorUtils import *
 from ElevatorConstants import *
 from CogOfficeConstants import *
+import random
 
 PROPS = {'photo_frame':     'phase_7/models/props/photo_frame.egg',
         'photo_frame_bh':  'phase_7/models/props/photo_frame_blackholes.bam',
@@ -62,10 +63,11 @@ class DistributedCogOfficeBattle(DistributedObject):
         Dept.SALES: {1: 'Marketing Floor', 2: 'Advertising Floor', 3: 'Telemarketing Floor'},
         Dept.LAW: {1: "Attorney's Floor", 2: "Paralegal Floor", 3: 'Document Management Floor'},
         Dept.CASH: {1: 'Accounting Floor', 2: 'Budgeting Floor', 3: 'Treasury Floor'}}
-    DEPT_2_PAINTING = {Dept.BOSS: 'phase_7/maps/Bossbot_C_E_O_oil.jpg',
-                       Dept.LAW: 'phase_7/maps/Lawbot_C_J_oil.jpg',
-                       Dept.CASH: 'phase_7/maps/Cashbot_C_F_O_oil.jpg',
-                       Dept.SALES: 'phase_7/maps/Sellbot_V_P_oil.jpg'}
+    DEPT_2_PAINTING = {
+        Dept.BOSS: ['phase_7/maps/Bossbot_C_E_O_oil.jpg'],
+        Dept.LAW: ['phase_7/maps/Lawbot_C_J_oil.jpg'],
+        Dept.CASH: ['phase_7/maps/Cashbot_C_F_O_oil.jpg', 'phase_7/maps/CashbotHQ_oil.jpg'],
+        Dept.SALES: ['phase_7/maps/Sellbot_V_P_oil.jpg', 'phase_7/maps/SellbotHQ_oil.jpg']}
 
     ROOM_DATA = {RECEPTION_FLOOR: {'props': [
                         ['photo_frame', -42.86, 0.72, 8.0, 0, 0, 90, 1],
@@ -537,7 +539,8 @@ class DistributedCogOfficeBattle(DistributedObject):
             propMdl.setPosHpr(x, y, z, h, p, r)
             propMdl.setScale(scale)
             if name == 'photo_frame':
-                propMdl.find('**/photo').setTexture(loader.loadTexture(self.DEPT_2_PAINTING[self.deptClass]), 1)
+                painting = random.choice(self.DEPT_2_PAINTING[self.deptClass])
+                propMdl.find('**/photo').setTexture(loader.loadTexture(painting), 1)
             for oPropPath in otherProps:
                 oPropMdl = loader.loadModel(oPropPath)
                 oPropMdl.reparentTo(propMdl)

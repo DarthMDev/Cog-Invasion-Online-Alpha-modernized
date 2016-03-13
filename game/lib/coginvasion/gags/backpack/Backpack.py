@@ -176,10 +176,10 @@ class Backpack:
 
     def getMaxSupply(self, arg = None):
         if type(arg) == types.IntType or arg == None:
-            if self.index and self.gags:
+            if not self.index is None and not self.gags is None:
                 if arg == None:
-                    arg = self.index
-                return self.amounts.values()[arg]
+                    return self.amounts.values()[self.index]
+                return self.gags.values()[self.gags.keys().index(self.getGagByID(arg))][1]
         elif isinstance(arg, str):
             return self.amounts.get(arg)
         if arg: return 0
@@ -209,9 +209,11 @@ class Backpack:
             curMaxSupply = self.gags.values()[self.index][1]
             index = self.gags.keys()[self.index]
         if type(arg) == types.IntType:
-            if self.index and self.gags:
-                curMaxSupply = self.gags.values()[arg][1]
-                index = self.gags.keys()[arg]
+            if not self.index is None and not self.gags is None:
+                for gag, values in self.gags.iteritems():
+                    if gag.getID() == arg:
+                        curMaxSupply = values[1]
+                        index = gag
         elif isinstance(arg, str):
             if self.isInBackpack(arg):
                 for gag, ammoTbl in self.gags.iteritems():
@@ -233,8 +235,8 @@ class Backpack:
         if arg == None:
             curSupply = self.gags.values()[self.index][0]
         if type(arg) == types.IntType:
-            if self.index and self.gags:
-                curSupply = self.gags.values()[arg][0]
+            if not self.index is None and not self.gags is None:
+                curSupply = self.gags.values()[self.gags.keys().index(self.getGagByID(arg))][0]
             if curSupply == None: return 0
         elif isinstance(arg, str):
             if len(self.gags) > 0:

@@ -442,7 +442,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
 
     def setGagAmmo(self, gagId, ammo):
         if self.backpack.getGagByID(gagId):
-            self.backpack.setSupply(ammo, GagGlobals.getGagByID(gagId))
+            self.backpack.setSupply(ammo, gagId)
 
     def d_setGagAmmo(self, gagId, ammo):
         self.sendUpdate('setGagAmmo', [gagId, ammo])

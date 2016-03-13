@@ -48,28 +48,26 @@ class DistributedGagBarrelAI(DistributedRestockBarrelAI):
             # The strongest gags should be first.
             availableGags.reverse()
         else:
-            trackGags = list()
             loadout = backpack.getLoadout()
             for gagCls in loadout:
                 gagId = GagGlobals.getIDByName(self.gagManager.getGagNameByType(gagCls))
                 gag = backpack.getGagByID(gagId)
-                print gag.getName()
                 if gag.getType() == track:
-                    trackGags.append(gag.getID())
-            availableGags = trackGags
+                    availableGags.append(gag.getID())
         
         restockLeft = self.maxRestock
         
         for gagId in availableGags:
             if restockLeft <= 0:
                 break
+            supply = backpack.getSupply(gagId)
             maxAmount = backpack.getMaxSupply(gagId)
             
-            if backpack.getSupply(gagId) < maxAmount:
+            if supply < maxAmount:
                 giveAmount = maxAmount - backpack.getSupply(gagId)
                 if restockLeft < giveAmount:
                     giveAmount = restockLeft
-                restockGags[gagId] = giveAmount
+                restockGags[gagId] = supply + giveAmount
                 restockLeft -= giveAmount
                 print 'Restocking %s.' % (backpack.getGagByID(gagId).getName())
                 
