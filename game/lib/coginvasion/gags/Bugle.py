@@ -15,7 +15,7 @@ class Bugle(SoundGag):
         SoundGag.__init__(self, CIGlobals.Bugle, 'phase_5/models/props/bugle.bam', 11,
                           GagGlobals.BUGLE_APPEAR_SFX, GagGlobals.BUGLE_SFX, soundRange = 25, hitSfx = None)
         self.setImage('phase_3.5/maps/bugle.png')
-        self.setRechargeTime(17.5)
+        self.setRechargeTime(4.5)
 
     def start(self):
         SoundGag.start(self)

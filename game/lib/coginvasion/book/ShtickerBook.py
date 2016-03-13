@@ -29,7 +29,8 @@ class ShtickerBook(StateData):
          State('inventoryPage', self.enterInventoryPage, self.exitInventoryPage, ['mapPage', 'questPage', 'off']),
          State('mapPage', self.enterMapPage, self.exitMapPage, ['inventoryPage', 'off']),
          State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['mapPage', 'off']),
-         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'off'])], 
+         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'off']),
+         State('namePage', self.enterNamePage, self.exitNamePage, ['adminPage', 'off'])], 
         'off', 'off')
         if base.localAvatar.getAdminToken() > -1:
             self.fsm.getStateNamed('mapPage').addTransition('adminPage')
@@ -195,12 +196,10 @@ class ShtickerBook(StateData):
         self.clearTitle()
         
     def enterNamePage(self):
-        self.createPageButtons('adminPage', 'releaseNotesPage')
+        self.createPageButtons('adminPage', None)
         self.setTitle('Name Requests')
     
     def exitNamePage(self):
-        self.infoText.destroy()
-        del self.infoText
         self.deletePageButtons(True, True)
         self.clearTitle()
 

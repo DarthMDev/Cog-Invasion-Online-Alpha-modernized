@@ -15,7 +15,7 @@ class BikeHorn(SoundGag):
         SoundGag.__init__(self, CIGlobals.BikeHorn, 'phase_5/models/props/bikehorn.bam', 5,
                           GagGlobals.BIKE_HORN_APPEAR_SFX, GagGlobals.BIKE_HORN_SFX, hitSfx = None)
         self.setImage('phase_3.5/maps/bike-horn.png')
-        self.setRechargeTime(13.5)
+        self.setRechargeTime(2.5)
 
     def start(self):
         SoundGag.start(self)

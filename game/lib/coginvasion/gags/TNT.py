@@ -20,7 +20,7 @@ class TNT(TossTrapGag):
                              "phase_5/audio/sfx/TL_dynamite.mp3", particlesFx="phase_5/etc/tnt.ptf", anim = "phase_5/models/props/tnt-chan.bam")
         self.maxDistance = GagGlobals.TNT_RANGE
         self.setImage('phase_3.5/maps/tnt.png')
-        self.setRechargeTime(34.5)
+        self.setRechargeTime(19.5)
 
     def start(self):
         super(TNT, self).start()

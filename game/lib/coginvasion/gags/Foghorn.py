@@ -15,7 +15,7 @@ class Foghorn(SoundGag):
         SoundGag.__init__(self, CIGlobals.Foghorn, 'phase_5/models/props/fog_horn.bam', 50, GagGlobals.FOG_APPEAR_SFX,
                           GagGlobals.FOG_SFX, soundRange = 40, hitSfx = None)
         self.setImage('phase_3.5/maps/fog-horn.png')
-        self.setRechargeTime(24.5)
+        self.setRechargeTime(14.5)
 
     def start(self):
         SoundGag.start(self)

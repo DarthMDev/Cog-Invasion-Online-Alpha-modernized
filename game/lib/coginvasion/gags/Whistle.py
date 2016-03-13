@@ -17,7 +17,7 @@ class Whistle(SoundGag):
         SoundGag.__init__(self, CIGlobals.Whistle, 'phase_5/models/props/whistle.bam', 7,
                           GagGlobals.WHISTLE_APPEAR_SFX, GagGlobals.WHISTLE_SFX, hitSfx = None)
         self.setImage('phase_3.5/maps/whistle.png')
-        self.setRechargeTime(15.5)
+        self.setRechargeTime(3.5)
 
     def start(self):
         SoundGag.start(self)
