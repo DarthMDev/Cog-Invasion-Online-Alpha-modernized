@@ -445,7 +445,7 @@ class ShopWindow(DirectFrame):
         newItems = dict(items)
         loadout = []
         for slot in base.localAvatar.getBackpack().gagGUI.getSlots():
-            loadout.append(slot.getGag().getID())
+            if slot.getGag(): loadout.append(slot.getGag().getID())
         for item, values in newItems.items():
             if values.get('type') == ItemType.GAG:
                 gag = item()

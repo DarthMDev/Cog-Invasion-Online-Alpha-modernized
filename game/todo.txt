@@ -22,6 +22,9 @@ Add Banana Peel [ ]
 Add Rake [ ]
 Add Marbles [ ]
 
+FIXES
+Fix Tunnel Animations for other Toons [ ]
+Fix Donald's Dreamland Cog Buildings [ ]
 
 BACKEND FEATURES
 Create Autodeploy System [ ]

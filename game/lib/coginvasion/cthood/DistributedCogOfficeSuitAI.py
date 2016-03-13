@@ -75,7 +75,8 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         pass
         
     def enterThink(self):
-        self.brain.startThinking()
+        if self.brain is not None:
+            self.brain.startThinking()
         
     def exitThink(self):
         if self.brain is not None:

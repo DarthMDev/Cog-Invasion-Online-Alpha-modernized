@@ -106,8 +106,15 @@ def filterChat(chat, animal):
         if len(word) == 0:
             continue
         checkWord = word
+        
+        # Let's handle end of the word punctuation.
         if word and len(word) > 1 and word[len(word) - 1] in ['?', '!', '.', ',']:
             checkWord = word.replace(word[len(word) - 1], '')
+        
+        # Let's handle thoughts and corrections.
+        if word and len(word) > 1 and word[0] in ['*', '.']:
+            checkWord = word.replace(word[0], '')    
+        
         if not (checkWord.lower() in whiteList):
             garble = getGarble(animal)
             chat = chat.replace(checkWord, random.choice(garble))

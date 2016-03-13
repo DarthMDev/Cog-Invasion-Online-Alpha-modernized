@@ -6,4 +6,4 @@
 """
 
 class GagState:
-    LOADED, START, RELEASED = range(3)
+    LOADED, START, RELEASED, RECHARGING = range(4)

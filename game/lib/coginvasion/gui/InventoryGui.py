@@ -7,11 +7,15 @@ from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotify import DirectNotify
 from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel, OnscreenText, DGG
 from direct.gui.DirectButton import DirectButton
+from direct.gui.DirectWaitBar import DirectWaitBar
+
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
 
 from panda3d.core import TransparencyAttrib, TextNode
+from lib.coginvasion.globals import CIGlobals
 
 class Slot(DirectFrame):
 
@@ -27,11 +31,21 @@ class Slot(DirectFrame):
         self.mouseRlvrSfx = loader.loadSfx('phase_3/audio/sfx/GUI_rollover.mp3')
         
         # The no ammo text over the gag when you run out of ammo.
-        self.noAmmoText = OnscreenText(text = "No\nAmmo", fg = (1, 0, 0, 1), parent = self,
+        self.infoText = OnscreenText(text = "No\nAmmo", fg = (1, 0, 0, 1), parent = self,
                                        scale = 0.5, shadow = (0, 0, 0, 1), align = TextNode.ACenter,
                                        pos = (0, 0.1))
-        self.noAmmoText.setBin('unsorted', 100)
-        self.noAmmoText.hide()
+        self.infoText.setBin('unsorted', 100)
+        self.infoText.hide()
+        
+        # The recharging progress bar.
+        self.rechargeBar = DirectWaitBar(value = 0, range = 100, frameColor = CIGlobals.DialogColor,
+                                        barColor = (0.286, 0.901, 1, 1), barRelief = DGG.RAISED,
+                                        relief = DGG.RAISED, pos = (-1.25, 0, 0), hpr = (0, 0, -90), 
+                                        parent = self)
+        self.rechargeBar.setSx(0.85)
+        self.rechargeBar.setSz(1.05)
+        self.rechargeBar.setBin('fixed', 60)
+        self.rechargeBar.hide()
         
         # The gag label underneath the gag icon.
         self.gagLabel = OnscreenText(text = "Birthday Cake", fg = (1, 1, 1, 1), parent = self,
@@ -52,10 +66,46 @@ class Slot(DirectFrame):
         self.hoverObj.bind(DGG.B1CLICK, self.gui.click_setWeapon, [self])
         
     def showNoAmmo(self):
-        self.noAmmoText.show()
+        self.infoText['text'] = "No\nAmmo"
+        self.infoText['scale'] = 0.5
+        self.infoText['fg'] = (1, 0, 0, 1)
+        self.infoText['pos'] = (0, 0.1)
+        self.infoText.show()
         
-    def hideNoAmmo(self):
-        self.noAmmoText.hide()
+        if self.gag and self.gag.getState() == GagState.RECHARGING:
+            self.rechargeBar.show()
+        
+    def showRecharging(self):
+        self.infoText['text'] = "Recharging..."
+        self.infoText['scale'] = 0.315
+        self.infoText['fg'] = (0, 0, 1, 1)
+        self.infoText['pos'] = (0, 0)
+        self.infoText.show()
+        
+        self.rechargeBar.show()
+        
+    def __tickRecharge(self):
+        if not self.gag:
+            self.ignoreAll()
+        else:
+            elapsedTime = float(self.gag.getRechargeElapsedTime())
+            totalTime = float(self.gag.getRechargeTime())
+            barValue = int(float(elapsedTime / totalTime) * self.rechargeBar['range'])
+            self.rechargeBar['value'] = barValue
+            
+            if barValue == 0:
+                self.gui.setWeapon(self, playSound = False)
+                self.setOutlineImage('no_ammo')
+                self.showRecharging()
+            elif barValue >= 100:
+                slotImage = 'idle'
+                if base.localAvatar.getBackpack().getSupply(self.gag.getName()) <= 0:
+                    slotImage = 'no_ammo'
+                Sequence(Wait(0.5), Func(self.setOutlineImage, slotImage)).start()
+        
+    def hideInfoText(self):
+        self.infoText.hide()
+        self.rechargeBar.hide()
 
     def setSlotImage(self, gagImage):
         if self.gagImage:
@@ -72,9 +122,18 @@ class Slot(DirectFrame):
         self['image'] = loader.loadTexture(phase + 'slot_%s_%s.png' % (str(self.index), image))
         self.setOutline()
         
+        if image != 'no_ammo':
+            if self.gag and base.localAvatar.getBackpack().getSupply(self.gag.getName()) == 0 or self.gag and self.gag.getState() == GagState.RECHARGING:
+                image = 'no_ammo'
+        
         if image == 'no_ammo':
-            # Show the no ammo text.
-            self.showNoAmmo()
+            if self.gag and self.gag.getState() == GagState.RECHARGING:
+                # Show the recharge text.
+                self.showRecharging()
+            else:
+                # Show the no ammo text.
+                self.showNoAmmo()
+                self.rechargeBar.hide()
             # When we have no ammo, render the frame in front of the gag image.
             self.setBin('fixed', 40)
             
@@ -82,7 +141,7 @@ class Slot(DirectFrame):
                 self.gagImage.setBin('transparent', 30)
         else:
             # Hide the no ammo text if we're not out of ammo.
-            self.hideNoAmmo()
+            self.hideInfoText()
             # Render the gag image in front of the frame.
             if self.gagImage:
                 self.gagImage.setBin('fixed', 40)
@@ -100,11 +159,13 @@ class Slot(DirectFrame):
         self.gagLabel.hide()
 
     def setGag(self, gag):
+        self.ignoreAll()
         self.gag = gag
         if gag:
             self.show()
             self.setSlotImage(self.gag.getImage())
             self.gagLabel['text'] = self.gag.getName()
+            self.accept('%s-Recharge-Tick' % (str(self.gag.getID())), self.__tickRecharge)
         else:
             self.hide()
             self.gagLabel['text'] = ''
@@ -119,7 +180,7 @@ class InventoryGui(DirectObject):
         DirectObject.__init__(self)
         self.backpack = None
         self.oneSlotPos = [(0, 0, 0)]
-        self.twoSlotsPos = [(0, 0, -0.35), (0, 0, -0.55)]
+        self.twoSlotsPos = [(0, 0, 0.30), (0, 0, -0.2)]
         self.threeSlotsPos = [(0, 0, 0.5), (0, 0, 0), (0, 0, -0.5)]
         self.fourSlotPos = [(0, 0, 0.45), (0, 0, 0.15), (0, 0, -0.15), (0, 0, -0.45)]
         self.availableSlot = 0
@@ -144,7 +205,7 @@ class InventoryGui(DirectObject):
         if self.activeSlot:
             self.activeSlot.setOutlineImage('idle')
             self.prevSlot = self.activeSlot
-        if self.backpack.getSupply(slot.getGag().getName()) > 0:
+        if self.backpack.getSupply(slot.getGag().getName()) > 0 and not slot.getGag().getState() == GagState.RECHARGING:
             if self.activeSlot != slot:
                 gagName = slot.getGag().getName()
                 gagId = GagGlobals.getIDByName(gagName)
@@ -156,7 +217,7 @@ class InventoryGui(DirectObject):
                     base.localAvatar.enablePieKeys()
                 slot.setOutlineImage('selected')
                 self.activeSlot = slot
-            elif self.activeSlot == slot and slot.getGag().getState() == GagState.LOADED:
+            elif self.activeSlot == slot and slot.getGag().getState() in [GagState.LOADED, GagState.RECHARGING]:
                 base.localAvatar.needsToSwitchToGag = 'unequip'
                 if base.localAvatar.gagsTimedOut == False:
                     base.localAvatar.b_unEquip()
@@ -235,22 +296,23 @@ class InventoryGui(DirectObject):
             if not gag and len(self.backpack.getGags()) - 1 >= index:
                 gag = self.backpack.getGagByIndex(index)
                 slot.setGag(gag)
-                if self.backpack.getSupply(gag.getName()) > 0:
+                if self.backpack.getSupply(gag.getName()) > 0 and not gag.getState() == GagState.RECHARGING:
                     slot.setOutlineImage('idle')
                 else:
                     slot.setOutlineImage('no_ammo')
             else:
                 if slot == self.activeSlot:
-                    if supply > 0:
+                    self.ammoLabel['text_fg'] = (1, 1, 1, 1)
+                    if supply > 0 and not gag.getState() == GagState.RECHARGING:
                         slot.setOutlineImage('selected')
-                        self.ammoLabel['text_fg'] = (1, 1, 1, 1)
                     else:
+                        if supply <= 0:
+                            self.ammoLabel['text_fg'] = (0.9, 0, 0, 1)
                         slot.setOutlineImage('no_ammo')
-                        self.ammoLabel['text_fg'] = (0.9, 0, 0, 1)
                         self.activeSlot = None
                     self.ammoLabel.show()
                     self.ammoLabel['text'] = 'Ammo: %s' % (self.backpack.getSupply(slot.getGag().getName()))
-                elif self.backpack.getSupply(slot.getGag().getName()) > 0:
+                elif self.backpack.getSupply(slot.getGag().getName()) > 0 and not gag.getState() == GagState.RECHARGING:
                     slot.setOutlineImage('idle')
                 else:
                     slot.setOutlineImage('no_ammo')

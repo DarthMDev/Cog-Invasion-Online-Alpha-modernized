@@ -101,7 +101,7 @@ class SoundGag(Gag):
         self.megaphone = loader.loadModel(self.megaphonePath)
 
     def cleanupGag(self):
-        if self.state == GagState.LOADED:
+        if self.state == GagState.LOADED or self.state == GagState.RECHARGING:
             Gag.cleanupGag(self)
             if self.megaphone:
                 copies = self.avatar.findAllMatches('**/%s' % self.megaphone.getName())
