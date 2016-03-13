@@ -5,9 +5,9 @@ FEATURES
 Start Experience [ ]
 Correct Questing Page [ ]
 Implement New Cog Building Floors [ ]
-  - Breakroom
-  - Puzzle Room
-Create Restock Barrels [ ]
+  - Breakroom [ ]
+  - Puzzle Room [ ]
+Create Restock Barrels [X]
 Add Emotes [ ]
 Add Unites [ ]
 Make Pets [ ]
@@ -21,10 +21,11 @@ Add High Dive [ ]
 Add Banana Peel [ ]
 Add Rake [ ]
 Add Marbles [ ]
+Create Path Finding Polygons for Playground Battles [ ]
 
 FIXES
-Fix Tunnel Animations for other Toons [ ]
-Fix Donald's Dreamland Cog Buildings [ ]
+Fix Tunnel Animations for other Toons [X]
+Fix CogTropolis Streets Randomly Disappearing [ ]
 
 BACKEND FEATURES
 Create Autodeploy System [ ]
