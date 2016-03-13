@@ -87,7 +87,8 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             self.ignore(self.moveIval.getDoneEvent())
             self.moveIval.pause()
             self.moveIval = None
-        self.animFSM.request('neutral')
+        if not self.isDead():
+            self.animFSM.request('neutral')
 
     def exitWalking(self):
         self.clearMoveTrack()
