@@ -5,6 +5,7 @@
 
 from panda3d.core import VBase4, Point4, Point3
 from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.gags.GagType import GagType
 import types
 
 # These ids are sent on the wire to capture gags.
@@ -71,6 +72,7 @@ TrackColorByName = {ToonUp : (211 / 255.0, 148 / 255.0, 255 / 255.0),
  Throw : (255 / 255.0, 145 / 255.0, 66 / 255.0),
  Squirt : (255 / 255.0, 65 / 255.0, 199 / 255.0),
  Drop : (67 / 255.0, 243 / 255.0, 255 / 255.0)}
+Type2TrackName = {GagType.TOON_UP : 0, GagType.TRAP : 1, GagType.SOUND : 3, GagType.THROW : 4, GagType.SQUIRT : 5, GagType.DROP : 6}
 TrackNameById = {0 : ToonUp, 1 : Trap, 2 : Lure, 3 : Sound, 4 : Throw, 5 : Squirt, 6 : Drop}
 TrackGagNamesByTrackName = {Throw : [CIGlobals.Cupcake,
   CIGlobals.FruitPieSlice,

@@ -3,7 +3,7 @@
 # Created by: DecodedLogic (28Feb16)
 ########################################
 
-from panda3d.core import CollisionSphere, CollisionNode
+from panda3d.core import CollisionSphere, CollisionNode, NodePath
 
 from direct.distributed.DistributedNode import DistributedNode
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -17,6 +17,7 @@ class DistributedRestockBarrel(DistributedNode):
     
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)
+        NodePath.__init__(self, 'restock_barrel')
         self.grabSfx = None
         self.rejectSfx = None
         self.grabSoundPath = 'phase_4/audio/sfx/SZ_DD_treasure.mp3'
@@ -44,11 +45,11 @@ class DistributedRestockBarrel(DistributedNode):
         self.collNode = CollisionNode(self.uniqueName('barrelSphere'))
         self.collNode.setIntoCollideMask(CIGlobals.WallBitmask)
         self.collNode.addSolid(self.collSphere)
-        self.collNodePath = self.barrel.attachNewNode(self.collNode)
+        self.collNodePath = self.attachNewNode(self.collNode)
         self.collNodePath.hide()
-        self.accept(self.uniqueName('enterbarrelSphere'), self.__handleCollision)
+        self.accept('enter' + self.collNodePath.getName(), self.__handleCollision)
         
-        self.setLabel(1)
+        self.setParent(CIGlobals.SPRender)
         
     def disable(self):
         DistributedNode.disable(self)
@@ -95,6 +96,14 @@ class DistributedRestockBarrel(DistributedNode):
         else:
             gagId = labelId - 2
             iconName = GagGlobals.InventoryIconByName.get(GagGlobals.getGagByID(gagId))
+            invModel = loader.loadModel('phase_3.5/models/gui/inventory_icons.bam').find('**/%s' % iconName)
+            if invModel:
+                self.gagModel = invModel
+                self.gagModel.reparentTo(self.gagNode)
+                self.gagModel.setScale(13.0)
+                self.gagModel.setPos(0, -0.1, 0)
+            else:
+                self.notify.warning('Failed to find gag label %s.' % (str(labelId)))
         
     def __handleCollision(self, entry = None):
         self.sendUpdate('requestGrab', [])

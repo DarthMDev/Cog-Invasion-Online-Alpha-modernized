@@ -17,6 +17,9 @@ from CogOfficeConstants import *
 from ElevatorConstants import *
 import SuitBuildingGlobals, random
 
+from lib.coginvasion.gags.GagType import GagType
+from lib.coginvasion.battle.DistributedGagBarrelAI import DistributedGagBarrelAI
+
 RIDE_ELEVATOR_TIME = 6.5
 FACE_OFF_TIME = 3.0
 VICTORY_TIME = 5.0
@@ -47,6 +50,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.readyAvatars = []
         self.elevators = []
         self.drops = []
+        self.barrels = []
         self.entranceElevator = None
         self.exitElevator = None
         self.dept = dept
@@ -220,6 +224,11 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         else:
             dataList = POINTS[self.currentFloor][name]
         return dataList
+    
+    def cleanupBarrels(self):
+        for barrel in self.barrels:
+            barrel.requestDelete()
+        self.barrels = []
 
     def cleanupDrops(self):
         for drop in self.drops:
@@ -250,6 +259,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.cleanupDrops()
         self.cleanupChairSuits()
         self.cleanupGuardSuits()
+        self.cleanupBarrels()
         self.avIds = []
         self.readyAvatars = []
         for elevator in self.elevators:
@@ -264,6 +274,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.spotTaken2suitId = None
         self.cleanupDrops()
         self.drops = None
+        self.cleanupBarrels()
         self.cleanupChairSuits()
         self.chairSuits = None
         self.cleanupGuardSuits()
@@ -380,6 +391,43 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 wantBoss = False
             suit = self.makeSuit([guardPoints.index(point), point], 0, isBoss)
             self.guardSuits.append(suit)
+            
+        # Let's make the barrels.
+        barrelPoints = self.getPoints('barrels')
+        if barrelPoints:
+            barrelPoints = list(barrelPoints)
+            # This is the data for each gag track.
+            # The list inside of the dictionary value is a list of gagIds that 
+            # can be chosen to represent the gag track.
+            # The second value is the percentage chance that it'll be chosen.
+            trackGags = {
+                GagType.SOUND : [[18, 20], 20],
+                GagType.SQUIRT : [[31, 4], 38],
+                GagType.DROP : [[8, 30], 25]
+            }
+            maxBarrels = 2
+            
+            for _ in xrange(maxBarrels):
+                locationData = random.choice(barrelPoints)
+                barrelPoints.remove(locationData)
+                
+                position = locationData[0]
+                hpr = locationData[1]
+                
+                gagIcon = random.choice([0, 2])
+                track = GagType.THROW
+                
+                for track, data in trackGags.iteritems():
+                    if random.randrange(0, 100) <= data[1]:
+                        gagIcon = random.choice(data[0])
+                        track = track
+                        break
+                del trackGags[track]
+                
+                barrel = DistributedGagBarrelAI(gagIcon, self.air)
+                barrel.generateWithRequired(self.zoneId)
+                barrel.b_setPosHpr(position[0], position[1], position[2], hpr[0], hpr[1], hpr[2])
+                self.barrels.append(barrel)
 
         # We need to wait for a response from all players telling us that they finished loading the floor.
         # Once they all finish loading the floor, we ride the elevator.
