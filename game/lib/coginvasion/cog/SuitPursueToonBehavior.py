@@ -40,15 +40,18 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         
     def enter(self):
         SuitPathBehavior.enter(self)
+        self.pickTarget()
+        # Choose a distance that is good enough to attack this target.
+        self.attackSafeDistance = random.uniform(5.0, 19.0)
+        # Now, chase them down!
+        self.fsm.request('pursue')
+
+    def pickTarget(self):
         # Choose the toon that is the closest to this suit as the target.
         avIds = list(self.battle.avIds)
         avIds.sort(key = lambda avId: self.air.doId2do.get(avId).getDistance(self.suit))
         self.targetId = avIds[0]
         self.target = self.air.doId2do.get(self.targetId)
-        # Choose a distance that is good enough to attack this target.
-        self.attackSafeDistance = random.uniform(5.0, 19.0)
-        # Now, chase them down!
-        self.fsm.request('pursue')
         
     def exit(self):
         self.fsm.request('off')
@@ -135,6 +138,8 @@ class SuitPursueToonBehavior(SuitPathBehavior):
             data = self.suitList
         elif self.suitDict is not None:
             data = self.suitDict.values()
+        else:
+            return task.done
 
         for suit in data:
             if suit == self.suit:

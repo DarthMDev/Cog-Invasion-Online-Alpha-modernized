@@ -13,6 +13,13 @@ class CogOfficePursueToonBehavior(SuitPursueToonBehavior):
 
     def enter(self):
         SuitPathBehavior.enter(self)
+        self.pickTarget()
+        # Choose a distance that is good enough to attack this target.
+        self.attackSafeDistance = random.uniform(5.0, 19.0)
+        # Now, chase them down!
+        self.fsm.request('pursue')
+
+    def pickTarget(self):
         # Pick a new toon target
         avIds = list(self.suit.battle.avIds)
         # We need to target the toon who has the least amount of attackers.
@@ -22,10 +29,6 @@ class CogOfficePursueToonBehavior(SuitPursueToonBehavior):
         self.target = self.air.doId2do.get(self.targetId)
         # Add myself to the targets list for this toon
         self.suit.battle.toonId2suitsTargeting[self.targetId].append(self.suit.doId)
-        # Choose a distance that is good enough to attack this target.
-        self.attackSafeDistance = random.uniform(5.0, 19.0)
-        # Now, chase them down!
-        self.fsm.request('pursue')
 
     def exit(self):
         # Remove myself from the targets list for my target
