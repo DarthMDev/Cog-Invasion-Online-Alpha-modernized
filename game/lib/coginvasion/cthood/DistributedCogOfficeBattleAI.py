@@ -438,7 +438,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                         break
                 del trackGags[track]
                 
-                barrel = DistributedGagBarrelAI(gagIcon, self.air)
+                barrel = DistributedGagBarrelAI(gagIcon, self.air, loadoutOnly = True)
                 barrel.generateWithRequired(self.zoneId)
                 barrel.b_setPosHpr(position[0], position[1], position[2], hpr[0], hpr[1], hpr[2])
                 self.barrels.append(barrel)

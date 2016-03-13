@@ -80,6 +80,11 @@ class GagManager:
                      CIGlobals.WaterGun : WaterGun,
                      CIGlobals.FireHose : FireHose,
                      CIGlobals.SquirtFlower : SquirtingFlower}
+        
+    def getGagNameByType(self, gagType):
+        for gName, definedType in self.gags.iteritems():
+            if definedType == type(gagType):
+                return gName
 
     def getGagByName(self, name):
         for gName in self.gags.keys():
