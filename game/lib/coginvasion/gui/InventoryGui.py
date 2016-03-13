@@ -28,7 +28,8 @@ class Slot(DirectFrame):
         self.hoverObj = None
         self.gagImage = None
         self.gag = None
-        self.mouseRlvrSfx = loader.loadSfx('phase_3/audio/sfx/GUI_rollover.mp3')
+        self.mouseRlvrSfx = base.loadSfx('phase_3/audio/sfx/GUI_rollover.mp3')
+        self.soundRecharged = base.loadSfx('phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3')
         
         # The no ammo text over the gag when you run out of ammo.
         self.infoText = OnscreenText(text = "No\nAmmo", fg = (1, 0, 0, 1), parent = self,
@@ -38,12 +39,10 @@ class Slot(DirectFrame):
         self.infoText.hide()
         
         # The recharging progress bar.
-        self.rechargeBar = DirectWaitBar(value = 0, range = 100, frameColor = CIGlobals.DialogColor,
-                                        barColor = (0.286, 0.901, 1, 1), barRelief = DGG.RAISED,
-                                        relief = DGG.RAISED, pos = (-1.25, 0, 0), hpr = (0, 0, -90), 
-                                        parent = self)
-        self.rechargeBar.setSx(0.85)
-        self.rechargeBar.setSz(1.05)
+        self.rechargeBar = DirectWaitBar(value = 0, range = 100, frameColor = (1, 1, 1, 1),
+                                        barColor = (0.286, 0.901, 1, 1), relief = DGG.RAISED,
+                                        borderWidth = (0.04, 0.04), pos = (-1.25, 0, 0),
+                                        hpr = (0, 0, -90), parent = self, frameSize = (-0.85, 0.85, -0.12, 0.12))
         self.rechargeBar.setBin('fixed', 60)
         self.rechargeBar.hide()
         
@@ -78,7 +77,7 @@ class Slot(DirectFrame):
     def showRecharging(self):
         self.infoText['text'] = "Recharging..."
         self.infoText['scale'] = 0.315
-        self.infoText['fg'] = (0, 0, 1, 1)
+        self.infoText['fg'] = (0.286, 0.901, 1, 1)
         self.infoText['pos'] = (0, 0)
         self.infoText.show()
         
@@ -98,6 +97,7 @@ class Slot(DirectFrame):
                 self.setOutlineImage('no_ammo')
                 self.showRecharging()
             elif barValue >= 100:
+                base.playSfx(self.soundRecharged)
                 slotImage = 'idle'
                 if base.localAvatar.getBackpack().getSupply(self.gag.getName()) <= 0:
                     slotImage = 'no_ammo'
@@ -230,7 +230,7 @@ class InventoryGui(DirectObject):
     def createGui(self):
         self.deleteGui()
         posGroup = self.threeSlotsPos
-        self.inventoryFrame = DirectFrame(parent = base.a2dRightCenter, pos = (-0.2, 0, 0))
+        self.inventoryFrame = DirectFrame(parent = base.a2dRightCenter, pos = (-0.1725, 0, 0))
         if self.defaultSlots == 4:
             posGroup = self.fourSlotPos
         for slot in range(len(posGroup) + 1):

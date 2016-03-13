@@ -37,3 +37,6 @@ ElevatorPoints = [Point3(-1.5, 5, 0.1), Point3(1.5, 5, 0.1),
 
 ElevatorOutPoints = [Point3(-1.5, -5, 0), Point3(1.5, -5, 0),
                      Point3(-2.5, -7, 0), Point3(2.5, -7, 0)]
+
+ElevatorOutPointsFar = [Point3(-1.5, -5, 0), Point3(1.5, -5, 0),
+                     Point3(-2.5, -7, 0), Point3(2.5, -7, 0)]
