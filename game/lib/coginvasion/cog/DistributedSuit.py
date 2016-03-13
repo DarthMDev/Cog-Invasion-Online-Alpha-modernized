@@ -194,7 +194,8 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             self.moveIval.pause()
             self.moveIval = None
         if andTurnAround == 1:
-            self.animFSM.request('neutral')
+            if self.health > 0:
+                self.animFSM.request('neutral')
             self.setH(self.getH() - 180)
 
     def toggleRay(self, ray = 1):

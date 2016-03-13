@@ -123,7 +123,7 @@ class Gag(object):
                 if backpack.getActiveGag() == self:
                     backpack.setActiveGag(None)
                     
-                    if self.rechargeTime > 0:
+                    if self.rechargeTime > 0 and self.isLocal():
                         self.state = GagState.RECHARGING
                         self.setRechargeElapsedTime(0)
                         messenger.send('%s-Recharge-Tick' % (str(self.getID())))

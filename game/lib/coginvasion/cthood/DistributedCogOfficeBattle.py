@@ -67,7 +67,7 @@ class DistributedCogOfficeBattle(DistributedObject):
         Dept.BOSS: ['phase_7/maps/Bossbot_C_E_O_oil.jpg', 'phase_7/maps/BossbotHQ_oil.jpg'],
         Dept.LAW: ['phase_7/maps/Lawbot_C_J_oil.jpg', 'phase_7/maps/LawbotHQ_oil.jpg'],
         Dept.CASH: ['phase_7/maps/Cashbot_C_F_O_oil.jpg', 'phase_7/maps/CashbotHQ_oil.jpg'],
-        Dept.SALES: ['phase_7/maps/Sellbot_V_P_oil.jpg', 'phase_7/maps/SellbotHQ_oil.jpg']}
+        Dept.SALES: ['phase_7/maps/Sellbot_V_P_oil.jpg', 'phase_7/maps/SellbotHQ_oil.jpg', 'phase_7/maps/SellbotBldg_oil.jpg']}
 
     ROOM_DATA = {RECEPTION_FLOOR: {'props': [
                         ['photo_frame', -42.86, 0.72, 8.0, 0, 0, 90, 1],
