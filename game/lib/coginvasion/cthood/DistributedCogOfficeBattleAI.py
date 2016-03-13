@@ -94,7 +94,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 if suit.brain.currentBehavior.targetId == avId:
                     # Uh oh, this cog was targeting this toon.
                     # We have to make them pick a new target.
-                    suit.brain.currentBehavior.pickNewTarget()
+                    suit.brain.currentBehavior.pickTarget()
 
         if avId in self.toonId2suitsTargeting.keys():
             del self.toonId2suitsTargeting[avId]
