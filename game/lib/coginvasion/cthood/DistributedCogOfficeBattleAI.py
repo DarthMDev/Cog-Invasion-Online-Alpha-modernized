@@ -11,14 +11,15 @@ from lib.coginvasion.cog import SuitBank, Variant
 from lib.coginvasion.cog.SuitType import SuitType
 from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.hood import ZoneUtil
+from lib.coginvasion.gags.GagType import GagType
+from lib.coginvasion.battle.DistributedGagBarrelAI import DistributedGagBarrelAI
 from DistributedCogOfficeElevatorAI import DistributedCogOfficeElevatorAI
 from DistributedCogOfficeSuitAI import DistributedCogOfficeSuitAI
 from CogOfficeConstants import *
 from ElevatorConstants import *
-import SuitBuildingGlobals, random
+import SuitBuildingGlobals
 
-from lib.coginvasion.gags.GagType import GagType
-from lib.coginvasion.battle.DistributedGagBarrelAI import DistributedGagBarrelAI
+import random
 
 RIDE_ELEVATOR_TIME = 6.5
 FACE_OFF_TIME = 3.0
@@ -156,6 +157,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         pass
 
     def enterFloorIntermission(self):
+        self.sendUpdate('openRestockDoors')
         self.elevators[1].b_setState('opening')
         self.elevators[0].b_setState('closed')
         self.readyAvatars = []
@@ -371,9 +373,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         return chairs
 
     def startFloor(self, floorNum):
-        for drop in self.drops:
-            drop.requestDelete()
-        self.drops = []
+        # Clean up barrels and drops from the last floor.
+        self.cleanupBarrels()
+        self.cleanupDrops()
+
         self.currentFloor = floorNum
         wantBoss = False
         if self.currentFloor == self.numFloors - 1:
@@ -405,7 +408,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 GagType.SQUIRT : [[31, 4], 38],
                 GagType.DROP : [[8, 30], 25]
             }
-            maxBarrels = 2
+            maxBarrels = 3
             
             for _ in xrange(maxBarrels):
                 locationData = random.choice(barrelPoints)

@@ -233,6 +233,24 @@ class DistributedCogOfficeBattle(DistributedObject):
          State.State('victory', self.enterVictory, self.exitVictory)], 'off', 'off')
         self.fsm.enterInitialState()
 
+    def openRestockDoors(self):
+        lDoorOpen = -3.9
+        rDoorOpen = 3.5
+        closed = 0.0
+
+        leftDoor = self.floorModel.find('**/left_door')
+        rightDoor = self.floorModel.find('**/right_door')
+
+        # Delete the invisible one-piece wall blocking the doorway.
+        # John, fix this!
+        self.floorModel.find('**/door_collisions').removeNode()
+
+        ival = Parallel(LerpPosInterval(leftDoor, 2.0, (lDoorOpen, 0, 0),
+                                        (closed, 0, 0), blendType = 'easeOut'),
+                        LerpPosInterval(rightDoor, 2.0, (rDoorOpen, 0, 0),
+                                        (closed, 0, 0), blendType = 'easeOut'))
+        ival.start()
+
     def enterVictory(self, ts):
         self.cr.playGame.getPlace().fsm.request('stop')
         base.localAvatar.b_setAnimState('win')

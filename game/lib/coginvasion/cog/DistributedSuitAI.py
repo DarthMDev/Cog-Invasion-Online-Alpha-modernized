@@ -227,7 +227,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     
     def __clearComboData(self, task):
         self.comboData = {}
-        return Task.done
+
+        task.delayTime = self.clearComboDataTime
+        return Task.again
     
     def __handleCombos(self, avId, gag):
         self.comboData.update({avId : {gag.getType() : gag.getDamage()}})
@@ -248,7 +250,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         
         for track in tracks:
             if tracks.count(track) > 1 and track == gag.getType():
-                # Get the indexes of each occurrence of this track in the tracks list.
+                # Get the indices of each occurrence of this track in the tracks list.
                 # For example, tracks could equal [GagType.THROW, GagType.SQUIRT, GagType.THROW]
                 # If, the variable 'track' equaled GagType.THROW, then the next line would
                 # return: [0, 2]
@@ -282,7 +284,6 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.b_setHealth(self.getHealth() - dmg)
             Sequence(Func(self.d_announceHealth, 0, dmg), Wait(self.showComboDamageTime), Func(self.__showComboLabel)).start()
             self.__handleCombos(avatar.doId, gag)
-            taskMgr.doMethodLater(self.clearComboDataTime, self.__clearComboData, self.comboDataTaskName)
             
             if self.isDead():
                 if track == GagType.THROW or gag.getName() == CIGlobals.TNT:
@@ -448,6 +449,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         
         # Let's set the combo data task name and start the task.
         self.comboDataTaskName = self.uniqueName('clearComboData')
+        taskMgr.add(self.__clearComboData, self.comboDataTaskName)
 
     def disable(self):
         DistributedAvatarAI.disable(self)

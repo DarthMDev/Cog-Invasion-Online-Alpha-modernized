@@ -12,12 +12,14 @@ from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gui.LaffOMeter import LaffOMeter
 from lib.coginvasion.quests import QuestManager
 from lib.coginvasion.globals import ChatGlobals
+from lib.coginvasion.hood import LinkTunnel
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DelayDeletable import DelayDeletable
 from direct.distributed import DelayDelete
 from direct.interval.SoundInterval import SoundInterval
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpColorScaleInterval
+from direct.interval.IntervalGlobal import Parallel, LerpPosInterval, LerpQuatInterval, LerpHprInterval
 from direct.directnotify.DirectNotify import DirectNotify
 from panda3d.core import Point3
 import random
@@ -67,7 +69,116 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.lastHood = 0
         self.defaultShard = 0
         self.dmgFadeIval = None
+        self.tunnelTrack = None
         return
+
+    def goThroughTunnel(self, toZone, inOrOut, requestStatus = None):
+        # inOrOut: 0 = in; 1 = out
+
+        if self.tunnelTrack:
+            self.ignore(self.tunnelTrack.getDoneEvent())
+            self.tunnelTrack.finish()
+            self.tunnelTrack = None
+
+        linkTunnel = LinkTunnel.getTunnelThatGoesToZone(toZone)
+        if not linkTunnel:
+            return
+        self.tunnelTrack = Parallel(name = self.uniqueName('Place.goThroughTunnel'))
+
+        if inOrOut == 0:
+            # Going in a tunnel!
+            pivotPoint = linkTunnel.inPivotPoint
+            pivotPointNode = linkTunnel.tunnel.attachNewNode('tunnelPivotPoint')
+            pivotPointNode.setPos(pivotPoint)
+            self.stopSmooth()
+            self.wrtReparentTo(pivotPointNode)
+            if linkTunnel.__class__.__name__ == "SafeZoneLinkTunnel":
+                self.setHpr(180, 0, 0)
+            else:
+                self.setHpr(0, 0, 0)
+            if base.localAvatar.doId == self.doId:
+                doneMethod = self._handleWentInTunnel
+                extraArgs = [requestStatus]
+                self.walkControls.setCollisionsActive(0)
+                camera.wrtReparentTo(linkTunnel.tunnel)
+                currCamPos = camera.getPos()
+                currCamHpr = camera.getHpr()
+                tunnelCamPos = linkTunnel.camPos
+                tunnelCamHpr = linkTunnel.camHpr
+                self.tunnelTrack.append(LerpPosInterval(
+                    camera,
+                    duration = 0.7,
+                    pos = tunnelCamPos,
+                    startPos = currCamPos,
+                    blendType = 'easeOut'
+                ))
+                self.tunnelTrack.append(LerpQuatInterval(
+                    camera,
+                    duration = 0.7,
+                    quat = tunnelCamHpr,
+                    startHpr = currCamHpr,
+                    blendType = 'easeOut'
+                ))
+            exitSeq = Sequence(Func(self.loop, 'run'))
+            if base.localAvatar.doId == self.doId:
+                exitSeq.append(Wait(2.0))
+                exitSeq.append(Func(base.transitions.irisOut))
+            self.tunnelTrack.append(exitSeq)
+            self.tunnelTrack.append(Sequence(
+                LerpHprInterval(
+                    pivotPointNode,
+                    duration = 2.0,
+                    hpr = linkTunnel.inPivotEndHpr,
+                    startHpr = linkTunnel.inPivotStartHpr,
+            ), LerpPosInterval(
+                    pivotPointNode,
+                    duration = 1.0,
+                    pos = (linkTunnel.inPivotEndX, pivotPointNode.getY(), pivotPointNode.getZ()),
+                    startPos = (linkTunnel.inPivotStartX, pivotPointNode.getY(), pivotPointNode.getZ())
+            )))
+        elif inOrOut == 1:
+            # Going out!
+            pivotPoint = linkTunnel.outPivotPoint
+            pivotPointNode = linkTunnel.tunnel.attachNewNode('tunnelPivotPoint')
+            pivotPointNode.setPos(pivotPoint)
+            pivotPointNode.setHpr(linkTunnel.outPivotStartHpr)
+            if base.localAvatar.doId == self.doId:
+                base.localAvatar.walkControls.setCollisionsActive(0)
+                base.localAvatar.detachCamera()
+                camera.reparentTo(linkTunnel.tunnel)
+                tunnelCamPos = linkTunnel.camPos
+                tunnelCamHpr = linkTunnel.camHpr
+                camera.setPos(tunnelCamPos)
+                camera.setHpr(tunnelCamHpr)
+                doneMethod = self._handleCameOutTunnel
+                extraArgs = []
+            self.reparentTo(pivotPointNode)
+            self.setHpr(linkTunnel.toonOutHpr)
+            self.setPos(linkTunnel.toonOutPos)
+            exitSeq = Sequence(
+                Func(self.loop, 'run'),
+                LerpPosInterval(
+                    pivotPointNode,
+                    duration = 1.0,
+                    pos = (linkTunnel.outPivotEndX, pivotPointNode.getY(), pivotPointNode.getZ()),
+                    startPos = (linkTunnel.outPivotStartX, pivotPointNode.getY(), pivotPointNode.getZ())
+                ),
+                LerpHprInterval(
+                    pivotPointNode,
+                    duration = 2.0,
+                    hpr = linkTunnel.outPivotEndHpr,
+                    startHpr = linkTunnel.outPivotStartHpr,
+                ),
+                Func(self.wrtReparentTo, render),
+                Func(self.startSmooth)
+            )
+            self.tunnelTrack.append(exitSeq)
+
+        if base.localAvatar.doId == self.doId:
+            self.tunnelTrack.setDoneEvent(self.tunnelTrack.getName())
+            self.acceptOnce(self.tunnelTrack.getDoneEvent(), doneMethod, extraArgs)
+
+        self.tunnelTrack.start()
 
     def setupNameTag(self, tempName = None):
         Toon.Toon.setupNameTag(self, tempName)
@@ -633,6 +744,10 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.startSmooth()
 
     def disable(self):
+        if self.tunnelTrack:
+            self.ignore(self.tunnelTrack.getDoneEvent())
+            self.tunnelTrack.finish()
+            self.tunnelTrack = None
         if self.dmgFadeIval:
             self.dmgFadeIval.finish()
             self.dmgFadeIval = None

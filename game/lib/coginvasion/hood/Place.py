@@ -384,63 +384,10 @@ class Place(StateData):
         base.localAvatar.stopPosHprBroadcast()
 
     def enterTunnelIn(self, linkTunnel):
+        zoneId = linkTunnel.data['zoneId']
+        base.localAvatar.sendUpdate('goThroughTunnel', [zoneId, 0])
         base.localAvatar.attachCamera()
         base.localAvatar.playMovementSfx("run")
-
-        pivotPoint = linkTunnel.inPivotPoint
-        self.pivotPointNode = linkTunnel.tunnel.attachNewNode('tunnelPivotPoint')
-        self.pivotPointNode.setPos(pivotPoint)
-        currCamPos = camera.getPos(linkTunnel.tunnel)
-        currCamHpr = camera.getHpr(linkTunnel.tunnel)
-        currPos = base.localAvatar.getPos(self.pivotPointNode)
-        currHpr = base.localAvatar.getHpr(self.pivotPointNode)
-        if linkTunnel.__class__.__name__ == "SafeZoneLinkTunnel":
-            base.localAvatar.setHpr(180, 0, 0)
-        else:
-            base.localAvatar.setHpr(0, 0, 0)
-        base.localAvatar.setPos(currPos)
-        base.localAvatar.reparentTo(self.pivotPointNode)
-        base.localAvatar.walkControls.setCollisionsActive(0)
-        base.localAvatar.detachCamera()
-        camera.reparentTo(linkTunnel.tunnel)
-        tunnelCamPos = linkTunnel.camPos
-        tunnelCamHpr = linkTunnel.camHpr
-        self.track = Parallel(
-            LerpPosInterval(
-                camera,
-                duration = 0.7,
-                pos = tunnelCamPos,
-                startPos = currCamPos,
-                blendType = 'easeOut'
-            ),
-            LerpQuatInterval(
-                camera,
-                duration = 0.7,
-                quat = tunnelCamHpr,
-                startHpr = currCamHpr,
-                blendType = 'easeOut'
-            ),
-            Sequence(
-                Func(base.localAvatar.b_setAnimState, 'run'),
-                Wait(2.0),
-                Func(base.transitions.irisOut)
-            ),
-            Sequence(
-                LerpHprInterval(
-                    self.pivotPointNode,
-                    duration = 2.0,
-                    hpr = linkTunnel.inPivotEndHpr,
-                    startHpr = linkTunnel.inPivotStartHpr,
-                ),
-                LerpPosInterval(
-                    self.pivotPointNode,
-                    duration = 1.0,
-                    pos = (linkTunnel.inPivotEndX, self.pivotPointNode.getY(), self.pivotPointNode.getZ()),
-                    startPos = (linkTunnel.inPivotStartX, self.pivotPointNode.getY(), self.pivotPointNode.getZ())
-                )
-            ),
-            name = 'Place.enterTunnelIn'
-        )
 
         requestStatus = {}
         requestStatus['zoneId'] = linkTunnel.data['zoneId']
@@ -475,84 +422,24 @@ class Place(StateData):
             requestStatus['how'] = 'tunnelOut'
             requestStatus['fromZone'] = base.localAvatar.zoneId
 
-        self.track.setDoneEvent(self.track.getName())
-        self.acceptOnce(self.track.getDoneEvent(), self.__handleTunnelInDone, [requestStatus])
-        self.track.start()
-
-    def __handleTunnelInDone(self, requestStatus):
-        self.doneStatus = requestStatus
-        messenger.send(self.doneEvent)
+        base.localAvatar.goThroughTunnel(zoneId, 0, requestStatus)
 
     def exitTunnelIn(self):
         base.localAvatar.playMovementSfx(None)
-        if self.track:
-            self.ignore(self.track.getDoneEvent())
-            self.track.finish()
-            self.track = None
         base.localAvatar.reparentTo(render)
-        self.pivotPointNode.removeNode()
-        del self.pivotPointNode
         base.localAvatar.detachCamera()
         base.localAvatar.walkControls.setCollisionsActive(1)
 
     def enterTunnelOut(self, requestStatus):
+        zone = requestStatus['fromZone']
+        base.localAvatar.sendUpdate('goThroughTunnel', [zone, 1])
         base.localAvatar.playMovementSfx("run")
         base.transitions.irisIn()
         self.nextState = requestStatus.get('nextState', 'walk')
-        # This is the tunnel that we run out of.
-        linkTunnel = LinkTunnel.getTunnelThatGoesToZone(requestStatus['fromZone'])
-        pivotPoint = linkTunnel.outPivotPoint
-        self.pivotPointNode = linkTunnel.tunnel.attachNewNode('tunnelPivotPoint')
-        self.pivotPointNode.setPos(pivotPoint)
-        self.pivotPointNode.setHpr(linkTunnel.outPivotStartHpr)
-        base.localAvatar.walkControls.setCollisionsActive(0)
-        base.localAvatar.reparentTo(self.pivotPointNode)
-        base.localAvatar.setHpr(linkTunnel.toonOutHpr)
-        base.localAvatar.setPos(linkTunnel.toonOutPos)
-        base.localAvatar.detachCamera()
-        camera.reparentTo(linkTunnel.tunnel)
-        tunnelCamPos = linkTunnel.camPos
-        tunnelCamHpr = linkTunnel.camHpr
-        camera.setPos(tunnelCamPos)
-        camera.setHpr(tunnelCamHpr)
-        self.track = Parallel(
-            Sequence(
-                Func(base.localAvatar.b_setAnimState, 'run'),
-                LerpPosInterval(
-                    self.pivotPointNode,
-                    duration = 1.0,
-                    pos = (linkTunnel.outPivotEndX, self.pivotPointNode.getY(), self.pivotPointNode.getZ()),
-                    startPos = (linkTunnel.outPivotStartX, self.pivotPointNode.getY(), self.pivotPointNode.getZ())
-                ),
-                LerpHprInterval(
-                    self.pivotPointNode,
-                    duration = 2.0,
-                    hpr = linkTunnel.outPivotEndHpr,
-                    startHpr = linkTunnel.outPivotStartHpr,
-                )
-            ),
-            name = 'Place.enterTunnelOut'
-        )
-
-        self.track.setDoneEvent(self.track.getName())
-        self.acceptOnce(self.track.getDoneEvent(), self.__handleTunnelOutDone)
-        self.track.start()
-
-    def __handleTunnelOutDone(self):
-        base.localAvatar.walkControls.setCollisionsActive(1)
-        self.fsm.request(self.nextState)
+        base.localAvatar.goThroughTunnel(zone, 1)
 
     def exitTunnelOut(self):
         base.localAvatar.playMovementSfx(None)
         base.localAvatar.walkControls.setCollisionsActive(1)
-        if self.track:
-            self.ignore(self.track.getDoneEvent())
-            self.track.finish()
-            self.track = None
-        base.localAvatar.setPos(base.localAvatar.getPos(render))
-        base.localAvatar.setHpr(base.localAvatar.getHpr(render))
-        base.localAvatar.reparentTo(render)
-        self.pivotPointNode.removeNode()
-        del self.pivotPointNode
         base.localAvatar.detachCamera()
         del self.nextState
