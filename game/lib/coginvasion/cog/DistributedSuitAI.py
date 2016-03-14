@@ -392,8 +392,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.brain.addBehavior(behavior, priority)
         self.requestedBehaviors = []
         if self.suitPlan.getName() in [SuitGlobals.VicePresident]:
-            self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 1)
-            self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 2)
+            self.brain.addBehavior(SuitCallInBackupBehavior(self), priority = 1)
+            self.brain.addBehavior(SuitFlyToRandomSpotBehavior(self), priority = 2)
             self.brain.addBehavior(SuitAttackBehavior(self), priority = 3)
         else:
             pursue = SuitPursueToonBehavior(self, getPathFinder(self.hood))

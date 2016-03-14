@@ -9,7 +9,6 @@ import SuitAttacks
 import SuitGlobals
 import SuitUtils
 
-from direct.distributed.ClockDelta import globalClockDelta
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.task.Task import Task
 import random, operator
@@ -100,7 +99,17 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         if len(self.avatarsInRange) < 1 or panicBehavior and healthPerct <= panicBehavior.getPanicHealthPercentage() or healthPerct - origHealthPerct >= self.ABANDON_ATTACK_PERCT:
             self.stopAttacking()
             return
-
+        
+        # Let's check if we have a backup behavior if toons get out of control.
+        from lib.coginvasion.cog.SuitCallInBackupBehavior import SuitCallInBackupBehavior
+        backupBehavior = brain.getBehavior(SuitCallInBackupBehavior)
+        
+        if not backupBehavior is None:
+            if backupBehavior.shouldStart():
+                brain.queueBehavior(SuitCallInBackupBehavior)
+                self.stopAttacking()
+                return
+        
         # Let's select a target and look at them.
         target = self.avatarsInRange[0]
         attack = SuitUtils.attack(self.suit, target)

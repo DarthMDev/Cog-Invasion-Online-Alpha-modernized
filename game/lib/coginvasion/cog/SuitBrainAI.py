@@ -14,6 +14,7 @@ class SuitBrain(DirectObject):
     def __init__(self, suit):
         self.suit = suit
         self.behaviors = {}
+        self.queuedBehavior = None
         self.currentBehavior = None
         self.thinkTaskName = self.suit.uniqueName('think')
         self.isThinking = False
@@ -30,6 +31,12 @@ class SuitBrain(DirectObject):
                 if self.currentBehavior == behavior:
                     self.exitCurrentBehavior()
         self.organizeBehaviors()
+        
+    def queueBehavior(self, behavior):
+        self.queuedBehavior = behavior
+            
+    def removeQueuedBehavior(self):
+        self.queuedBehavior = None
 
     def setPriorityOfBehavior(self, behaviorType, priority):
         # Update the priority on this behavior.
@@ -97,6 +104,7 @@ class SuitBrain(DirectObject):
         del self.behaviors
         del self.thinkTaskName
         del self.isThinking
+        del self.queuedBehavior
 
     def isThinking(self):
         return self.isThinking
@@ -114,6 +122,17 @@ class SuitBrain(DirectObject):
             self.exitCurrentBehavior()
             self.isThinking = False
             return Task.done
+        
+        # Let's see if we have any queued behaviors.
+        if not self.queuedBehavior is None:
+            self.exitCurrentBehavior()
+            for behavior in self.behaviors.keys():
+                if behavior.__class__ == self.queuedBehavior:
+                    behavior.enter()
+                    self.currentBehavior = behavior
+                    break
+            self.queuedBehavior = None
+            return Task.again
 
         readyBehaviors = []
         # Let's figure out which behaviors are ready (shouldStart = True).
