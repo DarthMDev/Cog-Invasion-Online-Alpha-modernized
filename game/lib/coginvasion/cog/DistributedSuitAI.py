@@ -258,7 +258,8 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 damageIndices = [i for i, x in enumerate(tracks) if x == track]
                 totalGags = len(damageIndices)
                 for i in damageIndices:
-                    totalDamage += damages[damageIndices[i]]
+                    if i < len(damageIndices) and i >= 0:
+                        totalDamage += damages[damageIndices[i]]
                 isCombo = True
                 break
             continue
