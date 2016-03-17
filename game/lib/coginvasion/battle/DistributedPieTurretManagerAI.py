@@ -13,12 +13,10 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
         self.turretId2turret = {}
-        self.turretCount = 0
 
     def killTurret(self, turretId):
         if self.turretId2turret == None:
             return
-        self.turretCount -= 1
         turret = self.turretId2turret[turretId]
         turret.disable()
         turret.requestDelete()
@@ -38,7 +36,6 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
         turret.b_setPosHpr(x, y, z, h, p, r)
         turret.b_setParent(CIGlobals.SPRender)
         turret.startScanning()
-        self.turretCount += 1
         self.turretId2turret[turret.doId] = turret
         self.sendUpdateToAvatarId(avId, 'turretPlaced', [turret.doId])
 
@@ -50,7 +47,7 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
         self.turretId2turret = None
         
     def getTurretCount(self):
-        turrets = self.turretCount
+        turrets = 0
             
         for obj in base.air.doId2do.values():
             className = obj.__class__.__name__
@@ -58,4 +55,6 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
                 if className == 'DistributedToonAI':
                     if obj.getPUInventory()[0] > 0:
                         turrets += 1
+                elif className == 'DistributedPieTurretAI':
+                    turrets += 1
         return turrets

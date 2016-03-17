@@ -101,11 +101,22 @@ class DistributedGunGameFlag(DistributedNode):
     def announceGenerate(self):
         self.reparentTo(render)
         base.minigame.flags.append(self)
-        self.flagMdl = loader.loadModel('phase_4/models/minigames/flag.egg')
+        self.flagMdl = loader.loadModel('phase_4/models/minigames/flag_new.egg')
         self.flagMdl.reparentTo(render)
         self.flagMdl.find('**/flag').setTwoSided(1)
         self.flagMdl.find('**/flag_pole').setColor(self.pole_color)
         self.flagMdl.find('**/flag').setColor(self.colors[self.team])
+        
+        hideNodes = ['icon2', 'icon3']
+        
+        if self.team == GGG.Teams.BLUE:
+            hideNodes = ['icon', 'icon1']
+            
+        for node in hideNodes:
+            part = self.flagMdl.find('**/%s' % node)
+            if part:
+                part.removeNode()
+        
         sphere = CollisionSphere(0, 0, 0, 4)
         sphere.setTangible(0)
         node = CollisionNode(self.uniqueName('flagpoint_colnode'))

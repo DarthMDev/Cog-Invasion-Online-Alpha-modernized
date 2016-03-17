@@ -115,7 +115,7 @@ class Shop(StateData):
             if health + healAmt > maxHealth:
                 healAmt = maxHealth - health
             self.requestedHp = healAmt
-            base.localAvatar.setHealth(healAmt)
+            base.localAvatar.setHealth(health + healAmt)
             healDict = {item : [0, values.get('healCooldown')]}
             self.healCooldowns.update(healDict)
             self.newHealCooldowns.update(healDict)
@@ -198,6 +198,7 @@ class Shop(StateData):
         self.window.setCancelCommand(self.cancelPurchase)
         self.window.makePages(self.distShop.getItems())
         self.window.setPage(0)
+        self.window.updatePages()
 
         # Load the rejection sfx.
         self.healCooldownDoneSfx = base.loadSfx(self.healCooldownDoneSoundPath)
@@ -491,7 +492,7 @@ class ShopWindow(DirectFrame):
     def updatePages(self):
         battle = base.localAvatar.getMyBattle()
 
-        if battle:
+        if battle and self.wantTurretCount:
             self.shop.distShop.sendUpdate('requestTurretCount', [])
             self.updateTurretCount()
 

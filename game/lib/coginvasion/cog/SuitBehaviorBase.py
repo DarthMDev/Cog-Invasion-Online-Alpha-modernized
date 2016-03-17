@@ -14,12 +14,12 @@ class SuitBehaviorBase(DirectObject):
         self.suit = suit
         
     def enter(self):
-        if self.isEntered:
+        if self.isEntered == 1:
             return
         self.isEntered = 1
         
     def exit(self):
-        if self.isEntered:
+        if self.isEntered == 1:
             self.isEntered = 0
             messenger.send(self.doneEvent)
             if self.suit and self.suit.brain:

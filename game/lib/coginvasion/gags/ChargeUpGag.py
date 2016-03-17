@@ -75,7 +75,7 @@ class ChargeUpGag:
             return
         self.cleanupTracks()
         self.actorTrack = Sequence(Func(self.avatar.play, self.buttonAnim, fromFrame = self.chooseLocFrame,
-            toFrame = self.completeFrame, playRate = self.playRate))
+            toFrame = self.completeFrame))
         self.soundTrack = Sequence(Wait(self.buttonHold), SoundInterval(self.buttonSfx, node = self.avatar))
         self.actorTrack.start()
         self.soundTrack.start()

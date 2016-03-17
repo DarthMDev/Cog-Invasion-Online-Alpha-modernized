@@ -5,10 +5,12 @@
 
 """
 
-from panda3d.core import VBase4, Vec3, Point3
+from panda3d.core import VBase4, Vec3, Vec4, Point3
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from DistributedDroppableCollectableJellybeans import DistributedDroppableCollectableJellybeans
 from direct.interval.IntervalGlobal import SoundInterval, Sequence, LerpPosInterval, LerpHprInterval, Func
+from direct.interval.MetaInterval import ParallelEndTogether
+from direct.interval.LerpInterval import LerpColorScaleInterval
 import random
 
 class DistributedDroppableCollectableJellybean(DistributedDroppableCollectableJellybeans):
@@ -55,9 +57,24 @@ class DistributedDroppableCollectableJellybean(DistributedDroppableCollectableJe
         self.accept(avatarGoneName, self.unexpectedExit)
         flyTime = 1.0
         
+        # Let's speed up the spinning.
+        self.stopSpin()
+        self.spinIval = Sequence(
+            LerpHprInterval(self.bean, duration = 1.5, hpr = Vec3(360, 0, 0),
+                startHpr = self.bean.getHpr())
+        )
+        self.spinIval.loop()
+        
         self.actuallyCollect(avId, 1.2)
-        track = Sequence(LerpPosInterval(self.bean, flyTime, pos = Point3(0, 0, 3), startPos = self.bean.getPos(avatar), blendType = 'easeInOut'),
-                         Func(self.bean.detachNode), Func(self.ignore, avatarGoneName))
+        track = ParallelEndTogether(
+            Sequence(
+                LerpPosInterval(self.bean, flyTime, pos = Point3(0, 0, 3),
+                    startPos = self.bean.getPos(avatar), blendType = 'easeInOut'),
+                Func(self.bean.detachNode),
+                Func(self.ignore, avatarGoneName)
+            ),
+            LerpColorScaleInterval(self.bean, flyTime, Vec4(0, 0, 0, 0.1), Vec4(1, 1, 1, 1))
+        )
         self.flyTrack = Sequence(track, name = 'treasureFlyTrack')
         self.bean.reparentTo(avatar)
         self.flyTrack.start()

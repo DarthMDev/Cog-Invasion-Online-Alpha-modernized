@@ -5,7 +5,6 @@
 
 from lib.coginvasion.cog.SuitBehaviorBase import SuitBehaviorBase
 from lib.coginvasion.cog.SuitFollowBossBehavior import SuitFollowBossBehavior
-from lib.coginvasion.cog.SuitHealBossBehavior import SuitHealBossBehavior
 from lib.coginvasion.cog import Variant
 
 from direct.task.Task import Task
@@ -15,7 +14,9 @@ import random
 SPEECH_BY_BACKUP_LVL = {0: ['Gah! I need backup!', 'Get me some backup!', 'Get them!!!', 'Attack!!'],
                         1: ["Is that all you got, Toons?", "There's more where that came from!", "Send in higher backup!",
                             "I need stronger reinforcements!"],
-                        2: ["No, no, it's not working... give me everything you got!", "I need everything I can get!",
+                        2: ["Send in the backup! These Toons are getting out of hand!", "Good luck getting through this...",
+                            "Enough is enough! Watch as your town is converted into a sales depot."],
+                        3: ["No, no, it's not working... give me everything you got!", "I need everything I can get!",
                             "Get me the highest level of backup you have!", "Just try and get through these reinforcements!"]}
 
 class SuitCallInBackupBehavior(SuitBehaviorBase):
@@ -25,7 +26,8 @@ class SuitCallInBackupBehavior(SuitBehaviorBase):
         SuitBehaviorBase.__init__(self, suit, doneEvent)
         self.backup_levels = {1: range(1, 4 + 1),
                         2: range(5, 8 + 1),
-                        3: range(9, 12 + 1)}
+                        3: range(6, 11 + 1),
+                        4: range(9, 12 + 1)}
         self.backupLevel = -1
         self.backupAvailable = True
         self.backupCooldown = None
@@ -34,27 +36,35 @@ class SuitCallInBackupBehavior(SuitBehaviorBase):
 
     def enter(self):
         SuitBehaviorBase.enter(self)
-        self.__toggleBackupAvailable()
-        self.backupLevel += 1
-        backupCooldown = random.randint(16, 20)
-        self.backupCooldown = Sequence(Wait(backupCooldown), Func(self.__toggleBackupAvailable))
-        taskMgr.doMethodLater(8, self.__spawnBackupGroup, self.suit.uniqueName('Spawn Backup Group'))
-        self.suit.getManager().flyAwayAllSuits()
-        self.suit.getManager().sendSysMessage('The {0} is calling in backup level {1}!'.format(self.suit.getName(), self.backupLevel + 1))
-        self.suit.d_setChat(random.choice(SPEECH_BY_BACKUP_LVL[self.backupLevel]))
+        if self.backupAvailable and self.backupCooldown is None:
+            self.__toggleBackupAvailable()
+            self.backupLevel = self.getBackupLevel()
+            backupCooldown = random.randint(16, 20)
+            self.backupCooldown = Sequence(Wait(backupCooldown), Func(self.__toggleBackupAvailable))
+            taskMgr.doMethodLater(random.randint(3, 8), self.__spawnBackupGroup, self.suit.uniqueName('Spawn Backup Group'))
+            self.suit.getManager().flyAwayAllSuits()
+            self.suit.getManager().sendSysMessage('The {0} is calling in backup level {1}!'.format(self.suit.getName(), self.backupLevel + 1))
+            self.suit.d_setChat(random.choice(SPEECH_BY_BACKUP_LVL[self.backupLevel]))
         self.exit()
-
-    def unload(self):
-        SuitBehaviorBase.unload(self)
+        
+    def resetCooldown(self):
         if self.backupCooldown:
             self.backupCooldown.pause()
             self.backupCooldown = None
+
+    def unload(self):
+        SuitBehaviorBase.unload(self)
+        self.resetCooldown()
         del self.backupLevel
         del self.backup_levels
         del self.backupAvailable
 
     def __toggleBackupAvailable(self):
-        self.backupAvailable = True
+        if self.backupAvailable is True:
+            self.backupAvailable = False
+        else:
+            self.backupAvailable = True
+            self.resetCooldown()
 
     def __spawnBackupGroup(self, task):
         if not hasattr(self, 'suit') or hasattr(self.suit, 'DELETED'):
@@ -62,26 +72,32 @@ class SuitCallInBackupBehavior(SuitBehaviorBase):
         mgr = self.suit.getManager()
         if mgr.isCogCountFull() or mgr.suits == None:
             return Task.done
-        requestSize = random.randint(0, 7)
+        requestSize = random.randint(2, 7)
         for _ in range(requestSize):
             if mgr.isCogCountFull():
                 break
             newSuit = mgr.createSuit(levelRange = self.backup_levels[self.backupLevel + 1], anySuit = 1, variant = Variant.SKELETON)
-            #newSuit.addBehavior(SuitHealBossBehavior(newSuit, self.suit), priority = 5)
             newSuit.addBehavior(SuitFollowBossBehavior(newSuit, self.suit), priority = 4)
         self.calledInBackup += requestSize
         task.delayTime = 4
         return Task.again
+    
+    def getBackupLevel(self):
+        hpPerct = float(self.suit.getHealth()) / float(self.suit.getMaxHealth())
+        if 0.8 <= hpPerct <= 0.85:
+            return 0
+        elif 0.5 <= hpPerct <= 0.8:
+            return 1
+        elif 0.2 <= hpPerct <= 0.5:
+            return 2
+        elif 0.0 <= hpPerct <= 0.4:
+            return 3
+        return -1
 
     def getCalledInBackup(self):
         return self.calledInBackup
 
     def shouldStart(self):
-        hpPerct = float(self.suit.getHealth()) / float(self.suit.getMaxHealth())
-        if self.backupLevel == -1 and 0.7 <= hpPerct <= 0.8:
-            return self.backupAvailable
-        elif self.backupLevel == 0 and 0.4 <= hpPerct <= 0.7:
-            return self.backupAvailable
-        elif self.backupLevel == 1 and 0.0 <= hpPerct <= 0.4:
+        if self.getBackupLevel() != -1:
             return self.backupAvailable
         return False

@@ -49,6 +49,12 @@ class SuitPursueToonBehavior(SuitPathBehavior):
     def pickTarget(self):
         # Choose the toon that is the closest to this suit as the target.
         avIds = list(self.battle.avIds)
+        
+        # Temporary fix for district resets. TODO: Actually correct this.
+        for avId in avIds:
+            if self.air.doId2do.get(avId) is None:
+                avIds.remove(avId)
+        
         avIds.sort(key = lambda avId: self.air.doId2do.get(avId).getDistance(self.suit))
         self.targetId = avIds[0]
         self.target = self.air.doId2do.get(self.targetId)
@@ -160,15 +166,16 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         return task.again
         
     def _pursueTask(self, task):
-        currPos = self.target.getPos(render)
-        if self.suit.getDistance(self.target) <= self.attackSafeDistance and not self.target.isDead():
-            # We're a good distance to attack this toon. Let's do it.
-            self.fsm.request('attack')
-            return task.done
-        elif (currPos.getXy() - self.lastCheckedPos.getXy()).length() >= SuitPursueToonBehavior.RemakePathDistance:
-            # They're too far from where we're trying to go! Make a new path to where they are!
-            self.lastCheckedPos = self.target.getPos(render)
-            self.createPath(self.target)
+        if self.target:
+            currPos = self.target.getPos(render)
+            if self.suit.getDistance(self.target) <= self.attackSafeDistance and not self.target.isDead():
+                # We're a good distance to attack this toon. Let's do it.
+                self.fsm.request('attack')
+                return task.done
+            elif (currPos.getXy() - self.lastCheckedPos.getXy()).length() >= SuitPursueToonBehavior.RemakePathDistance:
+                # They're too far from where we're trying to go! Make a new path to where they are!
+                self.lastCheckedPos = self.target.getPos(render)
+                self.createPath(self.target)
         task.delayTime = 1.0
         return task.again
         

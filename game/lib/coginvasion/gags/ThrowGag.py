@@ -100,14 +100,15 @@ class ThrowGag(Gag):
         trackOfClosestPie = None
         pieHash2range = {}
         for entity, track in self.entities:
-            pieHash2range[hash(entity)] = (entity.getPos(render) - pos).length()
+            if not entity.isEmpty():
+                pieHash2range[hash(entity)] = (entity.getPos(render) - pos).length()
         ranges = []
         for distance in pieHash2range.values():
             ranges.append(distance)
         ranges.sort()
         for pieHash in pieHash2range.keys():
             distance = pieHash2range[pieHash]
-            if distance == ranges[0]:
+            if not distance is None and distance == ranges[0]:
                 for entity, track in self.entities:
                     if hash(entity) == pieHash:
                         closestPie = entity

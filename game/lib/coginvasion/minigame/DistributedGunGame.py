@@ -338,6 +338,10 @@ class DistributedGunGame(DistributedToonFPSGame):
         self.myRemoteAvatar = RemoteToonBattleAvatar(self, self.cr, base.localAvatar.doId)
         self.setWinnerPrize(200)
         self.setLoserPrize(15)
+        
+        if not base.localAvatar.tokenIcon is None:
+            base.localAvatar.tokenIcon.hide()
+        
         #pos, hpr = self.loader.getCameraOfCurrentLevel()
         #camera.setPos(pos)
         #camera.setHpr(hpr)
@@ -501,6 +505,11 @@ class DistributedGunGame(DistributedToonFPSGame):
     def disable(self):
         render.show()
         base.localAvatar.setWalkSpeedNormal()
+        
+        # Show the staff icon again.
+        if not base.localAvatar.tokenIcon is None:
+            base.localAvatar.tokenIcon.show()
+        
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.taskMgr.remove(self.uniqueName('updateArrows'))
         self.playersByTeam = None
