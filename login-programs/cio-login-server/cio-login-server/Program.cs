@@ -42,12 +42,13 @@ namespace cio_login_server
 
     class Client
     {
-        public Client(Server server, List<Client> clients, TcpClient client, StreamReader sr, StreamWriter sw)
+        public Client(Server server, List<Client> clients, TcpClient client, StreamReader sr, StreamWriter sw, string ip)
         {
             this.server = server;
             this.client = client;
             this.sr = sr;
             this.sw = sw;
+            this.ip = ip;
             client_list = clients;
         }
 
@@ -142,10 +143,11 @@ namespace cio_login_server
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e.ToString());
-                Console.WriteLine("Client dropped connection.");
+                Console.WriteLine("-------LOST CONNECTION-------");
+                Console.WriteLine("IP Address: " + ip);
+                Console.WriteLine("Number of active connections: " + (client_list.Count - 1).ToString());
                 client_list.Remove(this);
             }
         }
@@ -155,6 +157,7 @@ namespace cio_login_server
         private StreamWriter sw;
         private List<Client> client_list;
         private Server server;
+        private string ip;
     }
 
     class Server
@@ -173,6 +176,8 @@ namespace cio_login_server
             SetupJSONData();
 
             var task = AcceptTcpClients(cts.Token);
+
+            Console.WriteLine("Cog Invasion Online login server running.");
 
             while (true)
             {
@@ -258,10 +263,14 @@ namespace cio_login_server
             while (!token.IsCancellationRequested)
             {
                 var ws = await listener.AcceptTcpClientAsync();
+                IPEndPoint endpoint = (IPEndPoint)ws.Client.RemoteEndPoint;
+                string ip = endpoint.ToString();
                 StreamReader sr = new StreamReader(ws.GetStream());
                 StreamWriter sw = new StreamWriter(ws.GetStream());
-                Console.WriteLine("Got a new connection.");
-                clients.Add(new Client(this, clients, ws, sr, sw));
+                Console.WriteLine("-------NEW CONNECTION-------");
+                Console.WriteLine("IP Address: " + ip);
+                Console.WriteLine("Number of active connections: " + (clients.Count + 1).ToString());
+                clients.Add(new Client(this, clients, ws, sr, sw, ip));
             }
         }
 

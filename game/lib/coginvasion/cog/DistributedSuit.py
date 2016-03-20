@@ -211,6 +211,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         
         self.disableRay()
         self.stopMoveInterval()
+        startPos = Point3(startX, startY, startZ)
         endPos = Point3(endX, endY, endZ)
         oldHpr = self.getHpr(render)
         self.headsUp(endPos)
@@ -219,7 +220,6 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.moveIval = Parallel(
             LerpHprInterval(self, duration = 0.5, hpr = newHpr, startHpr = oldHpr, blendType = 'easeInOut'),
             Sequence(
-                Func(self.disableRay),
                 Func(self.animFSM.request, 'flyAway', [ts]),
                 Wait(3.5),
                 Func(self.animFSM.request, 'flyDown', [1.0])
@@ -228,11 +228,10 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
                 Wait(2.0),
                 Func(self.headsUp, endPos),
                 ProjectileInterval(self,
-                    startPos = self.getPos(render),
+                    startPos = startPos,
                     endPos = endPos,
                     gravityMult = gravityMult,
-                    duration = duration),
-                Func(self.initializeRay, self.avatarType, 2)
+                    duration = duration)
             )
         )
         self.moveIval.start(ts)

@@ -13,6 +13,7 @@ from lib.coginvasion.hood import DLHood
 from lib.coginvasion.hood import MLHood
 from lib.coginvasion.hood import DGHood
 from lib.coginvasion.hood import DDHood
+from lib.coginvasion.cogtropolis import CTHood
 from World import World
 
 class OToontown(World):
@@ -23,22 +24,38 @@ class OToontown(World):
                 CIGlobals.DonaldsDreamland: DLHood.DLHood,
                 CIGlobals.MinniesMelodyland: MLHood.MLHood,
                 CIGlobals.DaisyGardens: DGHood.DGHood,
-                CIGlobals.DonaldsDock: DDHood.DDHood}
+                CIGlobals.DonaldsDock: DDHood.DDHood,
+                CIGlobals.CogTropolis: CTHood.CTHood}
     Hood2HoodState = {CIGlobals.ToontownCentral: 'TTHood',
                 CIGlobals.MinigameArea: 'MGHood',
                 CIGlobals.TheBrrrgh: 'BRHood',
                 CIGlobals.DonaldsDreamland: 'DLHood',
                 CIGlobals.MinniesMelodyland: 'MLHood',
                 CIGlobals.DaisyGardens: 'DGHood',
-                CIGlobals.DonaldsDock: 'DDHood'}
+                CIGlobals.DonaldsDock: 'DDHood',
+                CIGlobals.CogTropolis: 'CTHood'}
 
     def __init__(self, parentFSM, doneEvent):
         World.__init__(self, doneEvent)
         self.fsm.setName(CIGlobals.OToontown)
         self.fsm.addState(State('MGHood', self.enterMGHood, self.exitMGHood, ['quietZone']))
+        self.fsm.addState(State('CTHood', self.enterCTHood, self.exitCTHood, ['quietZone']))
         self.fsm.getStateNamed('quietZone').addTransition('MGHood')
+        self.fsm.getStateNamed('quietZone').addTransition('CTHood')
         self.parentFSM = parentFSM
         self.parentFSM.getStateNamed(CIGlobals.OToontown).addChild(self.fsm)
+
+    def enterCTHood(self, requestStatus):
+        self.accept(self.hoodDoneEvent, self.handleHoodDone)
+        self.hood.enter(requestStatus)
+
+    def exitCTHood(self):
+        self.ignore(self.hoodDoneEvent)
+        self.hood.exit()
+        self.hood.unload()
+        self.hood = None
+        base.cr.playGame.hood = None
+        self.lastHood = CIGlobals.CogTropolis
 
     def enterDDHood(self, requestStatus):
         self.accept(self.hoodDoneEvent, self.handleHoodDone)

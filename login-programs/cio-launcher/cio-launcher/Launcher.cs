@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Media;
 
 namespace cio_launcher
 {
@@ -92,11 +93,24 @@ namespace cio_launcher
                             Environment.SetEnvironmentVariable("LOGIN_TOKEN", loginToken);
 
                             //launcher.CloseConnection();
-
-                            Process ciProcess = new Process();
-                            ciProcess.StartInfo.FileName = "coginvasion.exe";
-                            ciProcess.Start();
-                            ciProcess.WaitForExit();
+                            Console.WriteLine("Starting coginvasion.exe");
+                            //Process ciProcess = new Process();
+                            //ciProcess.StartInfo.FileName = "coginvasion.exe";
+                            //ciProcess.Start();
+                            ProcessStartInfo ciInfo = new ProcessStartInfo();
+                            ciInfo.FileName = "coginvasion.exe";
+                            ciInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                            ciInfo.CreateNoWindow = true;
+                            Console.WriteLine("Waiting for exit...");
+                            using (Process ciProc = Process.Start(ciInfo))
+                            {
+                                ciProc.WaitForExit();
+                            }
+                            //ciProcess.WaitForExit();
+                            Console.WriteLine("It finished!");
+                            SoundPlayer winXPsound = new SoundPlayer(@"sounds\winXPStartup.wav");
+                            winXPsound.Play();
+                            //Process.Start("iexplore.exe");
 
 
                         }
@@ -191,6 +205,7 @@ namespace cio_launcher
             else
             {
                 string myMD5 = BitConverter.ToString(new SHA1CryptoServiceProvider().ComputeHash(File.Open(filename, FileMode.Open)));
+                Console.WriteLine(filename + ": " + myMD5);
                 return (myMD5 == md5);
             }
         }

@@ -139,12 +139,12 @@ RecoverArea = "Recover Area"
 CTZoneDifference = 20000
 World2Hood2ZoneId = {OToontown:   {ToontownCentral: 2000, DonaldsDock: 1000, TheBrrrgh: 3000,
                                    MinniesMelodyland: 4000, DaisyGardens: 5000, DonaldsDreamland: 9000,
-                                   MinigameArea: 10000},
+                                   MinigameArea: 10000, CogTropolis: 12000},
                      CogTropolis: {CogTropCentral: 22000, DonaldsDock: 21000, TheBrrrgh: 23000,
                                    MinniesMelodyland: 24000, DaisyGardens: 25000, DonaldsDreamland: 29000}}
 World2ZoneId2Hood = {OToontown:   {2000: ToontownCentral, 1000: DonaldsDock, 3000: TheBrrrgh,
                                    4000: MinniesMelodyland, 5000: DaisyGardens, 9000: DonaldsDreamland,
-                                   10000: MinigameArea},
+                                   10000: MinigameArea, 12000: CogTropolis},
                      CogTropolis: {22000: CogTropCentral, 21000: DonaldsDock, 23000: TheBrrrgh,
                                    24000: MinniesMelodyland, 25000: DaisyGardens, 29000: DonaldsDreamland}}
 World2Id = {OToontown: 0, CogTropolis: 1}

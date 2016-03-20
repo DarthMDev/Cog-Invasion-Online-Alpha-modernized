@@ -28,6 +28,7 @@ class SuitCallInBackupBehavior(SuitBehaviorBase):
                         2: range(5, 8 + 1),
                         3: range(6, 11 + 1),
                         4: range(9, 12 + 1)}
+        self.backup_request_size = 18
         self.backupLevel = -1
         self.backupAvailable = True
         self.backupCooldown = None
@@ -41,10 +42,12 @@ class SuitCallInBackupBehavior(SuitBehaviorBase):
             self.backupLevel = self.getBackupLevel()
             backupCooldown = random.randint(16, 20)
             self.backupCooldown = Sequence(Wait(backupCooldown), Func(self.__toggleBackupAvailable))
+            self.suit.getManager().suitsRequest = self.backup_request_size
             taskMgr.doMethodLater(random.randint(3, 8), self.__spawnBackupGroup, self.suit.uniqueName('Spawn Backup Group'))
             self.suit.getManager().flyAwayAllSuits()
             self.suit.getManager().sendSysMessage('The {0} is calling in backup level {1}!'.format(self.suit.getName(), self.backupLevel + 1))
             self.suit.d_setChat(random.choice(SPEECH_BY_BACKUP_LVL[self.backupLevel]))
+            self.suit.getManager().setActiveInvasion(1)
         self.exit()
         
     def resetCooldown(self):
@@ -70,11 +73,11 @@ class SuitCallInBackupBehavior(SuitBehaviorBase):
         if not hasattr(self, 'suit') or hasattr(self.suit, 'DELETED'):
             return Task.done
         mgr = self.suit.getManager()
-        if mgr.isCogCountFull() or mgr.suits == None:
+        if mgr.isFullInvasion() or mgr.suits == None:
             return Task.done
         requestSize = random.randint(2, 7)
         for _ in range(requestSize):
-            if mgr.isCogCountFull():
+            if mgr.isCogCountFull() or mgr.isFullInvasion():
                 break
             newSuit = mgr.createSuit(levelRange = self.backup_levels[self.backupLevel + 1], anySuit = 1, variant = Variant.SKELETON)
             newSuit.addBehavior(SuitFollowBossBehavior(newSuit, self.suit), priority = 4)

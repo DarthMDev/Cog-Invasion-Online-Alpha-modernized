@@ -15,9 +15,9 @@ class SuitTournament:
     round_difficulties = [range(1, 4 + 1),
                         range(5, 8 + 1),
                         range(9, 12 + 1)]
-    round_sizes = ["large",
-                "large",
-                "large"]
+    round_sizes = [25,
+                25,
+                25]
     round_dialogue = {1: {"end": "That's all the " + CIGlobals.Suits + " of round one. The " + CIGlobals.Suits + " are recharging and upgrading their parts..."},
                     2: {"start": "This is the second round of the " + CIGlobals.Suit + " Tournament, the more advanced " + CIGlobals.Suits + " are arriving.",
                         "end": "That's all for round two, prepare for the most advanced " + CIGlobals.Suits + " to arrive."},
@@ -69,10 +69,11 @@ class SuitTournament:
         suit = "ABC"
         levelRange = self.round_difficulties[self.getRound() - 1]
         size = self.round_sizes[self.getRound() - 1]
+        self.suitMgr.suitsRequest = size
         skeleton = 0
         if self.getRound() == 4:
             skeleton = 1
-        self.suitMgr.startInvasion(suit, levelRange, size, skeleton)
+        self.suitMgr.startInvasion(suit, levelRange, skeleton)
         return task.done
 
     def endRound(self):
@@ -143,6 +144,6 @@ class SuitTournament:
         return self.round
 
     def handleDeadSuit(self):
-        if self.suitMgr.numSuits == 0 and self.suitMgr.isFullInvasion(self.suitMgr.currInvasionSize):
+        if self.suitMgr.numSuits == 0 and self.suitMgr.isFullInvasion():
             self.suitMgr.suitsSpawnedThisInvasion = 0
             self.endRound()

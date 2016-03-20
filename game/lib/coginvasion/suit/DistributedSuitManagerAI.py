@@ -17,6 +17,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
     chances = {'invasion': range(56, 100 + 1), 'cog': range(8, 55 + 1), 'tournament': range(1, 7 + 1)}
     # The delays after a certain spawn type has ended
     delayRangeBySpawn = {'invasion': [20, 40], 'cog': [5, 20], 'tournament': [20, 40]}
+    suitsRequestBySize = {'small': 7, 'medium': 14, 'large': 21}
 
     def __init__(self, air):
         try:
@@ -30,6 +31,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         self.numSuits = 0
         self.activeInvasion = False
         self.suitsSpawnedThisInvasion = 0
+        self.suitsRequest = self.suitsRequestBySize['small']
         self.lastChoice = None
         self.totalSuitsThisShift = 0
         self.maxSuitsThisShift = 0
@@ -138,13 +140,14 @@ class DistributedSuitManagerAI(DistributedObjectAI):
                         avatar.questManager.tournamentDefeated(CogBattleGlobals.HoodIndex2HoodName[self.battle.getHoodIndex()])
             return
         if self.numSuits == 0:
-            if self.getActiveInvasion() and self.isFullInvasion(self.currInvasionSize):
+            if self.getActiveInvasion() and self.isFullInvasion():
                 for avId in self.battle.avIds:
                     avatar = self.air.doId2do.get(avId)
                     if avatar:
                         avatar.questManager.invasionDefeated(CogBattleGlobals.HoodIndex2HoodName[self.battle.getHoodIndex()])
                 self.setActiveInvasion(0)
                 self.suitsSpawnedThisInvasion = 0
+                self.suitsRequest = 0
                 self.currInvasionSize = None
             #if self.totalSuitsThisShift >= self.maxSuitsThisShift:
             #	self.sendSysMessage(random.choice(CIGlobals.SuitBreakMsgArray))
@@ -264,16 +267,17 @@ class DistributedSuitManagerAI(DistributedObjectAI):
     def createAutoSuit(self, choice):
         self.lastChoice = choice
         if choice == "invasion":
-            if not self.isFullInvasion("large") and not self.tournament.inTournament and not self.getActiveInvasion() and self.numSuits == 0:
+            if not self.isFullInvasion() and not self.tournament.inTournament and not self.getActiveInvasion() and self.numSuits == 0:
                 # Spawn invasion
                 difficulty = CogBattleGlobals.HoodIndex2LevelRange[self.battle.getHoodIndex()]
                 size = random.choice(["small", "medium", "large"])
+                self.suitsRequest = self.suitsRequestBySize[size]
                 suit = "ABC"
                 if self.battle.getHoodIndex() == CogBattleGlobals.SkeletonHoodIndex:
                     skeleton = 1
                 else:
                     skeleton = 0
-                self.startInvasion(suit, difficulty, size, skeleton)
+                self.startInvasion(suit, difficulty, skeleton)
         elif choice == "suit":
             if not self.isCogCountFull() and not self.tournament.inTournament:
                 # Spawn suit
@@ -286,38 +290,36 @@ class DistributedSuitManagerAI(DistributedObjectAI):
     def isCogCountFull(self):
         return self.numSuits >= 25
 
-    def isFullInvasion(self, size):
-        if size == "large":
-            return self.suitsSpawnedThisInvasion >= 21
-        elif size == "medium":
-            return self.suitsSpawnedThisInvasion >= 14
-        elif size == "small":
-            return self.suitsSpawnedThisInvasion >= 7
+    def isFullInvasion(self):
+        isFull = self.suitsSpawnedThisInvasion >= self.suitsRequest
+        if isFull:
+            print "It's full. {0} cogs spawned this invasion".format(self.suitsSpawnedThisInvasion)
+        return isFull
 
-    def startInvasion(self, suit, difficulty, size, skeleton, backup = 0):
+    def startInvasion(self, suit, difficulty, skeleton, backup = 0):
         if not self.getActiveInvasion() and not self.tournament.inTournament:
             self.sendSysMessage(CIGlobals.SuitInvasionMsg)
-        self.currInvasionSize = size
         self.setActiveInvasion(1)
-        if self.isFullInvasion(size) or self.isCogCountFull():
+        if self.isFullInvasion() or self.isCogCountFull():
             return
         self.suitsSpawnedThisInvasion = 0
+        print "Request size is {0}".format(self.suitsRequest)
         taskMgr.add(
             self.__doInvasion, self.uniqueName('doInvasion'),
-            extraArgs = [suit, difficulty, size, skeleton, backup], appendTask = True
+            extraArgs = [suit, difficulty, skeleton, backup], appendTask = True
         )
 
-    def __doInvasion(self, suitType, difficulty, size, skeleton, backup, task):
-        if self.isFullInvasion(size) or self.isCogCountFull() or self.suits == None:
+    def __doInvasion(self, suitType, difficulty, skeleton, backup, task):
+        if self.isFullInvasion() or self.suits == None:
             return task.done
         suitsNow = random.randint(0, 7)
         for suit in range(suitsNow):
-            if self.isFullInvasion(size) or self.isCogCountFull():
+            if self.isFullInvasion() or self.isCogCountFull():
                 break
             if suitType == "ABC":
                 suitType = random.choice(["A", "B", "C"])
             self.createSuit(levelRange = difficulty, anySuit = 1)
-            self.suitsSpawnedThisInvasion += 1
+            print self.suitsSpawnedThisInvasion
         task.delayTime = 4
         return task.again
 
