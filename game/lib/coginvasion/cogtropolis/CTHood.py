@@ -15,6 +15,7 @@ class CTHood(ToonHood.ToonHood):
         self.id = CIGlobals.CogTropolis
         self.safeZoneLoader = CTSafeZoneLoader.CTSafeZoneLoader
         self.storageDNAFile = None
+        self.holidayDNAFile = None
         self.skyFilename = "phase_9/models/cogHQ/cog_sky.bam"
         self.spookySkyFile = "phase_9/models/cogHQ/cog_sky.bam"
         self.titleColor = (0.5, 0.5, 0.5, 1.0)

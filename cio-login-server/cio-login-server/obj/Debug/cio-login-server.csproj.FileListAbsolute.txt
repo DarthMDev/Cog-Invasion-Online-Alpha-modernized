@@ -1,8 +1,0 @@
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\bin\Debug\cio-login-server.exe.config
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\bin\Debug\cio-login-server.exe
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\bin\Debug\cio-login-server.pdb
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\obj\Debug\cio-login-server.csprojResolveAssemblyReference.cache
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\obj\Debug\cio-login-server.exe
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\obj\Debug\cio-login-server.pdb
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Brian\Documents\cog-invasion-online\cio-login-server\cio-login-server\bin\Debug\Newtonsoft.Json.xml

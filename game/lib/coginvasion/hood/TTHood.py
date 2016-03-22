@@ -38,7 +38,8 @@ class TTHood(ToonHood.ToonHood):
         if not self.sky.find('**/cloud2').isEmpty():
             self.sky.find('**/cloud2').removeNode()
         self.sky.setScale(5)
-        self.sky.find('**/cloud1').setSz(0.7)
+        if not self.sky.find('**/cloud1').isEmpty():
+            self.sky.find('**/cloud1').setSz(0.7)
 
     def stopSky(self):
         ToonHood.ToonHood.stopSky(self)
