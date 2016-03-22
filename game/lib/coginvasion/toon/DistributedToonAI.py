@@ -9,17 +9,13 @@ from lib.coginvasion.globals import CIGlobals
 from direct.distributed.DistributedSmoothNodeAI import DistributedSmoothNodeAI
 from direct.directnotify.DirectNotify import DirectNotify
 from panda3d.core import *
-from pandac.PandaModules import *
 from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
-from lib.coginvasion.gags import GagGlobals
-from lib.coginvasion.gags.GagManager import GagManager
-from lib.coginvasion.gags.GagType import GagType
-from lib.coginvasion.gags.backpack import BackpackManager
-from lib.coginvasion.gags.backpack.Backpack import Backpack
+from lib.coginvasion.gags.backpack.BackpackAI import BackpackAI
 from lib.coginvasion.quests.QuestManagerAI import QuestManagerAI
 from lib.coginvasion.tutorial.DistributedTutorialAI import DistributedTutorialAI
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 import ToonDNA
+from lib.coginvasion.gags import GagGlobals
 
 class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.ToonDNA):
     notify = DirectNotify().newCategory("DistributedToonAI")
@@ -62,7 +58,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.shor = 1
         self.shog = 1
         self.shob = 1
-        self.ammo = []
         self.shirt = "phase_3/maps/desat_shirt_1.jpg"
         self.short = "phase_3/maps/desat_shorts_1.jpg"
         self.sleeve = "phase_3/maps/desat_sleeve_1.jpg"
@@ -78,9 +73,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.attackers = []
         self.puInventory = []
         self.equippedPU = -1
-        self.backpack = -1
-        self.gagMgr = GagManager()
-        self.setupGags = False
+        self.backpack = None
         self.quests = [[], [], []]
         self.questHistory = []
         self.tier = -1
@@ -217,25 +210,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def getQuests(self):
         return self.quests
 
-    def setBackpack(self, backpack):
-        self.backpack = BackpackManager.getBackpack(backpack)
-
-    def d_setBackpack(self, backpack):
-        self.sendUpdate('setBackpack', [backpack])
-
-    def b_setBackpack(self, backpack):
-        self.setBackpack(backpack)
-        self.d_setBackpack(backpack)
-
-    def getBackpack(self):
-        index = BackpackManager.getIndex(self.backpack)
-        # This is a required field and this sometimes returns None.
-        # We can't send none out on the wire.
-        if index == None:
-            return 0
-        else:
-            return index
-
     def usedPU(self, index):
         self.puInventory[index] = 0
         self.puInventory[1] = 0
@@ -368,91 +342,56 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def getAdminToken(self):
         return self.token
 
-    def usedGag(self, gag_id):
-        supply = self.backpack.getSupply(GagGlobals.getGagByID(gag_id))
+    def usedGag(self, gagId):
+        supply = self.backpack.getSupply(gagId)
         amt = supply - 1
         if amt < 0:
             self.ejectSelf()
             return
-        self.b_setGagAmmo(gag_id, amt)
-
-    def equip(self, index):
-        if not self.setupGags: self.setupGags = True
-        self.backpack.setCurrentGag(index)
-
-    def unEquip(self):
-        self.backpack.setCurrentGag(None)
-
-    def buildAmmoList(self, gagIds):
-        ammoList = []
-        for index in range(len(gagIds)):
-            gagId = gagIds[index]
-            amt = self.backpack.getSupply(GagGlobals.getGagByID(gagId))
-            ammoList.append(amt)
-        return ammoList
+        self.b_setGagAmmo(gagId, amt)
+        self.backpack.updateNetAmmo()
 
     def setLoadout(self, gagIds):
         if self.backpack:
-            loadout = []
             for i in range(len(gagIds)):
                 gagId = gagIds[i]
-                gag = self.backpack.getGagByID(gagId)
-                if gag:
-                    loadout.append(gag)
-            self.backpack.setLoadout(loadout)
+                if not self.backpack.hasGag(gagId):
+                    gagIds.remove(gagId)
+            self.backpack.setLoadout(gagIds)
 
     def b_setLoadout(self, gagIds):
         self.sendUpdate('setLoadout', [gagIds])
         self.setLoadout(gagIds)
-
-    def setBackpackAmmo(self, gagIds, ammoList):
-        if self.ammo == ammoList: return
-        if len(self.backpack.gags.keys()) > 0:
-            for index in range(len(gagIds)):
-                gagId = gagIds[index]
-                numOfThisGag = 0
-                for gag in self.backpack.gags.keys():
-                    if type(self.backpack.gagMgr.getGagByName(GagGlobals.getGagByID(gagId))) == type(gag):
-                        numOfThisGag += 1
-                if numOfThisGag < 1:
-                    # We must have been given a new backpack. Clear the current gag dictionary.
-                    self.backpack.resetGags()
-                    break
-        for index in range(len(ammoList)):
-            amt = ammoList[index]
-            gagId = gagIds[index]
-            if amt < 0:
-                amt = 0
-            self.backpack.setSupply(amt, GagGlobals.getGagByID(gagId))
-        self.ammo = ammoList
-        self.gagIds = gagIds
-        if self.setupGags == False: self.d_setBackpackAmmo(gagIds, ammoList)
-
-    def d_setBackpackAmmo(self, gagIds, ammoList):
-        for amt in ammoList:
-            if amt < 0: amt = 0
-        self.sendUpdate('setBackpackAmmo', [gagIds, ammoList])
-
-    def b_setBackpackAmmo(self, gagIds, ammoList):
-        self.setBackpackAmmo(gagIds, ammoList)
-        self.d_setBackpackAmmo(gagIds, ammoList)
-
-    def getBackpackAmmo(self):
-        return self.ammo
-
-    def setGagAmmo(self, gagId, ammo):
-        if self.backpack.getGagByID(gagId):
-            self.backpack.setSupply(ammo, gagId)
-
-    def d_setGagAmmo(self, gagId, ammo):
-        self.sendUpdate('setGagAmmo', [gagId, ammo])
-
+        
+    def d_addGag(self, gagId, curSupply, maxSupply):
+        self.sendUpdate('addGag', [gagId, curSupply, maxSupply])
+        
     def b_setGagAmmo(self, gagId, ammo):
         self.setGagAmmo(gagId, ammo)
-        self.d_setGagAmmo(gagId, ammo)
+        self.sendUpdate('setGagAmmo', [gagId, ammo])
+    
+    def setGagAmmo(self, gagId, ammo):
+        self.backpack.setSupply(gagId, ammo)
+        
+    def setBackpackAmmo(self, gagIds, ammoList):
+        if not self.backpack:
+            self.backpack = BackpackAI(self)
+            for i in xrange(len(gagIds)):
+                gagId = gagIds[i]
+                ammo = ammoList[i]
+                
+                if not self.backpack.hasGag(gagId):
+                    self.backpack.addGag(gagId, ammo, GagGlobals.getGagData(gagId).get('maxSupply'))
+                    
+    def b_setBackpackAmmo(self, gagIds, ammoList):
+        self.setBackpackAmmo(gagIds, ammoList)
+        self.sendUpdate('setBackpackAmmo', [gagIds, ammoList])
+                
+    def getBackpackAmmo(self):
+        return list(), list()
 
     def getInventory(self):
-        return self.gagIds
+        return self.backpack.getGags().keys()
 
     def died(self):
         self.b_setHealth(self.getMaxHealth())
@@ -460,9 +399,9 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def suitKilled(self, avId):
         pass
 
-    def toonHitByPie(self, avId, gag_id):
+    def toonHitByPie(self, avId, gagId):
         obj = self.air.doId2do.get(avId, None)
-        hp = self.gagMgr.getGagByName(GagGlobals.getGagByID(gag_id)).getHealth()
+        hp = GagGlobals.getGagData(gagId).get('health')
         if obj:
             if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
                 if obj.__class__.__name__ == 'DistributedToonAI':
@@ -479,33 +418,12 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         if self.parentId != self.getDefaultShard():
             self.b_setDefaultShard(self.parentId)
 
-        if self.__class__.__name__ == "DistributedToonAI":
-            self.setupGags = True
-            # TEMPORARY: Any new gags that we make have to be given to toons automatically.
-            newGags = GagGlobals.gagIds.keys()
-            currentBP = self.gagIds
-            currentAmmo = self.ammo
-            newBP = list(self.gagIds)
-            newAmmo = list(self.ammo)
-            needsToUpdate = False
-            for newGag in newGags:
-                if not newGag in currentBP:
-                    print 'This player is missing {0}'.format(GagGlobals.getGagByID(newGag))
-                    newBP.append(newGag)
-                    newAmmo.append(Backpack.amounts.get(GagGlobals.getGagByID(newGag)))
-                    if not needsToUpdate:
-                        needsToUpdate = True
-            if needsToUpdate:
-                self.b_setBackpackAmmo(newBP, newAmmo)
-
     def delete(self):
         try:
             self.DistributedToonAI_deleted
         except:
-            gagIds = []
-            for gag in self.backpack.getGags():
-                gagIds.append(gag.getID())
-            self.b_setBackpackAmmo(gagIds, self.buildAmmoList(gagIds))
+            self.backpack.cleanup()
+            self.backpack = None
             self.DistributedToonAI_deleted = 1
             DistributedAvatarAI.delete(self)
             DistributedSmoothNodeAI.delete(self)

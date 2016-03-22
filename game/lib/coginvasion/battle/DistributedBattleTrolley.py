@@ -146,7 +146,7 @@ class DistributedBattleTrolley(DistributedObject):
 
     def __handleTrolleyTrigger(self, entry):
         self.cr.playGame.getPlace().fsm.request('stop')
-        base.localAvatar.disablePies()
+        base.localAvatar.disableGags()
         self.notify.info('Waiting for response from server to enter trolley')
         self.sendUpdate('requestBoard')
         base.localAvatar.walkControls.setCollisionsActive(0)

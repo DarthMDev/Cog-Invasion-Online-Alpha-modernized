@@ -61,6 +61,7 @@ class TossTrapGag(TrapGag):
         event.setInPattern("%fn-into")
         event.setOutPattern("%fn-out")
         base.cTrav.addCollider(gagNP, event)
+        self.avatar.acceptOnce('gagSensor-into', self.onCollision)
 
     def onCollision(self, entry):
         TrapGag.onCollision(self, entry)
@@ -68,7 +69,7 @@ class TossTrapGag(TrapGag):
         if not gag:
             gag = self.entity
         x, y, z = gag.getPos(render)
-        self.avatar.sendUpdate('setGagPos', [self.getID(), x, y, z])
+        base.localAvatar.sendUpdate('setGagPos', [self.getID(), x, y, z])
 
     def release(self):
         TrapGag.release(self)

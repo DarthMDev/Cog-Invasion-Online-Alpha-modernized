@@ -59,7 +59,7 @@ class ChargeUpGag:
         self.buildTracks()
 
     def handleStopCharging(self):
-        if self.avatar.getBackpack().getSupply(self.getName()) > 0:
+        if self.avatar.getBackpack().getSupply(self.getID()) > 0:
             self.resetGag(wantButton = 1)
             self.buildTracks()
         else:

@@ -14,6 +14,7 @@ from lib.coginvasion.shop.ItemType import ItemType
 from lib.coginvasion.suit import CogBattleGlobals
 from panda3d.core import Vec4, TransparencyAttrib
 from direct.task.Task import Task
+from lib.coginvasion.gags import GagGlobals
 
 GRAYED_OUT_COLOR = Vec4(0.25, 0.25, 0.25, 1)
 NORMAL_COLOR = Vec4(1, 1, 1, 1)
@@ -244,7 +245,7 @@ class Page(DirectFrame):
                 backpack = base.localAvatar.getBackpack()
                 supply = backpack.getSupply(name)
                 maxSupply = backpack.getMaxSupply(name)
-                inBackpack = backpack.isInBackpack(name)
+                inBackpack = backpack.hasGag(GagGlobals.getIDByName(name))
                 if not inBackpack or inBackpack and supply >= maxSupply:
                     button.setColorScale(GRAYED_OUT_COLOR)
                 supply = base.localAvatar.getBackpack().getSupply(name)
@@ -445,12 +446,12 @@ class ShopWindow(DirectFrame):
     def makePages(self, items):
         newItems = dict(items)
         loadout = []
-        for slot in base.localAvatar.getBackpack().gagGUI.getSlots():
+        for slot in base.localAvatar.getBackpack().loadoutGUI.getSlots():
             if slot.getGag(): loadout.append(slot.getGag().getID())
         for item, values in newItems.items():
             if values.get('type') == ItemType.GAG:
                 gag = item()
-                if gag.getID() not in loadout or not base.localAvatar.getBackpack().isInBackpack(gag.getName()):
+                if gag.getID() not in loadout or not base.localAvatar.getBackpack().hasGag(gag.getID()):
                     del newItems[item]
         self.nPages = int((len(newItems) / 4))
         if self.nPages % 4 != 0 and len(newItems) > 4:

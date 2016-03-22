@@ -4,7 +4,6 @@
 ########################################
 
 from DistributedRestockBarrelAI import DistributedRestockBarrelAI
-from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags import GagGlobals
 
 class DistributedGagBarrelAI(DistributedRestockBarrelAI):
@@ -14,7 +13,6 @@ class DistributedGagBarrelAI(DistributedRestockBarrelAI):
         self.gagId = gagId
         self.maxRestock = 20
         self.loadoutOnly = loadoutOnly
-        self.gagManager = GagManager()
         
     def announceGenerate(self):
         DistributedRestockBarrelAI.announceGenerate(self)
@@ -25,13 +23,12 @@ class DistributedGagBarrelAI(DistributedRestockBarrelAI):
         del self.gagId
         del self.maxRestock
         del self.loadoutOnly
-        del self.gagManager
         
     def d_setGrab(self, avId):
         self.sendUpdate('setGrab', [avId])
         avatar = self.air.doId2do.get(avId)
         backpack = avatar.backpack
-        track = backpack.getGagByID(self.gagId).getType()
+        track = GagGlobals.getTrackOfGag(self.gagId)
         availableGags = []
         restockGags = {}
         
@@ -41,21 +38,17 @@ class DistributedGagBarrelAI(DistributedRestockBarrelAI):
             # Get the gagids of gags in this gag track.
             for trackGag in trackGags:
                 gagId = GagGlobals.getIDByName(trackGag)
-                bpGag = backpack.getGagByID(gagId)
-                
-                if bpGag:
+                if backpack.hasGag(gagId):
                     availableGags.append(gagId)
             # The strongest gags should be first.
             availableGags.reverse()
         else:
             loadout = backpack.getLoadout()
-            for gagCls in loadout:
-                gagId = GagGlobals.getIDByName(self.gagManager.getGagNameByType(gagCls))
-                gag = backpack.getGagByID(gagId)
-                if gag.getType() == track:
-                    availableGags.append(gag.getID())
+            for gagId in loadout:
+                if GagGlobals.getTrackOfGag(gagId) == track:
+                    availableGags.append(gagId)
         
-        restockLeft = self.maxRestock
+        restockLeft = int(self.maxRestock)
         
         for gagId in availableGags:
             if restockLeft <= 0:
@@ -69,7 +62,8 @@ class DistributedGagBarrelAI(DistributedRestockBarrelAI):
                     giveAmount = restockLeft
                 restockGags[gagId] = supply + giveAmount
                 restockLeft -= giveAmount
-                print 'Restocking %s.' % (backpack.getGagByID(gagId).getName())
+                print 'Requesting to give %s %ss.' % (str(restockGags[gagId]), GagGlobals.getGagByID(gagId))
                 
         for gagId in restockGags.keys():
             avatar.b_setGagAmmo(gagId, restockGags.get(gagId))
+            

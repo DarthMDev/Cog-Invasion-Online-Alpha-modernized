@@ -29,9 +29,6 @@ class DistributedToonUD(DistributedObjectUD):
 		
 	def setAnimState(self, anim, ts = 0):
 		pass
-	
-	def setPieType(self, pietype):
-		pass
 		
 	def setPlace(self, place):
 		pass

@@ -228,14 +228,14 @@ class Place(StateData):
         base.localAvatar.createLaffMeter()
         base.localAvatar.createMoney()
         #base.localAvatar.showBookButton()
-        base.localAvatar.enablePies(0)
+        base.localAvatar.enableGags(0)
 
     def exitStop(self):
         base.localAvatar.stopSmartCamera()
         base.localAvatar.detachCamera()
         base.localAvatar.disableLaffMeter()
         base.localAvatar.disableMoney()
-        base.localAvatar.disablePies()
+        base.localAvatar.disableGags()
         #base.localAvatar.hideBookButton()
 
     def load(self):

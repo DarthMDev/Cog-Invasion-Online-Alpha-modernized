@@ -81,7 +81,7 @@ class LocalToon(DistributedToon):
         self.isMoving_side = False
         self.isMoving_back = False
         self.isMoving_jump = False
-        self.pieThrowBtn = None
+        self.gagThrowBtn = None
         self.myBattle = None
         self.invGui = None
         self.gagsTimedOut = False
@@ -602,41 +602,37 @@ class LocalToon(DistributedToon):
                 if base.cr.playGame.getPlace().shtickerBookStateData.fsm.getCurrentState().getName() == 'inventoryPage':
                     base.cr.playGame.getPlace().shtickerBookStateData.gui.fsm.request('idle')
 
-    def enablePies(self, andKeys = 0):
+    def enableGags(self, andKeys = 0):
         if self.avatarMovementEnabled and andKeys:
-            self.enablePieKeys()
-        self.backpack = DistributedToon.getBackpack(self)
+            self.enableGagKeys()
         self.invGui = InventoryGui()
         self.invGui.createGui()
-        self.invGui.setBackpack(self.backpack)
-        for gag in self.backpack.getGags():
-            gag.setAvatar(self)
-        self.backpack.setGagGUI(self.invGui)
+        self.invGui.updateLoadout()
+        self.backpack.loadoutGUI = self.invGui
         if self.backpack.getCurrentGag():
             self.invGui.setWeapon(self.backpack.getCurrentGag().getName(), playSound = False)
 
-    def enablePieKeys(self):
-        if self.pieThrowBtn:
-            if not self.backpack:
-                self.backpack = DistributedToon.getBackpack(self)
-            self.pieThrowBtn.bind(DGG.B1PRESS, self.startGag)
-            self.pieThrowBtn.bind(DGG.B1RELEASE, self.throwGag)
+    def enableGagKeys(self):
+        if self.gagThrowBtn:
+            self.gagThrowBtn.bind(DGG.B1PRESS, self.startGag)
+            self.gagThrowBtn.bind(DGG.B1RELEASE, self.throwGag)
         self.accept(self.gagStartKey, self.startGag)
         self.accept(self.gagThrowKey, self.throwGag)
 
-    def disablePieKeys(self):
-        if self.pieThrowBtn:
-            self.pieThrowBtn.unbind(DGG.B1PRESS)
-            self.pieThrowBtn.unbind(DGG.B1RELEASE)
+    def disableGagKeys(self):
+        if self.gagThrowBtn:
+            self.gagThrowBtn.unbind(DGG.B1PRESS)
+            self.gagThrowBtn.unbind(DGG.B1RELEASE)
         self.ignore(self.gagStartKey)
         self.ignore(self.gagThrowKey)
 
-    def disablePies(self):
-        self.disablePieKeys()
-        self.invGui.deleteGui()
+    def disableGags(self):
+        self.disableGagKeys()
+        if self.invGui:
+            self.invGui.deleteGui()
         if hasattr(self, 'backpack'):
             if self.backpack:
-                self.backpack.setCurrentGag(None)
+                self.backpack.setCurrentGag()
 
     def setWeaponType(self, weaponType):
         enableKeysAgain = 0
@@ -644,8 +640,8 @@ class LocalToon(DistributedToon):
             enableKeysAgain = 1
         self.weaponType = weaponType
         if enableKeysAgain:
-            self.disablePieKeys()
-            self.enablePieKeys()
+            self.disableGagKeys()
+            self.enableGagKeys()
 
     def createMoney(self):
         self.moneyGui.createGui()
@@ -665,19 +661,18 @@ class LocalToon(DistributedToon):
         if not self.backpack or not self.backpack.getCurrentGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
         if self.backpack.getSupply() > 0:
-            if self.pieThrowBtn:
-                self.pieThrowBtn.unbind(DGG.B1PRESS)
+            if self.gagThrowBtn:
+                self.gagThrowBtn.unbind(DGG.B1PRESS)
             self.ignore(self.gagStartKey)
-            self.backpack.getCurrentGag().setAvatar(self)
             self.resetHeadHpr()
             self.b_gagStart(self.backpack.getCurrentGag().getID())
 
     def throwGag(self, start = True):
-        if not self.backpack or not self.backpack.getCurrentGag() or not self.backpack.getActiveGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
+        if not self.backpack.getCurrentGag():
             return
         if self.backpack.getSupply() > 0:
-            if self.pieThrowBtn:
-                self.pieThrowBtn.unbind(DGG.B1RELEASE)
+            if self.gagThrowBtn:
+                self.gagThrowBtn.unbind(DGG.B1RELEASE)
             self.ignore(self.gagThrowKey)
             if self.backpack.getActiveGag().getType() == GagType.SQUIRT and self.backpack.getActiveGag().getName() in [CIGlobals.SeltzerBottle]:
                 self.b_gagRelease(self.backpack.getActiveGag().getID())
@@ -707,9 +702,9 @@ class LocalToon(DistributedToon):
         h, p, r = hpr
         self.d_lookAtObject(h, p, r, blink = 1)
 
-    def showPieButton(self):
+    def showGagButton(self):
         geom = CIGlobals.getDefaultBtnGeom()
-        self.pieThrowBtn = DirectButton(
+        self.gagThrowBtn = DirectButton(
             geom = geom,
             geom_scale = (0.75, 1, 1),
             text = "Throw Gag",
@@ -719,11 +714,11 @@ class LocalToon(DistributedToon):
             parent = base.a2dTopCenter,
             pos = (0, 0, -0.1)
         )
-        self.pieThrowBtn.setBin('gui-popup', 60)
+        self.gagThrowBtn.setBin('gui-popup', 60)
 
-    def hidePieButton(self):
-        self.pieThrowBtn.removeNode()
-        self.pieThrowBtn = None
+    def hideGagButton(self):
+        self.gagThrowBtn.removeNode()
+        self.gagThrowBtn = None
 
     def showBookButton(self, inBook = 0):
         self.book_gui = loader.loadModel("phase_3.5/models/gui/sticker_open_close_gui.bam")
@@ -876,7 +871,7 @@ class LocalToon(DistributedToon):
         DistributedToon.disable(self)
         self.disableAvatarControls()
         self.disableLaffMeter()
-        self.disablePies()
+        self.disableGags()
         self.disableChatInput()
         self.weaponType = None
         self.myBattle = None
@@ -908,7 +903,7 @@ class LocalToon(DistributedToon):
         self.deleteNameTag()
         self.moneyGui.deleteGui()
         self.invGui.deleteGui()
-        self.hidePieButton()
+        self.hideGagButton()
         self.hideFriendButton()
         self.hideBookButton()
         self.removeAdminToken()

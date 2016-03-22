@@ -5,7 +5,7 @@
 
   Description: PublicWalk is used for avatar movement in public areas such
                as playgrounds. All it does is inherent from Walk and enable
-               the shticker book, laff meter, and pie throwing when we
+               the shticker book, laff meter, and Gag throwing when we
                enter the StateData.
 
 """
@@ -24,8 +24,8 @@ class PublicWalk(Walk.Walk):
         Walk.Walk.enter(self)
         base.localAvatar.showBookButton()
         base.localAvatar.createLaffMeter()
-        base.localAvatar.showPieButton()
-        base.localAvatar.enablePies(1)
+        base.localAvatar.showGagButton()
+        base.localAvatar.enableGags(1)
         base.localAvatar.createMoney()
         self.acceptOnce('escape-up', base.localAvatar.bookButtonClicked)
 
@@ -34,6 +34,6 @@ class PublicWalk(Walk.Walk):
         self.ignore('escape-up')
         base.localAvatar.hideBookButton()
         base.localAvatar.disableLaffMeter()
-        base.localAvatar.disablePies()
-        base.localAvatar.hidePieButton()
+        base.localAvatar.disableGags()
+        base.localAvatar.hideGagButton()
         base.localAvatar.disableMoney()

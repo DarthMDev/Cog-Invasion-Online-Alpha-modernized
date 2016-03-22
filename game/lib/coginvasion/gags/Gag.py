@@ -87,7 +87,7 @@ class Gag(object):
             elif base.localAvatar.needsToSwitchToGag == 'unequip':
                 base.localAvatar.b_unEquip()
         if base.localAvatar.avatarMovementEnabled:
-            base.localAvatar.enablePieKeys()
+            base.localAvatar.enableGagKeys()
         return task.done
 
     def stopTimeout(self):
@@ -97,12 +97,7 @@ class Gag(object):
     def start(self):
         if not self.avatar:
             return
-        backpack = self.avatar.getBackpack()
-        if not backpack:
-            return
-        elif not self in backpack.getGags():
-            return
-        elif backpack.getSupply(self.getName()) == 0 or self.state == GagState.RECHARGING:
+        if self.avatar.getBackpack().getSupply(self.getID()) == 0 or self.state == GagState.RECHARGING:
             return
         try:
             base.audio3d.detachSound(self.woosh)
@@ -110,7 +105,7 @@ class Gag(object):
             self.cleanupGag()
         except: pass
         self.state = GagState.START
-        self.avatar.getBackpack().setActiveGag(self.getName())
+        self.avatar.getBackpack().setActiveGag(self.getID())
 
     @abc.abstractmethod
     def reset(self):
@@ -182,7 +177,7 @@ class Gag(object):
             self.handJoint = self.avatar.find('**/joint_Rhold')
 
     def equip(self):
-        if not self.avatar or not self.avatar.getBackpack() or self.avatar.getBackpack() and self.avatar.getBackpack().getSupply(self.getName()) == 0 or self.state == GagState.RECHARGING:
+        if not self.avatar or not self.avatar.getBackpack() or self.avatar.getBackpack() and self.avatar.getBackpack().getSupply(self.getID()) == 0 or self.state == GagState.RECHARGING:
             return
         self.setHandJoint()
         if not self.gag:

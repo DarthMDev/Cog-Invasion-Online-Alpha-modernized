@@ -55,7 +55,6 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.gun = None
         self.tokenIcon = None
         self.tokenIconIval = None
-        self.backpack = None
         self.forcedTorsoAnim = None
         self.fallSfx = base.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
         base.audio3d.attachSoundToObject(self.fallSfx, self)

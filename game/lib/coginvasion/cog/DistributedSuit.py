@@ -26,7 +26,7 @@ import Voice
 import Variant
 import SuitAttacks
 
-from panda3d.core import Point3, VBase4, Point2
+from panda3d.core import Point3, VBase4
 import types, random
 
 class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDeletable):

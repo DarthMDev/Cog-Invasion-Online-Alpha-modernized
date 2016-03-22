@@ -7,7 +7,7 @@
 
 from lib.coginvasion.toon import Toon
 from lib.coginvasion.avatar.DistributedAvatar import DistributedAvatar
-from lib.coginvasion.gags.backpack import BackpackManager
+from lib.coginvasion.gags.backpack.Backpack import Backpack
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gui.LaffOMeter import LaffOMeter
 from lib.coginvasion.quests import QuestManager
@@ -46,18 +46,14 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.ghost = 0
         self.puInventory = []
         self.equippedPU = -1
-        self.backpackId = None
         self.backpack = None
         self.animState2animId = {}
         self.battleMeter = None
         for index in range(len(self.animFSM.getStates())):
             self.animState2animId[self.animFSM.getStates()[index].getName()] = index
         self.animId2animState = {v: k for k, v in self.animState2animId.items()}
-        self.initAmmo = []
-        self.initGagIds = []
         self.headMeter = None
         self.firstTimeChangingHP = True
-        self.gagBPData = []
         self.quests = []
         self.tier = None
         self.questHistory = None
@@ -555,13 +551,9 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.b_lookAtObject(0, 0, 0, blink = 1)
         self.sendUpdate('handleSuitAttack', [attack_id, suit_id])
 
-    def equip(self, gag_id):
+    def equip(self, gagId):
         if self.backpack:
-            gag = self.backpack.getGagByID(gag_id)
-            if gag:
-                if not gag.getAvatar():
-                    gag.setAvatar(self)
-                self.backpack.setCurrentGag(gag.getName())
+            self.backpack.setCurrentGag(gagId)
 
     def unEquip(self):
         if self.backpack:
@@ -575,31 +567,8 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.equip(gag_id)
         self.sendUpdate('equip', [gag_id])
 
-    def setBackpack(self, backpack):
-        if not isinstance(backpack, numbers.Number):
-            self.backpack = backpack
-        else:
-            self.backpackId = backpack
-            self.backpack = BackpackManager.getBackpack(backpack)
-        if self.initAmmo:
-            self.setBackpackAmmo(self.initGagIds, self.initAmmo)
-        self.backpack.setup(self)
-        Toon.Toon.backpack = self.backpack
-
-    def b_setBackpack(self, backpackId):
-        self.d_setBackpack(backpackId)
-        self.setBackpack(BackpackManager.getBackpack(backpackId))
-
     def getBackpack(self):
         return self.backpack
-
-    def buildAmmoList(self, gagIds):
-        ammoList = []
-        for index in range(len(gagIds)):
-            gagId = gagIds[index]
-            amt = self.backpack.getSupply(GagGlobals.getGagByID(gagId))
-            ammoList.append(amt)
-        return ammoList
 
     def setLoadout(self, gagIds):
         if self.backpack:
@@ -610,54 +579,26 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                 if gag:
                     loadout.append(gag)
             self.backpack.setLoadout(loadout)
-
+            
     def setBackpackAmmo(self, gagIds, ammoList):
-        if -1 in ammoList: return
-        self.gagBPData = [gagIds, ammoList]
-        if not self.initAmmo:
-            self.initAmmo = ammoList
-            self.initGagIds = gagIds
-        else:
-            self.initAmmo = None
-            self.initGagIds = None
-        bpReset = False
-        if len(self.backpack.gags.keys()) > 0:
-            for index in range(len(gagIds)):
-                gagId = gagIds[index]
-                numOfThisGag = 0
-                for gag in self.backpack.gags.keys():
-                    if type(self.backpack.gagMgr.getGagByName(GagGlobals.getGagByID(gagId))) == type(gag):
-                        numOfThisGag += 1
-                if numOfThisGag < 1:
-                    # We must have been given a new backpack. Clear the current gag dictionary.
-                    self.backpack.resetGags()
-                    bpReset = True
-                    break
-        for index in range(len(ammoList)):
-            amt = ammoList[index]
-            gagId = gagIds[index]
-            self.backpack.setSupply(amt, GagGlobals.getGagByID(gagId))
-        if self.backpack.gagGUI:
-            if bpReset:
-                self.disablePies()
-                self.enablePies(1)
-            self.backpack.gagGUI.update()
-
+        if not self.backpack:
+            self.backpack = Backpack()
+            # We just want to update the network ammo sometimes,
+            # let's ignore updates if we're not constructing a backpack.
+            for i in xrange(len(gagIds)):
+                gagId = gagIds[i]
+                ammo = ammoList[i]
+                
+                if not self.backpack.hasGag(gagId):
+                    self.backpack.addGag(gagId, ammo, GagGlobals.getGagData(gagId).get('maxSupply'))
+                else:
+                    self.backpack.setSupply(gagId, ammo)
+                
     def getBackpackAmmo(self):
-        return self.gagBPData
+        return list(), list()
 
     def setGagAmmo(self, gagId, ammo):
-        self.backpack.setSupply(ammo, GagGlobals.getGagByID(gagId))
-        if self.backpack.gagGUI:
-            self.backpack.gagGUI.update()
-
-    def updateBackpackAmmo(self):
-        gagIds = []
-        ammoList = []
-        for gag in self.backpack.getGags():
-            gagIds.append(GagGlobals.getIDByName(gag.getName()))
-            ammoList.append(self.backpack.getSupply(gag.getName()))
-        self.setBackpackAmmo(gagIds, ammoList)
+        self.backpack.setSupply(gagId, ammo)
 
     def setMoney(self, money):
         self.money = money

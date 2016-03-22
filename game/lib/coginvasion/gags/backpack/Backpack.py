@@ -1,267 +1,199 @@
 ########################################
 # Filename: Backpack.py
-# Created by: DecodedLogic (07Jul15)
+# Created by: DecodedLogic (20Mar16)
 ########################################
+# The client version of the backpack.
 
 from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags.GagState import GagState
-from lib.coginvasion.globals import CIGlobals
-from abc import ABCMeta
-import random, types
+from lib.coginvasion.gags import GagGlobals
+import types
 
 class Backpack:
-    amounts = {CIGlobals.WholeCreamPie : 7,
-        CIGlobals.WholeFruitPie : 10,
-        CIGlobals.BirthdayCake : 3,
-        CIGlobals.WeddingCake : 3,
-        CIGlobals.JugglingBalls : 3,
-        CIGlobals.BambooCane : 4,
-        CIGlobals.GrandPiano : 3,
-        CIGlobals.Safe : 7,
-        CIGlobals.TNT : 3,
-        CIGlobals.SeltzerBottle : 10,
-        CIGlobals.FruitPieSlice : 10,
-        CIGlobals.CreamPieSlice : 10,
-        CIGlobals.Megaphone : 7,
-        CIGlobals.Cupcake: 15,
-        CIGlobals.SquirtFlower : 15,
-        CIGlobals.TrapDoor : 7,
-        CIGlobals.Quicksand : 7,
-        CIGlobals.BananaPeel : 10,
-        CIGlobals.Lipstick : 5,
-        CIGlobals.Aoogah : 7,
-        CIGlobals.ElephantHorn : 5,
-        CIGlobals.Foghorn : 3,
-        CIGlobals.Opera : 1,
-        CIGlobals.BikeHorn : 15,
-        CIGlobals.Whistle : 10,
-        CIGlobals.Bugle : 10,
-        CIGlobals.PixieDust : 5,
-        CIGlobals.Anvil : 8,
-        CIGlobals.FlowerPot : 12,
-        CIGlobals.Sandbag : 10,
-        CIGlobals.Geyser : 1,
-        CIGlobals.BigWeight : 7,
-        CIGlobals.StormCloud : 3,
-        CIGlobals.WaterGlass : 10,
-        CIGlobals.WaterGun : 7,
-        CIGlobals.FireHose : 5}
-
+    
     def __init__(self):
-        __metaclass__ = ABCMeta
+        # Dictionary that stores the gags in the backpack.
+        # Setup like this:
+        # gagId : [gag instance, current ammo, max ammo]
         self.gags = {}
-        self.gagIds = {}
-        self.avatar = None
-        self.index = 3
-        self.currentGag = None
-        self.activeGag = None
-        self.gagMgr = GagManager()
-        self.gagGUI = None
+        
+        # The gags in-use by the player.
         self.loadout = []
-
-    def setup(self, avatar):
-        self.avatar = avatar
-
-    def setGagGUI(self, gui):
-        self.gagGUI = gui
-
-        if not len(self.loadout):
-            availableGags = self.gags.keys()
-            for _ in xrange(4):
-                gag = random.choice(availableGags)
-                availableGags.remove(gag)
-                self.addLoadoutGag(gag)
-        else:
-            self.gagGUI.updateLoadout()
-
-    def getGagGUI(self):
-        return self.gagGUI
-
-    def setGags(self, gags):
-        self.gags = gags
-
-    def addGag(self, gag, supply):
-        gag.setAvatar(self.avatar)
-        self.gags[gag] = [supply, self.amounts.get(gag.getName())]
-        self.gagIds[gag.getID()] = gag
-        for key in self.gags.keys():
-            if key == None:
-                del self.gags[key]
-
-    def getGags(self):
-        return self.gags
-
-    def getGagByIndex(self, index):
-        return self.gags.keys()[index]
-
-    def getIndexFromName(self, name):
-        names = self.gags.keys()
-        for gName in names:
-            if gName == name:
-                return self.gags.keys().index(gName)
-
-    def setLoadout(self, loadoutList):
-        self.loadout = loadoutList
-        if hasattr(base, 'cr'):
-            if base.cr.playGame.world and base.cr.playGame.world.getPlace() and base.cr.playGame.world.getPlace().fsm.getCurrentState().getName() == 'walk':
-                base.localAvatar.disablePies()
-                base.localAvatar.enablePies(1)
-
-    def addLoadoutGag(self, gag):
-        if gag not in self.loadout:
-            if len(self.loadout) < 4:
-                self.loadout.append(gag)
-                self.gagGUI.updateLoadout()
-
-    def removeLoadoutGag(self, gag):
-        if type(gag) == types.IntType:
-            gag = self.getGagByIndex(gag)
-        self.loadout.remove(gag)
-        self.gagGUI.updateLoadout()
-
+        
+        # The gag that's is active.
+        # This returns either -1 or the gag id of the active gag.
+        self.activeGag = -1
+        
+        # The gag that's currently in use by the avatar.
+        # This returns either -1 or the gag id of the current gag.
+        self.currentGag = -1
+        
+        # The GUI that shows the avatar's current loadout.
+        # This is used for calling update() when we changed
+        # the ammo of a gag.
+        self.loadoutGUI = None
+        
+        # This is just used to create gag instances when
+        # necessary.
+        self.gagManager = GagManager()
+    
+    def setLoadoutGUI(self):
+        self.loadoutGUI = base.localAvatar.invGui
+        
+    # Sets the current gag that's being used.
+    # Requires a gag id or -1 to remove a current gag.
+    def setCurrentGag(self, gagId = -1):
+        if not self.currentGag == -1 and self.hasGag(self.currentGag):
+            # Unequip the gag as we're switching to another one.
+            self.gags.get(self.currentGag)[0].unEquip()
+            self.currentGag = -1
+        
+        if not gagId == -1 and self.hasGag(gagId):
+            # Set the current gag.
+            self.currentGag = gagId
+            
+    # Returns the current gag.
+    def getCurrentGag(self):
+        return self.getGagByID(self.currentGag)
+    
+    # Sets the gag that is now activated.
+    # Requires a gag id or -1 to remove an active gag.
+    def setActiveGag(self, gagId):
+        # Clear the active gag if it's not active.
+        if not self.activeGag == -1:
+            state = self.gags.get(self.activeGag)[0].getState()
+            if state in [GagState.LOADED, GagState.RECHARGING]:
+                self.activeGag = -1
+        
+        # Finally, set the active gag if one isn't set and
+        # the gag is in the backpack.
+        if self.activeGag == -1 and self.hasGag(gagId):
+            self.activeGag = gagId
+    
+    # Returns the active gag.
+    def getActiveGag(self):
+        return self.getGagByID(self.activeGag)
+    
+    # Adds a gag to the backpack. This shouldn't be called
+    # just by the client, the AI should recommend it.
+    def addGag(self, gagId, curSupply = 0, maxSupply = 0):
+        if not gagId in self.gags.keys():
+            gagName = GagGlobals.getGagByID(gagId)
+            if not gagName is None:
+                gag = self.gagManager.getGagByName(gagName)
+                gag.setAvatar(base.localAvatar)
+                self.gags.update({gagId : [gag, curSupply, maxSupply]})
+    
+    # Sets the loadout of the backpack.
+    # Must receive a list of up to 4 gag ids or
+    # an empty list.
+    def setLoadout(self, gagIds):
+        self.loadout = gagIds
+        
+        # Let's reset the loadout to show the new one.
+        playGame = base.cr.playGame.world
+        if playGame and playGame.getPlace() and playGame.getPlace().fsm.getCurrentState().getName() == 'walk':
+            base.localAvatar.disableGags()
+            base.localAvatar.enableGags(1)
+            
+    # Adds a gag to the loadout.
+    def addLoadoutGag(self, gagId):
+        if len(self.loadout) < 4 and self.hasGag(gagId) and not gagId in self.loadout:
+            self.loadout.append(gagId)
+            self.loadoutGUI.updateLoadout()
+    
+    # Removes a gag from the loadout.
+    def removeLoadoutGag(self, gagId):
+        if len(self.loadout) > 0 and gagId in self.loadout:
+            self.loadout.remove(gagId)
+            self.loadoutGUI.updateLoadout()
+    
+    # Returns the current loadout of the backpack.        
     def getLoadout(self):
         return self.loadout
 
-    def setCurrentGag(self, arg):
-        if arg == None:
-            if self.currentGag:
-                self.currentGag.unEquip()
-                self.currentGag = None
-            self.index = -1
-            return
-
-        for gag in self.gags.keys():
-            if gag:
-                if gag.getName() == arg:
-                    if not gag.getAvatar():
-                        gag.setAvatar(self.avatar)
-                    self.index = self.gags.keys().index(gag)
-                    break
-        if self.currentGag:
-            if not self.currentGag.getAvatar():
-                self.currentGag.setAvatar(self.avatar)
-            self.currentGag.unEquip()
-        self.currentGag = self.gags.keys()[self.index]
-
-    def getCurrentGag(self):
-        return self.currentGag
-
-    def setActiveGag(self, arg):
-        if arg != None:
-            for gag in self.gags.keys():
-                if gag:
-                    if gag.getName() == arg:
-                        if not self.activeGag:
-                            self.activeGag = gag
-                        else:
-                            if self.activeGag.getState() == GagState.LOADED:
-                                self.activeGag = gag
-                        break
-        else:
-            if self.activeGag:
-                if self.activeGag.getState() == GagState.LOADED:
-                    self.activeGag = arg
-
-    def getActiveGag(self):
-        return self.activeGag
-
-    def setMaxSupply(self, nMaxSupply, arg = None):
-        if type(arg) == types.IntType or arg == None:
-            if self.index and self.gags:
-                if arg == None:
-                    arg = self.index
-                self.amounts.values()[arg] = nMaxSupply
-        elif isinstance(arg, str):
-            self.amounts.update({arg : nMaxSupply})
-
-    def getMaxSupply(self, arg = None):
-        if type(arg) == types.IntType or arg == None:
-            if not self.index is None and not self.gags is None:
-                if arg == None:
-                    return self.amounts.values()[self.index]
-                return self.gags.values()[self.gags.keys().index(self.getGagByID(arg))][1]
-        elif isinstance(arg, str):
-            return self.amounts.get(arg)
-        if arg: return 0
-
-    def isInBackpack(self, name):
-        if len(self.gags) == 0:
-            return False
-        else:
-            for gag in self.gags.keys():
-                if not gag:
-                    del self.gags[gag]
-                else:
-                    if gag.getName() == name:
-                        return True
-            return False
-
-    def resetGags(self):
-        self.gags = {}
-        self.gagIds = {}
-        self.currentGag = None
-        self.activeGag = None
-
-    def setSupply(self, nSupply, arg = None):
-        curMaxSupply = None
-        index = None
-        if arg == None and self.index:
-            curMaxSupply = self.gags.values()[self.index][1]
-            index = self.gags.keys()[self.index]
-        if type(arg) == types.IntType:
-            if not self.index is None and not self.gags is None:
-                for gag, values in self.gags.iteritems():
-                    if gag.getID() == arg:
-                        curMaxSupply = values[1]
-                        index = gag
-        elif isinstance(arg, str):
-            if self.isInBackpack(arg):
-                for gag, ammoTbl in self.gags.iteritems():
-                    if gag.getName() == arg:
-                        ammoTbl[0] = nSupply
-                        curMaxSupply = ammoTbl[1]
-                        index = gag
-                        break
-            else:
-                gag = self.gagMgr.getGagByName(arg)
-                self.addGag(gag, nSupply)
-        if index != None:
-            self.gags.update({index : [nSupply, curMaxSupply]})
-        if game.process == 'client' and self.gagGUI:
-            self.gagGUI.update()
-
-    def getSupply(self, arg = None):
-        curSupply = 0
-        if arg == None:
-            curSupply = self.gags.values()[self.index][0]
-        if type(arg) == types.IntType:
-            if not self.index is None and not self.gags is None:
-                curSupply = self.gags.values()[self.gags.keys().index(self.getGagByID(arg))][0]
-            if curSupply == None: return 0
-        elif isinstance(arg, str):
-            if len(self.gags) > 0:
-                for gag, ammoTbl in self.gags.iteritems():
-                    if gag:
-                        if gag.getName() == arg:
-                            curSupply = ammoTbl[0]
-                            break
-        return curSupply
-
-    def getGagByID(self, gagID):
-        if not self.gags: return
-        if gagID in self.gagIds.keys():
-            return self.gagIds.get(gagID)
-        else:
-            return None
-
-    def getIndex(self):
-        return self.index
-
+    # Sets the max supply of a gag.
+    # Returns either true or false depending on if the
+    # max supply was updated.
+    def setMaxSupply(self, gagId, maxSupply):
+        if self.hasGag(gagId) and 0 <= maxSupply <= 255:
+            values = self.gags.get(gagId)
+            gag = values[0]
+            supply = values[1]
+            self.gags.update({gagId : [gag, supply, maxSupply]})
+            self.loadoutGUI.update()
+            return True
+        return False
+    
+    # Returns the max supply of a gag in the backpack or
+    # -1 if the gag isn't in the backpack.
+    def getMaxSupply(self, arg = -1):
+        if type(arg) == types.IntType and self.hasGag(arg):
+            return self.gags.get(arg)[2]
+        elif arg != -1:
+            for values in self.gags.values():
+                if values[0].getName() == arg:
+                    return values[2]
+        elif arg == -1:
+            if self.currentGag > -1:
+                return self.gags.get(self.currentGag)[2]
+        return -1
+            
+    # Sets the supply of a gag.
+    # Returns either true or false depending on if the
+    # supply was updated.
+    def setSupply(self, gagId, supply):
+        if self.hasGag(gagId) and 0 <= supply <= 255:
+            values = self.gags.get(gagId)
+            gag = values[0]
+            maxSupply = values[2]
+            self.gags.update({gagId : [gag, supply, maxSupply]})
+            self.loadoutGUI.update()
+            return True
+        return False
+    
+    # Returns the supply of a gag in the backpack or
+    # -1 if the gag isn't in the backpack.
+    def getSupply(self, arg = -1):
+        if type(arg) == types.IntType and self.hasGag(arg):
+            return self.gags.get(arg)[1]
+        elif arg != -1:
+            for values in self.gags.values():
+                if values[0].getName() == arg:
+                    return values[1]
+        elif arg == -1:
+            if self.currentGag > -1:
+                return self.gags.get(self.currentGag)[1]
+        return -1
+     
+    # Returns a true/false flag if the gag is in the backpack.
+    def hasGag(self, gagId):
+        return gagId in self.gags.keys()
+    
+    # Returns the gag's class by gag id.
+    def getGagByID(self, gagId):
+        if self.hasGag(gagId):
+            return self.gags.get(gagId)[0]
+        return None
+    
+    # Returns the gag by index.
+    def getGagByIndex(self, index):
+        return self.gags.get(self.gags.keys()[index])[0]
+    
+    # Returns the gags in the backpack.
+    def getGags(self):
+        return self.gags
+    
+    # Cleans up all the variables that are no longer needed.
     def cleanup(self):
-        self.gags = None
-        self.avatar = None
-        self.index = None
-        self.currentGag = None
-        self.activeGag = None
-        self.gagMgr = None
-        self.gagGUI = None
+        for gagId, data in self.gags.iteritems():
+            gag = data[0]
+            gag.delete()
+            del self.gags[gagId]
+        del self.gags
+        del self.loadout
+        del self.currentGag
+        del self.activeGag
+        del self.loadoutGUI
+        del self.gagManager
+            

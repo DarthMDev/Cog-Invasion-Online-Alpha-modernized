@@ -11,7 +11,6 @@ from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
 from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.suit.SuitItemDropper import SuitItemDropper
 
-from lib.coginvasion.gags.GagManager import GagManager
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagType import GagType
 
@@ -232,8 +231,10 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         task.delayTime = self.clearComboDataTime
         return Task.again
     
-    def __handleCombos(self, avId, gag):
-        self.comboData.update({avId : {gag.getType() : gag.getDamage()}})
+    def __handleCombos(self, avId, gagName):
+        track = GagGlobals.getTrackOfGag(gagName)
+        damage = GagGlobals.getGagData(GagGlobals.getIDByName(gagName)).get('damage')
+        self.comboData.update({avId : {track : damage}})
         
         data = self.comboData.values()
         tracks = []
@@ -250,7 +251,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         totalGags = 0
         
         for track in tracks:
-            if tracks.count(track) > 1 and track == gag.getType():
+            if tracks.count(track) > 1 and track == track:
                 # Get the indices of each occurrence of this track in the tracks list.
                 # For example, tracks could equal [GagType.THROW, GagType.SQUIRT, GagType.THROW]
                 # If, the variable 'track' equaled GagType.THROW, then the next line would
@@ -278,26 +279,27 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     # The new method for handling gags.
     def hitByGag(self, gagId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender(), None)
-        gag = GagManager().getGagByName(GagGlobals.getGagByID(gagId))
-        dmg = gag.getDamage()
-        track = gag.getType()
+        gagName = GagGlobals.getGagByID(gagId)
+        data = GagGlobals.getGagData(gagId)
+        dmg = data.get('damage')
+        track = GagGlobals.getTrackOfGag(gagId)
         
         if self.canGetHit():
             self.b_setHealth(self.getHealth() - dmg)
             Sequence(Func(self.d_announceHealth, 0, dmg), Wait(self.showComboDamageTime), Func(self.__showComboLabel)).start()
-            self.__handleCombos(avatar.doId, gag)
+            self.__handleCombos(avatar.doId, gagName)
             
             if self.isDead():
-                if track == GagType.THROW or gag.getName() == CIGlobals.TNT:
+                if track == GagType.THROW or gagName == CIGlobals.TNT:
                     self.b_setAnimState('pie')
                 elif track == GagType.DROP:
                     majorDrops = [CIGlobals.GrandPiano, CIGlobals.Safe, CIGlobals.BigWeight]
-                    if gag.getName() in majorDrops:
+                    if gagName in majorDrops:
                         self.b_setAnimState('drop')
                     else:
                         self.b_setAnimState('drop-react')
                 elif track == GagType.SQUIRT or track == GagType.SOUND:
-                    if gag.getName() == CIGlobals.StormCloud:
+                    if gagName == CIGlobals.StormCloud:
                         self.b_setAnimState('soak')
                     else:
                         self.b_setAnimState('squirt-small')

@@ -15,7 +15,6 @@ from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
 
 from panda3d.core import TransparencyAttrib, TextNode
-from lib.coginvasion.globals import CIGlobals
 
 class Slot(DirectFrame):
 
@@ -99,7 +98,7 @@ class Slot(DirectFrame):
             elif barValue >= 100:
                 base.playSfx(self.soundRecharged)
                 slotImage = 'idle'
-                if base.localAvatar.getBackpack().getSupply(self.gag.getName()) <= 0:
+                if base.localAvatar.getBackpack().getSupply(self.gag.getID()) <= 0:
                     slotImage = 'no_ammo'
                 Sequence(Wait(0.5), Func(self.setOutlineImage, slotImage)).start()
         
@@ -123,7 +122,7 @@ class Slot(DirectFrame):
         self.setOutline()
         
         if image != 'no_ammo':
-            if self.gag and base.localAvatar.getBackpack().getSupply(self.gag.getName()) == 0 or self.gag and self.gag.getState() == GagState.RECHARGING:
+            if self.gag and base.localAvatar.getBackpack().getSupply(self.gag.getID()) == 0 or self.gag and self.gag.getState() == GagState.RECHARGING:
                 image = 'no_ammo'
         
         if image == 'no_ammo':
@@ -178,7 +177,9 @@ class InventoryGui(DirectObject):
 
     def __init__(self):
         DirectObject.__init__(self)
-        self.backpack = None
+        self.backpack = base.localAvatar.backpack
+        self.backpack.setLoadoutGUI()
+        
         self.oneSlotPos = [(0, 0, 0)]
         self.twoSlotsPos = [(0, 0, 0.30), (0, 0, -0.2)]
         self.threeSlotsPos = [(0, 0, 0.5), (0, 0, 0), (0, 0, -0.5)]
@@ -200,28 +201,27 @@ class InventoryGui(DirectObject):
         if isinstance(slot, str):
             for iSlot in self.slots:
                 if iSlot.getGag():
-                    if iSlot.getGag().getName() == slot:
+                    if iSlot.getGag().getID() == slot:
                         slot = iSlot
         if self.activeSlot:
             self.activeSlot.setOutlineImage('idle')
             self.prevSlot = self.activeSlot
-        if self.backpack.getSupply(slot.getGag().getName()) > 0 and not slot.getGag().getState() == GagState.RECHARGING:
+        if slot.getGag() and self.backpack.getSupply(slot.getGag().getID()) > 0 and not slot.getGag().getState() == GagState.RECHARGING:
             if self.activeSlot != slot:
-                gagName = slot.getGag().getName()
-                gagId = GagGlobals.getIDByName(gagName)
+                gagId = slot.getGag().getID()
                 # We need to wait until our current gag has finished its time
                 # out in order to equip the new gag.
                 base.localAvatar.needsToSwitchToGag = gagId
                 if base.localAvatar.gagsTimedOut == False:
                     base.localAvatar.b_equip(gagId)
-                    base.localAvatar.enablePieKeys()
+                    base.localAvatar.enableGagKeys()
                 slot.setOutlineImage('selected')
                 self.activeSlot = slot
             elif self.activeSlot == slot and slot.getGag().getState() in [GagState.LOADED, GagState.RECHARGING]:
                 base.localAvatar.needsToSwitchToGag = 'unequip'
                 if base.localAvatar.gagsTimedOut == False:
                     base.localAvatar.b_unEquip()
-                    base.localAvatar.enablePieKeys()
+                    base.localAvatar.enableGagKeys()
                 self.activeSlot = None
             self.update()
             if self.switchSound and playSound:
@@ -291,12 +291,12 @@ class InventoryGui(DirectObject):
                 updateSlots.remove(slot)
                 slot.hide()
                 continue
-            supply = self.backpack.getSupply(gag.getName())
+            supply = self.backpack.getSupply(gag.getID())
             index = self.slots.index(slot)
             if not gag and len(self.backpack.getGags()) - 1 >= index:
                 gag = self.backpack.getGagByIndex(index)
                 slot.setGag(gag)
-                if self.backpack.getSupply(gag.getName()) > 0 and not gag.getState() == GagState.RECHARGING:
+                if self.backpack.getSupply(gag.getID()) > 0 and not gag.getState() == GagState.RECHARGING:
                     slot.setOutlineImage('idle')
                 else:
                     slot.setOutlineImage('no_ammo')
@@ -311,8 +311,8 @@ class InventoryGui(DirectObject):
                         slot.setOutlineImage('no_ammo')
                         self.activeSlot = None
                     self.ammoLabel.show()
-                    self.ammoLabel['text'] = 'Ammo: %s' % (self.backpack.getSupply(slot.getGag().getName()))
-                elif self.backpack.getSupply(slot.getGag().getName()) > 0 and not gag.getState() == GagState.RECHARGING:
+                    self.ammoLabel['text'] = 'Ammo: %s' % (self.backpack.getSupply(slot.getGag().getID()))
+                elif self.backpack.getSupply(slot.getGag().getID()) > 0 and not gag.getState() == GagState.RECHARGING:
                     slot.setOutlineImage('idle')
                 else:
                     slot.setOutlineImage('no_ammo')

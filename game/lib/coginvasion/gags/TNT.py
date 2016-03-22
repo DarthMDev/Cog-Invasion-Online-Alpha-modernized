@@ -82,7 +82,7 @@ class TNT(TossTrapGag):
         self.cleanupEntity()
         self.setState(GagState.LOADED)
         backpack = self.avatar.getBackpack()
-        if backpack.getSupply(self.getName()) > 0 and backpack.getCurrentGag() == self:
+        if backpack.getSupply(self.getID()) > 0 and backpack.getCurrentGag() == self:
             self.equip()
         Sequence(Wait(0.5), Func(self.cleanupExplosion)).start()
 

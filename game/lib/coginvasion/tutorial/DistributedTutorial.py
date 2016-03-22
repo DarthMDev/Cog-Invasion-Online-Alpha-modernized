@@ -208,8 +208,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.startSmartCamera()
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
-        base.localAvatar.enablePies(1)
-        base.localAvatar.showPieButton()
+        base.localAvatar.enableGags(1)
+        base.localAvatar.showGagButton()
         base.localAvatar.startTrackAnimToSpeed()
         self.makeWhisper("This should be pretty simple. Just throw a gag at this dummy bot to defeat it.")
 
@@ -242,9 +242,9 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.stopBlink()
         base.localAvatar.collisionsOff()
         base.localAvatar.controlManager.placeOnFloor()
-        base.localAvatar.disablePies()
+        base.localAvatar.disableGags()
         base.localAvatar.stopTrackAnimToSpeed()
-        base.localAvatar.hidePieButton()
+        base.localAvatar.hideGagButton()
 
     def enterTraining2Info(self):
         base.camera.setPos(3.09, 37.16, 3.93)
@@ -281,8 +281,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.startSmartCamera()
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
-        base.localAvatar.enablePies(1)
-        base.localAvatar.showPieButton()
+        base.localAvatar.enableGags(1)
+        base.localAvatar.showGagButton()
         base.localAvatar.startTrackAnimToSpeed()
 
     def exitTrainingPT2(self):
@@ -294,9 +294,9 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.stopBlink()
         base.localAvatar.collisionsOff()
         base.localAvatar.controlManager.placeOnFloor()
-        base.localAvatar.disablePies()
+        base.localAvatar.disableGags()
         base.localAvatar.stopTrackAnimToSpeed()
-        base.localAvatar.hidePieButton()
+        base.localAvatar.hideGagButton()
 
     def enterTraining3Info(self):
         base.camera.setPos(3.09, 37.16, 3.93)
@@ -333,8 +333,8 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.startSmartCamera()
         base.localAvatar.collisionsOn()
         base.localAvatar.enableAvatarControls()
-        base.localAvatar.enablePies(1)
-        base.localAvatar.showPieButton()
+        base.localAvatar.enableGags(1)
+        base.localAvatar.showGagButton()
         base.localAvatar.startTrackAnimToSpeed()
 
     def exitTrainingPT3(self):
@@ -346,9 +346,9 @@ class DistributedTutorial(DistributedObject):
         base.localAvatar.stopBlink()
         base.localAvatar.collisionsOff()
         base.localAvatar.controlManager.placeOnFloor()
-        base.localAvatar.disablePies()
+        base.localAvatar.disableGags()
         base.localAvatar.stopTrackAnimToSpeed()
-        base.localAvatar.hidePieButton()
+        base.localAvatar.hideGagButton()
 
     def enterTrainingDone(self):
         base.camera.setPos(3.09, 37.16, 3.93)

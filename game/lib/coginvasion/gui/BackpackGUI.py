@@ -187,7 +187,7 @@ class BackpackGUI(DirectFrame):
             for j in xrange(len(GagGlobals.TrackGagNamesByTrackName[trackName])):
                 gagName = GagGlobals.TrackGagNamesByTrackName[trackName][j]
                 gagId = GagGlobals.gagIdByName[gagName]
-                if gagId in base.localAvatar.getBackpackAmmo()[0]:
+                if base.localAvatar.getBackpack().hasGag(gagId):
                     self.__makeGagButton(gagName, trackName)
         self.editButton = DirectButton(relief = None,
          image = CIGlobals.getDefaultBtnGeom(),
