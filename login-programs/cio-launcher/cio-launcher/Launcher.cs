@@ -92,26 +92,36 @@ namespace cio_launcher
                             Environment.SetEnvironmentVariable("GAME_VERSION", gameVersion);
                             Environment.SetEnvironmentVariable("LOGIN_TOKEN", loginToken);
 
-                            //launcher.CloseConnection();
                             Console.WriteLine("Starting coginvasion.exe");
-                            //Process ciProcess = new Process();
-                            //ciProcess.StartInfo.FileName = "coginvasion.exe";
-                            //ciProcess.Start();
-                            ProcessStartInfo ciInfo = new ProcessStartInfo();
-                            ciInfo.FileName = "coginvasion.exe";
-                            ciInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                            ciInfo.CreateNoWindow = true;
-                            Console.WriteLine("Waiting for exit...");
-                            using (Process ciProc = Process.Start(ciInfo))
-                            {
-                                ciProc.WaitForExit();
-                            }
-                            //ciProcess.WaitForExit();
-                            Console.WriteLine("It finished!");
-                            SoundPlayer winXPsound = new SoundPlayer(@"sounds\winXPStartup.wav");
-                            winXPsound.Play();
-                            //Process.Start("iexplore.exe");
 
+                            
+
+                            ProcessStartInfo ciInfo = new ProcessStartInfo();
+                            ciInfo.ErrorDialog = true;
+                            ciInfo.UseShellExecute = false;
+                            ciInfo.FileName = Directory.GetCurrentDirectory() + "\\coginvasion.exe";
+                            ciInfo.WindowStyle = ProcessWindowStyle.Normal;
+                            ciInfo.CreateNoWindow = false;
+
+                            Console.WriteLine("Waiting for exit...");
+
+                            try
+                            {
+                                Process ciProc = Process.Start(ciInfo);
+                                ciProc.WaitForExit();
+                                ciProc.Close();
+                            }
+                            catch (System.ComponentModel.Win32Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+
+                            
+
+                            launcher.lf.Hide();
+                            launcher.CloseConnection();
+                            Console.WriteLine("Exited");
+                            launcher.DoInitialStuff(false);
 
                         }
                         else if (response == 0)
@@ -204,8 +214,14 @@ namespace cio_launcher
                 return false;
             else
             {
-                string myMD5 = BitConverter.ToString(new SHA1CryptoServiceProvider().ComputeHash(File.Open(filename, FileMode.Open)));
+                Stream fileStream = File.Open(filename, FileMode.Open);
+
+                string myMD5 = BitConverter.ToString(new SHA1CryptoServiceProvider().ComputeHash(fileStream));
+
                 Console.WriteLine(filename + ": " + myMD5);
+
+                fileStream.Close();
+
                 return (myMD5 == md5);
             }
         }
@@ -278,9 +294,14 @@ namespace cio_launcher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             LoginForm lf = new LoginForm();
-            lf.Show();
             this.lf = lf;
+            DoInitialStuff(true);
+            Application.Run(lf);
+        }
 
+        public void DoInitialStuff(bool firstTime)
+        {
+            lf.Show();
             lf.HideAll(true);
             lf.ShowStatus(Constants.STATUS_CONNECTING);
 
@@ -288,8 +309,11 @@ namespace cio_launcher
             Console.WriteLine("Connecting to login server at " + gameserver);
 
             // Connect to the server
-            TcpClient client = new TcpClient();
-            this.client = client;
+            if (firstTime)
+            {
+                TcpClient client = new TcpClient();
+                this.client = client;
+            }
             try
             {
                 client.Connect(Constants.LOGIN_SERVER, Constants.LOGIN_PORT);
@@ -304,19 +328,22 @@ namespace cio_launcher
 
             Console.WriteLine("Connected");
 
-            // Initialize our stream readers and writers for talking to the server
-            StreamReader sr = new StreamReader(client.GetStream());
-            this.sr = sr;
-            StreamWriter sw = new StreamWriter(client.GetStream());
-            this.sw = sw;
+            if (firstTime)
+            {
+                // Initialize our stream readers and writers for talking to the server
+                StreamReader sr = new StreamReader(client.GetStream());
+                this.sr = sr;
+                StreamWriter sw = new StreamWriter(client.GetStream());
+                this.sw = sw;
 
-            List<string> dl_list = new List<string>();
-            this.dl_list = dl_list;
+                List<string> dl_list = new List<string>();
+                this.dl_list = dl_list;
 
-            // Start the reader task
-            CancellationTokenSource cts = new CancellationTokenSource();
-            this.cts = cts;
-            var listen_task = Listen(this, cts.Token);
+                // Start the reader task
+                CancellationTokenSource cts = new CancellationTokenSource();
+                this.cts = cts;
+                var listen_task = Listen(this, cts.Token);
+            }
 
             Console.WriteLine("Now sending server info req");
 
@@ -326,8 +353,6 @@ namespace cio_launcher
             // Send the server info req
             sw.WriteLine(Constants.CL_SERVER_INFO.ToString());
             sw.Flush();
-
-            Application.Run(lf);
 
         }
 
