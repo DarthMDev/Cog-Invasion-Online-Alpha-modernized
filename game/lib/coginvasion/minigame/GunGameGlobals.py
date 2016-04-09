@@ -23,7 +23,7 @@ TeamNameById = {Teams.RED: RED, Teams.BLUE: BLUE}
 
 CTF_SCORE_CAP = 3
 
-ToonSpeedFactor = 1.3
+ToonSpeedFactor = 1.35
 ToonForwardSpeed = 16.0 * ToonSpeedFactor
 ToonJumpForce = 24.0
 ToonReverseSpeed = 8.0 * ToonSpeedFactor
