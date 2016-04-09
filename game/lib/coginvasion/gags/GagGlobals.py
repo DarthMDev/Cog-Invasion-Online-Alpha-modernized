@@ -106,6 +106,13 @@ Sound = "Sound"
 Lure = "Lure"
 ToonUp = "Toon-Up"
 Trap = "Trap"
+TrackIdByName = {Throw : GagType.THROW,
+                 Squirt : GagType.SQUIRT,
+                 Drop : GagType.DROP,
+                 Sound : GagType.SOUND,
+                 Lure : GagType.LURE,
+                 ToonUp : GagType.TOON_UP,
+                 Trap : GagType.TRAP}
 TrackColorByName = {ToonUp : (211 / 255.0, 148 / 255.0, 255 / 255.0),
  Trap : (249 / 255.0, 255 / 255.0, 93 / 255.0),
  Lure : (79 / 255.0, 190 / 255.0, 76 / 255.0),
@@ -269,14 +276,31 @@ def getIDByName(name):
 def getGagData(gagId):
     return gagData.get(getGagByID(gagId))
 
-def getTrackOfGag(arg):
+def getTrackOfGag(arg, getId = False):
     if type(arg) == types.IntType:
+
         # This is a gag id.
         for trackName, gagList in TrackGagNamesByTrackName.items():
+
             if getGagByID(arg) in gagList:
-                return trackName
+
+                if not getId:
+                    # Return the name of the track as a string
+                    return trackName
+                else:
+                    # Return the int ID of the track
+                    return TrackIdByName[trackName]
+
     elif type(arg) == types.StringType:
+
         # This is a gag name.
         for trackName, gagList in TrackGagNamesByTrackName.items():
+
             if arg in gagList:
-                return trackName
+
+                if not getId:
+                    # Return the name of the track as a string
+                    return trackName
+                else:
+                    # Return the int ID of the track
+                    return TrackIdByName[trackName]

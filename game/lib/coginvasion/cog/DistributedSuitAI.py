@@ -135,7 +135,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 elif anim == 45:
                     self.anim = 'flyNeutral'
 
-    def b_setAnimState(self, anim):
+    def b_setAnimState(self, anim, loop = 1):
         if type(anim) == types.StringType:
             animId = SuitGlobals.getAnimId(SuitGlobals.getAnimByName(anim))
             if animId == None and anim != 'flyNeutral':
@@ -144,12 +144,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 animId = 45
         else:
             animId = anim
-        self.d_setAnimState(animId)
+        self.d_setAnimState(animId, loop)
         self.setAnimState(animId)
 
-    def d_setAnimState(self, anim):
+    def d_setAnimState(self, anim, loop):
         timestamp = globalClockDelta.getFrameNetworkTime()
-        self.sendUpdate('setAnimState', [anim, timestamp])
+        self.sendUpdate('setAnimState', [anim, loop, timestamp])
 
     def getAnimState(self):
         return self.anim
@@ -282,7 +282,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         gagName = GagGlobals.getGagByID(gagId)
         data = GagGlobals.getGagData(gagId)
         dmg = data.get('damage')
-        track = GagGlobals.getTrackOfGag(gagId)
+        track = GagGlobals.getTrackOfGag(gagId, getId = True)
         
         if self.canGetHit():
             self.b_setHealth(self.getHealth() - dmg)
@@ -291,18 +291,18 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             
             if self.isDead():
                 if track == GagType.THROW or gagName == CIGlobals.TNT:
-                    self.b_setAnimState('pie')
+                    self.b_setAnimState('pie', 0)
                 elif track == GagType.DROP:
                     majorDrops = [CIGlobals.GrandPiano, CIGlobals.Safe, CIGlobals.BigWeight]
                     if gagName in majorDrops:
-                        self.b_setAnimState('drop')
+                        self.b_setAnimState('drop', 0)
                     else:
-                        self.b_setAnimState('drop-react')
+                        self.b_setAnimState('drop-react', 0)
                 elif track == GagType.SQUIRT or track == GagType.SOUND:
                     if gagName == CIGlobals.StormCloud:
-                        self.b_setAnimState('soak')
+                        self.b_setAnimState('soak', 0)
                     else:
-                        self.b_setAnimState('squirt-small')
+                        self.b_setAnimState('squirt-small', 0)
                 avatar.questManager.cogDefeated(self)
 
     def __handleDeath(self, task):

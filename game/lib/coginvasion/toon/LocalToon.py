@@ -86,6 +86,7 @@ class LocalToon(DistributedToon):
         self.invGui = None
         self.gagsTimedOut = False
         self.needsToSwitchToGag = None
+        self.gagsEnabled = False
 
         self.pickerTrav = None
         self.pickerRay = None
@@ -618,8 +619,10 @@ class LocalToon(DistributedToon):
             self.gagThrowBtn.bind(DGG.B1RELEASE, self.throwGag)
         self.accept(self.gagStartKey, self.startGag)
         self.accept(self.gagThrowKey, self.throwGag)
+        self.gagsEnabled = True
 
     def disableGagKeys(self):
+        self.gagsEnabled = False
         if self.gagThrowBtn:
             self.gagThrowBtn.unbind(DGG.B1PRESS)
             self.gagThrowBtn.unbind(DGG.B1RELEASE)
@@ -657,43 +660,65 @@ class LocalToon(DistributedToon):
     def resetHeadHpr(self):
         self.b_lookAtObject(0, 0, 0, blink = 0)
 
+    def canUseGag(self, preActive):
+        if preActive:
+
+            # We're checking if we can call `startGag` (before the gag gets activated)
+            return (self.backpack is not None
+                    and self.backpack.getCurrentGag() is not None
+                    and self.backpack.getSupply() > 0
+                    and self.gagsEnabled)
+
+        else:
+
+            # We're checking if we can call `throwGag` or `releaseGag` (after the gag gets activated)
+            return (self.backpack is not None
+                    and self.backpack.getCurrentGag() is not None
+                    and self.backpack.getActiveGag() is not None
+                    and self.backpack.getSupply() > 0
+                    and self.gagsEnabled)
+
     def startGag(self, start = True):
-        if not self.backpack or not self.backpack.getCurrentGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
+        if not self.canUseGag(True) or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
-        if self.backpack.getSupply() > 0:
-            if self.gagThrowBtn:
-                self.gagThrowBtn.unbind(DGG.B1PRESS)
-            self.ignore(self.gagStartKey)
-            self.resetHeadHpr()
-            self.b_gagStart(self.backpack.getCurrentGag().getID())
+
+        if self.gagThrowBtn:
+            self.gagThrowBtn.unbind(DGG.B1PRESS)
+
+        self.ignore(self.gagStartKey)
+        self.resetHeadHpr()
+        self.b_gagStart(self.backpack.getCurrentGag().getID())
 
     def throwGag(self, start = True):
-        if not self.backpack.getCurrentGag():
+        if not self.canUseGag(False):
             return
-        if self.backpack.getSupply() > 0:
-            if self.gagThrowBtn:
-                self.gagThrowBtn.unbind(DGG.B1RELEASE)
-            self.ignore(self.gagThrowKey)
-            if self.backpack.getActiveGag().getType() == GagType.SQUIRT and self.backpack.getActiveGag().getName() in [CIGlobals.SeltzerBottle]:
-                self.b_gagRelease(self.backpack.getActiveGag().getID())
-            else:
-                self.b_gagThrow(self.backpack.getActiveGag().getID())
-            activeGag = self.backpack.getActiveGag()
-            if not activeGag:
-                activeGag = self.backpack.getCurrentGag()
-            if not activeGag.doesAutoRelease():
-                Sequence(Wait(0.75), Func(self.releaseGag)).start()
+
+        if self.gagThrowBtn:
+             self.gagThrowBtn.unbind(DGG.B1RELEASE)
+
+        self.ignore(self.gagThrowKey)
+
+        if self.backpack.getActiveGag().getType() == GagType.SQUIRT and self.backpack.getActiveGag().getName() in [CIGlobals.SeltzerBottle]:
+            self.b_gagRelease(self.backpack.getActiveGag().getID())
+        else:
+            self.b_gagThrow(self.backpack.getActiveGag().getID())
+
+        activeGag = self.backpack.getActiveGag()
+        if not activeGag:
+            activeGag = self.backpack.getCurrentGag()
+
+        if not activeGag.doesAutoRelease():
+            Sequence(Wait(0.75), Func(self.releaseGag)).start()
 
     def releaseGag(self):
-        if not self.backpack or not self.backpack.getActiveGag() or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
+        if not self.canUseGag(False) or self.backpack.getCurrentGag().__class__.__name__ == 'BananaPeel':
             return
-        if self.backpack.getSupply() > 0:
-            gag = self.backpack.getActiveGag()
-            if not gag:
-                gag = self.backpack.getCurrentGag()
-            if gag.getState() != GagState.RELEASED:
-                gagName = gag.getName()
-                self.b_gagRelease(GagGlobals.getIDByName(gagName))
+        gag = self.backpack.getActiveGag()
+        if not gag:
+            gag = self.backpack.getCurrentGag()
+        if gag.getState() != GagState.RELEASED:
+            gagName = gag.getName()
+            self.b_gagRelease(GagGlobals.getIDByName(gagName))
 
     def checkSuitHealth(self, suit):
         pass

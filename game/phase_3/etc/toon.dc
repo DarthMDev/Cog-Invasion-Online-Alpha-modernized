@@ -307,7 +307,7 @@ dclass DistributedSuit : DistributedAvatar {
   setLevel(uint8 level) required broadcast ram;
   setSuit(uint8 planId, uint8 variantId) required broadcast ram;
   setName(string name) required broadcast ram;
-  setAnimState(uint8 anim, int16 timestamp) broadcast ram;
+  setAnimState(uint8 anim, int8 loop, int16 timestamp) broadcast ram;
   doAttack(int8 attackName, uint32, int16) broadcast;
   hitByGag(uint8 gagId) clsend airecv;
   toonHitByWeapon(int8, uint32) clsend airecv;

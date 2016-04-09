@@ -382,7 +382,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def getSuitState(self):
         return self.suitState
 
-    def setAnimState(self, anim, timestamp = None):
+    def setAnimState(self, anim, loop = 1, timestamp = None):
         prevAnim = self.anim
         self.anim = anim
 
@@ -405,7 +405,10 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         if self.animFSM.hasStateNamed(animName):
             self.animFSM.request(animName, [ts])
         else:
-            self.loop(animName)
+            if loop:
+                self.loop(animName)
+            else:
+                self.play(animName)
         messenger.send(SuitGlobals.animStateChangeEvent % (self.uniqueName), [anim, prevAnim])
 
     def doAttack(self, attackId, avId, timestamp = None):
