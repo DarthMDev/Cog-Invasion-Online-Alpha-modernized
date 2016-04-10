@@ -64,3 +64,5 @@ game/coginvasion.bin
 game/astron/databases
 *.pyo
 game/tools/*.c
+prod
+!game/tools/cio-file-hash-writer.exe

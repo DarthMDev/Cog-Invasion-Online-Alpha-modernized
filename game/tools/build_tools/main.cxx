@@ -90,8 +90,11 @@ static void start_nirai()
     init_libpnmimagetypes();
 
     // Init other modules.
+	std::cout << "initinterrogatedb" << std::endl;
     initinterrogatedb();
+	std::cout << "init_direct" << std::endl;
     init_direct();
+	std::cout << "initegg" << std::endl;
     initegg();
     initfx();
     initode();
@@ -198,6 +201,8 @@ int main(int argc, char* argv[])
     if (!niraicall_isGameExe()) {
       module = "lib.launcher";
     }
+
+	std::cout << "PyImport_ImportModule" << std::endl;
 
     PyObject* res = PyImport_ImportModule(module);
 

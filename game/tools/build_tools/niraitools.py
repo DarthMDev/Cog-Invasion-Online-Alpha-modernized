@@ -10,8 +10,9 @@ import aes
 
 SOURCE_ROOT = os.path.dirname(os.path.abspath(__file__))
 NIRAI_ROOT = '.'
-PYTHON_ROOT = "C:\\Users\\Brian\\Documents\\cog-invasion-online\\python-master"
-PANDA3D_ROOT = "C:\\Users\\Brian\\Documents\\cog-invasion-online\\cio-panda3d"
+PYTHON_ROOT = "C:\\Users\\brian\\Documents\\cog-invasion-online\\python-master"
+PANDA3D_ROOT = "C:\\Users\\brian\\Documents\\cog-invasion-online\\cio-panda3d"
+DEV_P3D_ROOT = "C:\\Users\\brian\\Documents\\cog-invasion-online\\Panda3D-CI"
 THIRDPARTY_ROOT = os.path.join(PANDA3D_ROOT, 'thirdparty')
 
 class NiraiCompilerBase:
@@ -315,7 +316,7 @@ class NiraiPackager:
         return len(rel) + len(os.sep)
 
     def add_panda3d_dirs(self):
-        manglebase = self.get_mangle_base(os.path.join(PANDA3D_ROOT, 'built'),  relative=False)
+        manglebase = self.get_mangle_base(DEV_P3D_ROOT, relative=False)
 
         def _mangler(name):
             name = name[manglebase:].strip('.')
@@ -326,9 +327,9 @@ class NiraiPackager:
 
             return name
 
-        self.add_directory(os.path.join(PANDA3D_ROOT, 'built', 'direct'), mangler=_mangler)
-        self.add_directory(os.path.join(PANDA3D_ROOT, 'built', 'pandac'), mangler=_mangler)
-        self.add_directory(os.path.join(PANDA3D_ROOT, 'built', 'panda3d'), mangler=_mangler)
+        self.add_directory(os.path.join(DEV_P3D_ROOT, 'direct'), mangler=_mangler)
+        self.add_directory(os.path.join(DEV_P3D_ROOT, 'pandac'), mangler=_mangler)
+        self.add_directory(os.path.join(DEV_P3D_ROOT, 'panda3d'), mangler=_mangler)
 
     def add_default_lib(self):
         manglebase = self.get_mangle_base(os.path.join(PYTHON_ROOT, 'Lib'),  relative=False)

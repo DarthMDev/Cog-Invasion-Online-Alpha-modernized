@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Media;
+using System.Text.RegularExpressions;
 
 namespace cio_launcher
 {
@@ -84,8 +85,7 @@ namespace cio_launcher
                             string gameVersion = split_msg[3];
                             string loginToken = "asdasdasbsdf";
                             string username = launcher.lf.GetUsername();
-                            // Reset our variables for when the launcher opens back up.
-                            launcher.ResetVars();
+
                             // Set the environment variables.
                             Environment.SetEnvironmentVariable("ACCOUNT_NAME", username);
                             Environment.SetEnvironmentVariable("GAME_SERVER", gameServer);
@@ -94,7 +94,10 @@ namespace cio_launcher
 
                             Console.WriteLine("Starting coginvasion.exe");
 
-                            
+                            launcher.lf.Hide();
+                            launcher.CloseConnection();
+                            // Reset our variables for when the launcher opens back up.
+                            launcher.PrepareToRestart();
 
                             ProcessStartInfo ciInfo = new ProcessStartInfo();
                             ciInfo.ErrorDialog = true;
@@ -116,12 +119,8 @@ namespace cio_launcher
                                 Console.WriteLine(e.Message);
                             }
 
-                            
-
-                            launcher.lf.Hide();
-                            launcher.CloseConnection();
                             Console.WriteLine("Exited");
-                            launcher.DoInitialStuff(false);
+                            launcher.DoInitialStuff();
 
                         }
                         else if (response == 0)
@@ -179,6 +178,7 @@ namespace cio_launcher
                 string[] split_data = fileData.Split(' ');
                 string filename = split_data[0];
                 string md5 = split_data[1];
+                md5 = Regex.Replace(md5, @"\s", "");
                 if (!IsSameMD5(filename, md5))
                 {
                     Console.WriteLine(filename + " is out of date or missing! Adding to download list.");
@@ -211,18 +211,20 @@ namespace cio_launcher
         private bool IsSameMD5(string filename, string md5)
         {
             if (!File.Exists(filename))
+            {
                 return false;
+            }
             else
             {
-                Stream fileStream = File.Open(filename, FileMode.Open);
-
+                FileStream fileStream = File.Open(filename, FileMode.Open);
+                
                 string myMD5 = BitConverter.ToString(new SHA1CryptoServiceProvider().ComputeHash(fileStream));
 
                 Console.WriteLine(filename + ": " + myMD5);
 
                 fileStream.Close();
 
-                return (myMD5 == md5);
+                return (string.Equals(md5, myMD5));
             }
         }
 
@@ -275,13 +277,6 @@ namespace cio_launcher
             return alreadyUpdated;
         }
 
-        public void ResetVars()
-        {
-            alreadyUpdated = true;
-            Globals.dl_base_link = "";
-            dl_list.Clear();
-        }
-
         public void CloseConnection()
         {
             client.Close();
@@ -295,11 +290,11 @@ namespace cio_launcher
             Application.SetCompatibleTextRenderingDefault(false);
             LoginForm lf = new LoginForm();
             this.lf = lf;
-            DoInitialStuff(true);
+            DoInitialStuff();
             Application.Run(lf);
         }
 
-        public void DoInitialStuff(bool firstTime)
+        public void DoInitialStuff()
         {
             lf.Show();
             lf.HideAll(true);
@@ -309,11 +304,8 @@ namespace cio_launcher
             Console.WriteLine("Connecting to login server at " + gameserver);
 
             // Connect to the server
-            if (firstTime)
-            {
-                TcpClient client = new TcpClient();
-                this.client = client;
-            }
+            TcpClient client = new TcpClient();
+            this.client = client;
             try
             {
                 client.Connect(Constants.LOGIN_SERVER, Constants.LOGIN_PORT);
@@ -328,22 +320,20 @@ namespace cio_launcher
 
             Console.WriteLine("Connected");
 
-            if (firstTime)
-            {
-                // Initialize our stream readers and writers for talking to the server
-                StreamReader sr = new StreamReader(client.GetStream());
-                this.sr = sr;
-                StreamWriter sw = new StreamWriter(client.GetStream());
-                this.sw = sw;
+            // Initialize our stream readers and writers for talking to the server
+            StreamReader sr = new StreamReader(client.GetStream());
+            this.sr = sr;
+            StreamWriter sw = new StreamWriter(client.GetStream());
+            this.sw = sw;
 
-                List<string> dl_list = new List<string>();
-                this.dl_list = dl_list;
+            List<string> dl_list = new List<string>();
+            this.dl_list = dl_list;
 
-                // Start the reader task
-                CancellationTokenSource cts = new CancellationTokenSource();
-                this.cts = cts;
-                var listen_task = Listen(this, cts.Token);
-            }
+            // Start the reader task
+            CancellationTokenSource cts = new CancellationTokenSource();
+            this.cts = cts;
+            var listen_task = Listen(this, cts.Token);
+            
 
             Console.WriteLine("Now sending server info req");
 
@@ -356,6 +346,21 @@ namespace cio_launcher
 
         }
 
+        public void PrepareToRestart()
+        {
+            cts.Cancel();
+            cts = null;
+            sr.Close();
+            sr = null;
+            sw.Close();
+            sw = null;
+            client.Close();
+            client = null;
+            dl_list = null;
+            alreadyUpdated = false;
+            Globals.dl_base_link = "";
+        }
+
         private TcpClient client;
         public StreamReader sr;
         public StreamWriter sw;
@@ -365,7 +370,7 @@ namespace cio_launcher
 
         private int currentFile = -1;
         private int filesDownloaded = 0;
-        private bool alreadyUpdated = true;
+        private bool alreadyUpdated = false;
 
     }
 }

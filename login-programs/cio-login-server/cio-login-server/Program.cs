@@ -184,7 +184,10 @@ namespace cio_login_server
                 for (int i = 0; i <= clients.Count - 1; i++)
                 {
                     Client client = clients[i];
-                    client.Process();
+                    if (client != null)
+                    {
+                        client.Process();
+                    }
                 }
             }
         }
