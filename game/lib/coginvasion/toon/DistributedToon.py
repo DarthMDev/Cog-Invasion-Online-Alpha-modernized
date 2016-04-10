@@ -582,7 +582,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             
     def setBackpackAmmo(self, gagIds, ammoList):
         if not self.backpack:
-            self.backpack = Backpack()
+            self.backpack = Backpack(self)
             # We just want to update the network ammo sometimes,
             # let's ignore updates if we're not constructing a backpack.
             for i in xrange(len(gagIds)):

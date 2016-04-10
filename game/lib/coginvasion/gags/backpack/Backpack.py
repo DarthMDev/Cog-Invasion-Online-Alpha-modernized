@@ -11,7 +11,7 @@ import types
 
 class Backpack:
     
-    def __init__(self):
+    def __init__(self, avatar):
         # Dictionary that stores the gags in the backpack.
         # Setup like this:
         # gagId : [gag instance, current ammo, max ammo]
@@ -36,6 +36,9 @@ class Backpack:
         # This is just used to create gag instances when
         # necessary.
         self.gagManager = GagManager()
+
+        # The owner of this backpack, who we will be playing gags on.
+        self.avatar = avatar
         
     # Sets the current gag that's being used.
     # Requires a gag id or -1 to remove a current gag.
@@ -78,7 +81,7 @@ class Backpack:
             gagName = GagGlobals.getGagByID(gagId)
             if not gagName is None:
                 gag = self.gagManager.getGagByName(gagName)
-                gag.setAvatar(base.localAvatar)
+                gag.setAvatar(self.avatar)
                 self.gags.update({gagId : [gag, curSupply, maxSupply]})
     
     # Sets the loadout of the backpack.
@@ -87,23 +90,26 @@ class Backpack:
     def setLoadout(self, gagIds):
         self.loadout = gagIds
         
-        # Let's reset the loadout to show the new one.
-        playGame = base.cr.playGame.world
-        if playGame and playGame.getPlace() and playGame.getPlace().fsm.getCurrentState().getName() == 'walk':
-            base.localAvatar.disableGags()
-            base.localAvatar.enableGags(1)
+        if self.avatar.doId == base.localAvatar.doId:
+            # Let's reset the loadout to show the new one.
+            playGame = base.cr.playGame.world
+            if playGame and playGame.getPlace() and playGame.getPlace().fsm.getCurrentState().getName() == 'walk':
+                base.localAvatar.disableGags()
+                base.localAvatar.enableGags(1)
             
     # Adds a gag to the loadout.
     def addLoadoutGag(self, gagId):
         if len(self.loadout) < 4 and self.hasGag(gagId) and not gagId in self.loadout:
             self.loadout.append(gagId)
-            self.loadoutGUI.updateLoadout()
+            if self.loadoutGUI:
+                self.loadoutGUI.updateLoadout()
     
     # Removes a gag from the loadout.
     def removeLoadoutGag(self, gagId):
         if len(self.loadout) > 0 and gagId in self.loadout:
             self.loadout.remove(gagId)
-            self.loadoutGUI.updateLoadout()
+            if self.loadoutGUI:
+                self.loadoutGUI.updateLoadout()
     
     # Returns the current loadout of the backpack.        
     def getLoadout(self):
@@ -188,11 +194,11 @@ class Backpack:
         for gagId, data in self.gags.iteritems():
             gag = data[0]
             gag.delete()
-            del self.gags[gagId]
         del self.gags
         del self.loadout
         del self.currentGag
         del self.activeGag
         del self.loadoutGUI
         del self.gagManager
+        del self.avatar
             
