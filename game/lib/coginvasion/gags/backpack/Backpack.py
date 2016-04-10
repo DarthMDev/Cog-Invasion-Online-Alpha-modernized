@@ -121,7 +121,8 @@ class Backpack:
             gag = values[0]
             supply = values[1]
             self.gags.update({gagId : [gag, supply, maxSupply]})
-            self.loadoutGUI.update()
+            if self.loadoutGUI:
+                self.loadoutGUI.update()
             return True
         return False
     
