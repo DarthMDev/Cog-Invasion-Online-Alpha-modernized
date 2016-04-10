@@ -178,7 +178,7 @@ class InventoryGui(DirectObject):
     def __init__(self):
         DirectObject.__init__(self)
         self.backpack = base.localAvatar.backpack
-        self.backpack.setLoadoutGUI()
+        self.backpack.loadoutGUI = self
         
         self.oneSlotPos = [(0, 0, 0)]
         self.twoSlotsPos = [(0, 0, 0.30), (0, 0, -0.2)]

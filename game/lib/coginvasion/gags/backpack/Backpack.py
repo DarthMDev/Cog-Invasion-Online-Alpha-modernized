@@ -36,9 +36,6 @@ class Backpack:
         # This is just used to create gag instances when
         # necessary.
         self.gagManager = GagManager()
-    
-    def setLoadoutGUI(self):
-        self.loadoutGUI = base.localAvatar.invGui
         
     # Sets the current gag that's being used.
     # Requires a gag id or -1 to remove a current gag.
