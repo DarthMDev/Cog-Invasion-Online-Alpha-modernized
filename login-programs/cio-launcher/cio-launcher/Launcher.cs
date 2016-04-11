@@ -290,11 +290,11 @@ namespace cio_launcher
             Application.SetCompatibleTextRenderingDefault(false);
             LoginForm lf = new LoginForm();
             this.lf = lf;
-            DoInitialStuff();
-            Application.Run(lf);
+            if (DoInitialStuff())
+                Application.Run(lf);
         }
 
-        public void DoInitialStuff()
+        public bool DoInitialStuff()
         {
             lf.Show();
             lf.HideAll(true);
@@ -310,12 +310,13 @@ namespace cio_launcher
             {
                 client.Connect(Constants.LOGIN_SERVER, Constants.LOGIN_PORT);
             }
-            catch (SocketException)
+            catch (SocketException e)
             {
+                Console.WriteLine(e.Message);
                 Console.WriteLine("Could not connect to the login server.");
                 MessageBox.Show("Yikes! It seems the Cog Invasion Online servers are down right now.\nTry again later.",
                     "Could Not Connect", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
+                return false;
             }
 
             Console.WriteLine("Connected");
@@ -344,6 +345,7 @@ namespace cio_launcher
             sw.WriteLine(Constants.CL_SERVER_INFO.ToString());
             sw.Flush();
 
+            return true;
         }
 
         public void PrepareToRestart()

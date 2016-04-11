@@ -5,7 +5,7 @@
 /// </summary>
 public static class Constants
 {
-    public const string LOGIN_SERVER = "gameserver.coginvasion.com";
+    public const string LOGIN_SERVER = "gameserver-dev.coginvasion.com";
     public const int LOGIN_PORT = 7033;
 
     public const int CL_SERVER_INFO = 1;

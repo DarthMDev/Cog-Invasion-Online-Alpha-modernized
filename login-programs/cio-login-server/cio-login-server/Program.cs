@@ -36,8 +36,8 @@ namespace cio_login_server
         public const string FAIL = "0";
         public const string SUCCESS = "1";
 
-        public const string GAME_SERVER = "gameserver.coginvasion.com:7032";
-        public const string SERVER_VERSION = "1.0.17";
+        public const string GAME_SERVER = "gameserver-dev.coginvasion.com:7032";
+        public static string SERVER_VERSION = Environment.GetEnvironmentVariable("GAME_VERSION");
     }
 
     class Client
@@ -164,8 +164,7 @@ namespace cio_login_server
     {
         public Server()
         {
-            IPAddress ip = IPAddress.Parse("127.0.0.1");
-            listener = new TcpListener(ip, 7033);
+            listener = new TcpListener(IPAddress.Any, 7033);
             listener.Start();
 
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -181,6 +180,7 @@ namespace cio_login_server
 
             while (true)
             {
+                Thread.Sleep(4);
                 for (int i = 0; i <= clients.Count - 1; i++)
                 {
                     Client client = clients[i];
