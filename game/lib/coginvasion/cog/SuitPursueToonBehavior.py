@@ -56,6 +56,13 @@ class SuitPursueToonBehavior(SuitPathBehavior):
                 avIds.remove(avId)
         
         avIds.sort(key = lambda avId: self.air.doId2do.get(avId).getDistance(self.suit))
+        
+        # Make sure we found some avatars to pursue.
+        if len(avIds) == 0:
+            self.suit.getBrain().exitCurrentBehavior()
+            self.fsm.enterInitialState()
+            return
+        
         self.targetId = avIds[0]
         self.target = self.air.doId2do.get(self.targetId)
         
@@ -85,6 +92,8 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         taskMgr.add(self._attackTask, self.suit.uniqueName('attackToonTask'))
         
     def _attackTask(self, task):
+        if not self.isAvatarReachable(self.target):
+            return task.done
         if self.suit.getDistance(self.target) > self.attackSafeDistance:
             # Nope, we're too far away! We need to chase them down!
             self.fsm.request('pursue')
@@ -134,6 +143,8 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         
     def enterPursue(self):
         # Make our initial path to the toon.
+        if not self.isAvatarReachable(self.target):
+            return
         self.lastCheckedPos = self.target.getPos(render)
         self.createPath(self.target)
         taskMgr.add(self._pursueTask, self.suit.uniqueName('pursueToonTask'))
@@ -182,7 +193,8 @@ class SuitPursueToonBehavior(SuitPathBehavior):
     def exitPursue(self):
         taskMgr.remove(self.suit.uniqueName('scanTask'))
         taskMgr.remove(self.suit.uniqueName('pursueToonTask'))
-        del self.lastCheckedPos
+        if hasattr(self, 'lastCheckedPos'):
+            del self.lastCheckedPos
         self.clearWalkTrack()
         
     def shouldStart(self):

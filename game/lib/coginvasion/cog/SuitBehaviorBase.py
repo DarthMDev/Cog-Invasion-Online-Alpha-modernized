@@ -13,6 +13,14 @@ class SuitBehaviorBase(DirectObject):
         self.doneEvent = doneEvent
         self.suit = suit
         
+    def isAvatarReachable(self, var, exitFSM = False):
+        if var == None or var.isEmpty():
+            if hasattr(self, 'fsm') and exitFSM:
+                self.fsm.enterInitialState()
+                self.suit.getBrain().exitCurrentBehavior()
+            return False
+        return True
+        
     def enter(self):
         if self.isEntered == 1:
             return

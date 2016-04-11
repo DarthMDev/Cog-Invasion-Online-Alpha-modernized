@@ -64,6 +64,12 @@ class SafeZoneLoader(StateData):
         if self.tournamentMusicFiles:
             self.tournamentMusic = None
         self.createSafeZone(self.dnaFile)
+        
+        children = self.geom.findAllMatches('**/*doorFrameHole*')
+        
+        for child in children:
+            child.hide()
+        
         self.parentFSMState.addChild(self.fsm)
         _, _, _, _, _, _, _, _, af = SettingsManager().getSettings("settings.json")
         if af == "on":

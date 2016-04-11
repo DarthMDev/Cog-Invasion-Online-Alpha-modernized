@@ -152,6 +152,29 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             ts = globalClockDelta.localElapsedTime(timestamp)
 
         self.fsm.request('scan', [ts, afterShooting])
+        
+    def buildScanTrack(self, ts = None):
+        if self.track:
+            self.track.pause()
+            self.track = None
+        self.track = Parallel(
+            Sequence(
+                LerpQuatInterval(self.cannon.find('**/cannon'), duration = 3, quat = (60, 0, 0),
+                    startHpr = Vec3(-60, 0, 0), blendType = 'easeInOut'),
+                LerpQuatInterval(self.cannon.find('**/cannon'), duration = 3, quat = (-60, 0, 0),
+                    startHpr = Vec3(60, 0, 0), blendType = 'easeInOut'),
+            ),
+            Sequence(
+                LerpQuatInterval(self.cannon.find('**/square_drop_shadow'), duration = 3, quat = (60, 0, 0),
+                    startHpr = Vec3(-60, 0, 0), blendType = 'easeInOut'),
+                LerpQuatInterval(self.cannon.find('**/square_drop_shadow'), duration = 3, quat = (-60, 0, 0),
+                    startHpr = Vec3(60, 0, 0), blendType = 'easeInOut'),
+            )
+        )
+        if ts:
+            self.track.loop(ts)
+        else:
+            self.track.loop()
 
     def enterScan(self, ts = 0, afterShooting = 0):
         if afterShooting:
@@ -166,21 +189,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
             self.acceptOnce(self.track.getDoneEvent(), self._afterShootTrackDone)
             self.track.start(ts)
         else:
-            self.track = Parallel(
-                Sequence(
-                    LerpQuatInterval(self.cannon.find('**/cannon'), duration = 3, quat = (60, 0, 0),
-                        startHpr = Vec3(-60, 0, 0), blendType = 'easeInOut'),
-                    LerpQuatInterval(self.cannon.find('**/cannon'), duration = 3, quat = (-60, 0, 0),
-                        startHpr = Vec3(60, 0, 0), blendType = 'easeInOut'),
-                ),
-                Sequence(
-                    LerpQuatInterval(self.cannon.find('**/square_drop_shadow'), duration = 3, quat = (60, 0, 0),
-                        startHpr = Vec3(-60, 0, 0), blendType = 'easeInOut'),
-                    LerpQuatInterval(self.cannon.find('**/square_drop_shadow'), duration = 3, quat = (-60, 0, 0),
-                        startHpr = Vec3(60, 0, 0), blendType = 'easeInOut'),
-                )
-            )
-            self.track.loop(ts)
+            self.buildScanTrack(ts)
 
     def exitScan(self):
         if self.track:
@@ -197,22 +206,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
     # END STATES
 
     def _afterShootTrackDone(self):
-        self.track = None
-        self.track = Parallel(
-            Sequence(
-                LerpQuatInterval(self.cannon.find('**/cannon'), duration = 3, quat = (60, 0, 0),
-                    startHpr = Vec3(-60, 0, 0), blendType = 'easeInOut'),
-                LerpQuatInterval(self.cannon.find('**/cannon'), duration = 3, quat = (-60, 0, 0),
-                    startHpr = Vec3(60, 0, 0), blendType = 'easeInOut'),
-            ),
-            Sequence(
-                LerpQuatInterval(self.cannon.find('**/square_drop_shadow'), duration = 3, quat = (60, 0, 0),
-                    startHpr = Vec3(-60, 0, 0), blendType = 'easeInOut'),
-                LerpQuatInterval(self.cannon.find('**/square_drop_shadow'), duration = 3, quat = (-60, 0, 0),
-                    startHpr = Vec3(60, 0, 0), blendType = 'easeInOut'),
-            )
-        )
-        self.track.loop()
+        self.buildScanTrack()
 
     def makeTurret(self):
         self.cannon = loader.loadModel('phase_4/models/minigames/toon_cannon.bam')

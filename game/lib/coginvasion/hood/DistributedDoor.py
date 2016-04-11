@@ -146,6 +146,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
             self.rightTrack = None
         self.rightTrack = Sequence(LerpQuatInterval(self.rightDoor, duration = 1.0, quat = (self.getRightDoorClosedH(), 0, 0),
             startHpr = (self.getRightDoorOpenH(), 0, 0), blendType = 'easeIn'),
+            Func(self.toggleDoorHole, 'right'),
             Func(base.playSfx, self.doorShutSound, 0, 1, None, 0.0, self.rightDoor))
         self.rightTrack.start()
 
@@ -158,7 +159,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         if self.rightTrack:
             self.rightTrack.finish()
             self.rightTrack = None
-        self.rightTrack = Sequence(Wait(0.5), Parallel(LerpQuatInterval(self.rightDoor, duration = 0.7, quat = (self.getRightDoorOpenH(), 0, 0),
+        self.rightTrack = Sequence(Wait(0.5), Parallel(Func(self.toggleDoorHole, 'right', True), LerpQuatInterval(self.rightDoor, duration = 0.7, quat = (self.getRightDoorOpenH(), 0, 0),
             startHpr = (self.getRightDoorClosedH(), 0, 0), blendType = 'easeInOut'), SoundInterval(self.doorOpenSound, node = self.rightDoor)))
         self.rightTrack.start()
 
@@ -186,6 +187,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         self.leftTrack = Sequence(LerpQuatInterval(
             self.leftDoor, duration = 1.0, quat = (self.getLeftDoorClosedH(), 0, 0),
             startHpr = (self.getLeftDoorOpenH(), 0, 0), blendType = 'easeIn'),
+            Func(self.toggleDoorHole, 'left'),
             Func(base.playSfx, self.doorShutSound, 0, 1, None, 0.0, self.leftDoor))
         self.leftTrack.start()
 
@@ -198,7 +200,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         if self.leftTrack:
             self.leftTrack.finish()
             self.leftTrack = None
-        self.leftTrack = Sequence(Wait(0.5), Parallel(LerpQuatInterval(self.leftDoor, duration = 0.7, quat = (self.getLeftDoorOpenH(), 0, 0),
+        self.leftTrack = Sequence(Wait(0.5), Parallel(Func(self.toggleDoorHole, 'left', True), LerpQuatInterval(self.leftDoor, duration = 0.7, quat = (self.getLeftDoorOpenH(), 0, 0),
             startHpr = (self.getLeftDoorClosedH(), 0, 0), blendType = 'easeInOut'), SoundInterval(self.doorOpenSound, node = self.leftDoor)))
         self.leftTrack.start()
 
@@ -435,6 +437,18 @@ class DistributedDoor(DistributedObject.DistributedObject):
         base.audio3d.attachSoundToObject(self.doorShutSound, self.doorNode)
         self.acceptOnce(self.getEnterTriggerEvent(), self._handleTrigger)
         self.ready = True
+        self.toggleDoorHole('Left')
+        self.toggleDoorHole('Right')
+        
+    def toggleDoorHole(self, side, show = False):
+        side = side.title()
+        if self.building:
+            hole = self.building.find('**/doorFrameHole%s' % side)
+            if hole and not hole.isEmpty():
+                if not show:
+                    hole.hide()
+                else:
+                    hole.show()
 
     def printBuildingPos(self):
         self.notify.info(self.building.getPos(render))

@@ -98,6 +98,7 @@ class Geyser(SquirtGag, ChargeUpGag):
                 startFlailFrame = 15
                 endFlailFrame = 15
             track = Sequence()
+            track.append(Func(cog.d_disableMovement))
             track.append(Wait(0.5))
             slipIval = Sequence(
                 ActorInterval(cog, 'slip-backward', playRate=0.5, startFrame=0, endFrame=startFlailFrame - 1),
