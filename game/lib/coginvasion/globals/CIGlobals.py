@@ -100,6 +100,12 @@ def getHolidayTheme():
         holidayTheme = 'phase_3/audio/bgm/ci_holiday_christmas_bgm.wav'
     return holidayTheme
 
+# Helper method to check if two objects are facing each other like so: -> <-
+def areFacingEachOther(obj1, obj2):
+    h1 = obj1.getH(render) % 360
+    h2 = obj2.getH(render) % 360
+    return not (-90.0 <= (h1 - h2) <= 90.0)
+
 FloorBitmask = BitMask32(2)
 WallBitmask = BitMask32(1)
 EventBitmask = BitMask32(3)

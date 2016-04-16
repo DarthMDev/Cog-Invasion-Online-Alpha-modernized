@@ -31,7 +31,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         self.numSuits = 0
         self.activeInvasion = False
         self.suitsSpawnedThisInvasion = 0
-        self.suitsRequest = self.suitsRequestBySize['small']
+        self.suitsRequest = -1
         self.lastChoice = None
         self.totalSuitsThisShift = 0
         self.maxSuitsThisShift = 0
@@ -147,7 +147,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
                         avatar.questManager.invasionDefeated(CogBattleGlobals.HoodIndex2HoodName[self.battle.getHoodIndex()])
                 self.setActiveInvasion(0)
                 self.suitsSpawnedThisInvasion = 0
-                self.suitsRequest = 0
+                self.suitsRequest = -1
                 self.currInvasionSize = None
             #if self.totalSuitsThisShift >= self.maxSuitsThisShift:
             #	self.sendSysMessage(random.choice(CIGlobals.SuitBreakMsgArray))
@@ -291,7 +291,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         return self.numSuits >= 25
 
     def isFullInvasion(self):
-        isFull = self.suitsSpawnedThisInvasion >= self.suitsRequest
+        isFull = self.suitsSpawnedThisInvasion >= self.suitsRequest and self.suitsRequest > -1
         if isFull:
             print "It's full. {0} cogs spawned this invasion".format(self.suitsSpawnedThisInvasion)
         return isFull
@@ -300,7 +300,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         if not self.getActiveInvasion() and not self.tournament.inTournament:
             self.sendSysMessage(CIGlobals.SuitInvasionMsg)
         self.setActiveInvasion(1)
-        if self.isFullInvasion() or self.isCogCountFull():
+        if self.isFullInvasion() or self.isCogCountFull() or self.suitsRequest < 0:
             return
         self.suitsSpawnedThisInvasion = 0
         print "Request size is {0}".format(self.suitsRequest)

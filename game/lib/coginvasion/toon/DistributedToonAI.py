@@ -411,6 +411,12 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                         hp = obj.getMaxHealth() - obj.getHealth()
                     obj.b_setHealth(obj.getHealth() + hp)
                     obj.d_announceHealth(1, hp)
+    
+    def gagStart(self, gagId):
+        for suit in self.air.doFindAll("DistributedSuitAI"):
+            if suit.zoneId == self.zoneId:
+                # Let this Suit know that we've started using a gag.
+                suit.handleToonThreat(self, False)
 
     def announceGenerate(self):
         DistributedAvatarAI.announceGenerate(self)

@@ -17,6 +17,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
     
     RemakePathDistance = 20.0
     DivertDistance = 5.0
+    MaxNonSafeDistance = 40.0
     
     def __init__(self, suit, pathFinder):
         SuitPathBehavior.__init__(self, suit, False)
@@ -45,6 +46,10 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         self.attackSafeDistance = random.uniform(5.0, 19.0)
         # Now, chase them down!
         self.fsm.request('pursue')
+
+    def setTarget(self, toon):
+        self.targetId = toon.doId
+        self.target = toon
 
     def pickTarget(self):
         # Choose the toon that is the closest to this suit as the target.
@@ -88,18 +93,27 @@ class SuitPursueToonBehavior(SuitPathBehavior):
     def exitOff(self):
         pass
         
-    def enterAttack(self):
-        taskMgr.add(self._attackTask, self.suit.uniqueName('attackToonTask'))
+    def enterAttack(self, useSafeDistance = True):
+        taskMgr.add(self._attackTask, self.suit.uniqueName('attackToonTask'),
+                    extraArgs = [useSafeDistance], appendTask = True)
         
-    def _attackTask(self, task):
+    def _attackTask(self, useSafeDistance, task):
         if not self.isAvatarReachable(self.target):
             return task.done
-        if self.suit.getDistance(self.target) > self.attackSafeDistance:
+
+        if useSafeDistance:
+            safeDistance = self.attackSafeDistance
+        else:
+            safeDistance = SuitPursueToonBehavior.MaxNonSafeDistance
+
+        if self.suit.getDistance(self.target) > safeDistance:
             # Nope, we're too far away! We need to chase them down!
             self.fsm.request('pursue')
             return task.done
+
         attack = SuitUtils.attack(self.suit, self.target)
         timeout = SuitAttacks.SuitAttackLengths[attack]
+
         task.delayTime = timeout
         return task.again
         

@@ -183,7 +183,7 @@ dclass DistributedToon : DistributedAvatar {
   setFriendsList(uint32[] = []) required ownrecv db airecv;
   updateBackpackAmmo() ownrecv;
   lookAtObject(float64, float64, float64, int8 = 1) broadcast ownsend;
-  gagStart(uint8 gagId) broadcast ownsend;
+  gagStart(uint8 gagId) broadcast ownsend airecv;
   gagThrow(uint8 gagId) broadcast ownsend;
   gagBuild(uint8 gagId) broadcast ownsend;
   gagRelease(uint8 gag_id) broadcast ownsend airecv;

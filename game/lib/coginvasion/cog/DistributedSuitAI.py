@@ -73,6 +73,33 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.comboDamage = 0
 
         self.allowHits = True
+
+    def handleToonThreat(self, toon, hasBeenHit):
+        if (CIGlobals.areFacingEachOther(self, toon) or hasBeenHit):
+            # Woah! This Toon might be trying to attack us!
+
+            doIt = random.choice([True, False])
+            if not doIt and not hasBeenHit or not self.brain:
+                return
+            
+            behav = self.brain.currentBehavior
+
+            if behav.__class__.__name__ == "SuitPursueToonBehavior":
+
+                if behav.fsm.getCurrentState().getName() == "pursue":
+
+                    if self.getDistance(toon) < 40:
+
+                        if toon != behav.target:
+
+                            # We need to make this toon our new target.
+                            behav.fsm.request("off")
+                            behav.setTarget(toon)
+
+                        # Attack
+                        behav.fsm.request("attack", [False])
+                    
+
         
     def d_setWalkPath(self, path):
         # Send out a list of Point2s for the client to create a path for the suit to walk.
@@ -304,6 +331,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                     else:
                         self.b_setAnimState('squirt-small', 0)
                 avatar.questManager.cogDefeated(self)
+            else:
+                # I've been hit! Take appropriate actions.
+                self.handleToonThreat(avatar, True)
 
     def __handleDeath(self, task):
         if hasattr(self, 'deathTimeLeft'):
