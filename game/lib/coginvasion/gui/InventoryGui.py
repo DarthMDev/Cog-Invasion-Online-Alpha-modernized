@@ -142,10 +142,13 @@ class Slot(DirectFrame):
                 return
             
             gagId = GagGlobals.getIDByName(useTrack[nextGagIndex])
-            if self.gui.backpack.hasGag(gagId):
+            loadout = self.gui.backpack.getLoadout()
+            if self.gui.backpack.hasGag(gagId) and self.gag in loadout:
                 self.hideInfoText()
-                loadout = self.gui.backpack.getLoadout()
                 
+                if not self.gag in loadout:
+                    return
+
                 loadout[loadout.index(self.gag)] = self.gui.backpack.getGagByID(gagId)
                 self.gui.backpack.setLoadout(loadout)
         

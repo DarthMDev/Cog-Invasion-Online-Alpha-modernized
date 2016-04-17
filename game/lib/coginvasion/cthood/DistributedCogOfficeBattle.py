@@ -252,6 +252,8 @@ class DistributedCogOfficeBattle(DistributedObject):
                         LerpPosInterval(rightDoor, 2.0, (rDoorOpen, 0, 0),
                                         (closed, 0, 0), blendType = 'easeOut'))
         ival.start()
+        
+        base.localAvatar.sendUpdate('requestSetLoadout', [base.localAvatar.backpack.getLoadout()])
 
     def enterVictory(self, ts):
         self.cr.playGame.getPlace().fsm.request('stop')
