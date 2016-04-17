@@ -58,13 +58,13 @@ class Slot(DirectFrame):
         arrow = battleGui.find('**/PckMn_BackBtn')
         arrowRlvr = battleGui.find('**/PckMn_BackBtn_Rlvr')
         arrowDn = battleGui.find('**/PckMn_BackBtn_Dn')
-        self.leftArrow = DirectButton(geom = (arrow, arrowRlvr, arrowDn),
+        self.leftArrow = DirectButton(geom = (arrow, arrowDn, arrowRlvr, arrow),
             parent = self, pos = (-0.925, -2.0, -1.02), relief = None, scale = 2,
-            command = self.updateLoadout, extraArgs = [0])
+            command = self.updateLoadout, extraArgs = [0], geom3_color = (0.5, 0.5, 0.5, 1.0))
         self.leftArrow.setBin('fixed', 60)
-        self.rightArrow = DirectButton(geom = (arrow, arrowRlvr, arrowDn),
+        self.rightArrow = DirectButton(geom = (arrow, arrowDn, arrowRlvr, arrow),
             parent = self, pos = (0.925, -2.0, -1.02), hpr = (180, 0, 0), relief = None, scale = 2,
-            command = self.updateLoadout, extraArgs = [1])
+            command = self.updateLoadout, extraArgs = [1], geom3_color = (0.5, 0.5, 0.5, 1.0))
         self.rightArrow.setBin('fixed', 60)
         
         self.hoverObj = DirectButton(relief = None, parent = self, frameSize = self['frameSize'])
@@ -77,13 +77,21 @@ class Slot(DirectFrame):
         self.hoverObj.bind(DGG.WITHIN, self.mouseEntered)
         self.hoverObj.bind(DGG.WITHOUT, self.mouseExited)
         self.hoverObj.bind(DGG.B1CLICK, self.gui.click_setWeapon, [self])
+
+    def toggleArrows(self, left, right):
+        if left:
+            self.leftArrow['state'] = DGG.NORMAL
+        else:
+            self.leftArrow['state'] = DGG.DISABLED
+
+        if right:
+            self.rightArrow['state'] = DGG.NORMAL
+        else:
+            self.rightArrow['state'] = DGG.DISABLED
         
     def updateArrows(self):
-        self.rightArrow.setColor(1, 1, 1, 1)
-        self.leftArrow.setColor(1, 1, 1, 1)
         if not self.gag:
-            self.leftArrow.setColor(0.5, 0.5, 0.5, 1)
-            self.rightArrow.setColor(0.5, 0.5, 0.5, 1)
+            self.toggleArrows(False, False)
         else:
             track = GagGlobals.TrackGagNamesByTrackName.get(GagGlobals.getTrackOfGag(self.gag.getID()))
             index = None
@@ -98,13 +106,18 @@ class Slot(DirectFrame):
             index = useTrack.index(self.gag.getName())
             
             if index == 0:
-                self.leftArrow.setColor(0.5, 0.5, 0.5, 1)
+                self.toggleArrows(False, True)
+
             elif(index > 0 and index < (len(useTrack) - 1)):
                 gagId = GagGlobals.getIDByName(useTrack[index + 1])
                 if not self.gui.backpack.hasGag(gagId):
-                    self.rightArrow.setColor(0.5, 0.5, 0.5, 1)
+                    self.toggleArrows(True, False)
+
             elif(index == (len(useTrack) - 1)):
-                self.rightArrow.setColor(0.5, 0.5, 0.5, 1)
+                self.toggleArrows(True, False)
+
+            else:
+                self.toggleArrows(True, True)
         
     def updateLoadout(self, forward):
         if self.gag and self.gag.getState() in [GagState.RECHARGING, GagState.LOADED]:
@@ -131,8 +144,6 @@ class Slot(DirectFrame):
             gagId = GagGlobals.getIDByName(useTrack[nextGagIndex])
             if self.gui.backpack.hasGag(gagId):
                 self.hideInfoText()
-                if self.gui.activeSlot == self:
-                    self.gui.activeSlot = None
                 loadout = self.gui.backpack.getLoadout()
                 
                 loadout[loadout.index(self.gag)] = self.gui.backpack.getGagByID(gagId)
