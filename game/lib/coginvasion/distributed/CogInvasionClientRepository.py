@@ -650,7 +650,7 @@ class CogInvasionClientRepository(AstronClientRepository):
             self.gotTimeSync(status)
         else:
             print "Time manager found"
-            DistributedSmoothNode.globalActivateSmoothing(1, 1)
+            DistributedSmoothNode.globalActivateSmoothing(1, 0)
             #h = HashVal()
             #hashPrcVariables(h)
             #pyc = HashVal()

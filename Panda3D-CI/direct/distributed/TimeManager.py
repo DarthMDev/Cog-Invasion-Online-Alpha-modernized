@@ -21,7 +21,7 @@ class TimeManager(DistributedObject.DistributedObject):
     # The number of seconds to wait between automatic
     # synchronizations.  Set to 0 to disable auto sync after
     # startup.
-    updateFreq = base.config.GetFloat('time-manager-freq', 1800)
+    updateFreq = base.config.GetFloat('time-manager-freq', 10)
 
     # The minimum number of seconds to wait between two unrelated
     # synchronization attempts.  Increasing this number cuts down
