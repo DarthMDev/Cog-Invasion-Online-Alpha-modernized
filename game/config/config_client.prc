@@ -48,7 +48,7 @@ server-address gameserver.coginvasion.com
 # Performance...
 hardware-animated-vertices #f
 sync-video #f
-smooth-lag 0.2
+smooth-lag 0.0
 basic-shaders-only #f
 framebuffer-multisample 1
 multisamples 16

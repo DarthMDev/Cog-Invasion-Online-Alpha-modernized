@@ -1,149 +1,5 @@
 <CoordinateSystem> { Z-up } 
-<Material> Material.014 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.005 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.010 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.017 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.006 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.002 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.007 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.018 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.011 {
-  <Scalar> diffr { 0.640000 }
-  <Scalar> diffg { 0.640000 }
-  <Scalar> diffb { 0.640000 }
-  <Scalar> specr { 0.500000 }
-  <Scalar> specg { 0.500000 }
-  <Scalar> specb { 0.500000 }
-  <Scalar> shininess { 12.5 }
-  <Scalar> ambr { 1.000000 }
-  <Scalar> ambg { 1.000000 }
-  <Scalar> ambb { 1.000000 }
-  <Scalar> emitr { 0.000000 }
-  <Scalar> emitg { 0.000000 }
-  <Scalar> emitb { 0.000000 }
-}
-
-<Material> Material.004 {
+<Material> Material.013 {
   <Scalar> diffr { 0.640000 }
   <Scalar> diffg { 0.640000 }
   <Scalar> diffb { 0.640000 }
@@ -175,7 +31,7 @@
   <Scalar> emitb { 0.000000 }
 }
 
-<Material> Material.016 {
+<Material> Material.004 {
   <Scalar> diffr { 0.640000 }
   <Scalar> diffg { 0.640000 }
   <Scalar> diffb { 0.640000 }
@@ -191,7 +47,7 @@
   <Scalar> emitb { 0.000000 }
 }
 
-<Material> Material.008 {
+<Material> Material.010 {
   <Scalar> diffr { 0.640000 }
   <Scalar> diffg { 0.640000 }
   <Scalar> diffb { 0.640000 }
@@ -207,7 +63,7 @@
   <Scalar> emitb { 0.000000 }
 }
 
-<Material> Material.001 {
+<Material> Material.002 {
   <Scalar> diffr { 0.640000 }
   <Scalar> diffg { 0.640000 }
   <Scalar> diffb { 0.640000 }
@@ -239,7 +95,103 @@
   <Scalar> emitb { 0.000000 }
 }
 
-<Material> Material.009 {
+<Material> Material.008 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
+<Material> Material.019 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
+<Material> Material.016 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
+<Material> Material.001 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
+<Material> Material.014 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
+<Material> Material.017 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
+}
+
+<Material> Material.011 {
   <Scalar> diffr { 0.640000 }
   <Scalar> diffg { 0.640000 }
   <Scalar> diffb { 0.640000 }
@@ -271,7 +223,7 @@
   <Scalar> emitb { 0.000000 }
 }
 
-<Material> Material.013 {
+<Material> Material.018 {
   <Scalar> diffr { 0.640000 }
   <Scalar> diffg { 0.640000 }
   <Scalar> diffb { 0.640000 }
@@ -287,100 +239,84 @@
   <Scalar> emitb { 0.000000 }
 }
 
-<Texture> Texture.016 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
+<Material> Material.009 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
 }
 
-<Texture> Texture.007 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
+<Material> Material.007 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
 }
 
-<Texture> Texture.011 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
+<Material> Material.005 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
 }
 
-<Texture> Texture.012 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
+<Material> Material {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
 }
 
-<Texture> Texture.005 {
-  "phase_3.5/maps/cobblestone_blue.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture.002 {
-  "phase_8/maps/snow_wall_front.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture.014 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture.008 {
-  "phase_8/maps/snow_wall_front.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture.003 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture.010 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture.013 {
-  "phase_8/maps/snowpile.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
-}
-
-<Texture> Texture.004 {
-  "phase_5.5/maps/floor_snow.jpg"
-  <Scalar> envtype { MODULATE }
-  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
-  <Scalar> wrap { REPEAT }
+<Material> Material.006 {
+  <Scalar> diffr { 0.640000 }
+  <Scalar> diffg { 0.640000 }
+  <Scalar> diffb { 0.640000 }
+  <Scalar> specr { 0.500000 }
+  <Scalar> specg { 0.500000 }
+  <Scalar> specb { 0.500000 }
+  <Scalar> shininess { 12.5 }
+  <Scalar> ambr { 1.000000 }
+  <Scalar> ambg { 1.000000 }
+  <Scalar> ambb { 1.000000 }
+  <Scalar> emitr { 0.000000 }
+  <Scalar> emitg { 0.000000 }
+  <Scalar> emitb { 0.000000 }
 }
 
 <Texture> UVMap_cobblestone_blue.jpg {
@@ -399,7 +335,55 @@
   <Scalar> wrap { REPEAT }
 }
 
+<Texture> Texture.003 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.019 {
+  "phase_4/maps/big_ass_B.png"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.016 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
 <Texture> Texture.001 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.010 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.014 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.017 {
   "phase_8/maps/snowpile.jpg"
   <Scalar> envtype { MODULATE }
   <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
@@ -415,7 +399,31 @@
   <Scalar> wrap { REPEAT }
 }
 
+<Texture> Texture.007 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.002 {
+  "phase_8/maps/snow_wall_front.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
 <Texture> Texture.009 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.011 {
   "phase_8/maps/snowpile.jpg"
   <Scalar> envtype { MODULATE }
   <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
@@ -431,7 +439,31 @@
   <Scalar> wrap { REPEAT }
 }
 
-<Texture> Texture.017 {
+<Texture> Texture.005 {
+  "phase_3.5/maps/cobblestone_blue.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.020 {
+  "phase_4/maps/big_ass_R.png"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.008 {
+  "phase_8/maps/snow_wall_front.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.013 {
   "phase_8/maps/snowpile.jpg"
   <Scalar> envtype { MODULATE }
   <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
@@ -439,59 +471,129 @@
   <Scalar> wrap { REPEAT }
 }
 
-  <Group> wall4_coll {
-    <Collide> { Polyset descend }
+<Texture> Texture.012 {
+  "phase_8/maps/snowpile.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+<Texture> Texture.004 {
+  "phase_5.5/maps/floor_snow.jpg"
+  <Scalar> envtype { MODULATE }
+  <Scalar> minfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> magfilter { LINEAR_MIPMAP_LINEAR }
+  <Scalar> wrap { REPEAT }
+}
+
+  <Group> bluesign {
     <Transform> {
       <Matrix4> {
-        7.549790126404332e-08 0.0 -1.0 0.0 
-        1.0 1.1924880638503055e-08 7.549790126404332e-08 0.0 
-        1.1924880638503055e-08 -1.0 9.003033787027153e-16 0.0 
-        0.0 50.0 1.0 1.0 
+        10.569624900817871 -3.191938048985321e-06 2.440332593778294e-07 0.0 
+        3.4710902241386066e-07 2.1039507389068604 12.485464096069336 0.0 
+        -3.819081484834896e-06 -12.485464096069336 2.1039507389068604 0.0 
+        0.0 70.20648956298828 24.206817626953125 1.0 
       }
     }
     
-    <VertexPool> wall4_coll {
+    <VertexPool> bluesign {
     
-      <Vertex> 0 {-52.720005 49.999996 31.999996
+      <Vertex> 0 {-10.569625 68.102539 11.721354
+        <UV>  {
+          0.000100 0.000100 
+        }
       }
-      <Vertex> 1 {-52.720001 50.000000 -0.000004
+      <Vertex> 1 {10.569625 68.102539 11.721354
+        <UV>  {
+          0.999900 0.000100 
+        }
       }
-      <Vertex> 2 {52.720001 50.000000 0.000004
+      <Vertex> 2 {10.569625 72.310440 36.692284
+        <UV>  {
+          0.999900 0.999900 
+        }
       }
-      <Vertex> 3 {52.719997 50.000000 32.000004
+      <Vertex> 3 {-10.569625 72.310440 36.692280
+        <UV>  {
+          0.000100 0.999900 
+        }
       }}
     
     
     <Polygon> {
-      <Normal> {-0.000000 -1.000000 -0.000000}
-      <VertexRef> { 0 1 2 3 <Ref> { wall4_coll }} 
+      <TRef> { Texture.019 }
+      <MRef> { Material }
+      <Normal> {-0.000000 -0.986097 0.166169}
+      <VertexRef> { 0 1 2 3 <Ref> { bluesign }} 
+    }
+  }
+  <Group> redsign {
+    <Transform> {
+      <Matrix4> {
+        -12.661493301391602 1.9118324416922405e-06 2.9233066811684694e-07 0.0 
+        -2.9421274305718725e-08 -2.1039507389068604 12.485464096069336 0.0 
+        1.9338287984282942e-06 12.485464096069336 2.1039507389068604 0.0 
+        0.0 -72.81232452392578 24.206817626953125 1.0 
+      }
+    }
+    
+    <VertexPool> redsign {
+    
+      <Vertex> 0 {12.661493 -70.708374 11.721354
+        <UV>  {
+          0.000100 0.000100 
+        }
+      }
+      <Vertex> 1 {-12.661493 -70.708374 11.721354
+        <UV>  {
+          0.999900 0.000100 
+        }
+      }
+      <Vertex> 2 {-12.661493 -74.916275 36.692284
+        <UV>  {
+          0.999900 0.999900 
+        }
+      }
+      <Vertex> 3 {12.661493 -74.916275 36.692280
+        <UV>  {
+          0.000100 0.999900 
+        }
+      }}
+    
+    
+    <Polygon> {
+      <TRef> { Texture.020 }
+      <MRef> { Material.019 }
+      <Normal> {0.000000 0.986097 0.166169}
+      <VertexRef> { 0 1 2 3 <Ref> { redsign }} 
     }
   }
   <Group> wall3_coll {
     <Collide> { Polyset descend }
     <Transform> {
       <Matrix4> {
-        7.549790126404332e-08 0.0 -1.0 0.0 
-        -1.0 1.9470718370939721e-07 -7.549790126404332e-08 0.0 
-        1.9470718370939721e-07 1.0 1.4699984054989366e-14 0.0 
-        0.0 -50.0 1.0 1.0 
+        1.0 0.0 0.0 0.0 
+        0.0 1.0 0.0 0.0 
+        0.0 0.0 1.0 0.0 
+        0.0 0.0 0.0 1.0 
       }
     }
     
     <VertexPool> wall3_coll {
     
-      <Vertex> 0 {52.719997 -50.000008 32.000004
+      <Vertex> 0 {50.000000 -50.000000 0.000000
       }
-      <Vertex> 1 {52.720001 -50.000011 0.000004
+      <Vertex> 1 {-50.000000 -50.000000 0.000000
       }
-      <Vertex> 2 {-52.720001 -49.999989 -0.000004
+      <Vertex> 2 {-50.000000 -50.000000 30.000000
       }
-      <Vertex> 3 {-52.720005 -49.999989 31.999996
+      <Vertex> 3 {50.000000 -50.000000 30.000000
       }}
     
     
     <Polygon> {
-      <Normal> {0.000000 1.000000 -0.000000}
+      <Normal> {0.000000 1.000000 0.000000}
       <VertexRef> { 0 1 2 3 <Ref> { wall3_coll }} 
     }
   }
@@ -499,50 +601,78 @@
     <Collide> { Polyset descend }
     <Transform> {
       <Matrix4> {
-        7.549790126404332e-08 0.0 -1.0 0.0 
-        -1.5099580252808664e-07 -1.0 -1.1399865765455465e-14 0.0 
-        -1.0 1.5099580252808664e-07 -7.549790126404332e-08 0.0 
-        50.0 0.0 1.0 1.0 
+        1.0 0.0 0.0 0.0 
+        0.0 1.0 0.0 0.0 
+        0.0 0.0 1.0 0.0 
+        0.0 0.0 0.0 1.0 
       }
     }
     
     <VertexPool> wall1_coll {
     
-      <Vertex> 0 {50.000004 52.720001 32.000000
+      <Vertex> 0 {50.000000 50.000000 0.000000
       }
-      <Vertex> 1 {50.000008 52.720001 0.000000
+      <Vertex> 1 {50.000000 -50.000000 0.000000
       }
-      <Vertex> 2 {49.999992 -52.720001 -0.000000
+      <Vertex> 2 {50.000000 -50.000000 30.000000
       }
-      <Vertex> 3 {49.999989 -52.720001 32.000000
+      <Vertex> 3 {50.000000 50.000000 30.000000
       }}
     
     
     <Polygon> {
-      <Normal> {-1.000000 0.000000 -0.000000}
+      <Normal> {-1.000000 0.000000 0.000000}
       <VertexRef> { 0 1 2 3 <Ref> { wall1_coll }} 
+    }
+  }
+  <Group> wall4_coll {
+    <Collide> { Polyset descend }
+    <Transform> {
+      <Matrix4> {
+        1.0 0.0 0.0 0.0 
+        0.0 1.0 0.0 0.0 
+        0.0 0.0 1.0 0.0 
+        0.0 0.0 0.0 1.0 
+      }
+    }
+    
+    <VertexPool> wall4_coll {
+    
+      <Vertex> 0 {-50.000000 50.000000 0.000000
+      }
+      <Vertex> 1 {50.000000 50.000000 0.000000
+      }
+      <Vertex> 2 {50.000000 50.000000 30.000000
+      }
+      <Vertex> 3 {-50.000000 50.000000 30.000000
+      }}
+    
+    
+    <Polygon> {
+      <Normal> {0.000000 -1.000000 0.000000}
+      <VertexRef> { 0 1 2 3 <Ref> { wall4_coll }} 
     }
   }
   <Group> wall2_coll {
     <Collide> { Polyset descend }
     <Transform> {
       <Matrix4> {
-        7.549790126404332e-08 0.0 -1.0 0.0 
+        1.0 0.0 0.0 0.0 
         0.0 1.0 0.0 0.0 
-        1.0 0.0 7.549790126404332e-08 0.0 
-        -50.0 0.0 1.0 1.0 
+        0.0 0.0 1.0 0.0 
+        0.0 0.0 0.0 1.0 
       }
     }
     
     <VertexPool> wall2_coll {
     
-      <Vertex> 0 {-50.000000 -52.720001 32.000000
+      <Vertex> 0 {-50.000000 -50.000000 0.000000
       }
-      <Vertex> 1 {-50.000000 -52.720001 0.000000
+      <Vertex> 1 {-50.000000 50.000000 0.000000
       }
-      <Vertex> 2 {-50.000000 52.720001 0.000000
+      <Vertex> 2 {-50.000000 50.000000 30.000000
       }
-      <Vertex> 3 {-50.000000 52.720001 32.000000
+      <Vertex> 3 {-50.000000 -50.000000 30.000000
       }}
     
     

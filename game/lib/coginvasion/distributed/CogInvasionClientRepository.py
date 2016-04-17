@@ -645,11 +645,12 @@ class CogInvasionClientRepository(AstronClientRepository):
     def uberZoneInterestComplete(self, status):
         self.__gotTimeSync = 0
         if self.timeManager == None:
-            self.notify.info('There is no time manager.')
+            print "No time manager"
             DistributedSmoothNode.globalActivateSmoothing(0, 0)
             self.gotTimeSync(status)
         else:
-            DistributedSmoothNode.globalActivateSmoothing(1, 0)
+            print "Time manager found"
+            DistributedSmoothNode.globalActivateSmoothing(1, 1)
             #h = HashVal()
             #hashPrcVariables(h)
             #pyc = HashVal()

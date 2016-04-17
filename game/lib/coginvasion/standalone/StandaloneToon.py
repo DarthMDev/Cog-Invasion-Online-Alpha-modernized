@@ -15,7 +15,7 @@ cbm.addBin('ground', CullBinManager.BTUnsorted, 18)
 cbm.addBin('shadow', CullBinManager.BTBackToFront, 19)
 cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
 
-from direct.showbase.ShowBase import ShowBase
+from direct.showbase.ShowBaseWide import ShowBase
 base = ShowBase()
 from direct.showbase.Audio3DManager import Audio3DManager
 base.audio3d = Audio3DManager(base.sfxManagerList[0], camera)
