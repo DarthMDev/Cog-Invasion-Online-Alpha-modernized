@@ -191,7 +191,7 @@ class Backpack:
     
     # Cleans up all the variables that are no longer needed.
     def cleanup(self):
-        for gagId, data in self.gags.iteritems():
+        for _, data in self.gags.iteritems():
             gag = data[0]
             gag.delete()
         del self.gags

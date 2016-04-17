@@ -11,10 +11,11 @@ from direct.gui.DirectWaitBar import DirectWaitBar
 
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
-from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagState import GagState
+from lib.coginvasion.gags import GagGlobals
 
 from panda3d.core import TransparencyAttrib, TextNode
+import types
 
 class Slot(DirectFrame):
 
@@ -52,6 +53,20 @@ class Slot(DirectFrame):
         self.gagLabel.setBin('fixed', 50)
         self.gagLabel.hide()
         
+        # The left arrow for moving to the gag before this one in the sequence.
+        battleGui = loader.loadModel('phase_3.5/models/gui/battle_gui.bam')
+        arrow = battleGui.find('**/PckMn_BackBtn')
+        arrowRlvr = battleGui.find('**/PckMn_BackBtn_Rlvr')
+        arrowDn = battleGui.find('**/PckMn_BackBtn_Dn')
+        self.leftArrow = DirectButton(geom = (arrow, arrowRlvr, arrowDn),
+            parent = self, pos = (-0.925, -2.0, -1.02), relief = None, scale = 2,
+            command = self.updateLoadout, extraArgs = [0])
+        self.leftArrow.setBin('fixed', 60)
+        self.rightArrow = DirectButton(geom = (arrow, arrowRlvr, arrowDn),
+            parent = self, pos = (0.925, -2.0, -1.02), hpr = (180, 0, 0), relief = None, scale = 2,
+            command = self.updateLoadout, extraArgs = [1])
+        self.rightArrow.setBin('fixed', 60)
+        
         self.hoverObj = DirectButton(relief = None, parent = self, frameSize = self['frameSize'])
         
         self.setBin('transparent', 30)
@@ -62,6 +77,66 @@ class Slot(DirectFrame):
         self.hoverObj.bind(DGG.WITHIN, self.mouseEntered)
         self.hoverObj.bind(DGG.WITHOUT, self.mouseExited)
         self.hoverObj.bind(DGG.B1CLICK, self.gui.click_setWeapon, [self])
+        
+    def updateArrows(self):
+        self.rightArrow.setColor(1, 1, 1, 1)
+        self.leftArrow.setColor(1, 1, 1, 1)
+        if not self.gag:
+            self.leftArrow.setColor(0.5, 0.5, 0.5, 1)
+            self.rightArrow.setColor(0.5, 0.5, 0.5, 1)
+        else:
+            track = GagGlobals.TrackGagNamesByTrackName.get(GagGlobals.getTrackOfGag(self.gag.getID()))
+            index = None
+            
+            useTrack = []
+            
+            for name in track:
+                gag = self.gui.backpack.getGagByID(GagGlobals.getIDByName(name))
+                if gag == self.gag or (not gag in self.gui.backpack.getLoadout()):
+                    useTrack.append(name)
+                    
+            index = useTrack.index(self.gag.getName())
+            
+            if index == 0:
+                self.leftArrow.setColor(0.5, 0.5, 0.5, 1)
+            elif(index > 0 and index < (len(useTrack) - 1)):
+                gagId = GagGlobals.getIDByName(useTrack[index + 1])
+                if not self.gui.backpack.hasGag(gagId):
+                    self.rightArrow.setColor(0.5, 0.5, 0.5, 1)
+            elif(index == (len(useTrack) - 1)):
+                self.rightArrow.setColor(0.5, 0.5, 0.5, 1)
+        
+    def updateLoadout(self, forward):
+        if self.gag and self.gag.getState() in [GagState.RECHARGING, GagState.LOADED]:
+            track = GagGlobals.TrackGagNamesByTrackName.get(GagGlobals.getTrackOfGag(self.gag.getID()))
+            index = None
+            
+            useTrack = []
+            
+            for name in track:
+                gag = self.gui.backpack.getGagByID(GagGlobals.getIDByName(name))
+                if gag == self.gag or (not gag in self.gui.backpack.getLoadout()):
+                    useTrack.append(name)
+                    
+            index = useTrack.index(self.gag.getName())
+            
+            if forward == 1:
+                nextGagIndex = index + 1
+            else:
+                nextGagIndex = index - 1
+                
+            if nextGagIndex < 0 or nextGagIndex >= len(useTrack):
+                return
+            
+            gagId = GagGlobals.getIDByName(useTrack[nextGagIndex])
+            if self.gui.backpack.hasGag(gagId):
+                self.hideInfoText()
+                if self.gui.activeSlot == self:
+                    self.gui.activeSlot = None
+                loadout = self.gui.backpack.getLoadout()
+                
+                loadout[loadout.index(self.gag)] = self.gui.backpack.getGagByID(gagId)
+                self.gui.backpack.setLoadout(loadout)
         
     def showNoAmmo(self):
         self.infoText['text'] = "No\nAmmo"
@@ -158,6 +233,8 @@ class Slot(DirectFrame):
         self.gagLabel.hide()
 
     def setGag(self, gag):
+        if type(gag) == types.IntType:
+            gag = self.gui.backpack.getGagByID(gag)
         self.ignoreAll()
         self.gag = gag
         if gag:
@@ -168,6 +245,7 @@ class Slot(DirectFrame):
         else:
             self.hide()
             self.gagLabel['text'] = ''
+        self.updateArrows()
 
     def getGag(self):
         return self.gag
@@ -183,7 +261,7 @@ class InventoryGui(DirectObject):
         self.oneSlotPos = [(0, 0, 0)]
         self.twoSlotsPos = [(0, 0, 0.30), (0, 0, -0.2)]
         self.threeSlotsPos = [(0, 0, 0.5), (0, 0, 0), (0, 0, -0.5)]
-        self.fourSlotPos = [(0, 0, 0.45), (0, 0, 0.15), (0, 0, -0.15), (0, 0, -0.45)]
+        self.fourSlotPos = [(0, 0, 0.5), (0, 0, 0.15), (0, 0, -0.2), (0, 0, -0.55)]
         self.availableSlot = 0
         self.slots = []
         self.activeSlot = None
