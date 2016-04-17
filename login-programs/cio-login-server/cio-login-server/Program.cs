@@ -50,105 +50,117 @@ namespace cio_login_server
             this.sw = sw;
             this.ip = ip;
             client_list = clients;
+
+            // Start processing this client
+            cts = new CancellationTokenSource();
+            var proctask = Process(cts.Token);
         }
 
-        public void Process()
+        public async Task Process(CancellationToken token)
         {
-            try
+            while (!token.IsCancellationRequested)
             {
-                string request = sr.ReadLine();
-                string[] split_msg = request.Split(Constants.MSG_DELIMITER.ToCharArray());
-
-                if (split_msg[0] == Constants.CL_REQ_SERVER_INFO.ToString())
+                try
                 {
-                    Console.WriteLine("Client requested server info.");
-                    Console.WriteLine("Server Version: " + Constants.LAUNCHER_VER);
-                    string msg = Constants.SV_SERVER_INFO.ToString() + Constants.MSG_DELIMITER + Constants.LAUNCHER_VER;
-                    sw.WriteLine(msg);
-                    sw.Flush();
-                }
+                    Console.WriteLine("Processing client " + ip);
+                    string request =  await sr.ReadLineAsync();
+                    string[] split_msg = request.Split(Constants.MSG_DELIMITER.ToCharArray());
 
-                else if (split_msg[0] == Constants.CL_REQ_BASE_LINK.ToString())
-                {
-                    Console.WriteLine("Got base link request");
-                    sw.WriteLine(Constants.SV_BASE_LINK.ToString() + Constants.MSG_DELIMITER + Constants.DL_BASE_LINK);
-                    sw.Flush();
-                }
-
-                else if (split_msg[0] == Constants.CL_REQ_PLAY.ToString())
-                {
-                    Console.WriteLine("Got a play request.");
-                    string username = split_msg[1].ToLower();
-                    string password = split_msg[2];
-                    Console.WriteLine("Username: " + username + ", Passsword: " + password);
-                    string loginResp = Constants.SV_PLAY_RESP.ToString() + Constants.MSG_DELIMITER;
-                    if (server.AccNameExists(username))
+                    if (split_msg[0] == Constants.CL_REQ_SERVER_INFO.ToString())
                     {
-                        Account acc = server.GetAccountByName(username);
-                        string accPHash = acc.Password;
-                        if (Server.HashPasswordSHA256(password) == accPHash)
-                            loginResp += Constants.SUCCESS;
+                        Console.WriteLine("Client requested server info.");
+                        Console.WriteLine("Server Version: " + Constants.LAUNCHER_VER);
+                        string msg = Constants.SV_SERVER_INFO.ToString() + Constants.MSG_DELIMITER + Constants.LAUNCHER_VER;
+                        sw.WriteLine(msg);
+                        sw.Flush();
+                    }
+
+                    else if (split_msg[0] == Constants.CL_REQ_BASE_LINK.ToString())
+                    {
+                        Console.WriteLine("Got base link request");
+                        sw.WriteLine(Constants.SV_BASE_LINK.ToString() + Constants.MSG_DELIMITER + Constants.DL_BASE_LINK);
+                        sw.Flush();
+                    }
+
+                    else if (split_msg[0] == Constants.CL_REQ_PLAY.ToString())
+                    {
+                        Console.WriteLine("Got a play request.");
+                        string username = split_msg[1].ToLower();
+                        string password = split_msg[2];
+                        Console.WriteLine("Username: " + username + ", Passsword: " + password);
+                        string loginResp = Constants.SV_PLAY_RESP.ToString() + Constants.MSG_DELIMITER;
+                        if (server.AccNameExists(username))
+                        {
+                            Account acc = server.GetAccountByName(username);
+                            string accPHash = acc.Password;
+                            if (Server.HashPasswordSHA256(password) == accPHash)
+                                loginResp += Constants.SUCCESS;
+                            else
+                                loginResp += Constants.FAIL;
+                        }
                         else
                             loginResp += Constants.FAIL;
+                        loginResp += Constants.MSG_DELIMITER + Constants.GAME_SERVER + Constants.MSG_DELIMITER + Constants.SERVER_VERSION;
+                        sw.WriteLine(loginResp);
+                        sw.Flush();
                     }
-                    else
-                        loginResp += Constants.FAIL;
-                    loginResp += Constants.MSG_DELIMITER + Constants.GAME_SERVER + Constants.MSG_DELIMITER + Constants.SERVER_VERSION;
-                    sw.WriteLine(loginResp);
-                    sw.Flush();
-                }
 
-                else if (split_msg[0] == Constants.CL_REQ_CREATE_ACC.ToString())
-                {
-                    string username = split_msg[1].ToLower();
-                    string password = split_msg[2];
-                    string mac = split_msg[3];
-
-                    Console.WriteLine("Attemping to create account with username: " + username + ", Password: " + password);
-
-                    string msg = string.Empty;
-
-                    if (server.AccNameExists(username))
+                    else if (split_msg[0] == Constants.CL_REQ_CREATE_ACC.ToString())
                     {
-                        Console.WriteLine("This account name already exists.");
-                        msg = Constants.SV_CREATE_ACC_RESP.ToString() + Constants.MSG_DELIMITER + Constants.FAIL;
-                    }
-                    else if (!server.CanMakeNewAcc(mac))
-                    {
-                        Console.WriteLine("Too many accounts on this MAC address.");
-                        msg = Constants.SV_MSG.ToString() + Constants.MSG_DELIMITER + string.Format(Constants.MSG_TMAOTC, Constants.ACC_LIMIT_PER_COMP.ToString());
-                    }
-                    else if (server.IsTotalAccountLimitReached())
-                    {
-                        Console.WriteLine("The game's total acc limit has been reached.");
-                        msg = Constants.SV_MSG.ToString() + Constants.MSG_DELIMITER + string.Format(Constants.MSG_TMAIT, Constants.ACCOUNT_LIMIT.ToString());
-                    }
-                    else
-                    {
-                        // We're good to make the account.
-                        Console.WriteLine("hashing");
-                        string passwordHashed = Server.HashPasswordSHA256(password);
-                        Console.WriteLine("Hashed password.");
-                        Account acc = new Account();
-                        acc.Username = username;
-                        acc.Password = passwordHashed;
-                        acc.Mac = mac;
-                        server.AddAccount(acc);
-                        msg = Constants.SV_CREATE_ACC_RESP.ToString() + Constants.MSG_DELIMITER + Constants.SUCCESS;
-                    }
+                        string username = split_msg[1].ToLower();
+                        string password = split_msg[2];
+                        string mac = split_msg[3];
 
-                    sw.WriteLine(msg);
-                    sw.Flush();
+                        Console.WriteLine("Attemping to create account with username: " + username + ", Password: " + password);
+
+                        string msg = string.Empty;
+
+                        if (server.AccNameExists(username))
+                        {
+                            Console.WriteLine("This account name already exists.");
+                            msg = Constants.SV_CREATE_ACC_RESP.ToString() + Constants.MSG_DELIMITER + Constants.FAIL;
+                        }
+                        else if (!server.CanMakeNewAcc(mac))
+                        {
+                            Console.WriteLine("Too many accounts on this MAC address.");
+                            msg = Constants.SV_MSG.ToString() + Constants.MSG_DELIMITER + string.Format(Constants.MSG_TMAOTC, Constants.ACC_LIMIT_PER_COMP.ToString());
+                        }
+                        else if (server.IsTotalAccountLimitReached())
+                        {
+                            Console.WriteLine("The game's total acc limit has been reached.");
+                            msg = Constants.SV_MSG.ToString() + Constants.MSG_DELIMITER + string.Format(Constants.MSG_TMAIT, Constants.ACCOUNT_LIMIT.ToString());
+                        }
+                        else
+                        {
+                            // We're good to make the account.
+                            Console.WriteLine("hashing");
+                            string passwordHashed = Server.HashPasswordSHA256(password);
+                            Console.WriteLine("Hashed password.");
+                            Account acc = new Account();
+                            acc.Username = username;
+                            acc.Password = passwordHashed;
+                            acc.Mac = mac;
+                            server.AddAccount(acc);
+                            msg = Constants.SV_CREATE_ACC_RESP.ToString() + Constants.MSG_DELIMITER + Constants.SUCCESS;
+                        }
+
+                        sw.WriteLine(msg);
+                        sw.Flush();
                     
-                }
+                    }
 
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("-------LOST CONNECTION-------");
-                Console.WriteLine("IP Address: " + ip);
-                Console.WriteLine("Number of active connections: " + (client_list.Count - 1).ToString());
-                client_list.Remove(this);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("-------LOST CONNECTION-------");
+                    Console.WriteLine("IP Address: " + ip);
+                    Console.WriteLine("Number of active connections: " + (client_list.Count - 1).ToString());
+
+                    // Stop our async Process task
+                    cts.Cancel();
+
+                    client_list.Remove(this);
+                }
             }
         }
 
@@ -158,6 +170,7 @@ namespace cio_login_server
         private List<Client> client_list;
         private Server server;
         private string ip;
+        private CancellationTokenSource cts;
     }
 
     class Server
@@ -178,17 +191,10 @@ namespace cio_login_server
 
             Console.WriteLine("Cog Invasion Online login server running.");
 
+            // MAINLOOP:
             while (true)
             {
                 Thread.Sleep(4);
-                for (int i = 0; i <= clients.Count - 1; i++)
-                {
-                    Client client = clients[i];
-                    if (client != null)
-                    {
-                        client.Process();
-                    }
-                }
             }
         }
 
