@@ -253,7 +253,13 @@ class DistributedCogOfficeBattle(DistributedObject):
                                         (closed, 0, 0), blendType = 'easeOut'))
         ival.start()
         
-        base.localAvatar.sendUpdate('requestSetLoadout', [base.localAvatar.backpack.getLoadout()])
+        
+        loadout = base.localAvatar.backpack.getLoadout()
+        sendLoadout = []
+        for gag in loadout:
+            sendLoadout.append(gag.getID())
+        
+        base.localAvatar.sendUpdate('requestSetLoadout', [sendLoadout])
 
     def enterVictory(self, ts):
         self.cr.playGame.getPlace().fsm.request('stop')
