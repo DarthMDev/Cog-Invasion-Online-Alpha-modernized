@@ -55,6 +55,10 @@ class LightDropGag(DropGag):
         if not suit.isDead():
             suit.setAnimState('drop-react')
         suit.d_disableMovement(wantRay = True)
+        
+        if not self.gag or self.gag.isEmpty():
+            self.build()
+
         self.gag.setPos(suit.find('**/joint_head').getPos(render))
         if self.name == CIGlobals.FlowerPot:
             self.gag.setZ(self.gag, 3)
