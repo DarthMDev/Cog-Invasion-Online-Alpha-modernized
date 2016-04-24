@@ -12,6 +12,7 @@ from DistributedFactorySneakGameAI import DistributedFactorySneakGameAI
 from DistributedCameraShyGameAI import DistributedCameraShyGameAI
 from DistributedEagleGameAI import DistributedEagleGameAI
 from DistributedDeliveryGameAI import DistributedDeliveryGameAI
+from DistributedDodgeballGameAI import DistributedDodgeballGameAI
 
 class MinigameBase(DirectObject):
 
@@ -24,6 +25,7 @@ class MinigameBase(DirectObject):
 
     def createMinigame(self, game, numPlayers, avatars):
         self.zoneId = base.air.allocateZone()
+
         gameClass = DistributedMinigameAI
         if game == CIGlobals.RaceGame:
             gameClass = DistributedRaceGameAI
@@ -34,11 +36,14 @@ class MinigameBase(DirectObject):
         elif game == CIGlobals.FactoryGame:
             gameClass = DistributedFactorySneakGameAI
         elif game == CIGlobals.CameraShyGame:
-			gameClass = DistributedCameraShyGameAI
+            gameClass = DistributedCameraShyGameAI
         elif game == CIGlobals.EagleGame:
             gameClass = DistributedEagleGameAI
         elif game == CIGlobals.DeliveryGame:
             gameClass = DistributedDeliveryGameAI
+        elif game == CIGlobals.DodgeballGame:
+            gameClass = DistributedDodgeballGameAI
+
         self.minigame = gameClass(self.cr)
         self.minigame.generateWithRequired(self.zoneId)
         self.minigame.setNumPlayers(numPlayers)

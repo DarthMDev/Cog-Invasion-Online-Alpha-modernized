@@ -31,6 +31,7 @@ from lib.coginvasion.minigame import DistributedEagleSuit/AI
 from lib.coginvasion.minigame import DistributedDeliveryGame/AI
 from lib.coginvasion.minigame import DistributedDeliveryTruck/AI
 from lib.coginvasion.minigame import DistributedDeliveryGameSuit/AI
+from lib.coginvasion.minigame import DistributedDodgeballGame/AI
 from lib.coginvasion.uber import ClientServicesManager/UD
 from lib.coginvasion.uber import LauncherLoginManager/UD
 from lib.coginvasion.uber import DistrictNameManager/AI/UD
@@ -554,6 +555,10 @@ dclass DistributedDeliveryTruck : DistributedNode {
 };
 
 dclass DistributedDeliveryGameSuit : DistributedSuit {
+
+};
+
+dclass DistributedDodgeballGame : DistributedToonFPSGame {
 
 };
 

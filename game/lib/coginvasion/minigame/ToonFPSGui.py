@@ -9,6 +9,8 @@ from pandac.PandaModules import *
 from lib.coginvasion.globals import CIGlobals
 from direct.gui.DirectGui import *
 
+from MinigameUtils import *
+
 class ToonFPSGui:
 
 	def __init__(self, base):
@@ -45,9 +47,9 @@ class ToonFPSGui:
 		)
 		self.hp_meter.setR(-90)
 		self.hp_meter.hide()
-		self.crosshair = OnscreenImage(image = "phase_4/maps/crosshair.png", scale = 0.04)
-		self.crosshair.setTransparency(True)
-		self.crosshair.hide()
+
+		self.crosshair = getCrosshair()
+
 		font = CIGlobals.getToonFont()
 		box = DGG.getDefaultDialogGeom()
 		if self.base.__class__.__name__ == "GunGameToonFPS":

@@ -19,7 +19,8 @@ class MGHoodAI(HoodAI.HoodAI):
                 CIGlobals.CameraShyGame,
                 CIGlobals.EagleGame,
                 CIGlobals.FactoryGame,
-                CIGlobals.DeliveryGame]
+                CIGlobals.DeliveryGame,
+                CIGlobals.DodgeballGame]
 
     def __init__(self, air):
         HoodAI.HoodAI.__init__(self, air, CIGlobals.MinigameAreaId,
@@ -30,29 +31,43 @@ class MGHoodAI(HoodAI.HoodAI):
     def startup(self):
         self.dnaFiles = []
         HoodAI.HoodAI.startup(self)
+
         self.notify.info("Creating minigames...")
+
         if base.config.GetBool('want-minigames', True):
+
             if not base.config.GetBool('want-race-game', True):
                 self.notify.info("Excluding %s" % CIGlobals.RaceGame)
                 self.minigames.remove(CIGlobals.RaceGame)
+
             if not base.config.GetBool('want-uno-game', True):
                 self.notify.info("Excluding %s" % CIGlobals.UnoGame)
                 self.minigames.remove(CIGlobals.UnoGame)
+
             if not base.config.GetBool('want-toon-battle', True):
                 self.notify.info("Excluding %s" % CIGlobals.GunGame)
                 self.minigames.remove(CIGlobals.GunGame)
+
             if not base.config.GetBool('want-factory-sneak', True):
                 self.notify.info("Excluding %s" % CIGlobals.FactoryGame)
                 self.minigames.remove(CIGlobals.FactoryGame)
+
             if not base.config.GetBool('want-camera-shy', True):
                 self.notify.info("Excluding %s" % CIGlobals.CameraShyGame)
                 self.minigames.remove(CIGlobals.CameraShyGame)
+
             if not base.config.GetBool('want-eagle-game', True):
                 self.notify.info("Excluding %s" % CIGlobals.EagleGame)
                 self.minigames.remove(CIGlobals.EagleGame)
+
             if not base.config.GetBool('want-delivery-game', True):
                 self.notify.info('Excluding %s' % CIGlobals.DeliveryGame)
                 self.minigames.remove(CIGlobals.DeliveryGame)
+
+            if not base.config.GetBool('want-dodgeball-game', True):
+                self.notify.info("Excluding %s" % CIGlobals.DodgeballGame)
+                self.minigames.remove(CIGlobals.DodgeballGame)
+
             for name in self.minigames:
                 index = self.minigames.index(name)
                 mg = DistributedMinigameStationAI(self.air)

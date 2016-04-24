@@ -18,14 +18,16 @@ class MinigameStation(GroupStation):
 				CIGlobals.FactoryGame: 4,
 				CIGlobals.CameraShyGame: 4,
 				CIGlobals.EagleGame: 4,
-                CIGlobals.DeliveryGame: 4}
+                CIGlobals.DeliveryGame: 4,
+                CIGlobals.DodgeballGame: 8}
 	game2dateCreated = {CIGlobals.UnoGame: "October 15, 2014",
 		CIGlobals.RaceGame: "October 7, 2014",
 		CIGlobals.GunGame: "January 19, 2015",
 		CIGlobals.CameraShyGame: "April 26, 2015",
 		CIGlobals.EagleGame: "July 4, 2015",
         CIGlobals.FactoryGame: "August 21, 2015",
-        CIGlobals.DeliveryGame: "October 4, 2015"}
+        CIGlobals.DeliveryGame: "October 4, 2015",
+        CIGlobals.DodgeballGame: "April 18, 2016"}
 
 	def __init__(self):
 		try:

@@ -17,6 +17,9 @@ from QuietZoneState import QuietZoneState
 import ToonInterior
 import LinkTunnel
 
+import types
+import random
+
 class SafeZoneLoader(StateData):
     notify = directNotify.newCategory("SafeZoneLoader")
 
@@ -52,7 +55,11 @@ class SafeZoneLoader(StateData):
     def load(self):
         StateData.load(self)
         if self.pgMusicFilename:
-            self.music = base.loadMusic(self.pgMusicFilename)
+            if type(self.pgMusicFilename) == types.ListType:
+                filename = random.choice(self.pgMusicFilename)
+            else:
+                filename = self.pgMusicFilename
+            self.music = base.loadMusic(filename)
         if self.battleMusicFile:
             self.battleMusic = base.loadMusic(self.battleMusicFile)
         if self.invasionMusicFiles:

@@ -20,7 +20,8 @@ class DistributedMinigameStationAI(DistributedGroupStationAI):
 				CIGlobals.FactoryGame: 4,
 				CIGlobals.CameraShyGame: 4,
 				CIGlobals.EagleGame: 4,
-                CIGlobals.DeliveryGame: 4}
+                CIGlobals.DeliveryGame: 4,
+                CIGlobals.DodgeballGame: 8}
 
 	def __init__(self, air):
 		try:

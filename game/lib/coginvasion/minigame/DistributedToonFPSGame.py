@@ -10,6 +10,9 @@ from direct.distributed.ClockDelta import globalClockDelta
 from DistributedMinigame import DistributedMinigame
 
 class DistributedToonFPSGame(DistributedMinigame):
+
+    """Abstract class for minigames with FPS controls (client)"""
+
     notify = directNotify.newCategory("DistributedToonFPSGame")
 
     def __init__(self, cr):
@@ -21,8 +24,10 @@ class DistributedToonFPSGame(DistributedMinigame):
         DistributedMinigame.__init__(self, cr)
         self.remoteAvatars = []
         self.myRemoteAvatar = None
-
+    
     def makeSmokeEffect(self, pos):
+        """Create a gunsmoke effect at the specified position (pos)"""
+
         smoke = loader.loadModel("phase_4/models/props/test_clouds.bam")
         smoke.setBillboardAxis()
         smoke.reparentTo(render)
@@ -37,13 +42,18 @@ class DistributedToonFPSGame(DistributedMinigame):
         track.start()
 
     def avatarHitByBullet(self, avId, damage):
+        """(Network method) Called when a player gets hit by a bullet (sent by player who gets hit)"""
+        
         pass
 
     def d_gunShot(self):
+        """Send out a message that we are shooting our gun (make it happen on other screens)"""
+
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.sendUpdate('gunShot', [base.localAvatar.doId, timestamp])
 
     def standingAvatar(self, avId):
+        """(Network method) Make a remote avatar do a standing (neutral) animation."""
         av = self.getRemoteAvatar(avId)
         if av:
             av.stand()

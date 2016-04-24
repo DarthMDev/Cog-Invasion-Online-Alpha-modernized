@@ -24,7 +24,7 @@ class FirstPerson(DirectObject):
         base.localAvatar.controlManager.wantWASD = 1
         base.localAvatar.controlManager.enable()
         camera.reparentTo(self.player_node)
-        camera.setZ(3.5)
+        camera.setZ(base.localAvatar.getHeight() * 0.7)
 
     def reallyStart(self):
         base.localAvatar.walkControls.enableAvatarControls()

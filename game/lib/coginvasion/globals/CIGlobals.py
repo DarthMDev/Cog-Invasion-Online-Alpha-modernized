@@ -63,6 +63,7 @@ FactoryGame = "Factory Prowl"
 CameraShyGame = "Camera Shy"
 EagleGame = "Eagle Summit"
 DeliveryGame = "Delivery!"
+DodgeballGame = "Winter Dodgeball"
 ChatGarblerDog = ['woof', 'arf', 'rruff']
 ChatGarblerCat = ['meow', 'mew']
 ChatGarblerMouse = ['squeak', 'squeaky', 'squeakity']

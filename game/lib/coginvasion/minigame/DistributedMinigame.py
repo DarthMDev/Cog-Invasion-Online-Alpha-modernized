@@ -52,6 +52,7 @@ def getAlertPulse(text, toScale1 = 0.12, toScale2 = 0.1):
     return seq
 
 class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
+    """Abstract class for any minigame (client side)"""
 
     def __init__(self, cr):
         try:
