@@ -32,7 +32,7 @@ class ChargeUpGag:
     def start(self, avatar):
         self.avatar = avatar
         self.buildButton()
-        self.button.reparentTo(self.avatar.find('**/joint_Lhold'))
+        self.button.reparentTo(self.avatar.find('**/def_joint_left_hold'))
         track = Sequence(Func(self.avatar.play, self.buttonAnim, toFrame = self.chooseLocFrame))
         if self.avatar == base.localAvatar:
             self.chargeUpSpot = ChargeUpSpot(self, self.avatar, self.selectionRadius,

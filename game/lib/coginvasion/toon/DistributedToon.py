@@ -193,7 +193,9 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             return task.done
         else:
             if self.doId != base.localAvatar.doId:
-                self.setSpeed(self.smoother.getSmoothForwardVelocity(), self.smoother.getSmoothRotationalVelocity())
+                self.setSpeed(self.smoother.getSmoothForwardVelocity(),
+                              self.smoother.getSmoothRotationalVelocity(),
+                              self.smoother.getSmoothLateralVelocity())
         return task.cont
 
     def setLastHood(self, zoneId):

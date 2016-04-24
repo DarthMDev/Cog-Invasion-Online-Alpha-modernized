@@ -43,7 +43,7 @@ class LocationGag:
         self.avatar = avatar
         self.cleanupLocationSeeker()
         self.buildButton()
-        self.button.reparentTo(self.avatar.find('**/joint_Lhold'))
+        self.button.reparentTo(self.avatar.find('**/def_joint_left_hold'))
         buttonAnimDuration = self.avatar.getDuration(self.buttonAnim, toFrame = self.chooseLocFrame)
         
         track = Parallel(

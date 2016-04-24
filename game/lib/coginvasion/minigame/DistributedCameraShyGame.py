@@ -156,16 +156,6 @@ class DistributedCameraShyGame(DistributedMinigame):
         if avatar:
             avatar.takePicture()
 
-    def standingAvatar(self, avId):
-        avatar = self.getRemoteAvatar(avId)
-        if avatar:
-            avatar.stand()
-
-    def runningAvatar(self, avId):
-        avatar = self.getRemoteAvatar(avId)
-        if avatar:
-            avatar.run()
-
     def createRemoteAvatar(self, avId):
         if avId == base.localAvatar.doId:
             self.myRemoteAvatar = RemoteCameraShyAvatar(self, self.cr, avId)

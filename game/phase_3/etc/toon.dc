@@ -431,8 +431,6 @@ dclass DistributedUnoGame : DistributedMinigame {
 dclass DistributedToonFPSGame : DistributedMinigame {
   setupRemoteAvatar(uint32) broadcast;
   gunShot(uint32, int16) broadcast clsend;
-  standingAvatar(uint32) broadcast clsend;
-  runningAvatar(uint32) broadcast clsend;
   jumpingAvatar(uint32) broadcast clsend;
   avatarHitByBullet(uint32, int8) broadcast clsend airecv;
   damage(int8, uint32);
@@ -504,9 +502,6 @@ dclass DistributedFactorySneakGame : DistributedToonFPSGame {
 
 dclass DistributedCameraShyGame : DistributedMinigame {
   createRemoteAvatar(uint32) broadcast;
-  runningAvatar(uint32) broadcast clsend;
-  standingAvatar(uint32) broadcast clsend;
-  jumpingAvatar(uint32) broadcast clsend;
   remoteAvatarTakePicture(uint32) broadcast clsend;
   tookPictureOfToon(uint32) clsend airecv;
   announceGameOver() broadcast;

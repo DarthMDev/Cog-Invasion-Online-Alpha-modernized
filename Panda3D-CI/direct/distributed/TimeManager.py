@@ -26,7 +26,7 @@ class TimeManager(DistributedObject.DistributedObject):
     # The minimum number of seconds to wait between two unrelated
     # synchronization attempts.  Increasing this number cuts down
     # on frivolous synchronizations.
-    minWait = base.config.GetFloat('time-manager-min-wait', 10)
+    minWait = base.config.GetFloat('time-manager-min-wait', 1)
 
     # The maximum number of seconds of uncertainty to tolerate in
     # the clock delta without trying again.

@@ -174,7 +174,7 @@ class Gag(object):
 
     def setHandJoint(self):
         if self.avatar:
-            self.handJoint = self.avatar.find('**/joint_Rhold')
+            self.handJoint = self.avatar.find('**/def_joint_right_hold')
 
     def equip(self):
         if not self.avatar or not self.avatar.getBackpack() or self.avatar.getBackpack() and self.avatar.getBackpack().getSupply(self.getID()) == 0 or self.state == GagState.RECHARGING:

@@ -77,31 +77,17 @@ class ToonFPS(DirectObject):
         self.firstPerson = FirstPerson()
 
     def movementTask(self, task):
-        if (
-            not inputState.isSet('jump') and
-            not base.localAvatar.walkControls.isAirborne and
-            inputState.isSet('forward') or
-            inputState.isSet('reverse') or
-            inputState.isSet('slideLeft') or
-            inputState.isSet('slideRight')
-        ):
-            if base.localAvatar.getAnimState() != "run":
-                base.localAvatar.setAnimState('run')
-                base.localAvatar.playMovementSfx("run")
-                self.mg.sendUpdate("runningAvatar", [base.localAvatar.doId])
-        elif (
-            inputState.isSet('jump') or
-            base.localAvatar.walkControls.isAirborne
-        ):
+
+        if (inputState.isSet('jump') or
+            base.localAvatar.walkControls.isAirborne):
+
             if base.localAvatar.getAnimState() != "jump":
+
                 base.localAvatar.setAnimState("jump")
                 base.localAvatar.playMovementSfx(None)
+
                 self.mg.sendUpdate("jumpingAvatar", [base.localAvatar.doId])
-        else:
-            if base.localAvatar.getAnimState() != "neutral":
-                base.localAvatar.setAnimState("neutral")
-                base.localAvatar.playMovementSfx(None)
-                self.mg.sendUpdate("standingAvatar", [base.localAvatar.doId])
+
         return Task.cont
 
     def enterAlive(self):
@@ -279,7 +265,8 @@ class ToonFPS(DirectObject):
 
     def reallyStart(self):
         self.firstPerson.reallyStart()
-        taskMgr.add(self.movementTask, "toonBattleMovement")
+        base.localAvatar.startTrackAnimToSpeed()
+        #taskMgr.add(self.movementTask, "toonBattleMovement")
 
     def end(self):
         if self.aliveFSM.getCurrentState().getName() != 'off':

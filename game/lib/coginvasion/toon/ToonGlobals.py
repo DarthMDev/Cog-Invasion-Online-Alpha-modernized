@@ -5,10 +5,10 @@
 from lib.coginvasion.globals import CIGlobals
 
 # First argument is phase, next is type, body part, pant type, and finally model detail.
-# Pant type is either: Shorts, Skirt, or Naked.
-# Type is either: SS, MM, or LL.
+# Pant type is either: shorts or skirt.
+# Type is either: dgs, dgm, or dgl.
 
-BASE_MODEL = "phase_%s/models/char/dog%s_%s-%s-%s.bam"
+BASE_MODEL = "phase_%s/models/char/tt_a_chr_%s_%s_%s_%s.bam"
 
 # These are the animations
 # Key is the code name of the animation,
@@ -59,7 +59,8 @@ ANIMATIONS = {
     "spit": [5, "spit"],
     "firehose": [5, "firehose"],
     "applause": [4, "applause"],
-    "left" : [4, "left"]
+    "left" : [4, "left"],
+    "strafe" : [3, "strafe"]
 }
 
 # These are the admin tokens
@@ -75,6 +76,9 @@ def generateBodyPart(toon, bodyPart, partType, partPhase, pantType):
     
     if '_-' in mdlPath:
         mdlPath = mdlPath.replace('_-', '-')
+
+    if '__' in mdlPath:
+        mdlPath = mdlPath.replace('__', '_')
     
     toon.loadModel(mdlPath, bodyPart)
     
@@ -93,6 +97,9 @@ def generateBodyPart(toon, bodyPart, partType, partPhase, pantType):
             
             if '_-' in animPath:
                 animPath = animPath.replace('_-', '-')
+
+            if '__' in animPath:
+                animPath = animPath.replace('__', '_')
             
         partAnimations[animName] = animPath
         

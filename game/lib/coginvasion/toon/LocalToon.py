@@ -545,7 +545,8 @@ class LocalToon(DistributedToon):
         return task.cont
 
     def startTrackAnimToSpeed(self):
-        base.taskMgr.add(self.trackAnimToSpeed, self.uniqueName('trackAnimToSpeed'))
+        if not base.taskMgr.hasTaskNamed(self.uniqueName('trackAnimToSpeed')):
+            base.taskMgr.add(self.trackAnimToSpeed, self.uniqueName('trackAnimToSpeed'))
 
     def stopTrackAnimToSpeed(self):
         base.taskMgr.remove(self.uniqueName('trackAnimToSpeed'))

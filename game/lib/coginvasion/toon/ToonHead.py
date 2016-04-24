@@ -84,7 +84,7 @@ class ToonHead(Actor.Actor):
         if head != "dog":
             self.loadModel("phase_3/models/char/%s-heads-%s.bam" % (head, _modelDetail), 'head')
         else:
-            self.loadModel("phase_3/models/char/dog%s-head-%s.bam" % (headType, _modelDetail), 'head')
+            self.loadModel("phase_3/models/char/tt_a_chr_%s_head_%s.bam" % (headType, _modelDetail), 'head')
             partAnimations = {}
             
             # Load the body part animations.
@@ -107,8 +107,8 @@ class ToonHead(Actor.Actor):
                 
             self.loadAnims(partAnimations, 'head')
 
-            _pupilL = self.findAllMatches('**/joint_pupilL')
-            _pupilR = self.findAllMatches('**/joint_pupilR')
+            _pupilL = self.findAllMatches('**/def_left_pupil')
+            _pupilR = self.findAllMatches('**/def_right_pupil')
         if headType == "1":
             stashParts("long")
             stashMuzzles("long", stashNeutral=0)

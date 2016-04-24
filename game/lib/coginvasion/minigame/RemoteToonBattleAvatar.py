@@ -160,6 +160,14 @@ class RemoteToonBattleAvatar(RemoteAvatar):
             else:
                 self.avatar.loop('run')
 
+    def strafe(self, playRate):
+        if self.avatar:
+            self.avatar.setPlayRate(playRate, 'strafe')
+            if self.track and self.track.isPlaying():
+                self.avatar.loop('strafe', partName = 'legs')
+            else:
+                self.avatar.loop('strafe')
+
     def stand(self):
         if self.avatar:
             if self.track and self.track.isPlaying():

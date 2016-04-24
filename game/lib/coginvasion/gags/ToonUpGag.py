@@ -35,8 +35,8 @@ class ToonUpGag(Gag):
 
     def setupHandJoints(self):
         if not self.handJoint or not self.lHandJoint:
-            self.handJoint = self.avatar.find('**/joint_Rhold')
-            self.lHandJoint = self.avatar.find('**/joint_Lhold')
+            self.handJoint = self.avatar.find('**/def_joint_right_hold')
+            self.lHandJoint = self.avatar.find('**/def_joint_left_hold')
 
     def setupHips(self):
         if not self.hips:

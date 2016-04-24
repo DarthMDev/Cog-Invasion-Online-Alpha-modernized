@@ -76,7 +76,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         suit = self.cr.doId2do.get(suitId)
         if suit:
             barrel = loader.loadModel('phase_4/models/cogHQ/gagTank.bam')
-            barrel.reparentTo(suit.find('**/joint_Rhold'))
+            barrel.reparentTo(suit.find('**/def_joint_right_hold'))
             barrel.setP(180)
             #barrel.setZ(0.25)
             barrel.setScale(0.2)
@@ -95,7 +95,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         if av:
             av.setForcedTorsoAnim('catchneutral')
             barrel = loader.loadModel('phase_4/models/cogHQ/gagTank.bam')
-            barrel.reparentTo(av.find('**/joint_Rhold'))
+            barrel.reparentTo(av.find('**/def_joint_right_hold'))
             barrel.setP(90)
             barrel.setZ(0.25)
             barrel.setScale(0.2)

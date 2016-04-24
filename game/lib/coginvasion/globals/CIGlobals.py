@@ -13,6 +13,8 @@ STAND_INDEX = 0
 WALK_INDEX = 1
 RUN_INDEX = 2
 REVERSE_INDEX = 3
+STRAFE_RIGHT_INDEX = 4
+STRAFE_LEFT_INDEX = 5
 GeneralAnimPlayRate = 1.0
 BackwardsAnimPlayRate = -1.0
 OpenBookFromFrame = 29
@@ -970,23 +972,23 @@ toonHeadScales = {'mouse': Point3(1.0),
     'monkey': Point3(1.0),
     'bear': Point3(1.0),
     'pig': Point3(1.0)}
-legHeightDict = {'SS': 1.5,
-    'MM': 2.0,
-    'LL': 2.75}
-torsoHeightDict = {'SS_Shorts': 1.5,
-    'MM_Shorts': 1.75,
-    'LL_Shorts': 2.25,
-    'SS_Skirt': 1.5,
-    'MM_Skirt': 1.75,
-    'LL_Skirt': 2.25}
+legHeightDict = {'dgs': 1.5,
+    'dgm': 2.0,
+    'dgl': 2.75}
+torsoHeightDict = {'dgs_shorts': 1.5,
+    'dgm_shorts': 1.75,
+    'dgl_shorts': 2.25,
+    'dgs_skirt': 1.5,
+    'dgm_skirt': 1.75,
+    'dgl_skirt': 2.25}
 headHeightDict = {'3': 0.75,
     '1': 0.5,
     '2': 0.5,
     '4': 0.75,
-    'SS_Shorts': 0.5,
-    'LL_Shorts': 0.75,
-    'MM_Shorts': 0.75,
-    'MM_Skirt': 0.5}
+    'dgs_shorts': 0.5,
+    'dgl_shorts': 0.75,
+    'dgm_shorts': 0.75,
+    'dgm_skirt': 0.5}
 SuitPathHeights = {ToontownCentral: 0, TheBrrrgh: 6}
 SuitSpawnPoints = {
     CogTropCentral: {

@@ -41,6 +41,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         ToonHead.__init__(self, cr)
         self.forwardSpeed = 0.0
         self.rotateSpeed = 0.0
+        self.strafeSpeed = 0.0
         self.avatarType = CIGlobals.Toon
         self.track = None
         self.standWalkRunReverse = None
@@ -123,7 +124,8 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
     def enterHappy(self, ts = 0, callback = None, extraArgs = []):
         self.playingAnim = None
-        self.standWalkRunReverse = (('neutral', 1.0), ('walk', 1.0), ('run', 1.0), ('walk', -1.0))
+        self.standWalkRunReverse = (('neutral', 1.0), ('walk', 1.0), ('run', 1.0), ('walk', -1.0),
+                                    ('strafe', 1.0), ('strafe', -1.0))
         self.setSpeed(self.forwardSpeed, self.rotateSpeed)
 
     def exitHappy(self):
@@ -143,13 +145,21 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         #        if base.localAvatar.doId == self.doId:
         #            self.controlManager.enableAvatarJump()
 
-    def setSpeed(self, forwardSpeed, rotateSpeed):
+    def setSpeed(self, forwardSpeed, rotateSpeed, strafeSpeed = 0.0):
         self.forwardSpeed = forwardSpeed
         self.rotateSpeed = rotateSpeed
+        self.strafeSpeed = strafeSpeed
         action = None
         if self.standWalkRunReverse != None:
-            if forwardSpeed >= CIGlobals.RunCutOff:
+            if (forwardSpeed >= CIGlobals.RunCutOff and
+                strafeSpeed < CIGlobals.RunCutOff and
+                strafeSpeed > -CIGlobals.RunCutOff):
                 action = CIGlobals.RUN_INDEX
+            elif strafeSpeed >= CIGlobals.RunCutOff or strafeSpeed <= -CIGlobals.RunCutOff:
+                if strafeSpeed > 0:
+                    action = CIGlobals.STRAFE_RIGHT_INDEX
+                elif strafeSpeed < 0:
+                    action = CIGlobals.STRAFE_LEFT_INDEX
             elif forwardSpeed > CIGlobals.WalkCutOff:
                 action = CIGlobals.WALK_INDEX
             elif forwardSpeed < -CIGlobals.WalkCutOff:
@@ -265,14 +275,14 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.detachGun()
         if gunName == "pistol":
             self.gun = loader.loadModel("phase_4/models/props/water-gun.bam")
-            self.gun.reparentTo(self.find('**/joint_Rhold'))
+            self.gun.reparentTo(self.find('**/def_joint_right_hold'))
             self.gun.setPos(Point3(0.28, 0.1, 0.08))
             self.gun.setHpr(VBase3(85.6, -4.44, 94.43))
             self.gunAttached = True
         elif gunName == "shotgun":
             self.gun = loader.loadModel("phase_4/models/props/shotgun.egg")
             self.gun.setScale(0.75)
-            self.gun.reparentTo(self.find('**/joint_Rhold'))
+            self.gun.reparentTo(self.find('**/def_joint_right_hold'))
             self.gun.setPos(Point3(-0.5, -0.2, 0.19))
             self.gun.setHpr(Vec3(350, 272.05, 0))
             color = random.choice(
@@ -287,7 +297,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         elif gunName == "sniper":
             self.gun = loader.loadModel("phase_4/models/props/sniper.egg")
             self.gun.setScale(0.75)
-            self.gun.reparentTo(self.find('**/joint_Rhold'))
+            self.gun.reparentTo(self.find('**/def_joint_right_hold'))
             self.gun.setPos(Point3(-0.5, -0.2, 0.19))
             self.gun.setHpr(Vec3(350, 272.05, 0))
             color = random.choice(
@@ -499,7 +509,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.pose("toss", 22, partName = "torso")
 
     def parentToonParts(self):
-        self.attach('head', 'torso', 'joint_head')
+        self.attach('head', 'torso', 'def_head')
         self.attach('torso', 'legs', 'joint_hips')
 
     def unparentToonParts(self):
@@ -538,7 +548,10 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         torsob.setColor(shortcolor)
 
     def generateLegs(self):
-        ToonGlobals.generateBodyPart(self, 'legs', self.getLegs(), 3, 'Shorts')
+        ToonGlobals.generateBodyPart(self, 'legs', self.getLegs(), 3, 'shorts')
+        self.find('**/boots_long').stash()
+        self.find('**/boots_short').stash()
+        self.find('**/shoes').stash()
         
     def generateTorso(self):
         ToonGlobals.generateBodyPart(self, 'torso', self.getTorso(), 3, '')
@@ -721,7 +734,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.playingAnim = 'book'
         self.book1 = Actor("phase_3.5/models/props/book-mod.bam",
                     {"chan": "phase_3.5/models/props/book-chan.bam"})
-        self.book1.reparentTo(self.getPart('torso').find('**/joint_Rhold'))
+        self.book1.reparentTo(self.getPart('torso').find('**/def_joint_right_hold'))
         self.track = ActorInterval(self, "book", startFrame=CIGlobals.OpenBookFromFrame, endFrame=CIGlobals.OpenBookToFrame,
                 name = self.uniqueName('enterOpenBook'))
         self.track.setDoneEvent(self.track.getName())
@@ -743,7 +756,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.playingAnim = 'book'
         self.book2 = Actor("phase_3.5/models/props/book-mod.bam",
                     {"chan": "phase_3.5/models/props/book-chan.bam"})
-        self.book2.reparentTo(self.getPart('torso').find('**/joint_Rhold'))
+        self.book2.reparentTo(self.getPart('torso').find('**/def_joint_right_hold'))
 
         self.pingpong("book", fromFrame=CIGlobals.ReadBookFromFrame, toFrame=CIGlobals.ReadBookToFrame)
         self.book2.pingpong("chan", fromFrame=CIGlobals.ReadBookFromFrame, toFrame=CIGlobals.ReadBookToFrame)
@@ -758,7 +771,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.playingAnim = 'book'
         self.book3 = Actor("phase_3.5/models/props/book-mod.bam",
                     {"chan": "phase_3.5/models/props/book-chan.bam"})
-        self.book3.reparentTo(self.getPart('torso').find('**/joint_Rhold'))
+        self.book3.reparentTo(self.getPart('torso').find('**/def_joint_right_hold'))
         self.track = ActorInterval(self, "book", startFrame=CIGlobals.CloseBookFromFrame, endFrame=CIGlobals.CloseBookToFrame,
                 name = self.uniqueName('enterCloseBook'))
         self.track.setDoneEvent(self.track.getName())
@@ -782,7 +795,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.portal1 = Actor("phase_3.5/models/props/portal-mod.bam",
                             {"chan": "phase_3.5/models/props/portal-chan.bam"})
         self.portal1.play("chan")
-        self.portal1.reparentTo(self.getPart('legs').find('**/joint_Rhold'))
+        self.portal1.reparentTo(self.getPart('legs').find('**/def_joint_right_hold'))
         self.play("tele")
         if hasattr(self, 'uniqueName'):
             name = self.uniqueName('enterTeleportOut')

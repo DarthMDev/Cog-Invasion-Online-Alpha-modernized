@@ -52,17 +52,6 @@ class DistributedToonFPSGame(DistributedMinigame):
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.sendUpdate('gunShot', [base.localAvatar.doId, timestamp])
 
-    def standingAvatar(self, avId):
-        """(Network method) Make a remote avatar do a standing (neutral) animation."""
-        av = self.getRemoteAvatar(avId)
-        if av:
-            av.stand()
-
-    def runningAvatar(self, avId):
-        av = self.getRemoteAvatar(avId)
-        if av:
-            av.run()
-
     def jumpingAvatar(self, avId):
         av = self.getRemoteAvatar(avId)
         if av:
