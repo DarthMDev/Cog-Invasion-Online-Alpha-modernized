@@ -102,6 +102,9 @@ class ToonHead(Actor.Actor):
                     
                     if '_-' in animPath:
                         animPath = animPath.replace('_-', '-')
+                        
+                    if '__' in animPath:
+                        animPath = animPath.replace('__', '_')
                     
                 partAnimations[animName] = animPath
                 
