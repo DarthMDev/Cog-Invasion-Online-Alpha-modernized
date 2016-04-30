@@ -164,7 +164,7 @@ class AdminPage(StateData):
 		self.book.clearTitle()
 		
 	def enterBasePage(self):
-		self.book.createPageButtons('mapPage', None)
+		self.book.createPageButtons('mapPage', 'namePage')
 		self.book.setTitle('Admin Stuff')
 		geom = CIGlobals.getDefaultBtnGeom()
 		self.suitSpawnerBtn = DirectButton(
@@ -335,4 +335,4 @@ class AdminPage(StateData):
 		self.makeCogBtn.destroy()
 		del self.makeCogBtn
 		self.book.clearTitle()
-		self.book.deletePageButtons(True, False)
+		self.book.deletePageButtons(True, True)

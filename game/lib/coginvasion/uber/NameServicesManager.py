@@ -11,6 +11,7 @@ class NameServicesManager(DistributedObjectGlobal):
     def __init__(self, cr):
         DistributedObjectGlobal.__init__(self, cr)
         self.requestedNames = []
+        self.requestCompleteEventName = 'NameServicesManager-RequestComplete'
         return
     
     def d_requestName(self, name):
@@ -18,8 +19,10 @@ class NameServicesManager(DistributedObjectGlobal):
     
     def d_requestNameData(self):
         self.sendUpdate('requestNameData', [])
+        print 'Requesting Data...'
         
     def nameDataRequest(self, names, avatarIds, dates, statuses):
+        print 'Got a reply.'
         for i in xrange(len(names)):
             request = dict()
             request['name'] = str(names[i])
@@ -27,6 +30,10 @@ class NameServicesManager(DistributedObjectGlobal):
             request['date'] = str(dates[i])
             request['status'] = int(statuses[i])
             self.requestedNames.append(request)
+        messenger.send(self.requestCompleteEventName)
             
     def getNameRequests(self):
         return self.requestedNames
+    
+    def getRequestCompleteName(self):
+        return self.requestCompleteEventName

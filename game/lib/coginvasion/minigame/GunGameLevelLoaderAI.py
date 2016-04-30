@@ -14,7 +14,11 @@ import random
 class GunGameLevelLoaderAI:
     notify = directNotify.newCategory("GunGameLevelLoaderAI")
 
-    LevelsByGameMode = {GGG.GameModes.CASUAL: ['momada', 'dg', 'oz', 'mml', 'cbhq'], GGG.GameModes.CTF: ['sbf']}
+    LevelsByGameMode = {
+        GGG.GameModes.CASUAL: ['momada', 'dg', 'oz', 'mml', 'cbhq'], 
+        GGG.GameModes.CTF: ['sbf'],
+        GGG.GameModes.KOTH : ['ttc']
+    }
 
     LevelData = {
         'momada': {
@@ -39,7 +43,11 @@ class GunGameLevelLoaderAI:
 
         'sbf': {
             'gameTime': 999
-        }
+        },
+                 
+        'ttc' : {
+            'gameTime' : 60
+        },
     }
 
     def __init__(self, gun_game):

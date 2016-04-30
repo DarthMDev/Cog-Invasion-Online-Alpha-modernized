@@ -14,6 +14,7 @@ from lib.coginvasion.gui.BackpackGUI import BackpackGUI
 
 from OptionPage import OptionPage
 from AdminPage import AdminPage
+from lib.coginvasion.book.NamePage import NamePage
 
 qt_btn = loader.loadModel("phase_3/models/gui/quit_button.bam")
 
@@ -29,7 +30,7 @@ class ShtickerBook(StateData):
          State('inventoryPage', self.enterInventoryPage, self.exitInventoryPage, ['mapPage', 'questPage', 'off']),
          State('mapPage', self.enterMapPage, self.exitMapPage, ['inventoryPage', 'off']),
          State('releaseNotesPage', self.enterReleaseNotesPage, self.exitReleaseNotesPage, ['mapPage', 'off']),
-         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'off']),
+         State('adminPage', self.enterAdminPage, self.exitAdminPage, ['mapPage', 'namePage', 'off']),
          State('namePage', self.enterNamePage, self.exitNamePage, ['adminPage', 'off'])], 
         'off', 'off')
         if base.localAvatar.getAdminToken() > -1:
@@ -196,12 +197,14 @@ class ShtickerBook(StateData):
         self.clearTitle()
         
     def enterNamePage(self):
-        self.createPageButtons('adminPage', None)
-        self.setTitle('Name Requests')
-    
+        self.namePageStateData = NamePage(self, self.fsm)
+        self.namePageStateData.load()
+        self.namePageStateData.enter()
+
     def exitNamePage(self):
-        self.deletePageButtons(True, True)
-        self.clearTitle()
+        self.namePageStateData.exit()
+        self.namePageStateData.unload()
+        del self.namePageStateData
 
     def enterQuestPage(self):
         self.createPageButtons('districtPage', 'inventoryPage')
@@ -496,7 +499,8 @@ class ShtickerBook(StateData):
 
     def pageDone(self, nextPage):
         base.cr.playGame.getPlace().lastBookPage = nextPage
-        self.fsm.request(nextPage)
+        if hasattr(self, 'fsm'):
+            self.fsm.request(nextPage)
         self.book_turn.play()
 
     def enterOptionPage(self):

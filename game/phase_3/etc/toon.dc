@@ -22,6 +22,7 @@ from lib.coginvasion.minigame import DistributedRaceGame/AI
 from lib.coginvasion.minigame import DistributedUnoGame/AI
 from lib.coginvasion.minigame import DistributedGunGame/AI
 from lib.coginvasion.minigame import DistributedGunGameFlag/AI
+from lib.coginvasion.minigame import DistributedGunGameCapturePoint/AI
 from lib.coginvasion.minigame import DistributedToonFPSGame/AI
 from lib.coginvasion.minigame import DistributedFactorySneakGame/AI
 from lib.coginvasion.minigame import DistributedCameraShyGame/AI
@@ -42,8 +43,6 @@ from lib.coginvasion.suit import DistributedDroppableCollectableObject/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableJellybeans/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableJellybeanJar/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableJellybean/AI
-from lib.coginvasion.suit import DistributedDroppableCollectableHealth/AI
-from lib.coginvasion.suit import DistributedDroppableCollectableIceCream/AI
 from lib.coginvasion.suit import DistributedDroppableCollectableBackpack/AI
 from lib.coginvasion.suit import DistributedCogBattle/AI
 from lib.coginvasion.suit import DistributedCogStation/AI
@@ -498,6 +497,16 @@ dclass DistributedGunGameFlag : DistributedNode {
   flagReturned() broadcast;
 };
 
+dclass DistributedGunGameCapturePoint : DistributedNode {
+  setCaptured(uint8 teamId) broadcast ram;
+  requestEnter() clsend airecv;
+  requestExit() clsend airecv;
+  startListening() broadcast;
+  startCircleAnim(uint8 direction, int16 timestamp) broadcast;
+  handleContesters(uint8 contesters) broadcast;
+  updateStatus(uint8 status, uint32 avId) broadcast;
+};
+
 dclass DistributedFactorySneakGame : DistributedToonFPSGame {
 
 };
@@ -617,14 +626,6 @@ dclass DistributedDroppableCollectableJellybean : DistributedDroppableCollectabl
 };
 
 dclass DistributedDroppableCollectableJellybeanJar : DistributedDroppableCollectableJellybeans {
-
-};
-
-dclass DistributedDroppableCollectableHealth : DistributedDroppableCollectableObject {
-  setDisabled(int8) required broadcast ram;
-};
-
-dclass DistributedDroppableCollectableIceCream : DistributedDroppableCollectableHealth {
 
 };
 

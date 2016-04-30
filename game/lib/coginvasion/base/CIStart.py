@@ -7,6 +7,7 @@ from panda3d.core import *
 import __builtin__
 import os
 
+
 vfs = VirtualFileSystem.getGlobalPtr()
 
 phases = ['phase_3', 'phase_3.5', 'phase_4', 'phase_5', 'phase_5.5', 'phase_6', 'phase_7', 'phase_8', 'phase_9',
@@ -104,8 +105,9 @@ print 'CIStart: Using %s audio library.' % audio
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 
-
+from lib.coginvasion.base import ScreenshotHandler
 import CogInvasionLoader
+
 base.loader = CogInvasionLoader.CogInvasionLoader(base)
 base.graphicsEngine.setDefaultLoader(base.loader.loader)
 __builtin__.loader = base.loader
@@ -121,7 +123,7 @@ base.camLens.setNearFar(CIGlobals.DefaultCameraNear, CIGlobals.DefaultCameraFar)
 base.transitions.IrisModelName = "phase_3/models/misc/iris.bam"
 base.transitions.FadeModelName = "phase_3/models/misc/fade.bam"
 base.setFrameRateMeter(False)
-base.accept('f9', base.screenshot, ['screenshots/screenshot'])
+base.accept('f9', ScreenshotHandler.__takeScreenshot)
 
 print "CIStart: Setting display preferences..."
 sm.applySettings(jsonfile)

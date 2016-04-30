@@ -50,5 +50,5 @@ class BattleShop(Shop):
         self.originalUpgrades = None
         self.upgradesPurchased = None
 
-    def update(self):
-        Shop.update(self)
+    def update(self, page = None):
+        Shop.update(self, page)

@@ -114,6 +114,12 @@ class Backpack:
     # Returns the current loadout of the backpack.        
     def getLoadout(self):
         return self.loadout
+    
+    def getLoadoutInIds(self):
+        ids = []
+        for gag in self.loadout:
+            ids.append(gag.getID())
+        return ids
 
     # Sets the max supply of a gag.
     # Returns either true or false depending on if the

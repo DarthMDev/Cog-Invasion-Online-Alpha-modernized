@@ -144,6 +144,18 @@ class GunGameLevelLoader:
             'flagpoint_points': {GGG.Teams.BLUE: [Point3(-543.60, 595.79, 9.73), Point3(270, 0, 0)],
                 GGG.Teams.RED: [Point3(213.23, 340.59, 19.73), Point3(0, 0, 0)]}
         },
+        
+        'ttc' : {
+            'name' : CIGlobals.ToontownCentral,
+            'dna' : [
+                'phase_4/dna/storage_TT.pdna',
+                'phase_4/dna/storage_TT_sz.pdna',
+                'phase_4/dna/new_ttc_sz.pdna',
+            ],
+            'sky' : 'TT',
+            'spawn_points' : hoodMgr.dropPoints[CIGlobals.ToontownCentral],
+            'cap_point' : Point3(-1.5, 0, 0)
+        }
     }
 
     SkyData = {
@@ -175,6 +187,9 @@ class GunGameLevelLoader:
 
     def getFlagPoint(self, team):
         return self.LevelData[self.levelName]['flag_points'][team]
+    
+    def getCapturePoint(self):
+        return self.LevelData[self.levelName]['cap_point']
 
     def setLevel(self, level):
         self.levelName = level
@@ -191,7 +206,7 @@ class GunGameLevelLoader:
         if self.levelName == "momada":
             return pointData
         else:
-            if self.mg.gameMode == GGG.GameModes.CASUAL:
+            if self.mg.gameMode in [GGG.GameModes.CASUAL, GGG.GameModes.KOTH]:
                 # These points come from lib.coginvasion.distributed.HoodMgr,
                 # which is a tuple of a bunch of arrays with pos as first
                 # 3, and hpr as last 3 list elements.
@@ -269,13 +284,20 @@ class GunGameLevelLoader:
                         self.levelGeom.reparentTo(hidden)
                     else:
                         self.levelGeom = hidden.attachNewNode(node)
-                    self.levelGeom.flattenMedium()
+                    if self.levelName == 'ttc' and dnaFiles[index] == 'phase_4/dna/new_ttc_sz.pdna':
+                        self.levelGeom.find('**/prop_gazebo_DNARoot').removeNode()
+                    else:
+                        self.levelGeom.flattenMedium()
                     gsg = base.win.getGsg()
                     if gsg:
                         self.levelGeom.prepareScene(gsg)
                     self.levelGeom.reparentTo(render)
                 else:
                     loadDNAFile(self.dnaStore, dnaFiles[index])
+            children = self.levelGeom.findAllMatches('**/*doorFrameHole*')
+            
+            for child in children:
+                child.hide()
             self.skyModel = loader.loadModel(skyPhase + "/" + skyType + "_sky.bam")
             self.skyUtil = SkyUtil()
             self.skyUtil.startSky(self.skyModel)

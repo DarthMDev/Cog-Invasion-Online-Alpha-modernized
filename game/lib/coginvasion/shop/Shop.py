@@ -9,12 +9,17 @@ from direct.fsm.StateData import StateData
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import DirectFrame, DirectLabel, DirectButton, OnscreenImage, DGG
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
+from direct.task.Task import Task
+
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.shop.ItemType import ItemType
 from lib.coginvasion.suit import CogBattleGlobals
-from panda3d.core import Vec4, TransparencyAttrib
-from direct.task.Task import Task
 from lib.coginvasion.gags import GagGlobals
+
+from panda3d.core import Vec4, TransparencyAttrib
+
+from collections import OrderedDict
+import math
 
 GRAYED_OUT_COLOR = Vec4(0.25, 0.25, 0.25, 1)
 NORMAL_COLOR = Vec4(1, 1, 1, 1)
@@ -22,7 +27,7 @@ NORMAL_COLOR = Vec4(1, 1, 1, 1)
 class Shop(StateData):
     notify = directNotify.newCategory('Shop')
 
-    def __init__(self, distShop, doneEvent, wantTurretCount = 0):
+    def __init__(self, distShop, doneEvent, wantTurretCount = 0, wantFullShop = False):
         StateData.__init__(self, doneEvent)
         self.distShop = distShop
         self.origHealth = None
@@ -35,6 +40,7 @@ class Shop(StateData):
         self.upgradesPurchased = False
         self.originalSupply = {}
         self.wantTurretCount = wantTurretCount
+        self.wantFullShop = wantFullShop
 
         # This handles heal cooldowns.
         self.healCooldowns = {}
@@ -151,7 +157,7 @@ class Shop(StateData):
     def hasCooldown(self, item):
         return item in self.healCooldowns.keys()
 
-    def purchaseItem(self, item):
+    def purchaseItem(self, item, page):
         items = self.items
         itemType = None
         values = None
@@ -168,11 +174,14 @@ class Shop(StateData):
                 self.__purchaseUpgradeItem(values)
             elif itemType == ItemType.HEAL:
                 self.__purchaseHealItem(item, values)
-        self.update()
+        self.update(page)
 
-    def update(self):
+    def update(self, page = None):
         if self.window:
-            self.window.updatePages()
+            if not page:
+                self.window.updatePages()
+            else:
+                self.window.updatePage(page)
             if base.localAvatar.getMoney() == 0: self.handleNoMoney()
 
     def handleNoMoney(self, duration = -1):
@@ -295,6 +304,9 @@ class Page(DirectFrame):
             entry[1].destroy()
             self.itemEntries[key] = None
         DirectFrame.destroy(self)
+        
+    def getItems(self):
+        return self.items
 
 class ShopWindow(DirectFrame):
 
@@ -380,7 +392,7 @@ class ShopWindow(DirectFrame):
         button = DirectButton(
                 geom = (itemImage), scale = 1.3, pos = pos,
                 relief = None, parent = page,
-                command = self.shop.purchaseItem, extraArgs = [item]
+                command = self.shop.purchaseItem, extraArgs = [item, page]
         )
         supply = base.localAvatar.getBackpack().getSupply(item().getName())
         maxSupply = base.localAvatar.getBackpack().getMaxSupply(item().getName())
@@ -396,7 +408,7 @@ class ShopWindow(DirectFrame):
         button = DirectButton(
                 image = (itemImage), scale = 0.15, pos = pos, relief = None,
                 parent = page, command = self.shop.purchaseItem,
-                extraArgs = [item]
+                extraArgs = [item, page]
         )
         button.setTransparency(TransparencyAttrib.MAlpha)
         upgradeID = values.get('upgradeID')
@@ -430,7 +442,7 @@ class ShopWindow(DirectFrame):
         button = DirectButton(
                   image = (itemImage), scale = 0.105, pos = pos,
                   relief = None, parent = page,
-                  command = self.shop.purchaseItem, extraArgs = [item]
+                  command = self.shop.purchaseItem, extraArgs = [item, page]
         )
         button.setTransparency(TransparencyAttrib.MAlpha)
         buttonLabel = DirectLabel(
@@ -445,15 +457,33 @@ class ShopWindow(DirectFrame):
 
     def makePages(self, items):
         newItems = dict(items)
-        loadout = []
-        for slot in base.localAvatar.getBackpack().loadoutGUI.getSlots():
-            if slot.getGag(): loadout.append(slot.getGag().getID())
-        for item, values in newItems.items():
-            if values.get('type') == ItemType.GAG:
-                gag = item()
-                if gag.getID() not in loadout or not base.localAvatar.getBackpack().hasGag(gag.getID()):
-                    del newItems[item]
-        self.nPages = int((len(newItems) / 4))
+        loadout = base.localAvatar.getBackpack().getLoadoutInIds()
+        
+        # Let's show the loadout gags first in a full shop.
+        if self.shop.wantFullShop:
+            crcGags = OrderedDict(newItems)
+            for item, values in newItems.items():
+                if values.get('type') == ItemType.GAG:
+                    gag = item()
+                    hasGag = base.localAvatar.getBackpack().hasGag(gag.getID())
+                    if gag.getID() not in loadout or not hasGag:
+                        del crcGags[item]
+                        if not hasGag:
+                            del newItems[item]
+                    else:
+                        del newItems[item]
+            # Let's add back the other gags.
+            crcGags.update(newItems)
+            newItems = crcGags
+            print len(newItems)
+        else:
+            for item, values in newItems.items():
+                if values.get('type') == ItemType.GAG:
+                    gag = item()
+                    if gag.getID() not in loadout or not base.localAvatar.getBackpack().hasGag(gag.getID()):
+                        del newItems[item]
+        
+        self.nPages = int(math.ceil((float(len(newItems)) / float(4))))
         if self.nPages % 4 != 0 and len(newItems) > 4:
             self.nPages += 1
         elif self.nPages == 0:
@@ -461,7 +491,7 @@ class ShopWindow(DirectFrame):
         itemPos = [(-0.45, 0, 0), (-0.15, 0, 0), (0.15, 0, 0), (0.45, 0, 0)]
         pageIndex = 0
         itemIndex = 0
-        index = 1
+        index = 0
         for _ in range(self.nPages):
             page = Page(self.shop, self)
             self.pages.append(page)
@@ -475,20 +505,34 @@ class ShopWindow(DirectFrame):
                 self.__makeUpgradeEntry(pos, item, values, page)
             elif itemType == ItemType.HEAL:
                 self.__makeHealEntry(pos, item, values, page)
-            if index % 4 == 0:
-                index = 1
+            if index == 3:
                 pageIndex += 1
                 itemIndex = 0
+                index = 0
             else:
-                itemIndex = itemIndex + 1
+                itemIndex += 1
                 index += 1
         if self.nPages == 1:
             self.backBtn.hide()
             self.nextBtn.hide()
         for page in self.pages:
-            page.hide()
-            page.update()
+            if len(page.getItems()) == 0:
+                page.destroy()
+                self.pages.remove(page)
+            else:
+                page.hide()
+                page.update()
+        self.nPages = len(self.pages)
         self.isSetup = True
+        
+    def updatePage(self, page):
+        battle = base.localAvatar.getMyBattle()
+
+        if battle and self.wantTurretCount:
+            self.shop.distShop.sendUpdate('requestTurretCount', [])
+            self.updateTurretCount()
+
+        page.update()
 
     def updatePages(self):
         battle = base.localAvatar.getMyBattle()

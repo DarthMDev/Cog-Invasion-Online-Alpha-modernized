@@ -28,14 +28,14 @@ class NameServicesManagerUD(DistributedObjectGlobalUD):
     def requestNameData(self):
         avId = self.air.getAvatarIdFromSender()
         avatar = self.air.doId2do.get(avId)
-        if avatar.getAdminToken() > -1:
+        if True:
             names, avatarIds, dates, statuses = [], [], [], []
             for i in xrange((len(self.requestedNames))):
                 nameRequest = self.requestedNames[i]
                 names.append(nameRequest['name'])
-                avatarIds.append(nameRequest['avId'])
+                avatarIds.append(int(nameRequest['avId']))
                 dates.append(nameRequest['date'])
-                statuses.append(nameRequest['status'])
+                statuses.append(int(nameRequest['status']))
             self.sendUpdateToAvatarId(avId, 'nameDataRequest', [names, avatarIds, dates, statuses])
         else:
             avatar.ejectSelf('Attempted to access administrator only system.')

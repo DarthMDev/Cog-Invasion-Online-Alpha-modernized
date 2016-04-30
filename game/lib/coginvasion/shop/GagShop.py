@@ -49,8 +49,8 @@ from lib.coginvasion.globals import CIGlobals
 class GagShop(Shop):
     notify = directNotify.newCategory('GagShop')
 
-    def __init__(self, distShop, doneEvent):
-        Shop.__init__(self, distShop, doneEvent)
+    def __init__(self, distShop, doneEvent, wantFullShop = False):
+        Shop.__init__(self, distShop, doneEvent, wantFullShop = wantFullShop)
         self.distShop = distShop
         self.backpack = base.localAvatar.getBackpack()
         self.setup()
@@ -116,8 +116,8 @@ class GagShop(Shop):
             self.originalSupply = {}
         Shop.cancelPurchase(self)
 
-    def update(self):
-        Shop.update(self)
+    def update(self, page = None):
+        Shop.update(self, page)
 
     def enter(self):
         Shop.enter(self)

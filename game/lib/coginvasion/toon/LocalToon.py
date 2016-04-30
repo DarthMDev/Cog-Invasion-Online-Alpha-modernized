@@ -33,6 +33,7 @@ from lib.coginvasion.nametag import NametagGlobals
 
 import random
 from lib.coginvasion.gags.GagState import GagState
+from lib.coginvasion.minigame import GunGameGlobals
 
 class LocalToon(DistributedToon):
     neverDisable = 1
@@ -287,7 +288,6 @@ class LocalToon(DistributedToon):
     def exitReadBook(self):
         DistributedToon.exitReadBook(self)
         self.startLookAround()
-        self.b_lookAtObject(0, 0, 0)
 
     def getAirborneHeight(self):
         return self.offset + 0.025000000000000001
@@ -301,7 +301,8 @@ class LocalToon(DistributedToon):
             CIGlobals.ToonReverseSpeed, CIGlobals.ToonRotateSpeed
         )
         self.walkControls.initializeCollisions(base.cTrav, self, floorOffset=0.025, reach=4.0)
-        self.walkControls.cEventSphereNodePath.node().setFromCollideMask(CIGlobals.WallBitmask | CIGlobals.WeaponBitmask)
+        self.walkControls.cEventSphereNodePath.node().setFromCollideMask(CIGlobals.WallBitmask | CIGlobals.WeaponBitmask
+            | GunGameGlobals.HILL_BITMASK)
         self.walkControls.setAirborneHeightFunc(self.getAirborneHeight)
 
     def setWalkSpeedNormal(self):

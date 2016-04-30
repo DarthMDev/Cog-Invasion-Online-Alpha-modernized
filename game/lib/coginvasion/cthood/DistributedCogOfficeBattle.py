@@ -555,7 +555,7 @@ class DistributedCogOfficeBattle(DistributedObject):
             self.props.append(propMdl)
 
     def loadElevators(self):
-        for i in xrange(2):
+        for _ in xrange(2):
             elevMdl = loader.loadModel('phase_4/models/modules/elevator.bam')
             elevMdl.reparentTo(render)
             elevator = Elevator(elevMdl)

@@ -7,14 +7,14 @@
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.avatar import Avatar
-from direct.actor.Actor import Actor
-from direct.directnotify.DirectNotify import DirectNotify
-from lib.coginvasion.toon.ToonHeads import ToonHeads
 from lib.coginvasion.nametag import NametagGlobals
-from direct.showbase.ShadowPlacer import ShadowPlacer
-from panda3d.core import *
+
+from panda3d.core import CharacterJointEffect, ModelNode
+
+from direct.directnotify.DirectNotify import DirectNotify
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
+
 import random
 
 notify = DirectNotify().newCategory("Char")

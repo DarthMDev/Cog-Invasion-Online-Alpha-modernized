@@ -6,9 +6,8 @@
   Explanation:
       The whole idea here is that objectives are parts of a quest instead of objectives
       being their own quests. You can only be rewarded if all quest objectives are completed.
-      Rewards are given out when all objectives are complete. Since the whole idea is that
-      the QuestManager is suppose to build quests, a remove function for objectives has not
-      been built as it doesn't make any sense.
+      Since the whole idea is that the QuestManager is suppose to build quests, a remove
+      function for objectives has not been built as it doesn't make any sense.
 
 """
 

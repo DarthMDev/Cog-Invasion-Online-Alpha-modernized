@@ -17,7 +17,7 @@ class DistributedClerkNPCToon(DistributedNPCToon):
         self.destroyEvent = 'destroyShop-' + str(random.randint(0, 1000))
         self.items = {}
         self.inShop = False
-        self.shop = GagShop(self, 'gagShopDone')
+        self.shop = GagShop(self, 'gagShopDone', wantFullShop = True)
 
     def addItem(self, item, itemType, price, itemImage, upgradeID = None, maxUpgrades = None, heal = 0, healCooldown = 0, showTitle = False):
         if itemType != ItemType.HEAL:

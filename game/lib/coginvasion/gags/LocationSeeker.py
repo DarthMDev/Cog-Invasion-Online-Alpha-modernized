@@ -29,6 +29,7 @@ class LocationSeeker:
         self.maxDistance = maxDistance
         self.legacyMode = False
         self.collHdlFl = CollisionHandlerQueue()
+        self.moveShadowEventName = 'LocationSeeker-MoveShadow'
         
     def startSeeking(self):
         if not self.avatar: return
@@ -71,6 +72,7 @@ class LocationSeeker:
         
     def __moveShadow(self, task):
         if base.mouseWatcherNode.hasMouse():
+            prevPos = self.dropShadow.getPos(render)
             def PointAtZ(z, point, vec):
                 if vec.getZ() != 0:
                     return point + vec * ((z-point.getZ()) / vec.getZ())
@@ -81,6 +83,8 @@ class LocationSeeker:
             nearPoint = render.getRelativePoint(camera, self.cameraRay.getOrigin())
             nearVec = render.getRelativeVector(camera, self.cameraRay.getDirection())
             self.dropShadow.setPos(PointAtZ(.5, nearPoint, nearVec))
+            if (prevPos - self.dropShadow.getPos(render)).length() >= 0.25:
+                messenger.send(self.moveShadowEventName)
             if self.legacyMode:
                 self.dropShadow.setZ(base.localAvatar.getZ(render) + 0.5)
             else:
@@ -106,6 +110,7 @@ class LocationSeeker:
         if not self.dropShadowPath or not self.avatar: return
         self.dropShadow = loader.loadModel(self.dropShadowPath)
         self.dropShadow.setScale(self.shadowScale)
+        self.dropShadow.setName('LocationSeeker_Shadow')
         
     def setShadowType(self, isCircle = False, scale = 1):
         if not isCircle:
@@ -114,6 +119,9 @@ class LocationSeeker:
             self.dropShadowPath = 'phase_3/models/props/drop_shadow.bam'
         self.shadowScale = scale
         
+    def getDropShadow(self):
+        return self.dropShadow
+        
     def getLocation(self):
         if self.dropShadow:
             return self.dropShadow.getPos(render)
@@ -121,6 +129,9 @@ class LocationSeeker:
     
     def getLocationSelectedName(self):
         return self.locationSelectedName
+    
+    def getShadowMovedName(self):
+        return self.moveShadowEventName
     
     def cleanupShadow(self):
         if self.dropShadow:
@@ -148,5 +159,25 @@ class LocationSeeker:
             self.rejectSoundPath = None
             self.locationSelectedName = None
             self.moveShadowTaskName = None
+            self.moveShadowEventName = None
+            self.collHdlFl = None
+            del self.collHdlFl
+            del self.minDistance
+            del self.maxDistance
+            del self.legacyMode
+            del self.dropShadow
+            del self.cameraNP
+            del self.cameraNode
+            del self.cameraRay
+            del self.shadowNP
+            del self.shadowRay
+            del self.shadowSphNP
             del self.shadowScale
+            del self.rejectSfx
+            del self.avatar
+            del self.dropShadowPath
+            del self.rejectSoundPath
+            del self.locationSelectedName
+            del self.moveShadowTaskName
+            del self.moveShadowEventName
         

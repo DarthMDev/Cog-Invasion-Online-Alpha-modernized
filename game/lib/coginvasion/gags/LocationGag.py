@@ -117,6 +117,9 @@ class LocationGag:
 
     def getLocation(self):
         return self.dropLoc
+    
+    def getLocationSeeker(self):
+        return self.locationSeeker
 
     def cleanupButton(self):
         if self.button:

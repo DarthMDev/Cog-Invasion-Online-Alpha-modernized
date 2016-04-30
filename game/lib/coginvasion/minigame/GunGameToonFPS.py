@@ -9,6 +9,7 @@ import ToonFPS
 from GunGameBullet import GunGameBullet
 from direct.distributed.ClockDelta import globalClockDelta
 import GunGameGlobals as GGG
+import random
 
 class GunGameToonFPS(ToonFPS.ToonFPS):
 
@@ -20,12 +21,12 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
 
     def load(self):
         ToonFPS.ToonFPS.load(self)
-        if self.weaponName == 'shotgun':
-            color = GGG.TeamColorById[self.mg.team]
-            self.weapon.setColorScale(color)
-        elif self.weaponName == 'sniper':
-            color = GGG.TeamColorById[self.mg.team]
-            self.weapon.setColorScale(color)			
+        if self.weaponName in ['shotgun', 'sniper']:
+            if self.mg.gameMode == GGG.GameModes.KOTH:
+                color = random.choice(GGG.TeamColorById.values())
+            else:
+                color = GGG.TeamColorById[self.mg.team]
+            self.weapon.setColorScale(color)		
 			
     def resetStats(self):
         self.points = 0
@@ -119,7 +120,7 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
             if avatar:
                 remoteAvatar = self.mg.getRemoteAvatar(avatar.doId)
                 if remoteAvatar:
-                    if remoteAvatar.getTeam() != self.mg.team:
+                    if remoteAvatar.getTeam() == None or remoteAvatar.getTeam() != self.mg.team:
                         # Good, this player isn't on my team. I can damage them.
                         damage = self.calcDamage(avatar)
                         self.mg.sendUpdate('avatarHitByBullet', [avatar.doId, damage])

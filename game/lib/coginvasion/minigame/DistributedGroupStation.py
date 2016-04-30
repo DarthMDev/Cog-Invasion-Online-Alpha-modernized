@@ -100,8 +100,9 @@ class DistributedGroupStation(GroupStation.GroupStation, DistributedObject):
 								pos=(0, 0, 0.85), text_pos = (0, -0.01), geom_scale = (0.8, 1, 1), command=self.d_requestAbort)
 
 	def deleteStationAbortGui(self):
-		if self.abortBtn:
-			self.abortBtn.destroy(); self.abortBtn = None
+		if hasattr(self, 'abortBtn') and self.abortBtn:
+			self.abortBtn.destroy()
+			self.abortBtn = None
 
 	def d_requestEnter(self):
 		self.cr.playGame.getPlace().fsm.request('stop')
