@@ -20,7 +20,6 @@ from lib.coginvasion.cthood.CTMLHoodAI import CTMLHoodAI
 from lib.coginvasion.cthood.CTDGHoodAI import CTDGHoodAI
 from lib.coginvasion.cthood.CTDDHoodAI import CTDDHoodAI
 from lib.coginvasion.cogtropolis.CTHoodAI import CTHoodAI
-from lib.coginvasion.hood.RecoverHoodAI import RecoverHoodAI
 from panda3d.core import *
 from lib.coginvasion.globals import CIGlobals
 from direct.distributed.PyDatagram import PyDatagram
