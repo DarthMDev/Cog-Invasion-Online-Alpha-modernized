@@ -29,7 +29,7 @@ TeamNameById = {Teams.RED: RED, Teams.BLUE: BLUE}
 CTF_SCORE_CAP = 3
 HILL_BITMASK = BitMask32(4)
 
-ToonSpeedFactor = 1.35
+ToonSpeedFactor = 1.5
 ToonForwardSpeed = 16.0 * ToonSpeedFactor
 ToonJumpForce = 24.0
 ToonReverseSpeed = 8.0 * ToonSpeedFactor
