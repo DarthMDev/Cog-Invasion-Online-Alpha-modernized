@@ -13,6 +13,7 @@ class RemoteDodgeballAvatar(RemoteAvatar):
 
     def __init__(self, mg, cr, avId):
         RemoteAvatar.__init__(self, mg, cr, avId)
+        self.retrieveAvatar()
 
     def setTeam(self, team):
         RemoteAvatar.setTeam(self, team)

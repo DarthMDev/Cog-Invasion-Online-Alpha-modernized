@@ -1,7 +1,7 @@
 # Filename: CameraShyFirstPerson.py
 # Created by:  blach (28Apr15)
 
-from panda3d.core import BitMask32, CollisionNode, CollisionRay, CollisionHandlerEvent, VBase4
+from panda3d.core import BitMask32, CollisionNode, CollisionRay, CollisionHandlerEvent, VBase4, CollisionTraverser, CollisionHandlerQueue
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
 from direct.gui.DirectGui import OnscreenText, DirectFrame, DirectWaitBar, OnscreenImage
@@ -93,26 +93,38 @@ class CameraShyFirstPerson(FirstPerson):
         taskMgr.remove("rechargeCamera")
         self.cameraRechargeState = None
 
-    def __handleRayInto(self, entry):
-        intoNP = entry.getIntoNodePath()
-        toonNP = intoNP.getParent()
-        for key in base.cr.doId2do.keys():
-            obj = base.cr.doId2do[key]
-            if obj.__class__.__name__ == "DistributedToon":
-                if obj.getKey() == toonNP.getKey():
-                    self.__handleToonInFocus(obj)
+    def __traverse(self, task):
+        if not base.mouseWatcherNode.hasMouse():
+            return task.cont
 
-    def __handleRayOut(self, entry):
-        intoNP = entry.getIntoNodePath()
-        toonNP = intoNP.getParent()
-        for key in base.cr.doId2do.keys():
-            obj = base.cr.doId2do[key]
-            if obj.__class__.__name__ == "DistributedToon":
-                if obj.getKey() == toonNP.getKey():
-                    self.toonToTakePicOf = None
-                    self.hasToonInFocus = False
-                    if self.cameraFocus.getColorScale() == self.toonInFocusColor:
-                        self.cameraFocus.setColorScale(self.toonOutOfFocusColor)
+        mpos = base.mouseWatcherNode.getMouse()
+        self.focusRay.setFromLens(base.camNode, mpos.getX(), mpos.getY())
+
+        self.focusTrav.traverse(render)
+
+        if self.focusHandler.getNumEntries() > 0:
+
+            self.focusHandler.sortEntries()
+
+            firstObj = self.focusHandler.getEntry(0).getIntoNodePath()
+            avId = firstObj.getParent().getPythonTag('player')
+            avatar = self.mg.cr.doId2do.get(avId)
+
+            toonInFoc = False
+
+            if avatar:
+                remoteAvatar = self.mg.getRemoteAvatar(avatar.doId)
+                if remoteAvatar:
+                    toonInFoc = True
+                    self.__handleToonInFocus(avatar)
+
+            if not toonInFoc:
+                self.toonToTakePicOf = None
+                self.hasToonInFocus = False
+                if self.cameraFocus.getColorScale() == self.toonInFocusColor:
+                    self.cameraFocus.setColorScale(self.toonOutOfFocusColor)
+
+        return task.cont
 
     def __handleToonInFocus(self, toon):
         if not self.hasToonInFocus or self.toonToTakePicOf is not None or self.toonToTakePicOf.doId != toon.doId:
@@ -131,24 +143,24 @@ class CameraShyFirstPerson(FirstPerson):
         self.batteryBar = DirectWaitBar(value = 0, range = 5, barColor = (1, 1, 1, 1), relief = None, scale = (0.12, 0.0, 0.3), parent = self.batteryFrame)
         self.cameraFocus = loader.loadModel("phase_4/models/minigames/photo_game_viewfinder.bam")
         self.cameraFocus.reparentTo(base.aspect2d)
-        self.focusCollHandler = CollisionHandlerEvent()
-        self.focusCollHandler.setInPattern("%fn-into")
-        self.focusCollHandler.setOutPattern("%fn-out")
-        self.focusCollNode = CollisionNode('mouseRay')
-        self.focusCollNP = base.camera.attachNewNode(self.focusCollNode)
-        self.focusCollNode.setCollideMask(BitMask32(0))
-        self.focusCollNode.setFromCollideMask(CIGlobals.WallBitmask)
-        self.focusRay = CollisionRay()
-        self.focusRay.setFromLens(base.camNode, 0.0, 0.0)
-        self.focusCollNode.addSolid(self.focusRay)
-        base.cTrav.addCollider(self.focusCollNP, self.focusCollHandler)
+
+        self.focusTrav = CollisionTraverser('CSFP.focusTrav')
+        ray = CollisionRay()
+        rayNode = CollisionNode('CSFP.rayNode')
+        rayNode.addSolid(ray)
+        rayNode.setCollideMask(BitMask32(0))
+        rayNode.setFromCollideMask(CIGlobals.WallBitmask)
+        self.focusRay = ray
+        self.focusRayNode = base.camera.attachNewNode(rayNode)
+        self.focusHandler = CollisionHandlerQueue()
+        self.focusTrav.addCollider(self.focusRayNode, self.focusHandler)
+
         base.localAvatar.walkControls.setWalkSpeed(CIGlobals.ToonForwardSpeed, 0.0,
                                                    CIGlobals.ToonReverseSpeed, CIGlobals.ToonRotateSpeed)
         FirstPerson.start(self)
 
     def reallyStart(self):
-        self.accept("mouseRay-into", self.__handleRayInto)
-        self.accept("mouseRay-out", self.__handleRayOut)
+        taskMgr.add(self.__traverse, "CSFP.__traverse")
         self.camFSM.request('recharge')
         #taskMgr.add(self.movementTask, "movementTask")
         base.localAvatar.startTrackAnimToSpeed()
@@ -157,8 +169,7 @@ class CameraShyFirstPerson(FirstPerson):
     def end(self):
         self.camFSM.request('off')
         taskMgr.remove("movementTask")
-        self.ignore("mouseRay-into")
-        self.ignore("mouseRay-out")
+        taskMgr.remove("CSFP.__traverse")
         FirstPerson.end(self)
 
     def reallyEnd(self):
@@ -170,11 +181,11 @@ class CameraShyFirstPerson(FirstPerson):
         self.batteryFrame = None
         self.cameraFocus.removeNode()
         self.cameraFocus = None
-        self.focusCollHandler = None
-        self.focusCollNode = None
-        self.focusCollNP.removeNode()
-        self.focusCollNP = None
+        self.focusHandler = None
         self.focusRay = None
+        self.focusRayNode.removeNode()
+        self.focusRayNode = None
+        self.focusTrav = None
         self.hasToonInFocus = None
         self.toonToTakePicOf = None
         self.fullyChargedSound = None
