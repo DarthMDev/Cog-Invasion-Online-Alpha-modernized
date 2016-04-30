@@ -56,22 +56,9 @@ class RemoteToonBattleAvatar(RemoteAvatar):
         self.retrieveAvatar()
 
     def setTeam(self, team):
-        self.team = team
-        if self.teamText:
-            self.teamText.removeNode()
-            self.teamText = None
-        textNode = TextNode('teamText')
-        textNode.setText(GGG.TeamNameById[team][0])
-        textNode.setTextColor(GGG.TeamColorById[team])
-        textNode.setAlign(TextNode.ACenter)
-        textNode.setFont(CIGlobals.getMickeyFont())
-        self.teamText = self.avatar.attachNewNode(textNode)
-        self.teamText.setBillboardAxis()
-        self.teamText.setZ(self.avatar.getNameTag().getZ() + 1.0)
-        self.teamText.setScale(5.0)
-
-    def getTeam(self):
-        return self.team
+        RemoteAvatar.setTeam(self, team)
+        self.teamText.node().setText(GGG.TeamNameById[team][0])
+        self.teamText.node().setTextColor(GGG.TeamColorById[team])
 
     def setGunName(self, gunName):
         self.gunName = gunName

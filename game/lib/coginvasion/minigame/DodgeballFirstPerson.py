@@ -50,6 +50,9 @@ class DodgeballFirstPerson(FirstPerson):
     def enterCatch(self):
         self.vModel.play("")
 
+    def exitCatch(self):
+        self.vModel.stop()
+
     def start(self):
         # Black crosshair because basically the entire arena is white.
         self.crosshair = getCrosshair(color = (0, 0, 0, 1))

@@ -287,6 +287,7 @@ class LocalToon(DistributedToon):
     def exitReadBook(self):
         DistributedToon.exitReadBook(self)
         self.startLookAround()
+        self.b_lookAtObject(0, 0, 0)
 
     def getAirborneHeight(self):
         return self.offset + 0.025000000000000001

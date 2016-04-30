@@ -5,7 +5,11 @@
 
 """
 
+from panda3d.core import TextNode
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
+
+from lib.coginvasion.globals import CIGlobals
 
 class RemoteAvatar:
 
@@ -16,6 +20,24 @@ class RemoteAvatar:
         self.cr = cr
         self.avId = avId
         self.avatar = None
+        self.teamText = None
+        self.team = None
+
+    def setTeam(self, team):
+        self.team = team
+        if self.teamText:
+            self.teamText.removeNode()
+            self.teamText = None
+        textNode = TextNode('teamText')
+        textNode.setAlign(TextNode.ACenter)
+        textNode.setFont(CIGlobals.getMickeyFont())
+        self.teamText = self.avatar.attachNewNode(textNode)
+        self.teamText.setBillboardAxis()
+        self.teamText.setZ(self.avatar.getNameTag().getZ() + 1.0)
+        self.teamText.setScale(5.0)
+
+    def getTeam(self):
+        return self.team
 
     def retrieveAvatar(self):
         self.avatar = self.cr.doId2do.get(self.avId, None)
@@ -29,3 +51,7 @@ class RemoteAvatar:
         del self.avId
         del self.cr
         del self.mg
+        if self.teamText:
+            self.teamText.removeNode()
+            self.teamText = None
+        del self.team

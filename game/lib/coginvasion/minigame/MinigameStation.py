@@ -65,14 +65,14 @@ class MinigameStation(GroupStation):
         numSlots = self.game2maxPlayers[game]
         GroupStation.generateStation(self, numSlots)
 
-        if base.config.GetBool('show-minigame-dates', False):
+        if not base.config.GetBool('show-minigame-dates', False):
             text = game
             pos = (0, 0)
         else:
             text = game + "\n" + self.game2dateCreated[game]
             pos = (0, 0.1)
 
-        title = DirectLabel(text=game + "\n" + self.game2dateCreated[game], relief=None, text_fg=(0.7, 0.3, 0.5, 1.0),
+        title = DirectLabel(text=text, relief=None, text_fg=(0.7, 0.3, 0.5, 1.0),
                             text_decal=True, text_font=CIGlobals.getMickeyFont(), text_pos = pos,
                             parent=self.sign.find('**/signText_locator'), text_scale=0.3,
                             text_wordwrap=7.0)

@@ -438,19 +438,7 @@ dclass DistributedToonFPSGame : DistributedMinigame {
   respawnAvatar(uint32) broadcast clsend;
 };
 
-dclass DistributedGunGame : DistributedToonFPSGame {
-  // Tell the clients to start voting for the game mode.
-  startGameModeVote() broadcast;
-
-  // Tell the ai which game mode we voted for.
-  myGameModeVote(int8) clsend airecv;
-
-  // Tell the clients to update their gui to show how many votes a game mode has.
-  incrementGameModeVote(int8) broadcast;
-
-  // Tell the clients that the vote is over and what game mode was decided.
-  gameModeDecided(int8, int8) broadcast;
-
+dclass TeamMinigame {
   // Tell the ai what team we've chosen.
   choseTeam(int8) clsend airecv;
 
@@ -465,6 +453,20 @@ dclass DistributedGunGame : DistributedToonFPSGame {
 
   // Tell the clients to set the team of this player.
   setTeamOfPlayer(uint32, int8) broadcast;
+};
+
+dclass DistributedGunGame : DistributedToonFPSGame, TeamMinigame {
+  // Tell the clients to start voting for the game mode.
+  startGameModeVote() broadcast;
+
+  // Tell the ai which game mode we voted for.
+  myGameModeVote(int8) clsend airecv;
+
+  // Tell the clients to update their gui to show how many votes a game mode has.
+  incrementGameModeVote(int8) broadcast;
+
+  // Tell the clients that the vote is over and what game mode was decided.
+  gameModeDecided(int8, int8) broadcast;
 
   // Tell the other clients which gun we chose.
   gunChoice(string, uint32) clsend broadcast;
@@ -553,8 +555,10 @@ dclass DistributedDeliveryGameSuit : DistributedSuit {
 
 };
 
-dclass DistributedDodgeballGame : DistributedToonFPSGame {
-
+dclass DistributedDodgeballGame : DistributedToonFPSGame, TeamMinigame {
+  chooseUrTeam() broadcast;
+  readyToStart() clsend airecv;
+  acceptedIntoTeam(int8);
 };
 
 dclass DistributedShop : DistributedNode {

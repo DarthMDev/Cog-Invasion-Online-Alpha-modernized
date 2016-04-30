@@ -64,6 +64,7 @@ gag-throw-key alt-up
 want-firstperson-battle #f
 chat-key t
 want-WASD #f
+show-minigame-dates #f
 
 want-pstats 0
 

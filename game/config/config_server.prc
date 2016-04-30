@@ -12,9 +12,10 @@ want-minigames #t
 want-uno-game #t
 want-race-game #t
 want-toon-battle #t
-want-factory-sneak #t
+want-factory-sneak #f
 want-camera-shy #t
 want-eagle-game #t
 want-delivery-game #f
+want-dodgeball-game #t
 
 # want-pstats 1

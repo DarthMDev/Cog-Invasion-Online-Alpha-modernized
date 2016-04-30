@@ -1,19 +1,20 @@
 # Filename: GunGameGlobals.py
 # Created by:  blach (05Aug15)
 
+from TeamMinigame import TEAM1, TEAM2
+
 class GameModes:
     CASUAL = 0
     CTF = 1
 
 class Teams:
-    RED = 0
-    BLUE = 1
+    BLUE = TEAM1
+    RED = TEAM2
 
 CTF = "Capture the Flag"
 CASUAL = "Casual Mode"
 RED = "Red Robber Barons"
 BLUE = "Blue Bloodsuckers"
-MSG_WELCOME = "Welcome to the {0}!"
 MSG_CHOSE_MODE_TIE = "It's a tie! Randomly chose: {0}"
 MSG_CHOSE_MODE = "{0}, it is!"
 
