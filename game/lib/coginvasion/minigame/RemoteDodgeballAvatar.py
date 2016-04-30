@@ -17,7 +17,7 @@ class RemoteDodgeballAvatar(RemoteAvatar):
 
     def setTeam(self, team):
         RemoteAvatar.setTeam(self, team)
-        self.teamText.node().setText(self.mg.teamNameById[team])
+        self.teamText.node().setText("")
         self.teamText.node().setTextColor(TEAM_COLOR_BY_ID[team])
 
 

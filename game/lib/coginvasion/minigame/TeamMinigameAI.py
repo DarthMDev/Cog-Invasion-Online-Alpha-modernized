@@ -19,6 +19,7 @@ class TeamMinigameAI:
         if team == TEAM2 and numOnRed > numOnBlue or team == TEAM1 and numOnBlue > numOnRed:
             # Wait a minute, this team is full. Tell the client.
             self.sendUpdateToAvatarId(avId, 'teamFull', [])
+            return 0
         else:
             # This team is open, let's accept them onto the team they chose!
             self.playerListByTeam[team].append(avId)
@@ -26,6 +27,7 @@ class TeamMinigameAI:
             if sendAcceptedMsg:
                 self.sendUpdateToAvatarId(avId, 'acceptedIntoTeam', [])
             self.sendUpdate('setTeamOfPlayer', [avId, team])
+            return 1
 
     def cleanup(self):
         del self.playerListByTeam

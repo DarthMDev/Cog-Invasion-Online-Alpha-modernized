@@ -55,13 +55,14 @@ class DistributedDodgeballGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
         avId = self.air.getAvatarIdFromSender()
 
         # We'll send our own accepted message.
-        TeamMinigameAI.choseTeam(self, team, avId, sendAcceptedMsg = False)
+        isOnTeam = TeamMinigameAI.choseTeam(self, team, avId, sendAcceptedMsg = False)
 
-        # Pick a spawn point for them
-        spawnIndex = random.choice(self.availableSpawnsByTeam[team])
-        self.availableSpawnsByTeam[team].remove(spawnIndex)
+        if isOnTeam:
+            # Pick a spawn point for them
+            spawnIndex = random.choice(self.availableSpawnsByTeam[team])
+            self.availableSpawnsByTeam[team].remove(spawnIndex)
 
-        self.sendUpdateToAvatarId(avId, 'acceptedIntoTeam', [spawnIndex])
+            self.sendUpdateToAvatarId(avId, 'acceptedIntoTeam', [spawnIndex])
 
     def readyToStart(self):
         self.playersReadyToStart += 1
