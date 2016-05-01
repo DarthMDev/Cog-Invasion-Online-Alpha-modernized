@@ -1,4 +1,5 @@
 import math
+
 from SuitPathFinderAI import SuitPathFinderAI
 
 from lib.coginvasion.globals import CIGlobals
@@ -335,14 +336,10 @@ PathPolygons = {
     ]
 }
 
-# This is created globally so that all initialization path-tests are done at
-# server startup rather than when the invasion begins.
-hood2pathfinder = {CIGlobals.CogTropCentral: SuitPathFinderAI(PathPolygons[CIGlobals.CogTropCentral]),
-                   CIGlobals.DonaldsDock: SuitPathFinderAI(PathPolygons[CIGlobals.CogTropCentral]),
-                   CIGlobals.DaisyGardens: SuitPathFinderAI(PathPolygons[CIGlobals.CogTropCentral]),
-                   CIGlobals.MinniesMelodyland: SuitPathFinderAI(PathPolygons[CIGlobals.CogTropCentral]),
-                   CIGlobals.TheBrrrgh: SuitPathFinderAI(PathPolygons[CIGlobals.TheBrrrgh]),
-                   CIGlobals.DonaldsDreamland: SuitPathFinderAI(PathPolygons[CIGlobals.CogTropCentral])}
+hood2pathfinder = {}
 
 def getPathFinder(hood):
+    if not hood2pathfinder.get(hood):
+        hood2pathfinder[hood] = SuitPathFinderAI(PathPolygons[hood])
+
     return hood2pathfinder[hood]

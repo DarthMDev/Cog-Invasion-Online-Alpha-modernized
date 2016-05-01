@@ -292,8 +292,6 @@ class DistributedSuitManagerAI(DistributedObjectAI):
 
     def isFullInvasion(self):
         isFull = self.suitsSpawnedThisInvasion >= self.suitsRequest and self.suitsRequest > -1
-        if isFull:
-            print "It's full. {0} cogs spawned this invasion".format(self.suitsSpawnedThisInvasion)
         return isFull
 
     def startInvasion(self, suit, difficulty, skeleton, backup = 0):
@@ -303,7 +301,6 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         if self.isFullInvasion() or self.isCogCountFull() or self.suitsRequest < 0:
             return
         self.suitsSpawnedThisInvasion = 0
-        print "Request size is {0}".format(self.suitsRequest)
         taskMgr.add(
             self.__doInvasion, self.uniqueName('doInvasion'),
             extraArgs = [suit, difficulty, skeleton, backup], appendTask = True
@@ -319,7 +316,6 @@ class DistributedSuitManagerAI(DistributedObjectAI):
             if suitType == "ABC":
                 suitType = random.choice(["A", "B", "C"])
             self.createSuit(levelRange = difficulty, anySuit = 1)
-            print self.suitsSpawnedThisInvasion
         task.delayTime = 4
         return task.again
 

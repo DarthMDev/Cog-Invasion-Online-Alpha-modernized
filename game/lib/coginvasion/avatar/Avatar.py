@@ -3,12 +3,8 @@
 # Created by: blach (??Jul14)
 ########################################
 
-#from libccoginvasion import LabelScaler
-
 from direct.actor.Actor import Actor
-from direct.showbase.ShadowDemo import ShadowCaster, arbitraryShadow
 from panda3d.core import *
-from pandac.PandaModules import *
 from direct.directnotify.DirectNotify import DirectNotify
 from lib.coginvasion.nametag import NametagGlobals
 from lib.coginvasion.nametag.NametagGroup import NametagGroup
