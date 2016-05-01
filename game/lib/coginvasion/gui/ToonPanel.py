@@ -13,7 +13,7 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.hood import ZoneUtil
 
 class ToonPanel(DirectFrame):
-    notify = directNotify.newCategory("ToonPanel")
+    notify = directNotify.newCategory("ToonPanel")    
 
     animal2HeadData = {'dog': (0.125, 0.04), 'duck': (0.1, 0.025), 'cat': (0.115, 0.04),
         'rabbit': (0.115, 0.04), 'horse': (0.115, 0.06), 'monkey': (0.115, 0.06), 'pig': (0.115, 0.07),
@@ -341,7 +341,7 @@ class ToonPanel(DirectFrame):
         self.acceptOnce('avatarInfoResponse', self.handleAvatarInfoResponse)
         base.cr.friendsManager.d_requestAvatarInfo(self.avatarInfo[0])
 
-    def handleAvatarInfoResponse(self, name, dna, maxHealth, health, zoneId, shardId, isOnline):
+    def handleAvatarInfoResponse(self, name, dna, maxHealth, health, zoneId, shardId, isOnline, adminToken):
         if self.avatarInfo:
             self.avatarInfo.append(name)
             self.avatarInfo.append(dna)
@@ -350,6 +350,7 @@ class ToonPanel(DirectFrame):
             self.avatarInfo.append(zoneId)
             self.avatarInfo.append(shardId)
             self.avatarInfo.append(isOnline)
+            self.avatarInfo.append(adminToken)
             self.fsm.request('panel')
 
     def exitWaitOnAvatarInfoResponse(self):
@@ -383,8 +384,10 @@ class ToonPanel(DirectFrame):
         self.avatarInfo = None
 
     def enterPanel(self):
+        adminToken = self.avatarInfo[8]
+        text_color = CIGlobals.TextColorByAdminToken[adminToken]
         self.nameText = OnscreenText(text = self.avatarInfo[1], parent = self,
-            pos = (0, 0.2), scale = 0.035, wordwrap = 8)
+            pos = (0, 0.2), scale = 0.035, wordwrap = 8, fg = text_color)
         self.nameText.setBin('gui-popup', 60)
 
         dna = ToonDNA.ToonDNA()

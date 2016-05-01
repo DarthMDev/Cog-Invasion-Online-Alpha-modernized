@@ -279,7 +279,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                 {"BANNED": 1}
             )
 
-        if self.getAdminToken() > -1:
+        if self.getAdminToken() > CIGlobals.NoToken:
             if andBan:
                 self.air.dbInterface.queryObject(
                     self.air.dbId,
@@ -293,7 +293,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
             self.ejectSelf("This player did not have administrator rights, but was trying to eject someone.")
 
     def setGhost(self, value):
-        if not self.getAdminToken() > -1 and value > 0:
+        if not self.getAdminToken() > CIGlobals.NoToken and value > 0:
             self.ejectSelf("This player did not have administrator rights, but was trying to set ghost.")
             return
         self.ghost = value

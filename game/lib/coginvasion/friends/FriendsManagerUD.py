@@ -13,7 +13,7 @@ class RequestFriendsListProcess:
         self.csm = csm
         self.air = air
         self.sender = sender
-        self.realFriendsList = [[], [], []]
+        self.realFriendsList = [[], [], [], []]
         self.avatarFriendsList = []
         self.friendIndex = 0
         self.senderDclass = None
@@ -38,11 +38,13 @@ class RequestFriendsListProcess:
             return
 
         name = fields['setName'][0]
+        adminToken = fields['setAdminToken'][0]
         avatarId = self.avatarFriendsList[self.friendIndex]
         self.realFriendsList[0].append(avatarId)
         self.realFriendsList[1].append(name)
         isOnline = int(avatarId in self.csm.toonsOnline)
         self.realFriendsList[2].append(isOnline)
+        self.realFriendsList[3].append(adminToken)
         if self.friendIndex >= len(self.avatarFriendsList) - 1:
             # Done, send it out
             self.csm.sendUpdateToAvatarId(self.sender, 'friendsList', self.realFriendsList)
@@ -66,7 +68,7 @@ class RequestFriendsListProcess:
         self.avatarFriendsList = fields['setFriendsList'][0]
 
         if len(self.avatarFriendsList) == 0:
-            self.csm.sendUpdateToAvatarId(self.sender, 'friendsList', [[], [], []])
+            self.csm.sendUpdateToAvatarId(self.sender, 'friendsList', [[], [], [], []])
             return
 
         self.air.dbInterface.queryObject(
@@ -112,14 +114,16 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
         RequestFriendsListProcess(self, self.air, sender)
 
     def d_toonOnline(self, avatarId, friendsList, name):
-        self.toonsOnline.append(avatarId)
+        if not avatarId in self.toonsOnline:
+            self.toonsOnline.append(avatarId)
 
         for friendId in friendsList:
             if friendId in self.toonsOnline:
                 self.sendUpdateToAvatarId(friendId, 'toonOnline', [avatarId, name])
 
     def d_toonOffline(self, avatarId, friendsList, name):
-        self.toonsOnline.remove(avatarId)
+        if avatarId in self.toonsOnline:
+            self.toonsOnline.remove(avatarId)
 
         for friendId in friendsList:
             if friendId in self.toonsOnline:
@@ -142,9 +146,10 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
                 shardId = fields['setDefaultShard'][0]
             except:
                 shardId = 0
+            adminToken = fields['setAdminToken'][0]
             isOnline = int(avId in self.toonsOnline)
 
-            self.sendUpdateToAvatarId(sender, 'avatarInfo', [name, dna, maxHP, hp, zoneId, shardId, isOnline])
+            self.sendUpdateToAvatarId(sender, 'avatarInfo', [name, dna, maxHP, hp, zoneId, shardId, isOnline, adminToken])
 
         self.air.dbInterface.queryObject(
             self.air.dbId,

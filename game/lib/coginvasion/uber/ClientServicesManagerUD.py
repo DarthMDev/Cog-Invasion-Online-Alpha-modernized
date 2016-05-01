@@ -129,7 +129,27 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         dg.addChannel(sender << 32 | avId)
         self.air.send(dg)
 
-        #self.sendUpdateToAccountId(accId, 'enterResponse', [])
+        # Tell the friends manager a toon has gone online.
+        self.__handleToonOnline(avId)
+
+    def __handleToonOnline(self, avId):
+
+        def toonResponse(dclass, fields):
+            if dclass != self.air.dclassesByName['DistributedToonUD']:
+                return
+
+            name = fields['setName'][0]
+            fl = fields['setFriendsList'][0]
+
+            # Now tell them.
+            self.air.friendsManager.d_toonOnline(avId, fl, name)
+
+        # We need to query this toon to get their name and friends list.
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            avId,
+            toonResponse
+        )
 
     def unloadAvatar(self, target, doId):
         channel = self.GetAccountConnectionChannel(target)
@@ -171,6 +191,27 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         )
         dg.addUint32(doId)
         self.air.send(dg)
+
+        # Tell the friends manager a toon has gone offline.
+        self.__handleToonOffline(doId)
+
+    def __handleToonOffline(self, avId):
+
+        def toonResponse(dclass, fields):
+            if dclass != self.air.dclassesByName['DistributedToonUD']:
+                return
+
+            name = fields['setName'][0]
+            fl = fields['setFriendsList'][0]
+
+            # Now tell them.
+            self.air.friendsManager.d_toonOffline(avId, fl, name)
+
+        self.air.dbInterface.queryObject(
+            self.air.dbId,
+            avId,
+            toonResponse
+        )
 
     def requestLogin(self, token, username):
         username = username.lower()
@@ -287,7 +328,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
                     19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], [7, 10, 3, 3, 3, 4, 3, 7, 3, 10,
                     10, 10, 7, 15, 7, 7, 10, 5, 7, 5, 3, 1, 15, 10, 10, 5, 8, 12, 10, 1, 7, 3, 10, 7, 5, 15],),
                 "setLoadout": ([13, 12, 7, 1],),
-                "setAdminToken": (-1,),
+                "setAdminToken": (CIGlobals.NoToken,),
                 "setQuests": ([], [], [],),
                 "setQuestHistory": ([],),
                 "setTier": (13,),

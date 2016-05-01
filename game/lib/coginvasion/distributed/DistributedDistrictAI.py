@@ -6,6 +6,8 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 import time
 
+from lib.coginvasion.globals import CIGlobals
+
 class DistributedDistrictAI(DistributedObjectAI):
 
     def __init__(self, air):
@@ -50,7 +52,12 @@ class DistributedDistrictAI(DistributedObjectAI):
 
     def announceGenerate(self):
         taskMgr.add(self.monitorAvatars, "monitorAvatars")
+        base.finalExitCallbacks.append(self.__sendShutdown)
         DistributedObjectAI.announceGenerate(self)
+
+    def __sendShutdown(self):
+        # Tell the district name manager we are shutting down to free up the name.
+        self.air.districtNameMgr.d_shuttingDown(self.name)
 
     def setPopulation(self, amount):
         self.population = amount
@@ -78,8 +85,6 @@ class DistributedDistrictAI(DistributedObjectAI):
         print "[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is joining my district!"
         self.avatarIds.append(avId)
         self.b_setPopulation(self.getPopulation() + 1)
-        # Tell the DNM that a toon came online
-        self.air.districtNameMgr.d_toonJoined(avId)
 
     def monitorAvatars(self, task):
         for avId in self.avatarIds:
@@ -87,13 +92,12 @@ class DistributedDistrictAI(DistributedObjectAI):
                 print "[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is leaving my district!"
                 self.avatarIds.remove(avId)
                 self.b_setPopulation(self.getPopulation() - 1)
-                self.air.districtNameMgr.d_toonLeft(avId)
         task.delayTime = 0.5
         return task.again
 
     def systemMessageCommand(self, adminToken, message):
         avId = self.air.getAvatarIdFromSender()
-        tokens = [0, 1, 2]
+        tokens = [CIGlobals.ModToken, CIGlobals.DevToken, CIGlobals.UndercoverToken]
         av = self.air.doId2do.get(avId, None)
         if av:
             if (adminToken in tokens and

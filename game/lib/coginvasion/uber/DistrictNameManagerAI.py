@@ -19,8 +19,5 @@ class DistrictNameManagerAI(DistributedObjectGlobalAI):
     def noAvailableNames(self):
         self.air.noDistrictNames()
 
-    def d_toonJoined(self, avatarId):
-        self.sendUpdate('toonJoined', [avatarId])
-
-    def d_toonLeft(self, avatarId):
-        self.sendUpdate('toonLeft', [avatarId])
+    def d_shuttingDown(self, name):
+        self.sendUpdate('shuttingDown', [name])

@@ -26,7 +26,7 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
                 color = random.choice(GGG.TeamColorById.values())
             else:
                 color = GGG.TeamColorById[self.mg.team]
-            self.weapon.setColorScale(color)		
+            self.weapon.setColorScale(color)
 			
     def resetStats(self):
         self.points = 0

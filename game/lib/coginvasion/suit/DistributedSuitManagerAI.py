@@ -71,7 +71,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
 
     def suitAdminCommand(self, adminToken, commandName):
         avId = self.air.getAvatarIdFromSender()
-        tokens = [0, 1, 2]
+        tokens = [CIGlobals.DevToken, CIGlobals.UndercoverToken, CIGlobals.ModToken]
         av = self.air.doId2do.get(avId, None)
         if av:
             if (adminToken in tokens and

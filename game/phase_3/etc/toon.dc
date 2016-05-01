@@ -120,8 +120,7 @@ dclass DistrictNameManager : DistributedObject {
   requestDistrictName() clsend;
   claimDistrictName(string);
   noAvailableNames();
-  toonJoined(uint32) clsend;
-  toonLeft(uint32) clsend;
+  shuttingDown(string) clsend;
 };
 
 dclass NameServicesManager : DistributedObject {
@@ -654,7 +653,11 @@ dclass FriendsManager : DistributedObject {
   iAcceptedFriendRequest(uint32) clsend;
   acceptedFriendRequest();
   rejectedFriendRequest();
-  avatarInfo(string, string, uint8, uint8, uint32, uint32, int8);
+
+  avatarInfo(string name, string dna, uint8 maxHP, uint8 hp,
+             uint32 zoneId, uint32 shardId, int8 isOnline,
+			 int8 adminToken);
+
   friendRequest(uint32, string, string);
   cancelFriendRequest(uint32) clsend;
   requestAvatarStatus(uint32) clsend;
@@ -673,8 +676,11 @@ dclass FriendsManager : DistributedObject {
   avatarLocation(uint32, uint32, uint32, int8);
   teleportNotify(string);
   requestFriendsList() clsend;
-  friendsList(uint32[], string[], int8[]);
+
+  friendsList(uint32 avIds[], string names[], int8 onlineFlags[], int8 adminTokens[]);
+
   sendWhisper(uint32 target, string message) clsend;
+
   whisper(uint32 sender, string message, string senderName);
 };
 

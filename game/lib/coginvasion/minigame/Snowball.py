@@ -1,7 +1,7 @@
 # Filename: Snowball.py
 # Created by:  blach (19Apr16)
 
-from panda3d.core import NodePath, CollisionNode, CollisionSphere
+from panda3d.core import NodePath, CollisionNode, CollisionSphere, BitMask32
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
@@ -54,5 +54,18 @@ class Snowball(NodePath):
     def hasOwner(self):
         """Returns whether or not this snowball has an owner."""
         return self.owner is not None
+
+    def removeNode(self):
+        if self.model:
+            self.model.removeNode()
+            self.model = None
+        if self.collNP:
+            self.collNP.removeNode()
+            self.collNP = None
+        self.isAirborne = None
+        self.owner = None
+        self.mg = None
+        NodePath.removeNode(self)
+
 
 

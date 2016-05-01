@@ -80,6 +80,16 @@ ChatGarblerBear = ['growl', 'grrr']
 ChatGarblerPig = ['oink', 'oik', 'snort']
 ChatGarblerDefault = ['blah']
 
+NoToken = -1
+DevToken = 0
+UndercoverToken = 1
+ModToken = 2
+
+TextColorByAdminToken = {NoToken : (0, 0, 0, 1),
+                         UndercoverToken : (0, 0, 0, 1),
+                         DevToken : (255.0 / 255, 154.0 / 255, 0.0 / 255, 1),
+                         ModToken : (0.0 / 255, 85.0 / 255, 255.0 / 255, 1)}
+
 ThemeSong = None
 holidayTheme = None
 

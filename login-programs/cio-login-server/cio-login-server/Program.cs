@@ -23,7 +23,7 @@ namespace cio_login_server
         public const int SV_CREATE_ACC_RESP = 7;
         public const int SV_PLAY_RESP = 8;
         public const int SV_MSG = 9;
-        public const string LAUNCHER_VER = "1.0";
+        public static string LAUNCHER_VER = Environment.GetEnvironmentVariable("LAUNCHER_VER");
         public const string MSG_DELIMITER = ";";
         public const string DL_BASE_LINK = "http://download.coginvasion.com/";
         public const string DB_FILE = "database/AccData.json";
@@ -36,7 +36,7 @@ namespace cio_login_server
         public const string FAIL = "0";
         public const string SUCCESS = "1";
 
-        public const string GAME_SERVER = "gameserver-dev.coginvasion.com:7032";
+        public static string GAME_SERVER = Environment.GetEnvironmentVariable("GAME_SERVER");
         public static string SERVER_VERSION = Environment.GetEnvironmentVariable("GAME_VERSION");
     }
 
@@ -62,7 +62,6 @@ namespace cio_login_server
             {
                 try
                 {
-                    Console.WriteLine("Processing client " + ip);
                     string request =  await sr.ReadLineAsync();
                     string[] split_msg = request.Split(Constants.MSG_DELIMITER.ToCharArray());
 
@@ -133,7 +132,6 @@ namespace cio_login_server
                         else
                         {
                             // We're good to make the account.
-                            Console.WriteLine("hashing");
                             string passwordHashed = Server.HashPasswordSHA256(password);
                             Console.WriteLine("Hashed password.");
                             Account acc = new Account();
@@ -177,6 +175,13 @@ namespace cio_login_server
     {
         public Server()
         {
+            Console.WriteLine("Launcher version: " + Constants.LAUNCHER_VER);
+            Console.WriteLine("Game version: " + Constants.SERVER_VERSION);
+            Console.WriteLine("Game server: " + Constants.GAME_SERVER);
+            Console.WriteLine("Game account limit: " + Constants.ACCOUNT_LIMIT);
+            Console.WriteLine("Account limit per comp: " + Constants.ACC_LIMIT_PER_COMP);
+            Console.WriteLine("----------------------------------------------");
+
             listener = new TcpListener(IPAddress.Any, 7033);
             listener.Start();
 
@@ -189,7 +194,7 @@ namespace cio_login_server
 
             var task = AcceptTcpClients(cts.Token);
 
-            Console.WriteLine("Cog Invasion Online login server running.");
+            Console.WriteLine("Cog Invasion Online login server running.\n");
 
             // MAINLOOP:
             while (true)
@@ -215,11 +220,9 @@ namespace cio_login_server
             int numAccsWithThisMac = 0;
             foreach (Account acc in jsonAccounts)
             {
-                Console.WriteLine(acc);
                 if (acc.Mac == mac)
                     numAccsWithThisMac++;
             }
-            Console.WriteLine(numAccsWithThisMac);
             if (numAccsWithThisMac < Constants.ACC_LIMIT_PER_COMP)
                 return true;
             else

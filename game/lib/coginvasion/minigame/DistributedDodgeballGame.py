@@ -14,6 +14,7 @@ from lib.coginvasion.toon import ParticleLoader
 
 from DistributedToonFPSGame import DistributedToonFPSGame
 from DodgeballFirstPerson import DodgeballFirstPerson
+from Snowball import Snowball
 from TeamMinigame import TeamMinigame, TEAM1, TEAM2
 
 BLUE = TEAM1
@@ -36,6 +37,16 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
 	            ['prop_snow_tree_small_ul', Point3(-23.23, -66.52, 6)],
 	            ['prop_snow_tree_small_ur', Point3(34.03, -88.02, 23)],
 	            ['prop_snow_tree_small_ul', Point3(-62.71, -62.66, 16)]]
+
+    SnowballData = [Point3(20, 0, 0.5),
+                    Point3(15, 0, 0.5),
+                    Point3(10, 0, 0.5),
+                    Point3(5, 0, 0.5),
+                    Point3(0, 0, 0.5),
+                    Point3(-5, 0, 0.5),
+                    Point3(-10, 0, 0.5),
+                    Point3(-15, 0, 0.5),
+                    Point3(-20, 0, 0.5)]
 
     GameSong = "phase_4/audio/bgm/MG_Dodgeball.mp3"
     GameDesc = ("Welcome to the north! You have been invited to play dodgeball with the penguins!\n\n"
@@ -89,6 +100,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         self.snow = None
         self.snowRender = None
         self.trees = []
+        self.snowballs = []
 
     def setupRemoteAvatar(self, avId):
         av = RemoteDodgeballAvatar(self, self.cr, avId)
@@ -136,6 +148,14 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
             tree.setPos(pos)
             self.trees.append(tree)
 
+        for i in xrange(len(DistributedDodgeballGame.SnowballData)):
+            snowdata = DistributedDodgeballGame.SnowballData[i]
+            snowball = Snowball(self)
+            snowball.load()
+            snowball.reparentTo(render)
+            snowball.setPos(snowdata)
+            self.snowballs.append(snowball)
+
         self.snow = ParticleLoader.loadParticleEffect('phase_8/etc/snowdisk.ptf')
         self.snow.setPos(0, 0, 5)
         self.snowRender = self.arena.attachNewNode('snowRender')
@@ -149,6 +169,9 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         render.setFog(self.fog)
 
     def deleteWorld(self):
+        for snowball in self.snowballs:
+            snowball.removeNode()
+        self.snowballs = []
         for tree in self.trees:
             tree.removeNode()
         self.trees = []
@@ -238,6 +261,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
     def disable(self):
         self.deleteWorld()
         self.trees = None
+        self.snowballs = None
         self.spawnPointsByTeam = None
         if self.firstPerson:
             self.firstPerson.cleanup()

@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Media;
 using System.Text.RegularExpressions;
+using System.Security.Principal;
 
 namespace cio_launcher
 {
@@ -41,6 +42,16 @@ namespace cio_launcher
                             // Send the dl base link request
                             launcher.sw.WriteLine(Constants.CL_REQ_BASE_LINK.ToString());
                             launcher.sw.Flush();
+                        }
+                        else
+                        {
+                            MessageBox.Show("This launcher is out of date. Press OK to be taken to the download page for the new launcher.",
+                                "Update Available", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            if (Constants.IS_DEV)
+                                Process.Start(Constants.DEV_INSTALLER);
+                            else
+                                Process.Start(Constants.DL_PAGE);
+                            Application.Exit();
                         }
                     }
 
@@ -103,8 +114,8 @@ namespace cio_launcher
                             ciInfo.ErrorDialog = true;
                             ciInfo.UseShellExecute = false;
                             ciInfo.FileName = Directory.GetCurrentDirectory() + "\\coginvasion.exe";
-                            ciInfo.WindowStyle = ProcessWindowStyle.Normal;
-                            ciInfo.CreateNoWindow = false;
+                            ciInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                            ciInfo.CreateNoWindow = true;
 
                             Console.WriteLine("Waiting for exit...");
 
@@ -298,17 +309,34 @@ namespace cio_launcher
         {
             lf.Show();
             lf.HideAll(true);
+
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                MessageBox.Show("Whoops! You must run the Cog Invasion Online Launcher with administrator rights.",
+                    "No Admin", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return false;
+            }
+
             lf.ShowStatus(Constants.STATUS_CONNECTING);
 
-            string gameserver = Constants.LOGIN_SERVER + ":" + Constants.LOGIN_PORT.ToString();
+            string server;
+            if (Constants.IS_DEV)
+                server = Constants.LOGIN_SERVER_DEV;
+            else
+                server = Constants.LOGIN_SERVER;
+
+            string gameserver = server + ":" + Constants.LOGIN_PORT.ToString();
             Console.WriteLine("Connecting to login server at " + gameserver);
 
             // Connect to the server
             TcpClient client = new TcpClient();
             this.client = client;
+
             try
             {
-                client.Connect(Constants.LOGIN_SERVER, Constants.LOGIN_PORT);
+                client.Connect(server, Constants.LOGIN_PORT);
             }
             catch (SocketException e)
             {
@@ -358,9 +386,10 @@ namespace cio_launcher
             sw = null;
             client.Close();
             client = null;
-            dl_list = null;
+            dl_list.Clear();
             alreadyUpdated = false;
             Globals.dl_base_link = "";
+            currentFile = -1;
         }
 
         private TcpClient client;

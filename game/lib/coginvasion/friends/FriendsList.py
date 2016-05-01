@@ -122,16 +122,17 @@ class FriendsList(DirectFrame):
             self.backBtn['state'] = DGG.DISABLED
 
 
-    def handleFriendsList(self, friendIdArray, nameArray, flags):
+    def handleFriendsList(self, friendIdArray, nameArray, flags, adminTokens):
         self.friends = {}
         self.onlineFriends = {}
         for i in xrange(len(friendIdArray)):
             avatarId = friendIdArray[i]
             name = nameArray[i]
-            self.friends[avatarId] = name
+            adminToken = adminTokens[i]
+            self.friends[avatarId] = [name, adminToken]
             if flags[i] == 1:
                 # This friend is online
-                self.onlineFriends[avatarId] = name
+                self.onlineFriends[avatarId] = [name, adminToken]
 
     def enterOff(self):
         self.hide()
@@ -139,7 +140,8 @@ class FriendsList(DirectFrame):
     def exitOff(self):
         self.show()
 
-    def addFriend(self, name, avatarId):
+    def addFriend(self, name, avatarId, adminToken):
+        text_fg = CIGlobals.TextColorByAdminToken[adminToken]
         self.frameForNames.addItem(
             DirectButton(
                 text = name,
@@ -147,6 +149,7 @@ class FriendsList(DirectFrame):
                 command = self.friendClicked,
                 scale = 0.035,
                 relief = None,
+                text_fg = text_fg,
                 text1_bg = textDownColor,
                 text2_bg = textRolloverColor,
                 text_align = TextNode.ALeft
@@ -168,8 +171,10 @@ class FriendsList(DirectFrame):
 
     def enterAllFriendsList(self):
         self.headingText.setText("All\nFriends")
-        for friendId, name in self.friends.items():
-            self.addFriend(name, friendId)
+        for friendId, data in self.friends.items():
+            name = data[0]
+            adminToken = data[1]
+            self.addFriend(name, friendId, adminToken)
         self.sortListItems()
         self.setButtons(None, 'onlineFriendsList')
 
@@ -178,8 +183,10 @@ class FriendsList(DirectFrame):
 
     def enterOnlineFriendsList(self):
         self.headingText.setText("Online\nFriends")
-        for friendId, name in self.onlineFriends.items():
-            self.addFriend(name, friendId)
+        for friendId, data in self.onlineFriends.items():
+            name = data[0]
+            adminToken = data[1]
+            self.addFriend(name, friendId, adminToken)
         self.sortListItems()
         self.setButtons('allFriendsList', None)
 

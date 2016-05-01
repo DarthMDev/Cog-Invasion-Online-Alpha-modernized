@@ -11,37 +11,10 @@ class DistrictNameManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
         self.availableNames = []
 
-    def toonJoined(self, avatarId):
-
-        def toonResponse(dclass, fields):
-            if dclass != self.air.dclassesByName['DistributedToonUD']:
-                return
-
-            name = fields['setName'][0]
-            fl = fields['setFriendsList'][0]
-            self.air.friendsManager.d_toonOnline(avatarId, fl, name)
-
-        self.air.dbInterface.queryObject(
-            self.air.dbId,
-            avatarId,
-            toonResponse
-        )
-
-    def toonLeft(self, avatarId):
-
-        def toonResponse(dclass, fields):
-            if dclass != self.air.dclassesByName['DistributedToonUD']:
-                return
-
-            name = fields['setName'][0]
-            fl = fields['setFriendsList'][0]
-            self.air.friendsManager.d_toonOffline(avatarId, fl, name)
-
-        self.air.dbInterface.queryObject(
-            self.air.dbId,
-            avatarId,
-            toonResponse
-        )
+    def shuttingDown(self, name):
+        # This district is shutting down.. make their name available.
+        print "Freeing up District name: {0}".format(name)
+        self.availableNames.append(name)
 
     def requestDistrictName(self):
         sender = self.air.getMsgSender()

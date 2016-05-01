@@ -128,6 +128,8 @@ class CogInvasionClientRepository(AstronClientRepository):
 
         base.minigame = None
 
+        base.finalExitCallbacks.insert(0, self.__handleExit)
+
         self.accountName = os.environ.get('ACCOUNT_NAME', '')
         self.csm = self.generateGlobalObject(DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
         self.friendsManager = self.generateGlobalObject(DO_ID_FRIENDS_MANAGER, 'FriendsManager')
@@ -143,6 +145,14 @@ class CogInvasionClientRepository(AstronClientRepository):
     #	div = taskName.split('-')
     #	self.taskNameAllocator.free(div[1])
     #	taskMgr.remove(taskName)
+
+    def __handleExit(self):
+        try:
+            base.localAvatar.b_setAnimState('teleportOut')
+        except:
+            pass
+
+        self.gameFSM.request('closeShard', ['off'])
 
     def showPlayerIds(self):
         print "Showing player ids..."
