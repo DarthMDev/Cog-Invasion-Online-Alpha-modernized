@@ -7,11 +7,13 @@ from panda3d.core import Fog, Point3, Vec3
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.State import State
-from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpPosInterval
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpPosInterval, Parallel
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.toon import ParticleLoader
 
+from DistributedMinigame import getAlertText, getAlertPulse
+from DistributedEagleGame import getGameText, getCountdownIval
 from DistributedToonFPSGame import DistributedToonFPSGame
 from DodgeballFirstPerson import DodgeballFirstPerson
 from Snowball import Snowball
@@ -38,15 +40,15 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
 	            ['prop_snow_tree_small_ur', Point3(34.03, -88.02, 23)],
 	            ['prop_snow_tree_small_ul', Point3(-62.71, -62.66, 16)]]
 
-    SnowballData = [Point3(20, 0, 0.5),
-                    Point3(15, 0, 0.5),
-                    Point3(10, 0, 0.5),
-                    Point3(5, 0, 0.5),
-                    Point3(0, 0, 0.5),
-                    Point3(-5, 0, 0.5),
-                    Point3(-10, 0, 0.5),
-                    Point3(-15, 0, 0.5),
-                    Point3(-20, 0, 0.5)]
+    SnowballData = [Point3(30, 0, 0.75),
+                    Point3(22.5, 0, 0.75),
+                    Point3(15, 0, 0.75),
+                    Point3(7.5, 0, 0.75),
+                    Point3(0, 0, 0.75),
+                    Point3(-7.5, 0, 0.75),
+                    Point3(-15, 0, 0.75),
+                    Point3(-22.5, 0, 0.75),
+                    Point3(-30, 0, 0.75)]
 
     GameSong = "phase_4/audio/bgm/MG_Dodgeball.mp3"
     GameDesc = ("Welcome to the north! You have been invited to play dodgeball with the penguins!\n\n"
@@ -54,6 +56,8 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
                 " to Catch!\n\nObjective\nThe first team to get everyone out wins!")
 
     InitCamTrans = [Point3(25, 45, 19.5317), Vec3(154.001, -15, 0)]
+
+    GetSnowBalls = "Pick up a snowball from the center!"
 
     def __init__(self, cr):
         try:
@@ -80,6 +84,9 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         self.firstPerson = DodgeballFirstPerson(self)
 
         self.scrollBySeq = None
+        self.infoText = None
+
+        self.infoText = getAlertText()
 
         self.spawnPointsByTeam = {
             BLUE: [
@@ -135,7 +142,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
 
         self.arena = loader.loadModel("phase_4/models/minigames/dodgeball_arena.egg")
         self.arena.reparentTo(render)
-        self.arena.setScale(0.5)
+        self.arena.setScale(0.75)
         self.arena.find('**/team_divider').setBin('ground', 18)
         self.arena.find('**/floor').setBin('ground', 18)
         self.arena.find('**/team_divider_coll').setCollideMask(CIGlobals.FloorBitmask)
@@ -150,7 +157,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
 
         for i in xrange(len(DistributedDodgeballGame.SnowballData)):
             snowdata = DistributedDodgeballGame.SnowballData[i]
-            snowball = Snowball(self)
+            snowball = Snowball(self, i)
             snowball.load()
             snowball.reparentTo(render)
             snowball.setPos(snowdata)
@@ -167,6 +174,10 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         self.fog.setColor(0.486, 0.784, 1)
         self.fog.setExpDensity(0.003)
         render.setFog(self.fog)
+
+    def snowballPickup(self, snowballIndex, pickerUpperAvId):
+        snowball = self.snowballs[snowballIndex]
+        snowball.pickup(pickerUpperAvId)
 
     def deleteWorld(self):
         for snowball in self.snowballs:
@@ -190,11 +201,48 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
             self.arena = None
         render.clearFog()
 
+    def enterPlay(self):
+        self.firstPerson.reallyStart()
+
+    def exitPlay(self):
+        self.firstPerson.end()
+
     def enterCountdown(self):
-        pass
+        self.firstPerson.start()
+        self.firstPerson.disableMouse()
+
+        self.infoText.setText(DistributedDodgeballGame.GetSnowBalls)
+
+        self.countdownText = getGameText()
+        self.countdownIval = Parallel(
+            Sequence(
+                Func(self.countdownText.setText, "5"),
+                getCountdownIval(self.countdownText),
+                Func(self.countdownText.setText, "4"),
+                getCountdownIval(self.countdownText),
+                Func(self.countdownText.setText, "3"),
+                getCountdownIval(self.countdownText),
+                Func(self.countdownText.setText, "2"),
+                getCountdownIval(self.countdownText),
+                Func(self.countdownText.setText, "1"),
+                getCountdownIval(self.countdownText)),
+            getAlertPulse(self.infoText),
+            name = "COUNTDOWNIVAL")
+        self.countdownIval.setDoneEvent(self.countdownIval.getName())
+        self.acceptOnce(self.countdownIval.getDoneEvent(), self.__handleCountdownDone)
+        self.countdownIval.start()
+
+    def __handleCountdownDone(self):
+        self.fsm.request('play')
 
     def exitCountdown(self):
-        pass
+        if hasattr(self, 'countdownText'):
+            self.countdownText.destroy()
+            del self.countdownText
+        if hasattr(self, 'countdownIval'):
+            self.ignore(self.countdownIval.getDoneEvent())
+            self.countdownIval.finish()
+            del self.countdownIval
 
     def enterScrollBy(self):
         BLUE_START_POS = Point3(-20, 0, 4)
@@ -256,6 +304,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
 
     def announceGenerate(self):
         DistributedToonFPSGame.announceGenerate(self)
+        base.camLens.setMinFov(CIGlobals.GunGameFOV / (4./3.))
         self.load()
 
     def disable(self):
