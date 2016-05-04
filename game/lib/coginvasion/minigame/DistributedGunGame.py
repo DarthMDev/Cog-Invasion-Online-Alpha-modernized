@@ -28,9 +28,11 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
     GameMode2Description = {GGG.GameModes.CASUAL: "Battle and defeat the Toons on the other team with your gun to gain points. " + \
                         "Remember to reload your gun when you're out of ammo! " + \
                         "The Toon with the most points when the timer runs out gets a nice prize!",
-                        GGG.GameModes.CTF: "Steal the other team's flag and take it to where your flag is to score a point. Follow the arrows at the bottom of the screen to find the flags! Use your gun to defend yourself and your flag!"}
+                        GGG.GameModes.CTF: "Steal the other team's flag and take it to where your flag is to score a point. Follow the arrows at the bottom of the screen to find the flags! Use your gun to defend yourself and your flag!",
+                        GGG.GameModes.KOTH : "Capture the central point and defend it from the other Toons. The Toon who holds the point the longest wins."}
     GameMode2Music = {GGG.GameModes.CASUAL: 'phase_4/audio/bgm/MG_TwoDGame.mid',
-                      GGG.GameModes.CTF:    'phase_9/audio/bgm/CHQ_FACT_bg.mid'}
+                      GGG.GameModes.CTF:    'phase_9/audio/bgm/CHQ_FACT_bg.mid',
+                      GGG.GameModes.KOTH : 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'}
 
     def __init__(self, cr):
         try:
@@ -73,8 +75,8 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.blueArrow = None
         self.infoLbl = None
         self.scoreByTeam = {GGG.Teams.RED: 0, GGG.Teams.BLUE: 0}
-        self.balloonSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
-        self.decidedSound = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_win_vote.mp3')
+        self.balloonSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.ogg')
+        self.decidedSound = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_win_vote.ogg')
         return
 
     def getFlagOfOtherTeam(self, team):
@@ -92,43 +94,59 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         box = DGG.getDefaultDialogGeom()
         geom = CIGlobals.getDefaultBtnGeom()
         self.container = DirectFrame()
-        self.bg = OnscreenImage(image = box, color = (1, 1, 0.75, 1), scale = (1.9, 1.4, 1.4),
+        self.bg = OnscreenImage(image = box, color = (1, 1, 0.75, 1), scale = (2.4, 1.4, 1.4),
             parent = self.container)
         self.title = OnscreenText(
             text = "Vote  on  Game  Mode", pos = (0, 0.5, 0), font = font,
             scale = (0.12), parent = self.container, fg = (1, 0.9, 0.3, 1))
         self.btnFrame = DirectFrame(parent = self.container, pos = (0.14, 0, 0))
-        self.casualFrame = DirectFrame(parent = self.btnFrame, pos = (-0.5, 0, 0))
-        self.ctfFrame = DirectFrame(parent = self.btnFrame, pos = (0.22, 0, 0))
+        self.casualFrame = DirectFrame(parent = self.btnFrame, pos = (-0.80, 0, 0))
+        self.ctfFrame = DirectFrame(parent = self.btnFrame, pos = (-0.125, 0, 0))
+        self.kothFrame = DirectFrame(parent = self.btnFrame, pos = (0.55, 0, 0))
         self.casual = DirectButton(
-        	parent = self.casualFrame, relief = None, pressEffect = 0,
-        	image = ('phase_4/maps/casual_neutral.png',
-        			'phase_4/maps/casual_hover.png',
-        			'phase_4/maps/casual_hover.png'),
-        	image_scale = (0.9, 1, 1), scale = 0.4, command = self.__pickedGameMode, extraArgs = [GGG.GameModes.CASUAL])
+            parent = self.casualFrame, relief = None, pressEffect = 0,
+            image = ('phase_4/maps/casual_neutral.png',
+                    'phase_4/maps/casual_hover.png',
+                    'phase_4/maps/casual_hover.png'),
+            image_scale = (0.9, 1, 1), scale = 0.4, command = self.__pickedGameMode, extraArgs = [GGG.GameModes.CASUAL])
         self.casual_votesLbl = OnscreenText(
-        	parent = self.casualFrame, text = "0", pos = (0, -0.46, 0), font = imp)
+            parent = self.casualFrame, text = "0", pos = (0, -0.46, 0), font = imp)
         self.ctf = DirectButton(
-        	parent = self.ctfFrame, relief = None, pressEffect = 0,
-        	image = ('phase_4/maps/ctf_neutral.png',
-        			'phase_4/maps/ctf_hover.png',
-        			'phase_4/maps/ctf_hover.png'),
-        	image_scale = (0.9, 1, 1), scale = 0.4, command = self.__pickedGameMode, extraArgs = [GGG.GameModes.CTF])
+            parent = self.ctfFrame, relief = None, pressEffect = 0,
+            image = ('phase_4/maps/ctf_neutral.png',
+                    'phase_4/maps/ctf_hover.png',
+                    'phase_4/maps/ctf_hover.png'),
+            image_scale = (0.9, 1, 1), scale = 0.4, command = self.__pickedGameMode, extraArgs = [GGG.GameModes.CTF])
         self.ctf_votesLbl = OnscreenText(
-        	parent = self.ctfFrame, text = "0", pos = (0, -0.46, 0), font = imp)
+            parent = self.ctfFrame, text = "0", pos = (0, -0.46, 0), font = imp)
+        self.koth = DirectButton(
+            parent = self.kothFrame, relief = None, pressEffect = 0,
+            image = ('phase_4/maps/koth_neutral.png',
+                    'phase_4/maps/koth_hover.png',
+                    'phase_4/maps/koth_hover.png'),
+            image_scale = (0.9, 1, 1), scale = 0.4, command = self.__pickedGameMode, extraArgs = [GGG.GameModes.KOTH])
+        self.koth_votesLbl = OnscreenText(
+            parent = self.kothFrame, text = "0", pos = (0, -0.46, 0), font = imp)
         self.outcomeLbl = OnscreenText(
-        	parent = self.container, text = "", pos = (0, -0.6, 0), font = imp, scale = 0.1)
+            parent = self.container, text = "", pos = (0, -0.6, 0), font = imp, scale = 0.1)
 
     def __pickedGameMode(self, mode):
         self.sendUpdate('myGameModeVote', [mode])
         self.ctf['state'] = DGG.DISABLED
         self.casual['state'] = DGG.DISABLED
+        self.koth['state'] = DGG.DISABLED
         if mode == GGG.GameModes.CASUAL:
             self.ctf['image'] = 'phase_4/maps/ctf_neutral.png'
+            self.koth['image'] = 'phase_4/maps/koth_neutral.png'
             self.casual['image'] = 'phase_4/maps/casual_hover.png'
         elif mode == GGG.GameModes.CTF:
             self.ctf['image'] = 'phase_4/maps/ctf_hover.png'
             self.casual['image'] = 'phase_4/maps/casual_neutral.png'
+            self.koth['image'] = 'phase_4/maps/koth_neutral.png'
+        elif mode == GGG.GameModes.KOTH:
+            self.ctf['image'] = 'phase_4/maps/ctf_neutral.png'
+            self.casual['image'] = 'phase_4/maps/casual_neutral.png'
+            self.koth['image'] = 'phase_4/maps/koth_hover.png'
 
     def incrementGameModeVote(self, mode):
         base.playSfx(self.balloonSound)
@@ -137,6 +155,8 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
             lbl = self.ctf_votesLbl
         elif mode == GGG.GameModes.CASUAL:
             lbl = self.casual_votesLbl
+        elif mode == GGG.GameModes.KOTH:
+            lbl = self.koth_votesLbl
         if lbl:
             lbl.setText(str(int(lbl.getText()) + 1))
 
@@ -163,12 +183,18 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         del self.casual_votesLbl
         self.ctf.destroy()
         del self.ctf
+        self.koth_votesLbl.destroy()
+        del self.koth_votesLbl
         self.casual.destroy()
         del self.casual
         self.ctfFrame.destroy()
         del self.ctfFrame
         self.casualFrame.destroy()
         del self.casualFrame
+        self.kothFrame.destroy()
+        del self.kothFrame
+        self.koth.destroy()
+        del self.koth
         self.title.destroy()
         del self.title
         self.bg.destroy()
@@ -177,19 +203,104 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         del self.container
 
     def enterChooseTeam(self):
-        self.makeSelectionGUI()
+        if self.gameMode == GGG.GameModes.KOTH:
+            self.fsm.request('chooseGun')
+            pos, hpr = self.pickSpawnPoint()
+            base.localAvatar.setPos(pos)
+            base.localAvatar.setHpr(hpr)
+            return
+        
+        font = CIGlobals.getMickeyFont()
+        box = loader.loadModel('phase_3/models/gui/dialog_box_gui.bam')
+        imp = CIGlobals.getToonFont()
+        geom = CIGlobals.getDefaultBtnGeom()
+        self.container = DirectFrame()
+        self.bg = OnscreenImage(image = box, color = (1, 1, 0.75, 1), scale = (1.9, 1.4, 1.4),
+            parent = self.container)
+        self.title = OnscreenText(
+            text = "Join  a  Team", pos = (0, 0.5, 0), font = font,
+            scale = (0.12), parent = self.container, fg = (1, 0.9, 0.3, 1))
+        self.btnFrame = DirectFrame(parent = self.container, pos = (0.14, 0, 0))
+        self.bbsFrame = DirectFrame(parent = self.btnFrame, pos = (-0.5, 0, 0))
+        self.rrbFrame = DirectFrame(parent = self.btnFrame, pos = (0.22, 0, 0))
+        self.bbs = DirectButton(
+            parent = self.bbsFrame, relief = None, pressEffect = 0,
+            image = ('phase_4/maps/blue_neutral.png',
+                    'phase_4/maps/blue_hover.png',
+                    'phase_4/maps/blue_hover.png'),
+            image_scale = (0.9, 1, 1), scale = 0.4, command = self.__choseTeam, extraArgs = [GGG.Teams.BLUE])
+        self.bbs_playersLbl = OnscreenText(
+            parent = self.bbsFrame, text = str(self.playersByTeam[GGG.Teams.BLUE]), pos = (0, -0.46, 0), font = imp)
+        self.rrb = DirectButton(
+            parent = self.rrbFrame, relief = None, pressEffect = 0,
+            image = ('phase_4/maps/red_neutral.png',
+                    'phase_4/maps/red_hover.png',
+                    'phase_4/maps/red_hover.png'),
+            image_scale = (0.9, 1, 1), scale = 0.4, command = self.__choseTeam, extraArgs = [GGG.Teams.RED])
+        self.rrb_playersLbl = OnscreenText(
+            parent = self.rrbFrame, text = str(self.playersByTeam[GGG.Teams.RED]), pos = (0, -0.46, 0), font = imp)
+        self.teamFull_text = OnscreenText(
+            parent = self.container, text = "", pos = (0, -0.6, 0), font = imp)
+
+    def __choseTeam(self, team):
+        self.team = team
+        self.bbs['state'] = DGG.DISABLED
+        self.rrb['state'] = DGG.DISABLED
+        self.sendUpdate('choseTeam', [team])
+
+    def teamFull(self):
+        # Oh, man, the team is full. Let's try again.
+        self.teamFull_text.setText('Sorry, that team is full.')
+        self.team = None
+        self.bbs['state'] = DGG.NORMAL
+        self.rrb['state'] = DGG.NORMAL
 
     def acceptedIntoTeam(self):
-        TeamMinigame.acceptedIntoTeam(self)
-
         # Yay, we're on the team! Let's choose our gun!
+        message = GGG.MSG_WELCOME.format(GGG.TeamNameById[self.team])
+        whisper = WhisperPopup(message, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
+        whisper.manage(base.marginManager)
         self.fsm.request('chooseGun')
         pos, hpr = self.pickSpawnPoint()
         base.localAvatar.setPos(pos)
         base.localAvatar.setHpr(hpr)
 
+    def incrementTeamPlayers(self, team):
+        self.playersByTeam[team] += 1
+        if self.fsm.getCurrentState().getName() == 'chooseTeam':
+            if team == GGG.Teams.RED:
+                lbl = self.rrb_playersLbl
+            elif team == GGG.Teams.BLUE:
+                lbl = self.bbs_playersLbl
+            lbl.setText(str(self.playersByTeam[team]))
+
     def exitChooseTeam(self):
-        self.destroySelectionGUI()
+        if self.gameMode != GGG.GameModes.KOTH:
+            self.teamFull_text.destroy()
+            del self.teamFull_text
+            self.rrb_playersLbl.destroy()
+            del self.rrb_playersLbl
+            self.bbs_playersLbl.destroy()
+            del self.bbs_playersLbl
+            self.rrb.destroy()
+            del self.rrb
+            self.bbs.destroy()
+            del self.bbs
+            self.rrbFrame.destroy()
+            del self.rrbFrame
+            self.bbsFrame.destroy()
+            del self.bbsFrame
+            self.title.destroy()
+            del self.title
+            self.bg.destroy()
+            del self.bg
+            self.container.destroy()
+            del self.container
+
+    def setTeamOfPlayer(self, avId, team):
+        remoteAvatar = self.getRemoteAvatar(avId)
+        if remoteAvatar:
+            remoteAvatar.setTeam(team)
 
     def enterChooseGun(self):
         font = CIGlobals.getToonFont()
@@ -204,7 +315,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.shotgunBtn = DirectButton(geom = geom, text = "Shotgun", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
             command = self.__gunChoice, extraArgs = ["shotgun"], pos = (0, 0, 0.25), parent = self.container)
         self.sniperBtn = DirectButton(geom = geom, text = "Sniper", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
-            command = self.__gunChoice, extraArgs = ["sniper"], pos = (0, 0, 0.15), parent = self.container)			
+            command = self.__gunChoice, extraArgs = ["sniper"], pos = (0, 0, 0.15), parent = self.container)            
 
     def __gunChoice(self, choice):
         self.toonFps.cleanup()
@@ -216,7 +327,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
 
     def exitChooseGun(self):
         self.sniperBtn.destroy()
-        del self.sniperBtn		
+        del self.sniperBtn        
         self.shotgunBtn.destroy()
         del self.shotgunBtn
         self.pistolBtn.destroy()
@@ -296,7 +407,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.fsm.request('announceTeamWon', [team])
 
     def enterAnnounceTeamWon(self, team):
-        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
         whistleSfx.play()
         del whistleSfx
         text = GGG.TeamNameById[team].split(' ')[0]
@@ -312,7 +423,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
             self.track = None
 
     def enterAnnounceGameOver(self):
-        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
         whistleSfx.play()
         del whistleSfx
         self.gameOverLbl = DirectLabel(text = "TIME'S\nUP!", relief = None, scale = 0.35, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
@@ -435,8 +546,6 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
     def disable(self):
         render.show()
         base.localAvatar.setWalkSpeedNormal()
-
-        TeamMinigame.cleanup(self)
         
         # Show the staff icon again.
         if not base.localAvatar.tokenIcon is None:

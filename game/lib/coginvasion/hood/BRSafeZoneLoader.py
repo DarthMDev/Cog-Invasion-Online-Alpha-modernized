@@ -22,10 +22,10 @@ class BRSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             "phase_9/audio/bgm/encntr_suit_winning.mid"
         ]
         self.tournamentMusicFiles = [
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_1.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_2.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_3.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_1.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_2.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_3.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.ogg",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_8/dna/the_burrrgh_sz.pdna'
@@ -34,9 +34,9 @@ class BRSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
         self.telescope = None
         self.snow = None
         self.windNoises = [
-            'phase_8/audio/sfx/SZ_TB_wind_1.mp3',
-            'phase_8/audio/sfx/SZ_TB_wind_2.mp3',
-            'phase_8/audio/sfx/SZ_TB_wind_3.mp3'
+            'phase_8/audio/sfx/SZ_TB_wind_1.ogg',
+            'phase_8/audio/sfx/SZ_TB_wind_2.ogg',
+            'phase_8/audio/sfx/SZ_TB_wind_3.ogg'
         ]
 
     def load(self):

@@ -19,7 +19,7 @@ class DistributedTreasure(DistributedObject):
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
         self.grabSoundPath = None
-        self.rejectSoundPath = 'phase_4/audio/sfx/ring_miss.mp3'
+        self.rejectSoundPath = 'phase_4/audio/sfx/ring_miss.ogg'
         self.dropShadow = None
         self.treasureTrack = None
         self.nodePath = None

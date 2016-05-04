@@ -18,7 +18,7 @@ class DistributedFactorySneakGame(DistributedToonFPSGame):
         self.gameWorld = None
 
     def load(self):
-        self.setMinigameMusic("phase_4/audio/bgm/MG_Escape.mp3")
+        self.setMinigameMusic("phase_4/audio/bgm/MG_Escape.ogg")
         self.setDescription(
             "Sneak around the Sellbot Factory and collect jellybean barrels. "
             "Avoid the guards and exit by the Factory Foreman to redeem your jellybeans.")

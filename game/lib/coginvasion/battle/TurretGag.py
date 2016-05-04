@@ -68,7 +68,7 @@ class TurretGag(DirectObject):
         self.acceptOnce(self.track.getDoneEvent(), self.cleanup)
         self.track.start()
 
-        fireSfx = base.audio3d.loadSfx('phase_4/audio/sfx/MG_cannon_fire_alt.mp3')
+        fireSfx = base.audio3d.loadSfx('phase_4/audio/sfx/MG_cannon_fire_alt.ogg')
         base.audio3d.attachSoundToObject(fireSfx, self.turret.getCannon())
         fireSfx.play()
 

@@ -225,17 +225,17 @@ class DistributedBuilding(DistributedObject):
 
     def loadAnimToSuitSfx(self):
         if self.cogDropSound == None:
-            self.cogDropSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_drop.mp3')
-            self.cogLandSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_land.mp3')
-            self.cogSettleSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_settle.mp3')
-            self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.mp3')
+            self.cogDropSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_drop.ogg')
+            self.cogLandSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_land.ogg')
+            self.cogSettleSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_settle.ogg')
+            self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.ogg')
             
     def loadAnimToToonSfx(self):
         if self.cogWeakenSound == None:
-            self.cogWeakenSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_weaken.mp3')
-            self.toonGrowSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'toonbldg_grow.mp3')
-            self.toonSettleSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'toonbldg_settle.mp3')
-            self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.mp3')
+            self.cogWeakenSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_weaken.ogg')
+            self.toonGrowSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'toonbldg_grow.ogg')
+            self.toonSettleSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'toonbldg_settle.ogg')
+            self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.ogg')
 
     def unloadSfx(self):
         if self.cogDropSound != None:

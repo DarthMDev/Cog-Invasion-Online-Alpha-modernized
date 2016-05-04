@@ -75,10 +75,10 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.localAv = base.localAvatar
         self.localAvId = self.localAv.doId
         self.musicPath = "phase_4/audio/bgm/trolley_song.mid"
-        self.winSfx = base.loadSfx("phase_4/audio/sfx/MG_win.mp3")
-        self.loseSfx = base.loadSfx("phase_4/audio/sfx/MG_lose.mp3")
-        self.prizeHigh = base.loadSfx("phase_6/audio/sfx/KART_Applause_1.mp3")
-        self.prizeLow = base.loadSfx("phase_6/audio/sfx/KART_Applause_4.mp3")
+        self.winSfx = base.loadSfx("phase_4/audio/sfx/MG_win.ogg")
+        self.loseSfx = base.loadSfx("phase_4/audio/sfx/MG_lose.ogg")
+        self.prizeHigh = base.loadSfx("phase_6/audio/sfx/KART_Applause_1.ogg")
+        self.prizeLow = base.loadSfx("phase_6/audio/sfx/KART_Applause_4.ogg")
         self.music = None
         self.description = ""
         self.descDialog = None
@@ -297,7 +297,7 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         DistributedObject.DistributedObject.announceGenerate(self)
         base.minigame = self
         self.alertText = getAlertText()
-        self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
+        self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.ogg')
 
     def disable(self):
         base.localAvatar.setPosHpr(0, 0, 0, 0, 0, 0)

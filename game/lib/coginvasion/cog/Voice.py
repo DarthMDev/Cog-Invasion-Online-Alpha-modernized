@@ -11,9 +11,9 @@ class Voice:
     def getSoundFile(self, expression):
         return (self.filePath % expression)
     
-NORMAL = Voice('phase_3.5/audio/dial/COG_VO_%s.mp3')
-SKELETON = Voice('phase_5/audio/sfx/Skel_COG_VO_%s.mp3')
-BOSS = Voice('phase_9/audio/sfx/Boss_COG_VO_%s.mp3')
+NORMAL = Voice('phase_3.5/audio/dial/COG_VO_%s.ogg')
+SKELETON = Voice('phase_5/audio/sfx/Skel_COG_VO_%s.ogg')
+BOSS = Voice('phase_9/audio/sfx/Boss_COG_VO_%s.ogg')
 
 def getVoiceById(self, index):
     voices = [NORMAL, SKELETON, BOSS]

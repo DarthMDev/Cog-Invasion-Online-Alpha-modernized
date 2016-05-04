@@ -57,12 +57,12 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.tokenIcon = None
         self.tokenIconIval = None
         self.forcedTorsoAnim = None
-        self.fallSfx = base.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_hit_dirt.mp3")
+        self.fallSfx = base.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_hit_dirt.ogg")
         base.audio3d.attachSoundToObject(self.fallSfx, self)
         self.eyes = loader.loadTexture("phase_3/maps/eyes.jpg", "phase_3/maps/eyes_a.rgb")
         self.myTaskId = random.uniform(0, 1231231232132131231232)
         self.closedEyes = loader.loadTexture("phase_3/maps/eyesClosed.jpg", "phase_3/maps/eyesClosed_a.rgb")
-        self.soundChatBubble = loader.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.mp3")
+        self.soundChatBubble = loader.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.ogg")
         self.shadowCaster = None
         self.chatSoundDict = {}
         self.backpack = None
@@ -192,7 +192,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
     def enterSquish(self, ts = 0, callback = None, extraArgs = []):
         self.playingAnim = 'squish'
-        sound = loader.loadSfx('phase_9/audio/sfx/toon_decompress.mp3')
+        sound = loader.loadSfx('phase_9/audio/sfx/toon_decompress.ogg')
         lerpTime = 0.1
         node = self.getGeomNode().getChild(0)
         origScale = node.getScale()
@@ -595,7 +595,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
 
     def enterWin(self, ts = 0, callback = None, extraArgs = []):
         self.playingAnim = 'win'
-        self.sfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_Win.mp3")
+        self.sfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/ENC_Win.ogg")
         self.sfx.setLoop(True)
         base.audio3d.attachSoundToObject(self.sfx, self)
         base.playSfx(self.sfx, node = self)
@@ -819,7 +819,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.exitTeleportOut()
 
     def teleportOutSfx(self):
-        self.outSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/AV_teleport.mp3")
+        self.outSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/AV_teleport.ogg")
         base.audio3d.attachSoundToObject(self.outSfx, self.portal1)
         base.playSfx(self.outSfx, node = self)
 
@@ -972,7 +972,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
                 callback()
 
     def dieSfx(self):
-        self.Losesfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_Lose.mp3")
+        self.Losesfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_Lose.ogg")
         base.audio3d.attachSoundToObject(self.Losesfx, self)
         base.playSfx(self.Losesfx, node = self)
 

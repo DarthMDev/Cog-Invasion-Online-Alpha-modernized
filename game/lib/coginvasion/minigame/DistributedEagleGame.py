@@ -310,12 +310,12 @@ class DistributedEagleGame(DistributedMinigame):
 		self.waitLbl.hide()
 
 	def load(self):
-		self.hitEagleSfx = base.loadSfx('phase_4/audio/sfx/AA_drop_anvil_miss.mp3')
-		self.hitObstacleSfx = base.loadSfx('phase_4/audio/sfx/MG_cannon_hit_tower.mp3')
-		self.toonOof = base.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_toonHit.mp3')
-		self.cannonMoveSfx = base.loadSfx("phase_4/audio/sfx/MG_cannon_adjust.mp3")
+		self.hitEagleSfx = base.loadSfx('phase_4/audio/sfx/AA_drop_anvil_miss.ogg')
+		self.hitObstacleSfx = base.loadSfx('phase_4/audio/sfx/MG_cannon_hit_tower.ogg')
+		self.toonOof = base.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_toonHit.ogg')
+		self.cannonMoveSfx = base.loadSfx("phase_4/audio/sfx/MG_cannon_adjust.ogg")
 		self.cannonMoveSfx.setLoop(True)
-		self.fallSfx = base.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_fall.mp3")
+		self.fallSfx = base.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_fall.ogg")
 		self.setMinigameMusic("phase_9/audio/bgm/CHQ_FACT_bg.mid")
 		self.setDescription("Shoot as many flying Legal Eagles as you can using your cannon. "
 			"Use the arrow keys to aim your cannon and press the control key to fire.")

@@ -290,7 +290,7 @@ class CannedAttack(ThrowAttack):
                             'throw-object', 0.05, 'cannedWeaponSphere', weapon_r = 180, ts = ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_tossup_only.ogg")
         ThrowAttack.playWeaponSound(self)
 
     def handleWeaponTouch(self):
@@ -308,7 +308,7 @@ class HardballAttack(ThrowAttack):
                             'throw-object', 0.1, 'hardballWeaponSphere', weapon_z = -0.5, ts = ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_throw_only.ogg")
         ThrowAttack.playWeaponSound(self)
 
     def handleWeaponTouch(self):
@@ -326,7 +326,7 @@ class ClipOnTieAttack(ThrowAttack):
                             'throw-paper', 1.1, 'clipOnTieWeaponSphere', weapon_r = 180, ts = ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.ogg")
         ThrowAttack.playWeaponSound(self)
 
 class MarketCrashAttack(ThrowAttack):
@@ -367,7 +367,7 @@ class GlowerPowerAttack(ThrowAttack):
         ThrowAttack.throwObject(self, False)
 
     def playWeaponSound(self):
-        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_glower_power.ogg")
         ThrowAttack.playWeaponSound(self)
 
 class PickPocketAttack(Attack):
@@ -408,7 +408,7 @@ class PickPocketAttack(Attack):
             base.localAvatar.b_handleSuitAttack(self.getAttackId(self.attack), self.suit.doId)
 
     def playWeaponSound(self):
-        self.pickSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_pick_pocket.mp3")
+        self.pickSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_pick_pocket.ogg")
         base.audio3d.attachSoundToObject(self.pickSfx, self.suit)
         self.pickSfx.play()
 
@@ -511,7 +511,7 @@ class FountainPenAttack(Attack):
         self.sprayScaleIval.pause()
 
     def playWeaponSound(self):
-        self.spraySfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_fountain_pen.mp3")
+        self.spraySfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_fountain_pen.ogg")
         base.audio3d.attachSoundToObject(self.spraySfx, self.pen)
         base.playSfx(self.spraySfx, node = self.pen)
 
@@ -568,9 +568,9 @@ class HangUpAttack(Attack):
         self.cord.ropeNode.setUseVertexThickness(1)
         self.cord.setup(3, ({'node': self.phone, 'point': (0.8, 0, 0.2), 'color': (0, 0, 0, 1), 'thickness': 1000}, {'node': self.phone, 'point': (2, 0, 0), 'color': (0, 0, 0, 1), 'thickness': 1000}, {'node': self.receiver, 'point': (1.1, 0.25, 0.5), 'color': (0, 0, 0, 1), 'thickness': 1000}), [])
         self.cord.setH(180)
-        self.phoneSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup.mp3")
+        self.phoneSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup.ogg")
         base.audio3d.attachSoundToObject(self.phoneSfx, self.phone)
-        self.hangupSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup_place_down.mp3")
+        self.hangupSfx = base.audio3d.loadSfx("phase_3.5/audio/sfx/SA_hangup_place_down.ogg")
         base.audio3d.attachSoundToObject(self.hangupSfx, self.phone)
         collSphere = CollisionSphere(0, 0, 0, 2)
         collSphere.setTangible(0)
@@ -708,7 +708,7 @@ class BounceCheckAttack(ThrowAttack):
         self.weapon = loader.loadModel('phase_5/models/props/bounced-check.bam')
         self.weapon.setScale(10)
         self.weapon.setTwoSided(1)
-        self.bounceSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_bounce_check_bounce.mp3')
+        self.bounceSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_bounce_check_bounce.ogg')
         base.audio3d.attachSoundToObject(self.bounceSound, self.suit)
         cSphere = CollisionSphere(0, 0, 0, 0.1)
         cSphere.setTangible(0)
@@ -813,7 +813,7 @@ class RedTapeAttack(ThrowAttack):
                             weapon_y = 0.35, weapon_z = -0.5, ts = ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_red_tape.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_red_tape.ogg")
         ThrowAttack.playWeaponSound(self)
 
     def handleWeaponTouch(self):
@@ -831,7 +831,7 @@ class PowerTieAttack(ThrowAttack):
                             'throw-paper', 0.2, 'powerTieWeaponSphere', weapon_r = 180, ts = ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.ogg")
         ThrowAttack.playWeaponSound(self)
 
 class HalfWindsorAttack(ThrowAttack):
@@ -844,7 +844,7 @@ class HalfWindsorAttack(ThrowAttack):
                             weapon_h = 90, weapon_z = -1, weapon_y = -1.6, ts = ts)
 
     def playWeaponSound(self):
-        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.mp3")
+        self.weaponSfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_throw.ogg")
         ThrowAttack.playWeaponSound(self)
 
 class BiteAttack(ThrowAttack):
@@ -1035,7 +1035,7 @@ class RazzleDazzleAttack(ParticleAttack):
         ParticleAttack.releaseAttack(self, self.handObj.find('**/scale_joint_sign'), onlyMoveColl = False, blendType = 'easeIn')
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_razzle_dazzle.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_razzle_dazzle.ogg')
         ParticleAttack.playParticleSound(self)
 
 class BuzzWordAttack(ParticleAttack):
@@ -1073,7 +1073,7 @@ class BuzzWordAttack(ParticleAttack):
         ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_buzz_word.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_buzz_word.ogg')
         ParticleAttack.playParticleSound(self)
 
 class JargonAttack(ParticleAttack):
@@ -1108,7 +1108,7 @@ class JargonAttack(ParticleAttack):
         ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_jargon.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_jargon.ogg')
         self.particleSound.setLoop(True)
         ParticleAttack.playParticleSound(self)
 
@@ -1146,7 +1146,7 @@ class MumboJumboAttack(ParticleAttack):
         ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'), blendType = 'easeIn')
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_mumbo_jumbo.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_mumbo_jumbo.ogg')
         self.particleSound.setLoop(True)
         ParticleAttack.playParticleSound(self)
 
@@ -1181,7 +1181,7 @@ class FilibusterAttack(ParticleAttack):
         ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_filibuster.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_filibuster.ogg')
         self.particleSound.setLoop(True)
         ParticleAttack.playParticleSound(self)
 
@@ -1214,7 +1214,7 @@ class DoubleTalkAttack(ParticleAttack):
         ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'), blendType = 'easeIn')
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_filibuster.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_filibuster.ogg')
         self.particleSound.setLoop(True)
         ParticleAttack.playParticleSound(self)
 
@@ -1249,7 +1249,7 @@ class SchmoozeAttack(ParticleAttack):
         ParticleAttack.releaseAttack(self, self.suit.find('**/joint_head'))
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_schmooze.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_schmooze.ogg')
         self.particleSound.setLoop(True)
         ParticleAttack.playParticleSound(self)
 
@@ -1274,7 +1274,7 @@ class FingerWagAttack(ParticleAttack):
         self.particles[0].setH(self.particles[0], 90)
 
     def playParticleSound(self):
-        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_finger_wag.mp3')
+        self.particleSound = base.audio3d.loadSfx('phase_5/audio/sfx/SA_finger_wag.ogg')
         self.particleSound.setLoop(False)
         ParticleAttack.playParticleSound(self)
 

@@ -21,10 +21,10 @@ class DGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             "phase_9/audio/bgm/encntr_suit_winning.mid"
         ]
         self.tournamentMusicFiles = [
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_1.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_2.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_3.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_1.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_2.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_3.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.ogg",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_8/dna/daisys_garden_sz.pdna'
@@ -34,10 +34,10 @@ class DGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             self.szHolidayDNAFile = 'phase_8/dna/winter_storage_DG_sz.pdna'
         self.telescope = None
         self.birdNoises = [
-            'phase_8/audio/sfx/SZ_DG_bird_01.mp3',
-            'phase_8/audio/sfx/SZ_DG_bird_02.mp3',
-            'phase_8/audio/sfx/SZ_DG_bird_03.mp3',
-            'phase_8/audio/sfx/SZ_DG_bird_04.mp3'
+            'phase_8/audio/sfx/SZ_DG_bird_01.ogg',
+            'phase_8/audio/sfx/SZ_DG_bird_02.ogg',
+            'phase_8/audio/sfx/SZ_DG_bird_03.ogg',
+            'phase_8/audio/sfx/SZ_DG_bird_04.ogg'
         ]
 
     def load(self):

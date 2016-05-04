@@ -16,8 +16,8 @@ from direct.actor.Actor import Actor
 class TNT(TossTrapGag):
 
     def __init__(self):
-        TossTrapGag.__init__(self, CIGlobals.TNT, "phase_5/models/props/tnt-mod.bam", 180, "phase_3.5/audio/sfx/ENC_cogfall_apart.mp3",
-                             "phase_5/audio/sfx/TL_dynamite.mp3", particlesFx="phase_5/etc/tnt.ptf", anim = "phase_5/models/props/tnt-chan.bam")
+        TossTrapGag.__init__(self, CIGlobals.TNT, "phase_5/models/props/tnt-mod.bam", 180, "phase_3.5/audio/sfx/ENC_cogfall_apart.ogg",
+                             "phase_5/audio/sfx/TL_dynamite.ogg", particlesFx="phase_5/etc/tnt.ptf", anim = "phase_5/models/props/tnt-chan.bam")
         self.maxDistance = GagGlobals.TNT_RANGE
         self.setImage('phase_3.5/maps/tnt.png')
         self.setRechargeTime(19.5)

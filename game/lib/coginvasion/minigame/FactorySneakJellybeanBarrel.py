@@ -16,7 +16,7 @@ class FactorySneakJellybeanBarrel(NodePath, FSM.FSM):
 
     BARREL_MODEL_PATH = "phase_4/models/cogHQ/gagTank.bam"
     JAR_MODEL_PATH = "phase_3.5/models/gui/jar_gui.bam"
-    COLLECT_SOUND_PATH = "phase_4/audio/sfx/SZ_DD_treasure.mp3"
+    COLLECT_SOUND_PATH = "phase_4/audio/sfx/SZ_DD_treasure.ogg"
 
     BEANS_VALUE = 25
 

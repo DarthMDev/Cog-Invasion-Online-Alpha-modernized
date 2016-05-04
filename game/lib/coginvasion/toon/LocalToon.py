@@ -66,9 +66,9 @@ class LocalToon(DistributedToon):
         friendsgui.removeNode()
         del friendsgui
         self.hideFriendButton()
-        self.runSfx = base.loadSfx("phase_3.5/audio/sfx/AV_footstep_runloop.wav")
+        self.runSfx = base.loadSfx("phase_3.5/audio/sfx/AV_footstep_runloop.ogg")
         self.runSfx.setLoop(True)
-        self.walkSfx = base.loadSfx("phase_3.5/audio/sfx/AV_footstep_walkloop.wav")
+        self.walkSfx = base.loadSfx("phase_3.5/audio/sfx/AV_footstep_walkloop.ogg")
         self.walkSfx.setLoop(True)
         self.controlManager = ControlManager.ControlManager(True, False)
         self.offset = 3.2375
@@ -100,7 +100,6 @@ class LocalToon(DistributedToon):
         self.lastState = None
         self.lastAction = None
 
-        self.__snowballButton = None
         #base.cTrav.showCollisions(render)
 
     def _handleWentInTunnel(self, requestStatus):
@@ -198,49 +197,6 @@ class LocalToon(DistributedToon):
 
     def disablePicking(self):
         self.ignore('toonClicked')
-
-    def loadImageAsPlane(self, filepath, yresolution = 600):
-        from panda3d.core import Texture, CardMaker, NodePath, TransparencyAttrib, Vec4
-        """
-        Load image as 3d plane
-
-        Arguments:
-        filepath -- image file path
-        yresolution -- pixel-perfect width resolution
-        """
-
-        tex = loader.loadTexture(filepath)
-        tex.setBorderColor(Vec4(0,0,0,0))
-        tex.setWrapU(Texture.WMBorderColor)
-        tex.setWrapV(Texture.WMBorderColor)
-        cm = CardMaker(filepath + ' card')
-        cm.setFrame(-tex.getOrigFileXSize(), tex.getOrigFileXSize(), -tex.getOrigFileYSize(), tex.getOrigFileYSize())
-        card = NodePath(cm.generate())
-        card.setTexture(tex)
-        card.setScale(card.getScale()/ yresolution)
-        card.flattenLight() # apply scale
-        card.setTransparency(TransparencyAttrib.MBinary)
-        return card
-
-    def updateSnowballButton(self):
-        from panda3d.core import TextNode, Vec4
-        if not self.__snowballButton:
-            gui = loader.loadModel('phase_3.5/models/gui/inventory_gui.bam')
-            upButton = gui.find('**/InventoryButtonUp')
-            dnButton = gui.find('**/InventoryButtonDown')
-            rlvrButton = gui.find('**/InventoryButtonRollover')
-            self.__snowballButton = DirectButton(image = (upButton, dnButton, rlvrButton),
-                geom = self.loadImageAsPlane('winter/maps/snowball_icon.png'),
-                text='50',
-                text_scale=0.04,
-                text_align=TextNode.ARight,
-                geom_scale=0.85,
-                geom_pos=(0, 0, 0),
-                text_fg=Vec4(1, 1, 1, 1),
-                text_pos=(0.07, -0.04),
-                relief=None,
-                image_color=(0, 0.6, 1, 1),
-            pos=(0, 0.1, 0.7))
 
     def toonClicked(self, avId):
         self.panel.makePanel(avId)
@@ -504,7 +460,7 @@ class LocalToon(DistributedToon):
     def __jump(self):
         self.playMovementSfx(None)
         if base.localAvatar.getHealth() > 0:
-            if self.playingAnim == 'run' or self.playingAnim == 'walk':
+            if self.playingAnim in ['run', 'walk']:
                 self.b_setAnimState("leap")
             else:
                 self.b_setAnimState("jump")

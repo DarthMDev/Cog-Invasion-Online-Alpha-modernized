@@ -19,8 +19,8 @@ class DistributedElevator(DistributedObject):
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
-        self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.mp3')
-        self.closeSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_close.mp3')
+        self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.ogg')
+        self.closeSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_close.ogg')
         self.elevatorPoints = ElevatorPoints
         self.type = ELEVATOR_NORMAL
         self.countdownTime = ElevatorData[self.type]['countdown']
@@ -220,15 +220,31 @@ class DistributedElevator(DistributedObject):
         if self.localAvOnElevator:
             base.transitions.fadeScreen(1.0)
             base.localAvatar.wrtReparentTo(render)
-            requestStatus = {'zoneId': self.getToZoneId(),
-                        'hoodId': self.cr.playGame.hood.hoodId,
-                        'where': 'suitInterior',
-                        'avId': base.localAvatar.doId,
-                        'loader': 'suitInterior',
-                        'shardId': None,
-                        'wantLaffMeter': 1,
-                        'world': base.cr.playGame.getCurrentWorldName(),
-                        'how': 'IDK'}
+            
+            loader = 'suitInterior'
+            where = 'suitInterior'
+            how = 'IDK'
+            world = base.cr.playGame.getCurrentWorldName()
+            
+            
+            if self.thebldg.fsm.getState().getName() == 'bldgComplete':
+                loader = 'townLoader'
+                where = 'street'
+                how = 'elevatorIn'
+                world = CIGlobals.CogTropolis
+            
+            requestStatus = {
+                'zoneId' : self.getToZoneId(),
+                'hoodId' : self.cr.playGame.hood.hoodId,
+                'where' : where,
+                'avId' : base.localAvatar.doId,
+                'loader' : loader,
+                'shardId' : None,
+                'wantLaffMeter' : 1,
+                'world' : world,
+                'how' : how
+            }
+            
             self.cr.playGame.getPlace().doneStatus = requestStatus
             messenger.send(self.cr.playGame.getPlace().doneEvent)
 

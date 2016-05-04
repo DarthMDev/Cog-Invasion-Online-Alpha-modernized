@@ -1371,8 +1371,8 @@ class ToonDNA:
 
     def getToonAnimalNoise(self, noise):
         if self.isCoach():
-            return 'phase_3/audio/dial/coach.wav'
-        return 'phase_3.5/audio/dial/AV_' + self.getAnimal() + '_' + noise + '.mp3'
+            return 'phase_3/audio/dial/coach.ogg'
+        return 'phase_3.5/audio/dial/AV_' + self.getAnimal() + '_' + noise + '.ogg'
 
     def generateDNAStrandWithCurrentStyle(self):
         gender = self.gender2genderDNA[self.gender]

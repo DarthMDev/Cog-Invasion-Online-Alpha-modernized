@@ -15,7 +15,7 @@ class RemoteCameraShyAvatar(RemoteAvatar):
 
     def __init__(self, mg, cr, avId):
         RemoteAvatar.__init__(self, mg, cr, avId)
-        self.shutter = base.audio3d.loadSfx("phase_4/audio/sfx/Photo_shutter.mp3")
+        self.shutter = base.audio3d.loadSfx("phase_4/audio/sfx/Photo_shutter.ogg")
         self.camera = None
         self.pictureTrack = None
         self.cameraFlash = None
@@ -92,7 +92,7 @@ class RemoteCameraShyAvatar(RemoteAvatar):
 
     def doWinDance(self):
         self.avatar.play('hdance')
-        sfx = base.loadSfx("phase_5/audio/sfx/AA_heal_happydance.mp3")
+        sfx = base.loadSfx("phase_5/audio/sfx/AA_heal_happydance.ogg")
         SoundInterval(sfx).start()
 
     def cleanup(self):

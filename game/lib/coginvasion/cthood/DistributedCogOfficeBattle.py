@@ -221,14 +221,15 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.props = []
         self.elevators = []
         self.elevatorResponses = 0
-        self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.mp3')
-        self.closeSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_close.mp3')
+        self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.ogg')
+        self.closeSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_close.ogg')
         self.rideElevatorMusic = base.loadMusic('phase_7/audio/bgm/tt_elevator.mid')
         self.bottomFloorsMusic = base.loadMusic('phase_7/audio/bgm/encntr_general_bg_indoor.mid')
         self.topFloorMusic = base.loadMusic('phase_7/audio/bgm/encntr_suit_winning_indoor.mid')
         self.intermissionMusic = base.loadMusic('phase_7/audio/bgm/encntr_toon_winning_indoor.mid')
         self.fsm = ClassicFSM.ClassicFSM('DistributedCogOfficeBattle', [State.State('off', self.enterOff, self.exitOff),
          State.State('floorIntermission', self.enterFloorIntermission, self.exitFloorIntermission),
+         State.State('bldgComplete', self.enterBldgComplete, self.exitBldgComplete),
          State.State('battle', self.enterBattle, self.exitBattle),
          State.State('rideElevator', self.enterRideElevator, self.exitRideElevator),
          State.State('faceOff', self.enterFaceOff, self.exitFaceOff),
@@ -264,26 +265,12 @@ class DistributedCogOfficeBattle(DistributedObject):
     def enterVictory(self, ts):
         self.cr.playGame.getPlace().fsm.request('stop')
         base.localAvatar.b_setAnimState('win')
-        base.taskMgr.doMethodLater(5.0, self.victoryTask, self.uniqueName('victoryTask'))
-
-    def victoryTask(self, task):
-        requestStatus = {
-            'zoneId': self.exteriorZoneId,
-            'hoodId': self.cr.playGame.hood.id,
-            'bldgDoId': self.bldgDoId,
-            'loader': 'townLoader',
-            'where': 'street',
-            'world': CIGlobals.CogTropolis,
-            'shardId': None,
-            'wantLaffMeter': 1,
-            'avId': base.localAvatar.doId,
-            'how': 'elevatorIn'
-        }
-        self.cr.playGame.getPlace().fsm.request('teleportOut', [requestStatus])
-        return task.done
+        self.elevators[1].setToZoneId(self.exteriorZoneId)
+        
+        # This would show the rewards panel eventually.
 
     def exitVictory(self):
-        base.taskMgr.remove(self.uniqueName('victoryTask'))
+        pass
 
     def setExteriorZoneId(self, zoneId):
         self.exteriorZoneId = zoneId

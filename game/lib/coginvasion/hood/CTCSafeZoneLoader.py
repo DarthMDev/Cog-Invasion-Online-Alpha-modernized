@@ -22,10 +22,10 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             "phase_9/audio/bgm/encntr_suit_winning.mid"
         ]
         self.tournamentMusicFiles = [
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_1.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_2.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_3.mp3",
-            "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.mp3",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_1.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_2.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_3.ogg",
+            "phase_3.5/audio/bgm/encntr_nfsmw_bg_4.ogg",
         ]
         self.bossBattleMusicFile = 'phase_7/audio/bgm/encntr_suit_winning_indoor.mid'
         self.dnaFile = 'phase_4/dna/cog_toontown_central_sz.pdna'
@@ -35,9 +35,9 @@ class CTCSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
             self.szHolidayDNAFile = 'phase_4/dna/winter_storage_TT_sz.pdna'
         self.telescope = None
         self.birdNoises = [
-            'phase_4/audio/sfx/SZ_TC_bird1.mp3',
-            'phase_4/audio/sfx/SZ_TC_bird2.mp3',
-            'phase_4/audio/sfx/SZ_TC_bird3.mp3'
+            'phase_4/audio/sfx/SZ_TC_bird1.ogg',
+            'phase_4/audio/sfx/SZ_TC_bird2.ogg',
+            'phase_4/audio/sfx/SZ_TC_bird3.ogg'
         ]
 
     def load(self):

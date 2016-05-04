@@ -12,7 +12,7 @@ vfs = VirtualFileSystem.getGlobalPtr()
 
 phases = ['phase_3', 'phase_3.5', 'phase_4', 'phase_5', 'phase_5.5', 'phase_6', 'phase_7', 'phase_8', 'phase_9',
     'phase_10', 'phase_11', 'phase_12', 'phase_13', 'phase_0', 'phase_14']
-packExtensions = ['.jpg', '.jpeg', '.png', '.mp3', '.rgb']
+packExtensions = ['.jpg', '.jpeg', '.png', '.ogg', '.rgb']
 
 for phase in phases:
     mf = Multifile()
@@ -137,8 +137,8 @@ ConfigVariableDouble('extractor-step-time').setValue(0.01)
 
 DirectGuiGlobals.setDefaultFontFunc(CIGlobals.getToonFont)
 DirectGuiGlobals.setDefaultFont(CIGlobals.getToonFont())
-DirectGuiGlobals.setDefaultRolloverSound(loader.loadSfx("phase_3/audio/sfx/GUI_rollover.mp3"))
-DirectGuiGlobals.setDefaultClickSound(loader.loadSfx("phase_3/audio/sfx/GUI_create_toon_fwd.mp3"))
+DirectGuiGlobals.setDefaultRolloverSound(loader.loadSfx("phase_3/audio/sfx/GUI_rollover.ogg"))
+DirectGuiGlobals.setDefaultClickSound(loader.loadSfx("phase_3/audio/sfx/GUI_create_toon_fwd.ogg"))
 DirectGuiGlobals.setDefaultDialogGeom(loader.loadModel("phase_3/models/gui/dialog_box_gui.bam"))
 
 from lib.coginvasion.nametag import NametagGlobals

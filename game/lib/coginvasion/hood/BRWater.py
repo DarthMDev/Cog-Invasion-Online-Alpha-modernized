@@ -29,15 +29,15 @@ class BRWater:
 
 		#base.localAvatar.audio3d
 
-		self.freezeUpSfx = base.loadSfx('phase_8/audio/sfx/freeze_up.mp3')
+		self.freezeUpSfx = base.loadSfx('phase_8/audio/sfx/freeze_up.ogg')
 		self.frozenSfxArray = [
-			base.loadSfx('phase_8/audio/sfx/frozen_1.mp3'),
-			base.loadSfx('phase_8/audio/sfx/frozen_2.mp3'),
-			base.loadSfx('phase_8/audio/sfx/frozen_3.mp3')
+			base.loadSfx('phase_8/audio/sfx/frozen_1.ogg'),
+			base.loadSfx('phase_8/audio/sfx/frozen_2.ogg'),
+			base.loadSfx('phase_8/audio/sfx/frozen_3.ogg')
 		]
 		self.coolSfxArray = [
-			base.loadSfx('phase_8/audio/sfx/cool_down_1.mp3'),
-			base.loadSfx('phase_8/audio/sfx/cool_down_2.mp3')
+			base.loadSfx('phase_8/audio/sfx/cool_down_1.ogg'),
+			base.loadSfx('phase_8/audio/sfx/cool_down_2.ogg')
 		]
 
 		self.freezeUpSfx.setVolume(12)

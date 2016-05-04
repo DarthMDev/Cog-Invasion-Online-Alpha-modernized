@@ -20,9 +20,9 @@ class ChargeUpSpot(LocationSeeker):
         self.chargedUpName = 'Charged Up'
         self.chargedCancelName = 'Charge Canceled'
         self.mouseDownName = 'mouse1-down'
-        self.chargingSfxPath = 'phase_4/audio/sfx/MG_sfx_ice_scoring_1.mp3'
+        self.chargingSfxPath = 'phase_4/audio/sfx/MG_sfx_ice_scoring_1.ogg'
         self.chargingSfx = None
-        self.tickSfxPath = 'phase_13/audio/sfx/tick_counter_short.mp3'
+        self.tickSfxPath = 'phase_13/audio/sfx/tick_counter_short.ogg'
         self.tickSfx = None
         self.lMouseDn = None
         self.isCharging = False

@@ -32,10 +32,10 @@ class DistributedBoat(DistributedObject):
         self.westPierPath = 'west_pier'
         self.pierUpP = 0.0
         self.pierDownP = -45.0
-        self.fogHorn = 'phase_5/audio/sfx/SZ_DD_foghorn.mp3'
-        self.shipBell = 'phase_6/audio/sfx/SZ_DD_shipbell.mp3'
-        self.waterLap = 'phase_6/audio/sfx/SZ_DD_waterlap.mp3'
-        self.dockCreak = 'phase_6/audio/sfx/SZ_DD_dockcreak.mp3'
+        self.fogHorn = 'phase_5/audio/sfx/SZ_DD_foghorn.ogg'
+        self.shipBell = 'phase_6/audio/sfx/SZ_DD_shipbell.ogg'
+        self.waterLap = 'phase_6/audio/sfx/SZ_DD_waterlap.ogg'
+        self.dockCreak = 'phase_6/audio/sfx/SZ_DD_dockcreak.ogg'
         self.eastWest = 'phase_6/paths/dd-e-w.bam'
         self.westEast = 'phase_6/paths/dd-w-e.bam'
         self.boatPath = '*donalds_boat*'

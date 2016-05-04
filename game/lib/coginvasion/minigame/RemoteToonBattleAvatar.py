@@ -77,7 +77,7 @@ class RemoteToonBattleAvatar(RemoteAvatar):
     def retrieveAvatar(self):
         RemoteAvatar.retrieveAvatar(self)
         if self.avatar:
-            self.soundGrunt = base.loadSfx('phase_4/audio/sfx/target_impact_grunt1.mp3')
+            self.soundGrunt = base.loadSfx('phase_4/audio/sfx/target_impact_grunt1.ogg')
 
     def enterOff(self):
         pass
@@ -191,11 +191,11 @@ class RemoteToonBattleAvatar(RemoteAvatar):
                 self.avatar.loop(self.avatar.getCurrentAnim(partName = 'legs'))
 
             if self.gunName == "pistol":
-                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/pistol_shoot.wav")
+                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/pistol_shoot.ogg")
             elif self.gunName == "shotgun":
-                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
+                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.ogg")
             elif self.gunName == "sniper":
-                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")                    
+                gunSound = base.audio3d.loadSfx("phase_4/audio/sfx/shotgun_shoot.ogg")                    
             base.audio3d.attachSoundToObject(gunSound, self.avatar)
             SoundInterval(gunSound, node = self.avatar).start()
             self.track = Sequence(

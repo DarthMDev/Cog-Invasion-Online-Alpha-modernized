@@ -111,7 +111,7 @@ class ToonFPS(DirectObject):
         base.localAvatar.getGeomNode().show()
         self.gui.end()
         base.localAvatar.attachCamera()
-        self.freezeCamSfx = base.loadSfx("phase_4/audio/sfx/freeze_cam.wav")
+        self.freezeCamSfx = base.loadSfx("phase_4/audio/sfx/freeze_cam.ogg")
         self.freezeCamImage = None
         self.freezeCamImageFile = None
         base.camera.setZ(base.camera.getZ() + 2.0)
@@ -177,20 +177,20 @@ class ToonFPS(DirectObject):
 
     def load(self):
         if self.weaponName == "pistol":
-            self.draw = base.loadSfx("phase_4/audio/sfx/draw_secondary.wav")
-            self.shoot = base.loadSfx("phase_4/audio/sfx/pistol_shoot.wav")
-            self.reload = base.loadSfx("phase_4/audio/sfx/pistol_worldreload.wav")
+            self.draw = base.loadSfx("phase_4/audio/sfx/draw_secondary.ogg")
+            self.shoot = base.loadSfx("phase_4/audio/sfx/pistol_shoot.ogg")
+            self.reload = base.loadSfx("phase_4/audio/sfx/pistol_worldreload.ogg")
         elif self.weaponName == "sniper":
-            self.draw = base.loadSfx("phase_4/audio/sfx/draw_primary.wav")
-            self.shoot = base.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
-            self.cockBack = base.loadSfx("phase_4/audio/sfx/shotgun_cock_back.wav")
-            self.cockFwd = base.loadSfx("phase_4/audio/sfx/shotgun_cock_forward.wav")
+            self.draw = base.loadSfx("phase_4/audio/sfx/draw_primary.ogg")
+            self.shoot = base.loadSfx("phase_4/audio/sfx/shotgun_shoot.ogg")
+            self.cockBack = base.loadSfx("phase_4/audio/sfx/shotgun_cock_back.ogg")
+            self.cockFwd = base.loadSfx("phase_4/audio/sfx/shotgun_cock_forward.ogg")
         elif self.weaponName == "shotgun":
-            self.draw = base.loadSfx("phase_4/audio/sfx/draw_primary.wav")
-            self.shoot = base.loadSfx("phase_4/audio/sfx/shotgun_shoot.wav")
-            self.cockBack = base.loadSfx("phase_4/audio/sfx/shotgun_cock_back.wav")
-            self.cockFwd = base.loadSfx("phase_4/audio/sfx/shotgun_cock_forward.wav")			
-        self.empty = base.loadSfx("phase_4/audio/sfx/shotgun_empty.wav")
+            self.draw = base.loadSfx("phase_4/audio/sfx/draw_primary.ogg")
+            self.shoot = base.loadSfx("phase_4/audio/sfx/shotgun_shoot.ogg")
+            self.cockBack = base.loadSfx("phase_4/audio/sfx/shotgun_cock_back.ogg")
+            self.cockFwd = base.loadSfx("phase_4/audio/sfx/shotgun_cock_forward.ogg")			
+        self.empty = base.loadSfx("phase_4/audio/sfx/shotgun_empty.ogg")
         self.v_model_root = base.camera.attachNewNode('v_model_root')
         if self.weaponName == "pistol":
             self.v_model = Actor('phase_4/models/minigames/v_dgm.egg', {'pidle': 'phase_4/models/minigames/v_dgm-pistol-idle.egg',

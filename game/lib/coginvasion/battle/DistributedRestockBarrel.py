@@ -20,8 +20,8 @@ class DistributedRestockBarrel(DistributedNode):
         NodePath.__init__(self, 'restock_barrel')
         self.grabSfx = None
         self.rejectSfx = None
-        self.grabSoundPath = 'phase_4/audio/sfx/SZ_DD_treasure.mp3'
-        self.rejectSoundPath = 'phase_4/audio/sfx/ring_miss.mp3'
+        self.grabSoundPath = 'phase_4/audio/sfx/SZ_DD_treasure.ogg'
+        self.rejectSoundPath = 'phase_4/audio/sfx/ring_miss.ogg'
         self.animTrack = None
         self.barrelScale = 0.5
         self.sphereRadius = 3.2

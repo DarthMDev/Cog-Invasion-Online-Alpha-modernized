@@ -133,8 +133,8 @@ class CameraShyFirstPerson(FirstPerson):
             self.cameraFocus.setColorScale(self.toonInFocusColor)
 
     def start(self):
-        self.fullyChargedSound = base.loadSfx('phase_4/audio/sfx/MG_pairing_match.mp3')
-        self.rechargeSound = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_blue_arrow.mp3')
+        self.fullyChargedSound = base.loadSfx('phase_4/audio/sfx/MG_pairing_match.ogg')
+        self.rechargeSound = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_blue_arrow.ogg')
         self.batteryFrame = DirectFrame(parent = base.a2dBottomRight, pos = (-0.2, 0, 0.1), scale = (0.8, 0, 1))
         self.batteryBg = OnscreenImage(image = 'phase_4/maps/battery_charge_frame.png', parent = self.batteryFrame)
         self.batteryBg.setTransparency(1)

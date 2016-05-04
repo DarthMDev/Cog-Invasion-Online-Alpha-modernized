@@ -35,7 +35,7 @@ class FactorySneakWorld(DirectObject):
         self.alertPulse = None
         self.popupSound = None
         self.music = [
-            'phase_4/audio/bgm/MG_Escape.mp3',
+            'phase_4/audio/bgm/MG_Escape.ogg',
             'phase_7/audio/bgm/encntr_suit_winning_indoor.mid']
 
     def playMusic(self, index):
@@ -173,7 +173,7 @@ class FactorySneakWorld(DirectObject):
             occluderNode.node().setDoubleSided(True)
         self.worldMdl.flattenMedium()
         self.alertText = OnscreenText(text = '', font = CIGlobals.getMickeyFont(), fg = (1, 0.9, 0.3, 1), pos = (0, 0.8, 0))
-        self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.mp3')
+        self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.ogg')
 
     def unloadWorld(self):
         if (self.worldMdl != None):

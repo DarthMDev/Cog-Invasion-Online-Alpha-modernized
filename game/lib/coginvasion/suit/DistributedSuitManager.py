@@ -126,7 +126,7 @@ class DistributedSuitManager(DistributedObject):
                 self.hood.loader.invasionMusic.stop()
             self.hood.loader.tournamentMusic = None
             self.hood.loader.tournamentMusic = base.loadMusic(random.choice(self.hood.loader.tournamentMusicFiles))
-            # Make .mp3 music files base.cr.music so we can replay it when the window gets minimized and comes back.
+            # Make .ogg music files base.cr.music so we can replay it when the window gets minimized and comes back.
             base.cr.music = self.hood.loader.tournamentMusic
             base.playMusic(self.hood.loader.tournamentMusic, looping = 1, volume = 0.9)
 

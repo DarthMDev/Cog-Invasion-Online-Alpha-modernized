@@ -48,7 +48,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
                     Point3(-15, 0, 0.5),
                     Point3(-20, 0, 0.5)]
 
-    GameSong = "phase_4/audio/bgm/MG_Dodgeball.mp3"
+    GameSong = "phase_4/audio/bgm/MG_Dodgeball.ogg"
     GameDesc = ("Welcome to the north! You have been invited to play dodgeball with the penguins!\n\n"
                 "How To Play\nWASD to Move and use the mouse to aim.\nLeft click to Throw!\nRight click"
                 " to Catch!\n\nObjective\nThe first team to get everyone out wins!")
