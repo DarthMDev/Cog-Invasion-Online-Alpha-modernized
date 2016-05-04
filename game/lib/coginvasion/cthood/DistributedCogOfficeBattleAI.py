@@ -33,6 +33,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         DistributedObjectAI.__init__(self, air)
         self.fsm = ClassicFSM.ClassicFSM('DistributedCogOfficeBattleAI', [State.State('off', self.enterOff, self.exitOff),
          State.State('floorIntermission', self.enterFloorIntermission, self.exitFloorIntermission),
+         State.State('bldgComplete', self.enterBldgComplete, self.exitBldgComplete),
          State.State('battle', self.enterBattle, self.exitBattle),
          State.State('rideElevator', self.enterRideElevator, self.exitRideElevator),
          State.State('faceOff', self.enterFaceOff, self.exitFaceOff),
@@ -166,6 +167,12 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.elevators[1].b_setState('closed')
 
     def exitBattle(self):
+        pass
+    
+    def enterBldgComplete(self):
+        self.enterFloorIntermission()
+        
+    def exitBldgComplete(self):
         pass
 
     def enterFloorIntermission(self):

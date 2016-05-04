@@ -128,7 +128,7 @@ class RaceGameMovement(DirectObject):
         base.localAvatar.b_setAnimState("swim")
         self.power = 30.0
         taskMgr.add(self.boostTask, 'boostTask')
-        self.boostSfx = base.loadSfx("phase_6/audio/sfx/KART_turboLoop.wav")
+        self.boostSfx = base.loadSfx("phase_6/audio/sfx/KART_turboLoop.ogg")
         base.playSfx(self.boostSfx, looping = 1)
 
     def exitBoost(self):

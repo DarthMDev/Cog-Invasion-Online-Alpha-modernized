@@ -272,7 +272,7 @@ class Suit(Avatar):
         self.generateCog(isLose = 1)
         self.nametag.clearChatText()
         self.deleteNameTag()
-        deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.mp3")
+        deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.ogg")
         base.audio3d.attachSoundToObject(deathSound, self)
         trackName = self.uniqueName('enterDie')
 

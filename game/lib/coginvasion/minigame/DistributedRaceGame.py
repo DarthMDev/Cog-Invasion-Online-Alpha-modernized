@@ -35,8 +35,8 @@ class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 		self.cr = cr
 		self.track = None
 		self.sky = None
-		self.countSfx = base.loadSfx("phase_5/audio/sfx/firehydrant_popup.mp3")
-		self.goSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+		self.countSfx = base.loadSfx("phase_5/audio/sfx/firehydrant_popup.ogg")
+		self.goSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
 		self.game = CIGlobals.RaceGame
 		self.trackPath = "phase_4/models/minigames/sprint_track.egg"
 		self.skyPath = "phase_3.5/models/props/TT_sky.bam"

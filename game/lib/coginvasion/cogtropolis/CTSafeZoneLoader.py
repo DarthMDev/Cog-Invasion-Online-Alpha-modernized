@@ -95,20 +95,20 @@ class CTSafeZoneLoader(SafeZoneLoader):
         self.rain = None
         self.rainRender = None
         self.soundRain = None
-        self.thunderSounds = [base.loadSfx('phase_14/audio/sfx/big_thunder_1.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_2.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_3.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_4.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_5.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_6.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_7.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_8.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_9.mp3'),
-            base.loadSfx('phase_14/audio/sfx/big_thunder_10.mp3')]
+        self.thunderSounds = [base.loadSfx('phase_14/audio/sfx/big_thunder_1.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_2.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_3.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_4.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_5.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_6.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_7.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_8.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_9.ogg'),
+            base.loadSfx('phase_14/audio/sfx/big_thunder_10.ogg')]
 
     def load(self):
         SafeZoneLoader.load(self)
-        self.soundRain = base.loadSfx('phase_14/audio/sfx/rain_ambient.mp3')
+        self.soundRain = base.loadSfx('phase_14/audio/sfx/rain_ambient.ogg')
         self.rain = ParticleLoader.loadParticleEffect('phase_14/etc/rain.ptf')
         self.rain.setPos(0, 0, 5)
         self.rainRender = self.geom.attachNewNode('snowRender')

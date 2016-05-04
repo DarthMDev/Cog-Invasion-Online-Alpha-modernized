@@ -42,7 +42,7 @@ class DistributedDeliveryGame(DistributedMinigame):
         self.fsm.request('announceGameOver')
 
     def enterAnnounceGameOver(self):
-        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+        whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
         whistleSfx.play()
         del whistleSfx
         self.gameOverLbl = DirectLabel(text = "GAME\nOVER!", relief = None, scale = 0.35, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
@@ -121,9 +121,9 @@ class DistributedDeliveryGame(DistributedMinigame):
         spawn = random.choice(DGG.SpawnPoints)
         base.localAvatar.setPos(spawn)
         base.localAvatar.setHpr(0, 0, 0)
-        self.soundPickUpBarrel = base.loadSfx('phase_6/audio/sfx/SZ_MM_gliss.mp3')
-        self.soundDropOff = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_bell_for_trolley.mp3')
-        self.setMinigameMusic('phase_4/audio/bgm/MG_Delivery.mp3')
+        self.soundPickUpBarrel = base.loadSfx('phase_6/audio/sfx/SZ_MM_gliss.ogg')
+        self.soundDropOff = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_bell_for_trolley.ogg')
+        self.setMinigameMusic('phase_4/audio/bgm/MG_Delivery.ogg')
         self.setDescription('A new supply of Gags were just shipped to Toontown! ' + \
             'Run over to a truck with Gag barrels to take a barrel out. Then, carry it over to the Gag Shop. ' + \
             'Try to unload and deliver as many barrels as you can to the Gag Shop. ' + \
@@ -154,7 +154,7 @@ class DistributedDeliveryGame(DistributedMinigame):
 
     def enterStart(self):
         DistributedMinigame.enterStart(self)
-        beepSound = base.loadSfx('phase_4/audio/sfx/MG_delivery_truck_beep.mp3')
+        beepSound = base.loadSfx('phase_4/audio/sfx/MG_delivery_truck_beep.ogg')
         SoundInterval(beepSound).start()
 
     def enterPlay(self):

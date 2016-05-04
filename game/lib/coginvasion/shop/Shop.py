@@ -32,7 +32,7 @@ class Shop(StateData):
         self.distShop = distShop
         self.origHealth = None
         self.avMoney = base.localAvatar.getMoney()
-        self.healCooldownDoneSoundPath = 'phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3'
+        self.healCooldownDoneSoundPath = 'phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.ogg'
         self.healCooldownDoneSfx = None
         self.requestedHp = None
         self.pages = 1
@@ -558,6 +558,9 @@ class ShopWindow(DirectFrame):
         self.nextPage = (page + 1)
         self.nPage = page
         self.pages[page].show()
+        
+    def getPage(self, index):
+        return self.pages[index]
 
     def setBackBtn(self, enabled):
         if self.backBtn:

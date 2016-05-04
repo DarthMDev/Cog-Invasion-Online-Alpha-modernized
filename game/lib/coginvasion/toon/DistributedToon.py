@@ -513,15 +513,15 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
     def handleSuitAttack(self, attack_id, suit_id):
         attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
         if attack == "canned":
-            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_impact_only.mp3")
+            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_impact_only.ogg")
             base.audio3d.attachSoundToObject(sfx, self)
             SoundInterval(sfx, node = self).start()
         elif attack == "playhardball":
-            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_impact_only_alt.mp3")
+            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_hardball_impact_only_alt.ogg")
             base.audio3d.attachSoundToObject(sfx, self)
             SoundInterval(sfx, node = self).start()
         elif attack == "clipontie":
-            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_impact.mp3")
+            sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_powertie_impact.ogg")
             base.audio3d.attachSoundToObject(sfx, self)
             SoundInterval(sfx, node = self).start()
         if not self.isDead():
@@ -670,7 +670,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
 
     def announceHealthAndPlaySound(self, level, hp):
         DistributedAvatar.announceHealth(self, level, hp)
-        hpSfx = base.audio3d.loadSfx("phase_11/audio/sfx/LB_toonup.mp3")
+        hpSfx = base.audio3d.loadSfx("phase_11/audio/sfx/LB_toonup.ogg")
         base.audio3d.attachSoundToObject(hpSfx, self)
         SoundInterval(hpSfx, node = self).start()
         del hpSfx

@@ -43,7 +43,7 @@ class DistributedToonCannon(DistributedNode):
 		smoke.wrtReparentTo(render)
 		track = Sequence(Parallel(LerpScaleInterval(smoke, 0.5, 3), LerpColorScaleInterval(smoke, 0.5, Vec4(2, 2, 2, 0))), Func(smoke.removeNode))
 		track.start()
-		sfx = base.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_fire_alt.mp3")
+		sfx = base.audio3d.loadSfx("phase_4/audio/sfx/MG_cannon_fire_alt.ogg")
 		base.audio3d.attachSoundToObject(sfx, self)
 		base.playSfx(sfx)
 

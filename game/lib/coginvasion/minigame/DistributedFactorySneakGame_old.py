@@ -55,7 +55,7 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
         sfx = 5
         for _ in range(5):
             print sfx
-            countdownSounds.append(base.loadSfx("phase_4/audio/sfx/announcer_begins_%ssec.wav" % (sfx)))
+            countdownSounds.append(base.loadSfx("phase_4/audio/sfx/announcer_begins_%ssec.ogg" % (sfx)))
             sfx -= 1
         text = OnscreenText(text = "", scale = 0.1, pos = (0, 0.5), fg = (1, 1, 1, 1), shadow = (0,0,0,1))
         self.text = text
@@ -127,7 +127,7 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
                             "Avoid the guards and exit by the Factory Foreman to redeem your jellybeans.")
         self.toonFps.start()
         self.toonFps.enableMouse()
-        self.whistleSfx = loader.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+        self.whistleSfx = loader.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
         DistributedToonFPSGame.DistributedToonFPSGame.load(self)
 
     def enterPlay(self):

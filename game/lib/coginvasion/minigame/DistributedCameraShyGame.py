@@ -133,7 +133,7 @@ class DistributedCameraShyGame(DistributedMinigame):
         pass
 
     def enterAnnounceGameOver(self):
-        whistle = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+        whistle = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
         base.playSfx(whistle)
         self.gameOverLbl = OnscreenText(text = 'Game Over!', fg = (1, 1, 1, 1), font = CIGlobals.getMinnieFont(), scale = 0.1)
         self.gameOverScaleIval = LerpScaleInterval(

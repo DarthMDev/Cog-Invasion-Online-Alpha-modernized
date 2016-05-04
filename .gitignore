@@ -66,3 +66,6 @@ game/astron/databases
 game/tools/*.c
 prod
 !game/tools/cio-file-hash-writer.exe
+game/puzzleroomidea.png
+game/puzzleroomidea.pdn
+game/puzzle.py

@@ -74,11 +74,11 @@ class Char(Avatar.Avatar):
 
     def setChat(self, chatString):
         if self.charType == CIGlobals.Mickey:
-            self.dial = base.audio3d.loadSfx("phase_3/audio/dial/mickey.wav")
+            self.dial = base.audio3d.loadSfx("phase_3/audio/dial/mickey.ogg")
         elif self.charType == CIGlobals.Minnie:
-            self.dial = base.audio3d.loadSfx("phase_3/audio/dial/minnie.wav")
+            self.dial = base.audio3d.loadSfx("phase_3/audio/dial/minnie.ogg")
         elif self.charType == CIGlobals.Goofy:
-            self.dial = base.audio3d.loadSfx("phase_6/audio/dial/goofy.wav")
+            self.dial = base.audio3d.loadSfx("phase_6/audio/dial/goofy.ogg")
         base.audio3d.attachSoundToObject(self.dial, self)
         self.dial.play()
         Avatar.Avatar.setChat(self, chatString)

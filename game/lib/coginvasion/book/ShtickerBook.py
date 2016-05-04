@@ -49,9 +49,9 @@ class ShtickerBook(StateData):
         StateData.load(self)
         self.book_contents = loader.loadModel("phase_3.5/models/gui/stickerbook_gui.bam")
         self.book_texture = self.book_contents.find('**/big_book')
-        self.book_open = loader.loadSfx("phase_3.5/audio/sfx/GUI_stickerbook_open.mp3")
-        self.book_close = loader.loadSfx("phase_3.5/audio/sfx/GUI_stickerbook_delete.mp3")
-        self.book_turn = loader.loadSfx("phase_3.5/audio/sfx/GUI_stickerbook_turn.mp3")
+        self.book_open = loader.loadSfx("phase_3.5/audio/sfx/GUI_stickerbook_open.ogg")
+        self.book_close = loader.loadSfx("phase_3.5/audio/sfx/GUI_stickerbook_delete.ogg")
+        self.book_turn = loader.loadSfx("phase_3.5/audio/sfx/GUI_stickerbook_turn.ogg")
 
     def unload(self):
         self.book_texture.removeNode()

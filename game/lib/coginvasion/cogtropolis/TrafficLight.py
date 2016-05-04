@@ -35,7 +35,7 @@ class TrafficLight(NodePath):
             self.find('**/pole1').stash()
             self.find('**/pole1_coll').stash()
         self.setTwoSided(1)
-        self.soundFlicker = base.audio3d.loadSfx('phase_14/audio/sfx/cogtropolis_trafficlight_flicker.mp3')
+        self.soundFlicker = base.audio3d.loadSfx('phase_14/audio/sfx/cogtropolis_trafficlight_flicker.ogg')
         base.audio3d.attachSoundToObject(self.soundFlicker, self.find('**/light-base'))
         self.flashTrack = None
 

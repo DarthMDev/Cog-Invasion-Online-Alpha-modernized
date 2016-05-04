@@ -92,8 +92,8 @@ class DistributedDroppableCollectableJellybean(DistributedDroppableCollectableJe
             self.flyTrack = None
 
     def load(self):
-        self.tickSfx = base.loadSfx("phase_3.5/audio/sfx/tick_counter.mp3")
-        self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3")
+        self.tickSfx = base.loadSfx("phase_3.5/audio/sfx/tick_counter.ogg")
+        self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.ogg")
         DistributedDroppableCollectableJellybeans.load(self)
 
     def unload(self):

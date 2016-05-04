@@ -21,11 +21,11 @@ class DistributedEagleSuit(DistributedSuit):
 
     def __init__(self, cr):
         DistributedSuit.__init__(self, cr)
-        self.eagleCry = base.audio3d.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_eagleCry.mp3')
+        self.eagleCry = base.audio3d.loadSfx('phase_5/audio/sfx/tt_s_ara_cfg_eagleCry.ogg')
         base.audio3d.attachSoundToObject(self.eagleCry, self)
-        self.fallWhistle = base.audio3d.loadSfx('phase_5/audio/sfx/incoming_whistleALT.mp3')
+        self.fallWhistle = base.audio3d.loadSfx('phase_5/audio/sfx/incoming_whistleALT.ogg')
         base.audio3d.attachSoundToObject(self.fallWhistle, self)
-        self.explode = base.audio3d.loadSfx('phase_3.5/audio/sfx/ENC_cogfall_apart.mp3')
+        self.explode = base.audio3d.loadSfx('phase_3.5/audio/sfx/ENC_cogfall_apart.ogg')
         base.audio3d.attachSoundToObject(self.explode, self)
         self.eventSphereNodePath = None
         self.fallingPropeller = None

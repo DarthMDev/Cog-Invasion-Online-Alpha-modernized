@@ -29,5 +29,5 @@ class DroppableCollectableJellybeanJar(DroppableCollectableJellybeans):
 			self.jar = None
 
 	def load(self):
-		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_bigBucks.wav")
+		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_bigBucks.ogg")
 		DroppableCollectableJellybeans.load(self)

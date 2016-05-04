@@ -13,7 +13,7 @@ class LocationSeeker:
     
     def __init__(self, avatar, minDistance, maxDistance, shadowScale = 1):
         self.dropShadowPath = 'phase_3/models/props/square_drop_shadow.bam'
-        self.rejectSoundPath = 'phase_4/audio/sfx/ring_miss.mp3'
+        self.rejectSoundPath = 'phase_4/audio/sfx/ring_miss.ogg'
         self.moveShadowTaskName = 'Move Shadow'
         self.locationSelectedName = 'Location Selected'
         self.dropShadow = None

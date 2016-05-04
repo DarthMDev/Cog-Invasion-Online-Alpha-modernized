@@ -22,7 +22,7 @@ class DropGag(Gag, LocationGag):
         Gag.__init__(self, name, model, damage, GagType.DROP, hitSfx, anim = anim, playRate = playRate, scale = scale, autoRelease = True)
         LocationGag.__init__(self, 10, 50)
         self.missSfx = None
-        self.fallSoundPath = 'phase_5/audio/sfx/incoming_whistleALT.mp3'
+        self.fallSoundPath = 'phase_5/audio/sfx/incoming_whistleALT.ogg'
         self.fallSoundInterval = None
         self.fallSfx = None
         self.chooseLocFrame = 34

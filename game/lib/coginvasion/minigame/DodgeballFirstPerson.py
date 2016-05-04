@@ -112,7 +112,7 @@ class DodgeballFirstPerson(FirstPerson):
         # Black crosshair because basically the entire arena is white.
         self.crosshair = getCrosshair(color = (0, 0, 0, 1), hidden = False)
 
-        self.soundCatch = base.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_catch.mp3")
+        self.soundCatch = base.loadSfx("phase_4/audio/sfx/MG_sfx_vine_game_catch.ogg")
 
         self.vModelRoot = camera.attachNewNode('vModelRoot')
         self.vModelRoot.setPos(-0.09, 1.38, -2.48)

@@ -14,7 +14,7 @@ from lib.coginvasion.globals import CIGlobals
 class LocationGag:
 
     def __init__(self, minDistance, maxDistance, shadowScale = 1):
-        self.buttonSoundPath = 'phase_5/audio/sfx/AA_drop_trigger_box.mp3'
+        self.buttonSoundPath = 'phase_5/audio/sfx/AA_drop_trigger_box.ogg'
         self.button = None
         self.buttonSfx = loader.loadSfx(self.buttonSoundPath)
         self.buttonAnim = 'push-button'

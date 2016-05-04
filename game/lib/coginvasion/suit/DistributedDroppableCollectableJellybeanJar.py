@@ -34,8 +34,8 @@ class DistributedDroppableCollectableJellybeanJar(DistributedDroppableCollectabl
 		DistributedDroppableCollectableJellybeans.handleCollisions(self, base.localAvatar.doId)
 
 	def load(self):
-		self.tickSfx = base.loadSfx("phase_4/audio/sfx/MG_maze_pickup.mp3")
-		self.collectSfx = base.loadSfx("phase_4/audio/sfx/MG_pos_buzzer.wav")
+		self.tickSfx = base.loadSfx("phase_4/audio/sfx/MG_maze_pickup.ogg")
+		self.collectSfx = base.loadSfx("phase_4/audio/sfx/MG_pos_buzzer.ogg")
 		DistributedDroppableCollectableJellybeans.load(self)
 
 	def unload(self):

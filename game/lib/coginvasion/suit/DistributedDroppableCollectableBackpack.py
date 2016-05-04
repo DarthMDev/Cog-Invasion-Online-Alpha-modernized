@@ -80,7 +80,7 @@ class DistributedDroppableCollectableBackpack(DistributedDroppableCollectableObj
             style = 0
         )
         self.unzippingDialog.show()
-        self.soundUnzipping = base.loadSfx("phase_3.5/audio/sfx/ci_s_bpunzip.mp3")
+        self.soundUnzipping = base.loadSfx("phase_3.5/audio/sfx/ci_s_bpunzip.ogg")
         SoundInterval(self.soundUnzipping).start()
         base.taskMgr.doMethodLater(self.UNZIP_TIME, self.__unzipWaitDone, 'DDCBackpack-unzipWaitDone')
 

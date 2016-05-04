@@ -32,7 +32,7 @@ class Whisper:
 			[Point3(-0.2, 0, 0.2), base.a2dBottomCenter],
 			[Point3(-0.8, 0, 0.2), base.a2dBottomCenter]]
 		data = random.choice(sysmsg_data)
-		sfx = loader.loadSfx("phase_3.5/audio/sfx/GUI_whisper_3.mp3")
+		sfx = loader.loadSfx("phase_3.5/audio/sfx/GUI_whisper_3.ogg")
 		SoundInterval(sfx).start()
 		length = math.sqrt(len(message)) / self.LENGTH_FACTOR
 		self.bubble = ChatBalloon(loader.loadModel("phase_3/models/props/chatbox_noarrow.bam")).generate(message, CIGlobals.getToonFont(), balloonColor=msg_color)

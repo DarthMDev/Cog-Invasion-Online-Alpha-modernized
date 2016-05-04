@@ -167,7 +167,7 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 			self.isTimeUp = True
 
 	def enterAnnounceGameOver(self):
-		whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.mp3")
+		whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
 		whistleSfx.play()
 		del whistleSfx
 		self.gameOverLbl = DirectLabel(text = "TIME'S\nUP!", relief = None, scale = 0.5, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
@@ -190,11 +190,11 @@ class DistributedSneakyGame(DistributedMinigame.DistributedMinigame):
 
 	def enterCountdown(self):
 		self.toonFps.fsm.request('alive')
-		sec5 = base.loadSfx("phase_4/audio/sfx/announcer_begins_5sec.wav")
-		sec4 = base.loadSfx("phase_4/audio/sfx/announcer_begins_4sec.wav")
-		sec3 = base.loadSfx("phase_4/audio/sfx/announcer_begins_3sec.wav")
-		sec2 = base.loadSfx("phase_4/audio/sfx/announcer_begins_2sec.wav")
-		sec1 = base.loadSfx("phase_4/audio/sfx/announcer_begins_1sec.wav")
+		sec5 = base.loadSfx("phase_4/audio/sfx/announcer_begins_5sec.ogg")
+		sec4 = base.loadSfx("phase_4/audio/sfx/announcer_begins_4sec.ogg")
+		sec3 = base.loadSfx("phase_4/audio/sfx/announcer_begins_3sec.ogg")
+		sec2 = base.loadSfx("phase_4/audio/sfx/announcer_begins_2sec.ogg")
+		sec1 = base.loadSfx("phase_4/audio/sfx/announcer_begins_1sec.ogg")
 		text = OnscreenText(text = "", scale = 0.1, pos = (0, 0.5), fg = (1, 1, 1, 1), shadow = (0,0,0,1))
 		self.track = Sequence(
 			Func(sec5.play),

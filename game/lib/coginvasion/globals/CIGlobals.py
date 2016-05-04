@@ -110,7 +110,7 @@ def getThemeSong():
 def getHolidayTheme():
     global holidayTheme
     if not holidayTheme:
-        holidayTheme = 'phase_3/audio/bgm/ci_holiday_christmas_bgm.wav'
+        holidayTheme = 'phase_3/audio/bgm/ci_holiday_christmas_bgm.ogg'
     return holidayTheme
 
 # Helper method to check if two objects are facing each other like so: -> <-

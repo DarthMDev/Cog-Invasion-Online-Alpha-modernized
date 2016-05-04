@@ -28,7 +28,7 @@ class DistributedCityCart(DistributedNode):
         self.fsm.enterInitialState()
         self.suitInCar = None
         self.cart = None
-        self.honkSfxPath = 'phase_14/audio/sfx/cogtropolis_citycar_driveby_horn.mp3'
+        self.honkSfxPath = 'phase_14/audio/sfx/cogtropolis_citycar_driveby_horn.ogg'
         self.cartModelPath = 'phase_12/models/bossbotHQ/Coggolf_cart3.bam'
         self.moPaths = ['phase_14/models/paths/ct-citycar-drivepath-1.egg',
             'phase_14/models/paths/ct-citycar-drivepath-2.egg',
@@ -131,12 +131,12 @@ class DistributedCityCart(DistributedNode):
         self.suitInCar.setH(180)
         self.suitInCar.setPos(0, -1, -1.5)
         self.suitInCar.reparentTo(self.cart.find('**/seat1'))
-        self.soundEngineLoop = base.audio3d.loadSfx('phase_6/audio/sfx/KART_Engine_loop_0.wav')
+        self.soundEngineLoop = base.audio3d.loadSfx('phase_6/audio/sfx/KART_Engine_loop_0.ogg')
         base.audio3d.attachSoundToObject(self.soundEngineLoop, self)
         base.playSfx(self.soundEngineLoop, looping = 1)
         self.soundDriveByHorn = base.audio3d.loadSfx(self.honkSfxPath)
         base.audio3d.attachSoundToObject(self.soundDriveByHorn, self)
-        self.soundDriveBy = base.audio3d.loadSfx('phase_14/audio/sfx/cogtropolis_citycar_driveby.mp3')
+        self.soundDriveBy = base.audio3d.loadSfx('phase_14/audio/sfx/cogtropolis_citycar_driveby.ogg')
         base.audio3d.attachSoundToObject(self.soundDriveBy, self)
         sphere = CollisionSphere(0, 0, 0, 2.5)
         sphere.setTangible(0)

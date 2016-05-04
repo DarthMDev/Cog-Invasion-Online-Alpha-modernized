@@ -377,32 +377,32 @@ class Suit(Avatar.Avatar):
         self.chat = chatString
         if self.isSkele:
             if "?" in chatString:
-                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_question.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_question.ogg")
             elif "!" in chatString:
-                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_grunt.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_grunt.ogg")
             else:
-                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_statement.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_5/audio/sfx/Skel_COG_VO_statement.ogg")
         elif self.head in ["vp"]:
             if "?" in chatString:
-                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_question.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_question.ogg")
             elif "!" in chatString:
-                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_grunt.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_grunt.ogg")
             else:
-                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_statement.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_9/audio/sfx/Boss_COG_VO_statement.ogg")
         else:
             if "?" in chatString:
                 self.suit_dial = base.audio3d.loadSfx(
                     random.choice(
                         [
-                            "phase_3.5/audio/dial/COG_VO_question.mp3",
-                            "phase_3.5/audio/dial/COG_VO_question_2.mp3"
+                            "phase_3.5/audio/dial/COG_VO_question.ogg",
+                            "phase_3.5/audio/dial/COG_VO_question_2.ogg"
                         ]
                     )
                 )
             elif "!" in chatString:
-                self.suit_dial = base.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_grunt.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_grunt.ogg")
             else:
-                self.suit_dial = base.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_statement.mp3")
+                self.suit_dial = base.audio3d.loadSfx("phase_3.5/audio/dial/COG_VO_statement.ogg")
         if self.isSkele:
             base.audio3d.attachSoundToObject(self.suit_dial, self)
         else:
@@ -624,7 +624,7 @@ class Suit(Avatar.Avatar):
         self.clearChat()
         self.state = "dead"
         self.play("lose")
-        deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.mp3")
+        deathSound = base.audio3d.loadSfx("phase_3.5/audio/sfx/Cog_Death_Full.ogg")
         base.audio3d.attachSoundToObject(deathSound, self)
         trackName = self.uniqueName('enterDie')
 
@@ -712,7 +712,7 @@ class Suit(Avatar.Avatar):
 
     def enterFlyNeutral(self, ts = 0):
         self.disableRay()
-        self.sfx = base.audio3d.loadSfx("phase_4/audio/sfx/TB_propeller.wav")
+        self.sfx = base.audio3d.loadSfx("phase_4/audio/sfx/TB_propeller.ogg")
         self.prop = Actor("phase_4/models/props/propeller-mod.bam",
                         {"chan": "phase_4/models/props/propeller-chan.bam"})
         base.audio3d.attachSoundToObject(self.sfx, self.prop)
@@ -732,7 +732,7 @@ class Suit(Avatar.Avatar):
 
     def enterFlyDown(self, ts = 0):
         self.disableRay()
-        self.fd_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_in.mp3")
+        self.fd_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_in.ogg")
         self.prop = Actor("phase_4/models/props/propeller-mod.bam",
                         {"chan": "phase_4/models/props/propeller-chan.bam"})
         base.audio3d.attachSoundToObject(self.fd_sfx, self.prop)
@@ -788,7 +788,7 @@ class Suit(Avatar.Avatar):
 
     def enterFlyAway(self, ts = 0):
         self.show()
-        self.fa_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_out.mp3")
+        self.fa_sfx = base.audio3d.loadSfx("phase_5/audio/sfx/ENC_propeller_out.ogg")
         self.prop = Actor("phase_4/models/props/propeller-mod.bam",
                         {"chan": "phase_4/models/props/propeller-chan.bam"})
         base.audio3d.attachSoundToObject(self.fa_sfx, self.prop)

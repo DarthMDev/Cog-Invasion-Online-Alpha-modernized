@@ -28,8 +28,8 @@ class Slot(DirectFrame):
         self.hoverObj = None
         self.gagImage = None
         self.gag = None
-        self.mouseRlvrSfx = base.loadSfx('phase_3/audio/sfx/GUI_rollover.mp3')
-        self.soundRecharged = base.loadSfx('phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.mp3')
+        self.mouseRlvrSfx = base.loadSfx('phase_3/audio/sfx/GUI_rollover.ogg')
+        self.soundRecharged = base.loadSfx('phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.ogg')
         
         # The no ammo text over the gag when you run out of ammo.
         self.infoText = OnscreenText(text = "No\nAmmo", fg = (1, 0, 0, 1), parent = self,
@@ -284,7 +284,7 @@ class InventoryGui(DirectObject):
         self.ammoLabel = None
         self.inventoryFrame = None
         self.switchSound = True
-        self.switchSoundSfx = base.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.mp3")
+        self.switchSoundSfx = base.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.ogg")
         
     def click_setWeapon(self, slot, cmd):
         self.setWeapon(slot, playSound = False)

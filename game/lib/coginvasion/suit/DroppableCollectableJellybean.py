@@ -18,7 +18,7 @@ class DroppableCollectableJellybean(DroppableCollectableJellybeans):
 		DroppableCollectableJellybeans.__init__(self)
 		self.bean = None
 		self.spinIval = None
-		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.wav")
+		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.ogg")
 
 	def loadObject(self):
 		self.removeObject()
@@ -45,7 +45,7 @@ class DroppableCollectableJellybean(DroppableCollectableJellybeans):
 
 	def load(self):
 		print "loading droppableCollectableJellybean"
-		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.mp3")
+		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.ogg")
 		DroppableCollectableJellybeans.load(self)
 
 	def unload(self):

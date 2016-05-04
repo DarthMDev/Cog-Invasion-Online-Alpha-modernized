@@ -128,10 +128,10 @@ def getAnimByName(animName):
 def getAnimations():
     return animations
 
-propellerNeutSfx = 'phase_4/audio/sfx/TB_propeller.wav'
-propellerInSfx = 'phase_5/audio/sfx/ENC_propeller_in.mp3'
-propellerOutSfx = 'phase_5/audio/sfx/ENC_propeller_out.mp3'
-healedSfx = 'phase_3/audio/sfx/health.mp3'
+propellerNeutSfx = 'phase_4/audio/sfx/TB_propeller.ogg'
+propellerInSfx = 'phase_5/audio/sfx/ENC_propeller_in.ogg'
+propellerOutSfx = 'phase_5/audio/sfx/ENC_propeller_out.ogg'
+healedSfx = 'phase_3/audio/sfx/health.ogg'
 
 medallionColors = {
     Dept.BOSS : Vec4(0.863, 0.776, 0.769, 1.0),

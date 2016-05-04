@@ -164,7 +164,7 @@ class DistributedGunGameCapturePoint(DistributedNode):
         self.captureCircle.hide()
         self.captureCircle.setTextureOff(1)
         
-        self.aoogahSfx = loader.loadSfx('phase_5/audio/sfx/AA_sound_aoogah.mp3')
+        self.aoogahSfx = loader.loadSfx('phase_5/audio/sfx/AA_sound_aoogah.ogg')
         
         sphere = CollisionSphere(0, 0, 0, 4)
         sphere.setTangible(0)

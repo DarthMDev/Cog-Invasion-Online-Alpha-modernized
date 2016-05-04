@@ -18,7 +18,7 @@ class ChargeUpGag:
         self.maxCogs = maxCogs
         self.chargeUpSpot = None
 
-        self.buttonSfxPath = 'phase_5/audio/sfx/AA_drop_trigger_box.mp3'
+        self.buttonSfxPath = 'phase_5/audio/sfx/AA_drop_trigger_box.ogg'
         self.buttonSfx = None
         self.buttonAnim = 'push-button'
         self.button = None
