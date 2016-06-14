@@ -15,9 +15,10 @@ from direct.gui.DirectGui import DirectLabel
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog import Dept
 from lib.coginvasion.hood import ZoneUtil
-from ElevatorConstants import *
-from ElevatorUtils import *
-from SuitBuildingGlobals import *
+
+from lib.coginvasion.cogoffice.ElevatorConstants import *
+from lib.coginvasion.cogoffice.ElevatorUtils import *
+from lib.coginvasion.cogoffice.SuitBuildingGlobals import *
 
 class DistributedBuilding(DistributedObject):
     notify = directNotify.newCategory('DistributedBuilding')
@@ -61,7 +62,7 @@ class DistributedBuilding(DistributedObject):
     def generate(self):
         DistributedObject.generate(self)
         self.mode = 'toon'
-        self.townTopLevel = self.cr.playGame.world.hood.loader.geom
+        self.townTopLevel = self.cr.playGame.hood.loader.geom
 
     def disable(self):
         self.fsm.requestFinalState()
@@ -229,7 +230,7 @@ class DistributedBuilding(DistributedObject):
             self.cogLandSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_land.ogg')
             self.cogSettleSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_settle.ogg')
             self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.ogg')
-            
+
     def loadAnimToToonSfx(self):
         if self.cogWeakenSound == None:
             self.cogWeakenSound = base.loadSfx(self.TAKEOVER_SFX_PREFIX + 'cogbldg_weaken.ogg')
@@ -309,12 +310,12 @@ class DistributedBuilding(DistributedObject):
     def setupSuitBuilding(self, nodePath):
         if nodePath.isEmpty():
             return
-        dnaStore = self.cr.playGame.world.dnaStore
+        dnaStore = self.cr.playGame.dnaStore
         level = int(self.difficulty / 2) + 1
         suitNP = dnaStore.findNode('suit_landmark_' + self.getDeptClassFromAbbr(self.suitDept).getClothingPrefix() + str(level))
         zoneId = dnaStore.getZoneFromBlockNumber(self.block)
         zoneId = ZoneUtil.getTrueZoneId(zoneId, self.interiorZoneId)
-        newParentNP = base.cr.playGame.world.hood.loader.zoneDict[zoneId]
+        newParentNP = base.cr.playGame.hood.loader.zoneDict[zoneId]
         suitBuildingNP = suitNP.copyTo(newParentNP)
         buildingTitle = dnaStore.getTitleFromBlockNumber(self.block)
         if not buildingTitle:

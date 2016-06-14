@@ -328,7 +328,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         )
         track.append(Func(av.setPlayRate, 1.0, 'walk'))
         track.append(Func(av.loop, 'neutral'))
-        track.append(Wait(1.5))
+        track.append(Wait(1.0))
         track.append(Func(av.loop, 'walk'))
         parallel = Parallel()
         parallel.append(
@@ -439,7 +439,7 @@ class DistributedDoor(DistributedObject.DistributedObject):
         self.ready = True
         self.toggleDoorHole('Left')
         self.toggleDoorHole('Right')
-        
+
     def toggleDoorHole(self, side, show = False):
         side = side.title()
         if self.building:

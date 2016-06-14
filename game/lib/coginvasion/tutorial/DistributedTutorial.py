@@ -387,7 +387,7 @@ class DistributedTutorial(DistributedObject):
         loaderName = 'safeZoneLoader'
         self.sendUpdate('finishedTutorial')
         self.cr.playGame.load()
-        self.cr.playGame.enter(hoodId, zoneId, base.localAvatar.doId, CIGlobals.OToontown)
+        self.cr.playGame.enter(hoodId, zoneId, base.localAvatar.doId)
 
     def exitLeaveTutorial(self):
         base.localAvatar.stopSmartCamera()

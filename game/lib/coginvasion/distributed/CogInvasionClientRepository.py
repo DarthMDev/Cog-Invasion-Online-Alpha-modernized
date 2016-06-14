@@ -498,9 +498,8 @@ class CogInvasionClientRepository(AstronClientRepository):
             AstronClientRepository.handleDatagram(self, di)
 
     def enterPlayingGame(self):
-        #self.handler = self.handlePlayGame
         zoneId = localAvatar.getLastHood()
-        hoodId = ZoneUtil.getHoodId(zoneId, world = CIGlobals.OToontown)
+        hoodId = ZoneUtil.getHoodId(zoneId)
         status = {"hoodId": hoodId,
                 "zoneId": zoneId,
                 "avId": self.localAvId}
@@ -745,9 +744,8 @@ class CogInvasionClientRepository(AstronClientRepository):
             zoneId = status['zoneId']
             hoodId = status['hoodId']
             avId = status['avId']
-            world = CIGlobals.OToontown
             self.playGame.load()
-            self.playGame.enter(hoodId, zoneId, avId, world)
+            self.playGame.enter(hoodId, zoneId, avId)
         else:
             self.sendQuietZoneRequest()
             localAvatar.sendUpdate('createTutorial')

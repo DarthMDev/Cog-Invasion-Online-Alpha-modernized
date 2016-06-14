@@ -6,7 +6,7 @@
 from lib.coginvasion.gags.ToonUpGag import ToonUpGag
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.globals import CIGlobals
-from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, LerpPosInterval, LerpScaleInterval
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, LerpPosInterval, LerpScaleInterval, ActorInterval
 from panda3d.core import Point3
 
 class Lipstick(ToonUpGag):
@@ -67,7 +67,7 @@ class Lipstick(ToonUpGag):
         )
         delay = tThrow + dScale
         mainTrack = Parallel(stickTrack, lipsTrack, self.getSoundTrack(delay, self.avatar, 2),
-                             Sequence(Func(self.avatar.play, self.avAnim)))
+                             ActorInterval(self.avatar, self.avAnim))
         mainTrack.start()
 
     def setTarget(self, target):

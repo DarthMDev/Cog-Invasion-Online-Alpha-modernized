@@ -61,7 +61,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.deathAnim = None
         self.deathTimeLeft = 0
         self.deathTaskName = None
-        
+
         # This is for handling combos.
         # Combo data stores an avId and gag type pair.
         # Avatar Ids are cheaper to store, so we use those.
@@ -81,7 +81,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             doIt = random.choice([True, False])
             if not doIt and not hasBeenHit or not self.brain:
                 return
-            
+
             behav = self.brain.currentBehavior
 
             if behav.__class__.__name__ == "SuitPursueToonBehavior":
@@ -98,14 +98,14 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
                         # Attack
                         behav.fsm.request("attack", [False])
-                    
 
-        
+
+
     def d_setWalkPath(self, path):
         # Send out a list of Point2s for the client to create a path for the suit to walk.
         timestamp = globalClockDelta.getRealNetworkTime()
         self.sendUpdate('setWalkPath', [path, timestamp])
-        
+
     def canGetHit(self):
         return self.allowHits
 
@@ -251,32 +251,32 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 self.killSuit()
             return Task.done
         return Task.cont
-    
+
     def __clearComboData(self, task):
         self.comboData = {}
 
         task.delayTime = self.clearComboDataTime
         return Task.again
-    
+
     def __handleCombos(self, avId, gagName):
         track = GagGlobals.getTrackOfGag(gagName)
         damage = GagGlobals.getGagData(GagGlobals.getIDByName(gagName)).get('damage')
         self.comboData.update({avId : {track : damage}})
-        
+
         data = self.comboData.values()
         tracks = []
         damages = []
-        
+
         for hitData in data:
             for track, damage in hitData.iteritems():
                 tracks.append(track)
                 damages.append(damage)
-        
+
         isCombo = False
         comboPerct = 0.35
         totalDamage = 0
         totalGags = 0
-        
+
         for track in tracks:
             if tracks.count(track) > 1 and track == track:
                 # Get the indices of each occurrence of this track in the tracks list.
@@ -291,18 +291,18 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 isCombo = True
                 break
             continue
-        
+
         if isCombo:
             self.comboDamage = int((float(totalDamage) / float(totalGags)) * comboPerct)
             self.b_setHealth(self.getHealth() - self.comboDamage)
             self.comboData.clear()
             taskMgr.remove(self.comboDataTaskName)
-            
+
     def __showComboLabel(self):
         if self.comboDamage > 0:
             self.d_announceHealth(2, self.comboDamage)
             self.comboDamage = 0
-            
+
     # The new method for handling gags.
     def hitByGag(self, gagId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender(), None)
@@ -310,12 +310,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         data = GagGlobals.getGagData(gagId)
         dmg = data.get('damage')
         track = GagGlobals.getTrackOfGag(gagId, getId = True)
-        
+
         if self.canGetHit():
             self.b_setHealth(self.getHealth() - dmg)
             Sequence(Func(self.d_announceHealth, 0, dmg), Wait(self.showComboDamageTime), Func(self.__showComboLabel)).start()
             self.__handleCombos(avatar.doId, gagName)
-            
+
             if self.isDead():
                 if track == GagType.THROW or gagName == CIGlobals.TNT:
                     self.b_setAnimState('pie', 0)
@@ -481,7 +481,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.clearTrack()
         self.track = Sequence(Wait(0.1), Func(self.spawn))
         self.track.start()
-        
+
         # Let's set the combo data task name and start the task.
         self.comboDataTaskName = self.uniqueName('clearComboData')
         taskMgr.add(self.__clearComboData, self.comboDataTaskName)

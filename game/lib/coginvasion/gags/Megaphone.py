@@ -4,7 +4,7 @@
 from lib.coginvasion.gags.ToonUpGag import ToonUpGag
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.globals import CIGlobals
-from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, ActorInterval
 
 import random
 
@@ -40,7 +40,7 @@ class Megaphone(ToonUpGag):
         propInterval.append(Wait(self.avatar.getDuration('shout', fromFrame = 118)))
         propInterval.append(Func(self.cleanupGag))
         propInterval.append(Func(self.reset))
-        self.track = Parallel(propInterval, Func(self.avatar.play, 'shout'), self.soundInterval)
+        self.track = Parallel(propInterval, ActorInterval(self.avatar, 'shout'), self.soundInterval)
         self.track.start()
 
     def equip(self):

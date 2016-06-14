@@ -17,6 +17,8 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 import ToonDNA
 from lib.coginvasion.gags import GagGlobals
 
+import types
+
 class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.ToonDNA):
     notify = DirectNotify().newCategory("DistributedToonAI")
 
@@ -362,31 +364,31 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
     def b_setLoadout(self, gagIds):
         self.sendUpdate('setLoadout', [gagIds])
         self.setLoadout(gagIds)
-        
+
     def d_addGag(self, gagId, curSupply, maxSupply):
         self.sendUpdate('addGag', [gagId, curSupply, maxSupply])
-        
+
     def b_setGagAmmo(self, gagId, ammo):
         self.setGagAmmo(gagId, ammo)
         self.sendUpdate('setGagAmmo', [gagId, ammo])
-    
+
     def setGagAmmo(self, gagId, ammo):
         self.backpack.setSupply(gagId, ammo)
-        
+
     def setBackpackAmmo(self, gagIds, ammoList):
         if not self.backpack:
             self.backpack = BackpackAI(self)
             for i in xrange(len(gagIds)):
                 gagId = gagIds[i]
                 ammo = ammoList[i]
-                
+
                 if not self.backpack.hasGag(gagId):
                     self.backpack.addGag(gagId, ammo, GagGlobals.getGagData(gagId).get('maxSupply'))
-                    
+
     def b_setBackpackAmmo(self, gagIds, ammoList):
         self.setBackpackAmmo(gagIds, ammoList)
         self.sendUpdate('setBackpackAmmo', [gagIds, ammoList])
-                
+
     def getBackpackAmmo(self):
         return list(), list()
 
@@ -411,7 +413,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
                         hp = obj.getMaxHealth() - obj.getHealth()
                     obj.b_setHealth(obj.getHealth() + hp)
                     obj.d_announceHealth(1, hp)
-    
+
     def gagStart(self, gagId):
         for suit in self.air.doFindAll("DistributedSuitAI"):
             if suit.zoneId == self.zoneId:
@@ -428,8 +430,9 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         try:
             self.DistributedToonAI_deleted
         except:
-            self.backpack.cleanup()
-            self.backpack = None
+            if type(self.backpack) != types.IntType and self.backpack is not None:
+                self.backpack.cleanup()
+                self.backpack = None
             self.DistributedToonAI_deleted = 1
             DistributedAvatarAI.delete(self)
             DistributedSmoothNodeAI.delete(self)

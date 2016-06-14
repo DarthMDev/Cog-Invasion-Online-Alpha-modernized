@@ -220,19 +220,19 @@ class DistributedElevator(DistributedObject):
         if self.localAvOnElevator:
             base.transitions.fadeScreen(1.0)
             base.localAvatar.wrtReparentTo(render)
-            
+
             loader = 'suitInterior'
             where = 'suitInterior'
             how = 'IDK'
             world = base.cr.playGame.getCurrentWorldName()
-            
-            
-            if self.thebldg.fsm.getState().getName() == 'bldgComplete':
+
+
+            if self.thebldg.fsm.getCurrentState().getName() == 'bldgComplete':
                 loader = 'townLoader'
                 where = 'street'
                 how = 'elevatorIn'
                 world = CIGlobals.CogTropolis
-            
+
             requestStatus = {
                 'zoneId' : self.getToZoneId(),
                 'hoodId' : self.cr.playGame.hood.hoodId,
@@ -244,7 +244,7 @@ class DistributedElevator(DistributedObject):
                 'world' : world,
                 'how' : how
             }
-            
+
             self.cr.playGame.getPlace().doneStatus = requestStatus
             messenger.send(self.cr.playGame.getPlace().doneEvent)
 

@@ -18,8 +18,6 @@ class MLTownLoader(TownLoader.TownLoader):
     def load(self, zoneId):
         TownLoader.TownLoader.load(self, zoneId)
         zone4File = str(self.branchZone)
-        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
-            zone4File = str(self.branchZone - 20000)
         dnaFile = 'phase_6/dna/minnies_melody_land_' + zone4File + '.pdna'
         self.createHood(dnaFile)
 

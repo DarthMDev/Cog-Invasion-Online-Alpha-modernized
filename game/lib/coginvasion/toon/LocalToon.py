@@ -760,7 +760,7 @@ class LocalToon(DistributedToon):
 
     def setHealth(self, hp):
         if hp > 0 and self.getHealth() < 1:
-            if self.cr.playGame.world and self.cr.playGame.world.getPlace():
+            if self.cr.playGame and self.cr.playGame.getPlace():
                 if self.cr.playGame.getPlace().fsm.getCurrentState().getName() == 'walk':
                     if self.cr.playGame.getPlace().walkStateData.fsm.getCurrentState().getName() == 'deadWalking':
                         self.cr.playGame.getPlace().walkStateData.fsm.request('walking')
@@ -777,7 +777,7 @@ class LocalToon(DistributedToon):
         hood = self.cr.playGame.hood.id
         if hood == CIGlobals.CogTropCentral:
             hood = CIGlobals.ToontownCentral
-        toZone = ZoneUtil.getZoneId(hood, world = CIGlobals.OToontown)
+        toZone = ZoneUtil.getZoneId(hood)
         if self.zoneId != toZone:
             requestStatus = {'zoneId': toZone,
                         'hoodId': hood,
@@ -786,8 +786,7 @@ class LocalToon(DistributedToon):
                         'loader': ZoneUtil.getLoaderName(toZone),
                         'shardId': None,
                         'wantLaffMeter': 1,
-                        'how': 'teleportIn',
-                        'world': CIGlobals.OToontown}
+                        'how': 'teleportIn'}
             self.cr.playGame.getPlace().doneStatus = requestStatus
             messenger.send(self.cr.playGame.getPlace().doneEvent)
 

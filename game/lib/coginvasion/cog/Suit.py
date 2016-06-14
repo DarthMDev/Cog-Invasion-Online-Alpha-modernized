@@ -300,9 +300,9 @@ class Suit(Avatar):
         self.bigGearExp = bigGearExplosion
 
         gearTrack = Sequence(Wait(0.7), Func(self.doSingleGear), Wait(1.5), Func(self.doSmallGears), Wait(3.0), Func(self.doBigExp))
-        self.suitTrack = Parallel(Sequence(Wait(0.8), SoundInterval(deathSound, node = self)),
+        self.suitTrack = Parallel(Sequence(Wait(0.8), SoundInterval(deathSound, node = self, duration = deathSound.length() / 2)),
                 Sequence(Wait(0.7), Func(self.doSingleGear), Wait(4.3),
-                Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions)), gearTrack, Sequence(ActorInterval(self, 'lose', duration = 6), Func(self.getGeomNode().hide)), name = trackName)
+                Func(self.suitExplode), Wait(1.0), Func(self.disableBodyCollisions), Func(self.__cleanupExplosion)), gearTrack, Sequence(ActorInterval(self, 'lose', duration = 6), Func(self.getGeomNode().hide)), name = trackName)
         self.suitTrack.setDoneEvent(self.suitTrack.getName())
         self.acceptOnce(self.suitTrack.getName(), self.exitDie)
         self.suitTrack.delayDelete = DelayDelete.DelayDelete(self, trackName)
@@ -331,6 +331,11 @@ class Suit(Avatar):
         else:
             self.explosion.setPos(self.headModel.getPos(render) + (0,0,2))
 
+    def __cleanupExplosion(self):
+        if self.explosion:
+            self.explosion.removeNode()
+            self.explosion = None
+
     def exitDie(self):
         if self.suitTrack != None:
             self.ignore(self.suitTrack.getName())
@@ -349,9 +354,7 @@ class Suit(Avatar):
         if hasattr(self, 'bigGearExp'):
             self.bigGearExp.cleanup()
             del self.bigGearExp
-        if self.explosion:
-            self.explosion.removeNode()
-            self.explosion = None
+        self.__cleanupExplosion()
 
     def enterWin(self, ts = 0):
         self.play('win')
@@ -504,6 +507,7 @@ class Suit(Avatar):
             self.headModel.loop('neutral')
         self.setClothes()
         self.setAvatarScale(self.suitPlan.getScale() / SuitGlobals.scaleFactors[self.suit])
+        self.setHeight(self.suitPlan.getHeight())
         self.setupNameTag()
         Avatar.initShadow(self)
 

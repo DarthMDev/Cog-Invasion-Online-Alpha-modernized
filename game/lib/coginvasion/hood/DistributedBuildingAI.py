@@ -10,11 +10,14 @@ from direct.task import Task
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.cog import Dept
-import SuitBuildingGlobals
-from DistributedElevatorAI import DistributedElevatorAI
-from DistributedCogOfficeBattleAI import DistributedCogOfficeBattleAI
+from lib.coginvasion.cogoffice import SuitBuildingGlobals
+from lib.coginvasion.cogoffice.DistributedElevatorAI import DistributedElevatorAI
+from lib.coginvasion.cogoffice.DistributedCogOfficeBattleAI import DistributedCogOfficeBattleAI
 
-from ElevatorConstants import *
+from DistributedToonInteriorAI import DistributedToonInteriorAI
+from DistributedDoorAI import DistributedDoorAI
+
+from lib.coginvasion.cogoffice.ElevatorConstants import *
 
 import random
 
@@ -61,7 +64,7 @@ class DistributedBuildingAI(DistributedObjectAI):
         DistributedObjectAI.delete(self)
         del self.fsm
 
-    def suitTakeOver(self, suitDept, difficulty, buildingHeight):
+    def suitTakeOver(self, suitDept, difficulty, numFloors):
         difficulty = 1
         numFloors = 5
         self.suitDept = suitDept.getClothingPrefix()
@@ -94,8 +97,6 @@ class DistributedBuildingAI(DistributedObjectAI):
         dnaStore = self.air.dnaStoreMap[self.canonicalZoneId]
         zoneId = dnaStore.getZoneFromBlockNumber(self.block)
         zoneId = ZoneUtil.getTrueZoneId(zoneId, self.zoneId)
-        if zoneId < CIGlobals.CTZoneDifference:
-            zoneId += CIGlobals.CTZoneDifference
         interiorZoneId = (zoneId - (zoneId % 100)) + 500 + self.block
         return (zoneId, interiorZoneId)
 
@@ -173,17 +174,23 @@ class DistributedBuildingAI(DistributedObjectAI):
 
     def enterToon(self):
         self.d_setState('toon')
-        (exteriorZoneId, interiorZoneId) = self.getExteriorAndInteriorZoneId()
-        taskMgr.doMethodLater(random.randint(SuitBuildingGlobals.SWITCH_BACK_TO_SUIT_TIME[0],
-            SuitBuildingGlobals.SWITCH_BACK_TO_SUIT_TIME[1]), self.toonTimeoutTask,
-            self.taskName(str(self.block) + 'toonBldg-timer'))
+        (exteriorZone, interiorZone) = self.getExteriorAndInteriorZoneId()
+        self.interior = DistributedToonInteriorAI(self.air, self.block, exteriorZone)
+        self.interior.generateWithRequired(interiorZone)
+        self.door = DistributedDoorAI(self.air, self.block, interiorZone, 1)
+        self.door.generateWithRequired(exteriorZone)
 
     def toonTimeoutTask(self, task):
         self.suitTakeOver(random.choice([Dept.SALES, Dept.CASH, Dept.LAW, Dept.BOSS]), 0, 0)
         return Task.done
 
     def exitToon(self):
-        pass
+        if hasattr(self, 'interior'):
+            self.interior.requestDelete()
+            del self.interior
+        if hasattr(self, 'door'):
+            self.door.requestDelete()
+            del self.door
 
     def enterWaitForVictors(self, victorList):
         activeToons = []

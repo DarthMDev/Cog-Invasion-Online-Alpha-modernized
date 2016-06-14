@@ -71,12 +71,12 @@ class SafeZoneLoader(StateData):
         if self.tournamentMusicFiles:
             self.tournamentMusic = None
         self.createSafeZone(self.dnaFile)
-        
+
         children = self.geom.findAllMatches('**/*doorFrameHole*')
-        
+
         for child in children:
             child.hide()
-        
+
         self.parentFSMState.addChild(self.fsm)
         _, _, _, _, _, _, _, _, af = SettingsManager().getSettings("settings.json")
         if af == "on":
@@ -173,6 +173,10 @@ class SafeZoneLoader(StateData):
         self.hood.dnaStore.resetDNAVisGroupsAI()
 
     def enterPlayground(self, requestStatus):
+        try:
+            self.hood.stopSuitEffect()
+        except:
+            pass
         self.acceptOnce(self.placeDoneEvent, self.handlePlaygroundDone)
         self.place = self.playground(self, self.fsm, self.placeDoneEvent)
         self.place.load()
@@ -187,7 +191,7 @@ class SafeZoneLoader(StateData):
 
     def handlePlaygroundDone(self):
         status = self.place.doneStatus
-        if self.hood.isSameHood(status) and status['loader'] == 'safeZoneLoader' and not status['where'] in ['minigame'] and status['world'] == base.cr.playGame.getCurrentWorldName():
+        if self.hood.isSameHood(status) and status['loader'] == 'safeZoneLoader' and not status['where'] in ['minigame']:
             self.fsm.request('quietZone', [status])
         else:
             self.doneStatus = status
@@ -217,7 +221,7 @@ class SafeZoneLoader(StateData):
         if (status['loader'] == 'safeZoneLoader' and
         self.hood.isSameHood(status) and
         status['shardId'] == None or
-        status['how'] == 'doorOut' and status['world'] == base.cr.playGame.getCurrentWorldName()):
+        status['how'] == 'doorOut'):
             self.fsm.request('quietZone', [status])
         else:
             self.doneStatus = status

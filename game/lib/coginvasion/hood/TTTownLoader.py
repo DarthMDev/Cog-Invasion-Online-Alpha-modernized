@@ -18,8 +18,6 @@ class TTTownLoader(TownLoader.TownLoader):
     def load(self, zoneId):
         TownLoader.TownLoader.load(self, zoneId)
         zone4File = str(self.branchZone)
-        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
-            zone4File = str(self.branchZone - 20000)
         dnaFile = 'phase_5/dna/toontown_central_' + zone4File + '.pdna'
         self.createHood(dnaFile)
 

@@ -13,13 +13,6 @@ from lib.coginvasion.hood.DLHoodAI import DLHoodAI
 from lib.coginvasion.hood.MLHoodAI import MLHoodAI
 from lib.coginvasion.hood.DGHoodAI import DGHoodAI
 from lib.coginvasion.hood.DDHoodAI import DDHoodAI
-from lib.coginvasion.cthood.CTCHoodAI import CTCHoodAI
-from lib.coginvasion.cthood.CTBRHoodAI import CTBRHoodAI
-from lib.coginvasion.cthood.CTDLHoodAI import CTDLHoodAI
-from lib.coginvasion.cthood.CTMLHoodAI import CTMLHoodAI
-from lib.coginvasion.cthood.CTDGHoodAI import CTDGHoodAI
-from lib.coginvasion.cthood.CTDDHoodAI import CTDDHoodAI
-from lib.coginvasion.cogtropolis.CTHoodAI import CTHoodAI
 from panda3d.core import *
 from lib.coginvasion.globals import CIGlobals
 from direct.distributed.PyDatagram import PyDatagram
@@ -83,13 +76,12 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
         self.notify.info("Generating time manager...")
         self.timeManager = TimeManagerAI(self)
         self.timeManager.generateWithRequired(2)
-        
-        self.areas = [TTHoodAI, MGHoodAI, BRHoodAI, DLHoodAI, MLHoodAI, DGHoodAI, DDHoodAI, CTHoodAI, CTCHoodAI,
-                      CTBRHoodAI, CTDLHoodAI, CTDGHoodAI, CTDDHoodAI, CTMLHoodAI]
+
+        self.areas = [TTHoodAI, MGHoodAI, BRHoodAI, DLHoodAI, MLHoodAI, DGHoodAI, DDHoodAI]
         self.areaIndex = 0
-                      
+
         taskMgr.add(self.makeAreasTask, 'makeAreasTask')
-        
+
     def makeAreasTask(self, task):
         if self.areaIndex >= len(self.areas):
            self.done()
@@ -99,7 +91,7 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
         self.areaIndex += 1
         task.delayTime = 0.5
         return task.again
-        
+
     def done(self):
         self.notify.info("Setting shard available.")
         self.district.b_setAvailable(1)

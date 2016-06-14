@@ -28,6 +28,9 @@ class ToonTalker:
         self.nametag = None
         self.autoClearChat = True
 
+    def setAutoClearChat(self, flag):
+        self.autoClearChat = flag
+
     def setAvatar(self, avatar, nametag):
         self.avatar = avatar
         self.nametag = nametag

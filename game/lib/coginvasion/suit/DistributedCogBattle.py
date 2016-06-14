@@ -111,8 +111,7 @@ class DistributedCogBattle(DistributedObject):
                     'avId': base.localAvatar.doId,
                     'loader': 'safeZoneLoader',
                     'shardId': None,
-                    'how': 'teleportIn',
-                    'world': base.cr.playGame.getCurrentWorldName()}
+                    'how': 'teleportIn'}
         self.cr.playGame.getPlace().fsm.request('teleportOut', [requestStatus])
 
     def setTotalCogs(self, num):

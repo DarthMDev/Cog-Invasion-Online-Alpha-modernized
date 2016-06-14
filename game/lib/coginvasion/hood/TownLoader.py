@@ -12,7 +12,7 @@ from QuietZoneState import QuietZoneState
 import LinkTunnel
 import ZoneUtil
 import ToonInterior
-from lib.coginvasion.cthood import CogOfficeInterior
+from lib.coginvasion.cogoffice import CogOfficeInterior
 
 class TownLoader(StateData):
     notify = directNotify.newCategory("TownLoader")
@@ -116,7 +116,7 @@ class TownLoader(StateData):
         if (status['loader'] == 'townLoader' and
         ZoneUtil.getBranchZone(status['zoneId']) == self.branchZone and
         status['shardId'] == None or
-        status['how'] == 'doorOut' and status['world'] == base.cr.playGame.getCurrentWorldName() or status['where'] == 'suitInterior'):
+        status['how'] == 'doorOut' or status['where'] == 'suitInterior'):
             self.fsm.request('quietZone', [status])
         else:
             self.doneStatus = status
@@ -157,7 +157,7 @@ class TownLoader(StateData):
         if (status['loader'] == 'townLoader' and
         ZoneUtil.getBranchZone(status['zoneId']) == self.branchZone and
         status['shardId'] == None or
-        status['how'] == 'doorOut' and status['world'] == base.cr.playGame.getCurrentWorldName()):
+        status['how'] == 'doorOut'):
             self.fsm.request('quietZone', [status])
         else:
             self.doneStatus = status

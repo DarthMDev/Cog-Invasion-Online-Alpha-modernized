@@ -14,7 +14,7 @@ import random
 class DistributedToonHQInterior(DistributedToonInterior.DistributedToonInterior):
 
     def makeInterior(self):
-        self.dnaStore = self.cr.playGame.world.dnaStore
+        self.dnaStore = self.cr.playGame.dnaStore
         self.generator = random.Random()
         self.generator.seed(self.zoneId)
         self.interior = loader.loadModel('phase_3.5/models/modules/HQ_interior.bam')

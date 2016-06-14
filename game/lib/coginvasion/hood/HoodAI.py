@@ -17,7 +17,10 @@ import DistributedCinemaInteriorAI
 import DistributedToonHQInteriorAI
 import DistributedTailorInteriorAI
 import DistributedGagShopInteriorAI
+import DistributedBuildingAI
 import CinemaGlobals
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.cogoffice.BuildingSuitPlannerAI import BuildingSuitPlannerAI
 
 class HoodAI:
     notify = directNotify.newCategory("HoodAI")
@@ -32,6 +35,8 @@ class HoodAI:
         self.treasurePlanner = None
         self.interiors = []
         self.exteriorDoors = []
+        self.buildings = {}
+        self.buildingPlanners = {}
 
     def startup(self):
         self.createTreasurePlanner()
@@ -40,7 +45,9 @@ class HoodAI:
         interiorZoneAllocator = UniqueIdAllocator(self.zoneId + 400, self.zoneId + 999)
         for dnaFile in self.dnaFiles:
             zoneId = 0
+            isSZ = False
             if 'sz' in dnaFile:
+                isSZ = True
                 zoneId = self.zoneId
             else:
                 for segment in dnaFile.split('_'):
@@ -53,6 +60,7 @@ class HoodAI:
             dnaData = loadDNAFileAI(dnaStore, dnaFile)
             self.air.dnaStoreMap[zoneId] = dnaStore
             self.air.dnaDataMap[zoneId] = dnaData
+            self.buildings[zoneId] = []
             blockZoneByNumber = {}
             for i in range(dnaStore.get_num_block_numbers()):
                 blockNumber = dnaStore.get_block_number_at(i)
@@ -60,53 +68,63 @@ class HoodAI:
             for block, exteriorZone in blockZoneByNumber.items():
                 buildingType = dnaStore.get_block_building_type(block)
                 interiorZone = (ZoneUtil.getBranchZone(zoneId) - (ZoneUtil.getBranchZone(zoneId) % 100)) + 500 + block
-                if not buildingType:
-                    interior = DistributedToonInteriorAI.DistributedToonInteriorAI(self.air, block, exteriorZone)
-                    interior.generateWithRequired(interiorZone)
-                    door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
-                    door.generateWithRequired(exteriorZone)
-                    self.exteriorDoors.append(door)
-                    self.interiors.append(interior)
-                elif buildingType == 'cinema':
-                    cinemaIndex = CinemaGlobals.Zone2Block2CinemaIndex[zoneId][block]
-                    interior = DistributedCinemaInteriorAI.DistributedCinemaInteriorAI(
-                        self.air, block, exteriorZone, cinemaIndex)
-                    interior.generateWithRequired(interiorZone)
-                    door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
-                    door.generateWithRequired(exteriorZone)
-                    self.exteriorDoors.append(door)
-                    self.interiors.append(interior)
-                elif buildingType == 'hq':
-                    interior = DistributedToonHQInteriorAI.DistributedToonHQInteriorAI(
-                        self.air, block, exteriorZone)
-                    interior.generateWithRequired(interiorZone)
-                    door0 = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 3)
-                    door0.generateWithRequired(exteriorZone)
-                    door1 = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 3, 1)
-                    door1.generateWithRequired(exteriorZone)
-                    self.exteriorDoors.append(door0)
-                    self.exteriorDoors.append(door1)
-                    self.interiors.append(interior)
-                elif buildingType == 'clotheshop':
-                    interior = DistributedTailorInteriorAI.DistributedTailorInteriorAI(self.air, block, exteriorZone)
-                    interior.generateWithRequired(interiorZone)
-                    door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
-                    door.generateWithRequired(exteriorZone)
-                    self.exteriorDoors.append(door)
-                    self.interiors.append(interior)
-                elif buildingType == 'gagshop':
-                    interior = DistributedGagShopInteriorAI.DistributedGagShopInteriorAI(self.air, block, exteriorZone)
-                    interior.generateWithRequired(interiorZone)
-                    door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 4)
-                    door.generateWithRequired(exteriorZone)
-                    self.exteriorDoors.append(door)
-                    self.interiors.append(interior)
+                if isSZ or (not isSZ and buildingType in ['hq']):
+                    if not buildingType:
+                        interior = DistributedToonInteriorAI.DistributedToonInteriorAI(self.air, block, exteriorZone)
+                        interior.generateWithRequired(interiorZone)
+                        door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
+                        door.generateWithRequired(exteriorZone)
+                        self.exteriorDoors.append(door)
+                        self.interiors.append(interior)
+                    elif buildingType == 'cinema':
+                        cinemaIndex = CinemaGlobals.Zone2Block2CinemaIndex[zoneId][block]
+                        interior = DistributedCinemaInteriorAI.DistributedCinemaInteriorAI(
+                            self.air, block, exteriorZone, cinemaIndex)
+                        interior.generateWithRequired(interiorZone)
+                        door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
+                        door.generateWithRequired(exteriorZone)
+                        self.exteriorDoors.append(door)
+                        self.interiors.append(interior)
+                    elif buildingType == 'hq':
+                        interior = DistributedToonHQInteriorAI.DistributedToonHQInteriorAI(
+                            self.air, block, exteriorZone)
+                        interior.generateWithRequired(interiorZone)
+                        door0 = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 3)
+                        door0.generateWithRequired(exteriorZone)
+                        door1 = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 3, 1)
+                        door1.generateWithRequired(exteriorZone)
+                        self.exteriorDoors.append(door0)
+                        self.exteriorDoors.append(door1)
+                        self.interiors.append(interior)
+                    elif buildingType == 'clotheshop':
+                        interior = DistributedTailorInteriorAI.DistributedTailorInteriorAI(self.air, block, exteriorZone)
+                        interior.generateWithRequired(interiorZone)
+                        door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 1)
+                        door.generateWithRequired(exteriorZone)
+                        self.exteriorDoors.append(door)
+                        self.interiors.append(interior)
+                    elif buildingType == 'gagshop':
+                        interior = DistributedGagShopInteriorAI.DistributedGagShopInteriorAI(self.air, block, exteriorZone)
+                        interior.generateWithRequired(interiorZone)
+                        door = DistributedDoorAI.DistributedDoorAI(self.air, block, interiorZone, 4)
+                        door.generateWithRequired(exteriorZone)
+                        self.exteriorDoors.append(door)
+                        self.interiors.append(interior)
+                else:
+                    if not buildingType in ["animbldg", "hq"]:
+                        building = DistributedBuildingAI.DistributedBuildingAI(self.air, block, exteriorZone, zoneId, self.hood)
+                        building.generateWithRequired(exteriorZone)
+                        building.setState('toon')
+                        self.buildings[zoneId].append(building)
+            if not isSZ:
+                self.buildingPlanners[zoneId] = BuildingSuitPlannerAI(zoneId, CIGlobals.BranchZone2StreetName[zoneId], self)
 
         del self.dnaFiles
 
     def createTreasurePlanner(self):
         spawnInfo = TreasureGlobals.treasureSpawns.get(self.zoneId)
-        if not spawnInfo: return
+        if not spawnInfo:
+            return
         treasureType, healAmount, spawnPoints, spawnRate, maxTreasures = spawnInfo
         self.treasurePlanner = SZTreasurePlannerAI(self.air,
             self.zoneId, treasureType, healAmount, spawnPoints,

@@ -6,7 +6,7 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.SoundGag import SoundGag
-from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval
+from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval, ActorInterval
 from panda3d.core import Vec3
 
 class ElephantHorn(SoundGag):
@@ -49,7 +49,7 @@ class ElephantHorn(SoundGag):
         delayUntilAppearSound = 1.0
         megaphoneTrack = Sequence(megaphoneShow, Wait(delayUntilAppearSound), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
         tracks.append(megaphoneTrack)
-        tracks.append(Func(self.avatar.play, 'sound'))
+        tracks.append(ActorInterval(self.avatar, 'sound'))
         instrumentshrink = self.getScaleIntervals(self.gag, duration=0.1, startScale=instrMax2, endScale=instrMin)
         soundTrack = Sequence(Wait(delayTime), Parallel(attackTrack, SoundInterval(self.soundSfx, node=self.avatar), Sequence(Wait(1.5), instrumentshrink), Func(self.damageCogsNearby), Wait(0.4), Func(self.finish)))
         tracks.append(soundTrack)

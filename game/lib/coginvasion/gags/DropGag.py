@@ -34,7 +34,7 @@ class DropGag(Gag, LocationGag):
         if game.process == 'client':
             self.missSfx = base.audio3d.loadSfx(missSfx)
             self.fallSfx = base.audio3d.loadSfx(self.fallSoundPath)
-            
+
         # Variables to handle the drop preview with large drops.
         self.crashSite = None
         self.crashSiteGag = None
@@ -45,23 +45,23 @@ class DropGag(Gag, LocationGag):
         self.crashBegun = False
         self.shadowIdleTaskName = 'Handle-IdleShadow'
         self.shadowIdleTime = 0.0
-        
+
     def tickShadowIdleTask(self, task):
         task.delayTime = 0.1
         self.shadowIdleTime += 0.1
         if self.shadowIdleTime >= 0.25:
             self.startCrashEffect()
         return task.again
-    
+
     def __shadowMoved(self):
         self.shadowIdleTime = 0.0
         base.taskMgr.remove(self.shadowIdleTaskName)
         base.taskMgr.add(self.tickShadowIdleTask, self.shadowIdleTaskName)
-        
+
         if self.crashSite:
             self.cleanupCrashIval()
             self.crashSite.hide()
-        
+
     def startCrashEffect(self):
         if not self.getLocationSeeker() or self.crashBegun:
             return
@@ -76,12 +76,12 @@ class DropGag(Gag, LocationGag):
             self.crashSiteGag = self.crashSite.find('**/crashed_piano')
             self.crashSiteGag.setTransparency(TransparencyAttrib.MAlpha)
             self.crashSiteShadow = self.crashSite.find('**/shadow_crack')
-            
+
             # Clean up the collision nodes.
             for node in self.crashSite.findAllMatches('**/*coll*'):
                 node.removeNode()
         self.crashSite.show()
-        
+
         dropShadow = self.getLocationSeeker().getDropShadow()
         if not dropShadow:
             return
@@ -90,7 +90,7 @@ class DropGag(Gag, LocationGag):
         self.crashEndPos = self.crashSiteShadow.getPos()
         self.crashStartPos = Point3(self.crashEndPos.getX(), self.crashEndPos.getY(),
             self.crashEndPos.getZ() + 8.5)
-            
+
         self.crashSiteIval = Sequence(
             Func(self.crashSiteShadow.hide),
             Func(self.crashSiteGag.headsUp, base.localAvatar),
@@ -106,8 +106,8 @@ class DropGag(Gag, LocationGag):
             Func(self.crashSiteShadow.setColorScale, 1.0, 1.0, 1.0, 1.0)
         )
         self.crashSiteIval.loop()
-            
-        
+
+
     def resetCrashEffect(self):
         base.taskMgr.remove(self.shadowIdleTaskName)
         base.ignore(self.getLocationSeeker().getShadowMovedName())
@@ -119,7 +119,7 @@ class DropGag(Gag, LocationGag):
             self.crashSiteShadow = None
             self.crashStartPos = None
             self.crashEndPos = None
-        
+
     def cleanupCrashIval(self):
         self.crashBegun = False
         if self.crashSiteIval:
@@ -135,7 +135,7 @@ class DropGag(Gag, LocationGag):
     def start(self):
         super(DropGag, self).start()
         LocationGag.start(self, self.avatar)
-        
+
         if self.isLocal() and self.getName() == CIGlobals.GrandPiano:
             base.taskMgr.add(self.tickShadowIdleTask, self.shadowIdleTaskName)
             base.accept(self.getLocationSeeker().getShadowMovedName(), self.__shadowMoved)

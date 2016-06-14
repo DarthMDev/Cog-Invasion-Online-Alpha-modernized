@@ -14,7 +14,7 @@ class DistributedGagShopInterior(DistributedToonInterior.DistributedToonInterior
     notify = directNotify.newCategory('DistributedGagShopInterior')
 
     def makeInterior(self, roomIndex = None):
-        self.dnaStore = self.cr.playGame.world.dnaStore
+        self.dnaStore = self.cr.playGame.dnaStore
         self.generator = random.Random()
         self.generator.seed(self.zoneId)
         self.interior = loader.loadModel('phase_4/models/modules/gagShop_interior.bam')

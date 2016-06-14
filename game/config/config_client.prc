@@ -2,8 +2,8 @@
 window-title Cog Invasion Online (Alpha)
 win-origin -1 -1
 win-size 640 480
-load-display pandagl
-aux-display pandagl
+load-display pandadx9
+aux-display pandadx9
 
 # Logging...
 notify-level warning
@@ -25,6 +25,8 @@ model-path .
 
 # Woo-hoo!!!! Miles!!
 audio-library-name p3miles_audio
+miles-audio-expand-mp3-threshold 10000000
+miles-audio-panda-threads #t
 
 # Virtual file system...
 vfs-mount resourcepack/phase_3 phase_3

@@ -6,7 +6,7 @@
 from lib.coginvasion.gags.ToonUpGag import ToonUpGag
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.globals import CIGlobals
-from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, Parallel, ActorInterval
 from panda3d.core import Point3
 
 class BambooCane(ToonUpGag):
@@ -60,7 +60,8 @@ class BambooCane(ToonUpGag):
         propInterval.append(self.scaleDown)
         propInterval.append(Func(self.cleanupGag))
         propInterval.append(Func(self.reset))
-        self.track = Parallel(propInterval, Func(self.avatar.play, 'happy-dance'),
+        self.track = Parallel(propInterval, ActorInterval(self.avatar, 'happy-dance'),
+
                               Func(self.soundInterval.start))
         self.track.start()
 

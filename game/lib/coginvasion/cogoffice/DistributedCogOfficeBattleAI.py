@@ -22,7 +22,7 @@ import SuitBuildingGlobals
 import random
 
 RIDE_ELEVATOR_TIME = 6.5
-FACE_OFF_TIME = 3.0
+FACE_OFF_TIME = 7.5
 VICTORY_TIME = 5.0
 
 class DistributedCogOfficeBattleAI(DistributedObjectAI):
@@ -156,7 +156,18 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         base.taskMgr.doMethodLater(RIDE_ELEVATOR_TIME, self.rideElevatorTask, self.uniqueName('rideElevatorTask'))
 
     def rideElevatorTask(self, task):
-        self.b_setState('faceOff')
+        guards = list(self.getGuardsBySection(0))
+        guards.sort(key = lambda guard: guard.getLevel(), reverse = True)
+        guard = guards[0]
+
+        suitId = guard.doId
+        taunts = CIGlobals.SuitFaceoffTaunts[guard.suitPlan.getName()]
+        tauntIndex = taunts.index(random.choice(taunts))
+
+        self.sendUpdate('doFaceoff', [suitId, tauntIndex, globalClockDelta.getRealNetworkTime()])
+
+        self.setState('faceOff')
+
         return task.done
 
     def exitRideElevator(self):
@@ -168,10 +179,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
 
     def exitBattle(self):
         pass
-    
+
     def enterBldgComplete(self):
         self.enterFloorIntermission()
-        
+
     def exitBldgComplete(self):
         pass
 
@@ -245,7 +256,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         else:
             dataList = POINTS[self.currentFloor][name]
         return dataList
-    
+
     def cleanupBarrels(self):
         for barrel in self.barrels:
             barrel.requestDelete()
@@ -344,16 +355,19 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         return CogBattleGlobals.hi2hi[self.hood]
 
     def makeSuit(self, initPointData, isChair, boss = False):
-        levelRange = SuitBuildingGlobals.buildingMinMax[CIGlobals.BranchZone2StreetName[ZoneUtil.getBranchZone(self.zoneId)]]
+        bldgInfo = SuitBuildingGlobals.buildingInfo[self.hood]
+        if self.currentFloor < self.numFloors - 1:
+            levelRange = bldgInfo[SuitBuildingGlobals.LEVEL_RANGE]
+        else:
+            levelRange = bldgInfo[SuitBuildingGlobals.BOSS_LEVEL_RANGE]
         availableSuits = []
         minLevel = levelRange[0]
         maxLevel = levelRange[1]
         battlePoint = None
 
-        if not boss:
-            maxLevel -= 1
-        else:
+        if boss:
             minLevel = maxLevel
+
         level = random.randint(minLevel, maxLevel)
         for suit in SuitBank.getSuits():
             if level >= suit.getLevelRange()[0] and level <= suit.getLevelRange()[1] and suit.getDept() == self.deptClass:
@@ -401,25 +415,53 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         if self.currentFloor == self.numFloors - 1:
             wantBoss = True
         # Make the Cogs for this floor.
-        chairPoints = self.getPoints('chairs')
-        for point in chairPoints:
-            suit = self.makeSuit([chairPoints.index(point), point], 1)
-            self.chairSuits.append(suit)
+
+        sectionRange = SuitBuildingGlobals.buildingInfo[self.hood][SuitBuildingGlobals.GUARDS_PER_SECTION]
+
+        guardSection2NumInSection = {}
         guardPoints = self.getPoints('guard')
+        maxInThisSection = 0
         for point in guardPoints:
             isBoss = False
             if wantBoss:
                 isBoss = True
                 wantBoss = False
-            suit = self.makeSuit([guardPoints.index(point), point], 0, isBoss)
-            self.guardSuits.append(suit)
-            
+            section = point[0]
+            if not guardSection2NumInSection.has_key(section):
+                guardSection2NumInSection[section] = 0
+                if section == 0:
+                    # Always make section 0 have 4 guards.
+                    maxInThisSection = 4
+                else:
+                    maxInThisSection = random.randint(sectionRange[0], sectionRange[1])
+            if guardSection2NumInSection[section] < maxInThisSection:
+                suit = self.makeSuit([guardPoints.index(point), point], 0, isBoss)
+                self.guardSuits.append(suit)
+                guardSection2NumInSection[section] += 1
+
+        chairPoints = self.getPoints('chairs')
+        chairSection2NumInSection = {}
+        maxInThisSection = 0
+        for point in chairPoints:
+            section = point[0]
+            if not chairSection2NumInSection.has_key(section):
+                chairSection2NumInSection[section] = 0
+                if guardSection2NumInSection[section] == 0:
+                    # Don't make any chairs in this section if their are no guards in the same section!!!
+                    maxInThisSection = 0
+                else:
+                    maxInThisSection = random.randint(sectionRange[0], sectionRange[1])
+            if chairSection2NumInSection[section] < maxInThisSection:
+                suit = self.makeSuit([chairPoints.index(point), point], 1)
+                self.chairSuits.append(suit)
+                chairSection2NumInSection[section] += 1
+
         # Let's make the barrels.
         barrelPoints = self.getPoints('barrels')
         if barrelPoints:
             barrelPoints = list(barrelPoints)
             # This is the data for each gag track.
-            # The list inside of the dictionary value is a list of gagIds that 
+            # The list inside of the dictionary value is a list of gagIds that
             # can be chosen to represent the gag track.
             # The second value is the percentage chance that it'll be chosen.
             trackGags = {
@@ -428,24 +470,24 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 GagType.DROP : [[8, 30], 25]
             }
             maxBarrels = 3
-            
+
             for _ in xrange(maxBarrels):
                 locationData = random.choice(barrelPoints)
                 barrelPoints.remove(locationData)
-                
+
                 position = locationData[0]
                 hpr = locationData[1]
-                
+
                 gagIcon = random.choice([0, 2])
                 track = GagType.THROW
-                
+
                 for track, data in trackGags.iteritems():
                     if random.randrange(0, 100) <= data[1]:
                         gagIcon = random.choice(data[0])
                         track = track
                         break
                 del trackGags[track]
-                
+
                 barrel = DistributedGagBarrelAI(gagIcon, self.air, loadoutOnly = True)
                 barrel.generateWithRequired(self.zoneId)
                 barrel.b_setPosHpr(position[0], position[1], position[2], hpr[0], hpr[1], hpr[2])

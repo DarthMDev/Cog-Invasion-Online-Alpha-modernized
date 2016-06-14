@@ -32,5 +32,5 @@ HILL_BITMASK = BitMask32(4)
 ToonSpeedFactor = 1.5
 ToonForwardSpeed = 16.0 * ToonSpeedFactor
 ToonJumpForce = 24.0
-ToonReverseSpeed = 8.0 * ToonSpeedFactor
+ToonReverseSpeed = 12.0 * ToonSpeedFactor
 ToonRotateSpeed = 80.0 * ToonSpeedFactor

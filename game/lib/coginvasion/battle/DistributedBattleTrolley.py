@@ -63,19 +63,18 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyEnterTrack = None
         self.trolleyExitTrack = None
 
-    def headOff(self, foo):
+    def headOff(self, zoneId):
         hoodId = self.cr.playGame.hood.hoodId
         if hoodId == CIGlobals.ToontownCentral:
             hoodId = CIGlobals.CogTropCentral
-        requestStatus = {'zoneId': ZoneUtil.getZoneId(hoodId, world = CIGlobals.CogTropolis),
+        requestStatus = {'zoneId': zoneId,
                     'hoodId': hoodId,
                     'where': 'playground',
                     'avId': base.localAvatar.doId,
                     'loader': 'safeZoneLoader',
                     'shardId': None,
                     'wantLaffMeter': 1,
-                    'how': 'teleportIn',
-                    'world': CIGlobals.CogTropolis}
+                    'how': 'teleportIn'}
         self.cr.playGame.getPlace().doneStatus = requestStatus
         messenger.send(self.cr.playGame.getPlace().doneEvent)
         base.localAvatar.reparentTo(render)

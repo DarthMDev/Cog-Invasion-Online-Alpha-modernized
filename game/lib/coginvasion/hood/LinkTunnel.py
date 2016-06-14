@@ -57,9 +57,6 @@ class LinkTunnel(DirectObject):
         del self.data
         del self.toZone
 
-    def isCTTunnel(self):
-        return base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis
-
 class SafeZoneLinkTunnel(LinkTunnel):
     """The tunnel in playgrounds that go to streets"""
 
@@ -94,8 +91,6 @@ class SafeZoneLinkTunnel(LinkTunnel):
                 toZoneFirstTwo = segment[:2]
                 toZone = toZoneFirstTwo + self.ToZoneLastTwo
                 self.toZone = int(segment)
-                if self.isCTTunnel():
-                    self.toZone += 20000
 
         self.data['zoneId'] = self.toZone
 
@@ -127,8 +122,6 @@ class StreetLinkTunnel(LinkTunnel):
         for segment in dnaRootStr.split('_'):
             if segment.isdigit():
                 self.toZone = int(segment)
-                if self.isCTTunnel():
-                    self.toZone += 20000
         self.data['zoneId'] = self.toZone
 
 class NeighborhoodLinkTunnel(LinkTunnel):
@@ -161,8 +154,6 @@ class NeighborhoodLinkTunnel(LinkTunnel):
         for segment in dnaRootStr.split('_'):
             if segment.isdigit():
                 self.toZone = int(segment)
-                if self.isCTTunnel():
-                    self.toZone += 20000
         self.data['zoneId'] = self.toZone
         self.data['hoodId'] = ZoneUtil.getHoodId(self.toZone, 1)
 
@@ -170,7 +161,7 @@ def getRecommendedTunnelClassFromZone(zone):
     if ZoneUtil.getWhereName(zone) == 'playground':
         return StreetLinkTunnel
     elif ZoneUtil.getWhereName(zone) == 'street':
-        if ZoneUtil.getHoodId(zone, street = 1, world = CIGlobals.OToontown) == base.cr.playGame.hood.id:
+        if ZoneUtil.getHoodId(zone, street = 1) == base.cr.playGame.hood.id:
             return SafeZoneLinkTunnel
         else:
             return NeighborhoodLinkTunnel

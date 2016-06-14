@@ -60,6 +60,7 @@ __builtin__.game = game()
 
 print "CIStart: Starting the game."
 print "CIStart: Using Panda3D version {0}".format(PandaSystem.getVersionString())
+print 'CIStart: True threading: ' + str(Thread.isTrueThreads())
 
 try:
     import aes

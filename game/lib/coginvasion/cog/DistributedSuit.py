@@ -59,7 +59,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.stateIndex2suitState = {}
         self.suitFSM.enterInitialState()
         self.makeStateDict()
-        
+
     def setWalkPath(self, path, timestamp):
         elapsedT = globalClockDelta.localElapsedTime(timestamp)
         self.suitFSM.request('walking', [path, elapsedT])
@@ -81,7 +81,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.clearMoveTrack()
         self.moveIval = getMoveIvalFromPath(self, path, elapsedT, True, 'suitMoveIval')
         self.moveIval.start(elapsedT)
-        
+
     def clearMoveTrack(self):
         if self.moveIval:
             self.ignore(self.moveIval.getDoneEvent())
@@ -208,7 +208,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def startProjInterval(self, startX, startY, startZ, endX, endY, endZ, duration, gravityMult, ts = 0):
         if isinstance(ts, int) and ts != 0:
             ts = globalClockDelta.localElapsedTime(ts)
-        
+
         self.disableRay()
         self.stopMoveInterval()
         startPos = Point3(startX, startY, startZ)

@@ -29,11 +29,11 @@ class Street(Place):
             State('elevatorIn', self.enterElevatorIn, self.exitElevatorIn, ['walk', 'stop']),
             State('final', self.enterFinal, self.exitFinal, ['final'])],
             'start', 'final')
-            
+
     def enterElevatorIn(self, requestStatus):
         taskMgr.add(
             self.elevatorInTask, 'Street.elevatorInTask', extraArgs = [requestStatus['bldgDoId']], appendTask = True)
-        
+
     def elevatorInTask(self, bldgDoId, task):
         bldg = base.cr.doId2do.get(bldgDoId)
         if bldg:
@@ -47,7 +47,7 @@ class Street(Place):
             return False
         messenger.send('insideVictorElevator')
         return True
-        
+
     def exitElevatorIn(self):
         taskMgr.remove('Street.elevatorInTask')
 
@@ -112,22 +112,17 @@ class Street(Place):
         self.doEnterZone(newZoneId)
 
     def doEnterZone(self, newZoneId):
-        similarZoneId = newZoneId
-        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis and similarZoneId != None and similarZoneId > 20000:
-            similarZoneId -= 20000
-        elif base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis and similarZoneId != None and similarZoneId < 20000:
-            newZoneId += 20000
         visualizeZones = 0
         if self.zoneId != None:
             for i in self.loader.nodeDict[self.zoneId]:
                 if newZoneId:
-                    if i not in self.loader.nodeDict[similarZoneId]:
+                    if i not in self.loader.nodeDict[newZoneId]:
                         self.loader.fadeOutDict[i].start()
                 else:
                     i.stash()
 
-        if similarZoneId != None:
-            for i in self.loader.nodeDict[similarZoneId]:
+        if newZoneId != None:
+            for i in self.loader.nodeDict[newZoneId]:
                 if self.zoneId:
                     if i not in self.loader.nodeDict[self.zoneId]:
                         self.loader.fadeInDict[i].start()
@@ -138,24 +133,19 @@ class Street(Place):
                         self.loader.fadeInDict[i].finish()
                     i.unstash()
 
-        if similarZoneId != self.zoneId:
+        if newZoneId != self.zoneId:
             if visualizeZones:
                 if self.zoneId != None:
                     self.loader.zoneDict[self.zoneId].clearColor()
                 if newZoneId != None:
-                    self.loader.zoneDict[similarZoneId].setColor(0, 0, 1, 1, 100)
-            if similarZoneId is not None:
+                    self.loader.zoneDict[newZoneId].setColor(0, 0, 1, 1, 100)
+            if newZoneId is not None:
                 loader = base.cr.playGame.getPlace().loader
-                if similarZoneId in loader.zoneVisDict:
-                    visList = []
-                    for vis in loader.zoneVisDict[similarZoneId]:
-                        if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
-                            visList.append(vis + 20000)
-                        else:
-                            visList.append(vis)
-                    base.cr.sendSetZoneMsg(newZoneId, visList)
+                if newZoneId in loader.zoneVisDict:
+                    base.cr.sendSetZoneMsg(newZoneId, loader.zoneVisDict[newZoneId])
                 else:
-                    visList = [similarZoneId] + loader.zoneVisDict.values()[0]
-            self.zoneId = similarZoneId
+                    visList = [newZoneId] + loader.zoneVisDict.values()[0]
+                    base.cr.sendSetZoneMsg(newZoneId, visList)
+            self.zoneId = newZoneId
         geom = base.cr.playGame.getPlace().loader.geom
         return

@@ -57,7 +57,7 @@ class ToonHood(Hood.Hood):
 
     def handleTownLoaderDone(self):
         doneStatus = self.loader.getDoneStatus()
-        if self.isSameHood(doneStatus) and doneStatus['world'] == base.cr.playGame.getCurrentWorldName():
+        if self.isSameHood(doneStatus):
             self.fsm.request('quietZone', [doneStatus])
         else:
             self.doneStatus = doneStatus

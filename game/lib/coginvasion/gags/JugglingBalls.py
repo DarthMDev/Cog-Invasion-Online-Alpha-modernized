@@ -33,7 +33,7 @@ class JugglingBalls(ToonUpGag):
             propInterval.append(Func(self.healNearbyAvatars, 25))
         propInterval.append(Func(self.cleanupGag))
         propInterval.append(Func(self.reset))
-        self.track = Parallel(Func(self.avatar.play, 'juggle'), propInterval, Func(self.soundInterval.start))
+        self.track = Parallel(ActorInterval(self.avatar, 'juggle'), propInterval, Func(self.soundInterval.start))
         self.track.start()
 
     def equip(self):

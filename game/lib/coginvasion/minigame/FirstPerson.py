@@ -23,6 +23,7 @@ class FirstPerson(DirectObject):
         base.localAvatar.prepareToSwitchControlType()
         base.localAvatar.controlManager.wantWASD = 1
         base.localAvatar.controlManager.enable()
+        camera.setPosHpr(0, 0, 0, 0, 0, 0)
         camera.reparentTo(self.player_node)
         camera.setZ(base.localAvatar.getHeight())
 

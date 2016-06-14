@@ -12,13 +12,36 @@ class AudioClip(DirectObject):
         self.ival = None
         self.chunks = chunks
 
-    def playAllParts(self):
+    def playFromIndex(self, startIndex):
+        self.stop()
+
         self.ival = Sequence()
+        index = 0
         for chunk in self.chunks:
-            self.ival.append(SoundInterval(chunk, volume = 0.5))
-            self.ival.append(Func(messenger.send, 'AudioClip_partDone'))
+            if index >= startIndex:
+                self.ival.append(SoundInterval(chunk, volume = 0.5, duration = chunk.length() / 2, taskChain = "TournamentMusicThread"))
+
+                if index < len(self.chunks) - 1:
+                    self.ival.append(Func(messenger.send, 'AudioClip_partDone', [index]))
+            index += 1
         self.ival.append(Func(messenger.send, 'AudioClip_clipDone'))
-        self.ival.append(Func(self.cleanup))
+        #self.ival.append(Func(self.cleanup))
+        self.ival.start()
+
+    def playAllParts(self):
+        self.stop()
+
+
+        self.ival = Sequence()
+        index = 0
+        for chunk in self.chunks:
+            self.ival.append(SoundInterval(chunk, volume = 0.5, duration = chunk.length() / 2, taskChain = "TournamentMusicThread"))
+
+            if index < len(self.chunks) - 1:
+                self.ival.append(Func(messenger.send, 'AudioClip_partDone', [index]))
+            index += 1
+        self.ival.append(Func(messenger.send, 'AudioClip_clipDone'))
+        #self.ival.append(Func(self.cleanup))
         self.ival.start()
 
     def stop(self):

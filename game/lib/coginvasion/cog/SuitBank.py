@@ -14,10 +14,11 @@ from panda3d.core import VBase4
 
 class SuitPlan:
 
-    def __init__(self, name, suitType, dept, head, scale, nametagZ, headColor = None,
+    def __init__(self, name, suitType, dept, head, scale, nametagZ, height, headColor = None,
                  headTex = None, headAnims = None, handColor = None, forcedVariant = None, forcedVoice = None,
                  levelRange = None, forcedLevel = None, attacks = SuitAttacks.SuitAttackLengths.keys()):
         self.name = name
+        self.height = height
         self.suitType = suitType
         self.dept = dept
         self.scale = scale
@@ -56,6 +57,9 @@ class SuitPlan:
     def getScale(self):
         return self.scale
 
+    def getHeight(self):
+        return self.height
+
     def getNametagZ(self):
         return self.nametagZ
 
@@ -85,6 +89,7 @@ TheBigCheese = SuitPlan(
     SuitType.A,
     Dept.BOSS,
     'bigcheese',
+    height = 9.34,
     scale = 7.0,
     nametagZ = 9.8,
     handColor = VBase4(0.75, 0.95, 0.75, 1.0),
@@ -95,6 +100,7 @@ CorporateRaider = SuitPlan(
     SuitType.C,
     Dept.BOSS,
     'tightwad',
+    height = 8.23,
     scale = 6.75,
     nametagZ = 9.0,
     handColor = VBase4(0.85, 0.55, 0.55, 1.0),
@@ -106,6 +112,7 @@ HeadHunter = SuitPlan(
     SuitType.A,
     Dept.BOSS,
     'headhunter',
+    height = 7.45,
     scale = 6.5,
     nametagZ = 7.9,
     levelRange = (6, 10)
@@ -115,6 +122,7 @@ Downsizer = SuitPlan(
     SuitType.B,
     Dept.BOSS,
     'beancounter',
+    height = 6.08,
     scale = 4.5,
     nametagZ = 6.3,
     levelRange = (5, 9)
@@ -124,6 +132,7 @@ Micromanager = SuitPlan(
     SuitType.C,
     Dept.BOSS,
     'micromanager',
+    height = 3.25,
     scale = 2.5,
     nametagZ = 3.5,
     levelRange = (4, 8)
@@ -133,6 +142,7 @@ Yesman = SuitPlan(
     SuitType.A,
     Dept.BOSS,
     'yesman',
+    height = 5.28,
     scale = 4.125,
     nametagZ = 5.6,
     levelRange = (3, 7)
@@ -142,6 +152,7 @@ PencilPusher = SuitPlan(
     SuitType.B,
     Dept.BOSS,
     'pencilpusher',
+    height = 5.0,
     scale = 3.35,
     nametagZ = 5.2,
     levelRange = (2, 6)
@@ -151,6 +162,7 @@ Flunky = SuitPlan(
     SuitType.C,
     Dept.BOSS,
     'flunky',
+    height = 4.88,
     scale = 4.0,
     nametagZ = 5.2,
     levelRange = (1, 5)
@@ -160,6 +172,7 @@ BigWig = SuitPlan(
     SuitType.A,
     Dept.LAW,
     'bigwig',
+    height = 8.69,
     scale = 7.0,
     nametagZ = 9.2,
     levelRange = (8, 13)
@@ -169,6 +182,7 @@ LegalEagle = SuitPlan(
     SuitType.A,
     Dept.LAW,
     'legaleagle',
+    height = 8.27,
     scale = 7.125,
     nametagZ = 8.75,
     handColor = VBase4(0.25, 0.25, 0.5, 1.0),
@@ -179,6 +193,7 @@ SpinDoctor = SuitPlan(
     SuitType.B,
     Dept.LAW,
     'telemarketer',
+    height = 7.9,
     scale = 5.65,
     nametagZ = 8.3,
     headTex = 'phase_4/maps/spin-doctor.jpg',
@@ -190,6 +205,7 @@ BackStabber = SuitPlan(
     SuitType.A,
     Dept.LAW,
     'backstabber',
+    height = 6.71,
     scale = 4.5,
     nametagZ = 7.0,
     levelRange = (5, 9)
@@ -199,6 +215,7 @@ AmbulanceChaser = SuitPlan(
     SuitType.B,
     Dept.LAW,
     'ambulancechaser',
+    height = 6.39,
     scale = 4.35,
     nametagZ = 7.0,
     levelRange = (4, 8)
@@ -208,6 +225,7 @@ DoubleTalker = SuitPlan(
     SuitType.A,
     Dept.LAW,
     'twoface',
+    height = 5.63,
     headTex = 'phase_4/maps/double-talker.jpg',
     scale = 4.25,
     nametagZ = 6.0,
@@ -218,6 +236,7 @@ Bloodsucker = SuitPlan(
     SuitType.B,
     Dept.LAW,
     'movershaker',
+    height = 6.17,
     headTex = 'phase_3.5/maps/bloodsucker.jpg',
     scale = 4.375,
     nametagZ = 6.5,
@@ -229,6 +248,7 @@ BottomFeeder = SuitPlan(
     SuitType.C,
     Dept.LAW,
     'tightwad',
+    height = 4.81,
     headTex = 'phase_3.5/maps/bottom-feeder.jpg',
     scale = 4.0,
     nametagZ = 5.1,
@@ -239,6 +259,7 @@ RobberBaron = SuitPlan(
     SuitType.A,
     Dept.CASH,
     'yesman',
+    height = 8.95,
     headTex = 'phase_3.5/maps/robberbaron.jpg',
     scale = 7.0,
     nametagZ = 9.4,
@@ -249,6 +270,7 @@ LoanShark = SuitPlan(
     SuitType.B,
     Dept.CASH,
     'loanshark',
+    height = 8.58,
     scale = 6.5,
     nametagZ = 8.9,
     handColor = VBase4(0.5, 0.85, 0.75, 1.0),
@@ -259,6 +281,7 @@ MoneyBags = SuitPlan(
     SuitType.C,
     Dept.CASH,
     'moneybags',
+    height = 6.97,
     scale = 5.3,
     nametagZ = 7.4,
     levelRange = (6, 10)
@@ -268,6 +291,7 @@ NumberCruncher = SuitPlan(
     SuitType.A,
     Dept.CASH,
     'numbercruncher',
+    height = 7.22,
     scale = 5.25,
     nametagZ = 7.8,
     levelRange = (5, 9)
@@ -277,6 +301,7 @@ BeanCounter = SuitPlan(
     SuitType.B,
     Dept.CASH,
     'beancounter',
+    height = 5.95,
     scale = 4.4,
     nametagZ = 6.3,
     levelRange = (4, 8)
@@ -286,6 +311,7 @@ Tightwad = SuitPlan(
     SuitType.C,
     Dept.CASH,
     'tightwad',
+    height = 5.41,
     scale = 4.5,
     nametagZ = 5.8,
     levelRange = (3, 7)
@@ -295,6 +321,7 @@ PennyPincher = SuitPlan(
     SuitType.A,
     Dept.CASH,
     'pennypincher',
+    height = 5.26,
     scale = 3.55,
     nametagZ = 5.6,
     handColor = VBase4(1.0, 0.5, 0.6, 1.0),
@@ -305,6 +332,7 @@ ShortChange = SuitPlan(
     SuitType.C,
     Dept.CASH,
     'coldcaller',
+    height = 4.77,
     scale = 3.6,
     nametagZ = 4.9,
     levelRange = (1, 5)
@@ -314,6 +342,7 @@ MrHollywood = SuitPlan(
     SuitType.A,
     Dept.SALES,
     'yesman',
+    height = 8.95,
     scale = 7.0,
     nametagZ = 9.4,
     levelRange = (8, 13)
@@ -323,6 +352,7 @@ TheMingler = SuitPlan(
     SuitType.A,
     Dept.SALES,
     'twoface',
+    height = 7.61,
     scale = 5.75,
     nametagZ = 8.0,
     headTex = 'phase_3.5/maps/mingler.jpg',
@@ -333,6 +363,7 @@ TwoFace = SuitPlan(
     SuitType.A,
     Dept.SALES,
     'twoface',
+    height = 6.95,
     scale = 5.25,
     nametagZ = 7.3,
     levelRange = (6, 10)
@@ -342,6 +373,7 @@ MoverShaker = SuitPlan(
     SuitType.B,
     Dept.SALES,
     'movershaker',
+    height = 6.7,
     scale = 4.75,
     nametagZ = 7.1,
     levelRange = (5, 9)
@@ -351,6 +383,7 @@ GladHander = SuitPlan(
     SuitType.C,
     Dept.SALES,
     'gladhander',
+    height = 6.4,
     scale = 4.75,
     nametagZ = 6.7,
     levelRange = (4, 8)
@@ -360,6 +393,7 @@ NameDropper = SuitPlan(
     SuitType.A,
     Dept.SALES,
     'numbercruncher',
+    height = 5.98,
     scale = 4.35,
     nametagZ = 6.3,
     headTex = 'phase_3.5/maps/namedropper.jpg',
@@ -370,6 +404,7 @@ Telemarketer = SuitPlan(
     SuitType.B,
     Dept.SALES,
     'telemarketer',
+    height = 5.24,
     scale = 3.75,
     nametagZ = 5.6,
     levelRange = (2, 6)
@@ -379,6 +414,7 @@ ColdCaller = SuitPlan(
     SuitType.C,
     Dept.SALES,
     'coldcaller',
+    height = 4.63,
     scale = 3.5,
     nametagZ = 4.9,
     headColor = VBase4(0.25, 0.35, 1.0, 1.0),
@@ -392,6 +428,7 @@ VicePresident = SuitPlan(
     Dept.SALES,
     'phase_9/models/char/sellbotBoss-head-zero.bam',
     headAnims = {'neutral': 'phase_9/models/char/bossCog-head-Ff_neutral.bam'},
+    height = 13.0,
     scale = 10.0,
     nametagZ = 14.0,
     levelRange = (70, 70),
@@ -403,6 +440,7 @@ LucyCrossbill = SuitPlan(
     Dept.LAW,
     'legaleagle',
     scale = 7.125,
+    height = 8.0,
     nametagZ = 8.75,
     handColor = VBase4(0.25, 0.25, 0.5, 1.0),
     levelRange = (80, 80),

@@ -126,9 +126,8 @@ class Avatar(ToonTalker.ToonTalker, Actor):
         offset = 0.0
         if self.avatarType:
             if self.avatarType == CIGlobals.Suit:
-                if self.charName:
-                    offset = 0.5
-                    z = SuitBank.getSuitByName(self.charName).getNametagZ()
+                offset = 1.0
+                z = self.getHeight()
             elif self.avatarType == CIGlobals.CChar:
                 z = 5
             elif self.avatarType == CIGlobals.Toon:

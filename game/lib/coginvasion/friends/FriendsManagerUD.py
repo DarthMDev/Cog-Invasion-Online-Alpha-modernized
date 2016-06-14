@@ -101,7 +101,7 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
                 return
             name = fields['setName'][0]
             self.sendUpdateToAvatarId(target, 'whisper', [sender, message, name])
-            
+
         self.air.dbInterface.queryObject(
             self.air.dbId,
             sender,
@@ -271,7 +271,7 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
         sender = self.air.getAvatarIdFromSender()
         self.sendUpdateToAvatarId(avatarId, 'avatarWantsYourLocation', [sender])
 
-    def myAvatarLocation(self, avatarId, shardId, zoneId, worldId):
+    def myAvatarLocation(self, avatarId, shardId, zoneId):
         sender = self.air.getAvatarIdFromSender()
 
         def teleportingAvatarResponse(dclass, fields):
@@ -286,4 +286,4 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
             avatarId,
             teleportingAvatarResponse
         )
-        self.sendUpdateToAvatarId(avatarId, 'avatarLocation', [sender, shardId, zoneId, worldId])
+        self.sendUpdateToAvatarId(avatarId, 'avatarLocation', [sender, shardId, zoneId])

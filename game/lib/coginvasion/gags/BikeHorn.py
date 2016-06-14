@@ -6,7 +6,7 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.SoundGag import SoundGag
-from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval
+from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval, ActorInterval
 from panda3d.core import Vec3
 
 class BikeHorn(SoundGag):
@@ -44,7 +44,7 @@ class BikeHorn(SoundGag):
         attackTrack = Parallel(Sequence(stretchInstr, backInstr), Sequence(stretchMega, backMega))
         megaphoneTrack = Sequence(megaphoneShow, Wait(delayUntilAppearSound), SoundInterval(self.appearSfx, node=self.avatar), instrumentAppear)
         tracks.append(megaphoneTrack)
-        tracks.append(Func(self.avatar.play, 'sound'))
+        tracks.append(ActorInterval(self.avatar, 'sound'))
         instrumentshrink = self.getScaleIntervals(self.gag, duration=0.1, startScale=instrMax, endScale=instrMin)
         soundTrack = Sequence(Wait(delayTime), Parallel(attackTrack, SoundInterval(self.soundSfx, node=self.avatar), Wait(0.2), instrumentshrink, Func(self.damageCogsNearby), Wait(0.4), Func(self.finish)))
         tracks.append(soundTrack)

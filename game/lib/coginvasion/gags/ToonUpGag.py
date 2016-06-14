@@ -5,6 +5,8 @@
 
 """
 
+from direct.interval.IntervalGlobal import ActorInterval
+
 from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
 from panda3d.core import Point3
@@ -51,7 +53,7 @@ class ToonUpGag(Gag):
 
     def healAvatar(self, avatar, anim = None):
         if anim:
-            avatar.play(anim)
+            ActorInterval(avatar, anim).start()
         if not self.healAmount:
             self.setHealAmount()
         avatar.sendUpdate('toonUp', [self.healAmount, 1, 1])

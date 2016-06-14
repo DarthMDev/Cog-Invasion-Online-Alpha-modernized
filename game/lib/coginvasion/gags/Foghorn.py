@@ -6,7 +6,7 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.gags.SoundGag import SoundGag
 from lib.coginvasion.gags import GagGlobals
-from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval, LerpHprInterval
+from direct.interval.IntervalGlobal import Parallel, Sequence, Func, Wait, SoundInterval, LerpHprInterval, ActorInterval
 from panda3d.core import Vec3
 
 class Foghorn(SoundGag):
@@ -43,7 +43,7 @@ class Foghorn(SoundGag):
         attackTrack = Parallel(Sequence(Wait(0.2), spinInstr), Sequence(stretchInstr, Wait(0.5), backInstr))
         megaphoneTrack = Sequence(megaphoneSh, Wait(delayUntilAppearSound), SoundInterval(self.appearSfx, node=self.avatar), Wait(delayTime + 1.0), instrumentAppear)
         tracks.append(megaphoneTrack)
-        tracks.append(Func(self.avatar.play, 'sound'))
+        tracks.append(ActorInterval(self.avatar, 'sound'))
         soundTrack = Sequence(Wait(delayTime), Parallel(attackTrack, SoundInterval(self.soundSfx, node=self.avatar), Func(self.damageCogsNearby), Wait(0.4), Func(self.finish)))
         tracks.append(soundTrack)
         tracks.start()

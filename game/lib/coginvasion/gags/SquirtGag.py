@@ -10,6 +10,7 @@ from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.globals import CIGlobals
 from direct.interval.IntervalGlobal import Sequence, Func, Wait, LerpScaleInterval, Parallel
+from direct.interval.IntervalGlobal import ActorInterval
 from panda3d.core import Point3, Vec3, NodePath, CollisionSphere, CollisionHandlerEvent, CollisionNode
 import abc
 
@@ -53,13 +54,13 @@ class SquirtGag(Gag):
             self.build()
             self.equip()
             duration = base.localAvatar.getDuration(self.toonAnim, toFrame = self.enableReleaseFrame)
-            self.sprayAttempt = Parallel(Func(self.avatar.play, self.toonAnim, fromFrame = self.startAnimFrame, toFrame = self.enableReleaseFrame, partName = 'torso'),
+            self.sprayAttempt = Parallel(ActorInterval(self.avatar, self.toonAnim, startFrame = self.startAnimFrame, endFrame = self.enableReleaseFrame, playRate = self.playRate),
                      Wait(duration - 0.15), Func(self.setSquirtEnabled, True)).start()
 
     def startSquirt(self, sprayScale, containerHold):
         def startSpray():
             self.doSpray(sprayScale, containerHold, sprayScale)
-        Sequence(Func(self.avatar.play, self.toonAnim, fromFrame = self.enableReleaseFrame, toFrame = self.completeSquirtFrame, partName = 'torso'), Func(startSpray)).start()
+        Sequence(ActorInterval(self.avatar, self.toonAnim, startFrame = self.enableReleaseFrame, endFrame = self.completeSquirtFrame), Func(startSpray)).start()
 
     def setSquirtEnabled(self, flag):
         self.canSquirt = flag
@@ -76,7 +77,7 @@ class SquirtGag(Gag):
         numFrames = base.localAvatar.getNumFrames(self.toonAnim)
         finishSeq = Sequence()
         finishSeq.append(Wait(0.5))
-        finishSeq.append(Func(self.avatar.play, self.toonAnim, fromFrame = self.completeSquirtFrame, toFrame = numFrames, partName = 'torso'))
+        finishSeq.append(Func(self.avatar.play, self.toonAnim, fromFrame = self.completeSquirtFrame, toFrame = numFrames))
         finishSeq.append(Func(self.reset))
         finishSeq.append(Func(self.avatar.play, 'neutral'))
         finishSeq.append(Func(self.cleanupSpray))

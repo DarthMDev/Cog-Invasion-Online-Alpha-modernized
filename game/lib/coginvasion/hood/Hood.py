@@ -37,7 +37,7 @@ class Hood(StateData):
         StateData.enter(self)
         hoodId = requestStatus['hoodId']
         zoneId = requestStatus['zoneId']
-        rootZone = ZoneUtil.getZoneId(hoodId, world = CIGlobals.OToontown)
+        rootZone = ZoneUtil.getZoneId(hoodId)
         if base.localAvatar.getLastHood() != rootZone and hoodId != CIGlobals.MinigameArea:
             base.localAvatar.b_setLastHood(rootZone)
         if not base.localAvatar.hasDiscoveredHood(rootZone):
@@ -100,8 +100,6 @@ class Hood(StateData):
             loadDNAFile(self.dnaStore, self.holidayDNAFile)
         if not base.cr.holidayManager.getHoliday() == HolidayType.CHRISTMAS:
             self.createNormalSky()
-            if base.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis:
-                self.startSuitEffect()
         else:
             self.createSpookySky()
 
@@ -196,7 +194,7 @@ class Hood(StateData):
 
     def handleSafeZoneLoaderDone(self):
         doneStatus = self.loader.getDoneStatus()
-        if self.isSameHood(doneStatus) and doneStatus['world'] == base.cr.playGame.getCurrentWorldName() or doneStatus['where'] == 'minigame':
+        if self.isSameHood(doneStatus) or doneStatus['where'] == 'minigame':
             self.fsm.request('quietZone', [doneStatus])
         else:
             self.doneStatus = doneStatus

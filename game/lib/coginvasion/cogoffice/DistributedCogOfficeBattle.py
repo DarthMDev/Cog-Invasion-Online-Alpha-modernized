@@ -12,7 +12,7 @@ from direct.fsm import ClassicFSM, State
 from lib.coginvasion.minigame import DistributedMinigame
 from lib.coginvasion.nametag import NametagGlobals
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.cog import Dept
+from lib.coginvasion.cog import Dept, SuitBank
 from ElevatorUtils import *
 from ElevatorConstants import *
 from CogOfficeConstants import *
@@ -69,6 +69,8 @@ class DistributedCogOfficeBattle(DistributedObject):
         Dept.CASH: ['phase_7/maps/Cashbot_C_F_O_oil.jpg', 'phase_7/maps/CashbotHQ_oil.jpg'],
         Dept.SALES: ['phase_7/maps/Sellbot_V_P_oil.jpg', 'phase_7/maps/SellbotHQ_oil.jpg', 'phase_7/maps/SellbotBldg_oil.jpg']}
 
+    TOP_FLOOR_TAUNT = "I'm the boss."
+
     ROOM_DATA = {RECEPTION_FLOOR: {'props': [
                         ['photo_frame', -42.86, 0.72, 8.0, 0, 0, 90, 1],
                         ['rug', 0, 0, 0, 90, 0, 0, 1],
@@ -93,7 +95,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                 },
                 EXECUTIVE_FLOOR: {'props': [
                         ['BR_sky', 0, 0, -125, 0, 0, 0, 1],
-                        
+
                         # Small room:
                         ['rug', -65.579, 10.385, 0, 0, 0, 0, 1],
                         ['computer_monitor', -54.654, -3.465, 2.936, -71.131, 0, 0, 1],
@@ -236,6 +238,18 @@ class DistributedCogOfficeBattle(DistributedObject):
          State.State('victory', self.enterVictory, self.exitVictory)], 'off', 'off')
         self.fsm.enterInitialState()
 
+    def isTopFloor(self):
+        return self.currentFloor >= self.numFloors - 1
+
+    def enterBldgComplete(self):
+        pass
+
+    def exitBldgComplete(self):
+        pass
+
+    def doFaceoff(self, suitId, tauntIndex, timestamp):
+        self.fsm.request('faceOff', [suitId, tauntIndex, globalClockDelta.localElapsedTime(timestamp)])
+
     def openRestockDoors(self):
         lDoorOpen = -3.9
         rDoorOpen = 3.5
@@ -253,24 +267,41 @@ class DistributedCogOfficeBattle(DistributedObject):
                         LerpPosInterval(rightDoor, 2.0, (rDoorOpen, 0, 0),
                                         (closed, 0, 0), blendType = 'easeOut'))
         ival.start()
-        
-        
+
+
         loadout = base.localAvatar.backpack.getLoadout()
         sendLoadout = []
         for gag in loadout:
             sendLoadout.append(gag.getID())
-        
+
         base.localAvatar.sendUpdate('requestSetLoadout', [sendLoadout])
 
     def enterVictory(self, ts):
         self.cr.playGame.getPlace().fsm.request('stop')
         base.localAvatar.b_setAnimState('win')
-        self.elevators[1].setToZoneId(self.exteriorZoneId)
-        
+        base.taskMgr.doMethodLater(5.0, self.victoryTask, self.uniqueName('victoryTask'))
+        #self.elevators[1].setToZoneId(self.exteriorZoneId)
+
         # This would show the rewards panel eventually.
 
+    def victoryTask(self, task):
+        requestStatus = {
+            'zoneId': self.exteriorZoneId,
+            'hoodId': self.cr.playGame.hood.id,
+            'bldgDoId': self.bldgDoId,
+            'loader': 'townLoader',
+            'where': 'street',
+            'world': CIGlobals.CogTropolis,
+            'shardId': None,
+            'wantLaffMeter': 1,
+            'avId': base.localAvatar.doId,
+            'how': 'elevatorIn'
+        }
+        self.cr.playGame.getPlace().fsm.request('teleportOut', [requestStatus])
+        return task.done
+
     def exitVictory(self):
-        pass
+        base.taskMgr.remove(self.uniqueName('victoryTask'))
 
     def setExteriorZoneId(self, zoneId):
         self.exteriorZoneId = zoneId
@@ -325,11 +356,48 @@ class DistributedCogOfficeBattle(DistributedObject):
             points = POINTS[self.currentFloor][name]
         return points
 
-    def enterFaceOff(self, ts):
-        base.localAvatar.attachCamera()
-        camera.lookAt(base.localAvatar.smartCamera.getLookAtPoint())
-        camera.setY(camera.getY() + 5)
-        self.faceOffTracks = []
+    def enterFaceOff(self, suitId, tauntIndex, ts):
+
+        suit = self.cr.doId2do.get(suitId)
+
+        if self.isTopFloor():
+            song = self.topFloorMusic
+            taunt = DistributedCogOfficeBattle.TOP_FLOOR_TAUNT
+        else:
+            song = self.bottomFloorsMusic
+            taunt = CIGlobals.SuitFaceoffTaunts[suit.suitPlan.getName()][tauntIndex]
+
+        base.playMusic(song, looping = 1, volume = 0.8)
+
+        base.camLens.setMinFov(30.0 / (4./3.))
+
+        camera.reparentTo(suit)
+        height = suit.getHeight()
+        offsetPnt = Point3(0, 0, height)
+        MidTauntCamHeight = height * 0.66
+        MidTauntCamHeightLim = height - 1.8
+        if MidTauntCamHeight < MidTauntCamHeightLim:
+            MidTauntCamHeight = MidTauntCamHeightLim
+        TauntCamY = 18
+        TauntCamX = 0
+        TauntCamHeight = random.choice((MidTauntCamHeight, 1, 11))
+        camera.setPos(TauntCamX, TauntCamY, TauntCamHeight)
+        camera.lookAt(suit, offsetPnt)
+
+        def setCamRunY():
+            camera.setY(camera.getY() + 5)
+
+        self.faceOffTrack = Sequence()
+        self.faceOffTrack.append(Func(suit.setAutoClearChat, False))
+        self.faceOffTrack.append(Func(suit.setChat, taunt))
+        self.faceOffTrack.append(Wait(3.5))
+        self.faceOffTrack.append(Func(suit.nametag.clearChatText))
+        self.faceOffTrack.append(Func(suit.setAutoClearChat, True))
+        self.faceOffTrack.append(Func(base.camLens.setMinFov, CIGlobals.DefaultCameraFov / (4./3.)))
+        self.faceOffTrack.append(Func(base.localAvatar.attachCamera))
+        self.faceOffTrack.append(Func(camera.lookAt, base.localAvatar.smartCamera.getLookAtPoint()))
+        self.faceOffTrack.append(Func(setCamRunY))
+        runTrack = Parallel()
         for i in xrange(len(self.avatars)):
             avId = self.avatars[i]
             toon = self.cr.doId2do.get(avId)
@@ -349,13 +417,14 @@ class DistributedCogOfficeBattle(DistributedObject):
                     LerpQuatInterval(toon, duration = 1.0, hpr = hpr,
                         startHpr = lambda toon = toon: toon.getHpr(render)),
                     Func(toon.setAnimState, 'neutral'))
-                self.faceOffTracks.append(track)
-                track.start(ts)
+                runTrack.append(track)
+
+        self.faceOffTrack.append(runTrack)
+        self.faceOffTrack.start(ts)
 
     def exitFaceOff(self):
-        for track in self.faceOffTracks:
-            track.finish()
-        del self.faceOffTracks
+        self.faceOffTrack.finish()
+        del self.faceOffTrack
 
     def enterRideElevator(self, ts):
         elevator = self.elevators[0]
@@ -386,7 +455,6 @@ class DistributedCogOfficeBattle(DistributedObject):
             del self.elevatorTrack
         self.rideElevatorMusic.stop()
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
-        NametagGlobals.setWant2dNametags(True)
 
     def __handleEnteredRoomSection(self, entry):
         name = entry.getIntoNodePath().getName()
@@ -397,11 +465,8 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.sendUpdate('enterSection', [index])
 
     def enterBattle(self, ts):
-        if self.currentFloor < self.numFloors - 1:
-            song = self.bottomFloorsMusic
-        else:
-            song = self.topFloorMusic
-        base.playMusic(song, looping = 1, volume = 0.8)
+        NametagGlobals.setWant2dNametags(True)
+
         base.localAvatar.walkControls.setCollisionsActive(1)
         self.cr.playGame.getPlace().fsm.request('walk')
         base.localAvatar.hideBookButton()
@@ -437,7 +502,8 @@ class DistributedCogOfficeBattle(DistributedObject):
     def announceGenerate(self):
         DistributedObject.announceGenerate(self)
         base.setBackgroundColor(self.CEILING_COLOR)
-        self.cr.playGame.hood.stopSuitEffect()
+        self.cr.playGame.hood.sky.hide()
+        self.cr.playGame.hood.setNoFog()
         self.loadElevators()
 
     def disable(self):
@@ -446,7 +512,6 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.fsm.requestFinalState()
         del self.fsm
         if self.cr.playGame.hood is not None:
-            self.cr.playGame.hood.startSuitEffect()
             self.cr.playGame.hood.sky.show()
         self.cleanupFloor()
         self.cleanupElevators()

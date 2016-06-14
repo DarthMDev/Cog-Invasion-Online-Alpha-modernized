@@ -21,7 +21,7 @@ if HoodIndex2HoodId == None:
     HoodIndex2HoodId = {}
     for hoodName in HoodId2HoodIndex.keys():
         index = HoodId2HoodIndex[hoodName]
-        zone = ZoneUtil.getZoneId(hoodName, world = CIGlobals.CogTropolis)
+        zone = ZoneUtil.getZoneId(hoodName)
         HoodIndex2HoodId[index] = zone
 
 hi2hi = HoodId2HoodIndex
