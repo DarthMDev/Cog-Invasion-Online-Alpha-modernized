@@ -12,7 +12,7 @@ from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 from lib.coginvasion.suit.CogTournamentMusicManager import CogTournamentMusicManager
 import random
 
-import ccoginvasion
+#import ccoginvasion
 
 class DistributedSuitManager(DistributedObject):
     notify = directNotify.newCategory("DistributedSuitManager")
@@ -24,7 +24,7 @@ class DistributedSuitManager(DistributedObject):
         except:
             self.DistributedSuitManager_initialized = 1
         DistributedObject.__init__(self, cr)
-        self.musicMgr = ccoginvasion.CTMusicManager()
+        #self.musicMgr = ccoginvasion.CTMusicManager()
         self.hood = cr.playGame.hood
         self.spawnerStatus = 0
         return
