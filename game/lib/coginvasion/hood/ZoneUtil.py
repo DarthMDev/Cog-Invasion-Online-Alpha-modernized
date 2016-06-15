@@ -73,7 +73,7 @@ def getHoodId(zoneId, street = 0):
             return DonaldsDreamland
     else:
         if zoneId < DynamicZonesBegin:
-            return ZoneId2Hood[zoneId]
+            return ZoneId2Hood.get(zoneId, None)
 
 def getZoneId(hoodId):
     if hoodId == BattleTTC:

@@ -466,6 +466,11 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         if ent:
             ent.setPos(pos)
 
+    def setThrowPower(self, gagId, power):
+        gag = self.backpack.getGagByID(gagId)
+        if gag:
+            gag.setPower(power)
+
     def gagStart(self, gagId):
         gag = self.backpack.getGagByID(gagId)
         if gag:
@@ -533,7 +538,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         if self.dmgFadeIval:
             self.dmgFadeIval.finish()
             self.dmgFadeIval = None
-        
+
         geomNode = self.getGeomNode()
         # Do a fade effect when we get hit so we are more aware that we were damaged.
         self.dmgFadeIval = Sequence(
@@ -581,23 +586,23 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                 if gag:
                     loadout.append(gag)
             self.backpack.setLoadout(loadout)
-            
+
     def setBackpackAmmo(self, gagIds, ammoList):
         if not self.backpack:
             self.backpack = Backpack(self)
-            # We just want to update the network ammo sometimes,
-            # let's ignore updates if we're not constructing a backpack.
-            for i in xrange(len(gagIds)):
-                gagId = gagIds[i]
-                ammo = ammoList[i]
-                
-                if not self.backpack.hasGag(gagId):
-                    self.backpack.addGag(gagId, ammo, GagGlobals.getGagData(gagId).get('maxSupply'))
-                else:
-                    self.backpack.setSupply(gagId, ammo)
-                
+        # We just want to update the network ammo sometimes,
+        # let's ignore updates if we're not constructing a backpack.
+        for i in xrange(len(gagIds)):
+            gagId = gagIds[i]
+            ammo = ammoList[i]
+
+            if not self.backpack.hasGag(gagId):
+                self.backpack.addGag(gagId, ammo, GagGlobals.getGagData(gagId).get('maxSupply'))
+            else:
+                self.backpack.setSupply(gagId, ammo)
+
     def getBackpackAmmo(self):
-        return list(), list()
+        return [], []
 
     def setGagAmmo(self, gagId, ammo):
         self.backpack.setSupply(gagId, ammo)

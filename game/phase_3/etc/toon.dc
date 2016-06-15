@@ -183,23 +183,9 @@ dclass DistributedToon : DistributedAvatar {
   setFriendsList(uint32[] = []) required ownrecv db airecv;
   updateBackpackAmmo() ownrecv;
   lookAtObject(float64, float64, float64, int8 = 1) broadcast ownsend;
-  gagStart(uint8 gagId) broadcast ownsend airecv;
-  gagThrow(uint8 gagId) broadcast ownsend;
-  gagBuild(uint8 gagId) broadcast ownsend;
-  gagRelease(uint8 gag_id) broadcast ownsend airecv;
-  usedGag(uint8 gag_id) ownsend airecv;
-  trapActivate(uint8 gagId, uint32 avId, uint8 entityId, uint32 suitId) broadcast ownsend;
-  setDropLoc(uint8 gagId, int16/10, int16/10, int16/10) clsend broadcast;
-  setSplatPos(uint8 gagId, int16/10, int16/10, int16/10) ownsend broadcast;
-  gagCollision(uint8 gagId) broadcast clsend;
-  unEquip() broadcast ram ownsend;
-  equip(uint8 gag_id) broadcast ram ownsend;
   handleSuitAttack(uint8 attack_id, uint32 suit_id) broadcast ownsend;
   toonHitByPie(uint32, uint8 gag_id) ownsend airecv;
   toonUp(uint8 hp, uint8 announce, uint8 sound) clsend airecv;
-  gagActivate(uint8 gagId) ownsend broadcast;
-  setTarget(uint8 gagId, uint32 target) clsend broadcast;
-  setGagPos(uint8 gagId, float64, float64, float64) ownsend broadcast;
   setAdminToken(int8) required broadcast db ownrecv; // Is this me?
   announceHealthAndPlaySound(int8, int16) broadcast;
   requestEject(uint32, int8 = 0) ownsend airecv;
@@ -213,6 +199,24 @@ dclass DistributedToon : DistributedAvatar {
   createTutorial() ownsend airecv;
   tutorialCreated(uint32) ownrecv;
   goThroughTunnel(uint32, int8) ownsend broadcast;
+
+  // Gags
+  gagStart(uint8 gagId) broadcast ownsend airecv;
+  gagThrow(uint8 gagId) broadcast ownsend;
+  gagBuild(uint8 gagId) broadcast ownsend;
+  gagRelease(uint8 gag_id) broadcast ownsend airecv;
+  usedGag(uint8 gag_id) ownsend airecv;
+  trapActivate(uint8 gagId, uint32 avId, uint8 entityId, uint32 suitId) broadcast ownsend;
+  setDropLoc(uint8 gagId, int16/10, int16/10, int16/10) clsend broadcast;
+  setSplatPos(uint8 gagId, int16/10, int16/10, int16/10) ownsend broadcast;
+  gagCollision(uint8 gagId) broadcast clsend;
+  unEquip() broadcast ram ownsend;
+  equip(uint8 gag_id) broadcast ram ownsend;
+  gagActivate(uint8 gagId) ownsend broadcast;
+  setTarget(uint8 gagId, uint32 target) clsend broadcast;
+  setGagPos(uint8 gagId, float64, float64, float64) ownsend broadcast;
+  setThrowPower(uint8 gagId, uint16 power) ownsend broadcast;
+
 };
 
 dclass DistributedTreasure : DistributedObject {

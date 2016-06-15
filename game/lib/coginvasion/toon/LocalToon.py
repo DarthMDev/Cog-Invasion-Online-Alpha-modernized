@@ -697,6 +697,7 @@ class LocalToon(DistributedToon):
             pos = (0, 0, -0.1)
         )
         self.gagThrowBtn.setBin('gui-popup', 60)
+        self.gagThrowBtn.hide()
 
     def hideGagButton(self):
         self.gagThrowBtn.removeNode()

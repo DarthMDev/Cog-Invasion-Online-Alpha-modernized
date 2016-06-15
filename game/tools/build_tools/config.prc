@@ -82,6 +82,8 @@ model-path .
 
 # Woo-hoo!!!! Miles!!
 audio-library-name null
+miles-audio-expand-mp3-threshold 10000000
+miles-audio-panda-threads #t
 
 # Virtual file system...
 vfs-mount resourcepack/phase_3 phase_3

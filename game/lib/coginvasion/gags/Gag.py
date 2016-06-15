@@ -39,12 +39,12 @@ class Gag(object):
         self.id = GagGlobals.getIDByName(name)
         self.image = None
         self.timeout = 5
-        
+
         # Handles the new recharging for certain gags.
-        
+
         # The time it takes (in seconds) to recharge this gag.
         self.rechargeTime = 0
-        
+
         # The elapsed time of the current recharge. Should be a float
         self.rechargeElapsedTime = 0
 
@@ -52,24 +52,28 @@ class Gag(object):
             if gagType == GagType.THROW:
                 self.woosh = base.audio3d.loadSfx(GagGlobals.PIE_WOOSH_SFX)
             self.hitSfx = base.audio3d.loadSfx(hitSfx)
-            
+
+    def playAnimThatShouldBePlaying(self):
+        if self.avatar:
+            self.avatar.loop(self.avatar.playingAnim)
+
     def setRechargeTime(self, time):
         self.rechargeTime = time
-        
+
     def getRechargeTime(self):
         return self.rechargeTime
-        
+
     def setRechargeElapsedTime(self, time):
         self.rechargeElapsedTime = time
-        
+
     def getRechargeElapsedTime(self):
         return self.rechargeElapsedTime
-    
+
     def __doRecharge(self, task):
         task.delayTime = 0.1
         self.rechargeElapsedTime += 0.1
         messenger.send('%s-Recharge-Tick' % (str(self.getID())))
-        
+
         if self.rechargeElapsedTime >= self.rechargeTime:
             self.state = GagState.LOADED
             return Task.done
@@ -117,7 +121,7 @@ class Gag(object):
             if backpack.getActiveGag():
                 if backpack.getActiveGag() == self:
                     backpack.setActiveGag(None)
-                    
+
                     if self.rechargeTime > 0 and self.isLocal():
                         self.state = GagState.RECHARGING
                         self.setRechargeElapsedTime(0)
