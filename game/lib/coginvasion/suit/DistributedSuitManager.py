@@ -61,7 +61,7 @@ class DistributedSuitManager(DistributedObject):
             #self.musicMgr.stop_clip()
             self.hood.loader.bossBattleMusic.stop()
             base.playMusic(self.hood.loader.music, looping = 1, volume = 0.9)
-        #self.hood.stopSuitEffect()
+        self.hood.stopSuitEffect()
 
     def newSuit(self):
         self.notify.info("There are active Suits!")
@@ -79,7 +79,7 @@ class DistributedSuitManager(DistributedObject):
                 self.hood.loader.invasionMusic.stop()
                 self.hood.loader.invasionMusic = None
             base.playMusic(self.hood.loader.battleMusic, looping = 1, volume = 0.9)
-        #self.hood.startSuitEffect()
+        self.hood.startSuitEffect()
 
     def bossSpawned(self):
         if not hasattr(self.hood, 'loader'):

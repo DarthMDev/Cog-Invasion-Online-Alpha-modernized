@@ -226,7 +226,8 @@ class ThrowGag(Gag):
 
     def unEquip(self):
         taskMgr.remove("hidePowerBarTask" + str(hash(self)))
-        self.powerBar.hide()
+        if self.powerBar:
+            self.powerBar.hide()
         Gag.unEquip(self)
 
     def delete(self):

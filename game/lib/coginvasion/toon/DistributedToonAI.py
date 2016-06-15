@@ -403,7 +403,7 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
 
     def toonHitByPie(self, avId, gagId):
         obj = self.air.doId2do.get(avId, None)
-        hp = GagGlobals.getGagData(gagId).get('health')
+        hp = GagGlobals.getGagData(gagId).get('health', 0)
         if obj:
             if obj.getHealth() < obj.getMaxHealth() and not obj.isDead():
                 if obj.__class__.__name__ == 'DistributedToonAI':
