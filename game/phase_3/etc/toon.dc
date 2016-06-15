@@ -125,9 +125,9 @@ dclass DistrictNameManager : DistributedObject {
 };
 
 dclass NameServicesManager : DistributedObject {
-  requestName(string name) clsend;
+  requestName(string name, uint32 avId) clsend;
   requestNameData() clsend;
-  nameDataRequest(string[], uint32[], string[], uint8[]);
+  nameDataRequest(string[], uint32[], uint32[], string[], uint8[]);
 };
 
 dclass LauncherLoginManager : DistributedObject {
@@ -142,7 +142,7 @@ dclass ClientServicesManager : DistributedObject {
   requestAvatars() clsend;
   setAvatars(AvChoice[]);
   requestNewAvatar(string dnaStrand, int8 slot, string name, int8 skipTutorial) clsend;
-  toonCreated(int32 avId);
+  toonCreated(uint32 avId);
   toonDeleted();
   requestDeleteAvatar(uint32 avId) clsend;
   requestSetAvatar(uint32 avId) clsend;

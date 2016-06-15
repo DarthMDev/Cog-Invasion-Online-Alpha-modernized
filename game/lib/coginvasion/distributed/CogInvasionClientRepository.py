@@ -110,6 +110,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.isShowingPlayerIds = False
         self.doBetaInform = True
         self.dTutorial = None
+        self.requestedName = None
         self.whisperNoise = base.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.ogg')
         self.checkHttp()
         #self.http.addPreapprovedServerCertificateFilename(self.serverURL, Filename('phase_3/etc/gameserver.crt'))
@@ -719,6 +720,11 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.csm.sendSubmitNewToon(dnaStrand, slot, name, skipTutorial)
 
     def __handleSubmitNewToonResp(self, avId):
+        # Now that our toon exists in the database, we can add send over the name we wanted to NameServicesManagerUD.
+        if self.requestedName is not None:
+            self.nameServicesManager.d_requestName(self.requestedName, avId)
+            self.requestedName = None
+
         self.loginFSM.request('avChoose')
 
     def exitSubmitNewToon(self):

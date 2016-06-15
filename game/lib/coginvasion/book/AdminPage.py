@@ -13,7 +13,7 @@ from lib.coginvasion.globals import CIGlobals
 
 class AdminPage(StateData):
 	notify = directNotify.newCategory("AdminPage")
-	
+
 	def __init__(self, book, parentFSM):
 		self.book = book
 		self.parentFSM = parentFSM
@@ -25,27 +25,27 @@ class AdminPage(StateData):
 			'off', 'off')
 		self.fsm.enterInitialState()
 		self.parentFSM.getStateNamed('adminPage').addChild(self.fsm)
-		
+
 	def enterOff(self):
 		pass
-		
+
 	def exitOff(self):
 		pass
-		
+
 	def enter(self):
 		StateData.enter(self)
 		self.fsm.request('basePage')
-		
+
 	def exit(self):
 		self.fsm.requestFinalState()
 		StateData.exit(self)
-		
+
 	def unload(self):
 		del self.book
 		del self.parentFSM
 		del self.fsm
 		StateData.unload(self)
-		
+
 	def enterSysMsgSection(self):
 		self.book.createPageButtons(None, None)
 		self.book.setTitle("System Message")
@@ -60,7 +60,7 @@ class AdminPage(StateData):
 			focusInCommand = base.localAvatar.chatInput.disableKeyboardShortcuts,
 			focusOutCommand = base.localAvatar.chatInput.enableKeyboardShortcuts,
 			pos = (-0.4, 0, 0)
-		
+
 		)
 		self.sendBtn = DirectButton(
 			geom = geom,
@@ -83,12 +83,12 @@ class AdminPage(StateData):
 			command = self.fsm.request,
 			extraArgs = ['basePage']
 		)
-		
+
 	def sendSystemMessageCommand(self, foo = None):
 		msg = self.msgEntry.get()
 		base.cr.myDistrict.sendUpdate('systemMessageCommand', [base.localAvatar.getAdminToken(), msg])
 		self.fsm.request('basePage')
-		
+
 	def exitSysMsgSection(self):
 		self.infoLbl.destroy()
 		del self.infoLbl
@@ -100,7 +100,7 @@ class AdminPage(StateData):
 		del self.cancelBtn
 		self.book.clearTitle()
 		self.book.deletePageButtons(False, False)
-		
+
 	def enterKickSection(self):
 		self.book.createPageButtons(None, None)
 		self.book.setTitle("Kick Player")
@@ -141,14 +141,14 @@ class AdminPage(StateData):
 			command = self.fsm.request,
 			extraArgs = ['basePage']
 		)
-		
+
 	def sendKickMessage(self, foo = None, andBan = 0):
 		if self.idEntry.get().isspace() or len(self.idEntry.get()) == 0:
 			return
 		print "Sending out kick request for avatar id: " + str(self.idEntry.get())
 		base.localAvatar.sendUpdate("requestEject", [int(self.idEntry.get()), andBan])
 		self.fsm.request('basePage')
-		
+
 	def exitKickSection(self):
 		self.banBtn.destroy()
 		del self.banBtn
@@ -162,9 +162,9 @@ class AdminPage(StateData):
 		del self.kickBtn
 		self.book.deletePageButtons(False, False)
 		self.book.clearTitle()
-		
+
 	def enterBasePage(self):
-		self.book.createPageButtons('mapPage', 'namePage')
+		self.book.createPageButtons('mapPage', None)
 		self.book.setTitle('Admin Stuff')
 		geom = CIGlobals.getDefaultBtnGeom()
 		self.suitSpawnerBtn = DirectButton(
@@ -278,13 +278,13 @@ class AdminPage(StateData):
 			self.ghostBtn['text'] = 'Turn Ghost On'
 		base.cr.playGame.getPlace().maybeUpdateAdminPage()
 		del geom
-		
+
 	def togglePlayerIds(self):
 		if base.cr.isShowingPlayerIds:
 			base.cr.hidePlayerIds()
 		else:
 			base.cr.showPlayerIds()
-		
+
 	def toggleBackground(self):
 		if render.isHidden():
 			render.show()
@@ -294,7 +294,7 @@ class AdminPage(StateData):
 			self.book.book_img.show()
 		else:
 			self.book.book_img.hide()
-	
+
 	def changeGhost(self):
 		if base.localAvatar.getGhost():
 			base.localAvatar.b_setGhost(0)
@@ -302,17 +302,17 @@ class AdminPage(StateData):
 		else:
 			base.localAvatar.b_setGhost(1)
 			self.ghostBtn['text'] = 'Turn Ghost Off'
-		
+
 	def sendSuitCommand(self, commandName):
 		if base.cr.playGame.suitManager:
 			base.cr.playGame.suitManager.sendUpdate('suitAdminCommand', [base.localAvatar.getAdminToken(), commandName])
-			
+
 	def openKickPage(self):
 		self.fsm.request('kickSection')
-		
+
 	def openSysMsgPage(self):
 		self.fsm.request('sysMsgSection')
-	
+
 	def exitBasePage(self):
 		self.systemMsgBtn.destroy()
 		del self.systemMsgBtn
@@ -335,4 +335,4 @@ class AdminPage(StateData):
 		self.makeCogBtn.destroy()
 		del self.makeCogBtn
 		self.book.clearTitle()
-		self.book.deletePageButtons(True, True)
+		self.book.deletePageButtons(True, False)

@@ -9,11 +9,116 @@ from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobal
 from direct.distributed.MsgTypes import *
 from lib.coginvasion.distributed.CogInvasionErrorCodes import *
 from direct.distributed.PyDatagram import PyDatagram
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from pandac.PandaModules import *
 import anydbm
 import os
 
 from lib.coginvasion.globals import CIGlobals
+
+class CreateToonProcess:
+    notify = directNotify.newCategory("CreateToonProcess")
+
+    def __init__(self, choice, accountId, sender, csm):
+        self.choice = choice
+        self.accountId = accountId
+        self.sender = sender
+        self.csm = csm
+        self.air = self.csm.air
+        self.accFields = None
+        self.newToonId = 0
+        self.avList = None
+        self.csm.queryAccount(accountId, self.accountResp)
+
+    def cleanup(self):
+        del self.choice
+        del self.accountId
+        del self.sender
+        del self.air
+        del self.accFields
+        del self.newToonId
+        del self.avList
+        del self.csm
+
+    def avatarCreateDone(self):
+        self.notify.info("DONE!")
+        print self.newToonId
+        self.csm.sendUpdateToAccountId(self.accountId, 'toonCreated', [self.newToonId])
+        self.cleanup()
+
+    def accountResp(self, dclass, fields):
+        if dclass != self.air.dclassesByName['AccountUD']:
+            self.cleanup()
+            return
+        if fields['AVATAR_IDS'][self.choice[1]] != 0:
+            self.notify.warning("Client tried to create a toon on an occupied slot!")
+            self.air.eject(self.sender, EC_OCCUPIED_SLOT_CREATION_ATTEMPT, "Client tried to create a toon on an occupied slot!")
+            self.cleanup()
+            return
+
+        self.accFields = fields
+
+        # We can create the new toon now!
+        self.createToon()
+
+    def createToon(self):
+        fields = {"ACCOUNT": self.accountId,
+                "setDNAStrand": (str(self.choice[0]),),
+                "setName": (str(self.choice[2]),),
+                "setHealth": (100,),
+                "setMaxHealth": (100,),
+                "setMoney": (5000,),
+                "setBackpackAmmo": ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+                    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], [7, 10, 3, 3, 3, 4, 3, 7, 3, 10,
+                    10, 10, 7, 15, 7, 7, 10, 5, 7, 5, 3, 1, 15, 10, 10, 5, 8, 12, 10, 1, 7, 3, 10, 7, 5, 15],),
+                "setLoadout": ([13, 35],),
+                "setAdminToken": (CIGlobals.NoToken,),
+                "setQuests": ([], [], [],),
+                "setQuestHistory": ([],),
+                "setTier": (13,),
+                "setFriendsList": ([],),
+                "setTutorialCompleted": (str(self.choice[3]),),
+                "setHoodsDiscovered": ([CIGlobals.ToontownCentralId],),
+                "setTeleportAccess": ([],),
+                "setLastHood": (CIGlobals.ToontownCentralId,),
+                "setDefaultShard": (0,)}
+        self.notify.info("Creating new toon!")
+        self.avList = self.accFields["AVATAR_IDS"]
+        self.avList = self.avList[:6]
+        self.avList += [0] * (6 - len(self.avList))
+
+        self.air.dbInterface.createObject(
+                    self.air.dbId,
+                    self.air.dclassesByName['DistributedToonUD'],
+                    fields,
+                    self.createDone)
+
+    def storeToonDone(self, fields):
+        if fields:
+            print "Bad fields"
+            self.cleanup()
+            return
+        self.avatarCreateDone()
+
+    def storeToonID(self):
+        self.notify.info("STORING ID!")
+        self.avList[self.choice[1]] = self.newToonId
+        self.air.dbInterface.updateObject(
+                self.air.dbId,
+                self.accountId,
+                self.air.dclassesByName['AccountUD'],
+                {"AVATAR_IDS": self.avList},
+                {"AVATAR_IDS": self.accFields["AVATAR_IDS"]},
+                self.storeToonDone)
+
+    def createDone(self, newId):
+        if not newId:
+            self.notify.warning("Failed to create a new toon object!")
+            self.cleanup()
+            return
+        self.notify.info("create finished, storing toon id...")
+        self.newToonId = newId
+        self.storeToonID()
 
 class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
@@ -317,63 +422,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         print avs
         self.sendUpdateToAccountId(accId, 'setAvatars', [avs])
 
-    def createToon(self, accId, choice, accFields, callback):
-        fields = {"ACCOUNT": accId,
-                "setDNAStrand": (str(choice[0]),),
-                "setName": (str(choice[2]),),
-                "setHealth": (100,),
-                "setMaxHealth": (100,),
-                "setMoney": (5000,),
-                "setBackpackAmmo": ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-                    19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], [7, 10, 3, 3, 3, 4, 3, 7, 3, 10,
-                    10, 10, 7, 15, 7, 7, 10, 5, 7, 5, 3, 1, 15, 10, 10, 5, 8, 12, 10, 1, 7, 3, 10, 7, 5, 15],),
-                "setLoadout": ([13, 35],),
-                "setAdminToken": (CIGlobals.NoToken,),
-                "setQuests": ([], [], [],),
-                "setQuestHistory": ([],),
-                "setTier": (13,),
-                "setFriendsList": ([],),
-                "setTutorialCompleted": (str(choice[3]),),
-                "setHoodsDiscovered": ([CIGlobals.ToontownCentralId],),
-                "setTeleportAccess": ([],),
-                "setLastHood": (CIGlobals.ToontownCentralId,),
-                "setDefaultShard": (0,)}
-        self.notify.info("Creating new toon!")
-        avId = 0
-        avList = accFields["AVATAR_IDS"]
-        avList = avList[:6]
-        avList += [0] * (6 - len(avList))
 
-        def storeToonDone(fields):
-            if fields:
-                print "Bad fields"
-                return
-            callback(avId)
-
-        def storeToonID(avId):
-            avId = avId
-            self.notify.info("STORING ID!")
-            avList[choice[1]] = avId
-            self.air.dbInterface.updateObject(
-                    self.air.dbId,
-                    accId,
-                    self.air.dclassesByName['AccountUD'],
-                    {"AVATAR_IDS": avList},
-                    {"AVATAR_IDS": accFields["AVATAR_IDS"]},
-                    storeToonDone)
-
-        def createDone(avId):
-            if not avId:
-                self.notify.warning("Failed to create a new toon object!")
-                return
-            self.notify.info("create finished, storing toon id...")
-            storeToonID(avId)
-
-        self.air.dbInterface.createObject(
-                    self.air.dbId,
-                    self.air.dclassesByName['DistributedToonUD'],
-                    fields,
-                    createDone)
 
     def deleteToon(self, accountId, avId, accFields, callback):
         self.notify.info("Deleting toon with dbId %s on account %s" % (avId, accountId))
@@ -429,22 +478,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         accountId = self.air.getAccountIdFromSender()
         sender = self.air.getMsgSender()
 
-        def avatarCreateDone(avId):
-            self.notify.info("DONE!")
-            self.sendUpdateToAccountId(accountId, 'toonCreated', [avId])
-
-        def accountResp(dclass, fields):
-            if dclass != self.air.dclassesByName['AccountUD']:
-                return
-            if fields['AVATAR_IDS'][choice[1]] != 0:
-                self.notify.warning("Client tried to create a toon on an occupied slot!")
-                self.air.eject(sender, EC_OCCUPIED_SLOT_CREATION_ATTEMPT, "Client tried to create a toon on an occupied slot!")
-                return
-
-            # We can create the new toon now!
-            self.createToon(accountId, choice, fields, avatarCreateDone)
-
-        self.queryAccount(accountId, accountResp)
+        CreateToonProcess(choice, accountId, sender, self)
 
     def requestSetAvatar(self, avId):
         currentAvId = self.air.getAvatarIdFromSender()

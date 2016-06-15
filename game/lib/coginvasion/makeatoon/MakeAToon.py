@@ -220,21 +220,22 @@ class MakeAToon:
             toon = self.toonGen.toon
             headColor = toon.getHeadColor()
             requestedName = self.toonName
-            
-            # We need to get the name of the head color.
-            for colorName, color in toon.colorName2DNAcolor.iteritems():
-                if headColor == color:
-                    colorName = colorName.title()
-                    self.toonName = "%s %s" % (colorName, toon.getAnimal().title())
-                    dialogMsg = dialogMsg % self.toonName
-                    break
 
-            self.nameInfoDialog = Dialog.GlobalDialog(message = dialogMsg,
-                doneEvent = 'nameInfoAck', style = Dialog.Ok)
-            base.acceptOnce('nameInfoAck', self.__handleNameInfoAck, [requestedName])
-            base.cr.nameServicesManager.d_requestName(requestedName)
-            self.nameInfoDialog.show()
-        
+            # We need to get the name of the head color.
+            #for colorName, color in toon.colorName2DNAcolor.iteritems():
+            #    if headColor == color:
+            #        colorName = colorName.title()
+            #        self.toonName = "%s %s" % (colorName, toon.getAnimal().title())
+            #        dialogMsg = dialogMsg % self.toonName
+            #        break
+
+            #self.nameInfoDialog = Dialog.GlobalDialog(message = dialogMsg,
+            #    doneEvent = 'nameInfoAck', style = Dialog.Ok)
+            #base.acceptOnce('nameInfoAck', self.__handleNameInfoAck, [requestedName])
+            #base.cr.requestedName = requestedName
+            #self.nameInfoDialog.show()
+            self.__handleExit('finished')
+
     def __handleNameInfoAck(self, requestedName):
         self.__handleExit('finished')
         self.nameInfoDialog.cleanup()
