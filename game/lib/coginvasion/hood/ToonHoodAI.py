@@ -33,8 +33,12 @@ class ToonHoodAI(HoodAI):
         #	self.suitManager.generateWithRequired(self.zoneId)
         #else:
         #	self.notify.info("Won't create suits.")
-        self.cogStation = DistributedBattleTrolleyAI(self.air, 0)
-        self.cogStation.generateWithRequired(self.zoneId)
+        hood = self.hood
+        if hood == CIGlobals.ToontownCentral:
+            hood = CIGlobals.BattleTTC
+        if CogBattleGlobals.HoodId2WantBattles[hood] is True:
+            self.cogStation = DistributedBattleTrolleyAI(self.air, CogBattleGlobals.HoodId2HoodIndex[hood])
+            self.cogStation.generateWithRequired(self.zoneId)
 
     def shutdown(self):
         if self.gagShop:

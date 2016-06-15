@@ -67,6 +67,13 @@ class DistributedDoor(DistributedObject.DistributedObject):
         self.exitDoorWalkToNode = None
         self.ready = False
         self.nodeProblemPolled = False
+        self.suitTakingOver = 0
+
+    def setSuitTakingOver(self, flag):
+        self.suitTakingOver = flag
+
+    def getSuitTakingOver(self):
+        return self.suitTakingOver
 
     def setDoorIndex(self, index):
         self.doorIndex = index
@@ -303,9 +310,10 @@ class DistributedDoor(DistributedObject.DistributedObject):
         return task.done
 
     def _handleTrigger(self, entry):
-        self.cr.playGame.getPlace().fsm.request('stop')
-        base.localAvatar.walkControls.setCollisionsActive(0)
-        self.sendUpdate('requestEnter', [])
+        if not self.getSuitTakingOver():
+            self.cr.playGame.getPlace().fsm.request('stop')
+            base.localAvatar.walkControls.setCollisionsActive(0)
+            self.sendUpdate('requestEnter', [])
 
     def getAvatarEnterTrack(self, av):
         track = Sequence(name = av.uniqueName('avatarEnterDoorTrack'))

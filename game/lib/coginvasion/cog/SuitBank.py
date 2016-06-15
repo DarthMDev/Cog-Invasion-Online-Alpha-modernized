@@ -501,3 +501,20 @@ def getSuitByName(suitName):
 
 def getSuits():
     return totalSuits
+
+def chooseLevelAndGetAvailableSuits(levelRange, dept, boss = False):
+    import random
+
+    availableSuits = []
+    minLevel = levelRange[0]
+    maxLevel = levelRange[1]
+
+    if boss:
+        minLevel = maxLevel
+
+    level = random.randint(minLevel, maxLevel)
+    for suit in getSuits():
+        if level >= suit.getLevelRange()[0] and level <= suit.getLevelRange()[1] and suit.getDept() == dept:
+            availableSuits.append(suit)
+
+    return [level, availableSuits]

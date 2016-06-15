@@ -35,6 +35,7 @@ class SquirtGag(Gag):
         self.tracks = None
         self.sprayTrack = None
         self.sprayAttempt = None
+        self.sprayRotation = Vec3(0, 0, 0)
 
         if game.process == 'client':
             if spraySfx:
@@ -66,10 +67,10 @@ class SquirtGag(Gag):
         self.canSquirt = flag
         self.sprayAttempt = None
 
-    def doSpray(self, scaleUp, scaleDown, hold):
+    def doSpray(self, scaleUp, scaleDown, hold, horizScale = 1.0, vertScale = 1.0):
         base.audio3d.attachSoundToObject(self.spraySfx, self.gag)
         base.playSfx(self.spraySfx, node = self.gag)
-        spraySequence = self.getSprayTrack(self.origin, self.sprayRange, scaleUp, hold, scaleDown)
+        spraySequence = self.getSprayTrack(self.origin, self.sprayRange, scaleUp, hold, scaleDown, horizScale, vertScale)
         self.sprayTrack = spraySequence
         self.sprayTrack.start()
 
@@ -156,12 +157,12 @@ class SquirtGag(Gag):
                 index = objects.index(item)
                 if index == 0:
                     item.reparentTo(self.sprayJoint)
-                    item.setPos(self.sprayJoint.getPos(render))
-                    item.setHpr(self.sprayJoint.getHpr(render))
-                    item.setP(0)
+                    item.setPos(0, 0, 0)
+                    item.setHpr(self.sprayRotation)
+                    item.wrtReparentTo(render)
                 else:
                     item.reparentTo(objects[index - 1])
-                item.clearMat()
+
         track.append(Func(showSpray, sprayScale, sprayProp, origin, target))
         self.spray = sprayRot
 

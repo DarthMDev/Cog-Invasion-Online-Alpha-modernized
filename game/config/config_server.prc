@@ -18,4 +18,7 @@ want-eagle-game #t
 want-delivery-game #f
 want-dodgeball-game #t
 
+# Trolley...
+trolley-slots 4
+
 # want-pstats 1

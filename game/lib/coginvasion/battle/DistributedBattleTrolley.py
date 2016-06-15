@@ -3,7 +3,7 @@
 #
 # This is a new way to go into the future to battle -- the trolley.
 
-from panda3d.core import Point3, Vec3, TextNode
+from panda3d.core import Point3, Vec3, TextNode, Fog
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
@@ -18,8 +18,8 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.hood import ZoneUtil
 import math
 
-TROLLEY_ENTER_TIME = 3.0
-TROLLEY_EXIT_TIME = 3.0
+TROLLEY_ENTER_TIME = 2.0
+TROLLEY_EXIT_TIME = 5.0
 
 class DistributedBattleTrolley(DistributedObject):
     notify = directNotify.newCategory('DistributedBattleTrolley')
@@ -37,8 +37,8 @@ class DistributedBattleTrolley(DistributedObject):
     TROLLEY_NEUTRAL_POS = Point3(15, 14, -1)
     TROLLEY_GONE_POS = Point3(50, 14.1588, -0.984615)
     TROLLEY_ARRIVING_START_POS = Point3(-20, 14.1588, -0.984615)
-    CAM_POS = Point3(-36.1269, 0.742999, 7.3503)
-    CAM_HPR = Vec3(-90, -1.9966, 0)
+    CAM_POS = Point3(-35, 0, 8)
+    CAM_HPR = Vec3(-90, 0, 0)
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
@@ -66,7 +66,7 @@ class DistributedBattleTrolley(DistributedObject):
     def headOff(self, zoneId):
         hoodId = self.cr.playGame.hood.hoodId
         if hoodId == CIGlobals.ToontownCentral:
-            hoodId = CIGlobals.CogTropCentral
+            hoodId = CIGlobals.BattleTTC
         requestStatus = {'zoneId': zoneId,
                     'hoodId': hoodId,
                     'where': 'playground',
@@ -129,9 +129,10 @@ class DistributedBattleTrolley(DistributedObject):
             self.trolleyEnterTrack.finish()
 
     def enterLeaving(self, ts = 0):
+        camera.posHprInterval(3, (0, 18.55, 3.75), (-180, 0, 0), blendType='easeInOut').start()
         base.playSfx(self.trolleyBellSfx, node = self.trolleyCar)
         if self.localAvOnTrolley == True:
-            self.trolleyExitTrack.append(Sequence(Wait(2.0), Func(base.transitions.fadeOut)))
+            self.trolleyExitTrack.append(Sequence(Wait(4.0), Func(base.transitions.fadeOut)))
         self.trolleyExitTrack.start(ts)
         self.ignore('entertrolley_sphere')
 
@@ -194,14 +195,14 @@ class DistributedBattleTrolley(DistributedObject):
             camTrack = Sequence(Parallel(
              LerpPosInterval(
               base.camera,
-              duration = 0.5,
+              duration = 1.5,
               pos = self.CAM_POS,
               startPos = base.camera.getPos(),
               blendType = 'easeOut'
              ),
              LerpQuatInterval(
               base.camera,
-              duration = 0.5,
+              duration = 1.5,
               hpr = self.CAM_HPR,
               startHpr = base.camera.getHpr(),
               blendType = 'easeOut'
@@ -281,6 +282,23 @@ class DistributedBattleTrolley(DistributedObject):
         self.trolleyStation = self.cr.playGame.hood.loader.geom.find('**/prop_trolley_station_DNARoot')
         self.trolleyCar = self.trolleyStation.find('**/trolley_car')
         self.trolleyKey = self.trolleyStation.find('**/key')
+
+        exitFog = Fog('TrolleyExitFog')
+        exitFog.setColor(0.0, 0.0, 0.0)
+        exitFog.setLinearOnsetPoint(30.0, 14.0, 0.0)
+        exitFog.setLinearOpaquePoint(37.0, 14.0, 0.0)
+        exitFog.setLinearFallback(70.0, 999.0, 1000.0)
+        self.trolleyExitFog = self.trolleyStation.attachNewNode(exitFog)
+        self.trolleyExitFogNode = exitFog
+        enterFog = Fog('TrolleyEnterFog')
+        enterFog.setColor(0.0, 0.0, 0.0)
+        enterFog.setLinearOnsetPoint(0.0, 14.0, 0.0)
+        enterFog.setLinearOpaquePoint(-7.0, 14.0, 0.0)
+        enterFog.setLinearFallback(70.0, 999.0, 1000.0)
+        self.trolleyEnterFog = self.trolleyStation.attachNewNode(enterFog)
+        self.trolleyEnterFogNode = enterFog
+        self.trolleyCar.setFogOff()
+
         tn = TextNode('trolleycountdowntext')
         tn.setFont(CIGlobals.getMickeyFont())
         tn.setTextColor(1, 0, 0, 1)
@@ -324,7 +342,9 @@ class DistributedBattleTrolley(DistributedObject):
         trolleyEnterStartPos = Point3(-20, 14, -1)
         trolleyEnterEndPos = Point3(15, 14, -1)
         trolleyEnterPos = Sequence(name='TrolleyEnterPos')
+        trolleyEnterPos.append(Func(self.trolleyCar.setFog, self.trolleyEnterFogNode))
         trolleyEnterPos.append(self.trolleyCar.posInterval(TROLLEY_ENTER_TIME, trolleyEnterEndPos, startPos=trolleyEnterStartPos, blendType='easeOut'))
+        trolleyEnterPos.append(Func(self.trolleyCar.setFogOff))
         trolleyEnterTrack = Sequence(trolleyAnimationReset, trolleyEnterPos, name='trolleyEnter')
         keyAngle = round(TROLLEY_ENTER_TIME) * 360
         dist = Vec3(trolleyEnterEndPos - trolleyEnterStartPos).length()
@@ -335,7 +355,9 @@ class DistributedBattleTrolley(DistributedObject):
         trolleyExitStartPos = Point3(15, 14, -1)
         trolleyExitEndPos = Point3(50, 14, -1)
         trolleyExitPos = Sequence(name='TrolleyExitPos')
+        trolleyExitPos.append(Func(self.trolleyCar.setFog, self.trolleyExitFogNode))
         trolleyExitPos.append(self.trolleyCar.posInterval(TROLLEY_EXIT_TIME, trolleyExitEndPos, startPos=trolleyExitStartPos, blendType='easeIn'))
+        trolleyExitPos.append(Func(self.trolleyCar.setFogOff))
         trolleyExitStartPos = Point3(15, 14, -1)
         trolleyExitEndPos = Point3(50, 14, -1)
         trolleyExitBellInterval = SoundInterval(self.trolleyBellSfx, node=self.trolleyCar)
@@ -396,6 +418,10 @@ class DistributedBattleTrolley(DistributedObject):
         self.keys = None
         self.trolleyEnterTrack = None
         self.trolleyExitTrack = None
+        self.trolleyExitFog = None
+        self.trolleyExitFogNode = None
+        self.trolleyEnterFogNode = None
+        self.trolleyEnterFog = None
 
         self.ignore('entertrolley_sphere')
         DistributedObject.delete(self)

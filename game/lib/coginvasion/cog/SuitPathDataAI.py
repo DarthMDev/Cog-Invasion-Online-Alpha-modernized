@@ -32,7 +32,7 @@ FatTreeRadius = 4
 # this is the outer boundary, which is wound CCW so that it is inside-out (i.e.
 # so that it has the "solid" part on the outside)
 PathPolygons = {
-    CIGlobals.CogTropCentral: [
+    CIGlobals.BattleTTC: [
         # Outermost loop, in CCW order
         [
             (-137.450,  -51.427),

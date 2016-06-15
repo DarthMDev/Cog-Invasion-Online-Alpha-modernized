@@ -197,6 +197,8 @@ class Place(StateData):
         self.fsm.request('teleportOut', [requestStatus])
 
     def __teleportOutDone(self, requestStatus):
+        if base.localAvatar.getMyBattle() is not None:
+            base.localAvatar.getMyBattle().d_left()
         self.doneStatus = requestStatus
         messenger.send(self.doneEvent)
 

@@ -42,6 +42,7 @@ class DistributedBuildingAI(DistributedObjectAI):
         self.difficulty = 1
         self.numFloors = 0
         self.frontDoorPoint = None
+        self.takenBySuit = False
         self.victorList = [0, 0, 0, 0]
 
     def cleanup(self):
@@ -123,6 +124,9 @@ class DistributedBuildingAI(DistributedObjectAI):
         self.battle.generateWithRequired(interiorZoneId)
 
     def exitSuit(self):
+        if hasattr(self, 'battle'):
+            self.battle.requestDelete()
+            del self.battle
         if hasattr(self, 'interior'):
             self.interior.requestDelete()
             del self.interior
@@ -173,6 +177,7 @@ class DistributedBuildingAI(DistributedObjectAI):
         return Task.done
 
     def enterToon(self):
+        self.takenBySuit = False
         self.d_setState('toon')
         (exteriorZone, interiorZone) = self.getExteriorAndInteriorZoneId()
         self.interior = DistributedToonInteriorAI(self.air, self.block, exteriorZone)

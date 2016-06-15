@@ -8,7 +8,7 @@ from lib.coginvasion.hood import ZoneUtil
 MAX_TURRETS = 3
 
 HoodId2HoodIndex = {
-    CogTropCentral: 0,
+    BattleTTC: 0,
     TheBrrrgh: 1,
     DonaldsDreamland: 2,
     MinniesMelodyland: 3,
@@ -27,7 +27,7 @@ if HoodIndex2HoodId == None:
 hi2hi = HoodId2HoodIndex
 
 HoodIndex2LevelRange = {
-    hi2hi[CogTropCentral]: list(range(1, 3 + 1)),
+    hi2hi[BattleTTC]: list(range(1, 3 + 1)),
     hi2hi[TheBrrrgh]: list(range(5, 9 + 1)),
     hi2hi[DonaldsDreamland]: list(range(6, 9 + 1)),
     hi2hi[MinniesMelodyland]: range(2, 6 + 1),
@@ -36,7 +36,7 @@ HoodIndex2LevelRange = {
 }
 
 HoodId2WantBattles = {
-    CogTropCentral: True,
+    BattleTTC: True,
     TheBrrrgh: True,
     DonaldsDreamland: True,
     MinniesMelodyland: False,
@@ -45,7 +45,7 @@ HoodId2WantBattles = {
 }
 
 HoodIndex2TotalCogs = {
-    hi2hi[CogTropCentral]: 45,
+    hi2hi[BattleTTC]: 45,
     hi2hi[TheBrrrgh]: 45,
     hi2hi[DonaldsDreamland]: 50,
     hi2hi[MinniesMelodyland]: 45,

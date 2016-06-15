@@ -72,10 +72,10 @@ def getHoodId(zoneId, street = 0):
         elif str(zoneId)[0] == '9':
             return DonaldsDreamland
     else:
-        if base.localAvatar.zoneId < DynamicZonesBegin:
+        if zoneId < DynamicZonesBegin:
             return ZoneId2Hood[zoneId]
 
 def getZoneId(hoodId):
-    if hoodId == CogTropCentral:
+    if hoodId == BattleTTC:
         hoodId = ToontownCentral
     return Hood2ZoneId[hoodId]

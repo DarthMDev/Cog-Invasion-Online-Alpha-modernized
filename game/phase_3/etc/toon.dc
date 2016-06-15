@@ -76,6 +76,7 @@ from lib.coginvasion.cogoffice import DistributedElevator/AI
 from lib.coginvasion.cogoffice import DistributedCogOfficeElevator/AI
 from lib.coginvasion.cogoffice import DistributedCogOfficeBattle/AI
 from lib.coginvasion.cogoffice import DistributedCogOfficeSuit/AI
+from lib.coginvasion.cogoffice import DistributedTakeOverSuit/AI
 
 struct AvChoice {
   uint32 avId;
@@ -240,6 +241,7 @@ dclass DistributedBoat : DistributedObject {
 };
 
 dclass DistributedDoor : DistributedObject {
+  setSuitTakingOver(int8) required broadcast ram;
   setDoorIndex(int8) required broadcast ram;
   setBlock(uint8) required broadcast ram;
   setToZone(uint32) required broadcast ram;
@@ -370,6 +372,7 @@ dclass DistributedCogBattle : DistributedObject {
   setCogsRemaining(uint8) required broadcast ram;
   arrived() clsend airecv;
   victory() broadcast;
+  iLeft() clsend airecv;
 };
 
 dclass DistributedBattleTrolley : DistributedObject {
@@ -752,4 +755,12 @@ dclass DistributedCogOfficeBattle : DistributedObject {
 dclass DistributedCogOfficeSuit : DistributedSuit {
   setBattleDoId(uint32) required broadcast ram;
   setState(string, int8[], int16) required broadcast ram;
+};
+
+dclass DistributedTakeOverSuit : DistributedSuit {
+  setDoorDoId(uint32) required broadcast ram;
+  setState(string, int16) required broadcast ram;
+  interruptTakeOver() broadcast;
+  requestStateAndTimestamp() clsend airecv;
+  stateAndTimestamp(string, int16);
 };

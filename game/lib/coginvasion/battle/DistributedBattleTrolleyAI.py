@@ -12,7 +12,7 @@ from lib.coginvasion.suit.DistributedCogBattleAI import DistributedCogBattleAI
 class DistributedBattleTrolleyAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedBattleTrolleyAI')
 
-    NUM_SLOTS = 8
+    NUM_SLOTS = base.config.GetInt('trolley-slots', 8)
 
     def __init__(self, air, hoodIndex):
         DistributedObjectAI.__init__(self, air)
@@ -23,7 +23,12 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
          State.State('arriving', self.enterArriving, self.exitArriving)], 'wait', 'off')
         self.fsm.enterInitialState()
         self.hoodIndex = hoodIndex
-        self.slots = [0, 1, 2, 3, 4, 5, 6, 7]
+
+        if DistributedBattleTrolleyAI.NUM_SLOTS == 8:
+            self.slots = [0, 1, 2, 3, 4, 5, 6, 7]
+        else:
+            self.slots = [4, 5, 6, 7]
+
         self.slotTakenByAvatarId = {}
         self.state = 'off'
         self.stateTimestamp = 0
@@ -74,7 +79,6 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
 		battle.b_setTotalCogs(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
 		battle.b_setCogsRemaining(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
 		battle.setAvIdArray(avIdArray)
-		battle.startWatchingAvatars()
 		for avId in self.slotTakenByAvatarId.keys():
 			self.sendUpdateToAvatarId(avId, 'headOff', [zone])
 

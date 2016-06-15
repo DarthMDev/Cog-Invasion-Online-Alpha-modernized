@@ -84,7 +84,6 @@ class LocalToon(DistributedToon):
         self.isMoving_jump = False
         self.gagThrowBtn = None
         self.myBattle = None
-        self.invGui = None
         self.gagsTimedOut = False
         self.needsToSwitchToGag = None
         self.gagsEnabled = False
@@ -565,7 +564,6 @@ class LocalToon(DistributedToon):
     def enableGags(self, andKeys = 0):
         if self.avatarMovementEnabled and andKeys:
             self.enableGagKeys()
-        self.invGui = InventoryGui()
         self.invGui.createGui()
         self.invGui.updateLoadout()
         self.backpack.loadoutGUI = self.invGui
@@ -748,9 +746,7 @@ class LocalToon(DistributedToon):
     def monitorHealth(self, task):
         if self.isDead():
             base.taskMgr.remove("LT.attackReactionDone")
-            if (self.cr.playGame.getCurrentWorldName() == CIGlobals.OToontown and
-            self.cr.playGame.hood.id != ZoneUtil.getHoodId(self.zoneId) or
-            self.cr.playGame.getCurrentWorldName() == CIGlobals.CogTropolis):
+            if (self.cr.playGame.hood.id != ZoneUtil.getHoodId(self.zoneId)):
                 self.cr.playGame.getPlace().fsm.request('died', [{}, self.diedStateDone])
             return task.done
         return task.cont
@@ -775,7 +771,7 @@ class LocalToon(DistributedToon):
 
     def diedStateDone(self, requestStatus):
         hood = self.cr.playGame.hood.id
-        if hood == CIGlobals.CogTropCentral:
+        if hood == CIGlobals.BattleTTC:
             hood = CIGlobals.ToontownCentral
         toZone = ZoneUtil.getZoneId(hood)
         if self.zoneId != toZone:
@@ -790,7 +786,8 @@ class LocalToon(DistributedToon):
             self.cr.playGame.getPlace().doneStatus = requestStatus
             messenger.send(self.cr.playGame.getPlace().doneEvent)
 
-        else: return
+        else:
+            return
 
         ## Tell the ai we're dead so they can refill our hp.
         #self.sendUpdate("died", [])
@@ -872,6 +869,10 @@ class LocalToon(DistributedToon):
         self.accept("gotLookSpot", self.handleLookSpot)
         self.accept("clickedWhisper", self.handleClickedSentWhisper)
         self.accept('f2', self.toggleAspect2d)
+
+        #self.accept('c', self.walkControls.setCollisionsActive, [0])
+
+        self.invGui = InventoryGui()
 
         # Unused developer methods.
         #self.accept('enter', self.printAvPos)

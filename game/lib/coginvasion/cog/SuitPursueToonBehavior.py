@@ -14,11 +14,11 @@ import random
 
 class SuitPursueToonBehavior(SuitPathBehavior):
     notify = directNotify.newCategory('SuitPursueToonBehavior')
-    
+
     RemakePathDistance = 20.0
     DivertDistance = 5.0
     MaxNonSafeDistance = 40.0
-    
+
     def __init__(self, suit, pathFinder):
         SuitPathBehavior.__init__(self, suit, False)
         self.fsm = ClassicFSM.ClassicFSM('SuitPursueToonBehavior', [State.State('off', self.enterOff, self.exitOff),
@@ -38,7 +38,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
 
     def setSuitDict(self, sDict):
         self.suitDict = sDict
-        
+
     def enter(self):
         SuitPathBehavior.enter(self)
         self.pickTarget()
@@ -54,23 +54,23 @@ class SuitPursueToonBehavior(SuitPathBehavior):
     def pickTarget(self):
         # Choose the toon that is the closest to this suit as the target.
         avIds = list(self.battle.avIds)
-        
+
         # Temporary fix for district resets. TODO: Actually correct this.
         for avId in avIds:
             if self.air.doId2do.get(avId) is None:
                 avIds.remove(avId)
-        
+
         avIds.sort(key = lambda avId: self.air.doId2do.get(avId).getDistance(self.suit))
-        
+
         # Make sure we found some avatars to pursue.
         if len(avIds) == 0:
             self.suit.getBrain().exitCurrentBehavior()
             self.fsm.enterInitialState()
             return
-        
+
         self.targetId = avIds[0]
         self.target = self.air.doId2do.get(self.targetId)
-        
+
     def exit(self):
         self.fsm.request('off')
         self.target = None
@@ -78,7 +78,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         self.suitList = None
         self.suitDict = None
         SuitPathBehavior.exit(self)
-        
+
     def unload(self):
         self.mgr = None
         self.battle = None
@@ -86,17 +86,17 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         self.targetId = None
         self.air = None
         SuitPathBehavior.unload(self)
-    
+
     def enterOff(self):
         pass
-        
+
     def exitOff(self):
         pass
-        
+
     def enterAttack(self, useSafeDistance = True):
         taskMgr.add(self._attackTask, self.suit.uniqueName('attackToonTask'),
                     extraArgs = [useSafeDistance], appendTask = True)
-        
+
     def _attackTask(self, useSafeDistance, task):
         if not self.isAvatarReachable(self.target):
             return task.done
@@ -116,7 +116,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
 
         task.delayTime = timeout
         return task.again
-        
+
     def exitAttack(self):
         taskMgr.remove(self.suit.uniqueName('attackToonTask'))
 
@@ -154,7 +154,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
 
     def exitDivert(self):
         self.clearWalkTrack()
-        
+
     def enterPursue(self):
         # Make our initial path to the toon.
         if not self.isAvatarReachable(self.target):
@@ -189,9 +189,13 @@ class SuitPursueToonBehavior(SuitPathBehavior):
                 return task.done
 
         return task.again
-        
+
     def _pursueTask(self, task):
         if self.target:
+            if self.target.isDead():
+                self.fsm.request('off')
+                self.pickTarget()
+                return task.done
             currPos = self.target.getPos(render)
             if self.suit.getDistance(self.target) <= self.attackSafeDistance and not self.target.isDead():
                 # We're a good distance to attack this toon. Let's do it.
@@ -203,13 +207,13 @@ class SuitPursueToonBehavior(SuitPathBehavior):
                 self.createPath(self.target)
         task.delayTime = 1.0
         return task.again
-        
+
     def exitPursue(self):
         taskMgr.remove(self.suit.uniqueName('scanTask'))
         taskMgr.remove(self.suit.uniqueName('pursueToonTask'))
         if hasattr(self, 'lastCheckedPos'):
             del self.lastCheckedPos
         self.clearWalkTrack()
-        
+
     def shouldStart(self):
         return True

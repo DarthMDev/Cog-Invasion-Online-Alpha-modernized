@@ -10,7 +10,7 @@ import CogBattleGlobals
 class DistributedCogStationAI(DistributedGroupStationAI):
 	notify = directNotify.newCategory("DistributedCogStationAI")
 	Slots = 8
-	
+
 	def __init__(self, air):
 		try:
 			self.DistributedCogStationAI_initialized
@@ -45,7 +45,6 @@ class DistributedCogStationAI(DistributedGroupStationAI):
 		battle.b_setTotalCogs(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
 		battle.b_setCogsRemaining(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
 		battle.setAvIdArray(avIdArray)
-		battle.startWatchingAvatars()
 		for avatar in self.avatars:
 			self.d_headOff(avatar.doId, zone, self.getHoodIndex())
 

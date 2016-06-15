@@ -315,7 +315,7 @@ class ShtickerBook(StateData):
 
         currHoodName = base.cr.playGame.hood.id
         currLocation = ''
-        if base.localAvatar.zoneId == CIGlobals.MinigameAreaId:
+        if base.localAvatar.zoneId == CIGlobals.MinigameAreaId or base.localAvatar.getMyBattle() is not None:
             currLocation = ''
         elif ZoneUtil.getWhereName(base.localAvatar.zoneId) == 'playground':
             currLocation = 'Playground'
@@ -324,7 +324,7 @@ class ShtickerBook(StateData):
         self.infoLabel = DirectLabel(relief = None, text = 'You are in: {0}\n{1}'.format(currHoodName, currLocation),
                                      scale = 0.06, pos = (-0.4, 0, -0.74), parent = self.frame, text_align = TextNode.ACenter)
 
-        if currHoodName in [CIGlobals.MinigameArea]:
+        if currHoodName in [CIGlobals.MinigameArea, CIGlobals.BattleTTC]:
             currHoodName = base.cr.playGame.lastHood
         btpText = "Back to Playground"
         btpEA = [ZoneUtil.getZoneId(currHoodName)]

@@ -360,18 +360,8 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             levelRange = bldgInfo[SuitBuildingGlobals.LEVEL_RANGE]
         else:
             levelRange = bldgInfo[SuitBuildingGlobals.BOSS_LEVEL_RANGE]
-        availableSuits = []
-        minLevel = levelRange[0]
-        maxLevel = levelRange[1]
         battlePoint = None
-
-        if boss:
-            minLevel = maxLevel
-
-        level = random.randint(minLevel, maxLevel)
-        for suit in SuitBank.getSuits():
-            if level >= suit.getLevelRange()[0] and level <= suit.getLevelRange()[1] and suit.getDept() == self.deptClass:
-                availableSuits.append(suit)
+        level, availableSuits = SuitBank.chooseLevelAndGetAvailableSuits(levelRange, self.deptClass, boss)
         if isChair:
             for suit in availableSuits:
                 if suit.getSuitType() == SuitType.B:

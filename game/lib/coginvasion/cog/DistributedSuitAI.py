@@ -75,6 +75,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.allowHits = True
 
     def handleToonThreat(self, toon, hasBeenHit):
+        if not hasattr(self, 'brain') or self.brain is None:
+            return
+
         if (CIGlobals.areFacingEachOther(self, toon) or hasBeenHit):
             # Woah! This Toon might be trying to attack us!
 
@@ -105,6 +108,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         # Send out a list of Point2s for the client to create a path for the suit to walk.
         timestamp = globalClockDelta.getRealNetworkTime()
         self.sendUpdate('setWalkPath', [path, timestamp])
+
+    def setAllowHits(self, flag):
+        self.allowHits = flag
 
     def canGetHit(self):
         return self.allowHits
@@ -229,7 +235,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
     def monitorHealth(self, task):
         if self.health <= 0:
-            if hasattr(self, 'brain'):
+            if hasattr(self, 'brain') and self.brain is not None:
                 self.brain.stopThinking()
                 self.brain.unloadBehaviors()
                 self.brain = None
@@ -252,7 +258,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             return Task.done
         return Task.cont
 
-    def __clearComboData(self, task):
+    def clearComboData(self, task):
         self.comboData = {}
 
         task.delayTime = self.clearComboDataTime
@@ -484,7 +490,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
         # Let's set the combo data task name and start the task.
         self.comboDataTaskName = self.uniqueName('clearComboData')
-        taskMgr.add(self.__clearComboData, self.comboDataTaskName)
+        taskMgr.add(self.clearComboData, self.comboDataTaskName)
 
     def disable(self):
         DistributedAvatarAI.disable(self)

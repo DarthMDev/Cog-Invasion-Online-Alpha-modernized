@@ -1,7 +1,7 @@
 # Filename: FireHose.py
 # Created by:  blach (15Nov15)
 
-from panda3d.core import Point3
+from panda3d.core import Point3, Vec3
 
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, ActorInterval, LerpScaleInterval, Parallel
 
@@ -26,6 +26,7 @@ class FireHose(SquirtGag):
         self.hydrantScale = None
         self.hoseTrack = None
         self.timeout = 6
+        self.sprayRotation = Vec3(0, 5, 0)
 
     def start(self):
         self.deleteHoseStuff()

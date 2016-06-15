@@ -27,6 +27,14 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
         self.leftDoorCloseToOpenTask = None
         self.leftDoorOpenTask = None
         self.leftDoorOpenToCloseTask = None
+        self.suitTakingOver = 0
+
+    def b_setSuitTakingOver(self, flag):
+        self.sendUpdate('setSuitTakingOver', [flag])
+        self.suitTakingOver = flag
+
+    def getSuitTakingOver(self):
+        return self.suitTakingOver
 
     def getDoorIndex(self):
         return self.doorIndex
@@ -46,6 +54,7 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
         self.rightDoorState = None
         self.leftDoorState = None
         self.toBlock = None
+        self.suitTakingOver = None
         DistributedObjectAI.DistributedObjectAI.delete(self)
 
     def setDoorType(self, doorType):
@@ -171,10 +180,11 @@ class DistributedDoorAI(DistributedObjectAI.DistributedObjectAI):
         self.__removeRightOpenToClose()
         self.b_setRightDoorState('closed')
 
-    def requestEnter(self):
-        avId = self.air.getAvatarIdFromSender()
-        timestamp = ClockDelta.globalClockDelta.getRealNetworkTime()
-        self.sendUpdate('enterDoor', [avId, timestamp])
+    def requestEnter(self, isTakeOverSuit = False):
+        if not isTakeOverSuit:
+            avId = self.air.getAvatarIdFromSender()
+            timestamp = ClockDelta.globalClockDelta.getRealNetworkTime()
+            self.sendUpdate('enterDoor', [avId, timestamp])
         if self.rightDoorState == 'closed':
             self.b_setRightDoorState('opening')
         self.__removeRightOpen()

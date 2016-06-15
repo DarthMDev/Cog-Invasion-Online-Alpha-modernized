@@ -42,7 +42,7 @@ class WaterGun(SquirtGag):
             if self.avatar.isEmpty():
                 return
             self.sprayRange = self.avatar.getPos(render) + Point3(0, GagGlobals.SELTZER_RANGE, 0)
-            self.doSpray(self.sprayScale, self.holdTime, self.sprayScale)
+            self.doSpray(self.sprayScale, self.holdTime, self.sprayScale, horizScale = 0.5, vertScale = 0.5)
             if self.isLocal():
                 base.localAvatar.sendUpdate('usedGag', [self.id])
 

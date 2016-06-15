@@ -20,7 +20,7 @@ class WaterGlass(SquirtGag):
         self.setHealth(GagGlobals.WATERGLASS_HEAL)
         self.setImage('phase_3.5/maps/water-glass.png')
         self.anim = 'spit'
-        self.sprayScale = 0.2
+        self.sprayScale = 0.1
         self.scale = 3.5
         self.holdTime = 0.0
         self.spitSfx = None
@@ -43,14 +43,14 @@ class WaterGlass(SquirtGag):
         def playSpit():
             base.playSfx(self.spitSfx, node = self.avatar)
 
-        self.track = Sequence(Wait(1.7), Func(playSpit), Wait(1.55), Func(self.release))
+        self.track = Sequence(Wait(1.7), Func(playSpit), Wait(1.75), Func(self.release))
         self.track.start()
 
     def release(self):
         if self.avatar.isEmpty():
             return
         self.sprayRange = self.avatar.getPos(render) + Point3(0, GagGlobals.SELTZER_RANGE, 0)
-        self.doSpray(self.sprayScale, self.holdTime, self.sprayScale)
+        self.doSpray(self.sprayScale, self.holdTime, self.sprayScale, horizScale = 0.3, vertScale = 0.3)
         if self.isLocal():
             base.localAvatar.sendUpdate('usedGag', [self.id])
 

@@ -10,7 +10,7 @@ VICTORY_SEQUENCE_TIME = VICTORY_RUN_TIME + TO_TOON_BLDG_TIME
 CLEAR_OUT_TOON_BLDG_TIME = 4
 TO_SUIT_BLDG_TIME = 8
 
-SWITCH_BACK_TO_SUIT_TIME = (1000, 2500)
+SPAWN_TIME_RANGE = (300, 600)
 
 # Range of guards per section.
 GUARDS_PER_SECTION = 0
@@ -64,4 +64,25 @@ buildingMinMax = {
     CIGlobals.PolarPlace: (5, 10),
     CIGlobals.LullabyLane: (6, 12),
     CIGlobals.PajamaPlace: (6, 12)
+}
+
+# The chance a cog building will be spawned each interval.
+buildingChances = {
+    CIGlobals.SillyStreet: 2.0,
+    CIGlobals.LoopyLane: 2.0,
+    CIGlobals.PunchlinePlace: 2.0,
+    CIGlobals.BarnacleBoulevard: 75.0,
+    CIGlobals.SeaweedStreet: 75.0,
+    CIGlobals.LighthouseLane: 75.0,
+    CIGlobals.ElmStreet: 90.0,
+    CIGlobals.MapleStreet: 90.0,
+    CIGlobals.OakStreet: 90.0,
+    CIGlobals.AltoAvenue: 95.0,
+    CIGlobals.BaritoneBoulevard: 95.0,
+    CIGlobals.TenorTerrace: 95.0,
+    CIGlobals.WalrusWay: 100.0,
+    CIGlobals.SleetStreet: 100.0,
+    CIGlobals.PolarPlace: 100.0,
+    CIGlobals.LullabyLane: 100.0,
+    CIGlobals.PajamaPlace: 100.0,
 }

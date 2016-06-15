@@ -196,9 +196,10 @@ PathPolygons = {
     ]
 }
 
-floor2pathFinder = {CONFERENCE_FLOOR: SuitPathFinderAI(PathPolygons[CONFERENCE_FLOOR]),
-                    EXECUTIVE_FLOOR: SuitPathFinderAI(PathPolygons[EXECUTIVE_FLOOR]),
-                    RECEPTION_FLOOR: SuitPathFinderAI(PathPolygons[RECEPTION_FLOOR])}
+floor2pathFinder = {}
 
 def getPathFinder(floor):
-    return floor2pathFinder.get(floor, None)
+    if not floor2pathFinder.get(floor):
+        floor2pathFinder[floor] = SuitPathFinderAI(PathPolygons[floor])
+
+    return floor2pathFinder[floor]

@@ -53,7 +53,20 @@ class DistributedCogBattle(DistributedObject):
         # Give toons 30 seconds to get the beans at the end.
         self.timer.setInitialTime(60)
         self.endMusic = base.loadMusic('phase_7/audio/bgm/encntr_toon_winning_indoor.mid')
-        self.balloonSound = base.loadSfx('phase_3/audio/bgm/GUI_balloon_popup.ogg')
+        self.balloonSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.ogg')
+
+    def d_left(self):
+        self.sendUpdate('iLeft')
+
+    def monitorHP(self, task):
+        if base.localAvatar.getHealth() < 1:
+            taskMgr.doMethodLater(7.0, self.diedTask, self.uniqueName('diedTask'))
+            return task.done
+        return task.cont
+
+    def diedTask(self, task):
+        self.d_left()
+        return task.done
 
     def setTurretManager(self, tmgr):
         self.turretManager = tmgr
@@ -215,8 +228,11 @@ class DistributedCogBattle(DistributedObject):
         DistributedObject.announceGenerate(self)
         base.localAvatar.setMyBattle(self)
         self.startPlacePoll()
+        taskMgr.add(self.monitorHP, "DCB.monitorHP")
 
     def disable(self):
+        taskMgr.remove("DCB.monitorHP")
+        taskMgr.remove(self.uniqueName('diedTask'))
         self.endMusic.stop()
         self.endMusic = None
         self.getBeansLabel.destroy()

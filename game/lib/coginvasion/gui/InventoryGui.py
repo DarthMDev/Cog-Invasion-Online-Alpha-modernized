@@ -8,8 +8,10 @@ from direct.directnotify.DirectNotify import DirectNotify
 from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectLabel, OnscreenText, DGG
 from direct.gui.DirectButton import DirectButton
 from direct.gui.DirectWaitBar import DirectWaitBar
+from direct.fsm.ClassicFSM import ClassicFSM
+from direct.fsm.State import State
 
-from direct.interval.IntervalGlobal import Sequence, Wait, Func
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpPosInterval
 
 from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.gags import GagGlobals
@@ -20,7 +22,7 @@ import types
 class Slot(DirectFrame):
 
     def __init__(self, baseGui, index, pos, parent):
-        DirectFrame.__init__(self, pos = pos, parent = parent, image = loader.loadTexture('phase_3.5/maps/slot_%s_%s.png' % (str(index), 'idle')), scale = 0.15, 
+        DirectFrame.__init__(self, pos = pos, parent = parent, image = loader.loadTexture('phase_3.5/maps/slot_%s_%s.png' % (str(index), 'idle')), scale = 0.15,
             frameSize = (-1, 1, -1, 1), frameColor = (0, 0, 0, 0), sortOrder = 0)
         self.initialiseoptions(Slot)
         self.gui = baseGui
@@ -30,14 +32,14 @@ class Slot(DirectFrame):
         self.gag = None
         self.mouseRlvrSfx = base.loadSfx('phase_3/audio/sfx/GUI_rollover.ogg')
         self.soundRecharged = base.loadSfx('phase_3.5/audio/sfx/tt_s_gui_sbk_cdrSuccess.ogg')
-        
+
         # The no ammo text over the gag when you run out of ammo.
         self.infoText = OnscreenText(text = "No\nAmmo", fg = (1, 0, 0, 1), parent = self,
                                        scale = 0.5, shadow = (0, 0, 0, 1), align = TextNode.ACenter,
                                        pos = (0, 0.1))
         self.infoText.setBin('unsorted', 100)
         self.infoText.hide()
-        
+
         # The recharging progress bar.
         self.rechargeBar = DirectWaitBar(value = 0, range = 100, frameColor = (1, 1, 1, 1),
                                         barColor = (0.286, 0.901, 1, 1), relief = DGG.RAISED,
@@ -45,14 +47,14 @@ class Slot(DirectFrame):
                                         hpr = (0, 0, -90), parent = self, frameSize = (-0.85, 0.85, -0.12, 0.12))
         self.rechargeBar.setBin('fixed', 60)
         self.rechargeBar.hide()
-        
+
         # The gag label underneath the gag icon.
         self.gagLabel = OnscreenText(text = "Birthday Cake", fg = (1, 1, 1, 1), parent = self,
                                        scale = 0.25, shadow = (0, 0, 0, 1), align = TextNode.ACenter,
                                        pos = (0, -0.9), mayChange = 1)
         self.gagLabel.setBin('fixed', 50)
         self.gagLabel.hide()
-        
+
         # The left arrow for moving to the gag before this one in the sequence.
         battleGui = loader.loadModel('phase_3.5/models/gui/battle_gui.bam')
         arrow = battleGui.find('**/PckMn_BackBtn')
@@ -66,12 +68,12 @@ class Slot(DirectFrame):
             parent = self, pos = (0.925, -2.0, -1.02), hpr = (180, 0, 0), relief = None, scale = 2,
             command = self.updateLoadout, extraArgs = [1], geom3_color = (0.5, 0.5, 0.5, 1.0))
         self.rightArrow.setBin('fixed', 60)
-        
+
         self.hoverObj = DirectButton(relief = None, parent = self, frameSize = self['frameSize'])
-        
+
         self.setBin('transparent', 30)
         self.setOutlineImage('idle')
-        
+
         # Let's handle mouse entering and leaving.
         self.hoverObj.guiItem.setActive(True)
         self.hoverObj.bind(DGG.WITHIN, self.mouseEntered)
@@ -88,23 +90,23 @@ class Slot(DirectFrame):
             self.rightArrow['state'] = DGG.NORMAL
         else:
             self.rightArrow['state'] = DGG.DISABLED
-        
+
     def updateArrows(self):
         if not self.gag:
             self.toggleArrows(False, False)
         else:
             track = GagGlobals.TrackGagNamesByTrackName.get(GagGlobals.getTrackOfGag(self.gag.getID()))
             index = None
-            
+
             useTrack = []
-            
+
             for name in track:
                 gag = self.gui.backpack.getGagByID(GagGlobals.getIDByName(name))
                 if gag == self.gag or (not gag in self.gui.backpack.getLoadout()):
                     useTrack.append(name)
-                    
+
             index = useTrack.index(self.gag.getName())
-            
+
             if index == 0:
                 self.toggleArrows(False, True)
 
@@ -118,59 +120,59 @@ class Slot(DirectFrame):
 
             else:
                 self.toggleArrows(True, True)
-        
+
     def updateLoadout(self, forward):
         if self.gag and self.gag.getState() in [GagState.RECHARGING, GagState.LOADED]:
             track = GagGlobals.TrackGagNamesByTrackName.get(GagGlobals.getTrackOfGag(self.gag.getID()))
             index = None
-            
+
             useTrack = []
-            
+
             for name in track:
                 gag = self.gui.backpack.getGagByID(GagGlobals.getIDByName(name))
                 if gag == self.gag or (not gag in self.gui.backpack.getLoadout()):
                     useTrack.append(name)
-                    
+
             index = useTrack.index(self.gag.getName())
-            
+
             if forward == 1:
                 nextGagIndex = index + 1
             else:
                 nextGagIndex = index - 1
-                
+
             if nextGagIndex < 0 or nextGagIndex >= len(useTrack):
                 return
-            
+
             gagId = GagGlobals.getIDByName(useTrack[nextGagIndex])
             loadout = self.gui.backpack.getLoadout()
             if self.gui.backpack.hasGag(gagId) and self.gag in loadout:
                 self.hideInfoText()
-                
+
                 if not self.gag in loadout:
                     return
 
                 loadout[loadout.index(self.gag)] = self.gui.backpack.getGagByID(gagId)
                 self.gui.backpack.setLoadout(loadout)
-        
+
     def showNoAmmo(self):
         self.infoText['text'] = "No\nAmmo"
         self.infoText['scale'] = 0.5
         self.infoText['fg'] = (1, 0, 0, 1)
         self.infoText['pos'] = (0, 0.1)
         self.infoText.show()
-        
+
         if self.gag and self.gag.getState() == GagState.RECHARGING:
             self.rechargeBar.show()
-        
+
     def showRecharging(self):
         self.infoText['text'] = "Recharging..."
         self.infoText['scale'] = 0.315
         self.infoText['fg'] = (0.286, 0.901, 1, 1)
         self.infoText['pos'] = (0, 0)
         self.infoText.show()
-        
+
         self.rechargeBar.show()
-        
+
     def __tickRecharge(self):
         if not self.gag:
             self.ignoreAll()
@@ -179,7 +181,7 @@ class Slot(DirectFrame):
             totalTime = float(self.gag.getRechargeTime())
             barValue = int(float(elapsedTime / totalTime) * self.rechargeBar['range'])
             self.rechargeBar['value'] = barValue
-            
+
             if barValue == 0:
                 self.gui.setWeapon(self, playSound = False)
                 self.setOutlineImage('no_ammo')
@@ -190,7 +192,7 @@ class Slot(DirectFrame):
                 if base.localAvatar.getBackpack().getSupply(self.gag.getID()) <= 0:
                     slotImage = 'no_ammo'
                 Sequence(Wait(0.5), Func(self.setOutlineImage, slotImage)).start()
-        
+
     def hideInfoText(self):
         self.infoText.hide()
         self.rechargeBar.hide()
@@ -209,11 +211,11 @@ class Slot(DirectFrame):
         phase = 'phase_3.5/maps/'
         self['image'] = loader.loadTexture(phase + 'slot_%s_%s.png' % (str(self.index), image))
         self.setOutline()
-        
+
         if image != 'no_ammo':
             if self.gag and base.localAvatar.getBackpack().getSupply(self.gag.getID()) == 0 or self.gag and self.gag.getState() == GagState.RECHARGING:
                 image = 'no_ammo'
-        
+
         if image == 'no_ammo':
             if self.gag and self.gag.getState() == GagState.RECHARGING:
                 # Show the recharge text.
@@ -224,7 +226,7 @@ class Slot(DirectFrame):
                 self.rechargeBar.hide()
             # When we have no ammo, render the frame in front of the gag image.
             self.setBin('fixed', 40)
-            
+
             if self.gagImage:
                 self.gagImage.setBin('transparent', 30)
         else:
@@ -237,12 +239,12 @@ class Slot(DirectFrame):
 
     def getOutline(self):
         return self.outline
-    
+
     def mouseEntered(self, cmd):
         if self.gag:
             self.gagLabel.show()
             self.mouseRlvrSfx.play()
-            
+
     def mouseExited(self, cmd):
         self.gagLabel.hide()
 
@@ -267,11 +269,16 @@ class Slot(DirectFrame):
 class InventoryGui(DirectObject):
     directNotify = DirectNotify().newCategory('InventoryGui')
 
+    HiddenPos = (0.2, 0, 0)
+    VisiblePos = (-0.1725, 0, 0)
+    SwitchTime = 0.3
+    AutoShowTime = 1.5
+
     def __init__(self):
         DirectObject.__init__(self)
         self.backpack = base.localAvatar.backpack
         self.backpack.loadoutGUI = self
-        
+
         self.oneSlotPos = [(0, 0, 0)]
         self.twoSlotsPos = [(0, 0, 0.30), (0, 0, -0.2)]
         self.threeSlotsPos = [(0, 0, 0.5), (0, 0, 0), (0, 0, -0.5)]
@@ -282,14 +289,83 @@ class InventoryGui(DirectObject):
         self.defaultSlots = 3
         self.prevSlot = None
         self.ammoLabel = None
-        self.inventoryFrame = None
+
+        self.inventoryFrame = DirectFrame(parent = base.a2dRightCenter, pos = (-0.1725, 0, 0))
+
+        self.visibilityBtn = DirectButton(text = "", relief = None, text_bg = (1, 1, 1, 0), parent = base.a2dRightCenter,
+					                      pos = (-0.1725, 0, 0), frameSize = (-0.2, 0.2, -0.725, 0.7), clickSound = None, rolloverSound = None)
+        self.visibilityBtn.bind(DGG.WITHIN, self.__handleVisEnter)
+        self.visibilityBtn.bind(DGG.WITHOUT, self.__handleVisExit)
+        self.visibilityBtn.setBin('background', 10)
+
+        self.visibilityBtn = None
+        self.visibilityBtnStatus = 0
         self.switchSound = True
         self.switchSoundSfx = base.loadSfx("phase_3/audio/sfx/GUI_balloon_popup.ogg")
-        
+
+        self.visibilityFSM = ClassicFSM('InventoryGui-VisibilityFSM',
+                                        [State('off', self.enterOff, self.exitOff),
+                                         State('hidden', self.enterHidden, self.exitHidden),
+                                         State('hidden2visible', self.enterHidden2Visible, self.exitHidden2Visible),
+                                         State('visible', self.enterVisible, self.exitVisible),
+                                         State('visible2hidden', self.enterVisible2Hidden, self.exitVisible2Hidden)],
+                                        'off', 'off')
+        self.visibilityFSM.enterInitialState()
+        self.visibilityFSM.request('hidden')
+
+    def enterOff(self):
+        pass
+
+    def exitOff(self):
+        pass
+
+    def enterHidden(self):
+        self.inventoryFrame.setPos(InventoryGui.HiddenPos)
+        self.inventoryFrame.hide()
+
+    def exitHidden(self):
+        pass
+
+    def enterVisible(self, autoShow = False):
+        self.inventoryFrame.setPos(InventoryGui.VisiblePos)
+        self.inventoryFrame.show()
+        if self.visibilityBtnStatus == 0:
+            if autoShow is False:
+                # our mouse is no longer in the visibility button.
+                self.visibilityFSM.request('visible2hidden')
+
+    def exitVisible(self):
+        pass
+
+    def enterHidden2Visible(self, autoShow = False):
+        self.inventoryFrame.show()
+        self.moveIval = LerpPosInterval(self.inventoryFrame, duration = InventoryGui.SwitchTime,
+                                        pos = InventoryGui.VisiblePos, startPos = InventoryGui.HiddenPos)
+        self.moveIval.setDoneEvent("hidden2visible")
+        self.acceptOnce("hidden2visible", self.visibilityFSM.request, ["visible", [autoShow]])
+        self.moveIval.start()
+
+    def exitHidden2Visible(self):
+        self.ignore("hidden2visible")
+        self.moveIval.finish()
+        del self.moveIval
+
+    def enterVisible2Hidden(self):
+        self.moveIval = LerpPosInterval(self.inventoryFrame, duration = InventoryGui.SwitchTime,
+                                        pos = InventoryGui.HiddenPos, startPos = InventoryGui.VisiblePos)
+        self.moveIval.setDoneEvent("visible2hidden")
+        self.acceptOnce("visible2hidden", self.visibilityFSM.request, ["hidden"])
+        self.moveIval.start()
+
+    def exitVisible2Hidden(self):
+        self.ignore("visible2hidden")
+        self.moveIval.finish()
+        del self.moveIval
+
     def click_setWeapon(self, slot, cmd):
         self.setWeapon(slot, playSound = False)
 
-    def setWeapon(self, slot, playSound = True):
+    def setWeapon(self, slot, playSound = True, showUpIfHidden = False):
         if isinstance(slot, str):
             for iSlot in self.slots:
                 if iSlot.getGag():
@@ -319,10 +395,37 @@ class InventoryGui(DirectObject):
             if self.switchSound and playSound:
                 base.playSfx(self.switchSoundSfx)
 
+        if showUpIfHidden:
+            base.taskMgr.remove("showUpIfHidden")
+            self.__autoVisEnter()
+            base.taskMgr.doMethodLater(InventoryGui.AutoShowTime, self.__autoVisExitTask, "showUpIfHidden")
+
+    def __autoVisExitTask(self, task):
+        if self.visibilityBtnStatus == 0:
+            self.__handleVisExit(None, updateBtnStatus = False)
+        return task.done
+
+    def __autoVisEnter(self):
+        self.__handleVisEnter(None, True, False)
+
+    def __handleVisEnter(self, foo, autoShow = False, updateBtnStatus = True):
+        if updateBtnStatus:
+            self.visibilityBtnStatus = 1
+        if self.visibilityFSM.getCurrentState().getName() == 'hidden':
+            self.visibilityFSM.request('hidden2visible', [autoShow])
+        elif self.visibilityFSM.getCurrentState().getName() == 'visible2hidden':
+            self.visibilityFSM.request('visible')
+
+    def __handleVisExit(self, foo, updateBtnStatus = True):
+        if updateBtnStatus:
+            self.visibilityBtnStatus = 0
+        base.taskMgr.remove("showUpIfHidden")
+        if self.visibilityFSM.getCurrentState().getName() == 'visible':
+            self.visibilityFSM.request('visible2hidden')
+
     def createGui(self):
         self.deleteGui()
         posGroup = self.threeSlotsPos
-        self.inventoryFrame = DirectFrame(parent = base.a2dRightCenter, pos = (-0.1725, 0, 0))
         if self.defaultSlots == 4:
             posGroup = self.fourSlotPos
         for slot in range(len(posGroup) + 1):
@@ -339,6 +442,9 @@ class InventoryGui(DirectObject):
         self.update()
 
     def deleteGui(self):
+        #if self.visibilityBtn:
+        #    self.visibilityBtn.destroy()
+        #    self.visibilityBtn = None
         self.disableWeaponSwitch()
         for slot in self.slots:
             slot.destroy()
@@ -346,9 +452,9 @@ class InventoryGui(DirectObject):
         if self.ammoLabel:
             self.ammoLabel.destroy()
             self.ammoLabel = None
-        if self.inventoryFrame:
-            self.inventoryFrame.destroy()
-            self.inventoryFrame = None
+        #if self.inventoryFrame:
+        #    self.inventoryFrame.destroy()
+        #    self.inventoryFrame = None
 
     def resetScroll(self):
         nextGag = 0
@@ -369,8 +475,8 @@ class InventoryGui(DirectObject):
         else:
             nextGag = curGag + 1
             prevGag = curGag - 1
-        self.accept('wheel_down', self.setWeapon, extraArgs = [self.slots[nextGag]])
-        self.accept('wheel_up', self.setWeapon, extraArgs = [self.slots[prevGag]])
+        self.accept('wheel_down', self.setWeapon, extraArgs = [self.slots[nextGag], True, True])
+        self.accept('wheel_up', self.setWeapon, extraArgs = [self.slots[prevGag], True, True])
 
     def update(self):
         if not self.backpack: return
@@ -408,14 +514,14 @@ class InventoryGui(DirectObject):
                     slot.setOutlineImage('idle')
                 else:
                     slot.setOutlineImage('no_ammo')
-        
+
         numSlots = len(updateSlots)
         posGroup = {1 : self.oneSlotPos, 2 : self.twoSlotsPos, 3 : self.threeSlotsPos, 4 : self.fourSlotPos}.get(numSlots)
-        
+
         for i in xrange(len(updateSlots)):
             updateSlots[i].setPos(posGroup[i])
             updateSlots[i].show()
-        
+
         if self.activeSlot == None:
             self.ammoLabel.hide()
             self.ammoLabel['text'] = 'Ammo: 0'
@@ -447,7 +553,7 @@ class InventoryGui(DirectObject):
 
     def enableWeaponSwitch(self):
         for index in range(len(self.slots)):
-            self.accept(str(index + 1), self.setWeapon, extraArgs = [self.slots[index]])
+            self.accept(str(index + 1), self.setWeapon, extraArgs = [self.slots[index], True, True])
 
     def disableWeaponSwitch(self):
         for key in ['1', '2', '3', '4', 'wheel_down', 'wheel_up']:

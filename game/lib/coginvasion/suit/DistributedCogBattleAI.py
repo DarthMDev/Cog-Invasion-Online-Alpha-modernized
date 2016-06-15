@@ -37,6 +37,11 @@ class DistributedCogBattleAI(DistributedObjectAI):
     def setAvIdArray(self, array):
         self.avIds = array
         self.avId2suitsTargeting = {avId: [] for avId in array}
+        for avId in self.avIds:
+            toon = self.air.doId2do.get(avId)
+            if toon:
+                self.ignore(toon.getDeleteEvent())
+                self.acceptOnce(toon.getDeleteEvent(), self.handleToonLeft, [avId])
 
     def getAvIdArray(self):
         return self.avIds
@@ -108,31 +113,30 @@ class DistributedCogBattleAI(DistributedObjectAI):
         avId = self.air.getAvatarIdFromSender()
         self.arrivedAvatars.append(avId)
 
-    def startWatchingAvatars(self):
-        taskMgr.add(self.__monitorAvatars, "DistributedCogBattleAI-monitorAvatars-" + str(id(self)))
+    def iLeft(self):
+        avId = self.air.getAvatarIdFromSender()
+        self.handleToonLeft(avId, 1)
 
-    def stopWatchingAvatars(self):
-        taskMgr.remove("DistributedCogBattleAI-monitorAvatars-" + str(id(self)))
+    def handleToonLeft(self, avId, died = 0):
+        self.notify.warning("Removing avatar {0} from DistributedCogBattleAI-{1}...".format(avId, self.doId))
+        # Check if this avatar had a turret.
+        for turret in self.turretMgr.turretId2turret.values():
+            if turret.getOwner() == avId:
+                # We won't keep the turret of an avatar that has
+                # left because it will raise issues.
+                self.turretMgr.killTurret(turret.doId)
+        self.avIds.remove(avId)
+        del self.avId2suitsTargeting[avId]
 
-    def __monitorAvatars(self, task):
-        for avId in self.avIds:
-            if not avId in self.air.doId2do.keys() or self.air.doId2do.get(avId).zoneId != self.zoneId and avId in self.arrivedAvatars:
-                self.notify.warning("Removing avatar {0} from DistributedCogBattleAI-{1}...".format(avId, self.doId))
-                # Check if this avatar had a turret.
-                for turret in self.turretMgr.turretId2turret.values():
-                    if turret.getOwner() == avId:
-                        # We won't keep the turret of an avatar that has
-                        # left because it will raise issues.
-                        self.turretMgr.killTurret(turret.doId)
-                self.avIds.remove(avId)
-                del self.avId2suitsTargeting[avId]
+        if died:
+            toon = self.air.doId2do.get(avId)
+            if toon:
+                self.ignore(toon.getDeleteEvent())
+
         if len(self.avIds) == 0:
             self.notify.warning("All avatars have left DistributedCogBattleAI-{0}, deleting DO...".format(self.doId))
             self.disable()
             self.requestDelete()
-            return task.done
-        task.delayTime = 5
-        return task.again
 
     def getTurretManager(self):
         return self.turretMgr
@@ -146,7 +150,6 @@ class DistributedCogBattleAI(DistributedObjectAI):
         self.turretMgr.generateWithRequired(self.zoneId)
 
     def disable(self):
-        self.stopWatchingAvatars()
         if self.gagShop:
             self.gagShop.disable()
             self.gagShop.requestDelete()
