@@ -51,7 +51,8 @@ class PixieDust(ToonUpGag):
                           self.__getPartTrack(explodeEffect, 2.7, 1.0, [explodeEffect, self.avatar, 0]),
                           self.__getPartTrack(poofEffect, 3.4, 1.0, [poofEffect, target, 0]),
                           self.__getPartTrack(wallEffect, 4.05, 1.2, [wallEffect, self.avatar, 0]),
-                          self.getSoundTrack(0, self.avatar, 4.1), Sequence(Func(face90), ActorInteral(self.avatar, 'sprinkle-dust')),
+                          self.getSoundTrack(0, self.avatar, 4.1), Sequence(Func(face90), 
+                            ActorInterval(self.avatar, 'sprinkle-dust')),
                           Sequence(Wait(delay), Func(doHeal)))
         track.append(mtrack)
         track.append(Func(self.reset))
