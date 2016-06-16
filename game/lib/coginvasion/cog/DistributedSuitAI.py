@@ -139,7 +139,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         return tuple((self.suitPlan, self.variant))
 
     def setSuitState(self, index, startPoint, endPoint):
-        if index == 0:
+        if index == 0 and not self.isEmpty():
             self.setLatePos(self.getX(render), self.getY(render))
         self.suitState = index
         self.startPoint = startPoint
