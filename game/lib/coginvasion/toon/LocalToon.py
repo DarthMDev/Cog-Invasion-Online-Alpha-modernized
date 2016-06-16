@@ -518,10 +518,11 @@ class LocalToon(DistributedToon):
         if state != self.lastState:
             self.lastState = state
             self.b_setAnimState(state)
-            if state == 'Sad':
-                self.setWalkSpeedSlow()
-            else:
-                self.setWalkSpeedNormal()
+            if base.minigame is None:
+                if state == 'Sad':
+                    self.setWalkSpeedSlow()
+                else:
+                    self.setWalkSpeedNormal()
         action = self.setSpeed(speed, rotSpeed)
         if action != self.lastAction:
             self.lastAction = action

@@ -22,12 +22,12 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
     def load(self):
         ToonFPS.ToonFPS.load(self)
         if self.weaponName in ['shotgun', 'sniper']:
-            if self.mg.gameMode == GGG.GameModes.KOTH:
+            if self.mg.gameMode in GGG.FFA_MODES:
                 color = random.choice(GGG.TeamColorById.values())
             else:
                 color = GGG.TeamColorById[self.mg.team]
             self.weapon.setColorScale(color)
-			
+
     def resetStats(self):
         self.points = 0
         self.kills = 0
@@ -107,7 +107,7 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
         elif self.weaponName == "sniper":
             GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
-            GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)			
+            GunGameBullet(self.mg, self.weapon.find('**/joint_nozzle'), 0, self.weaponName)
         self.mg.d_gunShot()
 
     def traverse(self):
@@ -123,4 +123,7 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
                     if remoteAvatar.getTeam() == None or remoteAvatar.getTeam() != self.mg.team:
                         # Good, this player isn't on my team. I can damage them.
                         damage = self.calcDamage(avatar)
+                        if damage <= 0:
+                            # Don't heal the player!
+                            damage = 1
                         self.mg.sendUpdate('avatarHitByBullet', [avatar.doId, damage])

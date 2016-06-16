@@ -39,6 +39,14 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         self.fsm.enterInitialState()
         self.stateExtraArgs = []
 
+    def monitorHealth(self, task):
+        if self.battle is None:
+            return task.done
+        
+        if self.isDead():
+            self.battle.suitHPAtZero(self.doId)
+        return DistributedSuitAI.monitorHealth(self, task)
+
     def isActivated(self):
         return (self.fsm.getCurrentState().getName() == 'think')
 
@@ -87,7 +95,8 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         self.b_setAnimState('sit')
 
     def allStandSuitsDead(self):
-        self.b_setState('chair2battle', [self.initPointIndex])
+        if self.fsm.getCurrentState().getName() == 'chair':
+            self.b_setState('chair2battle', [self.initPointIndex])
 
     def exitChair(self):
         pass

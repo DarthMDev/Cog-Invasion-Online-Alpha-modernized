@@ -85,6 +85,9 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.handleToonLeft(avId, 1)
 
     def handleToonLeft(self, avId, died = 0):
+        if self.avIds is None:
+            return
+
         if avId in self.avIds:
             self.avIds.remove(avId)
         self.b_setAvatars(self.avIds)
@@ -301,6 +304,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
     def delete(self):
         self.fsm.requestFinalState()
         self.fsm = None
+        for avId in self.avIds:
+            toon = self.air.doId2do.get(avId)
+            if toon:
+                self.ignore(toon.getDeleteEvent())
         self.currentFloor = None
         self.toonId2suitsTargeting = None
         self.spotTaken2suitId = None
@@ -327,6 +334,19 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.availableBattlePoints = None
         DistributedObjectAI.delete(self)
 
+    def suitHPAtZero(self, doId):
+        foundIt = False
+        section = 0
+        for suit in self.guardSuits:
+            if suit.doId == doId:
+                section = suit.floorSection
+                foundIt = True
+                break
+        if foundIt and len(self.getGuardsBySection(section, excludeIfZeroHP = 1)) <= 2:
+            for suit in self.getChairsBySection(section):
+                if suit.getHealth() > 0:
+                    suit.allStandSuitsDead()
+
     def deadSuit(self, doId):
         foundIt = False
         section = 0
@@ -336,10 +356,6 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 self.guardSuits.remove(suit)
                 foundIt = True
                 break
-        if foundIt and len(self.getGuardsBySection(section)) == 0:
-            for suit in self.getChairsBySection(section):
-                if suit.getHealth() > 0:
-                    suit.allStandSuitsDead()
         if not foundIt:
             for suit in self.chairSuits:
                 if suit.doId == doId:
@@ -381,11 +397,12 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         suit.b_setName(plan.getName())
         return suit
 
-    def getGuardsBySection(self, sectionIndex):
+    def getGuardsBySection(self, sectionIndex, excludeIfZeroHP = 0):
         guards = []
         for guard in self.guardSuits:
             if guard.floorSection == sectionIndex:
-                guards.append(guard)
+                if not excludeIfZeroHP or (excludeIfZeroHP and not guard.isDead()):
+                    guards.append(guard)
         return guards
 
     def getChairsBySection(self, sectionIndex):

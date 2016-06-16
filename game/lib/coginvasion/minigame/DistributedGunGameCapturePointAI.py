@@ -15,28 +15,28 @@ class CaptureState:
 
 class DistributedGunGameCapturePointAI(DistributedNodeAI):
     notify = directNotify.newCategory('DistributedGunGameCapturePointAI')
-    
+
     # Reset the capture point if captured and without someone
     # standing on it after this amount of seconds.
     EMPTY_RESET_TIME = 4.5
-    
+
     # The time it takes for the animation on the client side to complete.
     # At the end, this will stop the capture.
     REVERSE_CAPTURE_TIME = 1.5
-    
+
     # The time it takes for the animation on the client side to complete.
     # At the end, this will capture the point.
     CAPTURE_TIME = 8.0
-    
+
     # The time it takes for the animation on the client side to complete.
     # At the end, this will return the point to default.
     RESET_TIME = 10.75
-    
+
     # How Capturing Works
     # Because 0 is used to reset the capture point and 0 is the id of red,
     # you must add 2 to the teamId to set that a team has captured the point.
     # You set the capture to 1, if it's a free-for-all capture.
-    
+
     def __init__(self, air, mg):
         DistributedNodeAI.__init__(self, air)
         self.mg = mg
@@ -47,24 +47,24 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
         self.elapsedCaptureResetTime = 0
         self.state = CaptureState.IDLE
         self.resetCaptureTime = self.RESET_TIME
-        
+
         # The one who has captured this point.
         # For free-for-all KOTH.
         self.king = None
         self.kingId = None
         self.kingOnPoint = False
-        
+
         # The Toon that is trying to capture the point.
         self.primaryContester = None
-        
+
         # Toons who contesting the capture.
         self.contesters = []
-        
+
     def announceGenerate(self):
         DistributedNodeAI.announceGenerate(self)
         self.resetTaskName = self.uniqueName('ResetPoint')
         self.captureAttemptTaskName = self.uniqueName('CaptureAttempt')
-        
+
     def delete(self):
         # We need to clean up to prevent memory leaks.
         taskMgr.removeTasksMatching(self.captureAttemptTaskName)
@@ -85,13 +85,9 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
         del self.elapsedCaptureResetTime
         del self.state
         del self.resetCaptureTime
-        del self.EMPTY_RESET_TIME
-        del self.REVERSE_CAPTURE_TIME
-        del self.CAPTURE_TIME
-        del self.RESET_TIME
         self.removeNode()
         DistributedNodeAI.delete(self)
-        
+
     def setKing(self, avId):
         if avId:
             avatar = self.air.doId2do.get(avId)
@@ -102,13 +98,13 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
         else:
             self.king = None
             self.kingId = None
-            
+
     def getKing(self):
         return self.king
-    
+
     def getKingId(self):
         return self.kingId
-    
+
     def __handleCapture(self, task):
         self.elapsedCaptureTime += task.time
         if self.elapsedCaptureTime >= self.CAPTURE_TIME:
@@ -120,7 +116,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
                 self.sendUpdate('updateStatus', [1, self.primaryContester.doId])
             return Task.done
         return Task.again
-    
+
     def resetHill(self):
         self.b_setCaptured(0)
         self.setKing(None)
@@ -134,25 +130,25 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
             # The primary contester is gone and nobody else is contesting,
             # let's have the last remaining contester start capturing!
             self.beginCapture(self.air.doId2do.get(self.contesters[0]))
-    
+
     def __handleCaptorExit(self, task):
         self.resetHill()
         return Task.done
-    
+
     def __handleKingExit(self, task):
         self.elapsedCaptureResetTime += task.time
         if self.elapsedCaptureResetTime >= self.resetCaptureTime:
             self.resetHill()
             return Task.done
         return Task.again
-    
+
     def d_startCircleAnim(self, direction):
         if direction == 1:
             self.elapsedCaptureResetTime = 0
             self.elapsedCaptureTime = 0
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.sendUpdate('startCircleAnim', [direction, timestamp])
-        
+
     def beginCapture(self, captor):
         self.primaryContester = captor
         self.resetCaptureTime = self.RESET_TIME
@@ -160,18 +156,18 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
         self.d_startCircleAnim(0)
         taskMgr.add(self.__handleCapture, self.captureAttemptTaskName)
         self.state = CaptureState.IN_PROGRESS
-    
+
     # The avatar has jumped onto the point and is
     # attempting to capture it.
     def requestEnter(self):
         avId = self.air.getAvatarIdFromSender()
         avatar = self.air.doId2do.get(avId)
-        
+
         # Dead avatars cannot enter the point.
         # Ignore any apparent entrances from them.
         if avatar and avatar.isDead():
             return
-        
+
         if not avatar:
             if avId in self.contesters:
                 self.contesters.remove(avId)
@@ -179,7 +175,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
                 # A disconnected avatar is the king, let's reset the point.
                 self.resetHill()
             return
-        
+
         if not avId in self.contesters:
             if self.king and self.king.doId == avatar.doId:
                 # LEBRON JAMES HAS RETURNED TO CLEVELAND!!
@@ -204,7 +200,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
                 elif self.primaryContester and self.primaryContester.doId != avatar.doId:
                     # CONTEST the capture.
                     self.contesters.append(avId)
-                    
+
                     if self.state == CaptureState.RESETTING and self.king:
                         # We need to lower the time it takes to reset now.
                         self.resetCaptureTime = self.resetCaptureTime - 0.5
@@ -217,21 +213,21 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
                         self.d_startCircleAnim(1)
                         taskMgr.add(self.__handleKingExit, self.resetTaskName)
                         self.state = CaptureState.RESETTING
-                    
+
                     if not self.kingOnPoint:
                         self.sendUpdate('handleContesters', [1])
                         if self.state == CaptureState.IN_PROGRESS:
                             # We need to pause the capture.
                             taskMgr.removeTasksMatching(self.captureAttemptTaskName)
-    
+
     # The avatar has died or hopped off the point.
     def requestExit(self):
         avId = self.air.getAvatarIdFromSender()
         avatar = self.air.doId2do.get(avId)
-        
+
         if avId in self.contesters and avatar != self.king:
             self.contesters.remove(avId)
-            
+
             if len(self.contesters) == 0 and self.primaryContester and not self.state == CaptureState.CAPTURED:
                 # There's no longer any more contesters on the point.
                 self.sendUpdate('handleContesters', [0])
@@ -256,16 +252,16 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
                 self.d_startCircleAnim(1)
                 taskMgr.add(self.__handleKingExit, self.resetTaskName)
                 self.state = CaptureState.RESETTING
-            
-    
+
+
     def b_setCaptured(self, teamId):
         self.setCaptured(teamId)
         self.sendUpdate('setCaptured', [teamId])
-    
+
     def setCaptured(self, teamId):
         if (teamId - 2) in GGG.TeamNameById.values():
             self.team = (teamId - 2)
-            
+
     def getCaptured(self):
         if self.team < 0:
             return self.team + 2

@@ -1,10 +1,11 @@
 # Filename: DistributedGunGameFlag.py
 # Created by:  blach (21Nov15)
 
-from panda3d.core import CollisionSphere, CollisionNode, NodePath
+from panda3d.core import CollisionSphere, CollisionNode, NodePath, Vec3
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedNode import DistributedNode
+from direct.interval.IntervalGlobal import Sequence, LerpScaleInterval
 
 from lib.coginvasion.globals import CIGlobals
 import GunGameGlobals as GGG
@@ -16,6 +17,10 @@ class DistributedGunGameFlag(DistributedNode):
     torsoType2flagY = {"dgs_shorts": -1.5, "dgs_skirt": -1.5, "dgm_shorts": -1.1,
                        "dgm_skirt": -1.1, "dgl_shorts": -1.1, "dgl_skirt": -1.1}
 
+    AtHomeColor = {GGG.Teams.RED: colors[GGG.Teams.RED], GGG.Teams.BLUE: colors[GGG.Teams.BLUE]}
+    DroppedColor = {GGG.Teams.RED: (0.5, 0, 0, 1), GGG.Teams.BLUE: (0, 0, 0.5, 1)}
+    PickedUpColor = {GGG.Teams.RED: (1, 0.5, 0.5, 1), GGG.Teams.BLUE: (0.5, 0.5, 1, 1)}
+
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)
         NodePath.__init__(self, 'dggflag')
@@ -23,6 +28,23 @@ class DistributedGunGameFlag(DistributedNode):
         self.team = None
         self.collNP = None
         self.flagCollNP = None
+        self.pulseIval = None
+
+    def stopPulse(self):
+        if self.pulseIval:
+            self.pulseIval.finish()
+            self.pulseIval = None
+        base.minigame.getTeamFrame(self.team).setScale(1.0)
+
+    def startPulse(self):
+        self.stopPulse()
+
+        frame = base.minigame.getTeamFrame(self.team)
+        self.pulseIval = Sequence(
+            LerpScaleInterval(frame, duration = 0.5, scale = Vec3(0.6, 0.6, 0.6), startScale = Vec3(1, 1, 1), blendType = 'easeInOut'),
+            LerpScaleInterval(frame, duration = 0.5, scale = Vec3(1, 1, 1), startScale = Vec3(0.6, 0.6, 0.6), blendType = 'easeInOut')
+        )
+        self.pulseIval.loop()
 
     def acceptPointCollisions(self):
         self.acceptOnce('enter' + self.uniqueName('flagpoint_colnode'), self.__touchedFlagPointSphere)
@@ -39,6 +61,11 @@ class DistributedGunGameFlag(DistributedNode):
                 base.minigame.localAvHasFlag = False
         else:
             base.minigame.showAlert("The enemy has captured your flag!")
+
+        self.stopPulse()
+        color = self.AtHomeColor[self.team]
+        base.minigame.getTeamScoreLbl(self.team)['fg'] = color
+        base.minigame.getTeamFlagArrow(self.team).setColor(color)
 
     def setTeam(self, team):
         # The team this flag is associated with.
@@ -71,6 +98,10 @@ class DistributedGunGameFlag(DistributedNode):
                     base.minigame.showAlert("You have the enemy's flag!")
                     base.minigame.localAvHasFlag = True
                     self.acceptPointCollisions()
+            self.startPulse()
+            color = self.PickedUpColor[self.team]
+            base.minigame.getTeamScoreLbl(self.team)['fg'] = color
+            base.minigame.getTeamFlagArrow(self.team).setColor(color)
             self.flagCollNP.stash()
             self.ignore('enter' + self.uniqueName('flag_colnode'))
             self.flagMdl.reparentTo(av.avatar.find('**/def_joint_attachFlower'))
@@ -85,6 +116,10 @@ class DistributedGunGameFlag(DistributedNode):
             base.minigame.showAlert("Your team has dropped the enemy's flag!")
         else:
             base.minigame.showAlert("The enemy has dropped your flag!")
+        self.stopPulse()
+        color = self.DroppedColor[self.team]
+        base.minigame.getTeamScoreLbl(self.team)['fg'] = color
+        base.minigame.getTeamFlagArrow(self.team).setColor(color)
         self.flagMdl.reparentTo(render)
         self.flagMdl.setPos(x, y, z)
 
@@ -97,6 +132,10 @@ class DistributedGunGameFlag(DistributedNode):
             base.minigame.showAlert("The enemy's flag has returned!")
         else:
             base.minigame.showAlert("Your flag has returned!")
+        self.stopPulse()
+        color = self.AtHomeColor[self.team]
+        base.minigame.getTeamScoreLbl(self.team)['fg'] = color
+        base.minigame.getTeamFlagArrow(self.team).setColor(color)
 
     def announceGenerate(self):
         self.reparentTo(render)
@@ -106,17 +145,17 @@ class DistributedGunGameFlag(DistributedNode):
         self.flagMdl.find('**/flag').setTwoSided(1)
         self.flagMdl.find('**/flag_pole').setColor(self.pole_color)
         self.flagMdl.find('**/flag').setColor(self.colors[self.team])
-        
+
         hideNodes = ['icon2', 'icon3']
-        
+
         if self.team == GGG.Teams.BLUE:
             hideNodes = ['icon', 'icon1']
-            
+
         for node in hideNodes:
             part = self.flagMdl.find('**/%s' % node)
             if part:
                 part.removeNode()
-        
+
         sphere = CollisionSphere(0, 0, 0, 4)
         sphere.setTangible(0)
         node = CollisionNode(self.uniqueName('flagpoint_colnode'))

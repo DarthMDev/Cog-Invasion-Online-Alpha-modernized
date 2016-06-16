@@ -19,6 +19,7 @@ import Timer
 from lib.coginvasion.hood import ZoneUtil
 from HeadPanels import HeadPanels
 from FinalScoreGUI import FinalScoreGUI
+from lib.coginvasion.nametag import NametagGlobals
 import random
 
 transitions = Transitions(loader)
@@ -297,8 +298,10 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         base.minigame = self
         self.alertText = getAlertText()
         self.popupSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.ogg')
+        NametagGlobals.setWant2dNametags(False)
 
     def disable(self):
+        NametagGlobals.setWant2dNametags(True)
         base.localAvatar.setPosHpr(0, 0, 0, 0, 0, 0)
         self.fsm.requestFinalState()
         del self.fsm

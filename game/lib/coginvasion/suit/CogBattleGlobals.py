@@ -38,10 +38,10 @@ HoodIndex2LevelRange = {
 HoodId2WantBattles = {
     BattleTTC: True,
     TheBrrrgh: True,
-    DonaldsDreamland: True,
+    DonaldsDreamland: False,
     MinniesMelodyland: False,
     DaisyGardens: False,
-    DonaldsDock: True
+    DonaldsDock: False
 }
 
 HoodIndex2TotalCogs = {
