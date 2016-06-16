@@ -23,7 +23,6 @@ from direct.interval.IntervalGlobal import Parallel, LerpPosInterval, LerpQuatIn
 from direct.directnotify.DirectNotify import DirectNotify
 from panda3d.core import Point3
 import random
-import numbers
 import types
 
 from lib.coginvasion.cog import SuitAttacks
@@ -268,7 +267,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                     self.__makeHeadMeter()
 
     def __makeHeadMeter(self):
-        self.headMeter = LaffOMeter(self, forRender = True)
+        self.headMeter = LaffOMeter(forRender = True)
         r, g, b, _ = self.getHeadColor()
         animal = self.getAnimal()
         maxHp = self.getMaxHealth()

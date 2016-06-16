@@ -51,7 +51,7 @@ class LocalToon(DistributedToon):
         self.smartCamera = SmartCamera()
         self.chatInput = ChatInput()
         self.moneyGui = MoneyGui()
-        self.laffMeter = LaffOMeter(self)
+        self.laffMeter = LaffOMeter()
         self.positionExaminer = PositionExaminer()
         self.friendRequestManager = FriendRequestManager()
         self.friendsList = FriendsList()

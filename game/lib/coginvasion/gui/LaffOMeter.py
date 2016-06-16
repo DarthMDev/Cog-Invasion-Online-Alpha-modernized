@@ -16,12 +16,11 @@ class LaffOMeter(DirectFrame):
 
     deathColor = Vec4(0.58039216, 0.80392157, 0.34117647, 1.0)
 
-    def __init__(self, avatar, forRender = False):
+    def __init__(self, forRender = False):
         DirectFrame.__init__(self, relief=None, sortOrder=50, parent=base.a2dBottomLeft)
         self.initialiseoptions(LaffOMeter)
         self.container = DirectFrame(parent=self, relief=None)
         self.container.setBin('gui-popup', 60)
-        self.avatar = avatar
         
         if forRender:
             self.container.setY(0)
@@ -121,7 +120,7 @@ class LaffOMeter(DirectFrame):
         self.adjustText(health)
         
     def animatedEffect(self, delta):
-        if delta == 0 or self.avatar == None:
+        if delta == 0:
             return
         name = 'effect'
         if delta > 0:
