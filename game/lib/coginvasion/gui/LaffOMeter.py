@@ -4,24 +4,25 @@
   Created by: blach (??July14)
 
 """
+from lib.coginvasion.base import ToontownIntervals
 
-from lib.coginvasion.globals import CIGlobals
-from direct.gui.DirectGui import *
-from direct.directnotify.DirectNotify import *
-from panda3d.core import *
-from pandac.PandaModules import *
+from direct.gui.DirectGui import DirectFrame, DirectLabel
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from panda3d.core import Vec4
 
-notify = DirectNotify().newCategory("LaffOMeter")
+notify = directNotify.newCategory("LaffOMeter")
 
 class LaffOMeter(DirectFrame):
 
     deathColor = Vec4(0.58039216, 0.80392157, 0.34117647, 1.0)
 
-    def __init__(self, forRender = False):
+    def __init__(self, avatar, forRender = False):
         DirectFrame.__init__(self, relief=None, sortOrder=50, parent=base.a2dBottomLeft)
         self.initialiseoptions(LaffOMeter)
         self.container = DirectFrame(parent=self, relief=None)
         self.container.setBin('gui-popup', 60)
+        self.avatar = avatar
+        
         if forRender:
             self.container.setY(0)
         self.forRender = forRender
@@ -116,7 +117,18 @@ class LaffOMeter(DirectFrame):
             self.currentHealthLbl.show()
             self.container['image_color'] = self.color
             self.adjustTeeth(health)
+        self.animatedEffect(health - self.initialHP)
         self.adjustText(health)
+        
+    def animatedEffect(self, delta):
+        if delta == 0 or self.avatar == None:
+            return
+        name = 'effect'
+        if delta > 0:
+            ToontownIntervals.start(ToontownIntervals.getPulseLargerIval(self.container, name))
+        else:
+            ToontownIntervals.start(ToontownIntervals.getPulseSmallerIval(self.container, name))
+        return
 
     def adjustTeeth(self, health):
         for i in xrange(len(self.teethList)):

@@ -268,7 +268,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                     self.__makeHeadMeter()
 
     def __makeHeadMeter(self):
-        self.headMeter = LaffOMeter(forRender = True)
+        self.headMeter = LaffOMeter(self, forRender = True)
         r, g, b, _ = self.getHeadColor()
         animal = self.getAnimal()
         maxHp = self.getMaxHealth()
