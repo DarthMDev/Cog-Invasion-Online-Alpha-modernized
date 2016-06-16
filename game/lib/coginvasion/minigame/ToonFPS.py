@@ -26,8 +26,8 @@ from FirstPerson import FirstPerson
 class ToonFPS(DirectObject):
     notify = directNotify.newCategory("ToonFPS")
 
-    WeaponName2DamageData = {"pistol": (36.0, 10.0, 150.0, 0.25),
-        "shotgun": (40.0, 15.0, 155.0, 0.5),"sniper": (40.0, 15.0, 155.0, 0.5)}
+    WeaponName2DamageData = {"pistol": (30.0, 10.0, 150.0, 0.3),
+        "shotgun": (40.0, 15.0, 155.0, 0.5), "sniper": (40.0, 15.0, 155.0, 0.5)}
 
     def __init__(self, mg, weaponName = "pistol"):
         self.mg = mg
@@ -189,28 +189,15 @@ class ToonFPS(DirectObject):
             self.draw = base.loadSfx("phase_4/audio/sfx/draw_primary.ogg")
             self.shoot = base.loadSfx("phase_4/audio/sfx/shotgun_shoot.ogg")
             self.cockBack = base.loadSfx("phase_4/audio/sfx/shotgun_cock_back.ogg")
-            self.cockFwd = base.loadSfx("phase_4/audio/sfx/shotgun_cock_forward.ogg")			
+            self.cockFwd = base.loadSfx("phase_4/audio/sfx/shotgun_cock_forward.ogg")
         self.empty = base.loadSfx("phase_4/audio/sfx/shotgun_empty.ogg")
         self.v_model_root = base.camera.attachNewNode('v_model_root')
-        if self.weaponName == "pistol":
-            self.v_model = Actor('phase_4/models/minigames/v_dgm.egg', {'pidle': 'phase_4/models/minigames/v_dgm-pistol-idle.egg',
+        self.v_model = Actor('phase_4/models/minigames/v_dgm.egg', {'pidle': 'phase_4/models/minigames/v_dgm-pistol-idle.egg',
                         'pshoot': 'phase_4/models/minigames/v_dgm-pistol-shoot.egg',
                         'preload': 'phase_4/models/minigames/v_dgm-pistol-reload.egg',
                         'pdraw': 'phase_4/models/minigames/v_dgm-pistol-draw.egg',
-                        'sidle': 'phase_4/models/minigames/v_dgm-shotgun-idle.egg',					
+                        'sidle': 'phase_4/models/minigames/v_dgm-shotgun-idle.egg',
                         'sshoot': 'phase_4/models/minigames/v_dgm-shotgun-shoot.egg'})
-        elif self.weaponName == "sniper":		
-            self.v_model = Actor('phase_4/models/minigames/v_dgm.egg', {'pidle': 'phase_4/models/minigames/v_dgm-pistol-idle.egg',
-                        'pdraw': 'phase_4/models/minigames/v_dgm-pistol-draw.egg',
-                        'sidle': 'phase_4/models/minigames/v_dgm-shotgun-idle.egg',
-                        'preload': 'phase_4/models/minigames/v_dgm-pistol-reload.egg',				
-                        'sshoot': 'phase_4/models/minigames/v_dgm-shotgun-shoot.egg'})		
-        elif self.weaponName == "shotgun":		
-            self.v_model = Actor('phase_4/models/minigames/v_dgm.egg', {'pidle': 'phase_4/models/minigames/v_dgm-pistol-idle.egg',
-                        'pdraw': 'phase_4/models/minigames/v_dgm-pistol-draw.egg',
-                        'sidle': 'phase_4/models/minigames/v_dgm-shotgun-idle.egg',
-                        'preload': 'phase_4/models/minigames/v_dgm-pistol-reload.egg',				
-                        'sshoot': 'phase_4/models/minigames/v_dgm-shotgun-shoot.egg'})						
         if self.weaponName == "pistol":
             self.weapon = loader.loadModel("phase_4/models/props/water-gun.bam")
             self.weapon.reparentTo(self.v_model.exposeJoint(None, "modelRoot", "Bone.011"))
@@ -222,13 +209,13 @@ class ToonFPS(DirectObject):
             self.weapon.reparentTo(self.v_model.exposeJoint(None, "modelRoot", "Bone.029"))
             self.weapon.setScale(0.75)
             self.weapon.setPos(0.45, -1.03, -1.17)
-            self.weapon.setHpr(9.46, 308.19, 75.78)	
+            self.weapon.setHpr(9.46, 308.19, 75.78)
         elif self.weaponName == "shotgun":
             self.weapon = loader.loadModel("phase_4/models/props/shotgun.egg")
             self.weapon.reparentTo(self.v_model.exposeJoint(None, "modelRoot", "Bone.029"))
             self.weapon.setScale(0.75)
             self.weapon.setPos(0.45, -1.03, -1.17)
-            self.weapon.setHpr(9.46, 308.19, 75.78)			
+            self.weapon.setHpr(9.46, 308.19, 75.78)
         self.gui.load()
 
     def start(self):
@@ -255,10 +242,10 @@ class ToonFPS(DirectObject):
             self.v_model_root.setH(2)
         elif self.weaponName == "sniper":
             self.v_model_root.setPos(-0.42, -0.81, -1.7)
-            self.v_model_root.setHpr(359, 352.87, 0.00)	
+            self.v_model_root.setHpr(359, 352.87, 0.00)
         elif self.weaponName == "shotgun":
             self.v_model_root.setPos(-0.42, -0.81, -1.7)
-            self.v_model_root.setHpr(359, 352.87, 0.00)			
+            self.v_model_root.setHpr(359, 352.87, 0.00)
         self.gui.start()
         self.firstPerson.disableMouse()
         self.aliveFSM.request('draw')

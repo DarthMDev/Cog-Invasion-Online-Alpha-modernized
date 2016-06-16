@@ -16,7 +16,7 @@ from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 from lib.coginvasion.minigame.GunGameToonFPS import GunGameToonFPS
 from RemoteToonBattleAvatar import RemoteToonBattleAvatar
 from DistributedToonFPSGame import DistributedToonFPSGame
-from TeamMinigame import TeamMinigame
+from TeamMinigame import *
 import GunGameLevelLoader
 import GunGameGlobals as GGG
 
@@ -61,6 +61,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.fsm.getStateNamed('play').addTransition('announceGameOver')
         self.fsm.getStateNamed('play').addTransition('announceTeamWon')
         self.fsm.getStateNamed('start').addTransition('chooseTeam')
+        self.fsm.getStateNamed('start').addTransition('chooseGun')
         self.toonFps = GunGameToonFPS(self)
         self.loader = GunGameLevelLoader.GunGameLevelLoader(self)
         self.track = None
@@ -203,99 +204,18 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         del self.container
 
     def enterChooseTeam(self):
-        if self.gameMode == GGG.GameModes.KOTH:
-            self.fsm.request('chooseGun')
-            pos, hpr = self.pickSpawnPoint()
-            base.localAvatar.setPos(pos)
-            base.localAvatar.setHpr(hpr)
-            return
-        
-        font = CIGlobals.getMickeyFont()
-        box = loader.loadModel('phase_3/models/gui/dialog_box_gui.bam')
-        imp = CIGlobals.getToonFont()
-        geom = CIGlobals.getDefaultBtnGeom()
-        self.container = DirectFrame()
-        self.bg = OnscreenImage(image = box, color = (1, 1, 0.75, 1), scale = (1.9, 1.4, 1.4),
-            parent = self.container)
-        self.title = OnscreenText(
-            text = "Join  a  Team", pos = (0, 0.5, 0), font = font,
-            scale = (0.12), parent = self.container, fg = (1, 0.9, 0.3, 1))
-        self.btnFrame = DirectFrame(parent = self.container, pos = (0.14, 0, 0))
-        self.bbsFrame = DirectFrame(parent = self.btnFrame, pos = (-0.5, 0, 0))
-        self.rrbFrame = DirectFrame(parent = self.btnFrame, pos = (0.22, 0, 0))
-        self.bbs = DirectButton(
-            parent = self.bbsFrame, relief = None, pressEffect = 0,
-            image = ('phase_4/maps/blue_neutral.png',
-                    'phase_4/maps/blue_hover.png',
-                    'phase_4/maps/blue_hover.png'),
-            image_scale = (0.9, 1, 1), scale = 0.4, command = self.__choseTeam, extraArgs = [GGG.Teams.BLUE])
-        self.bbs_playersLbl = OnscreenText(
-            parent = self.bbsFrame, text = str(self.playersByTeam[GGG.Teams.BLUE]), pos = (0, -0.46, 0), font = imp)
-        self.rrb = DirectButton(
-            parent = self.rrbFrame, relief = None, pressEffect = 0,
-            image = ('phase_4/maps/red_neutral.png',
-                    'phase_4/maps/red_hover.png',
-                    'phase_4/maps/red_hover.png'),
-            image_scale = (0.9, 1, 1), scale = 0.4, command = self.__choseTeam, extraArgs = [GGG.Teams.RED])
-        self.rrb_playersLbl = OnscreenText(
-            parent = self.rrbFrame, text = str(self.playersByTeam[GGG.Teams.RED]), pos = (0, -0.46, 0), font = imp)
-        self.teamFull_text = OnscreenText(
-            parent = self.container, text = "", pos = (0, -0.6, 0), font = imp)
-
-    def __choseTeam(self, team):
-        self.team = team
-        self.bbs['state'] = DGG.DISABLED
-        self.rrb['state'] = DGG.DISABLED
-        self.sendUpdate('choseTeam', [team])
-
-    def teamFull(self):
-        # Oh, man, the team is full. Let's try again.
-        self.teamFull_text.setText('Sorry, that team is full.')
-        self.team = None
-        self.bbs['state'] = DGG.NORMAL
-        self.rrb['state'] = DGG.NORMAL
+        TeamMinigame.makeSelectionGUI(self)
 
     def acceptedIntoTeam(self):
-        # Yay, we're on the team! Let's choose our gun!
-        message = GGG.MSG_WELCOME.format(GGG.TeamNameById[self.team])
-        whisper = WhisperPopup(message, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
-        whisper.manage(base.marginManager)
+        TeamMinigame.acceptedIntoTeam(self)
+
         self.fsm.request('chooseGun')
         pos, hpr = self.pickSpawnPoint()
         base.localAvatar.setPos(pos)
         base.localAvatar.setHpr(hpr)
 
-    def incrementTeamPlayers(self, team):
-        self.playersByTeam[team] += 1
-        if self.fsm.getCurrentState().getName() == 'chooseTeam':
-            if team == GGG.Teams.RED:
-                lbl = self.rrb_playersLbl
-            elif team == GGG.Teams.BLUE:
-                lbl = self.bbs_playersLbl
-            lbl.setText(str(self.playersByTeam[team]))
-
     def exitChooseTeam(self):
-        if self.gameMode != GGG.GameModes.KOTH:
-            self.teamFull_text.destroy()
-            del self.teamFull_text
-            self.rrb_playersLbl.destroy()
-            del self.rrb_playersLbl
-            self.bbs_playersLbl.destroy()
-            del self.bbs_playersLbl
-            self.rrb.destroy()
-            del self.rrb
-            self.bbs.destroy()
-            del self.bbs
-            self.rrbFrame.destroy()
-            del self.rrbFrame
-            self.bbsFrame.destroy()
-            del self.bbsFrame
-            self.title.destroy()
-            del self.title
-            self.bg.destroy()
-            del self.bg
-            self.container.destroy()
-            del self.container
+        TeamMinigame.destroySelectionGUI(self)
 
     def setTeamOfPlayer(self, avId, team):
         remoteAvatar = self.getRemoteAvatar(avId)
@@ -315,7 +235,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.shotgunBtn = DirectButton(geom = geom, text = "Shotgun", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
             command = self.__gunChoice, extraArgs = ["shotgun"], pos = (0, 0, 0.25), parent = self.container)
         self.sniperBtn = DirectButton(geom = geom, text = "Sniper", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
-            command = self.__gunChoice, extraArgs = ["sniper"], pos = (0, 0, 0.15), parent = self.container)            
+            command = self.__gunChoice, extraArgs = ["sniper"], pos = (0, 0, 0.15), parent = self.container)
 
     def __gunChoice(self, choice):
         self.toonFps.cleanup()
@@ -327,7 +247,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
 
     def exitChooseGun(self):
         self.sniperBtn.destroy()
-        del self.sniperBtn        
+        del self.sniperBtn
         self.shotgunBtn.destroy()
         del self.shotgunBtn
         self.pistolBtn.destroy()
@@ -379,10 +299,10 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.myRemoteAvatar = RemoteToonBattleAvatar(self, self.cr, base.localAvatar.doId)
         self.setWinnerPrize(200)
         self.setLoserPrize(15)
-        
+
         if not base.localAvatar.tokenIcon is None:
             base.localAvatar.tokenIcon.hide()
-        
+
         #pos, hpr = self.loader.getCameraOfCurrentLevel()
         #camera.setPos(pos)
         #camera.setHpr(hpr)
@@ -390,7 +310,14 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         DistributedToonFPSGame.handleDescAck(self)
 
     def handleDescAck(self):
-        self.fsm.request('chooseTeam')
+        if self.gameMode in GGG.FFA_MODES:
+            # This is a free for all game mode, don't choose teams.
+            self.fsm.request('chooseGun')
+            pos, hpr = self.pickSpawnPoint()
+            base.localAvatar.setPos(pos)
+            base.localAvatar.setHpr(hpr)
+        else:
+            self.fsm.request('chooseTeam')
 
     def incrementKills(self):
         self.toonFps.killedSomebody()
@@ -477,22 +404,42 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
 
         return task.cont
 
+    def getTeamScoreLbl(self, team):
+        if team == GGG.Teams.BLUE:
+            return self.blueScoreLbl
+        elif team == GGG.Teams.RED:
+            return self.redScoreLbl
+
+    def getTeamFlagArrow(self, team):
+        if team == GGG.Teams.BLUE:
+            return self.blueArrow
+        elif team == GGG.Teams.RED:
+            return self.redArrow
+
+    def getTeamFrame(self, team):
+        if team == GGG.Teams.BLUE:
+            return self.blueFrame
+        elif team == GGG.Teams.RED:
+            return self.redFrame
+
     def enterCountdown(self):
         render.show()
         if self.gameMode == GGG.GameModes.CTF:
-            self.blueScoreLbl = OnscreenText(text = "Blue: 0", scale = 0.1, pos = (-0.1, -0.85),
+            self.blueFrame = DirectFrame(pos = (-0.1, 0, -0.85))
+            self.blueScoreLbl = OnscreenText(text = "Blue: 0", scale = 0.1, parent = self.blueFrame,
                 fg = GGG.TeamColorById[GGG.Teams.BLUE], shadow = (0,0,0,1), align = TextNode.ARight)
             self.blueArrow = loader.loadModel('phase_3/models/props/arrow.bam')
             self.blueArrow.setColor(GGG.TeamColorById[GGG.Teams.BLUE])
-            self.blueArrow.reparentTo(aspect2d)
-            self.blueArrow.setPos(-0.2, 0, -0.7)
+            self.blueArrow.reparentTo(self.blueFrame)
+            self.blueArrow.setPos(-0.1, 0, 0.15)
             self.blueArrow.setScale(0.1)
-            self.redScoreLbl = OnscreenText(text = "Red: 0", scale = 0.1, pos = (0.1, -0.85),
+            self.redFrame = DirectFrame(pos = (0.1, 0, -0.85))
+            self.redScoreLbl = OnscreenText(text = "Red: 0", scale = 0.1, parent = self.redFrame,
                 fg = GGG.TeamColorById[GGG.Teams.RED], shadow = (0,0,0,1), align = TextNode.ALeft)
             self.redArrow = loader.loadModel('phase_3/models/props/arrow.bam')
             self.redArrow.setColor(GGG.TeamColorById[GGG.Teams.RED])
-            self.redArrow.reparentTo(aspect2d)
-            self.redArrow.setPos(0.2, 0, -0.7)
+            self.redArrow.reparentTo(self.redFrame)
+            self.redArrow.setPos(0.1, 0, 0.15)
             self.redArrow.setScale(0.1)
             self.infoLbl = OnscreenText(text = "Playing to: 3", scale = 0.1, pos = (0, -0.95),
                 fg = (1, 1, 1, 1), shadow = (0,0,0,1))
@@ -546,11 +493,11 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
     def disable(self):
         render.show()
         base.localAvatar.setWalkSpeedNormal()
-        
+
         # Show the staff icon again.
         if not base.localAvatar.tokenIcon is None:
             base.localAvatar.tokenIcon.show()
-        
+
         base.camLens.setMinFov(CIGlobals.DefaultCameraFov / (4./3.))
         base.taskMgr.remove(self.uniqueName('updateArrows'))
         self.playersByTeam = None

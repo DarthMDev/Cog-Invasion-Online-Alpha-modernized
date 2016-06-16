@@ -15,7 +15,7 @@ class GunGameLevelLoaderAI:
     notify = directNotify.newCategory("GunGameLevelLoaderAI")
 
     LevelsByGameMode = {
-        GGG.GameModes.CASUAL: ['momada', 'dg', 'oz', 'mml', 'cbhq'], 
+        GGG.GameModes.CASUAL: ['momada', 'dg', 'oz', 'mml', 'cbhq'],
         GGG.GameModes.CTF: ['sbf'],
         GGG.GameModes.KOTH : ['ttc']
     }
@@ -44,9 +44,9 @@ class GunGameLevelLoaderAI:
         'sbf': {
             'gameTime': 999
         },
-                 
+
         'ttc' : {
-            'gameTime' : 60
+            'gameTime' : 205
         },
     }
 

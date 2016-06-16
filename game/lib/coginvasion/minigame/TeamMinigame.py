@@ -165,5 +165,3 @@ class TeamMinigame:
         del self.team2BtnImg
         del self.team
         del self.playersByTeam
-
-

@@ -14,6 +14,8 @@ class Teams:
     RED = TEAM2
     BLUE = TEAM1
 
+FFA_MODES = [GameModes.KOTH, GameModes.CASUAL]
+
 CTF = "Capture the Flag"
 CASUAL = "Casual Mode"
 KOTH = "King of the Hill"
@@ -29,8 +31,8 @@ TeamNameById = {Teams.RED: RED, Teams.BLUE: BLUE}
 CTF_SCORE_CAP = 3
 HILL_BITMASK = BitMask32(4)
 
-ToonSpeedFactor = 1.5
+ToonSpeedFactor = 1.35
 ToonForwardSpeed = 16.0 * ToonSpeedFactor
 ToonJumpForce = 24.0
-ToonReverseSpeed = 12.0 * ToonSpeedFactor
+ToonReverseSpeed = 16.0 * ToonSpeedFactor
 ToonRotateSpeed = 80.0 * ToonSpeedFactor
