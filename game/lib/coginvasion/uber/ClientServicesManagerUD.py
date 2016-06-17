@@ -239,8 +239,6 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def __handleToonOnline(self, avId):
 
-        print 'Toon online ' + str(avId)
-
         def toonResponse(dclass, fields):
             if dclass != self.air.dclassesByName['DistributedToonUD']:
                 return
@@ -259,7 +257,6 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         )
 
     def unloadAvatar(self, target, doId):
-        print "unloadAvatar"
         channel = self.GetAccountConnectionChannel(target)
 
         # Clear the postremove
@@ -304,8 +301,6 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.__handleToonOffline(doId)
 
     def __handleToonOffline(self, avId):
-
-        print 'Toon offline ' + str(avId)
 
         def toonResponse(dclass, fields):
             if dclass != self.air.dclassesByName['DistributedToonUD']:
