@@ -29,7 +29,15 @@ class KOTHKingGui(DirectFrame):
         # Let's create the header
         toonFont = CIGlobals.getToonFont()
         minnieFont = CIGlobals.getMinnieFont()
-        self.title = OnscreenText(text = 'Deputy B.D. is King!', pos = (0, 0.5, 0), font = toonFont, 
+        
+        name = 'Nobody'
+        
+        if king:
+            name = king.getName()
+        else:
+            king = base.localAvatar
+        
+        self.title = OnscreenText(text = '%s is King!' % name, pos = (0, 0.5, 0), font = toonFont, 
             scale = 0.12, parent = self, shadow = (0.5, 0.5, 0.5, 0.6))
         
         # Let's create the Toon head

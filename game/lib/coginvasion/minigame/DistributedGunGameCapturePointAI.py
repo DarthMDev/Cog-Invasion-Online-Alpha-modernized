@@ -26,7 +26,8 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
 
     # The time it takes for the animation on the client side to complete.
     # At the end, this will capture the point.
-    CAPTURE_TIME = 8.0
+    # Originally, 8.0, but for now will be 0.0, once you're alone you cap.
+    CAPTURE_TIME = 0.0
 
     # The time it takes for the animation on the client side to complete.
     # At the end, this will return the point to default.
@@ -176,7 +177,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
         self.primaryContester = captor
         self.resetCaptureTime = self.RESET_TIME
         self.elapsedCaptureTime = 0
-        self.d_startCircleAnim(0)
+        #self.d_startCircleAnim(0)
         taskMgr.add(self.__handleCapture, self.captureAttemptTaskName)
         self.state = CaptureState.IN_PROGRESS
 
