@@ -53,7 +53,9 @@ class FriendsManager(DistributedObjectGlobal):
             self.d_requestFriendsList()
 
     def toonOffline(self, avatarId, name):
+        print "Toon Offline!"
         if avatarId in base.localAvatar.friends:
+            print "They are in my list!"
             whisper = WhisperPopup(self.GoingOfflineMessage % name, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
             whisper.manage(base.marginManager)
             self.d_requestFriendsList()

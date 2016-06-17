@@ -122,11 +122,14 @@ class FriendsManagerUD(DistributedObjectGlobalUD):
                 self.sendUpdateToAvatarId(friendId, 'toonOnline', [avatarId, name])
 
     def d_toonOffline(self, avatarId, friendsList, name):
+        print "d_toonOffline"
         if avatarId in self.toonsOnline:
+            print "removed friend"
             self.toonsOnline.remove(avatarId)
 
         for friendId in friendsList:
             if friendId in self.toonsOnline:
+                print "sending toonOffline"
                 self.sendUpdateToAvatarId(friendId, 'toonOffline', [avatarId, name])
 
     def requestAvatarInfo(self, avId):
