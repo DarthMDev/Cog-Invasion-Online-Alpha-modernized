@@ -209,33 +209,35 @@ class Slot(DirectFrame):
 
     def setOutlineImage(self, image):
         phase = 'phase_3.5/maps/'
-        self['image'] = loader.loadTexture(phase + 'slot_%s_%s.png' % (str(self.index), image))
-        self.setOutline()
-
-        if image != 'no_ammo':
-            if self.gag and base.localAvatar.getBackpack().getSupply(self.gag.getID()) == 0 or self.gag and self.gag.getState() == GagState.RECHARGING:
-                image = 'no_ammo'
-
-        if image == 'no_ammo':
-            if self.gag and self.gag.getState() == GagState.RECHARGING:
-                # Show the recharge text.
-                self.showRecharging()
+        
+        if hasattr(self, '_optionInfo'):
+            self['image'] = loader.loadTexture(phase + 'slot_%s_%s.png' % (str(self.index), image))
+            self.setOutline()
+    
+            if image != 'no_ammo':
+                if self.gag and base.localAvatar.getBackpack().getSupply(self.gag.getID()) == 0 or self.gag and self.gag.getState() == GagState.RECHARGING:
+                    image = 'no_ammo'
+    
+            if image == 'no_ammo':
+                if self.gag and self.gag.getState() == GagState.RECHARGING:
+                    # Show the recharge text.
+                    self.showRecharging()
+                else:
+                    # Show the no ammo text.
+                    self.showNoAmmo()
+                    self.rechargeBar.hide()
+                # When we have no ammo, render the frame in front of the gag image.
+                self.setBin('fixed', 40)
+    
+                if self.gagImage:
+                    self.gagImage.setBin('transparent', 30)
             else:
-                # Show the no ammo text.
-                self.showNoAmmo()
-                self.rechargeBar.hide()
-            # When we have no ammo, render the frame in front of the gag image.
-            self.setBin('fixed', 40)
-
-            if self.gagImage:
-                self.gagImage.setBin('transparent', 30)
-        else:
-            # Hide the no ammo text if we're not out of ammo.
-            self.hideInfoText()
-            # Render the gag image in front of the frame.
-            if self.gagImage:
-                self.gagImage.setBin('fixed', 40)
-            self.setBin('transparent', 30)
+                # Hide the no ammo text if we're not out of ammo.
+                self.hideInfoText()
+                # Render the gag image in front of the frame.
+                if self.gagImage:
+                    self.gagImage.setBin('fixed', 40)
+                self.setBin('transparent', 30)
 
     def getOutline(self):
         return self.outline
@@ -273,10 +275,14 @@ class InventoryGui(DirectObject):
     VisiblePos = (-0.1725, 0, 0)
     SwitchTime = 0.3
     AutoShowTime = 1.5
+    
+    DELETED = False
 
     def __init__(self):
         DirectObject.__init__(self)
         self.backpack = base.localAvatar.backpack
+        
+        if not self.backpack: return
         self.backpack.loadoutGUI = self
 
         self.oneSlotPos = [(0, 0, 0)]
@@ -455,6 +461,7 @@ class InventoryGui(DirectObject):
         #if self.inventoryFrame:
         #    self.inventoryFrame.destroy()
         #    self.inventoryFrame = None
+        self.DELETED = True
 
     def resetScroll(self):
         nextGag = 0
@@ -561,3 +568,6 @@ class InventoryGui(DirectObject):
 
     def getSlots(self):
         return self.slots
+    
+    def isDeleted(self):
+        return self.DELETED

@@ -3832,11 +3832,7 @@ BranchZone2StreetName = {
 }
 
 ToonTips = [
-    'Take the Trolley in any playground to enter CogTropolis!',
-    "Look for a sign labelled 'Cog Battle' in any CogTropolis playground to be taken to battle.",
-    "CogTropolis is dark and spooky. Be careful going alone!",
-    "You can head back to OToontown from CogTropolis at any time using your Shticker Book.",
-    "Make sure you know where you're going! You cannot teleport around anywhere when you're in CogTropolis.",
+    "Look for a sign labeled 'Cog Battle' in any playground to be taken to battle.",
     "Try to use weaker gags when around weaker Cogs to conserve Jellybeans.",
     "You can use the Gags page in your Shticker Book to change the Gags you can use.",
     "Press ALT or click the Throw Gag button to use a Gag!",
@@ -3847,7 +3843,7 @@ ToonTips = [
     "Play Minigames at the Minigame Area to earn more Jellybeans!",
     "The only Minigame that works as single player is UNO.",
     "Different Minigames give different amounts of jellybeans.",
-    "You can choose between Capture the Flag and Casual Mode in Toon Battle!",
+    "You can choose between Capture the Flag, King of the Hill, and Casual Mode in Toon Battle!",
     "You can choose between the Pistol, Shotgun, and the Sniper in Toon Battle!",
     "You can play with up to 7 other Toons in Toon Battle!",
     "You can choose between the Blue Bloodsuckers and the Red Robber Barons in Toon Battle!",
@@ -3864,8 +3860,7 @@ ToonTips = [
     "Make sure to put your Pie Turret in the best spot you can -- it can't be moved after it's been placed!",
     "Level 12 Cogs can do up to 36 damage!",
     "Each area has different level Cogs.",
-    "The streets of CogTropolis are filled with Cog Office Buildings.",
-    "You cannot teleport to any Toon who is in CogTropolis.",
+    "When taking over Cog Office Buildings, make sure to have all your Laff points!",
     "You can go to the Minigame Area by using your Shticker Book.",
     "You can change your screen resolution on the Options page in your Shticker Book.",
     "You can change whether you play the game in fullscreen or in a window using the Options page in your Shticker Book.",
