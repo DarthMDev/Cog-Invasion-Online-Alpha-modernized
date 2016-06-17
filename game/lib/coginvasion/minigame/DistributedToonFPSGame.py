@@ -7,7 +7,6 @@ from direct.interval.IntervalGlobal import Sequence, Func, LerpScaleInterval, Le
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import globalClockDelta
 
-from lib.coginvasion.minigame import GunGameGlobals as GGG
 from DistributedMinigame import DistributedMinigame
 
 class DistributedToonFPSGame(DistributedMinigame):
@@ -25,20 +24,6 @@ class DistributedToonFPSGame(DistributedMinigame):
         DistributedMinigame.__init__(self, cr)
         self.remoteAvatars = []
         self.myRemoteAvatar = None
-        self.myKOTHPoints = 0
-        self.KOTHKing = None
-        
-    def setMyKOTHPoints(self, points):
-        self.myKOTHPoints = points
-        
-    def setKOTHKing(self, avId):
-        if avId != 0:
-            self.KOTHKing = self.cr.doId2do.get(avId)
-        else:
-            self.KOTHKing = None
-            
-    def getKOTHKing(self):
-        return self.KOTHKing
     
     def makeSmokeEffect(self, pos):
         """Create a gunsmoke effect at the specified position (pos)"""
@@ -55,26 +40,6 @@ class DistributedToonFPSGame(DistributedMinigame):
                 LerpColorScaleInterval(smoke, 0.5, Vec4(2, 2, 2, 0))),
             Func(smoke.removeNode))
         track.start()
-        
-    def enterFinalScores(self):
-        if self.gameMode == GGG.GameModes.KOTH:
-            from lib.coginvasion.gui.KOTHKingGui import KOTHKingGui
-            self.finalScoreUI = KOTHKingGui(self, self.KOTHKing, self.myKOTHPoints)
-        else:
-            DistributedMinigame.enterFinalScores(self)
-            
-    def finalScores(self, avIdList, scoreList):
-        if self.gameMode == GGG.GameModes.KOTH:
-            self.finalScoreUI.start()
-        else:
-            DistributedMinigame.finalScores(self, avIdList, scoreList)
-            
-    def exitFinalScores(self):
-        if self.gameMode == GGG.GameModes.KOTH:
-            self.finalScoreUI.destroy()
-            print "I should've destroyed"
-        else:
-            DistributedMinigame.exitFinalScores(self)
 
     def avatarHitByBullet(self, avId, damage):
         """(Network method) Called when a player gets hit by a bullet (sent by player who gets hit)"""

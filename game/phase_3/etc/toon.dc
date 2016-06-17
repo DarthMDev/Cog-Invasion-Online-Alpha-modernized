@@ -482,13 +482,6 @@ dclass DistributedGunGame : DistributedToonFPSGame, TeamMinigame {
 
   setGameMode(int8) broadcast ram;
   setLevelName(string) broadcast ram;
-  
-  // Updates are sent directly to the avatar that
-  // is receiving more points.
-  setKOTHPoints(uint8 points);
-  
-  // Update to tell the clients who the new king is.
-  setKOTHKing(uint32 avId) broadcast;
 
   // Tell the ai that our health got to 0.
   dead(uint32) clsend airecv;

@@ -156,10 +156,7 @@ class ToonFPS(DirectObject):
         self.freezeCamImage = OnscreenImage(image = self.freezeCamTex, parent=render2d)
 
     def cameraLookAtKillerTask(self, killer, task):
-        try:
-            base.camera.lookAt(killer, 0, 0, 3)
-        except AssertionError:
-            pass
+        base.camera.lookAt(killer, 0, 0, 3)
         return task.cont
 
     def exitDead(self):

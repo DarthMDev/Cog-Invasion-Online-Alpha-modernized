@@ -1806,11 +1806,7 @@ class ShowBase(DirectObject.DirectObject):
             if interrupt or (music.status() != AudioSound.PLAYING):
                 music.setTime(time)
                 music.setLoop(looping)
-
-                try:
-                    music.play()
-                except AssertionError:
-                    self.notify.warning("Failed to play Music %s." % music.getName())
+                music.play()
 
     def __resetPrevTransform(self, state):
         # Clear out the previous velocity deltas now, after we have
