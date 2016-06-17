@@ -31,7 +31,8 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
 
     # The time it takes for the animation on the client side to complete.
     # At the end, this will return the point to default.
-    RESET_TIME = 10.75
+    # Originally 10.75, now 0.0.
+    RESET_TIME = 0.0
     
     # How many points the king gets per second.
     POINTS_AS_KING = 2
@@ -74,7 +75,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
     def delete(self):
         # We need to clean up to prevent memory leaks.
         taskMgr.removeTasksMatching(self.captureAttemptTaskName)
-        taskMgr.removeTasksMatching(self.captureAttemptTaskName)
+        taskMgr.removeTasksMatching(self.resetTaskName)
         taskMgr.removeTasksMatching(self.awardKingTaskName)
         self.contesters = []
         self.resetHill()
@@ -189,7 +190,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
 
         # Dead avatars cannot enter the point.
         # Ignore any apparent entrances from them.
-        if avatar and avatar.isDead():
+        if avatar and avatar.isDead() or not hasattr(self, 'mg'):
             return
 
         if not avatar:
@@ -236,8 +237,8 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
                         taskMgr.removeTasksMatching(self.captureAttemptTaskName)
                     elif self.state == CaptureState.CAPTURED and self.king and not self.kingOnPoint:
                         # The avatar is trying to capture before the old avatar actually left.
-                        self.resetCaptureTime = self.resetCaptureTime - 0.5
-                        self.d_startCircleAnim(1)
+                        #self.resetCaptureTime = self.resetCaptureTime - 0.5
+                        #self.d_startCircleAnim(1)
                         taskMgr.add(self.__handleKingExit, self.resetTaskName)
                         taskMgr.removeTasksMatching(self.awardKingTaskName)
                         self.state = CaptureState.RESETTING
@@ -252,6 +253,8 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
     def requestExit(self):
         avId = self.air.getAvatarIdFromSender()
         avatar = self.air.doId2do.get(avId)
+        
+        if not hasattr(self, 'mg'): return
 
         if avId in self.contesters and avatar != self.king:
             self.contesters.remove(avId)
@@ -280,7 +283,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
             elif self.state == CaptureState.CAPTURED:
                 # The primary contester has stepped off the captured point.
                 # Begin resetting it.
-                self.d_startCircleAnim(1)
+                #self.d_startCircleAnim(1)
                 taskMgr.add(self.__handleKingExit, self.resetTaskName)
                 taskMgr.removeTasksMatching(self.awardKingTaskName)
                 self.state = CaptureState.RESETTING
