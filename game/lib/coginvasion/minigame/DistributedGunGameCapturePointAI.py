@@ -235,7 +235,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
                     elif self.state == CaptureState.IDLE and not self.king:
                         # The avatar is no longer able to capture.
                         taskMgr.removeTasksMatching(self.captureAttemptTaskName)
-                    elif self.state == CaptureState.CAPTURED and self.king and not self.kingOnPoint:
+                    elif self.state == CaptureState.CAPTURED and self.king:
                         # The avatar is trying to capture before the old avatar actually left.
                         #self.resetCaptureTime = self.resetCaptureTime - 0.5
                         #self.d_startCircleAnim(1)

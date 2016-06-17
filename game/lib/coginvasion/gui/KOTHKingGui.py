@@ -146,6 +146,9 @@ class KOTHKingGui(DirectFrame):
         
     def unload(self):
         pass
+    
+    def hideFinalScores(self):
+        pass
         
     def __doZeroEffect(self, task):
         if self.seqLevel == 0:
