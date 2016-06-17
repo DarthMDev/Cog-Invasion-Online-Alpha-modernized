@@ -342,7 +342,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         whistleSfx.play()
         del whistleSfx
         
-        if self.gameMode == GGG.GameModes.KOTH:
+        if self.gameMode == GGG.GameModes.KOTH and DistributedToonFPSGame.getKOTHKing(self):
             text = DistributedToonFPSGame.getKOTHKing(self).getName()
         else:
             text = GGG.TeamNameById[team].split(' ')[0]
