@@ -116,6 +116,7 @@ class DistributedGunGameCapturePoint(DistributedNode):
             # Let's do the reset animation when a new toon fails to capture it.
             self.circleTrack = Sequence()
             self.circleTrack.append(self.getCircleScaleAnim(self.captureCircle.getScale(), 0.75, 1.0))
+            self.circleTrack.append(Sequence(Wait(0.25), Func(self.captureCircle.hide)))
             self.circleTrack.start()
             return
         

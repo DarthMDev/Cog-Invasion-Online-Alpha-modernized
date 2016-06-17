@@ -79,6 +79,10 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.balloonSound = base.loadSfx('phase_3/audio/sfx/GUI_balloon_popup.ogg')
         self.decidedSound = base.loadSfx('phase_4/audio/sfx/MG_sfx_travel_game_win_vote.ogg')
         return
+    
+    def setKOTHPoints(self, points):
+        self.toonFps.setKOTHPoints(points)
+        DistributedToonFPSGame.setMyKOTHPoints(self, points)
 
     def getFlagOfOtherTeam(self, team):
         for flag in self.flags:
@@ -229,7 +233,7 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         self.container = DirectFrame()
         self.bg = OnscreenImage(image = box, color = (1, 1, 0.75, 1), scale = (1.9, 1.4, 1.4),
             parent = self.container)
-        self.title = OnscreenText(text = "Choose A Gun", pos = (0, 0.5, 0), font = font, scale = (0.12), parent = self.container)
+        self.title = OnscreenText(text = "Choose a Gun", pos = (0, 0.5, 0), font = font, scale = (0.12), parent = self.container)
         self.pistolBtn = DirectButton(geom = geom, text = "Pistol", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
             command = self.__gunChoice, extraArgs = ["pistol"], pos = (0, 0, 0.35), parent = self.container)
         self.shotgunBtn = DirectButton(geom = geom, text = "Shotgun", relief = None, text_scale = 0.055, text_pos = (0, -0.01),
@@ -337,7 +341,11 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
         whistleSfx = base.loadSfx("phase_4/audio/sfx/AA_sound_whistle.ogg")
         whistleSfx.play()
         del whistleSfx
-        text = GGG.TeamNameById[team].split(' ')[0]
+        
+        if self.gameMode == GGG.GameModes.KOTH and DistributedToonFPSGame.getKOTHKing(self):
+            text = DistributedToonFPSGame.getKOTHKing(self).getName()
+        else:
+            text = GGG.TeamNameById[team].split(' ')[0]
         self.gameOverLbl = DirectLabel(text = "{0}\nWins!".format(text), relief = None, scale = 0.35, text_font = CIGlobals.getMickeyFont(), text_fg = (1, 0, 0, 1))
         self.track = Sequence(Wait(3.0), Func(self.fsm.request, 'finalScores'))
         self.track.start()
@@ -367,6 +375,9 @@ class DistributedGunGame(DistributedToonFPSGame, TeamMinigame):
     def enterFinalScores(self):
         DistributedToonFPSGame.enterFinalScores(self)
         self.sendUpdate('myFinalScore', [self.toonFps.points])
+        
+    def exitFinalScores(self):
+        DistributedToonFPSGame.exitFinalScores(self)
 
     def incrementTeamScore(self, team):
         self.scoreByTeam[team] += 1

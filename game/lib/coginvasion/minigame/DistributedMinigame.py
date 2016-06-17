@@ -121,7 +121,7 @@ class DistributedMinigame(DistributedObject.DistributedObject, Timer.Timer):
         self.finalScoreUI.unload()
 
     def finalScores(self, avIdList, scoreList):
-		self.finalScoreUI.handleFinalScores(avIdList, scoreList)
+        self.finalScoreUI.handleFinalScores(avIdList, scoreList)
 
     def generateHeadPanel(self, gender, head, headtype, color, doId, name):
         self.headPanels.generate(gender, head, headtype, color, doId, name)

@@ -43,6 +43,8 @@ class DistributedGunGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
         self.scoreByTeam = {GGG.Teams.RED: 0, GGG.Teams.BLUE: 0}
         self.flags = []
         self.points = []
+        
+        self.kothCapturePoints = {}
         return
 
     def enterOff(self):
@@ -172,6 +174,22 @@ class DistributedGunGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
             capPoint = DistributedGunGameCapturePointAI(self.air, self)
             capPoint.generateWithRequired(self.zoneId)
             self.points.append(capPoint)
+            
+            # Let's initialize the kothCapturePoints dict.
+            for avatar in self.avatars:
+                self.kothCapturePoints.update({avatar.doId : 0})
+                
+    def b_setKOTHPoints(self, avId, points):
+        if avId in self.kothCapturePoints.keys():
+            self.kothCapturePoints.update({avId : points})
+        self.sendUpdateToAvatarId(avId, 'setKOTHPoints', [points])
+        
+    def d_setKOTHKing(self, avId):
+        self.sendUpdate('setKOTHKing', [avId])
+        
+    def getKOTHPoints(self, avId):
+        if avId in self.kothCapturePoints.keys():
+            return self.kothCapturePoints[avId]
 
     def deadAvatar(self, avId, timestamp):
         sender = self.air.getAvatarIdFromSender()

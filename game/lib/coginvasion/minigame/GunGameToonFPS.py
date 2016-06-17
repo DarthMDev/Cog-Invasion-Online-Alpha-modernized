@@ -11,12 +11,15 @@ from direct.distributed.ClockDelta import globalClockDelta
 import GunGameGlobals as GGG
 import random
 
+from lib.coginvasion.gui.KOTHGui import KOTHGui
+
 class GunGameToonFPS(ToonFPS.ToonFPS):
 
     def __init__(self, mg, weaponName = "pistol"):
         self.kills = 0
         self.deaths = 0
         self.points = 0
+        self.kothGui = None
         ToonFPS.ToonFPS.__init__(self, mg, weaponName)
 
     def load(self):
@@ -27,6 +30,13 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
             else:
                 color = GGG.TeamColorById[self.mg.team]
             self.weapon.setColorScale(color)
+            
+        if self.mg.gameMode == GGG.GameModes.KOTH:
+            self.kothGui = KOTHGui()
+            
+    def setKOTHPoints(self, points):
+        if self.kothGui:
+            self.kothGui.setPoints(points)
 
     def resetStats(self):
         self.points = 0
@@ -40,6 +50,10 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         base.localAvatar.setHpr(hpr)
         base.localAvatar.d_broadcastPositionNow()
         base.localAvatar.walkControls.setCollisionsActive(1)
+        
+        if self.kothGui:
+            self.kothGui.show()
+        
         ToonFPS.ToonFPS.enterAlive(self)
         if self.mg.fsm.getCurrentState().getName() == "play":
             self.mg.sendUpdate("respawnAvatar", [base.localAvatar.doId])
@@ -53,6 +67,10 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         self.deaths += 1
         self.updatePoints()
         self.gui.updateStats()
+        
+        if self.kothGui:
+            self.kothGui.hide()
+        
         self.mg.getMyRemoteAvatar().fsm.request('die', [0])
         ToonFPS.ToonFPS.enterDead(self, killer)
 
@@ -79,6 +97,12 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         self.kills = None
         self.deaths = None
         self.points = None
+        
+        # Let's clean up the GUI if we need to.
+        if self.kothGui:
+            self.kothGui.destroy()
+            self.kothGui = None
+        
         ToonFPS.ToonFPS.cleanup(self)
 
     def damageTaken(self, amount, avId):
