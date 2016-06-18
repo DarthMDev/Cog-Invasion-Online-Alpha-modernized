@@ -5,16 +5,16 @@
 
 """
 
-from panda3d.core import *
-from lib.coginvasion.globals import CIGlobals
-from pandac.PandaModules import *
-import DistributedMinigame
-from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
-import RaceGameMovement
-from lib.coginvasion.hood.SkyUtil import SkyUtil
+from direct.gui.DirectGui import DirectLabel
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpPosInterval
 from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
+
+from lib.coginvasion.hood.SkyUtil import SkyUtil
+from lib.coginvasion.globals import CIGlobals
+
+import RaceGameMovement
+import DistributedMinigame
 
 class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 

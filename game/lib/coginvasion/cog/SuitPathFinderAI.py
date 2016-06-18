@@ -1,6 +1,6 @@
+from panda3d.core import Point2, Point3, Mat3, Vec2
 import bisect
 import math
-from pandac.PandaModules import *
 
 class SuitPathFinderAI:
     VERTEX_EXTRUSION = 0.15

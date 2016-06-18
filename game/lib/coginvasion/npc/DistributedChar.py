@@ -5,22 +5,13 @@
   
 """
 
-from lib.coginvasion.globals import CIGlobals
-from direct.distributed.DistributedObject import DistributedObject
 from lib.coginvasion.npc import Char
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
-from lib.coginvasion.toon.ChatBalloon import ChatBalloon
-from lib.coginvasion.toon.LabelScaler import LabelScaler
-from direct.gui.DirectGui import *
 from direct.actor.Actor import Actor
-from direct.interval.ProjectileInterval import ProjectileInterval
-from direct.showbase.ShadowPlacer import ShadowPlacer
-from direct.directnotify.DirectNotify import DirectNotify
-from panda3d.core import *
-from pandac.PandaModules import *
-import random
 
-notify = DirectNotify().newCategory("DistributedChar")
+from direct.directnotify.DirectNotifyGlobal import directNotify
+
+notify = directNotify.newCategory("DistributedChar")
 
 class DistributedChar(Char.Char, DistributedSmoothNode):
 	

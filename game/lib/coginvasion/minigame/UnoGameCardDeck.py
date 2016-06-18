@@ -5,11 +5,8 @@
 
 """
 
-from panda3d.core import *
-from pandac.PandaModules import *
-from lib.coginvasion.globals import CIGlobals
-from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
+from direct.gui.DirectGui import DirectFrame, OnscreenImage, DirectButton
+from direct.gui.DirectGui import DirectScrolledList, DGG
 import UnoGameGlobals as UGG
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 

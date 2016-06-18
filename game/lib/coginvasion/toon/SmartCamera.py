@@ -5,17 +5,21 @@
 
 """
 
-from panda3d.core import *
-from pandac.PandaModules import *
-from direct.directnotify.DirectNotify import *
+from panda3d.core import CollisionTraverser, Point3, Vec3, CollisionNode
+from panda3d.core import CollisionSegment, CollisionHandlerPusher
+from panda3d.core import CollisionSphere, BitMask32, CollisionHandlerQueue
+from panda3d.core import CollisionRay, CollisionHandlerFloor
+from panda3d.core import deg2Rad
+
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
 from lib.coginvasion.globals import CIGlobals
-from direct.interval.IntervalGlobal import *
+from direct.interval.IntervalGlobal import LerpFunctionInterval
 import math
 
 class SmartCamera:
     UPDATE_TASK_NAME = "update_smartcamera"
-    notify = DirectNotify().newCategory("SmartCamera")
+    notify = directNotify.newCategory("SmartCamera")
 
     def __init__(self):
         self.cTrav = CollisionTraverser('cam_traverser')

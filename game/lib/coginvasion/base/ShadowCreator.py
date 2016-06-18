@@ -3,7 +3,7 @@
 # Created by: blach (06Apr15)
 ########################################
 
-from pandac.PandaModules import BitMask32, NodePath
+from panda3d.core import BitMask32, NodePath
 from direct.filter.CommonFilters import CommonFilters
 from direct.gui.OnscreenImage import OnscreenImage
 

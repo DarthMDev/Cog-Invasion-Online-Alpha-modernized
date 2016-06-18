@@ -1,12 +1,9 @@
 # Filename: DGSafeZoneLoader.py
 # Created by:  blach (24Jul15)
 
-from pandac.PandaModules import *
-from direct.actor.Actor import Actor
+from lib.coginvasion.holiday.HolidayManager import HolidayType
 import SafeZoneLoader
 import DGPlayground
-import random
-from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class DGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 

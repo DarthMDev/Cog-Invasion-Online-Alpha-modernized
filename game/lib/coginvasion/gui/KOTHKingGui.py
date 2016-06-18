@@ -20,6 +20,7 @@ class KOTHKingGui(DirectFrame):
     
     def __init__(self, mg, king, points):
         DirectFrame.__init__(self, parent = aspect2d)
+        self.setBin('gui-popup', 60)
         self.mg = mg
         
         # Let's create the background
@@ -34,8 +35,10 @@ class KOTHKingGui(DirectFrame):
         
         if king:
             name = king.getName()
+            self.kingId = king.doId
         else:
             king = base.localAvatar
+            self.kingId = 0
         
         self.title = OnscreenText(text = '%s is King!' % name, pos = (0, 0.5, 0), font = toonFont, 
             scale = 0.12, parent = self, shadow = (0.5, 0.5, 0.5, 0.6))
@@ -95,6 +98,7 @@ class KOTHKingGui(DirectFrame):
         self.points = points
     
     def start(self):
+        base.transitions.fadeScreen(0.5)
         if self.points == 0:
             self.__doZero()
         else:
@@ -102,19 +106,21 @@ class KOTHKingGui(DirectFrame):
             
     def destroy(self):
         # Let's stop the sequence.
-        self.pointsSeq.finish()
+        if self.pointsSeq:
+            self.pointsSeq.finish()
         self.pointsSeq = None
         
         # Let's stop and destroy all the sounds.
-        self.zeroPointsSfx.stop()
-        self.poorScoreSfx.stop()
-        self.goodScoreSfx.stop()
-        self.stomperSfx.stop()
-        self.fireworkSfx.stop()
-        self.perfectSfx.stop()
-        self.tick_fastSfx.stop()
-        self.tick_slowSfx.stop()
-        self.easterEggSfx.stop()
+        if self.zeroPointsSfx:
+            self.zeroPointsSfx.stop()
+            self.poorScoreSfx.stop()
+            self.goodScoreSfx.stop()
+            self.stomperSfx.stop()
+            self.fireworkSfx.stop()
+            self.perfectSfx.stop()
+            self.tick_fastSfx.stop()
+            self.tick_slowSfx.stop()
+            self.easterEggSfx.stop()
         self.zeroPointsSfx = None
         self.poorScoreSfx = None
         self.goodScoreSfx = None
@@ -130,13 +136,15 @@ class KOTHKingGui(DirectFrame):
         self.easterEgg = None
         self.seqLevel = None
         self.fakeNumber = None
+        self.kingId = None
         self.mg = None
         
         # Let's destroy all the frames.
-        self.bg.destroy()
-        self.title.destroy()
-        self.amt_label.destroy()
-        self.motivator.destroy()
+        if self.bg:
+            self.bg.destroy()
+            self.title.destroy()
+            self.amt_label.destroy()
+            self.motivator.destroy()
         self.bg = None
         self.title = None
         self.amt_label = None
@@ -148,7 +156,15 @@ class KOTHKingGui(DirectFrame):
         pass
     
     def hideFinalScores(self):
-        pass
+        base.transitions.noTransitions()
+        self.hide()
+        
+    def handleExit(self):
+        winner = 0
+        if self.kingId != 0:
+            winner = 1
+        self.pointsSeq.append(Sequence(Wait(5), Func(self.mg.gameOver, winner, [self.kingId])))
+        return
         
     def __doZeroEffect(self, task):
         if self.seqLevel == 0:
@@ -179,7 +195,7 @@ class KOTHKingGui(DirectFrame):
                 self.stomperSfx.play()
                 ToontownIntervals.start(ToontownIntervals.getPulseLargerIval(self.amt_label, 'effect'))
                 self.pointsSeq = Sequence(Wait(0.25), Func(self.zeroPointsSfx.play), Func(self.motivator.show))
-                self.pointsSeq.append(Sequence(Wait(5), Func(self.mg.gameOver, 1, [self.mg.KOTHKing.doId])))
+                self.handleExit()
                 self.pointsSeq.start()
                 return task.done
         return task.again
@@ -222,14 +238,10 @@ class KOTHKingGui(DirectFrame):
             if self.fakeNumber == self.points:
                 if self.points <= 50:
                     self.pointsSeq = Sequence(Wait(0.25), Func(self.poorScoreSfx.play), Func(self.motivator.show))
-                    self.pointsSeq.append(Sequence(Wait(5), Func(self.mg.gameOver, 1, [self.mg.KOTHKing.doId])))
-                    self.pointsSeq.start()
                 elif 50 < self.points != 100:
                     pulse = ToontownIntervals.getPulseLargerIval(self.amt_label, 'effect')
                     self.pointsSeq = Sequence(Wait(0.25), Func(self.goodScoreSfx.play),
                         Func(ToontownIntervals.start, pulse), Func(self.motivator.show))
-                    self.pointsSeq.append(Sequence(Wait(5), Func(self.mg.gameOver, 1, [self.mg.KOTHKing.doId])))
-                    self.pointsSeq.start()
                 elif self.points == 100:
                     pulse = ToontownIntervals.getPulseLargerIval(self.amt_label, 'effect')
                     self.pointsSeq = Sequence(Wait(0.25), Func(ToontownIntervals.start, pulse), 
@@ -237,9 +249,8 @@ class KOTHKingGui(DirectFrame):
                     
                     if self.easterEgg:
                         self.pointsSeq.append(Sequence(Wait(0.30), Func(self.easterEggSfx.play)))
-                    
-                    self.pointsSeq.append(Sequence(Wait(5), Func(self.mg.gameOver, 1, [self.mg.KOTHKing.doId])))
-                    self.pointsSeq.start()
+                self.handleExit()
+                self.pointsSeq.start()
                 return task.done
         return task.again
         

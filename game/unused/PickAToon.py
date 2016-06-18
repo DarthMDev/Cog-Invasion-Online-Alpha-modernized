@@ -5,19 +5,20 @@
 
 """
 
-from lib.coginvasion.globals import CIGlobals
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
+from panda3d.core import Point3
+
+from direct.gui.DirectGui import DirectButton, DirectLabel, OnscreenImage
+from direct.gui.DirectFrame import DirectFrame
+
+from lib.coginvasion.gui.Dialog import GlobalDialog
 from lib.coginvasion.makeatoon.MakeAToon import MakeAToon
 from lib.coginvasion.toon.ToonHead import ToonHead
 from lib.coginvasion.toon.ToonDNA import ToonDNA
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from lib.coginvasion.gui.Dialog import *
+from lib.coginvasion.globals import CIGlobals
+
 from direct.directnotify.DirectNotify import DirectNotify
-from direct.showbase.Transitions import Transitions
-#from lib.coginvasion.gui import Tutorial
-import json
+
 import sys
 import random
 

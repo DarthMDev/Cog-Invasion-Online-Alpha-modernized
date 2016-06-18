@@ -1,12 +1,9 @@
 # Filename: TTSafeZoneLoader.py
 # Created by:  blach (25Oct15)
 
-from pandac.PandaModules import *
-from direct.actor.Actor import Actor
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 import SafeZoneLoader
 import TTPlayground
-import random
 
 from lib.coginvasion.globals import CIGlobals
 

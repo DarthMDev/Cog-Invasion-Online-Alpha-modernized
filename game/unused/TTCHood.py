@@ -8,13 +8,15 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.dna.DNAParser import *
-from lib.coginvasion.hood.TrolleyBase import TrolleyBase
 from direct.actor.Actor import *
-from panda3d.core import *
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.gui.DirectGui import *
-from lib.coginvasion.holiday.HolidayManager import HolidayType
+
+from panda3d.core import TransparencyAttrib, BitMask32, AmbientLight, VBase4
+from panda3d.core import Fog, NodePath
+
+from direct.interval.IntervalGlobal import LerpColorInterval, LerpFunc, Sequence
+from direct.interval.IntervalGlobal import Wait, Func
+
+import random
 
 class TTCHood:
     
@@ -155,9 +157,6 @@ class TTCHood:
         self.telescope.play("chan")
         task.delayTime = 12
         return task.again
-        
-    def createTrolley(self):
-        self.trolley = TrolleyBase(self.cr)
         
     def enableSuitEffect(self, size):
         self.createLights(0.4, 0.4, 0.4, startColor=1, fade=1)

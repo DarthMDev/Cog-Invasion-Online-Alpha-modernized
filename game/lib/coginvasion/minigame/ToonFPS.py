@@ -5,22 +5,28 @@
 
 """
 
-from pandac.PandaModules import *
 from lib.coginvasion.globals import CIGlobals
+
 from direct.actor.Actor import Actor
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.interval.IntervalGlobal import *
+
+from direct.interval.IntervalGlobal import Sequence, LerpQuatInterval, Func, Wait
+from direct.interval.IntervalGlobal import ActorInterval, Parallel, LerpPosInterval
+from direct.interval.SoundInterval import SoundInterval
+
+from direct.gui.OnscreenImage import OnscreenImage
+
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.InputStateGlobal import inputState
 from direct.directnotify.DirectNotifyGlobal import directNotify
+
+from panda3d.core import PNMImage, Texture, CollisionTraverser
+from panda3d.core import CollisionRay, CollisionNode, BitMask32
+from panda3d.core import CollisionHandlerQueue
+
 from ToonFPSGui import ToonFPSGui
-from Bullet import Bullet
 from direct.task import Task
-from direct.distributed.ClockDelta import globalClockDelta
-from direct.gui.DirectGui import *
-import os
-import random
 from FirstPerson import FirstPerson
 
 class ToonFPS(DirectObject):

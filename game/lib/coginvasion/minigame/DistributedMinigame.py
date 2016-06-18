@@ -5,18 +5,19 @@
 
 """
 
-from panda3d.core import *
-from lib.coginvasion.globals import CIGlobals
-from pandac.PandaModules import *
 from direct.distributed import DistributedObject
-from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
-from direct.showbase.Transitions import *
-from lib.coginvasion.gui.Dialog import *
+from direct.gui.DirectGui import DirectLabel, OnscreenText
+from direct.interval.IntervalGlobal import Sequence, LerpFunc, Wait, Func
+from direct.showbase.Transitions import Transitions
 from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
+
 import Timer
+
 from lib.coginvasion.hood import ZoneUtil
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.gui.Dialog import GlobalDialog
+
 from HeadPanels import HeadPanels
 from FinalScoreGUI import FinalScoreGUI
 from lib.coginvasion.nametag import NametagGlobals

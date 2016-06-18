@@ -5,14 +5,10 @@
   
 """
 
-from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.dna.DNAParser import *
-from direct.actor.Actor import *
-from panda3d.core import *
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.gui.DirectGui import *
+
+from panda3d.core import NodePath
 
 class MinigameHood:
 	

@@ -3,37 +3,48 @@
 # Created by: blach (07Nov14)
 ########################################
 
-from panda3d.core import *
-from lib.coginvasion.gui.Dialog import *
-from direct.gui.DirectGui import *
 from direct.distributed.AstronClientRepository import AstronClientRepository
+from direct.distributed.MsgTypes import CLIENT_OBJECT_LOCATION
+from direct.distributed.MsgTypes import CLIENT_ENTER_OBJECT_REQUIRED_OTHER_OWNER
+from direct.distributed.PyDatagram import PyDatagram
+from direct.distributed.PyDatagramIterator import DatagramIterator
+from direct.distributed import DistributedSmoothNode
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.distributed.MsgTypes import *
-from direct.distributed.PyDatagram import PyDatagram
-from direct.distributed.PyDatagramIterator import PyDatagramIterator
-from direct.interval.IntervalGlobal import *
+
 from direct.showbase.Audio3DManager import Audio3DManager
-from CogInvasionDoGlobals import *
 from direct.task import Task
-from pandac.PandaModules import UniqueIdAllocator
-from lib.coginvasion.login.AvChooser import AvChooser
-from lib.coginvasion.makeatoon.MakeAToon import MakeAToon
+
+from panda3d.core import URLSpec, CollisionHandlerFloor, CollisionHandlerPusher
+from panda3d.core import CollisionHandlerQueue, ModelPool, TexturePool
+
+from lib.coginvasion.globals import CIGlobals
+from lib.coginvasion.gui.Dialog import GlobalDialog
+
+from lib.coginvasion.base import SpeedHackChecker
+from lib.coginvasion.base.EnterLoad import EnterLoad
+
 from lib.coginvasion.distributed.PlayGame import PlayGame
 from lib.coginvasion.distributed.HoodMgr import HoodMgr
+
+from lib.coginvasion.login.AvChooser import AvChooser
+from lib.coginvasion.makeatoon.MakeAToon import MakeAToon
 from lib.coginvasion.toon import LocalToon
-from lib.coginvasion.base.EnterLoad import EnterLoad
+
 from lib.coginvasion.hood.QuietZoneState import QuietZoneState
 from lib.coginvasion.hood import ZoneUtil
-from lib.coginvasion.gags import GagGlobals
-from lib.coginvasion.gags.backpack.Backpack import Backpack
-from direct.distributed import DistributedSmoothNode
-from CogInvasionErrorCodes import *
-from lib.coginvasion.base import SpeedHackChecker
-import types
-import os
-import sys
+
+# Let's import the doIds of our UBER services.
+from CogInvasionDoGlobals import DO_ID_COGINVASION, DO_ID_CLIENT_SERVICES_MANAGER
+from CogInvasionDoGlobals import DO_ID_FRIENDS_MANAGER, DO_ID_HOLIDAY_MANAGER
+from CogInvasionDoGlobals import DO_ID_NAME_SERVICES_MANAGER
+
+# Let's import our error codes
+from CogInvasionErrorCodes import ErrorCode2ErrorMsg, UnknownErrorMsg
+
+import os, sys
 import random
 
 class CogInvasionClientRepository(AstronClientRepository):

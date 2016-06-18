@@ -5,14 +5,12 @@
   
 """
 
-from lib.coginvasion.globals import CIGlobals
-from direct.directnotify.DirectNotify import DirectNotify
-from panda3d.core import *
-from pandac.PandaModules import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from panda3d.core import Vec3
 
 class SkyUtil:
 	
-	notify = DirectNotify().newCategory("SkyUtil")
+	notify = directNotify.newCategory("SkyUtil")
 	
 	def startSky(self, sky):
 		sky.setScale(5)

@@ -51,7 +51,7 @@ class TossTrapGag(TrapGag):
         gagSph.setTangible(0)
         gagNode = CollisionNode('gagSensor')
         gagNode.addSolid(gagSph)
-        gagNP = self.gag.attachNewNode(gagNode)
+        gagNP = self.entity.attachNewNode(gagNode)
         gagNP.setScale(0.75, 0.8, 0.75)
         gagNP.setPos(0.0, 0.1, 0.5)
         gagNP.setCollideMask(BitMask32.bit(0))
@@ -65,16 +65,10 @@ class TossTrapGag(TrapGag):
 
     def onCollision(self, entry):
         TrapGag.onCollision(self, entry)
-        gag = self.gag
-        if not gag:
-            gag = self.entity
-        x, y, z = gag.getPos(render)
+        x, y, z = self.entity.getPos(render)
         base.localAvatar.sendUpdate('setGagPos', [self.getID(), x, y, z])
 
     def release(self):
-        TrapGag.release(self)
-        if self.isLocal():
-            self.startTimeout()
         throwPath = NodePath('ThrowPath')
         throwPath.reparentTo(self.avatar)
         throwPath.setScale(render, 1)
@@ -83,17 +77,23 @@ class TossTrapGag(TrapGag):
 
         if not self.gag:
             self.build()
-
-        self.gag.wrtReparentTo(render)
-        self.gag.setHpr(throwPath.getHpr(render))
+            
+        self.entity = self.gag
+        self.gag = None
+        self.entity.wrtReparentTo(render)
+        self.entity.setHpr(throwPath.getHpr(render))
 
         self.setHandJoint()
-        self.track = ProjectileInterval(self.gag, startPos = self.handJoint.getPos(render), endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
+        self.track = ProjectileInterval(self.entity, startPos = self.handJoint.getPos(render), endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
         self.track.start()
-        if base.localAvatar == self.avatar:
+        
+        if self.isLocal():
+            self.startTimeout()
             self.buildCollisions()
             self.avatar.acceptOnce('gagSensor-into', self.onCollision)
+        
         self.reset()
+        TrapGag.release(self)
 
     def delete(self):
         TrapGag.delete(self)

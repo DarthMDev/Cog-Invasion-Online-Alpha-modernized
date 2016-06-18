@@ -40,7 +40,7 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         self.stateExtraArgs = []
 
     def monitorHealth(self, task):
-        if self.battle is None:
+        if not hasattr(self, 'battle') or hasattr(self, 'battle') and self.battle is None:
             return task.done
         
         if self.isDead():
@@ -52,7 +52,7 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
 
     def canGetHit(self):
         if not self.allowHits:
-           return False
+            return False
         else:
             return (not self.isChair) or (self.isChair and self.fsm.getCurrentState().getName() == 'think')
 
