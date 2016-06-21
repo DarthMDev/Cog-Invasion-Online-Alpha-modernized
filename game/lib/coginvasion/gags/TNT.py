@@ -30,8 +30,6 @@ class TNT(TossTrapGag):
 
     def release(self):
         super(TNT, self).release()
-        self.entity = self.gag
-        self.gag = None
 
     def equip(self):
         self.build()
@@ -46,9 +44,10 @@ class TNT(TossTrapGag):
     def onCollision(self, entry):
         TossTrapGag.onCollision(self, entry)
         base.localAvatar.b_gagCollision(self.getID())
-        self.doCollision()
+        print "Hey, there was a collision."
 
     def doCollision(self):
+        print "HEY! I SHOULD BE DOING THIS BY NOW!"
         if not self.entity:
             self.build()
             self.entity = self.gag
@@ -58,8 +57,8 @@ class TNT(TossTrapGag):
                 self.buildParticles()
             emitter = self.entity.find('**/joint_attachEmitter')
             self.particles.start(parent = emitter, renderParent = emitter)
-        base.audio3d.attachSoundToObject(self.idleSfx, self.gag)
-        base.playSfx(self.idleSfx, node = self.gag)
+        base.audio3d.attachSoundToObject(self.idleSfx, self.entity)
+        base.playSfx(self.idleSfx, node = self.entity)
         if self.entity and self.anim: self.entity.play('chan')
         if self.track:
             self.track.pause()

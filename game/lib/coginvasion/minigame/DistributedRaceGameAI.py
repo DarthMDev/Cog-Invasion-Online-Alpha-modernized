@@ -5,9 +5,7 @@
 
 """
 
-from panda3d.core import *
 from lib.coginvasion.globals import CIGlobals
-from pandac.PandaModules import *
 import DistributedMinigameAI
 
 class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):

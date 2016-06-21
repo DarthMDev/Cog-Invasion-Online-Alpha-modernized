@@ -5,16 +5,20 @@
 
 """
 
+
 from direct.fsm.StateData import StateData
-from direct.gui.DirectGui import *
+from direct.gui.OnscreenText import OnscreenText
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
+
 from lib.coginvasion.globals import CIGlobals
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-import ZoneUtil
-import HoodGui
-from QuietZoneState import QuietZoneState
 from lib.coginvasion.dna.DNALoader import *
 from lib.coginvasion.holiday.HolidayManager import HolidayType
+
+from panda3d.core import Vec4, AmbientLight, ModelPool, TexturePool
+from panda3d.core import Fog, CompassEffect, NodePath
+
+import ZoneUtil
+from QuietZoneState import QuietZoneState
 
 class Hood(StateData):
 

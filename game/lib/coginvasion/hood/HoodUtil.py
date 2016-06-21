@@ -5,15 +5,14 @@
   
 """
 
-from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.hood.TTCHood import *
-from lib.coginvasion.hood.HomeHood import *
-from lib.coginvasion.gui.ToontownProgressScreen import ToontownProgressScreen
-from panda3d.core import *
-from pandac.PandaModules import *
 from direct.showbase.DirectObject import DirectObject
-from lib.coginvasion.hood.MinigameHood import *
+
+from lib.coginvasion.hood.TTCHood import TTCHood
+from lib.coginvasion.hood.MinigameHood import MinigameHood
 from lib.coginvasion.hood import HoodGui
+
+from lib.coginvasion.gui.ToontownProgressScreen import ToontownProgressScreen
+from lib.coginvasion.globals import CIGlobals
 
 class HoodUtil(DirectObject):
 	
@@ -21,7 +20,6 @@ class HoodUtil(DirectObject):
 		DirectObject.__init__(self)
 		self.cr = cr
 		self.centralHood = TTCHood(self.cr)
-		self.homeHood = HomeHood()
 		self.minigameHood = MinigameHood(self.cr)
 		self.progressScreen = ToontownProgressScreen()
 		
@@ -31,13 +29,6 @@ class HoodUtil(DirectObject):
 				loader.beginBulkLoad(hood, CIGlobals.ToontownCentral, 20, 2, self.progressScreen)
 			self.centralHood.createHood(AI = AI)
 			self.setCurrentHood(self.centralHood)
-			if not AI:
-				loader.endBulkLoad(hood)
-		elif hood == "home":
-			if not AI:
-				loader.beginBulkLoad(hood, CIGlobals.Estate, 20, 1, self.progressScreen)
-			self.homeHood.createHood()
-			self.setCurrentHood(self.homeHood)
 			if not AI:
 				loader.endBulkLoad(hood)
 		elif hood == "minigamearea":
@@ -56,16 +47,12 @@ class HoodUtil(DirectObject):
 	def announceHood(self, hood):
 		if hood == "TT":
 			HoodGui.announceHood(CIGlobals.ToontownCentral)
-		elif hood == "home":
-			HoodGui.announceHood(CIGlobals.Estate)
 		elif hood == "minigamearea":
 			HoodGui.announceHood(CIGlobals.MinigameArea)
 				
 	def unload(self, hood):
 		if hood == "TT":
 			self.centralHood.unloadHood()
-		elif hood == "home":
-			self.homeHood.unloadHood()
 		elif hood == "minigamearea":
 			self.minigameHood.unloadHood()
 			

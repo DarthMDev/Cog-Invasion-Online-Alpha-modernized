@@ -9,6 +9,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.StateData import StateData
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
+from direct.actor.Actor import Actor
 from panda3d.core import ModelPool, TexturePool, NodePath
 
 from lib.coginvasion.globals import CIGlobals
@@ -44,6 +45,7 @@ class SafeZoneLoader(StateData):
         self.tournamentMusic = None
         self.linkTunnels = []
         self.szHolidayDNAFile = None
+        self.animatedFish = None
         return
 
     def findAndMakeLinkTunnels(self):
@@ -70,6 +72,7 @@ class SafeZoneLoader(StateData):
             self.interiorMusic = base.loadMusic(self.interiorMusicFilename)
         if self.tournamentMusicFiles:
             self.tournamentMusic = None
+            
         self.createSafeZone(self.dnaFile)
 
         children = self.geom.findAllMatches('**/*doorFrameHole*')
@@ -93,8 +96,15 @@ class SafeZoneLoader(StateData):
 
     def unload(self):
         StateData.unload(self)
+        
+        if self.animatedFish:
+            self.animatedFish.cleanup()
+            self.animatedFish.removeNode()
+            self.animatedFish = None
+        
         self.parentFSMState.removeChild(self.fsm)
         del self.parentFSMState
+        del self.animatedFish
         self.geom.removeNode()
         del self.geom
         del self.fsm
@@ -122,16 +132,26 @@ class SafeZoneLoader(StateData):
             partyGate.removeNode()
         del partyGate
         # Delete pet shop
-        petShop = self.geom.find('**/prop_pet_shop_DNARoot')
+        petShop = self.geom.find('**/*pet_shop_DNARoot*')
         if not petShop.isEmpty():
-            petShop.removeNode()
-        del petShop
+            fish = petShop.find('**/animated_prop_PetShopFishAnimatedProp_DNARoot')
+            if fish:
+                self.animatedFish = Actor('phase_4/models/props/exteriorfish-zero.bam', {'chan' : 
+                    'phase_4/models/props/exteriorfish-swim.bam'})
+                self.animatedFish.reparentTo(petShop)
+                self.animatedFish.setPos(fish.getPos())
+                self.animatedFish.loop('chan')
+                fish.removeNode()
+            #petShop.removeNode()
+        #del petShop
 
     def exit(self):
         StateData.exit(self)
         messenger.send('exitSafeZone')
         for link in self.linkTunnels:
             link.cleanup()
+        if self.animatedFish:
+            self.animatedFish.stop('chan')
         self.linkTunnels = []
 
     def setState(self, stateName, requestStatus):

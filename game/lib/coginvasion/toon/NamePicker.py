@@ -6,9 +6,7 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-from panda3d.core import *
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
+from direct.gui.DirectGui import OnscreenText, DirectEntry, DirectButton
 
 
 class NamePicker:

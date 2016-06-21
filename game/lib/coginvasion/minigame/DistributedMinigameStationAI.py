@@ -5,13 +5,10 @@
 
 """
 
-from panda3d.core import *
 from lib.coginvasion.globals import CIGlobals
-from pandac.PandaModules import *
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
-from direct.interval.IntervalGlobal import *
-import MinigameBase
+
 from DistributedGroupStationAI import DistributedGroupStationAI
+import MinigameBase
 
 class DistributedMinigameStationAI(DistributedGroupStationAI):
 	game2maxPlayers = {CIGlobals.UnoGame: 4,

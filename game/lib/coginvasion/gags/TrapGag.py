@@ -62,3 +62,8 @@ class TrapGag(Gag):
 
     def getHandle(self):
         return self
+    
+    def getGag(self):
+        if not self.gag:
+            return self.entity
+        return Gag.getGag(self)

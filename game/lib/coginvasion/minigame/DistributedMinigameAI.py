@@ -5,9 +5,6 @@
 
 """
 
-from panda3d.core import *
-from lib.coginvasion.globals import CIGlobals
-from pandac.PandaModules import *
 from direct.distributed import DistributedObjectAI
 import TimerAI
 

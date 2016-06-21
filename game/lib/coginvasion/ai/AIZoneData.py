@@ -1,10 +1,11 @@
-from pandac.PandaModules import *
 from direct.distributed import ParentMgr
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
 from direct.showbase import LeakDetectors
+
+from panda3d.core import NodePath, CollisionTraverser
+
 from lib.coginvasion.globals import CIGlobals
-import random
 
 class AIZoneData:
     notify = directNotify.newCategory('AIZoneData')
@@ -185,7 +186,7 @@ class AIZoneDataStore:
         self._zone2data = {}
 
     def destroy(self):
-        for zone, data in self._zone2data.items():
+        for _, data in self._zone2data.items():
             data.destroy()
 
         del self._zone2data

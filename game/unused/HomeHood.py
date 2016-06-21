@@ -8,8 +8,8 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.dna.DNAParser import *
-from panda3d.core import *
-from pandac.PandaModules import *
+
+from panda3d.core import BitMask32, TransparencyAttrib, NodePath
 
 class HomeHood:
 	dnaStore = DNAStorage()

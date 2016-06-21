@@ -10,7 +10,7 @@ from direct.distributed.MsgTypes import *
 from lib.coginvasion.distributed.CogInvasionErrorCodes import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from pandac.PandaModules import *
+from panda3d.core import NetDatagram
 import anydbm
 import os
 
@@ -239,6 +239,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def __handleToonOnline(self, avId):
 
+        print "toon online " + str(avId)
+
         def toonResponse(dclass, fields):
             if dclass != self.air.dclassesByName['DistributedToonUD']:
                 return
@@ -258,6 +260,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def unloadAvatar(self, target, doId):
         channel = self.GetAccountConnectionChannel(target)
+
+        print "unloadAvatar"
 
         # Clear the postremove
         dg = PyDatagram()
@@ -301,6 +305,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.__handleToonOffline(doId)
 
     def __handleToonOffline(self, avId):
+
+        print "toon offline " + str(avId)
 
         def toonResponse(dclass, fields):
             if dclass != self.air.dclassesByName['DistributedToonUD']:

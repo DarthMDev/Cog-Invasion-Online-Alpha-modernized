@@ -408,7 +408,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         suit.d_setHood(suit.hood)
         suit.b_setLevel(level)
         variant = Variant.NORMAL
-        if CogBattleGlobals.hi2hi[self.hood] == CogBattleGlobals.WaiterHoodIndex:
+        hood = self.hood
+        if self.hood == CIGlobals.ToontownCentral:
+            hood = CIGlobals.BattleTTC
+        if CogBattleGlobals.hi2hi[hood] == CogBattleGlobals.WaiterHoodIndex:
             variant = Variant.WAITER
         suit.b_setSuit(plan, variant)
         suit.b_setPlace(self.zoneId)

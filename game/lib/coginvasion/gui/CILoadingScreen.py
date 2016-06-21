@@ -5,17 +5,12 @@
   
 """
 
-from lib.coginvasion.base.CIStart import *
-from lib.coginvasion.globals import CIGlobals
-from panda3d.core import *
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from direct.directnotify.DirectNotify import *
+from direct.gui.DirectGui import OnscreenText
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.Transitions import Transitions
 from lib.coginvasion.base import FileUtility
-import glob
 
-loadernotify = DirectNotify().newCategory("CILoadingScreen")
+loadernotify = directNotify.newCategory("CILoadingScreen")
 
 class CILoadingScreen:
 	

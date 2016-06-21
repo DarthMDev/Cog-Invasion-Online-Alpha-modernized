@@ -7,13 +7,12 @@ import __builtin__
 
 __builtin__.process = 'ai'
 
-__builtin__.__dict__.update(__import__('pandac.PandaModules', fromlist=['*']).__dict__)
+__builtin__.__dict__.update(__import__('panda3d.core', fromlist=['*']).__dict__)
 
 import sys
 sys.dont_write_bytecode = True
 
-from pandac.PandaModules import *
-from direct.showbase import PythonUtil
+from panda3d.core import loadPrcFile, loadPrcFileData
 
 import argparse
 

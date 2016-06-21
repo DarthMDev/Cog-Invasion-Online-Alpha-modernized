@@ -5,10 +5,13 @@
 
 """
 
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from lib.coginvasion.globals import CIGlobals
+from panda3d.core import CollisionSphere, CollisionNode, NodePath
+from panda3d.core import CollisionHandlerEvent, BitMask32
+
 from direct.showbase.DirectObject import DirectObject
+from direct.interval.IntervalGlobal import Sequence, Wait, Func
+
+from lib.coginvasion.globals import CIGlobals
 import random
 
 class Bullet(DirectObject):

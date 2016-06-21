@@ -356,6 +356,11 @@ class LocalToon(DistributedToon):
         self.cr.playGame.hood.loader.place.fsm.request('walk')
         self.b_setAnimState('neutral')
         return Task.done
+    
+    def printPos(self):
+        x, y, z = self.getPos(render)
+        h, p, r = self.getHpr(render)
+        print "Pos: (%s, %s, %s), Hpr: (%s, %s, %s)" % (x, y, z, h, p, r)
 
     def enableAvatarControls(self):
         self.walkControls.enableAvatarControls()
@@ -365,6 +370,7 @@ class LocalToon(DistributedToon):
         self.accept('shift-tab', self.smartCamera.nextCameraPos, [0])
         self.accept('page_up', self.smartCamera.pageUp)
         self.accept('page_down', self.smartCamera.pageDown)
+        self.accept('p', self.printPos)
         taskMgr.add(self.movementTask, "avatarMovementTask")
         self.avatarMovementEnabled = True
         self.playMovementSfx(None)

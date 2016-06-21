@@ -3,14 +3,15 @@
 # Created by: blach (11Aug14)
 ########################################
 
-from panda3d.core import *
-from pandac.PandaModules import *
-from direct.directnotify.DirectNotify import *
+from panda3d.core import CollisionRay, CollisionNode, BitMask32
+from panda3d.core import CollisionHandlerFloor
 from lib.coginvasion.globals import CIGlobals
+
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.controls.ControlManager import CollisionHandlerRayStart
 
 class ShadowPlacer:
-	notify = DirectNotify().newCategory("ShadowPlacer")
+	notify = directNotify.newCategory("ShadowPlacer")
 
 	def __init__(self, shadow_node, mat):
 		self.setup_shadow_ray(shadow_node, mat)

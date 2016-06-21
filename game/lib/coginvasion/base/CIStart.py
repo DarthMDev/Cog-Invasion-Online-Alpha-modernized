@@ -3,10 +3,12 @@
 # Created by: blach (17Jun14)
 ########################################
 
-from panda3d.core import *
-import __builtin__
-import os
+from panda3d.core import Multifile, Filename, VirtualFileSystem, PandaSystem
+from panda3d.core import Thread, loadPrcFile, loadPrcFileData, CollisionTraverser, CullBinManager
+from panda3d.core import ConfigVariableDouble
 
+import __builtin__
+import os, sys
 
 vfs = VirtualFileSystem.getGlobalPtr()
 
@@ -104,7 +106,6 @@ elif audio == 'openal':
 print 'CIStart: Using %s audio library.' % audio
 
 from direct.gui import DirectGuiGlobals
-from direct.gui.DirectGui import *
 
 from lib.coginvasion.base import ScreenshotHandler
 import CogInvasionLoader
@@ -203,7 +204,7 @@ def maybeDoSomethingWithMusic(condition):
     # 0 = paused
     # 1 = restarted
     _, _, _, music, _, _, _, _, _ = sm.getSettings(jsonfile)
-    if music == True:
+    if music:
         base.enableMusic(condition)
 
 def handleMusicEnabled():

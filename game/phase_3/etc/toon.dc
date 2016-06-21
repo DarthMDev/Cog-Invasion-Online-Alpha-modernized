@@ -11,7 +11,6 @@ from lib.coginvasion.npc import DistributedChar
 from lib.coginvasion.shop import DistributedBattleShop/AI
 from lib.coginvasion.shop import DistributedGagShop/AI
 from lib.coginvasion.shop.DistributedShop/AI import DistributedShop/AI
-from lib.coginvasion.distributed import DistributedTrolley
 from lib.coginvasion.distributed import DistributedRoot/AI
 from lib.coginvasion.distributed import Account/AI/UD
 from lib.coginvasion.distributed import DistributedDistrict/AI/UD
@@ -344,10 +343,6 @@ dclass DistributedTutorial : DistributedObject {
 
 dclass DistributedTutorialSuit : DistributedSuit {
 
-};
-
-dclass DistributedTrolley : DistributedNode {
-  setDestination(string destination) required broadcast ram;
 };
 
 dclass DistributedGroupStation : DistributedObject {

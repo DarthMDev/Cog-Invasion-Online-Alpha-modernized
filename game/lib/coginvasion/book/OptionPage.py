@@ -3,13 +3,17 @@
 # Created by: blach (11Jan15)
 ########################################
 
-from pandac.PandaModules import *
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.manager.SettingsManager import SettingsManager
+
 from direct.fsm.StateData import StateData
 from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
-from direct.gui.DirectGui import *
+
+from direct.gui.DirectGui import DirectLabel, DirectButton, DirectRadioButton
+from direct.gui.DirectGui import DirectSlider, DGG
+
+from panda3d.core import loadPrcFileData, AntialiasAttrib, TextNode
 
 qt_btn = loader.loadModel("phase_3/models/gui/quit_button.bam")
 

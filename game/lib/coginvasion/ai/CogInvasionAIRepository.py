@@ -5,7 +5,11 @@
 
 from lib.coginvasion.distributed.CogInvasionInternalRepository import CogInvasionInternalRepository
 from lib.coginvasion.distributed.DistributedDistrictAI import DistributedDistrictAI
+
 from direct.distributed.TimeManagerAI import TimeManagerAI
+from direct.distributed.PyDatagram import PyDatagram
+from direct.distributed.MsgTypes import STATESERVER_OBJECT_SET_AI
+
 from lib.coginvasion.hood.TTHoodAI import TTHoodAI
 from lib.coginvasion.hood.MGHoodAI import MGHoodAI
 from lib.coginvasion.hood.BRHoodAI import BRHoodAI
@@ -13,14 +17,12 @@ from lib.coginvasion.hood.DLHoodAI import DLHoodAI
 from lib.coginvasion.hood.MLHoodAI import MLHoodAI
 from lib.coginvasion.hood.DGHoodAI import DGHoodAI
 from lib.coginvasion.hood.DDHoodAI import DDHoodAI
-from panda3d.core import *
+
+from panda3d.core import UniqueIdAllocator
 from lib.coginvasion.globals import CIGlobals
-from direct.distributed.PyDatagram import PyDatagram
-from lib.coginvasion.distributed.CogInvasionMsgTypes import *
 from AIZoneData import AIZoneDataStore
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.distributed.CogInvasionDoGlobals import DO_ID_DISTRICT_NAME_MANAGER
-import time
 
 #PStatClient.connect()
 

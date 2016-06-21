@@ -191,6 +191,8 @@ class Slot(DirectFrame):
                 slotImage = 'idle'
                 if base.localAvatar.getBackpack().getSupply(self.gag.getID()) <= 0:
                     slotImage = 'no_ammo'
+                elif self.gui.getActiveSlot() == self:
+                    slotImage = 'selected'
                 Sequence(Wait(0.5), Func(self.setOutlineImage, slotImage)).start()
 
     def hideInfoText(self):
@@ -335,6 +337,7 @@ class InventoryGui(DirectObject):
     def enterVisible(self, autoShow = False):
         self.inventoryFrame.setPos(InventoryGui.VisiblePos)
         self.inventoryFrame.show()
+        
         if self.visibilityBtnStatus == 0:
             if autoShow is False:
                 # our mouse is no longer in the visibility button.
@@ -377,7 +380,7 @@ class InventoryGui(DirectObject):
                 if iSlot.getGag():
                     if iSlot.getGag().getID() == slot:
                         slot = iSlot
-        if self.activeSlot:
+        if self.activeSlot and slot != self.activeSlot:
             self.activeSlot.setOutlineImage('idle')
             self.prevSlot = self.activeSlot
         if slot.getGag() and self.backpack.getSupply(slot.getGag().getID()) > 0 and not slot.getGag().getState() == GagState.RECHARGING:
@@ -568,6 +571,9 @@ class InventoryGui(DirectObject):
 
     def getSlots(self):
         return self.slots
+    
+    def getActiveSlot(self):
+        return self.activeSlot
     
     def isDeleted(self):
         return self.DELETED

@@ -9,9 +9,8 @@ from direct.interval.IntervalGlobal import LerpHprInterval
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCLookInterval, NPCWalkInterval
-from lib.coginvasion.suit.Suit import Suit
+from lib.coginvasion.cog.Suit import Suit
 from lib.coginvasion.suit import SuitPathFinder
-from lib.coginvasion.globals import CIGlobals
 import CogGuardGlobals as CGG
 
 import random

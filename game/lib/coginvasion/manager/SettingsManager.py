@@ -5,8 +5,8 @@
 
 """
 
-from panda3d.core import *
-from pandac.PandaModules import *
+from panda3d.core import AntialiasAttrib, TextureStage
+from panda3d.core import loadPrcFileData, WindowProperties
 from direct.directnotify.DirectNotify import DirectNotify
 import json
 
