@@ -11,25 +11,25 @@ import os
 vfs = VirtualFileSystem.getGlobalPtr()
 
 phases = ['phase_3', 'phase_3.5', 'phase_4', 'phase_5', 'phase_5.5', 'phase_6', 'phase_7', 'phase_8', 'phase_9',
-    'phase_10', 'phase_11', 'phase_12', 'phase_13', 'phase_0', 'phase_14', 'winter']
-packExtensions = ['.jpg', '.jpeg', '.png', '.ogg', '.rgb']
+    'phase_10', 'phase_11', 'phase_12', 'phase_13', 'phase_0', 'phase_14']
+packExtensions = ['.jpg', '.jpeg', '.png', '.ogg', '.rgb', '.mid']
 
 for phase in phases:
     mf = Multifile()
     mf.setEncryptionPassword('cio-03-06-16_lsphases')
     mf.openReadWrite(Filename(phase + '.mf'))
     packMf = None
-    
+
     if os.path.exists('resourcepack/%s.mf' % phase):
         # Let's remove the unneeded files.
         for subFile in mf.getSubfileNames():
             ext = os.path.splitext(subFile)[1]
             if ext in packExtensions:
                 mf.removeSubfile(subFile)
-        
+
         packMf = Multifile()
         packMf.openReadWrite(Filename('resourcepack/%s.mf' % phase))
-        
+
         # Let's remove all the default files.
         for subFile in packMf.getSubfileNames():
             ext = os.path.splitext(subFile)[1]

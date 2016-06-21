@@ -482,11 +482,11 @@ dclass DistributedGunGame : DistributedToonFPSGame, TeamMinigame {
 
   setGameMode(int8) broadcast ram;
   setLevelName(string) broadcast ram;
-  
+
   // Updates are sent directly to the avatar that
   // is receiving more points.
   setKOTHPoints(uint8 points);
-  
+
   // Update to tell the clients who the new king is.
   setKOTHKing(uint32 avId) broadcast;
 
@@ -747,7 +747,7 @@ dclass DistributedCogOfficeBattle : DistributedObject {
   setBldgDoId(uint32) required broadcast ram;
   setExteriorZoneId(uint32) required broadcast ram;
   readyToStart() clsend airecv;
-  loadFloor(int8) broadcast;
+  loadFloor(int8, string) broadcast;
   readyForNextFloor() clsend airecv;
   iAmDead() clsend airecv;
   doFaceoff(uint32, int8, int16) broadcast;

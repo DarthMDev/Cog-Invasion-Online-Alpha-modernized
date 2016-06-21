@@ -28,15 +28,22 @@ class BuildingSuitPlannerAI:
         base.taskMgr.doMethodLater(random.randint(SuitBuildingGlobals.SPAWN_TIME_RANGE[0], SuitBuildingGlobals.SPAWN_TIME_RANGE[1]),
                                    self.__spawnNewBuilding, streetName + "-spawnNewBuilding")
 
-    def takeOverBuilding(self, bldg = None, dept = None):
+    def takeOverBuilding(self, bldg = None, dept = None, suitLevel = None):
         if not bldg:
             bldg = random.choice(self.getToonBuildingsList())
 
         if not dept:
             dept = random.choice([Dept.SALES, Dept.CASH, Dept.LAW, Dept.BOSS])
 
+        if not suitLevel:
+            hoodName = self.hoodClass.hood
+            if hoodName == CIGlobals.ToontownCentral:
+                hoodName = CIGlobals.BattleTTC
+            suitLevel = random.choice(CogBattleGlobals.HoodIndex2LevelRange[CogBattleGlobals.HoodId2HoodIndex[hoodName]])
+        numFloors = self.chooseNumFloors(suitLevel)
+        print numFloors
         if bldg.fsm.getCurrentState().getName() == 'toon':
-            bldg.suitTakeOver(dept, 0, 0)
+            bldg.suitTakeOver(dept, 0, numFloors)
             self.numCogBuildings += 1
 
     def getToonBuildingsList(self):
@@ -51,6 +58,15 @@ class BuildingSuitPlannerAI:
             if suit.doId == doId:
                 self.suitsTakingOver.remove(suit)
                 break
+
+    def chooseNumFloors(self, suitLevel):
+        chances = SuitBuildingGlobals.floorNumberChances[suitLevel]
+        number = random.randint(1, 100)
+        for chance in chances:
+            numFloors = chances.index(chance) + 1
+            if number in chance:
+                print "numFloors: " + str(numFloors)
+                return numFloors
 
     def __spawnNewBuilding(self, task):
         number = random.randint(1, 100)

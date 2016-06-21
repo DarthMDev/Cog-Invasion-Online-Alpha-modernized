@@ -1,7 +1,7 @@
 # Filename: DistributedCogOfficeBattle.py
 # Created by:  blach (15Dec15)
 
-from panda3d.core import Point3, Vec3
+from panda3d.core import Point3, Vec3, NodePath, TextureStage
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
@@ -19,8 +19,10 @@ from CogOfficeConstants import *
 import random
 
 PROPS = {'photo_frame':     'phase_7/models/props/photo_frame.egg',
-        'photo_frame_bh':  'phase_7/models/props/photo_frame_blackholes.bam',
+        'photo_frame_bh':   'phase_7/models/props/photo_frame_blackholes.bam',
         'rug':              'phase_3.5/models/modules/rug.bam',
+        'rugA':             'phase_5.5/models/estate/rugA.bam',
+        'rugB':             'phase_5.5/models/estate/rugB.bam',
         'couch_2person':    'phase_3.5/models/modules/couch_2person.bam',
         'LB_chairA':        'phase_11/models/lawbotHQ/LB_chairA.bam',
         'computer_monitor': 'phase_7/models/props/computer_monitor.egg',
@@ -35,7 +37,8 @@ PROPS = {'photo_frame':     'phase_7/models/props/photo_frame.egg',
         'meeting_table':    'phase_7/models/props/meeting_table.egg',
         'square_shadow':    'phase_3/models/props/square_drop_shadow.bam',
         'shadow':           'phase_3/models/props/drop_shadow.bam',
-        'BR_sky':           'phase_3.5/models/props/BR_sky.bam'}
+        'BR_sky':           'phase_3.5/models/props/BR_sky.bam',
+        'tv_on_wall':       'phase_7/models/props/cogtv.egg'}
 
 class Elevator:
 
@@ -53,10 +56,33 @@ class Elevator:
     def getElevatorModel(self):
         return self.elevatorMdl
 
+class CogTV(NodePath):
+
+    def __init__(self):
+        NodePath.__init__(self, 'cogtv')
+        self.mdl = loader.loadModel(PROPS['tv_on_wall'])
+        self.mdl.reparentTo(self)
+        ts = TextureStage('tvts')
+        self.videoTex = loader.loadTexture('phase_7/videos/cogtv.mp4')
+        self.find('**/tv_screen').setTexture(ts, self.videoTex)
+        self.find('**/tv_screen').setTexRotate(ts, 90)
+        self.videoTex.setLoop(1)
+        self.videoTex.play()
+
+    def removeNode(self):
+        self.mdl.removeNode()
+        del self.mdl
+        self.videoTex.stop()
+        del self.videoTex
+        NodePath.removeNode(self)
+
 class DistributedCogOfficeBattle(DistributedObject):
     notify = directNotify.newCategory('DistributedCogOfficeBattle')
     CEILING_COLOR = (187.0 / 255, 174.0 / 255, 155.0 / 255)
-    FLOOR_NAMES = {RECEPTION_FLOOR: 'Reception Floor', EXECUTIVE_FLOOR: 'Executive Floor', CONFERENCE_FLOOR: 'Conference Floor'}
+    FLOOR_NAMES = {RECEPTION_FLOOR: 'Reception Floor',
+                   EXECUTIVE_FLOOR: 'Executive Floor',
+                   CONFERENCE_FLOOR: 'Conference Floor',
+                   LOUNGE_FLOOR: 'Lounge Floor'}
     UNIQUE_FLOORS = []
     UNIQUE_FLOOR_NAMES = {
         Dept.BOSS: {1: 'Stock Floor', 2: 'Board of Directors Floor', 3: 'Human Resources Floor'},
@@ -184,27 +210,72 @@ class DistributedCogOfficeBattle(DistributedObject):
                     'room_mdl': 'phase_7/models/modules/cog_bldg_conference_flr.bam',
                     'grounds': ['**/floor']
                 },
-                BREAK_FLOOR: {'props': [
-                        ['rug', -41.879, 34.818, 0, 0, 0, 0, 1],
-                        ['rug', 1.578, 55.649, 0, 90, 0, 0, 1],
+                #BREAK_FLOOR: {'props': [
+                #        ['rug', -41.879, 34.818, 0, 0, 0, 0, 1],
+                #        ['rug', 1.578, 55.649, 0, 90, 0, 0, 1],
                         #['meeting_table', -35.19, 52.182, 0, 0, 0, 0, 1],
                         #['square_shadow', -35.19, 52.182, 0, 0, 0, 0, Point3(2, 3.5, 1)],
-                        ['meeting_table', 18.28, 9.91, 0, 0, 0, 0, 1],
-                        ['square_shadow', 18.28, 9.91, 0, 0, 0, 0, Point3(2, 3.5, 1)],
-                        ['clock', -35.99, 61.99, 10.16, 90, 0, 90, 1],
-                        ['photo_frame_bh', -19.06, 45.58, 8.979, 0, 180, 270, 1],
-                        ['photo_frame', 27.72, 10.28, 8.98, 180, 0, 90, 1],
-                        ['plant', 14.035, 59.197, 0, 0, 0, 0, 12],
-                        ['plant', -10.499, 59.144, 0, 0, 0, 0, 12],
-                        ['plant', -45.962, 46.716, 0, 0, 0, 0, 12],
-                        ['plant', -45.962, 22.103, 0, 0, 0, 0, 12],
-                        ['couch_2person', -7.69, 31.11, 0, 180, 0, 0, 1.25],
-                        ['LB_chairA', 11.93, 29.85, 0, 180, 0, 0, 1]
+                #        ['meeting_table', 18.28, 9.91, 0, 0, 0, 0, 1],
+                #        ['square_shadow', 18.28, 9.91, 0, 0, 0, 0, Point3(2, 3.5, 1)],
+                #        ['clock', -35.99, 61.99, 10.16, 90, 0, 90, 1],
+                #        ['photo_frame_bh', -19.06, 45.58, 8.979, 0, 180, 270, 1],
+                #        ['photo_frame', 27.72, 10.28, 8.98, 180, 0, 90, 1],
+                #        ['plant', 14.035, 59.197, 0, 0, 0, 0, 12],
+                #        ['plant', -10.499, 59.144, 0, 0, 0, 0, 12],
+                #        ['plant', -45.962, 46.716, 0, 0, 0, 0, 12],
+                #        ['plant', -45.962, 22.103, 0, 0, 0, 0, 12],
+                #        ['couch_2person', -7.69, 31.11, 0, 180, 0, 0, 1.25],
+                #        ['LB_chairA', 11.93, 29.85, 0, 180, 0, 0, 1]
+                #    ],
+                #    'elevators': [],
+                #    'room_sections': [],
+                #    'room_mdl': 'phase_7/models/modules/cog_bldg_breakroom_flr.bam',
+                #    'grounds': []
+                #}
+                LOUNGE_FLOOR: {'props': [
+                        ['plant', -30.15, 3.54, 0, 0, 0, 0, 12],
+                        ['plant', 32.71, 3.54, 0, 0, 0, 0, 12],
+                        ['photo_frame', 21, -2.87, 8, 90, 0, 90, 1],
+                        ['couch_2person', -17.66, 3.87, 0, 180, 0, 0, 1.5],
+                        ['rugB', 0, 7.5, 0, 0, 0, 0, 6.09],
+                        ['rugB', -27.03, 63.42, 0, 90, 0, 0, 6.09],
+                        ['rug', 0, 40, 0, 0, 0, 0, 1.25],
+                        ['plant', -30.18, 77.41, 0, 0, 0, 0, 12],
+                        ['clock', -20.46, 82.96, 10.14, 0, 90, 0, 1],
+                        ['meeting_table', -30.64, 26.29, 0, 0, 0, 0, Vec3(0.51, 1.08, 1)],
+                        ['computer_monitor', -30.92, 18, 3.40, 270, 0, 0, 1],
+                        ['computer_monitor', -30.92, 25.7, 3.40, 270, 0, 0, 1],
+                        ['computer_monitor', -30.92, 33.78, 3.40, 270, 0, 0, 1],
+                        ['LB_chairA', -24, 18.25, 0, 270, 0, 0, 1],
+                        ['LB_chairA', -24, 26.03, 0, 270, 0, 0, 1],
+                        ['LB_chairA', -24, 33.93, 0, 270, 0, 0, 1],
+                        ['fax_paper', -28.86, 19.46, 3.4, 68.2, 0, 0, 1],
+                        ['fax_paper', -29, 24.21, 3.4, 102.72, 0, 0, 1],
+                        ['fax_paper', -28.75, 24.51, 3.41, 90, 0, 0, 1],
+                        ['fax_paper', -28.75, 33.98, 3.40, 90, 0, 0, 1],
+                        ['coffee_cup', -28.98, 27.76, 3.40, 59.04, 0, 0, 1],
+                        ['phone', -29.83, 29.51, 3.40, 90, 0, 0, 1],
+                        ['phone', -29.83, 21.15, 3.40, 90, 0, 0, 1],
+                        ['tv_on_wall', 36.44, 82.03, 12, 320, 0, 0, 1],
+                        ['LB_chairA', 18.01, 75.03, 0, 100.01, 0, 0, 1],
+                        ['LB_chairA', 20.18, 69.08, 0, 120.47, 0, 0, 1],
+                        ['LB_chairA', 24.8, 64.49, 0, 149.93, 0, 0, 1],
+                        ['LB_chairA', 30.8, 62.41, 0, 173.07, 0, 0, 1],
+                        ['couch_2person', 32.78, 13.41, 0, 270, 0, 0, 1.5],
+                        ['couch_2person', 32.78, 22.83, 0, 270, 0, 0, 1.5],
+                        ['bookshelfA', 34.7, 34.43, 0, 270, 0, 0, 1.5],
+                        ['BR_sky', 0, 0, -50, 0, 0, 0, 1],
+                        ['square_shadow', -30.64, 26.16, 0.01, 0, 0, 0, Vec3(1.09, 3.69, 1)]
                     ],
-                    'elevators': [],
+                    'gagdoor': [66.50544, 78.29003, 0, 90, 0, 0],
+                    'elevators': [
+                        [0, 0.5, 0, 180, 0, 0],
+                        [-33.75, 63.0, 0, 90, 0, 0]
+                    ],
                     'room_sections': [],
-                    'room_mdl': 'phase_7/models/modules/cog_bldg_breakroom_flr.bam',
-                    'grounds': []
+                    'room_mdl': 'phase_7/models/modules/cog_bldg_lounge_flr.egg',
+                    'grounds': ['**/gagroom_small_floor', '**/gagroom_big_floor', '**/floor']
+
                 }
     }
 
@@ -218,6 +289,7 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.exteriorZoneId = None
         self.bldgDoId = None
         self.avatars = None
+        self.gagDoor = None
         # Use the same text from eagle summit
         self.floorNameText = DistributedMinigame.getAlertText((0.75, 0.75, 0.75, 1.0), 0.15)
         self.props = []
@@ -255,12 +327,12 @@ class DistributedCogOfficeBattle(DistributedObject):
         rDoorOpen = 3.5
         closed = 0.0
 
-        leftDoor = self.floorModel.find('**/left_door')
-        rightDoor = self.floorModel.find('**/right_door')
+        leftDoor = self.gagDoor.find('**/left_door')
+        rightDoor = self.gagDoor.find('**/right_door')
 
         # Delete the invisible one-piece wall blocking the doorway.
         # John, fix this!
-        self.floorModel.find('**/door_collisions').removeNode()
+        self.gagDoor.find('**/door_collisions').removeNode()
 
         ival = Parallel(LerpPosInterval(leftDoor, 2.0, (lDoorOpen, 0, 0),
                                         (closed, 0, 0), blendType = 'easeOut'),
@@ -350,10 +422,10 @@ class DistributedCogOfficeBattle(DistributedObject):
         base.transitions.noTransitions()
 
     def getPoints(self, name):
-        if self.currentFloor in self.UNIQUE_FLOORS:
-            points = POINTS[self.deptClass][self.currentFloor][name]
+        if self.currentRoom in self.UNIQUE_FLOORS:
+            points = POINTS[self.deptClass][self.currentRoom][name]
         else:
-            points = POINTS[self.currentFloor][name]
+            points = POINTS[self.currentRoom][name]
         return points
 
     def enterFaceOff(self, suitId, tauntIndex, ts):
@@ -445,7 +517,7 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.elevatorTrack.start(ts)
 
     def __doFloorTextPulse(self):
-        self.floorNameText.setText(DistributedCogOfficeBattle.FLOOR_NAMES[self.currentFloor])
+        self.floorNameText.setText(DistributedCogOfficeBattle.FLOOR_NAMES[self.currentRoom])
         ival = DistributedMinigame.getAlertPulse(self.floorNameText, 0.17, 0.15)
         ival.start()
 
@@ -538,13 +610,27 @@ class DistributedCogOfficeBattle(DistributedObject):
         base.setBackgroundColor(CIGlobals.DefaultBackgroundColor)
         DistributedObject.disable(self)
 
-    def loadFloor(self, floorNum):
+    def loadFloor(self, floorNum, room):
         base.transitions.fadeScreen(1.0)
         self.cleanupFloor()
         self.currentFloor = floorNum
+        self.currentRoom = room
         self.loadRoom()
         self.loadProps()
         self.repositionElevators()
+
+        if self.getRoomData('gagdoor') is not None:
+            posHpr = self.getRoomData('gagdoor')
+            self.gagDoor = loader.loadModel('phase_7/models/modules/gagroom_door.bam')
+            self.gagDoor.reparentTo(render)
+            self.gagDoor.setPosHpr(*posHpr)
+        elif self.currentRoom != EXECUTIVE_FLOOR:
+            self.gagDoor = render.attachNewNode("gagDoor")
+            flr = self.floorModel
+            items = ['frame', 'trim', 'trim1', 'trim2', 'trim3', 'frame1', 'left_door', 'right_door', 'door_collisions']
+            for item in items:
+                node = flr.find('**/' + item)
+                node.wrtReparentTo(self.gagDoor)
 
         # Tell the AI that we've finished loading the floor
         self.d_loadedFloor()
@@ -556,6 +642,9 @@ class DistributedCogOfficeBattle(DistributedObject):
         if self.floorModel:
             self.floorModel.removeNode()
             self.floorModel = None
+        if self.gagDoor:
+            self.gagDoor.removeNode()
+            self.gagDoor = None
 
     def cleanupElevators(self):
         for elevator in self.elevators:
@@ -563,10 +652,10 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.elevators = []
 
     def getRoomData(self, name):
-        if self.currentFloor in self.UNIQUE_FLOORS:
-            dataList = self.ROOM_DATA[self.deptClass][self.currentFloor][name]
+        if self.currentRoom in self.UNIQUE_FLOORS:
+            dataList = self.ROOM_DATA[self.deptClass][self.currentRoom].get(name)
         else:
-            dataList = self.ROOM_DATA[self.currentFloor][name]
+            dataList = self.ROOM_DATA[self.currentRoom].get(name)
         return dataList
 
     def loadRoom(self):
@@ -594,7 +683,12 @@ class DistributedCogOfficeBattle(DistributedObject):
             if isinstance(PROPS[name], list):
                 propMdl = loader.loadModel(PROPS[name][0])
             else:
-                propMdl = loader.loadModel(PROPS[name])
+                if name == 'tv_on_wall':
+                    print "TVONWALL"
+                    # This is a tv with a movie texture.
+                    propMdl = CogTV()
+                else:
+                    propMdl = loader.loadModel(PROPS[name])
             propMdl.reparentTo(render)
             propMdl.setPosHpr(x, y, z, h, p, r)
             propMdl.setScale(scale)

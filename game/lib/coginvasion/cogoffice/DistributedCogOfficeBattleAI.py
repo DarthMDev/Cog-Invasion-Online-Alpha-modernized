@@ -47,8 +47,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.toonId2suitsTargeting = {}
         self.guardSuits = []
         self.chairSuits = []
+        self.roomsVisited = []
         self.numFloors = numFloors
         self.currentFloor = 0
+        self.currentRoom = ""
         self.readyAvatars = []
         self.elevators = []
         self.drops = []
@@ -200,10 +202,26 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         if not avId in self.readyAvatars:
             self.readyAvatars.append(avId)
         if len(self.readyAvatars) == len(self.avIds):
-            if self.currentFloor == RECEPTION_FLOOR:
-                self.startFloor(CONFERENCE_FLOOR)
-            elif self.currentFloor == CONFERENCE_FLOOR:
-                self.startFloor(EXECUTIVE_FLOOR)
+            floors = numFloors2roomsVisited[self.numFloors]
+            newFloor = floors[self.currentFloor + 1]
+            if newFloor == RANDOM_FLOOR:
+                # Let's choose a random middle floor to go to!
+                print "Choosing random floor"
+                choices = []
+                for floor in middleFloors:
+                    if not floor in self.roomsVisited:
+                        print "Added floor to choices: " + floor
+                        choices.append(floor)
+                    else:
+                        print "Room {0} already visited.".format(floor)
+                if len(choices) == 0:
+                    print "No choices, choosing randomly from middleFloors."
+                    # We haven't finished making all of the floors yet, go to one we have already been to.
+                    newFloor = random.choice(middleFloors)
+                else:
+                    newFloor = random.choice(choices)
+            print 'Chose floor: ' + newFloor
+            self.startFloor(self.currentFloor + 1, newFloor)
 
     def exitFloorIntermission(self):
         pass
@@ -254,10 +272,10 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.availableBattlePoints = self.getPoints('battle')
 
     def getPoints(self, name):
-        if self.currentFloor in self.UNIQUE_FLOORS:
-            dataList = POINTS[self.deptClass][self.currentFloor][name]
+        if self.currentRoom in self.UNIQUE_FLOORS:
+            dataList = POINTS[self.deptClass][self.currentRoom][name]
         else:
-            dataList = POINTS[self.currentFloor][name]
+            dataList = POINTS[self.currentRoom][name]
         return dataList
 
     def cleanupBarrels(self):
@@ -412,12 +430,15 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 chairs.append(chair)
         return chairs
 
-    def startFloor(self, floorNum):
+    def startFloor(self, floorNum, room):
         # Clean up barrels and drops from the last floor.
         self.cleanupBarrels()
         self.cleanupDrops()
 
         self.currentFloor = floorNum
+        self.currentRoom = room
+        if room not in self.roomsVisited:
+            self.roomsVisited.append(room)
         wantBoss = False
         if self.currentFloor == self.numFloors - 1:
             wantBoss = True
@@ -503,7 +524,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         # We need to wait for a response from all players telling us that they finished loading the floor.
         # Once they all finish loading the floor, we ride the elevator.
         self.readyAvatars = []
-        self.sendUpdate('loadFloor', [self.currentFloor])
+        self.sendUpdate('loadFloor', [self.currentFloor, self.currentRoom])
         self.elevators[0].sendUpdate('putToonsInElevator')
 
     # Sent by the player telling us that they have finished loading/setting up the floor.
@@ -520,4 +541,4 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         self.readyAvatars.append(avId)
         if len(self.readyAvatars) == len(self.avIds):
             # We're ready to go!
-            self.startFloor(RECEPTION_FLOOR)
+            self.startFloor(0, numFloors2roomsVisited[self.numFloors][0])

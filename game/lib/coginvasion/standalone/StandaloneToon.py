@@ -2,6 +2,7 @@
 # Created by:  blach (02May15)
 
 from panda3d.core import *
+loadPrcFile('config/Confauto.prc')
 loadPrcFile('config/config_client.prc')
 loadPrcFileData('', 'model-path ../../../')
 loadPrcFileData('', 'framebuffer-multisample 1')

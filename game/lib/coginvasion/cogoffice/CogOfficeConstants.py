@@ -5,10 +5,21 @@ from panda3d.core import Point3
 
 from lib.coginvasion.cog import Dept
 
-RECEPTION_FLOOR = 0
-BREAK_FLOOR = 1
-CONFERENCE_FLOOR = 3
-EXECUTIVE_FLOOR = 4
+RANDOM_FLOOR = "ran"
+RECEPTION_FLOOR = "rec"
+CONFERENCE_FLOOR = "conf"
+LOUNGE_FLOOR = "lou"
+EXECUTIVE_FLOOR = "exe"
+
+middleFloors = [CONFERENCE_FLOOR, LOUNGE_FLOOR]
+
+numFloors2roomsVisited = {
+    1: [EXECUTIVE_FLOOR],
+    2: [RECEPTION_FLOOR, EXECUTIVE_FLOOR],
+    3: [RECEPTION_FLOOR, RANDOM_FLOOR, EXECUTIVE_FLOOR],
+    4: [RECEPTION_FLOOR, RANDOM_FLOOR, RANDOM_FLOOR, EXECUTIVE_FLOOR],
+    5: [RECEPTION_FLOOR, RANDOM_FLOOR, RANDOM_FLOOR, RANDOM_FLOOR, EXECUTIVE_FLOOR]
+}
 
 # Faceoff: Position of Toons during faceoff
 # Guard: Position of a standing Cog before activation
@@ -85,5 +96,25 @@ POINTS = {RECEPTION_FLOOR: {'chairs': [[0, (0.91, 16.92, 0, 149.53, 0, 0), (-5.0
                      'barrels': [[(43.33, -12.04, 0), (142.52 - 180, 0, 0)],
                                  [(43.33, -17.79, 0), (90 - 180, 0, 0)],
                                  [(43.33, -38.51, 0), (90 - 180, 0, 0)],
-                                 [(30.80, -41.05, 0), (323.75 - 180, 0, 0)]]}
+                                 [(30.80, -41.05, 0), (323.75 - 180, 0, 0)]]},
+
+        LOUNGE_FLOOR: {'chairs': [[0, (31.46, 64.83, 0, 351.87, 0, 0), (29.74, 50.05, 0, 0, 0, 0)],
+                                  [0, (26.22, 66.4, 0, 327.09, 0, 0), (18.6, 53.53, 0, 0, 0, 0)],
+                                  [0, (22.22, 69.97, 0, 302.15, 0, 0), (12.18, 62.86, 0, 282.38, 0, 0)],
+                                  [0, (20.45, 75.12, 0, 282.38, 0, 0), (8, 73.38, 0, 282.38, 0, 0)],
+                                  [0, (-26.46, 18.47, 0, 90, 0, 0), (-13, 18.47, 0, 0, 0, 0)],
+                                  [0, (-26.46, 26.19, 0, 90, 0, 0), (-13, 26.19, 0, 0, 0, 0)],
+                                  [0, (-26.46, 34.05, 0, 90, 0, 0), (-26.46, 34.05, 0, 0, 0, 0)]],
+                    'guard': [[0, (-2.5, 58, 0, 180, 0, 0)],
+                              [0, (-7.5, 58, 0, 180, 0, 0)],
+                              [0, (2.5, 58, 0, 180, 0, 0)],
+                              [0, (7.5, 58, 0, 180, 0, 0)]],
+                    'faceoff': [[7.5, 20, 0, 0, 0, 0],
+                                [2.5, 20, 0, 0, 0, 0],
+                                [-2.5, 20, 0, 0, 0, 0],
+                                [-7.5, 20, 0, 0, 0, 0]],
+                    'barrels': [[(48, 58, 0), (0, 0, 0)],
+                                [(54, 58, 0), (0, 0, 0)],
+                                [(54, 34, 0), (180, 0, 0)],
+                                [(48, 34, 0), (180, 0, 0)]]}
 }

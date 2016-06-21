@@ -40,9 +40,9 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
         self.stateExtraArgs = []
 
     def monitorHealth(self, task):
-        if self.battle is None:
+        if self.battle is None or not hasattr(self, 'battle'):
             return task.done
-        
+
         if self.isDead():
             self.battle.suitHPAtZero(self.doId)
         return DistributedSuitAI.monitorHealth(self, task)
@@ -130,7 +130,7 @@ class DistributedCogOfficeSuitAI(DistributedSuitAI):
 
     def spawn(self):
         self.brain = SuitBrain(self)
-        pursue = SuitPursueToonBehavior(self, getPathFinder(self.battle.currentFloor))
+        pursue = SuitPursueToonBehavior(self, getPathFinder(self.battle.currentRoom))
         pursue.setSuitList(self.getManager().guardSuits)
         pursue.battle = self.battle
         self.brain.addBehavior(pursue, priority = 1)

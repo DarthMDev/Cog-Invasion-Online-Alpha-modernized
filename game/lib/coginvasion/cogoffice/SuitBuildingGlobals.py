@@ -86,3 +86,19 @@ buildingChances = {
     CIGlobals.LullabyLane: 100.0,
     CIGlobals.PajamaPlace: 100.0,
 }
+
+# The chances a cog level has of spawning a building with a certain number of floors.
+floorNumberChances = {
+    1: [range(1, 100 + 1), [], [], [], []],
+    2: [range(26, 100 + 1), range(1, 25 + 1), [], [], []],
+    3: [range(1, 50 + 1), range(51, 100 + 1), [], [], []],
+    4: [range(51, 75 + 1), range(1, 50 + 1), range(75, 100 + 1), [], []],
+    5: [(91, 95 + 1), range(76, 90 + 1), range(1, 75 + 1), range(96, 100 + 1), []],
+    6: [[], range(96, 100 + 1), range(1, 50 + 1), range(51, 95 + 1), []],
+    7: [[], [], range(1, 25 + 1), range(26, 75 + 1), range(76, 100 + 1)],
+    8: [[], [], range(66, 100 + 1), range(1, 50 + 1), range(51, 65 + 1)],
+    9: [[], [], range(96, 100 + 1), range(1, 30 + 1), range(31, 95 + 1)],
+    10: [[], [], range(86, 100 + 1), range(56, 85 + 1), range(1, 55 + 1)],
+    11: [[], [], range(91, 100 + 1), range(61, 90 + 1), range(1, 60 + 1)],
+    12: [[], [], [], range(81, 100 + 1), range(1, 80 + 1)]
+}

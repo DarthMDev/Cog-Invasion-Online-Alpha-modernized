@@ -41,10 +41,10 @@ class DistributedCogOfficeSuit(DistributedSuit):
         DistributedSuit.disable(self)
 
     def getPoints(self, name):
-        if self.battle.currentFloor in self.battle.UNIQUE_FLOORS:
-            points = POINTS[self.battle.deptClass][self.battle.currentFloor][name]
+        if self.battle.currentRoom in self.battle.UNIQUE_FLOORS:
+            points = POINTS[self.battle.deptClass][self.battle.currentRoom][name]
         else:
-            points = POINTS[self.battle.currentFloor][name]
+            points = POINTS[self.battle.currentRoom][name]
         return points
 
     def enterOff(self, extraArgs = [], ts = 0):

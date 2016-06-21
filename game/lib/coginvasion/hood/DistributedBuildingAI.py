@@ -67,7 +67,6 @@ class DistributedBuildingAI(DistributedObjectAI):
 
     def suitTakeOver(self, suitDept, difficulty, numFloors):
         difficulty = 1
-        numFloors = 5
         self.suitDept = suitDept.getClothingPrefix()
         self.difficulty = difficulty
         self.numFloors = numFloors
