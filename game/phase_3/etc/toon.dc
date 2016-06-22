@@ -8,6 +8,7 @@ from lib.coginvasion.toon import DistributedHQNPCToon/AI
 from lib.coginvasion.toon import DistributedTailorNPCToon/AI
 from lib.coginvasion.toon import DistributedClerkNPCToon/AI
 from lib.coginvasion.npc import DistributedChar
+from lib.coginvasion.npc import DistributedDisneyChar/AI
 from lib.coginvasion.shop import DistributedBattleShop/AI
 from lib.coginvasion.shop import DistributedGagShop/AI
 from lib.coginvasion.shop.DistributedShop/AI import DistributedShop/AI
@@ -769,4 +770,14 @@ dclass DistributedTakeOverSuit : DistributedSuit {
   interruptTakeOver() broadcast;
   requestStateAndTimestamp() clsend airecv;
   stateAndTimestamp(string, int16);
+};
+
+dclass DistributedDisneyChar : DistributedAvatar {
+  setCharId(int8) required broadcast ram;
+  doNeutral(string) broadcast;
+  doWalking(string, string, int16) broadcast;
+  talk2Toon(int8, int8, uint32) broadcast;
+  avatarEnter() clsend airecv;
+  avatarExit() clsend airecv;
+  requestStateData() clsend airecv;
 };

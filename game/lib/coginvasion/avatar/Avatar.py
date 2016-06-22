@@ -13,6 +13,7 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog import SuitBank
 from lib.coginvasion.toon import ToonTalker
 from lib.coginvasion.nametag import NametagGlobals
+from lib.coginvasion.npc import DisneyCharGlobals as DCG
 from direct.controls.ControlManager import CollisionHandlerRayStart
 import random
 
@@ -125,11 +126,15 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             name = self.name
         offset = 0.0
         if self.avatarType:
-            if self.avatarType == CIGlobals.Suit:
+            if self.avatarType in [CIGlobals.Suit]:
                 offset = 1.0
                 z = self.getHeight()
             elif self.avatarType == CIGlobals.CChar:
-                z = 5
+                if self.charId in [DCG.MICKEY, DCG.PLUTO, DCG.MINNIE]:
+                    offset = 1.0
+                else:
+                    offset = 0.0
+                z = self.getHeight()
             elif self.avatarType == CIGlobals.Toon:
                 offset = 0.5
             else:

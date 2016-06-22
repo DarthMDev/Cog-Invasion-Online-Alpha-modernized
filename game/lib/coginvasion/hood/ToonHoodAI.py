@@ -10,6 +10,8 @@ from lib.coginvasion.hood.HoodAI import HoodAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.battle.DistributedBattleTrolleyAI import DistributedBattleTrolleyAI
 from lib.coginvasion.suit import CogBattleGlobals
+from lib.coginvasion.npc.DistributedDisneyCharAI import DistributedDisneyCharAI
+from lib.coginvasion.npc.DisneyCharGlobals import *
 
 class ToonHoodAI(HoodAI):
     notify = directNotify.newCategory("ToonHoodAI")
@@ -19,6 +21,7 @@ class ToonHoodAI(HoodAI):
         self.gagShop = None
         self.suitManager = None
         self.cogStation = None
+        self.dChar = None
 
     def startup(self):
         HoodAI.startup(self)
@@ -33,6 +36,11 @@ class ToonHoodAI(HoodAI):
         #	self.suitManager.generateWithRequired(self.zoneId)
         #else:
         #	self.notify.info("Won't create suits.")
+
+        if HOOD2CHAR[self.hood] is not None:
+            self.dChar = DistributedDisneyCharAI(self.air, HOOD2CHAR[self.hood])
+            self.dChar.generateWithRequired(self.zoneId)
+
         hood = self.hood
         if hood == CIGlobals.ToontownCentral:
             hood = CIGlobals.BattleTTC
