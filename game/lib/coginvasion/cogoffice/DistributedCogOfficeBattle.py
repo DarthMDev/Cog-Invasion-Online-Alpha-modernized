@@ -42,10 +42,32 @@ PROPS = {'photo_frame':     'phase_7/models/props/photo_frame.egg',
 
 class Elevator:
 
-    def __init__(self, elevatorMdl):
+    BLDG = 0
+    COGDO = 1
+
+    def __init__(self, elevatorMdl, cogdoElev):
         self.elevatorMdl = elevatorMdl
-        self.leftDoor = getLeftDoor(elevatorMdl)
-        self.rightDoor = getRightDoor(elevatorMdl)
+        self.cogdoElev = cogdoElev
+        self.activeElev = None
+        self.leftDoor = None
+        self.rightDoor = None
+
+    def setActiveElev(self, index):
+
+        if self.activeElev is not None:
+            self.activeElev.reparentTo(hidden)
+
+        if index == Elevator.BLDG:
+            print "setting active elev to BLDG"
+            self.activeElev = self.elevatorMdl
+        elif index == Elevator.COGDO:
+            print "setting active elev to COGDO"
+            self.activeElev = self.cogdoElev
+
+        self.activeElev.reparentTo(render)
+
+        self.leftDoor = getLeftDoor(self.activeElev)
+        self.rightDoor = getRightDoor(self.activeElev)
 
     def getRightDoor(self):
         return self.rightDoor
@@ -54,7 +76,16 @@ class Elevator:
         return self.leftDoor
 
     def getElevatorModel(self):
-        return self.elevatorMdl
+        return self.activeElev
+
+    def cleanup(self):
+        self.elevatorMdl.removeNode()
+        del self.elevatorMdl
+        self.cogdoElev.removeNode()
+        del self.cogdoElev
+        del self.rightDoor
+        del self.leftDoor
+        del self.activeElev
 
 class CogTV(NodePath):
 
@@ -124,13 +155,14 @@ class DistributedCogOfficeBattle(DistributedObject):
 
                         # Small room:
                         ['rug', -65.579, 10.385, 0, 0, 0, 0, 1],
-                        ['computer_monitor', -54.654, -3.465, 2.936, -71.131, 0, 0, 1],
-                        ['coffee_cup', -54.86, 0.737, 2.944, 0, 0, 0, 1],
-                        ['phone', -50.311, -9.308, 2.924, 135.085, 0, 0, 1],
-                        ['fax_paper', -52.981, -6.703, 2.999, 136.571, 0, 0, 1],
-                        ['fax_paper', -53.37, -5.966, 3.03, 95.802, 0, 0, 1],
+                        ['computer_monitor', -65.39, -8.6, 4, 180, 0, 0, 1],
+                        ['coffee_cup', -62.89, -8.93, 4, 318.81, 0, 0, 1],
+                        ['phone', -69.97, -9.22, 4, 18.82, 0, 0, 1],
+                        ['fax_paper', -67.65, -9.04, 4.01, 19.18, 0, 0, 1],
+                        ['fax_paper', -67.48, -9.22, 4.02, 343.74, 0, 0, 1],
                         ['clock', -23.238, 9.498, 9.774, 0, 0, -90, 1],
-                        ['plant', -69.375, -15.463, 0, 0, 0, 0, 12],
+                        ['plant', -27.48, 17.63, 0, 132.71, 0, 0, 12],
+                        ['photo_frame_bh', -40.64, -22.54, 7.99, 90, 0, 90, 1],
 
                         # Large room:
                         ['rug', -0.154, 97.92, 0, -90, 0, 0, 1],
@@ -151,7 +183,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                         ['fax_paper', 3.218, 37.361, 4.104, 188.545, 0, 0, 1],
                         ['LB_chairA', -4.365, 45.791, 0, -26.36, 0, 0, 1],
                         ['LB_chairA', 4.786, 53.639, 0, 154.075, 0, 0, 1],
-                        ['LB_chairA', -46.244, 0.138, 0, -67.991, 0, 0, 1],
+                        ['LB_chairA', -65.39, -14.79, 0, 180, 0, 0, 1],
                         ['photo_frame', 27.72, 43.508, 8.515, 180, 0, 90, 1],
                         ['clock', 1.507, -20.368, 9.956, 90, 180, 90, 1],
                         ['plant', -19.403, 102.276, 0, 0, 0, 0, 12],
@@ -173,7 +205,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                     ],
                     'room_sections': ['short_floor_coll', 'long_floor_coll_part1', 'long_floor_coll_part2'],
                     'room_mdl': 'phase_7/models/modules/cog_bldg_executive_flr.bam',
-                    'grounds': []
+                    'grounds': ['**/short_floor', '**/long_floor']
                 },
                 CONFERENCE_FLOOR: {'props': [
                         ['BR_sky', 0, 0, -100, 0, 0, 0, 1],
@@ -208,7 +240,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                     # No need to provide any room sections when it's a single-sectioned room
                     'room_sections': [],
                     'room_mdl': 'phase_7/models/modules/cog_bldg_conference_flr.bam',
-                    'grounds': ['**/floor']
+                    'grounds': ['**/floor', '**/floor1']
                 },
                 #BREAK_FLOOR: {'props': [
                 #        ['rug', -41.879, 34.818, 0, 0, 0, 0, 1],
@@ -648,7 +680,7 @@ class DistributedCogOfficeBattle(DistributedObject):
 
     def cleanupElevators(self):
         for elevator in self.elevators:
-            elevator.getElevatorModel().removeNode()
+            elevator.cleanup()
         self.elevators = []
 
     def getRoomData(self, name):
@@ -703,12 +735,36 @@ class DistributedCogOfficeBattle(DistributedObject):
     def loadElevators(self):
         for _ in xrange(2):
             elevMdl = loader.loadModel('phase_4/models/modules/elevator.bam')
-            elevMdl.reparentTo(render)
-            elevator = Elevator(elevMdl)
+            cogdoElevMdl = loader.loadModel('phase_7/models/modules/cogoffice_elevator.bam')
+            elevator = Elevator(elevMdl, cogdoElevMdl)
+            elevator.setActiveElev(Elevator.BLDG)
             self.elevators.append(elevator)
 
     def repositionElevators(self):
         dataList = self.getRoomData('elevators')
+
+        if self.currentFloor == 0:
+            # Make the entrance elevator be a BLDG elevator for continuity.
+            if not self.isTopFloor():
+                self.elevators[0].setActiveElev(Elevator.BLDG)
+                self.elevators[1].setActiveElev(Elevator.COGDO)
+            else:
+                # This is the only floor in the building, make both elevators a BLDG.
+                self.elevators[0].setActiveElev(Elevator.BLDG)
+                self.elevators[1].setActiveElev(Elevator.BLDG)
+        elif self.currentFloor > 0 and self.isTopFloor():
+            # Make the exit elevator be a BLDG elevator for the last floor.
+            self.elevators[0].setActiveElev(Elevator.COGDO)
+            self.elevators[1].setActiveElev(Elevator.BLDG)
+        else:
+            # We're in one the middle floors, make both elevators cogdo.
+            self.elevators[0].setActiveElev(Elevator.COGDO)
+            self.elevators[1].setActiveElev(Elevator.COGDO)
+
+        # Make our DistributedElevator friends reparent the countdown text
+        # and collision sphere to the new active elevator.
+        messenger.send(self.uniqueName('prepareElevator'))
+
         for i in xrange(len(dataList)):
             x, y, z, h, p, r = dataList[i]
             elevMdl = self.elevators[i].getElevatorModel()

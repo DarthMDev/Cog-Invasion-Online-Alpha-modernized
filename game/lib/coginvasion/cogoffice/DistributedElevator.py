@@ -73,7 +73,7 @@ class DistributedElevator(DistributedObject):
         self.closeDoors.finish()
 
     def enterClosed(self, ts = 0):
-        closeDoors(self.leftDoor, self.rightDoor)
+        closeDoors(self.getLeftDoor(), self.getRightDoor())
 
     def exitClosed(self):
         pass
@@ -86,7 +86,7 @@ class DistributedElevator(DistributedObject):
     def enterWaitEmpty(self, ts = 0):
         if not self.localAvOnElevator:
             self.acceptOnce('enter' + self.uniqueName('elevatorSphere'), self.__handleElevatorTrigger)
-        openDoors(self.leftDoor, self.rightDoor)
+        openDoors(self.getLeftDoor(), self.getRightDoor())
 
     def exitWaitEmpty(self):
         self.ignore('enter' + self.uniqueName('elevatorSphere'))
@@ -94,7 +94,7 @@ class DistributedElevator(DistributedObject):
     def enterWaitCountdown(self, ts = 0):
         if not self.localAvOnElevator:
             self.acceptOnce('enter' + self.uniqueName('elevatorSphere'), self.__handleElevatorTrigger)
-        openDoors(self.leftDoor, self.rightDoor)
+        openDoors(self.getLeftDoor(), self.getRightDoor())
         if self.countdownTextNP:
             self.countdownTextNP.show()
             self.countdownTrack = Sequence()
@@ -179,8 +179,8 @@ class DistributedElevator(DistributedObject):
         self.elevatorSphereNode.addSolid(self.elevatorSphere)
         self.elevatorSphereNodePath = self.getElevatorModel().attachNewNode(self.elevatorSphereNode)
         self.elevatorSphereNodePath.reparentTo(self.getElevatorModel())
-        self.openDoors = getOpenInterval(self, self.leftDoor, self.rightDoor, self.openSfx, None, self.type)
-        self.closeDoors = getCloseInterval(self, self.leftDoor, self.rightDoor, self.closeSfx, None, self.type)
+        self.openDoors = getOpenInterval(self, self.getLeftDoor(), self.getRightDoor(), self.openSfx, None, self.type)
+        self.closeDoors = getCloseInterval(self, self.getLeftDoor(), self.getRightDoor(), self.closeSfx, None, self.type)
         self.closeDoors = Sequence(self.closeDoors, Func(self.onDoorCloseFinish))
 
     def disable(self):
@@ -315,7 +315,7 @@ class DistributedElevator(DistributedObject):
         self.thebldg = self.cr.doId2do.get(self.bldgDoId)
 
     def getElevatorModel(self):
-        return self.thebldg.elevatorModel
+        return self.thebldg.getElevatorModel()
 
     def enterRejected(self):
         self.cr.playGame.getPlace().fsm.request('walk')

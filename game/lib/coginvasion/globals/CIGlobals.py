@@ -97,17 +97,17 @@ holidayTheme = None
 def getThemeSong():
     global ThemeSong
     if not ThemeSong:
-        #themeList = []
-        #themeList.append('phase_3/audio/bgm/tt_theme.mid')
-        #vfs = VirtualFileSystem.getGlobalPtr()
-        #for fileName in vfs.scanDirectory('phase_3/audio/bgm/'):
-        #    fullpath = fileName.get_filename().get_fullpath()
-        #    if 'ci_theme' in fullpath:
-        #        themeList.append(fullpath)
-        #import random
-        #ThemeSong = random.choice(themeList)
+        themeList = []
+        themeList.append('phase_3/audio/bgm/tt_theme.mid')
+        vfs = VirtualFileSystem.getGlobalPtr()
+        for fileName in vfs.scanDirectory('phase_3/audio/bgm/'):
+            fullpath = fileName.get_filename().get_fullpath()
+            if 'ci_theme' in fullpath:
+                themeList.append(fullpath)
+        import random
+        ThemeSong = random.choice(themeList)
 
-        ThemeSong = 'phase_3/audio/bgm/CogInvasion_Final.ogg'
+        #ThemeSong = 'phase_3/audio/bgm/CogInvasion_Final.ogg'
     return ThemeSong
 
 def getHolidayTheme():

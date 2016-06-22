@@ -123,12 +123,6 @@ class DistributedBuildingAI(DistributedObjectAI):
         self.battle.generateWithRequired(interiorZoneId)
 
     def exitSuit(self):
-        if hasattr(self, 'battle'):
-            self.battle.requestDelete()
-            del self.battle
-        if hasattr(self, 'interior'):
-            self.interior.requestDelete()
-            del self.interior
         if hasattr(self, 'elevator'):
             self.elevator.requestDelete()
             del self.elevator
@@ -148,9 +142,9 @@ class DistributedBuildingAI(DistributedObjectAI):
 
     def toonTakeOver(self):
         self.fsm.request('becomingToon')
-        if hasattr(self, 'interior'):
-            self.interior.requestDelete()
-            del self.interior
+        if hasattr(self, 'battle'):
+            self.battle.requestDelete()
+            del self.battle
 
     def getFrontDoorPoint(self):
         return self.frontDoorPoint

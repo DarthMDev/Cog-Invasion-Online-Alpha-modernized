@@ -3,9 +3,11 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
+from direct.interval.IntervalGlobal import Sequence, Func
 
 from lib.coginvasion.hood import ZoneUtil
 from ElevatorConstants import *
+from ElevatorUtils import *
 from DistributedElevator import DistributedElevator
 
 class DistributedCogOfficeElevator(DistributedElevator):
@@ -28,11 +30,24 @@ class DistributedCogOfficeElevator(DistributedElevator):
 
     def getRightDoor(self):
         return self.thebldg.elevators[self.index].getRightDoor()
-        
+
     def postAnnounceGenerate(self):
         DistributedElevator.postAnnounceGenerate(self)
         # We've polled the building and found it, tell the building that this elevator is ready.
         self.thebldg.elevatorReady()
+        self.accept(self.thebldg.uniqueName('prepareElevator'), self.__prepareElevator)
+
+    def disable(self):
+        self.ignore(self.thebldg.uniqueName('prepareElevator'))
+        DistributedElevator.disable(self)
+
+    def __prepareElevator(self):
+        self.countdownTextNP.reparentTo(self.getElevatorModel())
+        self.elevatorSphereNodePath.reparentTo(self.getElevatorModel())
+        self.openDoors = getOpenInterval(self, self.getLeftDoor(), self.getRightDoor(), self.openSfx, None, self.type)
+        self.closeDoors = getCloseInterval(self, self.getLeftDoor(), self.getRightDoor(), self.closeSfx, None, self.type)
+        self.closeDoors = Sequence(self.closeDoors, Func(self.onDoorCloseFinish))
+        closeDoors(self.getLeftDoor(), self.getRightDoor())
 
     def putToonsInElevator(self):
         for i in xrange(len(self.thebldg.avatars)):

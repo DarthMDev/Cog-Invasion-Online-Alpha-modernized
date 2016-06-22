@@ -184,6 +184,9 @@ class DistributedBuilding(DistributedObject):
             nodePath.append(npc.getPath(i))
         return nodePath
 
+    def getElevatorModel(self):
+        return self.elevatorModel
+
     def loadElevator(self, newNP):
         self.floorIndicator = [None, None, None, None, None]
         self.elevatorNodePath = hidden.attachNewNode('elevatorNodePath')
