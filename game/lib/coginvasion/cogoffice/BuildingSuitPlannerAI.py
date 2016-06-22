@@ -41,7 +41,14 @@ class BuildingSuitPlannerAI:
                 hoodName = CIGlobals.BattleTTC
             suitLevel = random.choice(CogBattleGlobals.HoodIndex2LevelRange[CogBattleGlobals.HoodId2HoodIndex[hoodName]])
         numFloors = self.chooseNumFloors(suitLevel)
-        print numFloors
+
+        print "SuitBuildingPlannerAI.takeOverBuilding: hood - {0} | street - {1} | numFloors - {2} | dept - {3}".format(
+            self.hoodClass.hood,
+            self.streetName,
+            numFloors,
+            dept.getName()
+        )
+
         if bldg.fsm.getCurrentState().getName() == 'toon':
             bldg.suitTakeOver(dept, 0, numFloors)
             self.numCogBuildings += 1
@@ -65,7 +72,6 @@ class BuildingSuitPlannerAI:
         for chance in chances:
             numFloors = chances.index(chance) + 1
             if number in chance:
-                print "numFloors: " + str(numFloors)
                 return numFloors
 
     def __spawnNewBuilding(self, task):
