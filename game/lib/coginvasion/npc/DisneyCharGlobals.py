@@ -24,6 +24,9 @@ TALK_AGAIN_RANGE = (10.0, 15.0)
 LONELY_TIME_RANGE = (10.0, 20.0)
 TIMES_LONELY_RANGE = (1, 2)
 
+SHARED_COMMENT_CHANCE = range(1, 70 + 1)
+UNIQUE_COMMENT_CHANCE = range(71, 100 + 1)
+
 def getBam(num, mdl):
     return "phase_{0}/models/char/{1}.bam".format(num, mdl)
 

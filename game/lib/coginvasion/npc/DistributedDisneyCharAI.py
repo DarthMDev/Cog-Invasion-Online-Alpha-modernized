@@ -51,8 +51,14 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
     def chooseChat(self, chatType):
         if chatType == 'greet':
             sharedOrMine = random.choice([SHARED_GREETINGS, CHAR_GREETINGS])
+
         elif chatType == 'comment':
-            sharedOrMine = random.choice([SHARED_COMMENTS, CHAR_COMMENTS])
+            num = random.randint(1, 100)
+            if num in SHARED_COMMENT_CHANCE:
+                sharedOrMine = SHARED_COMMENTS
+            elif num in UNIQUE_COMMENT_CHANCE:
+                sharedOrMine = CHAR_COMMENTS
+
         elif chatType == 'bye':
             sharedOrMine = random.choice([SHARED_GOODBYES, CHAR_GOODBYES])
 
@@ -62,6 +68,7 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         elif sharedOrMine >= CHAR_GREETINGS:
             # It's unique
             chatList = CHATTER[sharedOrMine][self.charId]
+
         chat = random.choice(chatList)
         index = chatList.index(chat)
         return [sharedOrMine, index]
