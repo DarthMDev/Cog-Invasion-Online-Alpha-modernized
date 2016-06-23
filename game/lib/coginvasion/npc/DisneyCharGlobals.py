@@ -19,6 +19,11 @@ SLEEP_DONALD_N2W_TIME = 1.5
 MAX_RANGE = 20.0
 CHAT_THRESHOLD = 10
 
+CHECK_FOR_PEEPS_RANGE = (5.0, 10.0)
+TALK_AGAIN_RANGE = (10.0, 15.0)
+LONELY_TIME_RANGE = (10.0, 20.0)
+TIMES_LONELY_RANGE = (1, 2)
+
 def getBam(num, mdl):
     return "phase_{0}/models/char/{1}.bam".format(num, mdl)
 

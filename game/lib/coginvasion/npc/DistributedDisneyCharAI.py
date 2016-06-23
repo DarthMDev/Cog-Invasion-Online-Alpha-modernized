@@ -74,18 +74,29 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
 
     def enterNeutral(self, pickRandomPoint = False):
         if self.talkEnabled:
-            taskMgr.add(self.__neutralTask, self.uniqueName('neutralTask'))
+            taskMgr.doMethodLater(random.uniform(*CHECK_FOR_PEEPS_RANGE), self.__neutralTask, self.uniqueName('neutralTask'))
         if self.charId != SAILOR_DONALD:
-            taskMgr.doMethodLater(random.uniform(10.0, 20.0), self.__lonelyTask, self.uniqueName('lonelyTask'))
+            self.startLonelyTask()
             if pickRandomPoint:
                 self.currentPointLetter = random.choice(WALK_POINTS[self.charId].keys())
             self.sendUpdate('doNeutral', [self.currentPointLetter])
 
+    def startLonelyTask(self):
+        self.lonelyThreshold = random.randint(*TIMES_LONELY_RANGE)
+        self.timesLonely = 0
+        taskMgr.doMethodLater(random.uniform(*LONELY_TIME_RANGE), self.__lonelyTask, self.uniqueName('lonelyTask'))
+
     def __lonelyTask(self, task):
         # Nobody came over to talk to me.
-        # Let's walk somewhere else -- maybe we'll find people there.
-        self.fsm.request('walking')
-        return task.done
+        if self.isLonely() and not self.inConvo:
+            self.timesLonely += 1
+            if self.timesLonely >= self.lonelyThreshold:
+                # Let's walk somewhere else -- maybe we'll find people there.
+                self.fsm.request('walking')
+                return task.done
+
+        task.delayTime = random.uniform(*TIMES_LONELY_RANGE)
+        return task.again
 
     def __neutralTask(self, task):
         if self.saidGoodbye:
@@ -107,7 +118,8 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.sendUpdate('talk2Toon', [chatType, index, peep])
             # Don't mess with me, i'm in a conversation!
             self.inConvo = True
-            task.delayTime = 9.0
+            task.delayTime = random.uniform(*TALK_AGAIN_RANGE)
+            return task.again
         elif self.inConvo:
             # Seems like they're still interested in me. Let's keep talking.
             if not self.toonOfInterest in self.avatars:
@@ -117,8 +129,10 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                     self.toonOfInterest = random.choice(self.avatars)
                 elif self.isLonely():
                     # Wow, all my friends left me.
-                    self.fsm.request('walking')
-                    return task.done
+                    self.startLonelyTask()
+                    self.inConvo = False
+                    task.delayTime = random.uniform(*CHECK_FOR_PEEPS_RANGE)
+                    return task.again
 
             if self.chatsThisConvo >= CHAT_THRESHOLD:
                 # Ugh, i'm bored. Say goodbye and go for a walk.
@@ -128,12 +142,16 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 task.delayTime = 3.0
                 return task.again
 
+            self.toonOfInterest = random.choice(self.avatars)
+
             # Say a random comment.
             chatType, index = self.chooseChat('comment')
             self.sendUpdate('talk2Toon', [chatType, index, self.toonOfInterest])
             self.chatsThisConvo += 1
-            task.delayTime = 15.0
+            task.delayTime = random.uniform(*TALK_AGAIN_RANGE)
+            return task.again
 
+        task.delayTime = random.uniform(*CHECK_FOR_PEEPS_RANGE)
         return task.again
 
     def exitNeutral(self):
@@ -143,6 +161,8 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.toonOfInterest = 0
         self.saidGoodbye = False
         self.inConvo = False
+        del self.lonelyThreshold
+        del self.timesLonely
 
     def enterWalking(self):
         if self.currentPointLetter is None:
@@ -196,6 +216,7 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 self.avatars.append(avId)
 
     def avatarExit(self, avId = None, foo = None, foo2 = None):
+        print "avatar Exit"
         if avId == None:
             avId = self.air.getAvatarIdFromSender()
         if avId in self.avatars:
@@ -203,7 +224,7 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             if toon:
                 self.ignore(toon.getZoneChangeEvent())
                 self.ignore(toon.getDeleteEvent())
-                self.avatars.remove(avId)
+            self.avatars.remove(avId)
 
     def announceGenerate(self):
         DistributedAvatarAI.announceGenerate(self)

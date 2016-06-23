@@ -50,6 +50,9 @@ class DistributedDisneyChar(DistributedAvatar, DistributedSmoothNode):
         self.talkEnabled = True
         self.speechSound = None
 
+        self.chatsSinceLastNoise = 0
+        self.chatsWithoutNoise = 5
+
         self.eyes = None
         self.lpupil = None
         self.rpupil = None
@@ -121,6 +124,8 @@ class DistributedDisneyChar(DistributedAvatar, DistributedSmoothNode):
 
     def talk2Toon(self, chatType, chatIndex, avId):
         toon = self.cr.doId2do.get(avId)
+        if not toon:
+            return
 
         if chatType in [SHARED_GREETINGS, SHARED_COMMENTS, SHARED_GOODBYES]:
             self.currentChat = CHATTER[chatType][chatIndex]
@@ -134,7 +139,7 @@ class DistributedDisneyChar(DistributedAvatar, DistributedSmoothNode):
 
     def enterTurn2Target(self, toon):
         self.turnIval = NPCLookInterval(self, toon, fluid = 1, name = self.uniqueName('turnIval'))
-        if self.turnIval.distance > 20.0:
+        if self.turnIval.distance > 30:
             self.loop('walk')
         elif self.turnIval.distance < 10.0:
             self.headsUp(toon)
@@ -172,7 +177,11 @@ class DistributedDisneyChar(DistributedAvatar, DistributedSmoothNode):
         if self.charId == SLEEP_DONALD:
             chat = "." + chat
         DistributedAvatar.setChat(self, chat)
-        base.playSfx(self.speechSound, node = self)
+        if self.chatsSinceLastNoise >= self.chatsWithoutNoise or self.chatsSinceLastNoise == 0:
+            base.playSfx(self.speechSound, node = self)
+            self.chatsSinceLastNoise = 0
+            self.chatsWithoutNoise = random.randint(1, 5)
+        self.chatsSinceLastNoise += 1
 
     def loadChar(self):
         data = CHAR_DATA[self.charId]
@@ -390,6 +399,7 @@ class DistributedDisneyChar(DistributedAvatar, DistributedSmoothNode):
         self.currentChat = None
         self.talkEnabled = None
         self.speechSound = None
+        self.chatsSinceLastNoise = None
 
         self.eyes = None
         self.lpupil = None
