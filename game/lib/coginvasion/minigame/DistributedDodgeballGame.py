@@ -175,6 +175,10 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         self.fog.setExpDensity(0.003)
         render.setFog(self.fog)
 
+    def throw(self, snowballIndex, p):
+        snowball = self.snowballs[snowballIndex]
+        snowball.throw(p)
+
     def snowballPickup(self, snowballIndex, pickerUpperAvId):
         snowball = self.snowballs[snowballIndex]
         snowball.pickup(pickerUpperAvId)

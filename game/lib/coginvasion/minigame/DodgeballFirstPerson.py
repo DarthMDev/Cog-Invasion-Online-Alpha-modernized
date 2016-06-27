@@ -66,7 +66,7 @@ class DodgeballFirstPerson(FirstPerson):
     def enterThrow(self):
         self.ival = Parallel(
             Sequence(Wait(0.4), Func(self.mySnowball.b_throw)),
-            ActorInterval(self.vModel, "throw"), Func(self.fsm.request, 'off'))
+            Sequence(ActorInterval(self.vModel, "throw"), Func(self.fsm.request, 'off')))
         self.ival.start()
 
     def exitThrow(self):
@@ -153,6 +153,3 @@ class DodgeballFirstPerson(FirstPerson):
     def reallyEnd(self):
         base.localAvatar.setWalkSpeedNormal()
         FirstPerson.reallyEnd(self)
-
-
-

@@ -578,6 +578,7 @@ dclass DistributedDodgeballGame : DistributedToonFPSGame, TeamMinigame {
   readyToStart() clsend airecv;
   acceptedIntoTeam(int8);
   snowballPickup(int8 snowballIndex, uint32 pickerUpperAvId) clsend broadcast;
+  throw(int8 snowballIndex, int16 p) clsend broadcast;
 };
 
 dclass DistributedShop : DistributedNode {

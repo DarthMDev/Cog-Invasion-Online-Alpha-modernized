@@ -71,30 +71,43 @@ class Snowball(NodePath, DirectObject):
         return self.owner is not None
 
     def b_throw(self):
-        self.d_throw()
-        self.throw()
+        p = camera.getP(render)
+        self.d_throw(p)
+        self.throw(p)
 
-    def d_throw(self):
-        self.mg.sendUpdate('throw')
+    def d_throw(self, p):
+        self.mg.sendUpdate('throw', [self.index, p])
 
-    def throw(self):
+    def throw(self, p):
         self.isAirborne = True
-        self.owner.avatar.play('pie', partName = 'torso', fromFrame = 60)
+        self.owner.play('pie', partName = 'torso', fromFrame = 60)
 
-        throwPath = NodePath('ThrowPath')
-        throwPath.reparentTo(self.owner)
-        throwPath.setScale(render, 1)
-        throwPath.setPos(0, 160, -90)
-        throwPath.setHpr(90, -90, 90)
+        start = NodePath('StartPath')
+        start.reparentTo(self.owner)
+        start.setScale(render, 1)
+        start.setPos(0, 0, 0)
+        start.setP(p)
+
+        end = NodePath('ThrowPath')
+        end.reparentTo(start)
+        end.setScale(render, 1)
+        end.setPos(0, 160, -90)
+        end.setHpr(90, -90, 90)
 
         self.wrtReparentTo(render)
+        self.setScale(1.0)
 
         self.throwIval = ProjectileInterval(
             self, startPos = self.owner.find('**/def_joint_right_hold').getPos(render),
-            endPos = throwPath.getPos(render), gravityMult = 0.9, duration = 3)
+            endPos = end.getPos(render), gravityMult = 0.9, duration = 3)
         self.throwIval.start()
-        if self.owner.avatar.doId == base.localAvatar.doId:
+        if self.owner.doId == base.localAvatar.doId:
             self.acceptOnce('snowball-coll-' + str(id(self)) + '-into', self.__handleSnowballCollision)
+
+        start.removeNode()
+        del start
+        end.removeNode()
+        del end
 
     def __handleSnowballCollision(self, entry):
         if self.throwIval:
@@ -103,16 +116,19 @@ class Snowball(NodePath, DirectObject):
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
         name = intoNP.getName()
+        if self.owner.doId == base.localAvatar.doId:
+            self.mg.firstPerson.mySnowball = None
+            self.mg.firstPerson.hasSnowball = False
         self.isAirborne = False
         self.owner = None
-        base.playSfx(self.impactSound, node = self)
+        base.playSfx(self.impactSound, node = self, volume = 1.5)
         if 'wall' in name or 'fence' in name:
             # We hit a wall. Go back to our center position.
             self.setPos(self.mg.SnowballData[self.index])
             self.setHpr(0, 0, 0)
         elif 'floor' in name or 'ground' in name:
             # We hit the floor. Stay on the ground.
-            self.setZ(0)
+            self.setZ(0.5)
         else:
             for key in self.mg.cr.doId2do.keys():
                 obj = self.mg.cr.doId2do[key]
@@ -148,6 +164,3 @@ class Snowball(NodePath, DirectObject):
         self.owner = None
         self.mg = None
         NodePath.removeNode(self)
-
-
-
