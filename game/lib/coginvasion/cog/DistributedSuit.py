@@ -15,6 +15,9 @@ from direct.fsm.State import State
 from lib.coginvasion.avatar.DistributedAvatar import DistributedAvatar
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
+
+from lib.coginvasion.suit.PythonCTMusicMgr import PythonCTMusicManager as PCTMM
+
 from SuitState import SuitState
 from SuitBank import SuitPlan
 from Suit import Suit
@@ -45,6 +48,10 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.level = None
         self.moveIval = None
         self.hpFlash = None
+
+        # For PythonCTMusicManager:
+        # Are we in range of the localAvatar?
+        self.isInRange = False
 
         self.suitFSM = ClassicFSM('DistributedSuit',
             [
@@ -290,7 +297,12 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
                 self.clearColorScale()
 
         if self.isDead():
+
+            # Tell the cog tournament music manager (if exists) that a cog died.
+            messenger.send(PCTMM.getCogDiedEvent())
+
             self.interruptAttack()
+
         if self.getLevel() > 12:
             if self.hpFlash:
                 self.hpFlash.finish()
@@ -424,6 +436,11 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             shouldChat = random.randint(0, 2)
         if shouldChat == 0:
             self.setChat(attackTaunt)
+
+        if avId == base.localAvatar.doId:
+            # Tell the cog tournament music manager (if exists) that a cog is attacking the local avatar.
+            messenger.send(PCTMM.getCogAttackingEvent())
+
         self.animFSM.request('attack', [attackName, avatar, 0.0])
 
     def throwObject(self):
@@ -439,15 +456,27 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.sendUpdate('handleWeaponTouch', [])
         self.handleWeaponTouch()
 
+    def __monitorLocalAvDistance(self, task):
+        if self.getDistance(base.localAvatar) <= PCTMM.getCogInRangeDistance() and not self.isInRange:
+            self.isInRange = True
+            messenger.send(PCTMM.getCogInRangeEvent())
+        elif self.getDistance(base.localAvatar) > PCTMM.getCogInRangeDistance() and self.isInRange:
+            self.isInRange = False
+            messenger.send(PCTMM.getCogOutOfRangeEvent())
+
+        return task.cont
+
     def announceGenerate(self):
         DistributedAvatar.announceGenerate(self)
         self.setAnimState('neutral')
+        base.taskMgr.add(self.__monitorLocalAvDistance, self.uniqueName('monitorLocalAvDistance'))
 
     def generate(self):
         DistributedAvatar.generate(self)
         DistributedSmoothNode.generate(self)
 
     def disable(self):
+        base.taskMgr.remove(self.uniqueName('monitorLocalAvDistance'))
         self.anim = None
         self.state = None
         self.dept = None

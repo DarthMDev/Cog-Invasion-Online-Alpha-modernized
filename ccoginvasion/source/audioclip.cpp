@@ -1,4 +1,6 @@
 #include "audioclip.h"
+#include <math.h>
+#include "tools.cpp"
 
 AudioClip::AudioClip()
 {
@@ -48,6 +50,10 @@ void AudioClip::stop() {
 	}
 }
 
+static double round(double val) {
+	return floor(val + 0.5);
+}
+
 void AudioClip::play_from_index(int start_index) {
 
 	stop();
@@ -57,9 +63,10 @@ void AudioClip::play_from_index(int start_index) {
 
 	TickParams params;
 	params.sound = sound;
-	params.length = sound->length() / 2;
 	params.index = start_index;
 	_curr_sound_tick_params = params;
+
+	_curr_clip_started = false;
 
 	PT(GenericAsyncTask) _ticktask = new GenericAsyncTask("AudioClip_audioTick", &AudioClip::play_audio_tick_task, this);
 	_ticktask->set_task_chain("TournamentMusicThread");
@@ -71,16 +78,19 @@ void AudioClip::play_all_parts() {
 	play_from_index(0);
 }
 
-AsyncTask::DoneStatus AudioClip::play_audio_tick(GenericAsyncTask* task, PT(AudioSound) sound, int index, double length)
+AsyncTask::DoneStatus AudioClip::play_audio_tick(GenericAsyncTask* task, PT(AudioSound) sound, int index)
 {
 	if (!active) {
 		sound->stop();
 		return AsyncTask::DS_done;
 	}
-	if (sound->status() != AudioSound::PLAYING && sound == _current_sound) {
+
+	if (sound->status() != AudioSound::PLAYING && sound == _current_sound && _curr_clip_started == false) {
+		_curr_clip_started = true;
 		sound->play();
 	}
-	if (task->get_elapsed_time() >= length) {
+
+	if (sound->status() != AudioSound::PLAYING && sound == _current_sound && _curr_clip_started == true) {
 		// This part is done!
 		sound->stop();
 		if (index == _chunks.size() - 1) {
@@ -110,7 +120,6 @@ AsyncTask::DoneStatus AudioClip::play_audio_tick_task(GenericAsyncTask* task, vo
 
 	PT(AudioSound) sound = params->sound;
 	int index = params->index;
-	double length = params->length;
 
-	return ac->play_audio_tick(task, sound, index, length);
+	return ac->play_audio_tick(task, sound, index);
 }

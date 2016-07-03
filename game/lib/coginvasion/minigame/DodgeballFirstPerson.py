@@ -12,7 +12,7 @@ from MinigameUtils import *
 ToonSpeedFactor = 1.0
 ToonForwardSpeed = 16.0 * ToonSpeedFactor
 ToonJumpForce = 0.0
-ToonReverseSpeed = 12.0 * ToonSpeedFactor
+ToonReverseSpeed = 16.0 * ToonSpeedFactor
 ToonRotateSpeed = 80.0 * ToonSpeedFactor
 
 class DodgeballFirstPerson(FirstPerson):

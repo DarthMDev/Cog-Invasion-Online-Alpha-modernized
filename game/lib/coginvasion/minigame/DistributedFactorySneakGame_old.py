@@ -122,7 +122,7 @@ class DistributedFactorySneakGame(DistributedToonFPSGame.DistributedToonFPSGame)
         base.localAvatar.setPos(pos)
         base.localAvatar.setHpr(hpr)
         self.myRemoteAvatar = RemoteToonBattleAvatar(self, self.cr, base.localAvatar.doId)
-        self.setMinigameMusic("phase_12/audio/bgm/Bossbot_Entry_v3.mid")
+        self.setMinigameMusic("phase_12/audio/bgm/Bossbot_Entry_v3.ogg")
         self.setDescription("Sneak around the Sellbot Factory and collect jellybean barrels. " + \
                             "Avoid the guards and exit by the Factory Foreman to redeem your jellybeans.")
         self.toonFps.start()

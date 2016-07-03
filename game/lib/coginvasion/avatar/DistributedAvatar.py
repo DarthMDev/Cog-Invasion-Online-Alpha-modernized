@@ -75,7 +75,8 @@ class DistributedAvatar(DistributedActor, Avatar):
             self.healthLabel['text'] = "+%s" % hp
         elif level == 0 or level == 2:
             textFg = CIGlobals.NegativeTextColor
-            if level == 2: textFg = CIGlobals.OrangeTextColor
+            if level == 2:
+                textFg = CIGlobals.OrangeTextColor
             self.healthLabel["text_fg"] = textFg
             self.healthLabel['text'] = "-%s" % hp
         self.showAndMoveHealthLabel()

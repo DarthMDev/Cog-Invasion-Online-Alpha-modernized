@@ -50,10 +50,12 @@ server-address gameserver.coginvasion.com
 # Performance...
 hardware-animated-vertices #f
 sync-video #f
-smooth-lag 0.0
-basic-shaders-only #f
+smooth-lag 0.4
+basic-shaders-only #t
 framebuffer-multisample 1
 multisamples 16
+
+audio-dls-file phase_3/audio/soundbank.dls
 
 # Game content...
 game-name Cog Invasion
@@ -67,6 +69,8 @@ want-firstperson-battle #f
 chat-key t
 want-WASD #f
 show-minigame-dates #f
+
+ctmusic-numsongs 1
 
 want-pstats 0
 

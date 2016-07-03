@@ -33,7 +33,7 @@ class NPCWalkInterval(LerpPosInterval):
     def setDuration(self, duration):
         self.duration = duration
 
-class NPCLookInterval(LerpHprInterval):
+class NPCLookInterval(LerpQuatInterval):
     notify = directNotify.newCategory("NPCLookInterval")
 
     def __init__(self, nodePath, lookAtNode, durationFactor = 0.01,
@@ -51,6 +51,6 @@ class NPCLookInterval(LerpHprInterval):
         self.distance = _distance
         duration = _distance * durationFactor
         self.duration = duration
-        LerpHprInterval.__init__(self, nodePath, duration, _newHpr,
+        LerpQuatInterval.__init__(self, nodePath, duration, _newHpr,
                 startHpr = _oldHpr, other = other, blendType = blendType,
                 bakeInStart = bakeInStart, fluid = fluid, name = name)

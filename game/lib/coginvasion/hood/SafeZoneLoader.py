@@ -72,7 +72,7 @@ class SafeZoneLoader(StateData):
             self.interiorMusic = base.loadMusic(self.interiorMusicFilename)
         if self.tournamentMusicFiles:
             self.tournamentMusic = None
-            
+
         self.createSafeZone(self.dnaFile)
 
         children = self.geom.findAllMatches('**/*doorFrameHole*')
@@ -96,12 +96,12 @@ class SafeZoneLoader(StateData):
 
     def unload(self):
         StateData.unload(self)
-        
+
         if self.animatedFish:
             self.animatedFish.cleanup()
             self.animatedFish.removeNode()
             self.animatedFish = None
-        
+
         self.parentFSMState.removeChild(self.fsm)
         del self.parentFSMState
         del self.animatedFish
@@ -136,7 +136,7 @@ class SafeZoneLoader(StateData):
         if not petShop.isEmpty():
             fish = petShop.find('**/animated_prop_PetShopFishAnimatedProp_DNARoot')
             if fish:
-                self.animatedFish = Actor('phase_4/models/props/exteriorfish-zero.bam', {'chan' : 
+                self.animatedFish = Actor('phase_4/models/props/exteriorfish-zero.bam', {'chan' :
                     'phase_4/models/props/exteriorfish-swim.bam'})
                 self.animatedFish.reparentTo(petShop)
                 self.animatedFish.setPos(fish.getPos())

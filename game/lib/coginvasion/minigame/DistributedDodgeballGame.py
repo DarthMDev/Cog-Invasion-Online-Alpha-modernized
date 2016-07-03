@@ -57,6 +57,8 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
 
     InitCamTrans = [Point3(25, 45, 19.5317), Vec3(154.001, -15, 0)]
 
+    SnowBallDmg = 25
+
     GetSnowBalls = "Pick up a snowball from the center!"
 
     def __init__(self, cr):
@@ -109,10 +111,32 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         self.trees = []
         self.snowballs = []
 
+    def snowballHitWall(self, snowballIndex):
+        snowball = self.snowballs[snowballIndex]
+        snowball.handleHitWallOrPlayer()
+
+    def snowballHitPlayer(self, damagedPlayer, snowballIndex):
+        av = self.getRemoteAvatar(damagedPlayer)
+        if av:
+            print "setting health"
+            av.setHealth(av.health - DistributedDodgeballGame.SnowBallDmg)
+        if damagedPlayer == base.localAvatar.doId:
+            self.showAlert("You were hit by a snowball!")
+        snowball = self.snowballs[snowballIndex]
+        snowball.handleHitWallOrPlayer()
+
+    def playerCaughtSnowball(self, snowballIndex, catcherId):
+        av = self.getRemoteAvatar(catcherId)
+        if av:
+            snowball = self.snowballs[snowballIndex]
+            snowball.pauseThrowIval()
+            snowball.pickup(av)
+
     def setupRemoteAvatar(self, avId):
         av = RemoteDodgeballAvatar(self, self.cr, avId)
         if avId == self.cr.localAvId:
             self.myRemoteAvatar = av
+        print "setup remove avatar {0}".format(avId)
         self.remoteAvatars.append(av)
 
     def __getSnowTree(self, path):
@@ -180,8 +204,10 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         snowball.throw(p)
 
     def snowballPickup(self, snowballIndex, pickerUpperAvId):
-        snowball = self.snowballs[snowballIndex]
-        snowball.pickup(pickerUpperAvId)
+        remoteAv = self.getRemoteAvatar(pickerUpperAvId)
+        if remoteAv:
+            snowball = self.snowballs[snowballIndex]
+            snowball.pickup(remoteAv)
 
     def deleteWorld(self):
         for snowball in self.snowballs:

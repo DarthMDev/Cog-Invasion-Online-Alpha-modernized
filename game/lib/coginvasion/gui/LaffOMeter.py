@@ -21,7 +21,7 @@ class LaffOMeter(DirectFrame):
         self.initialiseoptions(LaffOMeter)
         self.container = DirectFrame(parent=self, relief=None)
         self.container.setBin('gui-popup', 60)
-        
+
         if forRender:
             self.container.setY(0)
         self.forRender = forRender
@@ -58,12 +58,13 @@ class LaffOMeter(DirectFrame):
                         self.tooth2,
                         self.tooth1]
         if self.forRender:
+            self.container['image_pos'] = (0, 0.01, 0)
             for tooth in self.teethList:
-                tooth.setY(-0.01)
-            self.eyes.setY(-0.01)
-            self.smile.setY(-0.01)
-            self.openSmile.setY(-0.01)
-            self.frown.setY(-0.01)
+                tooth.setDepthWrite(False)
+            self.eyes.setDepthWrite(False)
+            self.smile.setDepthWrite(False)
+            self.openSmile.setDepthWrite(False)
+            self.frown.setDepthWrite(False)
         self.fractions = [0.0,
                         0.166666,
                         0.333333,
@@ -118,7 +119,7 @@ class LaffOMeter(DirectFrame):
             self.adjustTeeth(health)
         self.animatedEffect(health - self.initialHP)
         self.adjustText(health)
-        
+
     def animatedEffect(self, delta):
         if delta == 0:
             return
@@ -127,7 +128,6 @@ class LaffOMeter(DirectFrame):
             ToontownIntervals.start(ToontownIntervals.getPulseLargerIval(self.container, name))
         else:
             ToontownIntervals.start(ToontownIntervals.getPulseSmallerIval(self.container, name))
-        return
 
     def adjustTeeth(self, health):
         for i in xrange(len(self.teethList)):

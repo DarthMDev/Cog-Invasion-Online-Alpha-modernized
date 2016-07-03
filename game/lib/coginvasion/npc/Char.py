@@ -40,6 +40,7 @@ class Char(Avatar.Avatar):
                                 State('run', self.enterRun, self.exitRun)], 'off', 'off')
         animStateList = self.animFSM.getStates()
         self.animFSM.enterInitialState()
+        self.charId = -1
 
         Avatar.Avatar.initializeBodyCollisions(self, self.avatarType, 3.5, 1)
 

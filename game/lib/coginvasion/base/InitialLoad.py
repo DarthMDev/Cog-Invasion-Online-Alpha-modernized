@@ -4,13 +4,14 @@
 ########################################
 
 from lib.coginvasion.globals import CIGlobals
-from lib.coginvasion.suit import CogTournamentMusicManager
 from direct.gui.DirectGui import *
 from panda3d.core import TextNode
 from direct.directnotify.DirectNotify import *
 import FileUtility
 from LoadUtility import LoadUtility
 import glob
+
+import ccoginvasion
 
 loadernotify = DirectNotify().newCategory("InitialLoad")
 
@@ -36,14 +37,13 @@ class InitialLoad(LoadUtility):
         loader.progressScreen.bg.hide()
         loader.progressScreen.toontipFrame.hide()
         loader.progressScreen.logoNode.setPos(0, 0, 0)
-        loader.progressScreen.logoNode.setScale(1.5)
+        loader.progressScreen.logoNode.setScale(2.0)
         self.createGui()
         loader.beginBulkLoad('init', 'init', len(self.models), 0, False)
 
         # Load C++ tournament music stuff.
-        # yeet
-        #ccoginvasion.CTMusicData.initialize_chunk_data()
-        #ccoginvasion.CTMusicManager.spawn_load_tournament_music_task(base.musicManager)
+        ccoginvasion.CTMusicData.initialize_chunk_data()
+        ccoginvasion.CTMusicManager.spawn_load_tournament_music_task()
 
         LoadUtility.load(self)
 

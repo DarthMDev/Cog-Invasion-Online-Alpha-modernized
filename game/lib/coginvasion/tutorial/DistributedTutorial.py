@@ -425,9 +425,9 @@ class DistributedTutorial(DistributedObject):
         self.sky.reparentTo(camera)
         ce = CompassEffect.make(NodePath(), CompassEffect.PRot | CompassEffect.PZ)
         self.sky.node().setEffect(ce)
-        self.music = base.loadMusic('phase_3.5/audio/bgm/TC_SZ.mid')
+        self.music = base.loadMusic('phase_3.5/audio/bgm/TC_SZ.ogg')
         base.playMusic(self.music, volume = 0.8, looping = 1)
-        self.battleMusic = base.loadMusic('phase_3.5/audio/bgm/encntr_general_bg.mid')
+        self.battleMusic = base.loadMusic('phase_3.5/audio/bgm/encntr_general_bg.ogg')
         self.fsm.request('newPlayerEmerge')
         base.localAvatar.inTutorial = True
 

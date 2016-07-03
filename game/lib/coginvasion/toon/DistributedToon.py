@@ -13,6 +13,9 @@ from lib.coginvasion.gui.LaffOMeter import LaffOMeter
 from lib.coginvasion.quests import QuestManager
 from lib.coginvasion.globals import ChatGlobals
 from lib.coginvasion.hood import LinkTunnel
+
+from lib.coginvasion.suit.PythonCTMusicMgr import PythonCTMusicManager as PCTMM
+
 from direct.distributed.DistributedSmoothNode import DistributedSmoothNode
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DelayDeletable import DelayDeletable
@@ -290,6 +293,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             self.headMeter.updateMeter(self.getHealth())
 
     def setHealth(self, health):
+        self.health = health
         if self.doId != base.localAvatar.doId:
             if not self.firstTimeChangingHP:
                 if health < self.getMaxHealth():
@@ -299,7 +303,10 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                         self.__updateHeadMeter()
                 else:
                     self.__removeHeadMeter()
-        self.health = health
+
+                if self.isDead():
+                    messenger.send(PCTMM.getToonDiedEvent())
+
         self.firstTimeChangingHP = False
 
     def d_createBattleMeter(self):

@@ -329,10 +329,10 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.elevatorResponses = 0
         self.openSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_open.ogg')
         self.closeSfx = base.loadSfx('phase_5/audio/sfx/elevator_door_close.ogg')
-        self.rideElevatorMusic = base.loadMusic('phase_7/audio/bgm/tt_elevator.mid')
-        self.bottomFloorsMusic = base.loadMusic('phase_7/audio/bgm/encntr_general_bg_indoor.mid')
-        self.topFloorMusic = base.loadMusic('phase_7/audio/bgm/encntr_suit_winning_indoor.mid')
-        self.intermissionMusic = base.loadMusic('phase_7/audio/bgm/encntr_toon_winning_indoor.mid')
+        self.rideElevatorMusic = base.loadMusic('phase_7/audio/bgm/tt_elevator.ogg')
+        self.bottomFloorsMusic = base.loadMusic('phase_7/audio/bgm/encntr_general_bg_indoor.ogg')
+        self.topFloorMusic = base.loadMusic('phase_7/audio/bgm/encntr_suit_winning_indoor.ogg')
+        self.intermissionMusic = base.loadMusic('phase_7/audio/bgm/encntr_toon_winning_indoor.ogg')
         self.fsm = ClassicFSM.ClassicFSM('DistributedCogOfficeBattle', [State.State('off', self.enterOff, self.exitOff),
          State.State('floorIntermission', self.enterFloorIntermission, self.exitFloorIntermission),
          State.State('bldgComplete', self.enterBldgComplete, self.exitBldgComplete),

@@ -167,7 +167,7 @@ class MakeAToon:
         #render.setTwoSided(True)
         self.toonGen = ToonGenerator(self)
         #self.toonGen.toon.flattenStrong()
-        self.music = base.loadMusic("phase_3/audio/bgm/create_a_toon.mid")
+        self.music = base.loadMusic("phase_3/audio/bgm/create_a_toon.ogg")
         base.playMusic(self.music, volume=1.0, looping=1)
         #base.enableMouse()
         #base.oobe()

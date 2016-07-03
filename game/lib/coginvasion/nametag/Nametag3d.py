@@ -1,7 +1,7 @@
 from direct.task.Task import Task
 import math
 from panda3d.core import BillboardEffect, Vec3, Point3, PGButton, VBase4
-from panda3d.core import DepthWriteAttrib
+from panda3d.core import DepthWriteAttrib, Point2, CardMaker
 
 from lib.coginvasion.toon.ChatBalloon import ChatBalloon
 import NametagGlobals
@@ -11,7 +11,7 @@ from lib.coginvasion.gui.Clickable3d import Clickable3d
 
 class Nametag3d(Nametag, Clickable3d):
     SCALING_MIN_DISTANCE = 1
-    SCALING_MAX_DISTANCE = 50
+    SCALING_MAX_DISTANCE = 100
     SCALING_FACTOR = 0.065
 
     def __init__(self):
@@ -19,6 +19,11 @@ class Nametag3d(Nametag, Clickable3d):
         Clickable3d.__init__(self, 'Nametag3d')
 
         self.distance = 0
+
+        self.card = None
+        self.cardNP = None
+
+        self.avatarNode = None
 
         self.billboardOffset = 3
         self.doBillboardEffect()
@@ -54,6 +59,25 @@ class Nametag3d(Nametag, Clickable3d):
             Point3(0, 0, 0))
         self.contents.setEffect(billboardEffect)
 
+    def compute2dPosition(self):
+        """ Computes a 3-d point, relative to the indicated node, into a
+        2-d point as seen by the camera.  The range of the returned value
+        is based on the len's current film size and film offset, which is
+        (-1 .. 1) by default. """
+
+        # Convert the point into the camera's coordinate space
+        p3d = base.cam.getRelativePoint(self.avatar, Point3(0, 0, 0))
+
+        # Ask the lens to project the 3-d point to 2-d.
+        p2d = Point2()
+        if base.camLens.project(p3d, p2d):
+            # Got it!
+            return p2d
+
+        # If project() returns false, it means the point was behind the
+        # lens.
+        return None
+
     def updateClickRegion(self):
         if self.chatBalloon is not None:
             left = self.chatBalloon.center[0] - (self.chatBalloon.width/2)
@@ -73,6 +97,23 @@ class Nametag3d(Nametag, Clickable3d):
             right = centerX + (self.panelWidth/2.0)
             bottom = centerY - (self.panelHeight/2.0)
             top = centerY + (self.panelHeight/2.0)
+
+            #twodpos = self.compute2dPosition()
+            #if twodpos is None:
+            #    if self.cardNP:
+            #        self.cardNP.removeNode()
+            #    return
+            #bounds = self.avatar.getTightBounds()
+            #centerX = twodpos.getX() / 2.0
+            #centerY = twodpos.getY() / 2.0
+            #bound1 = Point2()
+            #bound2 = Point2()
+            #base.camLens.project(bounds[0], bound1)
+            #base.camLens.project(bounds[1], bound2)
+            #left = centerX - (bound1.getX() / 2.0)
+            #right = centerX + (bound2.getX() / 2.0)
+            #bottom = centerY - (bound1.getY() / 2.0)
+            #top = centerY + (bound2.getY() / 2.0)
 
             self.setClickRegionFrame(left, right, bottom, top)
 

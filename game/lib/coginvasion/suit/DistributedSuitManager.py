@@ -9,10 +9,9 @@ from direct.distributed.DistributedObject import DistributedObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.gui.WhisperPopup import WhisperPopup
-from lib.coginvasion.suit.CogTournamentMusicManager import CogTournamentMusicManager
 import random
 
-#import ccoginvasion
+from PythonCTMusicMgr import PythonCTMusicManager
 
 class DistributedSuitManager(DistributedObject):
     notify = directNotify.newCategory("DistributedSuitManager")
@@ -24,7 +23,7 @@ class DistributedSuitManager(DistributedObject):
         except:
             self.DistributedSuitManager_initialized = 1
         DistributedObject.__init__(self, cr)
-        #self.musicMgr = ccoginvasion.CTMusicManager()
+        self.musicMgr = PythonCTMusicManager(self)
         self.hood = cr.playGame.hood
         self.spawnerStatus = 0
         return
@@ -45,6 +44,12 @@ class DistributedSuitManager(DistributedObject):
         whisper = WhisperPopup('Toon HQ: ' + message, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
         whisper.manage(base.marginManager)
 
+    def tournamentRoundEnded(self):
+        self.musicMgr.play_cooldown()
+
+    def newTournamentRound(self):
+        self.musicMgr.play_located()
+
     def noSuits(self):
         self.notify.info("There are no suits!")
         if not hasattr(self.hood, 'loader'):
@@ -58,7 +63,7 @@ class DistributedSuitManager(DistributedObject):
             if self.hood.loader.tournamentMusic:
                 self.hood.loader.tournamentMusic.stop()
                 base.cr.music = None
-            #self.musicMgr.stop_clip()
+            self.musicMgr.stop_clip()
             self.hood.loader.bossBattleMusic.stop()
             base.playMusic(self.hood.loader.music, looping = 1, volume = 0.9)
         self.hood.stopSuitEffect()
@@ -132,31 +137,33 @@ class DistributedSuitManager(DistributedObject):
             self.hood.loader.tournamentMusic = None
             self.hood.loader.tournamentMusic = base.loadMusic(random.choice(self.hood.loader.tournamentMusicFiles))
             # Make .ogg music files base.cr.music so we can replay it when the window gets minimized and comes back.
-            base.cr.music = self.hood.loader.tournamentMusic
-            base.playMusic(self.hood.loader.tournamentMusic, looping = 1, volume = 0.9)
-            #self.musicMgr.start_music()
-            #base.accept('control-5', self.musicMgr.set_clip_request, ["5050_orchestra"])
-            #base.accept('5', self.musicMgr.set_clip_request, ["5050_base"])
-            #base.accept('control-l', self.musicMgr.set_clip_request, ["located_orchestra"])
-            #base.accept('l', self.musicMgr.set_clip_request, ["located_base"])
-            #base.accept('control-r', self.musicMgr.set_clip_request, ["running_away_orchestra"])
-            #base.accept('r', self.musicMgr.set_clip_request, ["running_away_base"])
-            #base.accept('control-g', self.musicMgr.set_clip_request, ["getting_worse_orchestra"])
-            #base.accept('g', self.musicMgr.set_clip_request, ["getting_worse_base"])
-            #base.accept('control-i', self.musicMgr.set_clip_request, ["intro_orchestra"])
-            #base.accept('i', self.musicMgr.set_clip_request, ["intro_base"])
-            #base.accept('shift-s', self.musicMgr.set_clip_request, ['static_cooldown'])
-            #base.accept('a', self.musicMgr.set_clip_request, ["arresting_you"])
-            #base.accept('h', self.musicMgr.set_clip_request, ["high_speed_cooldown_base"])
-            #base.accept('control-h', self.musicMgr.set_clip_request, ["high_speed_cooldown_orchestra"])
-            #base.accept('v', self.musicMgr.set_clip_request, ["very_low_speed_cooldown"])
-            #base.accept('c', self.musicMgr.set_clip_request, ["low_speed_cooldown_1"])
-            #base.accept('control-c', self.musicMgr.set_clip_request, ["low_speed_cooldown_2"])
-            #base.accept('shift-a', self.musicMgr.set_clip_request, ["approaching_base"])
-            #base.accept('shift-control-a', self.musicMgr.set_clip_request, ["approaching_orchestra"])
-            #base.accept('control-a', self.musicMgr.set_clip_request, ["arrested_1"])
-            #base.accept('e', self.musicMgr.set_clip_request, ["evaded_1"])
-            #base.accept('f', self.musicMgr.set_clip_request, ["intro_orchestra_from_located"])
+            #base.cr.music = self.hood.loader.tournamentMusic
+            #base.playMusic(self.hood.loader.tournamentMusic, looping = 1, volume = 0.9)
+            self.musicMgr.start_music()
+            """
+            base.accept('control-5', self.musicMgr.set_clip_request, ["5050_orchestra"])
+            base.accept('5', self.musicMgr.set_clip_request, ["5050_base"])
+            base.accept('control-l', self.musicMgr.set_clip_request, ["located_orchestra"])
+            base.accept('l', self.musicMgr.set_clip_request, ["located_base"])
+            base.accept('control-r', self.musicMgr.set_clip_request, ["running_away_orchestra"])
+            base.accept('r', self.musicMgr.set_clip_request, ["running_away_base"])
+            base.accept('control-g', self.musicMgr.set_clip_request, ["getting_worse_orchestra"])
+            base.accept('g', self.musicMgr.set_clip_request, ["getting_worse_base"])
+            base.accept('control-i', self.musicMgr.set_clip_request, ["intro_orchestra"])
+            base.accept('i', self.musicMgr.set_clip_request, ["intro_base"])
+            base.accept('shift-s', self.musicMgr.set_clip_request, ['static_cooldown'])
+            base.accept('a', self.musicMgr.set_clip_request, ["arresting_you"])
+            base.accept('h', self.musicMgr.set_clip_request, ["high_speed_cooldown_base"])
+            base.accept('control-h', self.musicMgr.set_clip_request, ["high_speed_cooldown_orchestra"])
+            base.accept('v', self.musicMgr.set_clip_request, ["very_low_speed_cooldown"])
+            base.accept('c', self.musicMgr.set_clip_request, ["low_speed_cooldown_1"])
+            base.accept('control-c', self.musicMgr.set_clip_request, ["low_speed_cooldown_2"])
+            base.accept('shift-a', self.musicMgr.set_clip_request, ["approaching_base"])
+            base.accept('shift-control-a', self.musicMgr.set_clip_request, ["approaching_orchestra"])
+            base.accept('control-a', self.musicMgr.set_clip_request, ["arrested_1"])
+            base.accept('e', self.musicMgr.set_clip_request, ["evaded_1"])
+            base.accept('f', self.musicMgr.set_clip_request, ["intro_orchestra_from_located"])
+            """
 
     def invasionInProgress(self):
         self.systemMessage(CIGlobals.SuitInvasionInProgMsg)
@@ -169,6 +176,9 @@ class DistributedSuitManager(DistributedObject):
         base.cr.playGame.suitManager = self
 
     def disable(self):
+        self.musicMgr.stop_clip()
+        self.musicMgr.cleanup()
+        self.musicMgr = None
         base.cr.playGame.suitManager = None
         base.cr.music = None
         del self.hood

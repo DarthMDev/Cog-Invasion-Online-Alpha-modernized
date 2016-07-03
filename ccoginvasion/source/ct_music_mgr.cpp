@@ -6,10 +6,11 @@
 #include "eventHandler.h"
 #include "tools.cpp"
 
+#include "config_ccoginvasion.h"
+
 bool CTMusicManager::loaded = false;
 CTMusicManager::MusicChunkMap CTMusicManager::tournament_music_chunks;
 CTMusicManager::MusicClipMap CTMusicManager::tournament_music_clips;
-PT(AudioManager) CTMusicManager::audio_mgr;
 
 CTMusicManager::~CTMusicManager()
 {
@@ -20,9 +21,8 @@ bool CTMusicManager::is_loaded()
 	return loaded;
 }
 
-void CTMusicManager::spawn_load_tournament_music_task(PT(AudioManager) am)
+void CTMusicManager::spawn_load_tournament_music_task()
 {
-	audio_mgr = am;
 	PT(GenericAsyncTask) task = new GenericAsyncTask("LTM", &CTMusicManager::load_tournament_music, (void*)NULL);
 	task->set_task_chain("TournamentMusicThread");
 	AsyncTaskManager::get_global_ptr()->add(task);
@@ -48,6 +48,13 @@ AsyncTask::DoneStatus CTMusicManager::load_tournament_music(GenericAsyncTask* ta
 	{
 
 		string song_name = rootMapItr->first;
+
+		int songnum = song_name.back() - '0';
+		if (songnum > ctmusic_numsongs) {
+			cout << "Not loading " << song_name << ": only " << ctmusic_numsongs << " song(s) specified in config" << endl;
+			continue;
+		}
+
 		CTMusicData::ChunkDataMap chunkdata = rootMapItr->second;
 
 		cout << song_name << endl;
@@ -71,11 +78,11 @@ AsyncTask::DoneStatus CTMusicManager::load_tournament_music(GenericAsyncTask* ta
 				}
 
 				string fullfile = folder + filename + extension;
-				PT(AudioSound) song = audio_mgr->get_sound(fullfile);
+				PT(AudioSound) song = CTMusicData::audio_mgr->get_sound(fullfile);
 				song->set_volume(0.5f);
 				song->set_loop(false);
 				tournament_music_chunks[song_name][chunk_name].push_back(song);
-				
+
 			}
 
 		    tournament_music_clips[song_name][chunk_name] = AudioClip(tournament_music_chunks[song_name][chunk_name], chunk_name);
@@ -93,8 +100,13 @@ CTMusicManager::CTMusicManager() : _curr_clip(NULL)
 	_curr_clip_name = "NONE";
 
 	string base_song = "encntr_nfsmw_bg_";
-	int index = rand() % 4;
+	int index = rand() % ctmusic_numsongs;
 	_song_name = base_song + to_string((longlong)index + 1);
+}
+
+string CTMusicManager::get_song_name() const
+{
+	return _song_name;
 }
 
 void CTMusicManager::set_clip_request(const string& clip)
@@ -105,6 +117,11 @@ void CTMusicManager::set_clip_request(const string& clip)
 string CTMusicManager::get_clip_request() const
 {
 	return _next_clip_request;
+}
+
+string CTMusicManager::get_clip_name() const
+{
+	return _curr_clip_name;
 }
 
 void CTMusicManager::start_music()

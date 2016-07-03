@@ -10,4 +10,4 @@ class CTMLSafeZoneLoader(MLSafeZoneLoader):
 
     def __init__(self, hood, parentFSM, doneEvent):
         MLSafeZoneLoader.__init__(self, hood, parentFSM, doneEvent)
-        self.pgMusicFilename = 'phase_12/audio/bgm/Bossbot_Entry_v1.mid'
+        self.pgMusicFilename = 'phase_12/audio/bgm/Bossbot_Entry_v1.ogg'

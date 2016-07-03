@@ -60,6 +60,7 @@ class SuitTournament:
         self.setRound(round)
         if self.getRound() != 1:
             self.suitMgr.sendSysMessage(self.round_dialogue[self.getRound()]["start"])
+            self.suitMgr.sendUpdate('newTournamentRound')
         if self.getRound() == 4:
             self.suitMgr.createSuit(plan = SuitBank.VicePresident)
             return
@@ -78,6 +79,7 @@ class SuitTournament:
 
     def endRound(self):
         self.suitMgr.sendSysMessage(self.round_dialogue[self.getRound()]["end"])
+        self.suitMgr.sendUpdate('tournamentRoundEnded')
         random_waitTime = random.randint(15, 20)
         if self.getRound() == 4:
             self.stopBackup()

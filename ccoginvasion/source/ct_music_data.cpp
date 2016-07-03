@@ -4,14 +4,31 @@
 
 bool CTMusicData::initialized = false;
 CTMusicData::MusicDataMap CTMusicData::data;
+PT(AudioManager) CTMusicData::audio_mgr;
+PT(GenericAsyncTask) CTMusicData::am_update_task = NULL;
 
-CTMusicData::CTMusicData() {
+CTMusicData::CTMusicData()
+{
 }
 
 CTMusicData::~CTMusicData()
 {
 }
 
+void CTMusicData::stop_am_update_task() {
+	AsyncTaskManager* taskmgr = AsyncTaskManager::get_global_ptr();
+	if (am_update_task != NULL) {
+		if (taskmgr->has_task(am_update_task)) {
+			taskmgr->remove(am_update_task);
+			am_update_task = NULL;
+		}
+	}
+}
+
+AsyncTask::DoneStatus CTMusicData::audiomgr_update_task(GenericAsyncTask* task, void* data) {
+	CTMusicData::audio_mgr->update();
+	return AsyncTask::DS_cont;
+}
 
 void CTMusicData::initialize_chunk_data() {
 
@@ -21,6 +38,15 @@ void CTMusicData::initialize_chunk_data() {
 	taskchain->set_thread_priority(ThreadPriority::TP_urgent);
 	taskchain->set_num_threads(1);
 
+	// Make our own special Audio Manager that we will update on our thread.
+	audio_mgr = AudioManager::create_AudioManager();
+
+	// Start the audio manager update task
+	PT(GenericAsyncTask) updatetask = new GenericAsyncTask("CTMusicData::update_audioManager", &CTMusicData::audiomgr_update_task, (void*)NULL);
+	updatetask->set_task_chain("TournamentMusicThread");
+	AsyncTaskManager::get_global_ptr()->add(updatetask);
+	
+	am_update_task = updatetask;
 
 	//----------------------------------SONG 1---------------------------------\\
 

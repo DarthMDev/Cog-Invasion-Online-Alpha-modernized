@@ -7,4 +7,4 @@ class CTDDSafeZoneLoader(DDSafeZoneLoader.DDSafeZoneLoader):
 
     def __init__(self, hood, parentFSM, doneEvent):
         DDSafeZoneLoader.DDSafeZoneLoader.__init__(self, hood, parentFSM, doneEvent)
-        self.pgMusicFilename = 'phase_12/audio/bgm/Bossbot_Entry_v3.mid'
+        self.pgMusicFilename = 'phase_12/audio/bgm/Bossbot_Entry_v3.ogg'

@@ -17,7 +17,7 @@ notify = DirectNotify().newCategory("CIProgressScreen")
 class CIProgressScreen:
 
     def __init__(self):
-        self.defaultLogoScale = 0.85
+        self.defaultLogoScale = 1
         self.defaultLogoZ = 0.65
         self.bgm = loader.loadModel("phase_3/models/gui/progress-background.bam")
         self.bgm.find('**/logo').stash()
@@ -26,7 +26,7 @@ class CIProgressScreen:
         self.logoNode = hidden.attachNewNode('logoNode')
         self.logoNode.setScale(self.defaultLogoScale)
         self.logoNode.setPos(0, self.defaultLogoZ, 0)
-        self.logoImg = OnscreenImage(image = self.logo, scale = (0.685, 0, 0.3), parent=self.logoNode)
+        self.logoImg = OnscreenImage(image = self.logo, scale = (0.685, 0, 0.325), parent=self.logoNode)
         self.logoImg.setTransparency(True)
         self.bg_img = OnscreenImage(image=self.bg, parent=hidden)
         self.bg_img.setSx(1.35)
@@ -37,7 +37,7 @@ class CIProgressScreen:
         toontipgui = loader.loadModel('phase_3.5/models/gui/stickerbook_gui.bam')
         poster = toontipgui.find('**/questCard')
         self.toontipFrame = DirectFrame(image = poster, image_scale = (1.4, 1, 1), parent = hidden, relief = None, pos = (0, 0, -0.1), scale = 0.85)
-        self.toontipLbl = OnscreenText(text = "", parent = self.toontipFrame, fg = (0.35, 0.35, 0.35, 1),
+        self.toontipLbl = OnscreenText(text = "", parent = self.toontipFrame, fg = (89.0 / 255, 95.0 / 255, 98.0 / 255, 1),
             font = CIGlobals.getToonFont(), wordwrap = 14.5, pos = (-0.59, 0.25), align = TextNode.ALeft, scale = 0.08)
         self.loading_lbl = DirectLabel(text="",
                                     relief=None,
@@ -45,7 +45,7 @@ class CIProgressScreen:
                                     pos=(-1.0725, 0, -0.79),
                                     text_align=TextNode.ALeft,
                                     sortOrder=100,
-                                    text_fg=(0.343, 0.343, 0.343, 1.0), text_font = CIGlobals.getMinnieFont(), parent=hidden,
+                                    text_fg=(89.0 / 255, 95.0 / 255, 98.0 / 255, 1.0), text_font = CIGlobals.getMinnieFont(), parent=hidden,
                                     text_shadow=(0, 0, 0, 1))
 
     def begin(self, hood, range, wantGui):
@@ -64,7 +64,7 @@ class CIProgressScreen:
         #self.progress_bar['text_font'] = CIGlobals.getMinnieFont()
         #self.progress_bar['text_fg'] = (0.7, 0.3, 0.3, 1.0)
         #self.progress_bar['text_shadow'] = (0.0, 0.0, 0.0, 1.0)
-        self.progress_bar['barColor'] = (0.343, 0.343, 0.343, 1.0)
+        self.progress_bar['barColor'] = (89.0 / 255, 95.0 / 255, 98.0 / 255, 1.0)
         self.progress_bar['range'] = range
         self.bgm.reparentTo(aspect2d)
         self.bg.reparentTo(render2d)

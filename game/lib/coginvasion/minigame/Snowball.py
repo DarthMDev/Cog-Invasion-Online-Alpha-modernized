@@ -27,7 +27,7 @@ class Snowball(NodePath, DirectObject):
         # Has the snowball been thrown and is it currently in the air?
         self.isAirborne = False
 
-        # The avatar that is currently holding this snowball.
+        # The RemoteDodgeballAvatar that is currently holding this snowball.
         self.owner = None
 
         self.throwIval = None
@@ -43,13 +43,15 @@ class Snowball(NodePath, DirectObject):
         base.audio3d.attachSoundToObject(self.impactSound, self)
 
         # Setup collisions
-        sphere = CollisionSphere(0, 0, 0, 1)
+        sphere = CollisionSphere(0, 0, 0, 0.35)
         sphere.setTangible(0)
         node = CollisionNode('snowball-coll-' + str(id(self)))
         node.addSolid(sphere)
         node.setFromCollideMask(CIGlobals.WallBitmask | CIGlobals.FloorBitmask)
         self.collNP = self.attachNewNode(node)
         self.collNP.setCollideMask(BitMask32(0))
+        self.collNP.show()
+        self.collNP.setZ(0.35)
 
         event = CollisionHandlerEvent()
         event.set_in_pattern("%fn-into")
@@ -80,10 +82,10 @@ class Snowball(NodePath, DirectObject):
 
     def throw(self, p):
         self.isAirborne = True
-        self.owner.play('pie', partName = 'torso', fromFrame = 60)
+        self.owner.avatar.play('pie', partName = 'torso', fromFrame = 60)
 
         start = NodePath('StartPath')
-        start.reparentTo(self.owner)
+        start.reparentTo(self.owner.avatar)
         start.setScale(render, 1)
         start.setPos(0, 0, 0)
         start.setP(p)
@@ -98,10 +100,10 @@ class Snowball(NodePath, DirectObject):
         self.setScale(1.0)
 
         self.throwIval = ProjectileInterval(
-            self, startPos = self.owner.find('**/def_joint_right_hold').getPos(render),
+            self, startPos = self.owner.avatar.find('**/def_joint_right_hold').getPos(render),
             endPos = end.getPos(render), gravityMult = 0.9, duration = 3)
         self.throwIval.start()
-        if self.owner.doId == base.localAvatar.doId:
+        if self.owner.avId == base.localAvatar.doId:
             self.acceptOnce('snowball-coll-' + str(id(self)) + '-into', self.__handleSnowballCollision)
 
         start.removeNode()
@@ -109,14 +111,25 @@ class Snowball(NodePath, DirectObject):
         end.removeNode()
         del end
 
-    def __handleSnowballCollision(self, entry):
+    def pauseThrowIval(self):
         if self.throwIval:
             self.throwIval.pause()
             self.throwIval = None
+
+    def handleHitWallOrPlayer(self):
+        self.pauseThrowIval()
+        self.reparentTo(render)
+        self.setPos(self.mg.SnowballData[self.index])
+        self.setHpr(0, 0, 0)
+        self.isAirborne = False
+        self.owner = None
+
+    def __handleSnowballCollision(self, entry):
+        self.pauseThrowIval()
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
         name = intoNP.getName()
-        if self.owner.doId == base.localAvatar.doId:
+        if self.owner.avId == base.localAvatar.doId:
             self.mg.firstPerson.mySnowball = None
             self.mg.firstPerson.hasSnowball = False
         self.isAirborne = False
@@ -124,36 +137,35 @@ class Snowball(NodePath, DirectObject):
         base.playSfx(self.impactSound, node = self, volume = 1.5)
         if 'wall' in name or 'fence' in name:
             # We hit a wall. Go back to our center position.
-            self.setPos(self.mg.SnowballData[self.index])
-            self.setHpr(0, 0, 0)
+            self.handleHitWallOrPlayer()
         elif 'floor' in name or 'ground' in name:
             # We hit the floor. Stay on the ground.
             self.setZ(0.5)
         else:
-            for key in self.mg.cr.doId2do.keys():
-                obj = self.mg.cr.doId2do[key]
-                if obj.__class__.__name__ == "DistributedToon":
-                    if obj.getKey() == avNP.getKey():
-                        # We hit this toon!
-                        self.setPos(self.mg.SnowballData[self.index])
-                        self.setHpr(0, 0, 0)
+            for av in self.mg.remoteAvatars:
+                if av.avatar.getKey() == avNP.getKey():
+                    # We hit this toon!
+                    self.handleHitWallOrPlayer()
+                    if av.team != self.mg.getMyRemoteAvatar().team:
+                        # They aren't on my team, let's damage them.
+                        av.setHealth(av.health - self.mg.SnowBallDmg)
+                        self.mg.sendUpdate('snowballHitPlayer', [av.avId, self.index])
 
     def b_pickup(self):
         self.d_pickup(self.mg.cr.localAvId)
-        self.pickup(self.mg.cr.localAvId)
+        self.pickup(self.mg.getMyRemoteAvatar())
 
     def d_pickup(self, avId):
         self.mg.sendUpdate('snowballPickup', [self.index, avId])
 
-    def pickup(self, avId):
-        obj = self.mg.cr.doId2do.get(avId)
-        if obj:
-            self.setPosHpr(0, 0, 0, 0, 0, 0)
-            self.reparentTo(obj.find('**/def_joint_right_hold'))
-            self.owner = obj
-            self.isAirborne = False
+    def pickup(self, remoteAv):
+        self.setPosHpr(0, 0, 0, 0, 0, 0)
+        self.reparentTo(remoteAv.avatar.find('**/def_joint_right_hold'))
+        self.owner = remoteAv
+        self.isAirborne = False
 
     def removeNode(self):
+        self.pauseThrowIval()
         if self.model:
             self.model.removeNode()
             self.model = None

@@ -18,7 +18,7 @@ public:
 	AudioClip(vector<PT(AudioSound)> chunks, string& clip_name);
 	~AudioClip();
 
-	AsyncTask::DoneStatus play_audio_tick(GenericAsyncTask* task, PT(AudioSound) sound, int index, double length);
+	AsyncTask::DoneStatus play_audio_tick(GenericAsyncTask* task, PT(AudioSound) sound, int index);
 
 	void play_from_index(int start_index);
 	void play_all_parts();
@@ -32,7 +32,6 @@ public:
 	struct TickParams {
 		PT(AudioSound) sound;
 		int index;
-		double length;
 	};
 
 	TickParams* get_curr_sound_tick_params();
@@ -46,6 +45,8 @@ private:
 	static AsyncTask::DoneStatus play_audio_tick_task(GenericAsyncTask* task, void* data);
 
 	TickParams _curr_sound_tick_params;
+
+	bool _curr_clip_started;
 };
 
 

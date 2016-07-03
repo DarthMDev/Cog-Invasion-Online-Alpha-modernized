@@ -17,7 +17,7 @@ from lib.coginvasion.gui.LaffOMeter import LaffOMeter
 from lib.coginvasion.gui.MoneyGui import MoneyGui
 from lib.coginvasion.gui.InventoryGui import InventoryGui
 from lib.coginvasion.gags import GagGlobals
-from direct.interval.IntervalGlobal import Sequence, Wait, Func
+from direct.interval.IntervalGlobal import Sequence, Wait, Func, ActorInterval
 from direct.gui.DirectButton import DirectButton
 from direct.showbase.InputStateGlobal import inputState
 from direct.gui.DirectGui import DGG
@@ -28,6 +28,8 @@ from lib.coginvasion.friends.FriendRequestManager import FriendRequestManager
 from lib.coginvasion.base.PositionExaminer import PositionExaminer
 from lib.coginvasion.friends.FriendsList import FriendsList
 from lib.coginvasion.suit import SuitAttacks
+
+from lib.coginvasion.suit.PythonCTMusicMgr import PythonCTMusicManager as PCTMM
 
 from lib.coginvasion.nametag import NametagGlobals
 
@@ -98,6 +100,8 @@ class LocalToon(DistributedToon):
         self.hasDoneJump = False
         self.lastState = None
         self.lastAction = None
+
+        self.jumpHardLandIval = None
 
         #base.cTrav.showCollisions(render)
 
@@ -330,6 +334,10 @@ class LocalToon(DistributedToon):
 
     def handleSuitAttack(self, attack_id, suit_id):
         DistributedToon.handleSuitAttack(self, attack_id, suit_id)
+
+        # Tell the cog tournament music manager (if exists) that we got hurt.
+        messenger.send(PCTMM.getLocalAvHurtEvent())
+
         if not self.isDead() and base.config.GetBool('want-sa-reactions'):
             base.taskMgr.remove('LT.attackReactionDone')
             attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
@@ -356,7 +364,7 @@ class LocalToon(DistributedToon):
         self.cr.playGame.hood.loader.place.fsm.request('walk')
         self.b_setAnimState('neutral')
         return Task.done
-    
+
     def printPos(self):
         x, y, z = self.getPos(render)
         h, p, r = self.getHpr(render)
@@ -371,9 +379,27 @@ class LocalToon(DistributedToon):
         self.accept('page_up', self.smartCamera.pageUp)
         self.accept('page_down', self.smartCamera.pageDown)
         self.accept('p', self.printPos)
-        taskMgr.add(self.movementTask, "avatarMovementTask")
+        self.accept('jumpStart', self.__jump)
+        self.accept('jumpLand', self.__handleJumpLand)
+        self.accept('jumpHardLand', self.__handleJumpHardLand)
         self.avatarMovementEnabled = True
         self.playMovementSfx(None)
+
+    def __handleJumpLand(self):
+        if self.jumpHardLandIval:
+            self.jumpHardLandIval.finish()
+            self.jumpHardLandIval = None
+        if self.getHealth() > 0:
+            self.b_setAnimState('Happy')
+
+    def __handleJumpHardLand(self):
+        if self.jumpHardLandIval:
+            self.jumpHardLandIval.finish()
+            self.jumpHardLandIval = None
+        self.jumpHardLandIval = ActorInterval(self, 'zend')
+        self.jumpHardLandIval.setDoneEvent('LT::zend-done')
+        self.acceptOnce('LT::zend-done', self.__handleJumpLand)
+        self.jumpHardLandIval.start()
 
     def disableAvatarControls(self):
         self.walkControls.disableAvatarControls()
@@ -391,6 +417,9 @@ class LocalToon(DistributedToon):
         self.ignore("arrow_right-up")
         self.ignore("control")
         self.ignore("control-up")
+        self.ignore('jumpStart')
+        self.ignore('jumpLand')
+        self.ignore('jumpHardLand')
         taskMgr.remove("avatarMovementTask")
         self.isMoving_forward = False
         self.isMoving_side = False
@@ -846,6 +875,10 @@ class LocalToon(DistributedToon):
 
     def disable(self):
         base.camLens.setMinFov(CIGlobals.OriginalCameraFov / (4./3.))
+        if self.jumpHardLandIval:
+            self.ignore('LT::zend-done')
+            self.jumpHardLandIval.finish()
+            self.jumpHardLandIval = None
         self.friendsList.destroy()
         self.friendsList = None
         self.panel.cleanup()

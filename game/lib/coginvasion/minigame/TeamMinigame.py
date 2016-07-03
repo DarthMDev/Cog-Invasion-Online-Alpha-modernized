@@ -154,6 +154,7 @@ class TeamMinigame:
 
         remoteAvatar = self.getRemoteAvatar(avId)
         if remoteAvatar:
+            print "setting team of {0}".format(avId)
             remoteAvatar.setTeam(team)
 
     def cleanup(self):

@@ -1,5 +1,6 @@
 #include <vector>
 #include <fstream>
+#include <windows.h>
 
 using namespace std;
 
@@ -58,4 +59,11 @@ static vector<int> one_num_vec(int num) {
 	vector<int> vec;
 	vec.push_back(num);
 	return vec;
+}
+
+static int filter(unsigned int code) {
+	if (code == EXCEPTION_ACCESS_VIOLATION) {
+		return EXCEPTION_EXECUTE_HANDLER;
+	}
+	return EXCEPTION_CONTINUE_SEARCH;
 }

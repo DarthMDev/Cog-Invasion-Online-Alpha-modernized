@@ -157,7 +157,7 @@ interrogate.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\audioclip.h" />
-    <ClInclude Include="source\config_module.h" />
+    <ClInclude Include="source\config_ccoginvasion.h" />
     <ClInclude Include="source\ct_music_data.h" />
     <ClInclude Include="source\ct_music_mgr.h" />
     <ClInclude Include="source\stdafx.h" />
@@ -166,7 +166,7 @@ interrogate.bat</Command>
   <ItemGroup>
     <ClCompile Include="source\audioclip.cpp" />
     <ClCompile Include="source\ccoginvasion.cpp" />
-    <ClCompile Include="source\config_module.cpp" />
+    <ClCompile Include="source\config_ccoginvasion.cpp" />
     <ClCompile Include="source\ct_music_data.cpp" />
     <ClCompile Include="source\ct_music_mgr.cpp" />
     <ClCompile Include="source\dllmain.cpp" />

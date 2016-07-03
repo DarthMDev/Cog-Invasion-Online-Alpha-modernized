@@ -23,6 +23,12 @@ class SquirtingFlower(SquirtGag):
         self.track = Parallel()
         self.timeout = 4.0
         self.sprayRotation = Vec3(0, 20, 0)
+        
+    def setAvatar(self, avatar):
+        SquirtGag.setAvatar(self, avatar)
+        if 'dgs' in avatar.getTorso():
+            # It's a fat toon, change the spray rotation.
+            self.sprayRotation = Vec3(0, 10, 0)
 
     def start(self):
         SquirtGag.start(self)

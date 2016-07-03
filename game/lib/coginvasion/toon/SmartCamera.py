@@ -491,9 +491,16 @@ class SmartCamera:
         self.camFloorCollisionQueue.sortEntries()
         camObstrCollisionEntry = self.camFloorCollisionQueue.getEntry(0)
         camHeightFromFloor = camObstrCollisionEntry.getSurfacePoint(self.ccRayNodePath)[2]
+        heightOfFloorUnderCamera = (camera.getPos()[2] - CIGlobals.FloorOffset) + camHeightFromFloor
         self.cameraZOffset = camera.getPos()[2] + camHeightFromFloor
         if self.cameraZOffset < 0:
-            self.cameraZOffset = 0
+            self.cameraZOffset = self.cameraZOffset * 0.33333333329999998
+            camHeight = max(base.localAvatar.getHeight(), 3.0)
+            if self.cameraZOffset < -(camHeight * 0.5):
+                if self.cameraZOffset < -camHeight:
+                    self.cameraZOffset = 0.0
+                else:
+                    self.cameraZOffset = -(camHeight * 0.5)
         if self.__floorDetected == 0:
             self.__floorDetected = 1
             self.popCameraToDest()

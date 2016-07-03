@@ -7,20 +7,22 @@
 #include "audioclip.h"
 #include "ct_music_data.h"
 
-#include "audioManager.h"
-
 class CTMusicManager {
 PUBLISHED:
 
 	CTMusicManager();
 	~CTMusicManager();
 
-	static void spawn_load_tournament_music_task(PT(AudioManager) am);
+	static void spawn_load_tournament_music_task();
 	void set_clip_request(const string& clip);
 	string get_clip_request() const;
 	void start_music();
 	void stop_clip();
 	static bool is_loaded();
+	string get_song_name() const;
+	string get_clip_name() const;
+
+	void handle_part_done(int part_index);
 
 public:
 
@@ -32,8 +34,6 @@ public:
 
 	static bool loaded;
 
-	static PT(AudioManager) audio_mgr;
-
 private:
 	string _next_clip_request;
 	string _song_name;
@@ -44,7 +44,6 @@ private:
 
 	static void handle_clip_done(const Event* e, void* data);
 	static void handle_part_done_event(const Event* e, void* data);
-	void handle_part_done(int part_index);
 	void play_new_clip();
 	void play_clip(string& clip_name);
 };

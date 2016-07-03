@@ -5,7 +5,7 @@
 
 from panda3d.core import Multifile, Filename, VirtualFileSystem, PandaSystem
 from panda3d.core import Thread, loadPrcFile, loadPrcFileData, CollisionTraverser, CullBinManager
-from panda3d.core import ConfigVariableDouble
+from panda3d.core import ConfigVariableDouble, PStatClient
 
 import __builtin__
 import os, sys
@@ -226,5 +226,7 @@ il = InitialLoad(doneInitLoad)
 music = base.loadMusic(CIGlobals.getThemeSong())
 base.playMusic(music, looping = 1, volume = 0.75)
 il.load()
+
+PStatClient.connect()
 
 base.run()

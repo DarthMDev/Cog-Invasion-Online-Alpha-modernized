@@ -36,13 +36,13 @@ from lib.coginvasion.toon import LocalToon
 from lib.coginvasion.hood.QuietZoneState import QuietZoneState
 from lib.coginvasion.hood import ZoneUtil
 
-# Let's import the doIds of our UBER services.
 from CogInvasionDoGlobals import DO_ID_COGINVASION, DO_ID_CLIENT_SERVICES_MANAGER
 from CogInvasionDoGlobals import DO_ID_FRIENDS_MANAGER, DO_ID_HOLIDAY_MANAGER
 from CogInvasionDoGlobals import DO_ID_NAME_SERVICES_MANAGER
 
-# Let's import our error codes
 from CogInvasionErrorCodes import ErrorCode2ErrorMsg, UnknownErrorMsg
+
+import ccoginvasion
 
 import os, sys
 import random
@@ -163,6 +163,8 @@ class CogInvasionClientRepository(AstronClientRepository):
             base.localAvatar.b_setAnimState('teleportOut')
         except:
             pass
+
+        ccoginvasion.CTMusicData.stop_am_update_task()
 
         self.gameFSM.request('closeShard', ['off'])
 

@@ -38,6 +38,8 @@ class TTPlayground(Playground.Playground):
 
 	def enter(self, requestStatus):
 		Playground.Playground.enter(self, requestStatus)
+		for tree in self.loader.trees:
+			tree.reparentTo(render)
 		self.startBirds()
 
 	def startBirds(self):
@@ -61,5 +63,7 @@ class TTPlayground(Playground.Playground):
 		return task.again
 
 	def exit(self):
+		for tree in self.loader.trees:
+			tree.reparentTo(hidden)
 		self.stopBirds()
 		Playground.Playground.exit(self)

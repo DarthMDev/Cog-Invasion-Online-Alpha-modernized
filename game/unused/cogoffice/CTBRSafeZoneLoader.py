@@ -10,4 +10,4 @@ class CTBRSafeZoneLoader(BRSafeZoneLoader.BRSafeZoneLoader):
 
     def __init__(self, hood, parentFSM, doneEvent):
         BRSafeZoneLoader.BRSafeZoneLoader.__init__(self, hood, parentFSM, doneEvent)
-        self.pgMusicFilename = 'phase_12/audio/bgm/Bossbot_Entry_v2.mid'
+        self.pgMusicFilename = 'phase_12/audio/bgm/Bossbot_Entry_v2.ogg'
