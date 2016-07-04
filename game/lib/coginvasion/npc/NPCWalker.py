@@ -24,7 +24,6 @@ class NPCWalkInterval(LerpPosInterval):
         if duration is None:
             _distance = (pos.getXy() - (nodePath.getX(), nodePath.getY())).length()
             duration = _distance * durationFactor
-        self.duration = duration
         LerpPosInterval.__init__(self, nodePath, duration, pos, startPos,
                                 other, blendType, bakeInStart, fluid, name)
         if lookAtTarget:
@@ -50,7 +49,6 @@ class NPCLookInterval(LerpQuatInterval):
         _distance = (_newHpr.getXy() - _oldHpr.getXy()).length()
         self.distance = _distance
         duration = _distance * durationFactor
-        self.duration = duration
         LerpQuatInterval.__init__(self, nodePath, duration, _newHpr,
                 startHpr = _oldHpr, other = other, blendType = blendType,
                 bakeInStart = bakeInStart, fluid = fluid, name = name)

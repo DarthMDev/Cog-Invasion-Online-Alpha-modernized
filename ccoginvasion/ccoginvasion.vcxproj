@@ -160,6 +160,8 @@ interrogate.bat</Command>
     <ClInclude Include="source\config_ccoginvasion.h" />
     <ClInclude Include="source\ct_music_data.h" />
     <ClInclude Include="source\ct_music_mgr.h" />
+    <ClInclude Include="source\c_nametag.h" />
+    <ClInclude Include="source\c_nametag3d.h" />
     <ClInclude Include="source\stdafx.h" />
     <ClInclude Include="source\targetver.h" />
   </ItemGroup>
@@ -169,6 +171,8 @@ interrogate.bat</Command>
     <ClCompile Include="source\config_ccoginvasion.cpp" />
     <ClCompile Include="source\ct_music_data.cpp" />
     <ClCompile Include="source\ct_music_mgr.cpp" />
+    <ClCompile Include="source\c_nametag.cpp" />
+    <ClCompile Include="source\c_nametag3d.cpp" />
     <ClCompile Include="source\dllmain.cpp" />
     <ClCompile Include="source\stdafx.cpp" />
     <ClCompile Include="source\tools.cpp" />

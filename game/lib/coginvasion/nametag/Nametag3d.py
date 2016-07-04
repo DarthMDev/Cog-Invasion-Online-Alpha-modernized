@@ -8,6 +8,7 @@ import NametagGlobals
 from Nametag import Nametag
 from lib.coginvasion.gui.Clickable3d import Clickable3d
 
+from ccoginvasion import CNametag3d
 
 class Nametag3d(Nametag, Clickable3d):
     SCALING_MIN_DISTANCE = 1
@@ -17,6 +18,8 @@ class Nametag3d(Nametag, Clickable3d):
     def __init__(self):
         Nametag.__init__(self)
         Clickable3d.__init__(self, 'Nametag3d')
+        
+        self.cTag = CNametag3d()
 
         self.distance = 0
 
@@ -30,6 +33,8 @@ class Nametag3d(Nametag, Clickable3d):
 
     def destroy(self):
         self.ignoreAll()
+        
+        self.cTag = None
 
         Nametag.destroy(self)
         Clickable3d.destroy(self)
@@ -59,63 +64,17 @@ class Nametag3d(Nametag, Clickable3d):
             Point3(0, 0, 0))
         self.contents.setEffect(billboardEffect)
 
-    def compute2dPosition(self):
-        """ Computes a 3-d point, relative to the indicated node, into a
-        2-d point as seen by the camera.  The range of the returned value
-        is based on the len's current film size and film offset, which is
-        (-1 .. 1) by default. """
-
-        # Convert the point into the camera's coordinate space
-        p3d = base.cam.getRelativePoint(self.avatar, Point3(0, 0, 0))
-
-        # Ask the lens to project the 3-d point to 2-d.
-        p2d = Point2()
-        if base.camLens.project(p3d, p2d):
-            # Got it!
-            return p2d
-
-        # If project() returns false, it means the point was behind the
-        # lens.
-        return None
-
     def updateClickRegion(self):
         if self.chatBalloon is not None:
-            left = self.chatBalloon.center[0] - (self.chatBalloon.width/2)
-            right = left + self.chatBalloon.width
+            reg = []
+            self.cTag.get_chatballoon_region(self.chatBalloon.center, NametagGlobals.chatBalloon3dHeight, reg)
 
-            # Calculate the bottom of the region based on constants.
-            # 2.4 is the padded height of a single-line message:
-            bottom = NametagGlobals.chatBalloon3dHeight - 2.4
-            top = bottom + self.chatBalloon.height
-
-            self.setClickRegionFrame(left, right, bottom, top)
+            self.setClickRegionFrame(*reg)
         elif self.panel is not None:
-            centerX = (self.textNode.getLeft()+self.textNode.getRight()) / 2.0
-            centerY = (self.textNode.getBottom()+self.textNode.getTop()) / 2.0
+            reg = []
+            self.cTag.get_panel_region(self.textNode, reg)
 
-            left = centerX - (self.panelWidth/2.0)
-            right = centerX + (self.panelWidth/2.0)
-            bottom = centerY - (self.panelHeight/2.0)
-            top = centerY + (self.panelHeight/2.0)
-
-            #twodpos = self.compute2dPosition()
-            #if twodpos is None:
-            #    if self.cardNP:
-            #        self.cardNP.removeNode()
-            #    return
-            #bounds = self.avatar.getTightBounds()
-            #centerX = twodpos.getX() / 2.0
-            #centerY = twodpos.getY() / 2.0
-            #bound1 = Point2()
-            #bound2 = Point2()
-            #base.camLens.project(bounds[0], bound1)
-            #base.camLens.project(bounds[1], bound2)
-            #left = centerX - (bound1.getX() / 2.0)
-            #right = centerX + (bound2.getX() / 2.0)
-            #bottom = centerY - (bound1.getY() / 2.0)
-            #top = centerY + (bound2.getY() / 2.0)
-
-            self.setClickRegionFrame(left, right, bottom, top)
+            self.setClickRegionFrame(*reg)
 
     def isClickable(self):
         if self.getChatText() and self.hasChatButton():
@@ -144,6 +103,7 @@ class Nametag3d(Nametag, Clickable3d):
         Nametag.update(self)
 
     def tick(self, task):
+            
         distance = self.contents.getPos(base.cam).length()
 
         if distance < self.SCALING_MIN_DISTANCE:
@@ -152,10 +112,11 @@ class Nametag3d(Nametag, Clickable3d):
             distance = self.SCALING_MAX_DISTANCE
 
         if distance != self.distance:
-            self.contents.setScale(math.sqrt(distance) * self.SCALING_FACTOR)
+            self.contents.setScale(self.cTag.get_scale(distance, self.SCALING_FACTOR))
             self.distance = distance
-
-        self.updateClickRegion()
+            
+        if self.isClickable():
+            self.updateClickRegion()
 
         return Task.cont
 

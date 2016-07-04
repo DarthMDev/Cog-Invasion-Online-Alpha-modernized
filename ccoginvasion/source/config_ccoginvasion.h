@@ -9,5 +9,7 @@
 
 NotifyCategoryDecl(ccoginvasion, EXPORT_CLASS, EXPORT_TEMPL);
 
+extern ConfigVariableInt ctmusic_numsongs;
+
 extern void initccoginvasion();
 

@@ -22,9 +22,6 @@ notify = DirectNotify().newCategory("Avatar")
 class Avatar(ToonTalker.ToonTalker, Actor):
 
     def __init__(self, mat=0):
-        self.mat = mat
-        self.name = ''
-        self.chat = ''
         try:
             self.Avatar_initialized
             return
@@ -33,6 +30,10 @@ class Avatar(ToonTalker.ToonTalker, Actor):
 
         ToonTalker.ToonTalker.__init__(self)
         Actor.__init__(self, None, None, None, flattenable=0, setFinal=1)#self.setColorOff()
+        
+        self.mat = mat
+        self._name = ''
+        self.chat = ''
 
         self.nametagNodePath = None
         self.__nameVisible = 1
@@ -47,7 +48,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
 
         self.avatarType = None
         self.charName = None
-        self.name = None
+        self._name = None
         self.tag = None
         self.height = 0
         return
@@ -73,7 +74,7 @@ class Avatar(ToonTalker.ToonTalker, Actor):
             self.avatarType = None
             self.charName = None
             self.nameTag = None
-            self.name = None
+            self._name = None
 
             Actor.cleanup(self)
 
@@ -108,22 +109,22 @@ class Avatar(ToonTalker.ToonTalker, Actor):
     def setName(self, nameString = None, avatarType = None, charName = None, createNow = 0):
         if not nameString:
             return
-        self.name = nameString
+        self._name = nameString
         if charName:
             self.charName = charName
         if createNow:
             self.setupNameTag()
 
     def getName(self):
-        return self.name
+        return self._name
 
     def setupNameTag(self, tempName = None):
-        if not self.name and not tempName:
+        if not self._name and not tempName:
             return
         if tempName:
             name = tempName
         else:
-            name = self.name
+            name = self._name
         offset = 0.0
         if self.avatarType:
             if self.avatarType in [CIGlobals.Suit]:

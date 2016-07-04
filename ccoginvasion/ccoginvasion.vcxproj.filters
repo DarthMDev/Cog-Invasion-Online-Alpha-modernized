@@ -36,6 +36,12 @@
     <ClInclude Include="source\config_ccoginvasion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\c_nametag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\c_nametag3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\audioclip.cpp">
@@ -60,6 +66,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\config_ccoginvasion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\c_nametag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\c_nametag3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

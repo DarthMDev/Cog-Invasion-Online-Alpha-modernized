@@ -1,9 +1,9 @@
 """DistributedSmoothNode module: contains the DistributedSmoothNode class"""
 
 from pandac.PandaModules import *
-from ClockDelta import *
-import DistributedNode
-import DistributedSmoothNodeBase
+from .ClockDelta import *
+from . import DistributedNode
+from . import DistributedSmoothNodeBase
 from direct.task.Task import cont
 
 # This number defines our tolerance for out-of-sync telemetry packets.
@@ -13,7 +13,7 @@ from direct.task.Task import cont
 MaxFuture = base.config.GetFloat("smooth-max-future", 0.2)
 
 # How frequently can we suggest a resynchronize with another client?
-MinSuggestResync = base.config.GetFloat("smooth-min-suggest-resync", 10)
+MinSuggestResync = base.config.GetFloat("smooth-min-suggest-resync", 15)
 
 # These flags indicate whether global smoothing and/or prediction is
 # allowed or disallowed.
@@ -113,7 +113,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
         to specialize the behavior.
         """
         self.smoother.computeAndApplySmoothPosHpr(self, self)
-            
+
     def doSmoothTask(self, task):
         self.smoothPosition()
         return cont
@@ -205,7 +205,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
                 self.smoother.markPosition()
 
         self.stopped = False
-        
+
     # distributed set pos and hpr functions
     # 'send' versions are inherited from DistributedSmoothNodeBase
     def setSmStop(self, timestamp=None):
@@ -360,7 +360,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
                 # Too far off; advise the other client of our clock information.
                 if globalClockDelta.getUncertainty() != None and \
                    realTime - self.lastSuggestResync >= MinSuggestResync and \
-                   hasattr(self.cr, 'localAvId'):
+                   hasattr(self.cr, 'localAvatarDoId'):
                     self.lastSuggestResync = realTime
                     timestampB = globalClockDelta.localToNetworkTime(realTime)
                     serverTime = realTime - globalClockDelta.getDelta()
@@ -369,7 +369,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
                         self.doId, howFarFuture - chug,
                         realTime, serverTime))
                     self.d_suggestResync(
-                        self.cr.localAvId, timestamp,
+                        self.cr.localAvatarDoId, timestamp,
                         timestampB, serverTime,
                         globalClockDelta.getUncertainty())
 
@@ -398,7 +398,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
         return self.getR()
     def getComponentT(self):
         return 0
-                
+
     @report(types = ['args'], dConfigParam = 'smoothnode')
     def clearSmoothing(self, bogus = None):
         # Call this to invalidate all the old position reports
@@ -442,7 +442,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
         self.sendUpdate("suggestResync", [avId, timestampA, timestampB,
                                           serverTimeSec, serverTimeUSec,
                                           uncertainty])
-        
+
     def suggestResync(self, avId, timestampA, timestampB,
                       serverTimeSec, serverTimeUSec, uncertainty):
         """
@@ -461,24 +461,24 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
                 assert self.notify.info(
                     "Warning: couldn't find the avatar %d" % (avId))
             elif hasattr(other, "d_returnResync") and \
-                 hasattr(self.cr, 'localAvId'):
+                 hasattr(self.cr, 'localAvatarDoId'):
                 realTime = globalClock.getRealTime()
                 serverTime = realTime - globalClockDelta.getDelta()
                 assert self.notify.info(
                     "Returning resync for %s; local time is %s and server time is %s." % (
                     self.doId, realTime, serverTime))
                 other.d_returnResync(
-                    self.cr.localAvId, timestampB,
+                    self.cr.localAvatarDoId, timestampB,
                     serverTime,
                     globalClockDelta.getUncertainty())
-        
+
 
     def d_returnResync(self, avId, timestampB, serverTime, uncertainty):
         serverTimeSec = math.floor(serverTime)
         serverTimeUSec = (serverTime - serverTimeSec) * 10000.0
         self.sendUpdate("returnResync", [
             avId, timestampB, serverTimeSec, serverTimeUSec, uncertainty])
-        
+
     def returnResync(self, avId, timestampB, serverTimeSec, serverTimeUSec,
             uncertainty):
         """
@@ -518,7 +518,7 @@ class DistributedSmoothNode(DistributedNode.DistributedNode,
         current position, by extrapolating from old position reports.
 
         This assumes you have a client repository that knows its
-        localAvId -- stored in self.cr.localAvId
+        localAvatarDoId -- stored in self.cr.localAvatarDoId
         """
         if smoothing and EnableSmoothing:
             if prediction and EnablePrediction:

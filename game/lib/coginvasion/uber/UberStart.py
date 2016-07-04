@@ -58,7 +58,7 @@ if ':' in host:
 base.air.connect(host, port)
 
 # I'm embedding the login server into the uberdog process to reduce CPU usage.
-from lib.server.account.LoginServer import *
+#from lib.server.account.LoginServer import *
 
 try:
 	base.run()

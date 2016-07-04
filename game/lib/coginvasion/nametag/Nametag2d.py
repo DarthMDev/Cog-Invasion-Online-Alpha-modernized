@@ -10,6 +10,8 @@ from Nametag import Nametag
 from lib.coginvasion.gui.Clickable2d import Clickable2d
 from lib.coginvasion.globals import CIGlobals
 
+from ccoginvasion import CNametag
+
 
 class Nametag2d(Nametag, Clickable2d, MarginVisible):
     CONTENTS_SCALE = 0.25
@@ -34,6 +36,8 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
 
         self.contents.setScale(self.CONTENTS_SCALE)
         self.hideThought()
+        
+        self.cTag = CNametag()
 
         self.accept('MarginVisible-update', self.update)
 
@@ -41,6 +45,8 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
         self.ignoreAll()
 
         Nametag.destroy(self)
+        
+        self.cTag = None
 
         if self.textNodePath is not None:
             self.textNodePath.removeNode()
@@ -71,23 +77,16 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
 
     def updateClickRegion(self):
         if self.chatBalloon is not None:
-            right = self.chatBalloon.width / 2.0
-            left = -right
-            top = self.chatBalloon.height / 2.0
-            bottom = -top
+            reg = []
+            self.cTag.get_chatballoon_region(reg)
 
-            self.setClickRegionFrame(left, right, bottom, top)
+            self.setClickRegionFrame(*reg)
             self.region.setActive(True)
         elif self.panel is not None:
-            centerX = (self.textNode.getLeft()+self.textNode.getRight()) / 2.0
-            centerY = (self.textNode.getBottom()+self.textNode.getTop()) / 2.0
+            reg = []
+            self.cTag.get_panel_region(self.textNode, reg)
 
-            left = centerX - (self.panelWidth/2.0)
-            right = centerX + (self.panelWidth/2.0)
-            bottom = centerY - (self.panelHeight/2.0)
-            top = centerY + (self.panelHeight/2.0)
-
-            self.setClickRegionFrame(left, right, bottom, top)
+            self.setClickRegionFrame(*reg)
             self.region.setActive(True)
         else:
             if self.region is not None:
@@ -123,7 +122,8 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
             # We're in the margin display. Reposition our content, and update
             # the click region:
             self.reposition()
-            self.updateClickRegion()
+            if self.isClickable():
+                self.updateClickRegion()
         else:
             # We aren't in the margin display. Disable the click region if one
             # is present:
@@ -187,6 +187,8 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
             reversed=self.chatReversed,
             button=self.chatButton[self.clickState])
         self.chatBalloon.reparentTo(self.contents)
+        
+        self.cTag.set_chatballoon_size(self.chatBalloon.width, self.chatBalloon.height)
 
         # Calculate the center of the TextNode:
         left, right, bottom, top = self.chatTextNode.getFrameActual()
@@ -245,6 +247,8 @@ class Nametag2d(Nametag, Clickable2d, MarginVisible):
         self.panelWidth = self.textNode.getWidth() + self.PANEL_X_PADDING
         self.panelHeight = self.textNode.getHeight() + self.PANEL_Z_PADDING
         self.panel.setScale(self.panelWidth, 1, self.panelHeight)
+        
+        self.cTag.set_panel_size(self.panelWidth, self.panelHeight)
 
         # Add an arrow:
         self.arrow = NametagGlobals.arrowModel.copyTo(self.contents)

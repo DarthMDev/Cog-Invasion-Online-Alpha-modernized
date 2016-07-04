@@ -17,6 +17,8 @@ ConfigureFn(config_ccoginvasion) {
 	initccoginvasion();
 }
 
+ConfigVariableInt ctmusic_numsongs("ctmusic-numsongs", 4);
+
 void
 initccoginvasion() {
 	static bool initialized = false;

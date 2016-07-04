@@ -19,7 +19,7 @@ class DistributedAvatarAI(DistributedNodeAI.DistributedNodeAI):
         DistributedNodeAI.DistributedNodeAI.__init__(self, air)
         self.health = 0
         self.maxHealth = 0
-        self.name = ""
+        self._name = ""
         self.place = 0
         self.hood = ""
         return
@@ -41,7 +41,7 @@ class DistributedAvatarAI(DistributedNodeAI.DistributedNodeAI):
         self.sendUpdate('setChat', [chat])
 
     def setName(self, name):
-        self.name = name
+        self._name = name
 
     def d_setName(self, name):
         self.sendUpdate("setName", [name])
@@ -51,7 +51,7 @@ class DistributedAvatarAI(DistributedNodeAI.DistributedNodeAI):
         self.setName(name)
 
     def getName(self):
-        return self.name
+        return self._name
 
     def setMaxHealth(self, health):
         self.maxHealth = health
@@ -101,5 +101,5 @@ class DistributedAvatarAI(DistributedNodeAI.DistributedNodeAI):
     def disable(self):
         self.health = None
         self.maxHealth = None
-        self.name = None
+        self._name = None
         return

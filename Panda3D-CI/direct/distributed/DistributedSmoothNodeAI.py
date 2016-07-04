@@ -1,5 +1,5 @@
-import DistributedNodeAI
-import DistributedSmoothNodeBase
+from . import DistributedNodeAI
+from . import DistributedSmoothNodeBase
 
 class DistributedSmoothNodeAI(DistributedNodeAI.DistributedNodeAI,
                               DistributedSmoothNodeBase.DistributedSmoothNodeBase):
@@ -15,6 +15,7 @@ class DistributedSmoothNodeAI(DistributedNodeAI.DistributedNodeAI,
 
     def disable(self):
         DistributedSmoothNodeBase.DistributedSmoothNodeBase.disable(self)
+        DistributedNodeAI.DistributedNodeAI.disable(self)
 
     def delete(self):
         DistributedSmoothNodeBase.DistributedSmoothNodeBase.delete(self)
@@ -104,3 +105,4 @@ class DistributedSmoothNodeAI(DistributedNodeAI.DistributedNodeAI,
             return 0
     def getComponentT(self):
         return 0
+

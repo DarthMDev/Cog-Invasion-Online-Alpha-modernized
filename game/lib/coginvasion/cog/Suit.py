@@ -29,7 +29,6 @@ class Suit(Avatar):
 
     def __init__(self):
         Avatar.__init__(self)
-        self.name = None
         self.dept = None
         self.suit = None
         self.head = None

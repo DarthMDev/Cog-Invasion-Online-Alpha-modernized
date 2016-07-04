@@ -41,7 +41,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         DistributedSmoothNode.__init__(self, cr)
 
         self.anim = None
-        self.state = SuitState.ALIVE
+        self._state = SuitState.ALIVE
         self.dept = None
         self.variant = None
         self.suitPlan = None
@@ -478,7 +478,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def disable(self):
         base.taskMgr.remove(self.uniqueName('monitorLocalAvDistance'))
         self.anim = None
-        self.state = None
+        self._state = None
         self.dept = None
         self.variant = None
         self.suitPlan = None
@@ -494,7 +494,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def delete(self):
         Suit.delete(self)
         del self.anim
-        del self.state
+        del self._state
         del self.dept
         del self.variant
         del self.suitPlan

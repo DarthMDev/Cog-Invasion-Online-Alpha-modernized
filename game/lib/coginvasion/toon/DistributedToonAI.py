@@ -34,7 +34,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
         self.questManager = QuestManagerAI(self)
         self.avatarType = CIGlobals.Toon
         self.money = 0
-        self.name = ""
         self.anim = "neutral"
         self.chat = ""
         self.health = 50
@@ -455,7 +454,6 @@ class DistributedToonAI(DistributedAvatarAI, DistributedSmoothNodeAI, ToonDNA.To
             self.questManager = None
             self.tutDone = None
             self.token = None
-            self.name = None
             self.anim = None
             self.chat = None
             self.health = None

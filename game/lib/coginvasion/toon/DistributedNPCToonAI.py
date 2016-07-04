@@ -19,7 +19,7 @@ class DistributedNPCToonAI(DistributedToonAI):
         self.npcId = npcId
         npcData = CIGlobals.NPCToonDict.get(npcId)
         self.dnaStrand = npcData[2]
-        self.name = npcData[1]
+        self.setName(npcData[1])
         self.backpack = 0
         self.place = 0
 

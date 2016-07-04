@@ -82,7 +82,7 @@ except:
     print "CIStart: Running dev"
 sm.maybeFixAA()
 
-from direct.showbase.ShowBaseWide import ShowBase
+from direct.showbase.ShowBase import ShowBase
 base = ShowBase()
 base.cTrav = CollisionTraverser()
 
@@ -124,7 +124,6 @@ base.enableParticles()
 base.camLens.setNearFar(CIGlobals.DefaultCameraNear, CIGlobals.DefaultCameraFar)
 base.transitions.IrisModelName = "phase_3/models/misc/iris.bam"
 base.transitions.FadeModelName = "phase_3/models/misc/fade.bam"
-base.setFrameRateMeter(False)
 base.accept('f9', ScreenshotHandler.__takeScreenshot)
 
 print "CIStart: Setting display preferences..."
