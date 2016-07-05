@@ -40,16 +40,21 @@ class InitialLoad(LoadUtility):
         loader.progressScreen.logoNode.setScale(2.0)
         self.createGui()
         loader.beginBulkLoad('init', 'init', len(self.models), 0, False)
-
-        # Load C++ tournament music stuff.
-        ccoginvasion.CTMusicData.initialize_chunk_data()
-        ccoginvasion.CTMusicManager.spawn_load_tournament_music_task()
-
         LoadUtility.load(self)
 
     def done(self):
-        LoadUtility.done(self)
-        loader.endBulkLoad('init')
+        # Load C++ tournament music stuff.
+        ccoginvasion.CTMusicData.initialize_chunk_data()
+        ccoginvasion.CTMusicManager.spawn_load_tournament_music_task()
+        taskMgr.add(self.__pollTournyMusic, "pollTournyMusic")
+
+    def __pollTournyMusic(self, task):
+        # Wait for the asynchronous load of tournament music to finish.
+        if ccoginvasion.CTMusicManager.is_loaded():
+            LoadUtility.done(self)
+            loader.endBulkLoad('init')
+            return task.done
+        return task.cont
 
     def destroy(self):
         self.version_lbl.destroy()

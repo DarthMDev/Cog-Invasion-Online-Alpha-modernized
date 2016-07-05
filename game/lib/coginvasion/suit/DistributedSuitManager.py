@@ -44,6 +44,9 @@ class DistributedSuitManager(DistributedObject):
         whisper = WhisperPopup('Toon HQ: ' + message, CIGlobals.getToonFont(), ChatGlobals.WTSystem)
         whisper.manage(base.marginManager)
 
+    def normalRoundsEnded(self):
+        self.musicMgr.play_evaded()
+
     def tournamentRoundEnded(self):
         self.musicMgr.play_cooldown()
 
@@ -63,7 +66,7 @@ class DistributedSuitManager(DistributedObject):
             if self.hood.loader.tournamentMusic:
                 self.hood.loader.tournamentMusic.stop()
                 base.cr.music = None
-            self.musicMgr.stop_clip()
+            self.musicMgr.stop_music()
             self.hood.loader.bossBattleMusic.stop()
             base.playMusic(self.hood.loader.music, looping = 1, volume = 0.9)
         self.hood.stopSuitEffect()
@@ -100,6 +103,7 @@ class DistributedSuitManager(DistributedObject):
                 self.hood.loader.tournamentMusic.stop()
                 self.hood.loader.tournamentMusic = None
                 base.cr.music = None
+            self.musicMgr.stop_music()
             base.playMusic(self.hood.loader.bossBattleMusic, looping = 1, volume = 0.9)
 
     def invasionSpawned(self):
@@ -140,30 +144,6 @@ class DistributedSuitManager(DistributedObject):
             #base.cr.music = self.hood.loader.tournamentMusic
             #base.playMusic(self.hood.loader.tournamentMusic, looping = 1, volume = 0.9)
             self.musicMgr.start_music()
-            """
-            base.accept('control-5', self.musicMgr.set_clip_request, ["5050_orchestra"])
-            base.accept('5', self.musicMgr.set_clip_request, ["5050_base"])
-            base.accept('control-l', self.musicMgr.set_clip_request, ["located_orchestra"])
-            base.accept('l', self.musicMgr.set_clip_request, ["located_base"])
-            base.accept('control-r', self.musicMgr.set_clip_request, ["running_away_orchestra"])
-            base.accept('r', self.musicMgr.set_clip_request, ["running_away_base"])
-            base.accept('control-g', self.musicMgr.set_clip_request, ["getting_worse_orchestra"])
-            base.accept('g', self.musicMgr.set_clip_request, ["getting_worse_base"])
-            base.accept('control-i', self.musicMgr.set_clip_request, ["intro_orchestra"])
-            base.accept('i', self.musicMgr.set_clip_request, ["intro_base"])
-            base.accept('shift-s', self.musicMgr.set_clip_request, ['static_cooldown'])
-            base.accept('a', self.musicMgr.set_clip_request, ["arresting_you"])
-            base.accept('h', self.musicMgr.set_clip_request, ["high_speed_cooldown_base"])
-            base.accept('control-h', self.musicMgr.set_clip_request, ["high_speed_cooldown_orchestra"])
-            base.accept('v', self.musicMgr.set_clip_request, ["very_low_speed_cooldown"])
-            base.accept('c', self.musicMgr.set_clip_request, ["low_speed_cooldown_1"])
-            base.accept('control-c', self.musicMgr.set_clip_request, ["low_speed_cooldown_2"])
-            base.accept('shift-a', self.musicMgr.set_clip_request, ["approaching_base"])
-            base.accept('shift-control-a', self.musicMgr.set_clip_request, ["approaching_orchestra"])
-            base.accept('control-a', self.musicMgr.set_clip_request, ["arrested_1"])
-            base.accept('e', self.musicMgr.set_clip_request, ["evaded_1"])
-            base.accept('f', self.musicMgr.set_clip_request, ["intro_orchestra_from_located"])
-            """
 
     def invasionInProgress(self):
         self.systemMessage(CIGlobals.SuitInvasionInProgMsg)
@@ -176,7 +156,6 @@ class DistributedSuitManager(DistributedObject):
         base.cr.playGame.suitManager = self
 
     def disable(self):
-        self.musicMgr.stop_clip()
         self.musicMgr.cleanup()
         self.musicMgr = None
         base.cr.playGame.suitManager = None

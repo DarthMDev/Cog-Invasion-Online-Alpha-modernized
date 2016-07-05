@@ -304,9 +304,6 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
                 else:
                     self.__removeHeadMeter()
 
-                if self.isDead():
-                    messenger.send(PCTMM.getToonDiedEvent())
-
         self.firstTimeChangingHP = False
 
     def d_createBattleMeter(self):

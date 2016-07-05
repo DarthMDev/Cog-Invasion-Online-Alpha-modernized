@@ -50,6 +50,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
     def setTarget(self, toon):
         self.targetId = toon.doId
         self.target = toon
+        self.suit.sendUpdate('setChaseTarget', [self.targetId])
 
     def pickTarget(self):
         # Choose the toon that is the closest to this suit as the target.
@@ -70,6 +71,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
 
         self.targetId = avIds[0]
         self.target = self.air.doId2do.get(self.targetId)
+        self.suit.sendUpdate('setChaseTarget', [self.targetId])
 
     def exit(self):
         self.fsm.request('off')
@@ -77,6 +79,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         self.targetId = None
         self.suitList = None
         self.suitDict = None
+        self.suit.sendUpdate('setChaseTarget', [0])
         SuitPathBehavior.exit(self)
 
     def unload(self):

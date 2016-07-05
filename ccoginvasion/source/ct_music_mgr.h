@@ -16,11 +16,13 @@ PUBLISHED:
 	static void spawn_load_tournament_music_task();
 	void set_clip_request(const string& clip);
 	string get_clip_request() const;
-	void start_music();
+	void start_music(const string& base_or_orc);
 	void stop_clip();
 	static bool is_loaded();
+	void set_song_name(const string& name);
 	string get_song_name() const;
 	string get_clip_name() const;
+	string get_curr_style() const;
 
 	void handle_part_done(int part_index);
 
@@ -46,6 +48,8 @@ private:
 	static void handle_part_done_event(const Event* e, void* data);
 	void play_new_clip();
 	void play_clip(string& clip_name);
+
+	string get_style_of_clipname(const string& clip_name) const;
 };
 
 #endif //CTMUSICMGR_H

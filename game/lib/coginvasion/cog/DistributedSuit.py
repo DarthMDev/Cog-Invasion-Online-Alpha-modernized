@@ -53,6 +53,8 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         # Are we in range of the localAvatar?
         self.isInRange = False
 
+        self.chaseTarget = 0
+
         self.suitFSM = ClassicFSM('DistributedSuit',
             [
                 State('off', self.enterSuitOff, self.exitSuitOff),
@@ -66,6 +68,15 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         self.stateIndex2suitState = {}
         self.suitFSM.enterInitialState()
         self.makeStateDict()
+
+    def setChaseTarget(self, avId):
+        if avId != base.localAvatar.doId:
+            if self.chaseTarget == base.localAvatar.doId:
+                messenger.send(PCTMM.getCogLostTargetEvent())
+        else:
+            messenger.send(PCTMM.getCogChasingEvent())
+
+        self.chaseTarget = avId
 
     def setWalkPath(self, path, timestamp):
         elapsedT = globalClockDelta.localElapsedTime(timestamp)
@@ -297,10 +308,11 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
                 self.clearColorScale()
 
         if self.isDead():
-
-            # Tell the cog tournament music manager (if exists) that a cog died.
-            messenger.send(PCTMM.getCogDiedEvent())
-
+            self.setChaseTarget(0)
+            base.taskMgr.remove(self.uniqueName('monitorLocalAvDistance'))
+            if self.isInRange:
+                messenger.send(PCTMM.getCogOutOfRangeEvent())
+                self.isInRange = False
             self.interruptAttack()
 
         if self.getLevel() > 12:
@@ -436,10 +448,6 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             shouldChat = random.randint(0, 2)
         if shouldChat == 0:
             self.setChat(attackTaunt)
-
-        if avId == base.localAvatar.doId:
-            # Tell the cog tournament music manager (if exists) that a cog is attacking the local avatar.
-            messenger.send(PCTMM.getCogAttackingEvent())
 
         self.animFSM.request('attack', [attackName, avatar, 0.0])
 

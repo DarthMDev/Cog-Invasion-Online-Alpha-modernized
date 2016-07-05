@@ -79,7 +79,10 @@ class SuitTournament:
 
     def endRound(self):
         self.suitMgr.sendSysMessage(self.round_dialogue[self.getRound()]["end"])
-        self.suitMgr.sendUpdate('tournamentRoundEnded')
+        if self.getRound() > 3:
+            self.suitMgr.sendUpdate('tournamentRoundEnded')
+        elif self.getRound() == 3:
+            self.suitMgr.sendUpdate('normalRoundsEnded')
         random_waitTime = random.randint(15, 20)
         if self.getRound() == 4:
             self.stopBackup()

@@ -98,10 +98,11 @@ CTMusicManager::CTMusicManager() : _curr_clip(NULL)
 {
 	_next_clip_request = "NONE";
 	_curr_clip_name = "NONE";
+}
 
-	string base_song = "encntr_nfsmw_bg_";
-	int index = rand() % ctmusic_numsongs;
-	_song_name = base_song + to_string((longlong)index + 1);
+void CTMusicManager::set_song_name(const string& name)
+{
+	_song_name = name;
 }
 
 string CTMusicManager::get_song_name() const
@@ -124,7 +125,24 @@ string CTMusicManager::get_clip_name() const
 	return _curr_clip_name;
 }
 
-void CTMusicManager::start_music()
+string CTMusicManager::get_style_of_clipname(const string& clip_name) const
+{
+	vector<string> split_name = explode("_", clip_name);
+	string style = split_name[split_name.size() - 1];
+	if (style.find("orchestra") != string::npos || style.find("base") != string::npos) {
+		return "_" + style;
+	}
+	else {
+		return "_orchestra";
+	}
+}
+
+string CTMusicManager::get_curr_style() const
+{
+	return get_style_of_clipname(_curr_clip_name);
+}
+
+void CTMusicManager::start_music(const string& base_or_orc)
 {
 	if (!loaded) {
 		cout << "CTMusicManager: Cannot start the music before loading!" << endl;
@@ -133,13 +151,7 @@ void CTMusicManager::start_music()
 
 	cout << "Starting music" << endl;
 
-	int index = rand() % 2;
-	string base_or_orc;
-	if (index == 0)
-		base_or_orc = "base";
-	else
-		base_or_orc = "orchestra";
-	play_clip("intro_" + base_or_orc);
+	play_clip("intro" + base_or_orc);
 
 	EventHandler* evhandl = EventHandler::get_global_event_handler();
 	evhandl->add_hook(AudioClip::get_part_done_event(), &handle_part_done_event, this);
@@ -175,6 +187,10 @@ void CTMusicManager::handle_clip_done(const Event* e, void* data)
 
 void CTMusicManager::play_new_clip()
 {
+	if (_curr_clip_name.find("evaded") != string::npos || _curr_clip_name.find("arrested") != string::npos) {
+		// Don't play a new clip if we just played an evade or arrest clip (we're done).
+		return;
+	}
 	string new_clip;
 	if (_next_clip_request == "NONE") {
 		new_clip = _curr_clip_name;
@@ -197,8 +213,9 @@ void CTMusicManager::handle_part_done(int part_index)
 	if (_next_clip_request != "NONE" && _curr_clip_name.find(explode("_", _next_clip_request)[0]) == string::npos) {
 		play_new_clip();
 	}
-	else if (_next_clip_request != "NONE" && _curr_clip_name.find(explode("_", _next_clip_request)[0]) != string::npos) {
-		// We requested the same clip (but maybe in a different style?). Play from the same index but in the different style.
+	else if (_next_clip_request != "NONE" && _curr_clip_name.find(explode("_", _next_clip_request)[0]) != string::npos &&
+		     get_curr_style() != get_style_of_clipname(_next_clip_request)) {
+		// We requested the same clip but in a different style. Play from the same index but in the different style.
 		stop_clip();
 		AudioClip* ac = &tournament_music_clips[_song_name][_next_clip_request];
 		ac->active = true;

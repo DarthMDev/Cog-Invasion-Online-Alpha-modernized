@@ -332,6 +332,9 @@ dclass DistributedSuit : DistributedAvatar {
 
   setSuitState(int8, int8, int8, int16) broadcast ram;
   setWalkPath(Point3[], int16) broadcast;
+
+  // Tell the clients who we are targeting.
+  setChaseTarget(uint32) broadcast;
 };
 
 dclass DistributedTutorial : DistributedObject {
@@ -623,9 +626,10 @@ dclass DistributedSuitManager : DistributedObject {
   tournamentSpawned() broadcast;
   suitAdminCommand(int8, string) clsend airecv;
   spawner(int8) required ram broadcast;
-  
+
   tournamentRoundEnded() broadcast;
   newTournamentRound() broadcast;
+  normalRoundsEnded() broadcast;
 };
 
 dclass DistributedDroppableCollectableObject : DistributedNode {

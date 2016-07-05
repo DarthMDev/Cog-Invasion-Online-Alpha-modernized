@@ -335,9 +335,6 @@ class LocalToon(DistributedToon):
     def handleSuitAttack(self, attack_id, suit_id):
         DistributedToon.handleSuitAttack(self, attack_id, suit_id)
 
-        # Tell the cog tournament music manager (if exists) that we got hurt.
-        messenger.send(PCTMM.getLocalAvHurtEvent())
-
         if not self.isDead() and base.config.GetBool('want-sa-reactions'):
             base.taskMgr.remove('LT.attackReactionDone')
             attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
@@ -785,6 +782,7 @@ class LocalToon(DistributedToon):
             base.taskMgr.remove("LT.attackReactionDone")
             if (self.cr.playGame.hood.id != ZoneUtil.getHoodId(self.zoneId)):
                 self.cr.playGame.getPlace().fsm.request('died', [{}, self.diedStateDone])
+                messenger.send(PCTMM.getLocalAvDiedEvent())
             return task.done
         return task.cont
 
