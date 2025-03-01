@@ -187,7 +187,7 @@ class DistributedGunGameCapturePoint(DistributedNode):
         
     def setCaptured(self, teamId):
         textureSection = self.capturePoint.find('**/capture_point')
-        if (teamId - 2) in GGG.TeamNameById.values():
+        if (teamId - 2) in list(GGG.TeamNameById.values()):
             self.team = (teamId - 2)
             
             if self.team == GGG.RED:

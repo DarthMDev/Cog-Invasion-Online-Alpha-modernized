@@ -205,15 +205,15 @@ class ToonDNA:
                     '24': 'phase_3/maps/desat_shorts_12.jpg',
                     '25': 'phase_3/maps/desat_shorts_13.jpg',
                     '26': 'phase_3/maps/desat_shorts_14.jpg'}
-    gender2genderDNA = {v: k for k, v in genderDNA2gender.items()}
-    animal2animalDNA = {v: k for k, v in animalDNA2animal.items()}
-    head2headDNA = {v: k for k, v in headDNA2head.items()}
-    color2colorDNA = {v: k for k, v in colorDNA2color.items()}
-    torso2torsoDNA = {v: k for k, v in torsoDNA2torso.items()}
-    leg2legDNA = {v: k for k, v in legDNA2leg.items()}
-    shirt2shirtDNA = {v: k for k, v in shirtDNA2shirt.items()}
-    sleeve2sleeveDNA = {v: k for k, v in sleeveDNA2sleeve.items()}
-    short2shortDNA = {v: k for k, v in shortDNA2short.items()}
+    gender2genderDNA = {v: k for k, v in list(genderDNA2gender.items())}
+    animal2animalDNA = {v: k for k, v in list(animalDNA2animal.items())}
+    head2headDNA = {v: k for k, v in list(headDNA2head.items())}
+    color2colorDNA = {v: k for k, v in list(colorDNA2color.items())}
+    torso2torsoDNA = {v: k for k, v in list(torsoDNA2torso.items())}
+    leg2legDNA = {v: k for k, v in list(legDNA2leg.items())}
+    shirt2shirtDNA = {v: k for k, v in list(shirtDNA2shirt.items())}
+    sleeve2sleeveDNA = {v: k for k, v in list(sleeveDNA2sleeve.items())}
+    short2shortDNA = {v: k for k, v in list(shortDNA2short.items())}
 
     def __init__(self):
         self.dnaStrand = "00/00/00/00/00/00/00/00/00/00/00/00/00/00/00"
@@ -238,13 +238,13 @@ class ToonDNA:
     def getColorByName(self, name):
         name = name.lower()
         color = None
-        if name in self.colorName2DNAcolor.keys():
+        if name in list(self.colorName2DNAcolor.keys()):
             color = self.colorName2DNAcolor[name]
         return color
 
     def getDNAIDFromColor(self, color):
         dnaID = None
-        for _id, dnaColor in self.colorDNA2color.iteritems():
+        for _id, dnaColor in self.colorDNA2color.items():
             if dnaColor == color:
                 dnaID = _id
         return dnaID
@@ -353,7 +353,7 @@ class ToonDNA:
     def parseDNAStrand(self, dnaStrand):
         dnaParts = dnaStrand.split('/')
         strandLength = len(dnaParts) * 2
-        isString = type(dnaStrand) is types.StringType
+        isString = type(dnaStrand) is bytes
         if (strandLength == self.requiredStrandLength and isString):
             self.gender = self.genderDNA2gender[dnaParts[0]]
             self.animal = self.animalDNA2animal[dnaParts[1]]

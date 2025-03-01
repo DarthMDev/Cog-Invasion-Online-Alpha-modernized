@@ -4,9 +4,9 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 
-import BRSafeZoneLoader
-import BRTownLoader
-import ToonHood
+from . import BRSafeZoneLoader
+from . import BRTownLoader
+from . import ToonHood
 
 class BRHood(ToonHood.ToonHood):
 

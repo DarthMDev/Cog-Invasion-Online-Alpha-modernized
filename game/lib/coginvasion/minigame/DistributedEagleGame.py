@@ -10,9 +10,9 @@ from direct.gui.DirectGui import OnscreenText
 from direct.showbase.InputStateGlobal import inputState
 
 from lib.coginvasion.globals import CIGlobals
-from FlightProjectileInterval import FlightProjectileInterval
-from DistributedMinigame import DistributedMinigame
-import EagleGameGlobals as EGG
+from .FlightProjectileInterval import FlightProjectileInterval
+from .DistributedMinigame import DistributedMinigame
+from . import EagleGameGlobals as EGG
 
 def getGameText(fg = (1.0, 0.5, 0.0, 1.0)):
 	return OnscreenText(text = "", scale = 0.15, fg = fg, font = CIGlobals.getMickeyFont())
@@ -331,7 +331,7 @@ class DistributedEagleGame(DistributedMinigame):
 		self.world.setColorScale(0.75, 0.75, 0.75, 1.0)
 		self.world.reparentTo(base.render)
 		self.world.setZ(-5.0)
-		for i in range(len(self.platformPositions.keys())):
+		for i in range(len(list(self.platformPositions.keys()))):
 			platform = loader.loadModel("phase_9/models/cogHQ/platform1.bam")
 			platform.find('**/platformcollision').removeNode()
 			platform.reparentTo(render)

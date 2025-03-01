@@ -7,7 +7,7 @@
 
 from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from DroppableCollectableJellybeans import DroppableCollectableJellybeans
+from .DroppableCollectableJellybeans import DroppableCollectableJellybeans
 from direct.interval.IntervalGlobal import *
 import random
 
@@ -44,7 +44,7 @@ class DroppableCollectableJellybean(DroppableCollectableJellybeans):
 			self.bean = None
 
 	def load(self):
-		print "loading droppableCollectableJellybean"
+		print("loading droppableCollectableJellybean")
 		self.collectSfx = base.loadSfx("phase_3.5/audio/sfx/ci_s_money_smallBucks.ogg")
 		DroppableCollectableJellybeans.load(self)
 

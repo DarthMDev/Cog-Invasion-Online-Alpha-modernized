@@ -5,7 +5,7 @@
 
 """
 
-import ToonHoodAI
+from . import ToonHoodAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.globals import CIGlobals
 

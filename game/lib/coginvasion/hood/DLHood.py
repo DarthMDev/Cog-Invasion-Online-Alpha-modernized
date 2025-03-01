@@ -3,9 +3,9 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from ToonHood import ToonHood
-from DLSafeZoneLoader import DLSafeZoneLoader
-from DLTownLoader import DLTownLoader
+from .ToonHood import ToonHood
+from .DLSafeZoneLoader import DLSafeZoneLoader
+from .DLTownLoader import DLTownLoader
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 

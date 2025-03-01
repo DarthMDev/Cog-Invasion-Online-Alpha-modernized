@@ -21,10 +21,10 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
 
-from Tkinter import *
+from tkinter import *
 from PIL import Image, ImageTk
-import ttk
-import tkMessageBox
+import tkinter.ttk
+import tkinter.messagebox
 base = ShowBase()
 base.startTk()
 
@@ -119,7 +119,7 @@ class Launcher:
         self.cWriter.send(dg, self.Connection)
 
     def __handleBadLauncher(self):
-        self.badLauncherMsg = tkMessageBox.showwarning(parent = self.tk, title = "Error", message = "This launcher is out of date. Please go to coginvasion.com and download the latest launcher.")
+        self.badLauncherMsg = tkinter.messagebox.showwarning(parent = self.tk, title = "Error", message = "This launcher is out of date. Please go to coginvasion.com and download the latest launcher.")
         sys.exit()
 
     def exitValidate(self):
@@ -143,7 +143,7 @@ class Launcher:
     def __handleBaseLink(self, dgi):
         global baseLink
         baseLink = dgi.getString()
-        print "base link is: " + baseLink
+        print("base link is: " + baseLink)
 
     def exitFetch(self):
         canvas.delete(self.infoLbl)
@@ -155,7 +155,7 @@ class Launcher:
         self.currentMD5 = ""
         self.title = canvas.create_text(287, 167, text = "Updating files...", fill = "white")
         self.infoLbl = canvas.create_text(287, 215, fill = "white")
-        self.progBar = ttk.Progressbar(orient = "horizontal", length = 100, mode = "determinate")
+        self.progBar = tkinter.ttk.Progressbar(orient = "horizontal", length = 100, mode = "determinate")
         self.progBar.place(x = 237, y = 230)
         self.nextFile()
 
@@ -172,12 +172,12 @@ class Launcher:
         self.downloadFile()
 
     def reportDownloadTimes(self):
-        print "----------DOWNLOAD TIMES----------"
+        print("----------DOWNLOAD TIMES----------")
         totalTime = 0
-        for k, v in self.downloadTime.iteritems():
-            print files2Download[k] + ": " + str(self.downloadTime[k]) + " seconds."
+        for k, v in list(self.downloadTime.items()):
+            print(files2Download[k] + ": " + str(self.downloadTime[k]) + " seconds.")
             totalTime += self.downloadTime[k]
-        print "Total time: " + str(totalTime) + " seconds."
+        print(("Total time: " + str(totalTime) + " seconds."))
         dg = PyDatagram()
         dg.addUint16(DL_TIME_REPORT)
         dg.addFloat64(totalTime)
@@ -339,7 +339,7 @@ class Launcher:
             self.__handleNoConnection()
 
     def __handleNoConnection(self):
-        self.noConnectionDialog = tkMessageBox.showwarning(parent = self.tk, title = "Error", message = "Could not connect to the servers.")
+        self.noConnectionDialog = tkinter.messagebox.showwarning(parent = self.tk, title = "Error", message = "Could not connect to the servers.")
         sys.exit()
 
     def exitConnect(self):
@@ -380,7 +380,7 @@ class Launcher:
         self.launcherFSM.request('play')
 
     def __handleInvalidCredidentials(self):
-        self.invalidDialog = tkMessageBox.showwarning(parent = self.tk, message = "Username and/or password is incorrect.", title = "Error")
+        self.invalidDialog = tkinter.messagebox.showwarning(parent = self.tk, message = "Username and/or password is incorrect.", title = "Error")
         del self.invalidDialog
         self.launcherFSM.request('menu')
 
@@ -413,7 +413,7 @@ class Launcher:
         self.launcherFSM.request('submitAcc')
 
     def __handleInvalidEntries(self, state):
-        self.invalidMsg = tkMessageBox.showwarning(
+        self.invalidMsg = tkinter.messagebox.showwarning(
             parent = self.tk,
             message = "Your account name and password must be at least 5 characters long. " + \
                 "You cannot have whitespace or blank entries. Your account name and password cannot be identical.",
@@ -453,7 +453,7 @@ class Launcher:
             self.__handleAccExists()
 
     def __handleAccExists(self):
-        self.accExisitsDialog = tkMessageBox.showwarning(parent = self.tk, message = "That account name already exists.", title = "Account Exists")
+        self.accExisitsDialog = tkinter.messagebox.showwarning(parent = self.tk, message = "That account name already exists.", title = "Account Exists")
         del self.accExisitsDialog
         self.launcherFSM.request('accCreate')
 
@@ -534,7 +534,7 @@ class Launcher:
 
     def __handleServerMsg(self, dgi):
         msg = dgi.getString()
-        dialog = tkMessageBox.showwarning(parent = self.tk, message = msg, title = "Message from Server")
+        dialog = tkinter.messagebox.showwarning(parent = self.tk, message = msg, title = "Message from Server")
         self.launcherFSM.request('menu')
 
     def __handleDLList(self, dgi):
@@ -545,7 +545,7 @@ class Launcher:
         for i in range(numFiles):
             files2Download.append(dgi.getString())
         self.launcherFSM.request('menu')
-        print fileNames
+        print(fileNames)
 
     def __handleLauncherStatus(self, msgType):
         if msgType == LAUNCHER_GOOD:

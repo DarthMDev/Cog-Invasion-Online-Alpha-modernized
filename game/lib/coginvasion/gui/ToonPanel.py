@@ -86,7 +86,7 @@ class ToonPanel(DirectFrame):
         isOnline = self.avatarInfo[7]
         shardName = 'Unknown District'
         hoodName = ZoneUtil.getHoodId(zoneId, 1)
-        for district in base.cr.activeDistricts.values():
+        for district in list(base.cr.activeDistricts.values()):
             if district.doId == shardId:
                 shardName = district.getDistrictName()
                 break

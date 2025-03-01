@@ -70,7 +70,7 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
     def createBattle(self):
 		zone = base.air.allocateZone()
 		avIdArray = []
-		for avId in self.slotTakenByAvatarId.keys():
+		for avId in list(self.slotTakenByAvatarId.keys()):
 			avIdArray.append(avId)
 		battle = DistributedCogBattleAI(self.air)
 		battle.generateWithRequired(zone)
@@ -79,7 +79,7 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
 		battle.b_setTotalCogs(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
 		battle.b_setCogsRemaining(CogBattleGlobals.HoodIndex2TotalCogs[self.getHoodIndex()])
 		battle.setAvIdArray(avIdArray)
-		for avId in self.slotTakenByAvatarId.keys():
+		for avId in list(self.slotTakenByAvatarId.keys()):
 			self.sendUpdateToAvatarId(avId, 'headOff', [zone])
 
     def exitLeaving(self):
@@ -112,13 +112,13 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
 
     def requestBoard(self):
         avId = self.air.getAvatarIdFromSender()
-        if len(self.slotTakenByAvatarId) < self.NUM_SLOTS and not avId in self.slotTakenByAvatarId.keys() and self.fsm.getCurrentState().getName() in ['wait', 'waitCountdown']:
+        if len(self.slotTakenByAvatarId) < self.NUM_SLOTS and not avId in list(self.slotTakenByAvatarId.keys()) and self.fsm.getCurrentState().getName() in ['wait', 'waitCountdown']:
             if len(self.slotTakenByAvatarId) == 0:
                 # First avatar aboard! Start counting down!
                 self.b_setState('waitCountdown')
             slotToFill = -1
             for slotNum in self.slots:
-                if not slotNum in self.slotTakenByAvatarId.values():
+                if not slotNum in list(self.slotTakenByAvatarId.values()):
                     slotToFill = slotNum
                     break
             self.sendUpdate('fillSlot', [slotToFill, avId])
@@ -128,7 +128,7 @@ class DistributedBattleTrolleyAI(DistributedObjectAI):
 
     def requestHopOff(self):
         avId = self.air.getAvatarIdFromSender()
-        if avId in self.slotTakenByAvatarId.keys() and self.fsm.getCurrentState().getName() in ['wait', 'waitCountdown']:
+        if avId in list(self.slotTakenByAvatarId.keys()) and self.fsm.getCurrentState().getName() in ['wait', 'waitCountdown']:
             slot = self.slotTakenByAvatarId[avId]
             del self.slotTakenByAvatarId[avId]
             self.sendUpdate('emptySlot', [slot, avId])

@@ -1,8 +1,8 @@
 # Filename: QuestManagerAI.py
 # Created by:  blach (29Jul15)
 
-import QuestGlobals, Quests
-from QuestManagerBase import QuestManagerBase
+from . import QuestGlobals, Quests
+from .QuestManagerBase import QuestManagerBase
 from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.globals import CIGlobals
 
@@ -65,7 +65,7 @@ class QuestManagerAI(QuestManagerBase):
         # If checkCurrentCompleted is False, the method will only check if the last objective
         # was to visit this npc.
 
-        for quest in self.quests.values():
+        for quest in list(self.quests.values()):
             questId = quest.questId
             currentObjectiveIndex = quest.currentObjectiveIndex
             currentObjective = quest.getCurrentObjective()
@@ -91,7 +91,7 @@ class QuestManagerAI(QuestManagerBase):
         return False
 
     def hasAnObjectiveToVisit(self, npcId, zoneId):
-        for quest in self.quests.values():
+        for quest in list(self.quests.values()):
             currObjective = quest.getCurrentObjective()
             if currObjective.type == Quests.VisitNPC:
                 if currObjective.npcId == npcId:
@@ -108,7 +108,7 @@ class QuestManagerAI(QuestManagerBase):
             self.incrementQuestObjective(questId)
 
     def cogDefeated(self, cog):
-        for questId in self.quests.keys():
+        for questId in list(self.quests.keys()):
             quest = self.quests[questId]
             objective = quest.getCurrentObjective()
             if objective.type in Quests.DefeatCogObjectives:
@@ -144,7 +144,7 @@ class QuestManagerAI(QuestManagerBase):
                 self.checkIfObjectiveIsComplete(questId)
 
     def invasionDefeated(self, hood, size = None):
-        for questId in self.quests.keys():
+        for questId in list(self.quests.keys()):
             quest = self.quests[questId]
             objective = quest.getCurrentObjective()
             if objective.type == Quests.DefeatCogInvasion:
@@ -157,7 +157,7 @@ class QuestManagerAI(QuestManagerBase):
                         self.checkIfObjectiveIsComplete(questId)
 
     def tournamentDefeated(self, hood):
-        for questId in self.quests.keys():
+        for questId in list(self.quests.keys()):
             quest = self.quests[questId]
             objective = quest.getCurrentObjective()
             if objective.type == Quests.DefeatCogTournament:

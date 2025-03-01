@@ -1,7 +1,7 @@
 # Filename: DistributedMLTreasureAI.py
 # Created by: blach (29Jul15)
 
-import DistributedTreasureAI
+from . import DistributedTreasureAI
 
 class DistributedMLTreasureAI(DistributedTreasureAI.DistributedTreasureAI):
 

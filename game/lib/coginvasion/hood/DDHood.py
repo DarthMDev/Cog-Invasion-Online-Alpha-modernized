@@ -4,9 +4,9 @@
 from panda3d.core import Fog
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType
-import DDTownLoader
-import DDSafeZoneLoader
-from ToonHood import ToonHood
+from . import DDTownLoader
+from . import DDSafeZoneLoader
+from .ToonHood import ToonHood
 
 class DDHood(ToonHood):
 

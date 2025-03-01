@@ -206,7 +206,7 @@ class CharSelection(DirectObject):
                 'half_2' : {'pos' : (-15, 128.69, -25), 'hpr' : (60.26, 0, 0)}
             }
 
-            for pileType, info in piles.items():
+            for pileType, info in list(piles.items()):
                 if '_' in pileType:
                     pileType = pileType[:-2]
                 pile = loader.loadModel('phase_8/models/props/snow_pile_%s.bam' % (pileType))

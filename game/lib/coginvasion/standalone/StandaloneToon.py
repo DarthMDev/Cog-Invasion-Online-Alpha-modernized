@@ -84,10 +84,10 @@ base.mouseWatcherNode.setLeavePattern('mouse-leave-%r')
 base.mouseWatcherNode.setButtonDownPattern('button-down-%r')
 base.mouseWatcherNode.setButtonUpPattern('button-up-%r')
 
-import __builtin__
+import builtins
 class game:
 	process = 'client'
-__builtin__.game = game()
+builtins.game = game()
 
 from lib.coginvasion.toon import LocalToon
 from lib.coginvasion.login.AvChoice import AvChoice

@@ -40,7 +40,7 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
         self.sendUpdateToAvatarId(avId, 'turretPlaced', [turret.doId])
 
     def disable(self):
-        for turret in self.turretId2turret.values():
+        for turret in list(self.turretId2turret.values()):
             turret.requestDelete()
             turret.disable()
             turret.delete()
@@ -49,7 +49,7 @@ class DistributedPieTurretManagerAI(DistributedObjectAI):
     def getTurretCount(self):
         turrets = 0
             
-        for obj in base.air.doId2do.values():
+        for obj in list(base.air.doId2do.values()):
             className = obj.__class__.__name__
             if obj.zoneId == self.zoneId:
                 if className == 'DistributedToonAI':

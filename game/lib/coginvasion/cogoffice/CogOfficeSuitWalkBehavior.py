@@ -4,7 +4,7 @@
 from panda3d.core import Point3
 
 from lib.coginvasion.cog.SuitPathBehavior import SuitPathBehavior
-from CogOfficeConstants import *
+from .CogOfficeConstants import *
 
 class CogOfficeSuitWalkBehavior(SuitPathBehavior):
 

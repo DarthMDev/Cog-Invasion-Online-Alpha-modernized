@@ -76,7 +76,7 @@ class SuitPanicBehavior(SuitPathBehavior):
             self.toonsInRange = []
         
         # Let's search for toons in range.
-        for av in self.suit.air.doId2do.values():
+        for av in list(self.suit.air.doId2do.values()):
             if av.__class__.__name__ == 'DistributedToonAI':
                 if av.zoneId == self.suit.zoneId:
                     if self.suit.getDistance(av) <= toonRange:

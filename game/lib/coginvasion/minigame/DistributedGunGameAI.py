@@ -10,11 +10,11 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.fsm import ClassicFSM, State
 
 from lib.coginvasion.minigame.DistributedToonFPSGameAI import DistributedToonFPSGameAI
-import GunGameGlobals as GGG
-import GunGameLevelLoaderAI
-from DistributedGunGameFlagAI import DistributedGunGameFlagAI
-from DistributedGunGameCapturePointAI import DistributedGunGameCapturePointAI
-from TeamMinigameAI import TeamMinigameAI
+from . import GunGameGlobals as GGG
+from . import GunGameLevelLoaderAI
+from .DistributedGunGameFlagAI import DistributedGunGameFlagAI
+from .DistributedGunGameCapturePointAI import DistributedGunGameCapturePointAI
+from .TeamMinigameAI import TeamMinigameAI
 
 class DistributedGunGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
     notify = directNotify.newCategory("DistributedGunGameAI")
@@ -125,7 +125,7 @@ class DistributedGunGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
                     winnerAvIds.append(avId)
         elif self.gameMode == GGG.GameModes.CTF:
             highestScore = max(self.scoreByTeam.values())
-            for team, score in self.scoreByTeam.items():
+            for team, score in list(self.scoreByTeam.items()):
                 if score == highestScore:
                     # This team won. Make all the players that are on the winning team be winners.
                     for avId in self.playerListByTeam[team]:
@@ -149,7 +149,7 @@ class DistributedGunGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
         self.votes[mode] += 1
         self.sendUpdate('incrementGameModeVote', [mode])
         totalVotes = 0
-        for numVotes in self.votes.values():
+        for numVotes in list(self.votes.values()):
             totalVotes += numVotes
         if totalVotes >= len(self.avatars):
             v = list(self.votes.values())
@@ -180,7 +180,7 @@ class DistributedGunGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
                 self.kothCapturePoints.update({avatar.doId : 0})
                 
     def b_setKOTHPoints(self, avId, points):
-        if avId in self.kothCapturePoints.keys():
+        if avId in list(self.kothCapturePoints.keys()):
             self.kothCapturePoints.update({avId : points})
         self.sendUpdateToAvatarId(avId, 'setKOTHPoints', [points])
         
@@ -188,7 +188,7 @@ class DistributedGunGameAI(DistributedToonFPSGameAI, TeamMinigameAI):
         self.sendUpdate('setKOTHKing', [avId])
         
     def getKOTHPoints(self, avId):
-        if avId in self.kothCapturePoints.keys():
+        if avId in list(self.kothCapturePoints.keys()):
             return self.kothCapturePoints[avId]
 
     def deadAvatar(self, avId, timestamp):

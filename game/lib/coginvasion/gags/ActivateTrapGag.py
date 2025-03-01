@@ -113,7 +113,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
         intoNP = entry.getIntoNodePath()
         avNP = intoNP.getParent()
         if self.avatar.doId == base.localAvatar.doId:
-            for key in base.cr.doId2do.keys():
+            for key in list(base.cr.doId2do.keys()):
                 obj = base.cr.doId2do[key]
                 if obj.__class__.__name__ in CIGlobals.SuitClasses:
                     if obj.getKey() == avNP.getKey():
@@ -174,7 +174,7 @@ class ActivateTrapGag(TrapGag, LocationGag):
             self.entities.append(self.gag)
             # Let's suck the closest suit into our trap.
             suits = []
-            for obj in base.cr.doId2do.values():
+            for obj in list(base.cr.doId2do.values()):
                 if obj.__class__.__name__ == "DistributedSuit":
                     if obj.getPlace() == base.localAvatar.zoneId:
                         suits.append(obj)
@@ -249,10 +249,10 @@ class ActivateTrapGag(TrapGag, LocationGag):
         entities = {}
         for ent in objects:
             entities.update({ent : (ent.getDistance(entity) / 100)})
-        for dist in entities.values():
+        for dist in list(entities.values()):
             distances.append(dist)
         distances.sort()
-        for ent in entities.keys():
+        for ent in list(entities.keys()):
             if (ent.getDistance(entity) / 100) == distances[0]:
                 entities = {}
                 distances = []

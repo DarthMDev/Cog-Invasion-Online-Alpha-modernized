@@ -80,13 +80,13 @@ class AIRepository:
 		random_wait = random.uniform(5, 60)
 		taskMgr.doMethodLater(random_wait, self.autoSuiter, "autoSuitSpawn")
 		base.accept("control", self.disableAutoSuits)
-		print "AutoSuit: Auto suits enabled."
+		print("AutoSuit: Auto suits enabled.")
 		
 	def disableAutoSuits(self):
 		self.automaticSuits = 0
 		taskMgr.remove("autoSuitSpawn")
 		base.accept("control", self.enableAutoSuits)
-		print "AutoSuit: Auto suits disabled."
+		print("AutoSuit: Auto suits disabled.")
 		
 	def isBossActive(self):
 		for suit in self.Suits:
@@ -116,23 +116,23 @@ class AIRepository:
 			random_delay = random.randint(5, 80)
 		if self.toonsAreInZone(20):
 			self.createAutoSuit(choice)
-			print "AutoSuit: Creating auto suit."
+			print("AutoSuit: Creating auto suit.")
 		else:
 			random_delay = random.randint(20, 80)
-			print "AutoSuit: Can't create an auto suit with no toons playing. Changing delay time."
-		print "AutoSuit: Delay is %s seconds." % random_delay
+			print("AutoSuit: Can't create an auto suit with no toons playing. Changing delay time.")
+		print("AutoSuit: Delay is %s seconds." % random_delay)
 		task.delayTime = random_delay
 		return task.again
 		
 	def toonsArePlaying(self):
-		for key in base.cr.doId2do.keys():
+		for key in list(base.cr.doId2do.keys()):
 			obj = base.cr.doId2do[key]
 			if obj.__class__.__name__ == "DistributedToon":
 				return True
 		return False
 		
 	def toonsAreInZone(self, zone):
-		for key in base.cr.doId2do.keys():
+		for key in list(base.cr.doId2do.keys()):
 			obj = base.cr.doId2do[key]
 			if obj.__class__.__name__ == "DistributedToon":
 				if obj.zoneId == zone:

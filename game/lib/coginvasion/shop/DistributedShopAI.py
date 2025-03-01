@@ -34,7 +34,7 @@ class DistributedShopAI(DistributedNodeAI):
             
     def requestTurretCount(self):
         avId = self.air.getAvatarIdFromSender()
-        for obj in self.air.doId2do.values():
+        for obj in list(self.air.doId2do.values()):
             className = obj.__class__.__name__
             if obj.zoneId == self.zoneId:
                 if className == 'DistributedCogBattleAI':

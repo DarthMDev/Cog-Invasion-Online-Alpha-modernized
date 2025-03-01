@@ -20,7 +20,7 @@ from lib.coginvasion.hood.DDHoodAI import DDHoodAI
 
 from panda3d.core import UniqueIdAllocator
 from lib.coginvasion.globals import CIGlobals
-from AIZoneData import AIZoneDataStore
+from .AIZoneData import AIZoneDataStore
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.distributed.CogInvasionDoGlobals import DO_ID_DISTRICT_NAME_MANAGER
 
@@ -47,9 +47,9 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
 
     def updateAIWorld(self, task):
         # Adjust ai walk speed according to the frame rate.
-        for hood in self.hoods.values():
+        for hood in list(self.hoods.values()):
             if hood.suitManager:
-                for suit in hood.suitManager.suits.values():
+                for suit in list(hood.suitManager.suits.values()):
                     suit.aiChar.setMass(suit.aiChar.getMass() * globalClock.getDt() - 50 * CIGlobals.NPCWalkSpeed / globalClock.getDt())
 
         # Make this a try-except because sometimes it fails to update.
@@ -107,7 +107,7 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
 
     def toonsAreInZone(self, zoneId):
         numToons = 0
-        for obj in self.doId2do.values():
+        for obj in list(self.doId2do.values()):
             if obj.__class__.__name__ == "DistributedToonAI":
                 if obj.zoneId == zoneId:
                     numToons += 1
@@ -115,7 +115,7 @@ class CogInvasionAIRepository(CogInvasionInternalRepository):
 
     def shutdown(self):
         taskMgr.remove('updateAIWorld')
-        for hood in self.hoods.values():
+        for hood in list(self.hoods.values()):
             hood.shutdown()
         if self.timeManager:
             self.timeManager.requestDelete()

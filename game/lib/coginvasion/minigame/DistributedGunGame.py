@@ -14,11 +14,11 @@ from direct.interval.IntervalGlobal import *
 from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 from lib.coginvasion.minigame.GunGameToonFPS import GunGameToonFPS
-from RemoteToonBattleAvatar import RemoteToonBattleAvatar
-from DistributedToonFPSGame import DistributedToonFPSGame
-from TeamMinigame import *
-import GunGameLevelLoader
-import GunGameGlobals as GGG
+from .RemoteToonBattleAvatar import RemoteToonBattleAvatar
+from .DistributedToonFPSGame import DistributedToonFPSGame
+from .TeamMinigame import *
+from . import GunGameLevelLoader
+from . import GunGameGlobals as GGG
 
 import random
 import math

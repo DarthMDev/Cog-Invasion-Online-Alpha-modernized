@@ -1,8 +1,8 @@
 # Filename: BRTownLoader.py
 # Created by:  blach (26Jul15)
 
-import TownLoader
-import BRStreet
+from . import TownLoader
+from . import BRStreet
 
 from lib.coginvasion.globals import CIGlobals
 

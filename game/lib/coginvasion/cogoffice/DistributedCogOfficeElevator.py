@@ -6,9 +6,9 @@ from direct.distributed.DistributedObject import DistributedObject
 from direct.interval.IntervalGlobal import Sequence, Func
 
 from lib.coginvasion.hood import ZoneUtil
-from ElevatorConstants import *
-from ElevatorUtils import *
-from DistributedElevator import DistributedElevator
+from .ElevatorConstants import *
+from .ElevatorUtils import *
+from .DistributedElevator import DistributedElevator
 
 class DistributedCogOfficeElevator(DistributedElevator):
     notify = directNotify.newCategory('DistributedCogOfficeElevator')
@@ -50,7 +50,7 @@ class DistributedCogOfficeElevator(DistributedElevator):
         closeDoors(self.getLeftDoor(), self.getRightDoor())
 
     def putToonsInElevator(self):
-        for i in xrange(len(self.thebldg.avatars)):
+        for i in range(len(self.thebldg.avatars)):
             avId = self.thebldg.avatars[i]
             toon = self.cr.doId2do.get(avId)
             if toon:

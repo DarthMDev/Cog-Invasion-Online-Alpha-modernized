@@ -5,7 +5,7 @@
 
 """
 
-import HoodAI
+from . import HoodAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.minigame.DistributedMinigameStationAI import DistributedMinigameStationAI

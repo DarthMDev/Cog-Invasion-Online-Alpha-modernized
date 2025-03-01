@@ -10,8 +10,8 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 import random
 
-from DistributedMinigameAI import DistributedMinigameAI
-from CameraShyLevelLoaderAI import CameraShyLevelLoaderAI
+from .DistributedMinigameAI import DistributedMinigameAI
+from .CameraShyLevelLoaderAI import CameraShyLevelLoaderAI
 
 class DistributedCameraShyGameAI(DistributedMinigameAI):
     notify = directNotify.newCategory("DistributedCameraShyGameAI")
@@ -50,7 +50,7 @@ class DistributedCameraShyGameAI(DistributedMinigameAI):
 
         # Check if this avatar has taken 3 pictures of all other toons.
         completedToons = 0
-        for numPicsTaken in self.pictureData[avId].values():
+        for numPicsTaken in list(self.pictureData[avId].values()):
             if numPicsTaken >= self.numPicsToTakeOfEachAvatar:
                 completedToons += 1
         if completedToons == len(self.avatars) - 1:

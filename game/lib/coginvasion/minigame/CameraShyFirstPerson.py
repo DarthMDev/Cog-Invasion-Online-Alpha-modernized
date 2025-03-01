@@ -8,7 +8,7 @@ from direct.gui.DirectGui import OnscreenText, DirectFrame, DirectWaitBar, Onscr
 from direct.showbase.InputStateGlobal import inputState
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 
-from FirstPerson import FirstPerson
+from .FirstPerson import FirstPerson
 from lib.coginvasion.globals import CIGlobals
 
 class CameraShyFirstPerson(FirstPerson):

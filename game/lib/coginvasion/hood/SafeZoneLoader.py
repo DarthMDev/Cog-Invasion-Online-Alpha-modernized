@@ -14,9 +14,9 @@ from panda3d.core import ModelPool, TexturePool, NodePath
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.manager.SettingsManager import SettingsManager
-from QuietZoneState import QuietZoneState
-import ToonInterior
-import LinkTunnel
+from .QuietZoneState import QuietZoneState
+from . import ToonInterior
+from . import LinkTunnel
 
 import types
 import random
@@ -57,7 +57,7 @@ class SafeZoneLoader(StateData):
     def load(self):
         StateData.load(self)
         if self.pgMusicFilename:
-            if type(self.pgMusicFilename) == types.ListType:
+            if type(self.pgMusicFilename) == list:
                 filename = random.choice(self.pgMusicFilename)
             else:
                 filename = self.pgMusicFilename
@@ -177,7 +177,7 @@ class SafeZoneLoader(StateData):
 
     def makeDictionaries(self, dnaStore):
         self.nodeList = []
-        for i in xrange(dnaStore.getNumDNAVisGroups()):
+        for i in range(dnaStore.getNumDNAVisGroups()):
             groupFullName = dnaStore.getDNAVisGroupName(i)
             #groupName = base.cr.hoodMgr.extractGroupName(groupFullName)
             groupNode = self.geom.find('**/' + groupFullName)

@@ -27,7 +27,7 @@ class CogOfficeSuitAttackBehavior(SuitAttackBehavior):
 
         # Choose a random attack and start it.
         attack = random.choice(self.suit.suitPlan.getAttacks())
-        attackIndex = SuitAttacks.SuitAttackLengths.keys().index(attack)
+        attackIndex = list(SuitAttacks.SuitAttackLengths.keys()).index(attack)
         timestamp = globalClockDelta.getFrameNetworkTime()
         if self.suit.isDead():
             self.stopAttacking()

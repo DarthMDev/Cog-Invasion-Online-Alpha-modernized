@@ -6,7 +6,7 @@
 """
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-import RewardType
+from . import RewardType
 
 class QuestReward:
     notify = directNotify.newCategory('QuestReward')

@@ -25,7 +25,7 @@ class TrafficLight(NodePath):
     def __init__(self, index = 0):
         NodePath.__init__(self, 'TrafficLight-' + str(id(self)))
         self.light = loader.loadModel('phase_14/models/props/cogtropolis_streetlight.egg')
-        for partName, colorName in self.part2Color.items():
+        for partName, colorName in list(self.part2Color.items()):
             for node in self.light.findAllMatches('**/' + partName):
                 if not '_coll' in node.getName():
                     node.setColor(self.colors[colorName])

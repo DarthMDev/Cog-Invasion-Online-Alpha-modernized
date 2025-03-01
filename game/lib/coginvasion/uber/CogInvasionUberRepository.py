@@ -10,7 +10,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.distributed.DistributedRootAI import DistributedRootAI
 from lib.coginvasion.distributed.CogInvasionDoGlobals import *
 from direct.distributed.ParentMgr import ParentMgr
-import LoginToken
+from . import LoginToken
 
 STORE_LOGIN_TOKEN = 100
 
@@ -47,7 +47,7 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
         Validate a login token.
         """
 
-        print ip
+        print(ip)
 
         # Begin the process of validating this token.
 
@@ -92,9 +92,9 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
 
         # First, add the token to the activeTokens list.
         self.activeTokens.append(tokenObj)
-        print "Activated token: %s" % tokenObj
-        print "Token: %s, IP: %s" % (tokenObj.getToken(), tokenObj.getIP())
-        print "Tokens: %s" % self.activeTokens
+        print("Activated token: %s" % tokenObj)
+        print("Token: %s, IP: %s" % (tokenObj.getToken(), tokenObj.getIP()))
+        print("Tokens: %s" % self.activeTokens)
 
         # Then, start the deactivateToken task.
         #taskMgr.doMethodLater(self.getActiveTokenLength(), self.deleteTokenTask,
@@ -115,15 +115,15 @@ class CogInvasionUberRepository(CogInvasionInternalRepository):
         # First, stop the deactivate task.
         taskMgr.remove(token.getDeleteTask())
 
-        print "Deactivated token: %s" % token
-        print "Token: %s, IP: %s" % (token.getToken(), token.getIP())
+        print("Deactivated token: %s" % token)
+        print("Token: %s, IP: %s" % (token.getToken(), token.getIP()))
 
         # Next, cleanup the object.
         token.cleanup()
 
         # Finally, remove the object from the activeTokens list.
         self.activeTokens.remove(token)
-        print "Tokens: %s" % self.activeTokens
+        print("Tokens: %s" % self.activeTokens)
 
     def isBanned(self, ip):
         return False

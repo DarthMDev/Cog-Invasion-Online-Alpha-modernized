@@ -53,7 +53,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.battleMeter = None
         for index in range(len(self.animFSM.getStates())):
             self.animState2animId[self.animFSM.getStates()[index].getName()] = index
-        self.animId2animState = {v: k for k, v in self.animState2animId.items()}
+        self.animId2animState = {v: k for k, v in list(self.animState2animId.items())}
         self.headMeter = None
         self.firstTimeChangingHP = True
         self.quests = []
@@ -519,7 +519,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.sendUpdate('gagBuild', [gagId])
 
     def handleSuitAttack(self, attack_id, suit_id):
-        attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
+        attack = list(SuitAttacks.SuitAttackLengths.keys())[attack_id]
         if attack == "canned":
             sfx = base.audio3d.loadSfx("phase_5/audio/sfx/SA_canned_impact_only.ogg")
             base.audio3d.attachSoundToObject(sfx, self)
@@ -595,7 +595,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
             self.backpack = Backpack(self)
         # We just want to update the network ammo sometimes,
         # let's ignore updates if we're not constructing a backpack.
-        for i in xrange(len(gagIds)):
+        for i in range(len(gagIds)):
             gagId = gagIds[i]
             ammo = ammoList[i]
 
@@ -634,7 +634,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         else:
             ts = globalClockDelta.localElapsedTime(timestamp)
 
-        if type(anim) == types.IntType:
+        if type(anim) == int:
             anim = self.animId2animState[anim]
         if self.animFSM.getStateNamed(anim):
             self.animFSM.request(anim, [ts, callback, extraArgs])
@@ -644,7 +644,7 @@ class DistributedToon(Toon.Toon, DistributedAvatar, DistributedSmoothNode, Delay
         self.setAnimState(anim, None)
 
     def d_setAnimState(self, anim):
-        if type(anim) == types.StringType:
+        if type(anim) == bytes:
             anim = self.animState2animId[anim]
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.sendUpdate("setAnimState", [anim, timestamp])

@@ -5,10 +5,10 @@
 
 """
 
-import ToonFPS
-from GunGameBullet import GunGameBullet
+from . import ToonFPS
+from .GunGameBullet import GunGameBullet
 from direct.distributed.ClockDelta import globalClockDelta
-import GunGameGlobals as GGG
+from . import GunGameGlobals as GGG
 import random
 
 from lib.coginvasion.gui.KOTHGui import KOTHGui
@@ -26,7 +26,7 @@ class GunGameToonFPS(ToonFPS.ToonFPS):
         ToonFPS.ToonFPS.load(self)
         if self.weaponName in ['shotgun', 'sniper']:
             if self.mg.gameMode in GGG.FFA_MODES:
-                color = random.choice(GGG.TeamColorById.values())
+                color = random.choice(list(GGG.TeamColorById.values()))
             else:
                 color = GGG.TeamColorById[self.mg.team]
             self.weapon.setColorScale(color)

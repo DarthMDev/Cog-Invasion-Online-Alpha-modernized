@@ -44,10 +44,10 @@ class TNT(TossTrapGag):
     def onCollision(self, entry):
         TossTrapGag.onCollision(self, entry)
         base.localAvatar.b_gagCollision(self.getID())
-        print "Hey, there was a collision."
+        print("Hey, there was a collision.")
 
     def doCollision(self):
-        print "HEY! I SHOULD BE DOING THIS BY NOW!"
+        print("HEY! I SHOULD BE DOING THIS BY NOW!")
         if not self.entity:
             self.build()
             self.entity = self.gag
@@ -87,7 +87,7 @@ class TNT(TossTrapGag):
 
     def activate(self):
         if not self.entity: return
-        for obj in base.cr.doId2do.values():
+        for obj in list(base.cr.doId2do.values()):
             if obj.__class__.__name__ in CIGlobals.SuitClasses:
                 if obj.getPlace() == base.localAvatar.zoneId:
                     if obj.getDistance(self.entity) <= self.maxDistance:

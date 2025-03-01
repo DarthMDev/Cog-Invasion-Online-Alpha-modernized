@@ -11,7 +11,7 @@ from lib.coginvasion.distributed.CogInvasionErrorCodes import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from panda3d.core import NetDatagram
-import anydbm
+import dbm
 import os
 
 from lib.coginvasion.globals import CIGlobals
@@ -42,7 +42,7 @@ class CreateToonProcess:
 
     def avatarCreateDone(self):
         self.notify.info("DONE!")
-        print self.newToonId
+        print(self.newToonId)
         self.csm.sendUpdateToAccountId(self.accountId, 'toonCreated', [self.newToonId])
         self.cleanup()
 
@@ -95,7 +95,7 @@ class CreateToonProcess:
 
     def storeToonDone(self, fields):
         if fields:
-            print "Bad fields"
+            print("Bad fields")
             self.cleanup()
             return
         self.avatarCreateDone()
@@ -126,7 +126,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
         filename = base.config.GetString('account-bridge-filename',
                     'astron/databases/account-bridge.db')
-        self.dbm = anydbm.open(filename, 'c')
+        self.dbm = dbm.open(filename, 'c')
         self.private__dg = PyDatagram()
         return
 
@@ -168,7 +168,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def setAccount(self, sender, accountId):
         # Check if this account is already logged in.
-        print "setAccount: accountId = %s" % accountId
+        print("setAccount: accountId = %s" % accountId)
         dg = PyDatagram()
         dg.addServerHeader(self.GetAccountConnectionChannel(accountId),
                     self.air.ourChannel,
@@ -239,7 +239,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def __handleToonOnline(self, avId):
 
-        print "toon online " + str(avId)
+        print("toon online " + str(avId))
 
         def toonResponse(dclass, fields):
             if dclass != self.air.dclassesByName['DistributedToonUD']:
@@ -261,7 +261,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
     def unloadAvatar(self, target, doId):
         channel = self.GetAccountConnectionChannel(target)
 
-        print "unloadAvatar"
+        print("unloadAvatar")
 
         # Clear the postremove
         dg = PyDatagram()
@@ -306,7 +306,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def __handleToonOffline(self, avId):
 
-        print "toon offline " + str(avId)
+        print("toon offline " + str(avId))
 
         def toonResponse(dclass, fields):
             if dclass != self.air.dclassesByName['DistributedToonUD']:
@@ -327,7 +327,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
     def requestLogin(self, token, username):
         username = username.lower()
         sender = self.air.getMsgSender()
-        print sender
+        print(sender)
         self.air.getDatagram(self.private__dg)
         ip = str(NetDatagram(self.private__dg).getAddress())
         if sender >> 32:
@@ -387,7 +387,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
                     if dclass != self.air.dclassesByName['DistributedToonUD']:
                         return
                     if fields.get('ACCOUNT', None) == None:
-                        print "No field ACCOUNT in this toon, I'll add it for you."
+                        print("No field ACCOUNT in this toon, I'll add it for you.")
                         self.air.dbInterface.updateObject(
                             self.air.dbId,
                             avId,
@@ -425,7 +425,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.queryAccount(accId, checkAccountBanStatus)
 
     def sendToons(self, avs, accId):
-        print avs
+        print(avs)
         self.sendUpdateToAccountId(accId, 'setAvatars', [avs])
 
 

@@ -4,11 +4,11 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
-from SuitHabitualBehavior import SuitHabitualBehavior
-from SuitType import SuitType
-import SuitAttacks
-import SuitUtils
-import SuitGlobals
+from .SuitHabitualBehavior import SuitHabitualBehavior
+from .SuitType import SuitType
+from . import SuitAttacks
+from . import SuitUtils
+from . import SuitGlobals
 
 class SuitAttackTurretBehavior(SuitHabitualBehavior):
     notify = directNotify.newCategory('SuitAttackTurretBehavior')
@@ -28,7 +28,7 @@ class SuitAttackTurretBehavior(SuitHabitualBehavior):
         
     def getSortedTurretList(self):
         # Return a list of turrets sorted from least distance to greatest distance.
-        turrets = self.turretMgr.turretId2turret.values()
+        turrets = list(self.turretMgr.turretId2turret.values())
         turrets.sort(key = lambda turret: turret.getDistance(self.suit))
         return turrets
         

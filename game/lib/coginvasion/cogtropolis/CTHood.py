@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from lib.coginvasion.hood import ToonHood
 from lib.coginvasion.globals import CIGlobals
-import CTSafeZoneLoader
+from . import CTSafeZoneLoader
 
 class CTHood(ToonHood.ToonHood):
     notify = directNotify.newCategory("CTHood")

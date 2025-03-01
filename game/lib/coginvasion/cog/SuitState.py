@@ -4,4 +4,4 @@
 ########################################
 
 class SuitState:
-    ALIVE, LURED, DEAD = range(3)
+    ALIVE, LURED, DEAD = list(range(3))

@@ -39,7 +39,7 @@ colorId2colorName = {str(CARD_BLUE): "Blue",
                     str(CARD_GREEN): "Green",
                     str(CARD_RED): "Red",
                     str(CARD_YELLOW): "Yellow"}
-colorName2colorId = {v: k for k, v in colorId2colorName.items()}
+colorName2colorId = {v: k for k, v in list(colorId2colorName.items())}
 
 def addRandomColorToCardType(card_type):
     wildCards = [str(CARD_WILD), str(CARD_WILD_DRAW_FOUR)]
@@ -219,7 +219,7 @@ cardTex2cardId = {"mg_uno_actioncards_blue_drawtwo": cardId[0],
             "mg_uno_numcards_yellow_7": cardId[51],
             "mg_uno_numcards_yellow_8": cardId[52],
             "mg_uno_numcards_yellow_9": cardId[53]}
-cardId2cardTex = {v: k for k, v in cardTex2cardId.items()}
+cardId2cardTex = {v: k for k, v in list(cardTex2cardId.items())}
 
 def getCard(cardType):
     gui = loader.loadModel("phase_4/models/minigames/mg_uno_game_cards.egg")

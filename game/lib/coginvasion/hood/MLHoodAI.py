@@ -3,7 +3,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from ToonHoodAI import ToonHoodAI
+from .ToonHoodAI import ToonHoodAI
 from lib.coginvasion.globals import CIGlobals
 
 class MLHoodAI(ToonHoodAI):

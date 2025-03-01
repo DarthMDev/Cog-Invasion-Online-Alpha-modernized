@@ -36,11 +36,11 @@ from lib.coginvasion.toon import LocalToon
 from lib.coginvasion.hood.QuietZoneState import QuietZoneState
 from lib.coginvasion.hood import ZoneUtil
 
-from CogInvasionDoGlobals import DO_ID_COGINVASION, DO_ID_CLIENT_SERVICES_MANAGER
-from CogInvasionDoGlobals import DO_ID_FRIENDS_MANAGER, DO_ID_HOLIDAY_MANAGER
-from CogInvasionDoGlobals import DO_ID_NAME_SERVICES_MANAGER
+from .CogInvasionDoGlobals import DO_ID_COGINVASION, DO_ID_CLIENT_SERVICES_MANAGER
+from .CogInvasionDoGlobals import DO_ID_FRIENDS_MANAGER, DO_ID_HOLIDAY_MANAGER
+from .CogInvasionDoGlobals import DO_ID_NAME_SERVICES_MANAGER
 
-from CogInvasionErrorCodes import ErrorCode2ErrorMsg, UnknownErrorMsg
+from .CogInvasionErrorCodes import ErrorCode2ErrorMsg, UnknownErrorMsg
 
 import ccoginvasion
 
@@ -169,16 +169,16 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.gameFSM.request('closeShard', ['off'])
 
     def showPlayerIds(self):
-        print "Showing player ids..."
+        print("Showing player ids...")
         self.isShowingPlayerIds = True
-        for av in self.doId2do.values():
+        for av in list(self.doId2do.values()):
             if av.__class__.__name__ in ["DistributedToon", "LocalToon", "DistributedSuit"]:
                 av.showAvId()
 
     def hidePlayerIds(self):
-        print "Hiding player ids..."
+        print("Hiding player ids...")
         self.isShowingPlayerIds = False
-        for av in self.doId2do.values():
+        for av in list(self.doId2do.values()):
             if av.__class__.__name__ in ["DistributedToon", "LocalToon", 'DistributedSuit']:
                 av.showName()
 
@@ -258,7 +258,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         status['hoodId'] = self._switchShardParams[1]
         status['zoneId'] = self._switchShardParams[2]
         status['avId'] = self._switchShardParams[3]
-        print status['avId']
+        print(status['avId'])
         self.gameFSM.request('waitForGameEnterResponse', [status, self._switchShardParams[0]])
 
     def exitSwitchShards(self):
@@ -328,7 +328,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         return
 
     def _removeAllOV(self):
-        owners = self.doId2ownerView.keys()
+        owners = list(self.doId2ownerView.keys())
         for doId in owners:
             self.disableDoId(doId, ownerView = True)
 
@@ -371,7 +371,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.loginFSM.request('disconnect', [1])
 
     def deleteAllObjects(self):
-        for doId in self.doId2do.keys():
+        for doId in list(self.doId2do.keys()):
             obj = self.doId2do[doId]
             if hasattr(base, 'localAvatar'):
                 if doId != base.localAvatar.doId:
@@ -493,10 +493,10 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.loginFSM.request('makeAToon', [slot])
 
     def __handleAvChooseDone(self, avChoice):
-        print "------- AvChooseDone -------"
-        print "Toon name: %s" % avChoice.getName()
-        print "Slot: %s" % avChoice.getSlot()
-        print "DNA: %s" % avChoice.getDNA()
+        print("------- AvChooseDone -------")
+        print("Toon name: %s" % avChoice.getName())
+        print("Slot: %s" % avChoice.getSlot())
+        print("DNA: %s" % avChoice.getDNA())
         self.loginFSM.request("waitForSetAvatarResponse", [avChoice])
 
     def exitAvChoose(self):
@@ -579,14 +579,14 @@ class CogInvasionClientRepository(AstronClientRepository):
         return task.cont
 
     def _shardsAreAvailable(self):
-        for shard in self.activeDistricts.values():
+        for shard in list(self.activeDistricts.values()):
             if shard.available:
                 return True
         return False
 
     def _chooseAShard(self):
         choices = []
-        for shard in self.activeDistricts.values():
+        for shard in list(self.activeDistricts.values()):
             choices.append(shard)
         return random.choice(choices)
 
@@ -613,7 +613,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.loginFSM.request("playingGame")
 
     def __handleSetAvatarResponse(self, avId, di):
-        print "Entering game..."
+        print("Entering game...")
         enterLoad = EnterLoad(self.enterLoadDone)
         dclass = self.dclassesByName['DistributedToon']
         localAvatar = LocalToon.LocalToon(base.cr)
@@ -668,11 +668,11 @@ class CogInvasionClientRepository(AstronClientRepository):
     def uberZoneInterestComplete(self, status):
         self.__gotTimeSync = 0
         if self.timeManager == None:
-            print "No time manager"
+            print("No time manager")
             DistributedSmoothNode.globalActivateSmoothing(0, 0)
             self.gotTimeSync(status)
         else:
-            print "Time manager found"
+            print("Time manager found")
             DistributedSmoothNode.globalActivateSmoothing(1, 0)
             #h = HashVal()
             #hashPrcVariables(h)
@@ -837,7 +837,7 @@ class CogInvasionClientRepository(AstronClientRepository):
 
     def handleDatagram(self, di):
         if self.notify.getDebug():
-            print "ClientRepository received datagram:"
+            print("ClientRepository received datagram:")
             #di.getDatagram().dumpHex(ostream)
         msgType = self.getMsgType()
         self.currentSenderId = None
@@ -892,7 +892,7 @@ class CogInvasionClientRepository(AstronClientRepository):
         self.deleteObject(doId)
 
     def _abandonShard(self):
-        for doId, obj in self.doId2do.items():
+        for doId, obj in list(self.doId2do.items()):
             if obj.parentId == localAvatar.defaultShard and obj is not localAvatar:
                 self.deleteObject(doId)
 

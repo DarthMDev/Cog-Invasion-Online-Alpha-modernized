@@ -6,7 +6,7 @@
 """
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from DistributedDroppableCollectableJellybeansAI import DistributedDroppableCollectableJellybeansAI
+from .DistributedDroppableCollectableJellybeansAI import DistributedDroppableCollectableJellybeansAI
 
 class DistributedDroppableCollectableJellybeanAI(DistributedDroppableCollectableJellybeansAI):
     notify = directNotify.newCategory("DistributedDroppableCollectableJellybeanAI")

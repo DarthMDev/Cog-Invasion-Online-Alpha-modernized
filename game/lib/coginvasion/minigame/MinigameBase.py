@@ -4,15 +4,15 @@
 from direct.showbase.DirectObject import DirectObject
 
 from lib.coginvasion.globals import CIGlobals
-from DistributedRaceGameAI import DistributedRaceGameAI
-from DistributedUnoGameAI import DistributedUnoGameAI
-from DistributedGunGameAI import DistributedGunGameAI
-from DistributedMinigameAI import DistributedMinigameAI
-from DistributedFactorySneakGameAI import DistributedFactorySneakGameAI
-from DistributedCameraShyGameAI import DistributedCameraShyGameAI
-from DistributedEagleGameAI import DistributedEagleGameAI
-from DistributedDeliveryGameAI import DistributedDeliveryGameAI
-from DistributedDodgeballGameAI import DistributedDodgeballGameAI
+from .DistributedRaceGameAI import DistributedRaceGameAI
+from .DistributedUnoGameAI import DistributedUnoGameAI
+from .DistributedGunGameAI import DistributedGunGameAI
+from .DistributedMinigameAI import DistributedMinigameAI
+from .DistributedFactorySneakGameAI import DistributedFactorySneakGameAI
+from .DistributedCameraShyGameAI import DistributedCameraShyGameAI
+from .DistributedEagleGameAI import DistributedEagleGameAI
+from .DistributedDeliveryGameAI import DistributedDeliveryGameAI
+from .DistributedDodgeballGameAI import DistributedDodgeballGameAI
 
 class MinigameBase(DirectObject):
 
@@ -53,7 +53,7 @@ class MinigameBase(DirectObject):
 
     def monitorAvatars(self, task):
         for avatar in self.minigame.avatars:
-            if not avatar in self.cr.doId2do.values():
+            if not avatar in list(self.cr.doId2do.values()):
                 self.minigame.d_abort()
                 self.handleEmptyMinigame()
                 return task.done

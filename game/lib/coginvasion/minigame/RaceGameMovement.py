@@ -262,7 +262,7 @@ class RaceGameMovement(DirectObject):
         self.avatar.setControlEffect('run', runEffect)
         self.avatar.setControlEffect('neutral', neutralEffect)
         if runEffectRaw > self.RUN_MAX:
-            print runEffectRaw
+            print(runEffectRaw)
             self.avatar.setPlayRate(runEffectRaw * self.RUN_PR_FACTOR, 'run')
         else:
             self.avatar.setPlayRate(1.0, 'run')

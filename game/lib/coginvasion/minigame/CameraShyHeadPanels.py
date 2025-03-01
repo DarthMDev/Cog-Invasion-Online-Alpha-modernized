@@ -6,7 +6,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import DirectFrame
 
 from lib.coginvasion.toon.ToonHead import ToonHead
-from HeadPanels import HeadPanels
+from .HeadPanels import HeadPanels
 
 class CameraShyHeadPanels(HeadPanels):
     notify = directNotify.newCategory('CameraShyHeadPanels')
@@ -40,7 +40,7 @@ class CameraShyHeadPanels(HeadPanels):
         HeadPanels.generate(self, gender, head, headtype, color, doId, name, 0)
 
     def generateOtherPlayerGui(self):
-        for avId in self.doId2Frame.keys():
+        for avId in list(self.doId2Frame.keys()):
             self.avId2otherPlayerAvIds2otherPlayerHeadsFrame[avId] = {}
             headNumber = -1
             frame = self.doId2Frame[avId][0]
@@ -51,7 +51,7 @@ class CameraShyHeadPanels(HeadPanels):
             otherPlayerHeadsFrame.setPos(self.otherPlayerHeadHolderTransforms['pos'])
             otherPlayerHeadsFrame.setBin('gui-popup', 70)
             self.frameList.append(otherPlayerHeadsFrame)
-            for otherAvId in self.doId2Frame.keys():
+            for otherAvId in list(self.doId2Frame.keys()):
                 if otherAvId != avId:
                     headNumber += 1
                     otherAv = base.cr.doId2do.get(otherAvId)

@@ -7,7 +7,7 @@
 
 from panda3d.core import VBase4, Vec3, Vec4, Point3
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from DistributedDroppableCollectableJellybeans import DistributedDroppableCollectableJellybeans
+from .DistributedDroppableCollectableJellybeans import DistributedDroppableCollectableJellybeans
 from direct.interval.IntervalGlobal import SoundInterval, Sequence, LerpPosInterval, LerpHprInterval, Func
 from direct.interval.MetaInterval import ParallelEndTogether
 from direct.interval.LerpInterval import LerpColorScaleInterval

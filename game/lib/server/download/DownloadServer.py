@@ -17,8 +17,8 @@ class DownloadServer(MiniServer):
 		self.sendWhoIAm()
 				
 	def handleDatagram(self, datagram):
-		print "-----------------------------------"
-		print "Recieved datagram from %s..." % datagram.getConnection()
+		print("-----------------------------------")
+		print("Recieved datagram from %s..." % datagram.getConnection())
 		dgi = DatagramIterator(datagram)
 		type = dgi.getUint16()
 		if type == CLIENT_MD5:

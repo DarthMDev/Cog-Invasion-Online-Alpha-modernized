@@ -88,8 +88,8 @@ class Attack(DirectObject):
         self.suit = suit
         self.suitTrack = None
         self.attackName2attackId = {}
-        for index in range(len(self.attacksClass.attackName2attackClass.keys())):
-            self.attackName2attackId[SuitAttackLengths.keys()[index]] = index
+        for index in range(len(list(self.attacksClass.attackName2attackClass.keys()))):
+            self.attackName2attackId[list(SuitAttackLengths.keys())[index]] = index
 
     def getAttackId(self, attackStr):
         return self.attackName2attackId[attackStr]
@@ -761,7 +761,7 @@ class BounceCheckAttack(ThrowAttack):
         pathNP.setPos(0, 30, -100)
         pathNP.setHpr(90, -90, 90)
 
-        print pathNP.getPos(base.render)
+        print(pathNP.getPos(base.render))
 
         if self.throwTrajectory:
             self.throwTrajectory.pause()
@@ -1052,13 +1052,13 @@ class BuzzWordAttack(ParticleAttack):
                      'buzzwords-over',
                      'buzzwords-syn']
         particleList = []
-        for i in xrange(0, 5):
+        for i in range(0, 5):
             particleList.append('phase_5/etc/buzzWord.ptf')
         ParticleAttack.doAttack(
             self, particleList, 'doBuzzWord', 'buzzWordSphere',
             'speak', 1.5, 1.5, None, None, False, ts
         )
-        for i in xrange(0, 5):
+        for i in range(0, 5):
             effect = self.particles[i]
             if random.random() > 0.5:
                 setEffectTexture(effect, texturesList[i], Vec4(1, 0.94, 0.02, 1))
@@ -1090,13 +1090,13 @@ class JargonAttack(ParticleAttack):
                      'jargon-ipo']
         reds = [1, 0, 1, 0]
         particleList = []
-        for i in xrange(0, 4):
+        for i in range(0, 4):
             particleList.append('phase_5/etc/jargonSpray.ptf')
         ParticleAttack.doAttack(
             self, particleList, 'doJargon', 'jargonSphere',
             'speak', 1.5, 1.5, None, None, False, ts
         )
-        for i in xrange(0, 4):
+        for i in range(0, 4):
             effect = self.particles[i]
             setEffectTexture(effect, texturesList[i], Vec4(reds[i], 0, 0, 1))
         for particle in self.particles:
@@ -1126,15 +1126,15 @@ class MumboJumboAttack(ParticleAttack):
                      'mumbojumbo-high',
                      'mumbojumbo-iron']
         particleList = []
-        for i in xrange(0, 2):
+        for i in range(0, 2):
             particleList.append('phase_5/etc/mumboJumboSpray.ptf')
-        for i in xrange(0, 3):
+        for i in range(0, 3):
             particleList.append('phase_5/etc/mumboJumboSmother.ptf')
         ParticleAttack.doAttack(
             self, particleList, 'doMumJum', 'mumJumSphere',
             'speak', 1.5, 1.5, None, None, False, ts
         )
-        for i in xrange(0, 5):
+        for i in range(0, 5):
             effect = self.particles[i]
             setEffectTexture(effect, texturesList[i], Vec4(1, 0, 0, 1))
         for particle in self.particles:
@@ -1163,13 +1163,13 @@ class FilibusterAttack(ParticleAttack):
                      'filibuster-impeach',
                      'filibuster-inc']
         particleList = []
-        for i in xrange(0, 4):
+        for i in range(0, 4):
             particleList.append('phase_5/etc/filibusterSpray.ptf')
         ParticleAttack.doAttack(
             self, particleList, 'doFili', 'filiSphere',
             'speak', 1.5, 1.5, None, None, False, ts
         )
-        for i in xrange(0, 4):
+        for i in range(0, 4):
             effect = self.particles[i]
             setEffectTexture(effect, texturesList[i], Vec4(0.4, 0, 0, 1))
         for particle in self.particles:
@@ -1202,7 +1202,7 @@ class DoubleTalkAttack(ParticleAttack):
             self, particleList, 'doDT', 'DTSphere',
             'speak', 1.5, 1.5, None, None, False, ts
         )
-        for i in xrange(0, 2):
+        for i in range(0, 2):
             effect = self.particles[i]
             setEffectTexture(effect, texturesList[i], Vec4(0, 1.0, 0, 1))
         for particle in self.particles:
@@ -1237,7 +1237,7 @@ class SchmoozeAttack(ParticleAttack):
             self, particleList, 'doSch', 'SchSphere',
             'speak', 1.5, 1.5, None, None, False, ts
         )
-        for i in xrange(0, 2):
+        for i in range(0, 2):
             effect = self.particles[i]
             setEffectTexture(effect, texturesList[i], Vec4(0, 0, 1, 1))
         for particle in self.particles:

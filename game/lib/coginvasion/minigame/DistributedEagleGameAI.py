@@ -6,9 +6,9 @@ from direct.task import Task
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog import SuitBank
-from DistributedEagleSuitAI import DistributedEagleSuitAI
-from DistributedToonCannonAI import DistributedToonCannonAI
-from DistributedMinigameAI import DistributedMinigameAI
+from .DistributedEagleSuitAI import DistributedEagleSuitAI
+from .DistributedToonCannonAI import DistributedToonCannonAI
+from .DistributedMinigameAI import DistributedMinigameAI
 
 class DistributedEagleGameAI(DistributedMinigameAI):
     notify = directNotify.newCategory("DistributedEagleGameAI")
@@ -40,7 +40,7 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 
     def d_gameOver(self):
         winners = []
-        for avId in self.avId2score.keys():
+        for avId in list(self.avId2score.keys()):
             score = self.avId2score[avId]
             if score == max(self.avId2score.values()):
                 winners.append(avId)
@@ -52,8 +52,8 @@ class DistributedEagleGameAI(DistributedMinigameAI):
 
     def allRoundsEndedTask(self, task):
         self.sendUpdate('allRoundsEnded', [])
-        avIdArray = self.avId2score.keys()
-        scoreArray = self.avId2score.values()
+        avIdArray = list(self.avId2score.keys())
+        scoreArray = list(self.avId2score.values())
         self.sendUpdate('finalScores', [avIdArray, scoreArray])
         taskMgr.doMethodLater(7.0, self.gameOverTask, self.uniqueName("DEagleGameAI-gameOver"))
         return Task.done
@@ -84,7 +84,7 @@ class DistributedEagleGameAI(DistributedMinigameAI):
         return Task.done
 
     def __removeAllEagles(self):
-        for eagle in self.eagleId2eagle.values():
+        for eagle in list(self.eagleId2eagle.values()):
             del self.eagleId2eagle[eagle.doId]
             eagle.disable()
             eagle.requestDelete()
@@ -107,10 +107,10 @@ class DistributedEagleGameAI(DistributedMinigameAI):
         self.eagleId2eagle[eagle.doId] = eagle
 
     def __eagleSpawner(self, task):
-        if len(self.eagleId2eagle.keys()) == 0:
+        if len(list(self.eagleId2eagle.keys())) == 0:
             for _ in range(self.MaxEagles):
                 self.__makeEagle()
-        elif len(self.eagleId2eagle.keys()) < self.MaxEagles:
+        elif len(list(self.eagleId2eagle.keys())) < self.MaxEagles:
             self.__makeEagle()
         task.delayTime = 2.0
         return Task.again
@@ -156,7 +156,7 @@ class DistributedEagleGameAI(DistributedMinigameAI):
     def getCannonOfAvatar(self, avId):
         for avatar in self.avatars:
             if avatar.doId == avId:
-                return self.cannonId2cannon.keys()[self.avatars.index(avatar)]
+                return list(self.cannonId2cannon.keys())[self.avatars.index(avatar)]
 
     def allAvatarsReady(self):
         for avatar in self.avatars:
@@ -187,10 +187,10 @@ class DistributedEagleGameAI(DistributedMinigameAI):
         taskMgr.remove(self.uniqueName("DEagleGameAI-swapEagles"))
         taskMgr.remove(self.uniqueName("DEagleGameAI-startNewRound"))
         taskMgr.remove(self.uniqueName("DEagleGameAI-eagleSpawner"))
-        for cannon in self.cannonId2cannon.values():
+        for cannon in list(self.cannonId2cannon.values()):
             cannon.requestDelete()
         del self.cannonId2cannon
-        for eagle in self.eagleId2eagle.values():
+        for eagle in list(self.eagleId2eagle.values()):
             eagle.disable()
             eagle.requestDelete()
         del self.eagleId2eagle

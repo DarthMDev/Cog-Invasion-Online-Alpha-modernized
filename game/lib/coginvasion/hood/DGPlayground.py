@@ -1,7 +1,7 @@
 # Filename: DGPlayground.py
 # Created by:  blach (24Jul15)
 
-import Playground
+from . import Playground
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.SoundInterval import SoundInterval
 import random

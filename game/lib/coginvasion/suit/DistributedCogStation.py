@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from lib.coginvasion.minigame.DistributedGroupStation import DistributedGroupStation
-from CogStation import CogStation
+from .CogStation import CogStation
 from lib.coginvasion.globals import CIGlobals
 
 class DistributedCogStation(DistributedGroupStation, CogStation):

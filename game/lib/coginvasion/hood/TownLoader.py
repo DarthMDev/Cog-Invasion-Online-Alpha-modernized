@@ -8,10 +8,10 @@ from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.interval.IntervalGlobal import *
 
-from QuietZoneState import QuietZoneState
-import LinkTunnel
-import ZoneUtil
-import ToonInterior
+from .QuietZoneState import QuietZoneState
+from . import LinkTunnel
+from . import ZoneUtil
+from . import ToonInterior
 from lib.coginvasion.cogoffice import CogOfficeInterior
 
 class TownLoader(StateData):
@@ -217,12 +217,12 @@ class TownLoader(StateData):
     def reparentLandmarkBlockNodes(self):
         bucket = self.landmarkBlocks = hidden.attachNewNode('landmarkBlocks')
         npc = self.geom.findAllMatches('**/sb*:*_landmark_*_DNARoot')
-        for i in xrange(npc.getNumPaths()):
+        for i in range(npc.getNumPaths()):
             nodePath = npc.getPath(i)
             nodePath.wrtReparentTo(bucket)
 
         npc = self.geom.findAllMatches('**/sb*:*animated_building*_DNARoot')
-        for i in xrange(npc.getNumPaths()):
+        for i in range(npc.getNumPaths()):
             nodePath = npc.getPath(i)
             nodePath.wrtReparentTo(bucket)
 
@@ -236,7 +236,7 @@ class TownLoader(StateData):
         a1 = Vec4(1, 1, 1, 1)
         a0 = Vec4(1, 1, 1, 0)
         numVisGroups = dnaStore.getNumDNAVisGroupsAI()
-        for i in xrange(numVisGroups):
+        for i in range(numVisGroups):
             groupFullName = dnaStore.getDNAVisGroupName(i)
             visGroup = dnaStore.getDNAVisGroupAI(i)
             groupName = base.cr.hoodMgr.extractGroupName(groupFullName)
@@ -256,7 +256,7 @@ class TownLoader(StateData):
             self.nodeList.append(groupNode)
             self.zoneDict[zoneId] = groupNode
             visibles = []
-            for i in xrange(visGroup.getNumVisibles()):
+            for i in range(visGroup.getNumVisibles()):
                 visibles.append(int(visGroup.get_visible(i)))
             visibles.append(ZoneUtil.getBranchZone(zoneId))
             self.zoneVisDict[zoneId] = visibles
@@ -264,11 +264,11 @@ class TownLoader(StateData):
             self.fadeOutDict[groupNode] = Sequence(Func(groupNode.setTransparency, 1), LerpColorScaleInterval(groupNode, fadeDuration, a0, startColorScale=a1), Func(groupNode.clearColorScale), Func(groupNode.clearTransparency), Func(groupNode.stash), name='fadeZone-' + str(zoneId), autoPause=1)
             self.fadeInDict[groupNode] = Sequence(Func(groupNode.unstash), Func(groupNode.setTransparency, 1), LerpColorScaleInterval(groupNode, fadeDuration, a1, startColorScale=a0), Func(groupNode.clearColorScale), Func(groupNode.clearTransparency), name='fadeZone-' + str(zoneId), autoPause=1)
 
-        for i in xrange(numVisGroups):
+        for i in range(numVisGroups):
             groupFullName = dnaStore.getDNAVisGroupName(i)
             zoneId = int(base.cr.hoodMgr.extractGroupName(groupFullName))
             zoneId = ZoneUtil.getTrueZoneId(zoneId, self.zoneId)
-            for j in xrange(dnaStore.getNumVisiblesInDNAVisGroup(i)):
+            for j in range(dnaStore.getNumVisiblesInDNAVisGroup(i)):
                 visName = dnaStore.getVisibleName(i, j)
                 groupName = base.cr.hoodMgr.extractGroupName(visName)
                 nextZoneId = int(groupName)
@@ -286,7 +286,7 @@ class TownLoader(StateData):
             collNodePaths = i.findAllMatches('**/+CollisionNode')
             numCollNodePaths = collNodePaths.getNumPaths()
             visGroupName = i.node().getName()
-            for j in xrange(numCollNodePaths):
+            for j in range(numCollNodePaths):
                 collNodePath = collNodePaths.getPath(j)
                 bitMask = collNodePath.node().getIntoCollideMask()
                 if bitMask.getBit(1):

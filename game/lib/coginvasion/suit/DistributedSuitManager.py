@@ -11,7 +11,7 @@ from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 import random
 
-from PythonCTMusicMgr import PythonCTMusicManager
+from .PythonCTMusicMgr import PythonCTMusicManager
 
 class DistributedSuitManager(DistributedObject):
     notify = directNotify.newCategory("DistributedSuitManager")

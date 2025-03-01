@@ -59,7 +59,7 @@ class ChargeUpSpot(LocationSeeker):
 
     def __selectNearbyCogs(self):
         self.selectedCogs = []
-        for obj in base.cr.doId2do.values():
+        for obj in list(base.cr.doId2do.values()):
             if obj.__class__.__name__ in CIGlobals.SuitClasses:
                 if obj.getPlace() == self.avatar.zoneId:
                     if obj.getDistance(self.dropShadow) <= self.selectionRadius:

@@ -14,8 +14,8 @@ from lib.coginvasion.cogoffice import SuitBuildingGlobals
 from lib.coginvasion.cogoffice.DistributedElevatorAI import DistributedElevatorAI
 from lib.coginvasion.cogoffice.DistributedCogOfficeBattleAI import DistributedCogOfficeBattleAI
 
-from DistributedToonInteriorAI import DistributedToonInteriorAI
-from DistributedDoorAI import DistributedDoorAI
+from .DistributedToonInteriorAI import DistributedToonInteriorAI
+from .DistributedDoorAI import DistributedDoorAI
 
 from lib.coginvasion.cogoffice.ElevatorConstants import *
 
@@ -198,7 +198,7 @@ class DistributedBuildingAI(DistributedObjectAI):
                 toon = self.getToon(t)
             if toon is not None:
                 activeToons.append(toon)
-        for i in xrange(0, 4):
+        for i in range(0, 4):
             victor = victorList[i]
             if (victor is None) or (victor not in self.air.doId2do):
                 victorList[i] = 0
@@ -220,7 +220,7 @@ class DistributedBuildingAI(DistributedObjectAI):
         pass
 
     def findVictorIndex(self, avId):
-        for i in xrange(len(self.victorList)):
+        for i in range(len(self.victorList)):
             if self.victorList[i] == avId:
                 return i
 

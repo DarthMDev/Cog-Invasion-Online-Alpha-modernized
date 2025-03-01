@@ -2,7 +2,7 @@ from direct.task.Task import Task
 from panda3d.core import TextNode, VBase4
 
 from lib.coginvasion.toon.ChatBalloon import ChatBalloon
-import NametagGlobals
+from . import NametagGlobals
 
 
 class Nametag:

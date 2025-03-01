@@ -77,7 +77,7 @@ class Backpack:
     # Adds a gag to the backpack. This shouldn't be called
     # just by the client, the AI should recommend it.
     def addGag(self, gagId, curSupply = 0, maxSupply = 0):
-        if not gagId in self.gags.keys():
+        if not gagId in list(self.gags.keys()):
             gagName = GagGlobals.getGagByID(gagId)
             if not gagName is None:
                 gag = self.gagManager.getGagByName(gagName)
@@ -138,10 +138,10 @@ class Backpack:
     # Returns the max supply of a gag in the backpack or
     # -1 if the gag isn't in the backpack.
     def getMaxSupply(self, arg = -1):
-        if type(arg) == types.IntType and self.hasGag(arg):
+        if type(arg) == int and self.hasGag(arg):
             return self.gags.get(arg)[2]
         elif arg != -1:
-            for values in self.gags.values():
+            for values in list(self.gags.values()):
                 if values[0].getName() == arg:
                     return values[2]
         elif arg == -1:
@@ -166,10 +166,10 @@ class Backpack:
     # Returns the supply of a gag in the backpack or
     # -1 if the gag isn't in the backpack.
     def getSupply(self, arg = -1):
-        if type(arg) == types.IntType and self.hasGag(arg):
+        if type(arg) == int and self.hasGag(arg):
             return self.gags.get(arg)[1]
         elif arg != -1:
-            for values in self.gags.values():
+            for values in list(self.gags.values()):
                 if values[0].getName() == arg:
                     return values[1]
         elif arg == -1:
@@ -179,7 +179,7 @@ class Backpack:
 
     # Returns a true/false flag if the gag is in the backpack.
     def hasGag(self, gagId):
-        return gagId in self.gags.keys()
+        return gagId in list(self.gags.keys())
 
     # Returns the gag's class by gag id.
     def getGagByID(self, gagId):
@@ -189,7 +189,7 @@ class Backpack:
 
     # Returns the gag by index.
     def getGagByIndex(self, index):
-        return self.gags.get(self.gags.keys()[index])[0]
+        return self.gags.get(list(self.gags.keys())[index])[0]
 
     # Returns the gags in the backpack.
     def getGags(self):
@@ -197,7 +197,7 @@ class Backpack:
 
     # Cleans up all the variables that are no longer needed.
     def cleanup(self):
-        for _, data in self.gags.iteritems():
+        for _, data in self.gags.items():
             gag = data[0]
             gag.delete()
         del self.gags

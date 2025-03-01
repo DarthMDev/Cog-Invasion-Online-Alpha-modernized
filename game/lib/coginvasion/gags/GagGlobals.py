@@ -19,7 +19,7 @@ gagIds = {0 : CIGlobals.WholeCreamPie, 1 : CIGlobals.CreamPieSlice, 2 : CIGlobal
           27 : CIGlobals.Sandbag, 28 : CIGlobals.Anvil, 29 : CIGlobals.Geyser, 30 : CIGlobals.BigWeight,
           31 : CIGlobals.StormCloud, 32 : CIGlobals.WaterGlass, 33 : CIGlobals.WaterGun, 34 : CIGlobals.FireHose,
           35 : CIGlobals.SquirtFlower}
-gagIdByName = {v: k for k, v in gagIds.items()}
+gagIdByName = {v: k for k, v in list(gagIds.items())}
 
 # Data that should be able to be quickly picked up by the client and server.
 # Values: [default current supply, default max supply, default damage (or health), and, if necessary, toon-up amount.
@@ -269,7 +269,7 @@ def getGagByID(gId):
     return gagIds.get(gId)
 
 def getIDByName(name):
-    for gId, gName in gagIds.iteritems():
+    for gId, gName in gagIds.items():
         if gName == name:
             return gId
 
@@ -277,10 +277,10 @@ def getGagData(gagId):
     return gagData.get(getGagByID(gagId))
 
 def getTrackOfGag(arg, getId = False):
-    if type(arg) == types.IntType:
+    if type(arg) == int:
 
         # This is a gag id.
-        for trackName, gagList in TrackGagNamesByTrackName.items():
+        for trackName, gagList in list(TrackGagNamesByTrackName.items()):
 
             if getGagByID(arg) in gagList:
 
@@ -291,10 +291,10 @@ def getTrackOfGag(arg, getId = False):
                     # Return the int ID of the track
                     return TrackIdByName[trackName]
 
-    elif type(arg) == types.StringType:
+    elif type(arg) == bytes:
 
         # This is a gag name.
-        for trackName, gagList in TrackGagNamesByTrackName.items():
+        for trackName, gagList in list(TrackGagNamesByTrackName.items()):
 
             if arg in gagList:
 

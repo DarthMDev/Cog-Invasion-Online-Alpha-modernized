@@ -6,9 +6,9 @@ from panda3d.core import Vec2, Point2
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm import ClassicFSM, State
 
-from SuitPathBehavior import SuitPathBehavior
-import SuitUtils
-import SuitAttacks
+from .SuitPathBehavior import SuitPathBehavior
+from . import SuitUtils
+from . import SuitAttacks
 
 import random
 
@@ -130,7 +130,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         if self.suitList is not None:
             data = self.suitList
         elif self.suitDict is not None:
-            data = self.suitDict.values()
+            data = list(self.suitDict.values())
         for suit in data:
             if suit == self.suit:
                 continue
@@ -171,7 +171,7 @@ class SuitPursueToonBehavior(SuitPathBehavior):
         if self.suitList is not None:
             data = self.suitList
         elif self.suitDict is not None:
-            data = self.suitDict.values()
+            data = list(self.suitDict.values())
         else:
             return task.done
 

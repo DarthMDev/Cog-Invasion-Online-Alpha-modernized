@@ -3,7 +3,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from Playground import Playground
+from .Playground import Playground
 
 class MLPlayground(Playground):
     notify = directNotify.newCategory("MLPlayground")

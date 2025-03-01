@@ -4,4 +4,4 @@
 ########################################
 
 class SpawnMode:
-    FLYDOWN, FADEOUT, APPEAR = range(3)
+    FLYDOWN, FADEOUT, APPEAR = list(range(3))

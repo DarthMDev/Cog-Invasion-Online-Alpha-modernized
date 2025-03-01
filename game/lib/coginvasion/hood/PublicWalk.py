@@ -10,7 +10,7 @@
 
 """
 
-import Walk
+from . import Walk
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class PublicWalk(Walk.Walk):

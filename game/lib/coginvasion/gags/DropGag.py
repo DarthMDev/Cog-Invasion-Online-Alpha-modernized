@@ -7,7 +7,7 @@ from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.gags.GagState import GagState
 from lib.coginvasion.globals import CIGlobals
-from LocationGag import LocationGag
+from .LocationGag import LocationGag
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import Sequence, Func, SoundInterval, Wait, LerpScaleInterval, Parallel
 from direct.interval.LerpInterval import LerpPosHprInterval,\
@@ -162,7 +162,7 @@ class DropGag(Gag, LocationGag):
         self.fallSoundInterval = None
         shrinkTrack = Sequence()
         if self.avatar.doId == base.localAvatar.doId:
-            for key in base.cr.doId2do.keys():
+            for key in list(base.cr.doId2do.keys()):
                 obj = base.cr.doId2do[key]
                 if obj.__class__.__name__ in CIGlobals.SuitClasses:
                     if obj.getKey() == avNP.getKey():

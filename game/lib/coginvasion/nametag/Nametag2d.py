@@ -5,8 +5,8 @@ from panda3d.core import PGButton, VBase4, DepthWriteAttrib, Point3
 from lib.coginvasion.toon.ChatBalloon import ChatBalloon
 from lib.coginvasion.margins import MarginGlobals
 from lib.coginvasion.margins.MarginVisible import MarginVisible
-import NametagGlobals
-from Nametag import Nametag
+from . import NametagGlobals
+from .Nametag import Nametag
 from lib.coginvasion.gui.Clickable2d import Clickable2d
 from lib.coginvasion.globals import CIGlobals
 

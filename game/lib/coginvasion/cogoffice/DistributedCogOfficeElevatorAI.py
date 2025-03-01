@@ -3,8 +3,8 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from DistributedElevatorAI import DistributedElevatorAI
-from ElevatorConstants import *
+from .DistributedElevatorAI import DistributedElevatorAI
+from .ElevatorConstants import *
 
 class DistributedCogOfficeElevatorAI(DistributedElevatorAI):
     notify = directNotify.newCategory('DistributedCogOfficeElevatorAI')

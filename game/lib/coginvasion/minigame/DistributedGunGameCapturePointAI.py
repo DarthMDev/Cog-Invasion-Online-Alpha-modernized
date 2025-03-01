@@ -11,7 +11,7 @@ from direct.task.Task import Task
 from lib.coginvasion.minigame import GunGameGlobals as GGG
 
 class CaptureState:
-    IDLE, IN_PROGRESS, CAPTURED, RESETTING = range(4)
+    IDLE, IN_PROGRESS, CAPTURED, RESETTING = list(range(4))
 
 class DistributedGunGameCapturePointAI(DistributedNodeAI):
     notify = directNotify.newCategory('DistributedGunGameCapturePointAI')
@@ -294,7 +294,7 @@ class DistributedGunGameCapturePointAI(DistributedNodeAI):
         self.sendUpdate('setCaptured', [teamId])
 
     def setCaptured(self, teamId):
-        if (teamId - 2) in GGG.TeamNameById.values():
+        if (teamId - 2) in list(GGG.TeamNameById.values()):
             self.team = (teamId - 2)
         if len(taskMgr.getTasksNamed(self.awardKingTaskName)) == 0:
             taskMgr.doMethodLater(1, self.__handleAward, self.awardKingTaskName)

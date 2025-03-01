@@ -5,7 +5,7 @@
 
 """
 
-from Playground import Playground
+from .Playground import Playground
 from direct.fsm.State import State
 from direct.directnotify.DirectNotifyGlobal import directNotify
 

@@ -13,7 +13,7 @@ from lib.coginvasion.gags.Gag import Gag
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.globals import CIGlobals
 from direct.actor.Actor import Actor
-import GagGlobals
+from . import GagGlobals
 
 import math
 
@@ -89,7 +89,7 @@ class ThrowGag(Gag):
             self.stopPowerBar()
             self.power += 50
             self.power = 250 - self.power
-            print self.power
+            print(self.power)
             # Make other toons set the throw power on my gag.
             base.localAvatar.sendUpdate('setThrowPower', [self.id, self.power])
             self.startTimeout()
@@ -160,10 +160,10 @@ class ThrowGag(Gag):
             if not entity.isEmpty():
                 pieHash2range[hash(entity)] = (entity.getPos(render) - pos).length()
         ranges = []
-        for distance in pieHash2range.values():
+        for distance in list(pieHash2range.values()):
             ranges.append(distance)
         ranges.sort()
-        for pieHash in pieHash2range.keys():
+        for pieHash in list(pieHash2range.keys()):
             distance = pieHash2range[pieHash]
             if not distance is None and distance == ranges[0]:
                 for entity, track in self.entities:
@@ -188,7 +188,7 @@ class ThrowGag(Gag):
         if fromNP.isEmpty():
             return
 
-        for key in base.cr.doId2do.keys():
+        for key in list(base.cr.doId2do.keys()):
             obj = base.cr.doId2do[key]
             if obj.__class__.__name__ in CIGlobals.SuitClasses:
                 if obj.getKey() == avNP.getKey():

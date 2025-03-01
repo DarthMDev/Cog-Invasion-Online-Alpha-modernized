@@ -50,7 +50,7 @@ class MiniServer:
         dg.addServerControlHeader(CONTROL_ADD_CHANNEL)
         dg.addChannel(self.channel)
         self.cWriter.send(dg, self.serverConnection)
-        print "Registered channel: " + str(self.channel)
+        print("Registered channel: " + str(self.channel))
 
     def setLocked(self, value):
         if value:
@@ -64,11 +64,11 @@ class MiniServer:
         return Task.again
 
     def displayServerStatus(self):
-        print "-----------------------------------"
-        print "Server Status..."
-        print "Host: %s" % self.host
-        print "Port: %s" % self.port
-        print "Number of active connections: %s" % len(self.Connections)
+        print("-----------------------------------")
+        print("Server Status...")
+        print("Host: %s" % self.host)
+        print("Port: %s" % self.port)
+        print("Number of active connections: %s" % len(self.Connections))
 
     def startConnectionMgr(self):
         self.cMgr = QueuedConnectionManager()
@@ -80,14 +80,14 @@ class MiniServer:
         taskMgr.add(self.listenerPoll, "listenForConnections", -39)
         taskMgr.add(self.datagramPoll, "listenForDatagrams", -40)
         taskMgr.add(self.disconnectionPoll, "listenForDisconnections", -41)
-        print "%s server started." % self.serverType.capitalize()
+        print("%s server started." % self.serverType.capitalize())
 
     def listenerPoll(self, task):
         """ Listen for connections. """
         if not self.locked:
             if self.cListener.newConnectionAvailable():
-                print "-----------------------------------"
-                print "New connection available..."
+                print("-----------------------------------")
+                print("New connection available...")
                 rendezvous = PointerToConnection()
                 netAddress = NetAddress()
                 newConnection = PointerToConnection()
@@ -95,8 +95,8 @@ class MiniServer:
                     newConnection = newConnection.p()
                     self.Connections[str(newConnection.this)] = rendezvous
                     self.cReader.addConnection(newConnection)
-                    print "IP Address: %s" % newConnection.getAddress()
-                    print "ConnectionID: %s" % newConnection.this
+                    print("IP Address: %s" % newConnection.getAddress())
+                    print("ConnectionID: %s" % newConnection.this)
                     self.displayServerStatus()
                     #if self.__class__.__name__ == 'LoginServer':
                      #   self.sendServerMessage('ciac',
@@ -115,10 +115,10 @@ class MiniServer:
             connectionPointer = PointerToConnection()
             self.cMgr.getResetConnection(connectionPointer)
             lostConnection = connectionPointer.p()
-            print "-----------------------------------"
-            print "Farewell connection..."
-            print "IP Address: %s" % lostConnection.getAddress()
-            print "ConnectionID: %s" % lostConnection.this
+            print("-----------------------------------")
+            print("Farewell connection...")
+            print("IP Address: %s" % lostConnection.getAddress())
+            print("ConnectionID: %s" % lostConnection.this)
             del self.Connections[str(lostConnection.this)]
             self.cMgr.closeConnection(lostConnection)
             self.displayServerStatus()

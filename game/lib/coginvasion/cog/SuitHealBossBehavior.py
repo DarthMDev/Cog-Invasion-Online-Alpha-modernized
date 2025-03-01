@@ -59,7 +59,7 @@ class SuitHealBossBehavior(SuitHabitualBehavior):
         self.__toggleCanHeal()
         # Let's choose one of the heal attacks and send it.
         attack = random.randint(0, 6)
-        attackName = SuitAttacks.SuitAttackLengths.keys()[attack]
+        attackName = list(SuitAttacks.SuitAttackLengths.keys())[attack]
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.suit.sendUpdate('doAttack', [attack, self.boss.doId, timestamp])
 

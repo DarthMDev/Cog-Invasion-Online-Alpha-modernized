@@ -59,7 +59,7 @@ class DistributedPieTurretAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         # Let's search for some targets.
         suitId2range = {}
         self.targets = []
-        for obj in base.air.doId2do.values():
+        for obj in list(base.air.doId2do.values()):
             className = obj.__class__.__name__
             if obj.zoneId == self.zoneId:
                 if className == 'DistributedSuitAI':
@@ -68,12 +68,12 @@ class DistributedPieTurretAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                         
         # Let's organize the suits by distance.
         ranges = []
-        for distance in suitId2range.values():
+        for distance in list(suitId2range.values()):
             ranges.append(distance)
         ranges.sort()
         
         # Let's see if there's some suits that match our criteria.
-        for suitId in suitId2range.keys():
+        for suitId in list(suitId2range.keys()):
             distance = suitId2range[suitId]
             suit = self.air.doId2do.get(suitId)
             if len(self.targets) < self.MAX_TARGETS:

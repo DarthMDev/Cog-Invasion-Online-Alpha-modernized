@@ -60,7 +60,7 @@ class SettingsManager:
 
     def maybeFixAA(self):
         if self.getSettings('settings.json')[7] != "on":
-            print "Fixing anti-aliasing..."
+            print("Fixing anti-aliasing...")
             loadPrcFileData('', 'framebuffer-multisample 0')
             loadPrcFileData('', 'multisamples 0')
 
@@ -81,7 +81,7 @@ class SettingsManager:
 
             return tuple((width, height, fs, music, sfx, tex_detail, model_detail, aa, af))
         else:
-            raise StandardError("no file specified!")
+            raise Exception("no file specified!")
 
     def writeSettingToFile(self, setting, value, jsonfile, apply=0):
         info = open(jsonfile)

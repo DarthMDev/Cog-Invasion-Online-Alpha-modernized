@@ -8,7 +8,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import globalClockDelta
 
 from lib.coginvasion.minigame import GunGameGlobals as GGG
-from DistributedMinigame import DistributedMinigame
+from .DistributedMinigame import DistributedMinigame
 
 class DistributedToonFPSGame(DistributedMinigame):
 
@@ -72,7 +72,7 @@ class DistributedToonFPSGame(DistributedMinigame):
     def exitFinalScores(self):
         if self.gameMode == GGG.GameModes.KOTH:
             self.finalScoreUI.destroy()
-            print "I should've destroyed"
+            print("I should've destroyed")
         else:
             DistributedMinigame.exitFinalScores(self)
 

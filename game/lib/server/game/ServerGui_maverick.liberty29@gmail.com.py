@@ -66,7 +66,7 @@ class ServerGui:
 									
 	def lockServer(self):
 		base.sr.serverLocked = 1
-		print "Server is locked."
+		print("Server is locked.")
 		self.lock_btn['geom'] = (self.sgui.find('**/locked'),
 								self.sgui.find('**/unlocked'),
 								self.sgui.find('**/unlocked'),
@@ -75,7 +75,7 @@ class ServerGui:
 		
 	def unlockServer(self):
 		base.sr.serverLocked = 0
-		print "Server is unlocked."
+		print("Server is unlocked.")
 		self.lock_btn['geom'] = (self.sgui.find('**/unlocked'),
 								self.sgui.find('**/locked'),
 								self.sgui.find('**/locked'),

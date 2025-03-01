@@ -13,11 +13,11 @@ from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.gags.GagType import GagType
 from lib.coginvasion.battle.DistributedGagBarrelAI import DistributedGagBarrelAI
-from DistributedCogOfficeElevatorAI import DistributedCogOfficeElevatorAI
-from DistributedCogOfficeSuitAI import DistributedCogOfficeSuitAI
-from CogOfficeConstants import *
-from ElevatorConstants import *
-import SuitBuildingGlobals
+from .DistributedCogOfficeElevatorAI import DistributedCogOfficeElevatorAI
+from .DistributedCogOfficeSuitAI import DistributedCogOfficeSuitAI
+from .CogOfficeConstants import *
+from .ElevatorConstants import *
+from . import SuitBuildingGlobals
 
 import random
 
@@ -94,7 +94,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             self.avIds.remove(avId)
         self.b_setAvatars(self.avIds)
 
-        if avId in self.toonId2suitsTargeting.keys():
+        if avId in list(self.toonId2suitsTargeting.keys()):
             del self.toonId2suitsTargeting[avId]
 
         if len(self.avIds) > 0:
@@ -206,21 +206,21 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             newFloor = floors[self.currentFloor + 1]
             if newFloor == RANDOM_FLOOR:
                 # Let's choose a random middle floor to go to!
-                print "Choosing random floor"
+                print("Choosing random floor")
                 choices = []
                 for floor in middleFloors:
                     if not floor in self.roomsVisited:
-                        print "Added floor to choices: " + floor
+                        print("Added floor to choices: " + floor)
                         choices.append(floor)
                     else:
-                        print "Room {0} already visited.".format(floor)
+                        print("Room {0} already visited.".format(floor))
                 if len(choices) == 0:
-                    print "No choices, choosing randomly from middleFloors."
+                    print("No choices, choosing randomly from middleFloors.")
                     # We haven't finished making all of the floors yet, go to one we have already been to.
                     newFloor = random.choice(middleFloors)
                 else:
                     newFloor = random.choice(choices)
-            print 'Chose floor: ' + newFloor
+            print('Chose floor: ' + newFloor)
             self.startFloor(self.currentFloor + 1, newFloor)
 
     def exitFloorIntermission(self):
@@ -458,7 +458,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 isBoss = True
                 wantBoss = False
             section = point[0]
-            if not guardSection2NumInSection.has_key(section):
+            if section not in guardSection2NumInSection:
                 guardSection2NumInSection[section] = 0
                 if section == 0:
                     # Always make section 0 have 4 guards.
@@ -475,7 +475,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
         maxInThisSection = 0
         for point in chairPoints:
             section = point[0]
-            if not chairSection2NumInSection.has_key(section):
+            if section not in chairSection2NumInSection:
                 chairSection2NumInSection[section] = 0
                 if guardSection2NumInSection[section] == 0:
                     # Don't make any chairs in this section if their are no guards in the same section!!!
@@ -502,7 +502,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
             }
             maxBarrels = 3
 
-            for _ in xrange(maxBarrels):
+            for _ in range(maxBarrels):
                 locationData = random.choice(barrelPoints)
                 barrelPoints.remove(locationData)
 
@@ -512,7 +512,7 @@ class DistributedCogOfficeBattleAI(DistributedObjectAI):
                 gagIcon = random.choice([0, 2])
                 track = GagType.THROW
 
-                for track, data in trackGags.iteritems():
+                for track, data in trackGags.items():
                     if random.randrange(0, 100) <= data[1]:
                         gagIcon = random.choice(data[0])
                         track = track

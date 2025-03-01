@@ -14,19 +14,19 @@ from lib.coginvasion.suit.SuitItemDropper import SuitItemDropper
 from lib.coginvasion.gags import GagGlobals
 from lib.coginvasion.gags.GagType import GagType
 
-from SpawnMode import SpawnMode
-from SuitBrainAI import SuitBrain
-from SuitBank import SuitPlan
-from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
-from SuitCallInBackupBehavior import SuitCallInBackupBehavior
-from SuitPursueToonBehavior import SuitPursueToonBehavior
-from SuitAttackTurretBehavior import SuitAttackTurretBehavior
-from SuitAttackBehavior import SuitAttackBehavior
-from SuitPathDataAI import *
-import SuitAttacks
-import SuitBank
-import SuitGlobals
-import Variant
+from .SpawnMode import SpawnMode
+from .SuitBrainAI import SuitBrain
+from .SuitBank import SuitPlan
+from .SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
+from .SuitCallInBackupBehavior import SuitCallInBackupBehavior
+from .SuitPursueToonBehavior import SuitPursueToonBehavior
+from .SuitAttackTurretBehavior import SuitAttackTurretBehavior
+from .SuitAttackBehavior import SuitAttackBehavior
+from .SuitPathDataAI import *
+from . import SuitAttacks
+from . import SuitBank
+from . import SuitGlobals
+from . import Variant
 
 import types
 import random
@@ -160,7 +160,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if hasattr(self, 'animStateChangeEvent'):
             messenger.send(self.animStateChangeEvent, [anim, self.anim])
             self.anim = anim
-            if type(self.anim) == types.IntType:
+            if type(self.anim) == int:
                 if anim != 44 and anim != 45:
                     self.anim = SuitGlobals.getAnimById(anim).getName()
                 elif anim == 44:
@@ -169,7 +169,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                     self.anim = 'flyNeutral'
 
     def b_setAnimState(self, anim, loop = 1):
-        if type(anim) == types.StringType:
+        if type(anim) == bytes:
             animId = SuitGlobals.getAnimId(SuitGlobals.getAnimByName(anim))
             if animId == None and anim != 'flyNeutral':
                 animId = 44
@@ -269,12 +269,12 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         damage = GagGlobals.getGagData(GagGlobals.getIDByName(gagName)).get('damage')
         self.comboData.update({avId : {track : damage}})
 
-        data = self.comboData.values()
+        data = list(self.comboData.values())
         tracks = []
         damages = []
 
         for hitData in data:
-            for track, damage in hitData.iteritems():
+            for track, damage in hitData.items():
                 tracks.append(track)
                 damages.append(damage)
 
@@ -369,7 +369,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         self.requestedBehaviors.append([behavior, priority])
 
     def toonHitByWeapon(self, weaponId, avId):
-        weapon = SuitAttacks.SuitAttackLengths.keys()[weaponId]
+        weapon = list(SuitAttacks.SuitAttackLengths.keys())[weaponId]
         if not weapon in ["pickpocket", "fountainpen", "hangup", "buzzword", "razzledazzle",
                         "jargon", "mumbojumbo", 'doubletalk', 'schmooze', 'fingerwag', 'filibuster']:
             self.d_handleWeaponTouch()
@@ -392,7 +392,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.handleAvatarDefeat(toon)
 
     def turretHitByWeapon(self, weaponId, avId):
-        weapon = SuitAttacks.SuitAttackLengths.keys()[weaponId]
+        weapon = list(SuitAttacks.SuitAttackLengths.keys())[weaponId]
         if not weapon in ["pickpocket", "fountainpen", "hangup"]:
             self.d_handleWeaponTouch()
         dmg = int(self.maxHealth / SuitAttacks.SuitAttackDamageFactors[weapon])
@@ -440,9 +440,9 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
             self.brain.addBehavior(pursue, priority = 1)
             self.brain.addBehavior(SuitAttackTurretBehavior(self), priority = 2)
         place = CIGlobals.SuitSpawnPoints[self.hood]
-        landspot = random.choice(place.keys())
+        landspot = random.choice(list(place.keys()))
         path = place[landspot]
-        index = place.keys().index(landspot)
+        index = list(place.keys()).index(landspot)
         self.currentPath = landspot
         yaw = random.uniform(0.0, 360.0)
         self.setH(yaw)
@@ -560,7 +560,7 @@ class DistributedSuitAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         DistributedSmoothNodeAI.delete(self)
 
     def printPos(self, task):
-        print '%s\n%s' % (self.getPos(render), self.getHpr(render))
+        print('%s\n%s' % (self.getPos(render), self.getHpr(render)))
         return Task.cont
 
     def getBrain(self):

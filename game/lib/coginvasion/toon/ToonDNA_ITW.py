@@ -1193,20 +1193,20 @@ class ToonDNA:
                       ['bbs8'],
                       ['gsk7']]}
 
-    gender2genderDNA = {v: k for k, v in genderDNA2gender.items()}
-    animal2animalDNA = {v: k for k, v in animalDNA2animal.items()}
-    head2headDNA = {v: k for k, v in headDNA2head.items()}
-    color2colorDNA = {v: k for k, v in colorDNA2color.items()}
-    torso2torsoDNA = {v: k for k, v in torsoDNA2torso.items()}
-    leg2legDNA = {v: k for k, v in legDNA2leg.items()}
-    shirt2shirtDNA = {v: k for k, v in shirtDNA2shirt.items()}
-    sleeve2sleeveDNA = {v: k for k, v in sleeveDNA2sleeve.items()}
-    short2shortDNA = {v: k for k, v in shortDNA2short.items()}
+    gender2genderDNA = {v: k for k, v in list(genderDNA2gender.items())}
+    animal2animalDNA = {v: k for k, v in list(animalDNA2animal.items())}
+    head2headDNA = {v: k for k, v in list(headDNA2head.items())}
+    color2colorDNA = {v: k for k, v in list(colorDNA2color.items())}
+    torso2torsoDNA = {v: k for k, v in list(torsoDNA2torso.items())}
+    leg2legDNA = {v: k for k, v in list(legDNA2leg.items())}
+    shirt2shirtDNA = {v: k for k, v in list(shirtDNA2shirt.items())}
+    sleeve2sleeveDNA = {v: k for k, v in list(sleeveDNA2sleeve.items())}
+    short2shortDNA = {v: k for k, v in list(shortDNA2short.items())}
     skirt2skirtDNA = {}
-    for k, v in skirtDNA2skirt.items():
+    for k, v in list(skirtDNA2skirt.items()):
         skirt2skirtDNA[v[0]] = k
 
-    clothesColor2clothesColorDNA = {v: k for k, v in clothesColorDNA2clothesColor.items()}
+    clothesColor2clothesColorDNA = {v: k for k, v in list(clothesColorDNA2clothesColor.items())}
 
     def getRandomBottom(self, gender, tailorId = MAKE_A_TOON, generator = None, girlBottomType = None):
         if generator == None:
@@ -1217,10 +1217,10 @@ class ToonDNA:
         elif girlBottomType is None:
             style = generator.choice(collection[self.GIRL_BOTTOMS])
         elif girlBottomType == self.SKIRT:
-            skirtCollection = filter(lambda style: self.GirlBottoms[self.BottomStyles[style][0]][1] == self.SKIRT, collection[self.GIRL_BOTTOMS])
+            skirtCollection = [style for style in collection[self.GIRL_BOTTOMS] if self.GirlBottoms[self.BottomStyles[style][0]][1] == self.SKIRT]
             style = generator.choice(skirtCollection)
         elif girlBottomType == self.SHORTS:
-            shortsCollection = filter(lambda style: self.GirlBottoms[self.BottomStyles[style][0]][1] == self.SHORTS, collection[self.GIRL_BOTTOMS])
+            shortsCollection = [style for style in collection[self.GIRL_BOTTOMS] if self.GirlBottoms[self.BottomStyles[style][0]][1] == self.SHORTS]
             style = generator.choice(shortsCollection)
         else:
             self.notify.error('Bad girlBottomType: %s' % girlBottomType)
@@ -1231,26 +1231,26 @@ class ToonDNA:
     def getBottomFromTexture(self, bottomTex, skirt = None):
         texIndex = 0
         if skirt == True:
-            for tex, isShorts in self.skirtDNA2skirt.values():
+            for tex, isShorts in list(self.skirtDNA2skirt.values()):
                 if tex == bottomTex:
-                    texIndex = self.skirtDNA2skirt.values().index((tex, isShorts))
+                    texIndex = list(self.skirtDNA2skirt.values()).index((tex, isShorts))
         elif skirt == False:
             texIndex = self.BoyShorts.index(bottomTex)
         else:
             bottom = self.getBottom(bottomTex)
             if len(bottom) == 2:
-                texIndex = self.skirtDNA2skirt.values().index(bottom)
+                texIndex = list(self.skirtDNA2skirt.values()).index(bottom)
             else:
                 texIndex = self.BoyShorts.index(bottomTex)
-        for key, values in self.BottomStyles.iteritems():
+        for key, values in self.BottomStyles.items():
             tex = values[0]
             if tex == texIndex:
                 return key
 
     def getBottom(self, bottomTex):
-        print bottomTex
+        print(bottomTex)
 
-        skirtValues = self.skirtDNA2skirt.values()
+        skirtValues = list(self.skirtDNA2skirt.values())
         if isinstance(skirtValues[0], tuple):
             return self.skirt2skirtDNA[bottomTex]
         else:
@@ -1285,13 +1285,13 @@ class ToonDNA:
     def getColorByName(self, name):
         name = name.lower()
         color = None
-        if name in self.colorName2DNAcolor.keys():
+        if name in list(self.colorName2DNAcolor.keys()):
             color = self.colorName2DNAcolor[name]
         return color
 
     def getDNAIDFromColor(self, color):
         dnaID = None
-        for _id, dnaColor in self.colorDNA2color.iteritems():
+        for _id, dnaColor in self.colorDNA2color.items():
             if dnaColor == color:
                 dnaID = _id
         return dnaID
@@ -1387,11 +1387,11 @@ class ToonDNA:
         sleeve = self.sleeve2sleeveDNA[self.sleeve]
         if gender == 'boy':
             shorts = self.short2shortDNA[self.shorts]
-            print 'Using dict'
+            print('Using dict')
         else:
             shorts = self.getBottom(self.shorts)
-            print 'Using getBottom'
-        print shorts
+            print('Using getBottom')
+        print(shorts)
         shirtColorIndex = self.clothesColor2clothesColorDNA[self.shirtColor]
         sleeveColorIndex = self.clothesColor2clothesColorDNA[self.sleeveColor]
         shortColorIndex = self.clothesColor2clothesColorDNA[self.shortColor]
@@ -1404,7 +1404,7 @@ class ToonDNA:
             torsocolor, legs, legcolor, shirt, sleeve,
             shorts, shirtColor, sleeveColor, shortColor, gloveColor
             )
-        print strand
+        print(strand)
         self.setDNAStrand(strand)
 
     def canBeInteger(self, string):
@@ -1417,7 +1417,7 @@ class ToonDNA:
     def parseDNAStrand(self, dnaStrand):
         dnaParts = dnaStrand.split('/')
         strandLength = len(dnaParts) * 2
-        isString = type(dnaStrand) is types.StringType
+        isString = type(dnaStrand) is bytes
         if (strandLength == self.requiredStrandLength and isString):
             self.gender = self.genderDNA2gender[dnaParts[0]]
             self.animal = self.animalDNA2animal[dnaParts[1]]

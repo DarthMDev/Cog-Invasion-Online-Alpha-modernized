@@ -15,8 +15,8 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.globals import CIGlobals
 
-import RaceGameMovement
-import DistributedMinigame
+from . import RaceGameMovement
+from . import DistributedMinigame
 
 class DistributedRaceGame(DistributedMinigame.DistributedMinigame):
 

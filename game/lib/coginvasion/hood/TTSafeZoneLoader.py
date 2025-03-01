@@ -2,8 +2,8 @@
 # Created by:  blach (25Oct15)
 
 from lib.coginvasion.holiday.HolidayManager import HolidayType
-import SafeZoneLoader
-import TTPlayground
+from . import SafeZoneLoader
+from . import TTPlayground
 
 from lib.coginvasion.globals import CIGlobals
 

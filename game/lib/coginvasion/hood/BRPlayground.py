@@ -4,8 +4,8 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.SoundInterval import SoundInterval
 
-import Playground
-import BRWater
+from . import Playground
+from . import BRWater
 
 import random
 

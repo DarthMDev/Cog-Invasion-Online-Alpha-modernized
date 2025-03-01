@@ -24,9 +24,9 @@ class SuitCallInBackupBehavior(SuitBehaviorBase):
     def __init__(self, suit):
         doneEvent = 'suit%s-callInBackup'
         SuitBehaviorBase.__init__(self, suit, doneEvent)
-        self.backup_levels = {1: range(1, 4 + 1),
-                        2: range(5, 8 + 1),
-                        3: range(9, 12 + 1)}
+        self.backup_levels = {1: list(range(1, 4 + 1)),
+                        2: list(range(5, 8 + 1)),
+                        3: list(range(9, 12 + 1))}
                         #4: range(9, 12 + 1)}
         self.backup_request_size = 18
         self.backupLevel = -1

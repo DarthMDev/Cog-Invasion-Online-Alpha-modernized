@@ -3,7 +3,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-import DistributedToonInteriorAI
+from . import DistributedToonInteriorAI
 
 class DistributedGagShopInteriorAI(DistributedToonInteriorAI.DistributedToonInteriorAI):
     notify = directNotify.newCategory('DistributedGagShopInteriorAI')

@@ -5,7 +5,7 @@ from lib.server.game.AIRepository import AIRepository
 from direct.showbase.DirectObject import DirectObject
 from direct.filter.CommonFilters import CommonFilters
 from direct.gui import DirectGuiGlobals
-import ServerGui
+from . import ServerGui
 notify = DirectNotify().newCategory("ServerBase")
 
 KICK_DOID = 0x0000f

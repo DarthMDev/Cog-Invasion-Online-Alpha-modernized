@@ -31,7 +31,7 @@ class ChatBalloon:
         bottom = balloon.find('**/bottom')
         
         if top.isEmpty() or middle.isEmpty() or bottom.isEmpty():
-            raise StandardError("invalid chat balloon model")
+            raise Exception("invalid chat balloon model")
 
         balloon.setColor(balloonColor)
         if balloonColor[3] < 1.0:

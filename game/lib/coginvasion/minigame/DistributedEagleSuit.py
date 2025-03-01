@@ -8,11 +8,11 @@ from direct.actor.Actor import Actor
 from direct.fsm.State import State
 from direct.interval.IntervalGlobal import LerpPosInterval, Sequence, Wait, Func
 
-from FlightProjectileInterval import FlightProjectileInterval
+from .FlightProjectileInterval import FlightProjectileInterval
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog.DistributedSuit import DistributedSuit
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
-import EagleGameGlobals as EGG
+from . import EagleGameGlobals as EGG
 
 import random
 
@@ -53,7 +53,7 @@ class DistributedEagleSuit(DistributedSuit):
             6 : self.suitFSM.getStateNamed('eagleFall')
         }
         self.suitState2stateIndex = {}
-        for stateId, state in self.stateIndex2suitState.items():
+        for stateId, state in list(self.stateIndex2suitState.items()):
             self.suitState2stateIndex[state.getName()] = stateId
 
     def setFlySpeed(self, value):

@@ -1,6 +1,6 @@
 import math
 
-from SuitPathFinderAI import SuitPathFinderAI
+from .SuitPathFinderAI import SuitPathFinderAI
 
 from lib.coginvasion.globals import CIGlobals
 

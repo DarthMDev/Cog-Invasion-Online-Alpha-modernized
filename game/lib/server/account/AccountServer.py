@@ -33,11 +33,11 @@ class LoginServer(MiniServer):
 		self.accInfoFile.flush()
 		
 	def handleDatagram(self, datagram):
-		print "I got a datagram."
+		print("I got a datagram.")
 		dgi = DatagramIterator(datagram)
 		connection = datagram.getConnection()
 		msgType = dgi.getUint16()
-		print msgType
+		print(msgType)
 		if msgType == ACC_VALIDATE:
 			name = dgi.getString()
 			password = dgi.getString()
@@ -80,9 +80,9 @@ class LoginServer(MiniServer):
 		self.cWriter.send(dg, connection)
 				
 	def handleNewToonReq(self, accName, accPass, dnaStrand, slot, avName):
-		print "Storing toon data on account (%s, %s) with data (%s, %s, %s)" % (
+		print("Storing toon data on account (%s, %s) with data (%s, %s, %s)" % (
 				accName, accPass, dnaStrand, slot, avName
-				)
+				))
 		self.jsonAccInfo.get(accName).get("toons").update({"toon" + str(slot):
 					{"dna": dnaStrand, "slot": slot, "name": avName}})
 		self.flushData(self.jsonAccInfo)
@@ -94,8 +94,8 @@ class LoginServer(MiniServer):
 		self.cWriter.send(dg, connection)
 			
 	def handleToonDelReq(self, name, connection, doId, slot):
-		print "Deleting toon on slot %s for account %s from doId %s, connection %s" %(
-				slot, name, doId, connection.getAddress())
+		print("Deleting toon on slot %s for account %s from doId %s, connection %s" %(
+				slot, name, doId, connection.getAddress()))
 		self.jsonAccInfo.get(name).get("toons").update({"toon" + str(slot): {}})
 		self.flushData(self.jsonAccInfo)
 		self.sendToonDeleted(doId, connection)
@@ -137,9 +137,9 @@ class LoginServer(MiniServer):
 		self.cWriter.send(dg, connection)
 			
 	def createAccount(self, name, password, connection):
-		print "Attemping to create account: %s, %s" % (name, password)
-		if self.jsonAccInfo.has_key(name):
-			print "Account already exists: %s, %s" % (name, password)
+		print("Attemping to create account: %s, %s" % (name, password))
+		if name in self.jsonAccInfo:
+			print("Account already exists: %s, %s" % (name, password))
 			self.sendAccountExists(connection)
 			return
 		self.jsonAccInfo[name] = {"password": password, "toons": {"toon0": {},
@@ -147,7 +147,7 @@ class LoginServer(MiniServer):
 						"toon4": {}, "toon5": {}}}
 		self.flushData(self.jsonAccInfo)
 		self.sendAccountCreated(connection)
-		print "Created account: %s, %s" % (name, password)
+		print("Created account: %s, %s" % (name, password))
 		
 	def sendAccountCreated(self, connection):
 		dg = PyDatagram()
@@ -160,7 +160,7 @@ class LoginServer(MiniServer):
 		self.cWriter.send(dg, connection)
 		
 	def isValidAccount(self, name, password):
-		accExists = self.jsonAccInfo.has_key(name)
+		accExists = name in self.jsonAccInfo
 		if accExists:
 			acc = self.jsonAccInfo.get(name)
 			if password == acc.get('password'):
@@ -171,21 +171,21 @@ class LoginServer(MiniServer):
 			return False
 		
 	def validateAccount(self, name, password, connection, doId):
-		print "I'm validating an account with credidentials: %s, %s" % (name, password)
+		print("I'm validating an account with credidentials: %s, %s" % (name, password))
 		if self.isValidAccount(name, password):
 			self.sendValidAccount(connection, doId)
 		else:
 			self.sendInvalidAccount(connection, doId)
 			
 	def sendValidAccount(self, connection, doId):
-		print "The account is valid."
+		print("The account is valid.")
 		dg = PyDatagram()
 		dg.addUint16(ACC_VALID)
 		dg.addUint32(doId)
 		self.cWriter.send(dg, connection)
 		
 	def sendInvalidAccount(self, connection, doId):
-		print "The account is invalid."
+		print("The account is invalid.")
 		dg = PyDatagram()
 		dg.addUint16(ACC_INVALID)
 		dg.addUint32(doId)

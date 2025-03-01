@@ -6,10 +6,10 @@ from lib.coginvasion.cog.SuitPathBehavior import SuitPathBehavior
 from lib.coginvasion.cog.SuitHabitualBehavior import SuitHabitualBehavior
 from lib.coginvasion.cog import SuitAttacks
 from lib.coginvasion.globals import CIGlobals
-from SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
-from SuitAttackBehavior import SuitAttackBehavior
-import SuitPathDataAI
-import SuitUtils
+from .SuitFlyToRandomSpotBehavior import SuitFlyToRandomSpotBehavior
+from .SuitAttackBehavior import SuitAttackBehavior
+from . import SuitPathDataAI
+from . import SuitUtils
 
 from direct.fsm import ClassicFSM, State
 from direct.task.Task import Task
@@ -128,7 +128,7 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
         self.__toggleHeal()
         # Let's choose one of the heal attacks and send it.
         attack = random.randint(0, 6)
-        attackName = SuitAttacks.SuitAttackLengths.keys()[attack]
+        attackName = list(SuitAttacks.SuitAttackLengths.keys())[attack]
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.suit.sendUpdate('doAttack', [attack, self.boss.doId, timestamp])
 
@@ -230,7 +230,7 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
 
     def getSuitsByBoss(self):
         suits = []
-        for obj in base.air.doId2do.values():
+        for obj in list(base.air.doId2do.values()):
             className = obj.__class__.__name__
             if className == 'DistributedSuitAI':
                 if obj.zoneId == self.suit.zoneId:
@@ -248,13 +248,13 @@ class SuitFollowBossBehavior(SuitPathBehavior, SuitHabitualBehavior):
         return behavior.getCalledInBackup()
 
     def isBossInManager(self):
-        return self.boss in self.suit.getManager().suits.values()
+        return self.boss in list(self.suit.getManager().suits.values())
 
     def shouldStart(self):
         if self.boss and not self.boss.isDead() and self.isBossInManager() and self.suit.getDistance(self.boss) > self.LEEWAY_DISTANCE:
             _helper_suits = 0
             # Let me find out how many other Cogs are helping the boss.
-            for suit in self.suit.getManager().suits.values():
+            for suit in list(self.suit.getManager().suits.values()):
                 if suit.doId != self.suit.doId:
                     if suit.brain:
                         if suit.brain.currentBehavior.__class__ == SuitFollowBossBehavior:

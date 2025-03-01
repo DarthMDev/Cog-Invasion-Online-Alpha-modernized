@@ -3,9 +3,9 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from DistributedCogBattleAI import DistributedCogBattleAI
+from .DistributedCogBattleAI import DistributedCogBattleAI
 from lib.coginvasion.minigame.DistributedGroupStationAI import DistributedGroupStationAI
-import CogBattleGlobals
+from . import CogBattleGlobals
 
 class DistributedCogStationAI(DistributedGroupStationAI):
 	notify = directNotify.newCategory("DistributedCogStationAI")

@@ -9,16 +9,16 @@ from lib.coginvasion.distributed.HoodMgr import HoodMgr
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.hood import TreasureGlobals
 from lib.coginvasion.hood.SZTreasurePlannerAI import SZTreasurePlannerAI
-import ZoneUtil
+from . import ZoneUtil
 from lib.coginvasion.dna.DNALoader import *
-import DistributedDoorAI
-import DistributedToonInteriorAI
-import DistributedCinemaInteriorAI
-import DistributedToonHQInteriorAI
-import DistributedTailorInteriorAI
-import DistributedGagShopInteriorAI
-import DistributedBuildingAI
-import CinemaGlobals
+from . import DistributedDoorAI
+from . import DistributedToonInteriorAI
+from . import DistributedCinemaInteriorAI
+from . import DistributedToonHQInteriorAI
+from . import DistributedTailorInteriorAI
+from . import DistributedGagShopInteriorAI
+from . import DistributedBuildingAI
+from . import CinemaGlobals
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cogoffice.BuildingSuitPlannerAI import BuildingSuitPlannerAI
 
@@ -65,7 +65,7 @@ class HoodAI:
             for i in range(dnaStore.get_num_block_numbers()):
                 blockNumber = dnaStore.get_block_number_at(i)
                 blockZoneByNumber[blockNumber] = dnaStore.get_zone_from_block_number(blockNumber)
-            for block, exteriorZone in blockZoneByNumber.items():
+            for block, exteriorZone in list(blockZoneByNumber.items()):
                 buildingType = dnaStore.get_block_building_type(block)
                 interiorZone = (ZoneUtil.getBranchZone(zoneId) - (ZoneUtil.getBranchZone(zoneId) % 100)) + 500 + block
                 if isSZ or (not isSZ and buildingType in ['hq']):
@@ -132,7 +132,7 @@ class HoodAI:
         self.treasurePlanner.start()
 
     def shutdown(self):
-        for obj in self.air.doId2do.values():
+        for obj in list(self.air.doId2do.values()):
             obj.requestDelete()
         if self.treasurePlanner:
             self.treasurePlanner.stop()

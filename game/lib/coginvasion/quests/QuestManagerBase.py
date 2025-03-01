@@ -1,7 +1,7 @@
 # Filename: QuestManagerBase.py
 # Created by:  blach (30Jul15)
 
-import Quests
+from . import Quests
 from lib.coginvasion.globals import CIGlobals
 
 class QuestManagerBase:
@@ -13,7 +13,7 @@ class QuestManagerBase:
         del self.quests
 
     def getQuestAndIdWhereCurrentObjectiveIsToVisit(self, npcId):
-        for questId, quest in self.quests.items():
+        for questId, quest in list(self.quests.items()):
             currObjective = quest.getCurrentObjective()
             if currObjective.type == Quests.VisitNPC:
                 if (currObjective.npcId == npcId):
@@ -24,11 +24,11 @@ class QuestManagerBase:
         return None
 
     def makeQuestsFromData(self, avatar):
-        for quest in self.quests.values():
+        for quest in list(self.quests.values()):
             quest.cleanup()
         self.quests = {}
         questData = avatar.getQuests()
-        for i in xrange(len(questData[0])):
+        for i in range(len(questData[0])):
             questId = questData[0][i]
             currentObjectiveIndex = questData[1][i]
             currentObjectiveProg = questData[2][i]

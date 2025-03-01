@@ -8,8 +8,8 @@ from panda3d.core import Point3
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 
 from lib.coginvasion.globals import CIGlobals
-from SquirtGag import SquirtGag
-import GagGlobals
+from .SquirtGag import SquirtGag
+from . import GagGlobals
 
 class WaterGlass(SquirtGag):
 

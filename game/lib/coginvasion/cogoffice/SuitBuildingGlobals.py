@@ -1,7 +1,7 @@
 # Filename: SuitBuildingGlobals.py
 # Created by:  blach (13Dec15)
 
-from ElevatorConstants import *
+from .ElevatorConstants import *
 from lib.coginvasion.globals import CIGlobals
 
 VICTORY_RUN_TIME = ElevatorData[ELEVATOR_NORMAL]['openTime'] + TOON_VICTORY_EXIT_TIME
@@ -89,16 +89,16 @@ buildingChances = {
 
 # The chances a cog level has of spawning a building with a certain number of floors.
 floorNumberChances = {
-    1: [range(1, 100 + 1), [], [], [], []],
-    2: [range(26, 100 + 1), range(1, 25 + 1), [], [], []],
-    3: [range(1, 50 + 1), range(51, 100 + 1), [], [], []],
-    4: [range(51, 75 + 1), range(1, 50 + 1), range(75, 100 + 1), [], []],
-    5: [range(91, 95 + 1), range(76, 90 + 1), range(1, 75 + 1), range(96, 100 + 1), []],
-    6: [[], range(96, 100 + 1), range(1, 50 + 1), range(51, 95 + 1), []],
-    7: [[], [], range(1, 25 + 1), range(26, 75 + 1), range(76, 100 + 1)],
-    8: [[], [], range(66, 100 + 1), range(1, 50 + 1), range(51, 65 + 1)],
-    9: [[], [], range(96, 100 + 1), range(1, 30 + 1), range(31, 95 + 1)],
-    10: [[], [], range(86, 100 + 1), range(56, 85 + 1), range(1, 55 + 1)],
-    11: [[], [], range(91, 100 + 1), range(61, 90 + 1), range(1, 60 + 1)],
-    12: [[], [], [], range(81, 100 + 1), range(1, 80 + 1)]
+    1: [list(range(1, 100 + 1)), [], [], [], []],
+    2: [list(range(26, 100 + 1)), list(range(1, 25 + 1)), [], [], []],
+    3: [list(range(1, 50 + 1)), list(range(51, 100 + 1)), [], [], []],
+    4: [list(range(51, 75 + 1)), list(range(1, 50 + 1)), list(range(75, 100 + 1)), [], []],
+    5: [list(range(91, 95 + 1)), list(range(76, 90 + 1)), list(range(1, 75 + 1)), list(range(96, 100 + 1)), []],
+    6: [[], list(range(96, 100 + 1)), list(range(1, 50 + 1)), list(range(51, 95 + 1)), []],
+    7: [[], [], list(range(1, 25 + 1)), list(range(26, 75 + 1)), list(range(76, 100 + 1))],
+    8: [[], [], list(range(66, 100 + 1)), list(range(1, 50 + 1)), list(range(51, 65 + 1))],
+    9: [[], [], list(range(96, 100 + 1)), list(range(1, 30 + 1)), list(range(31, 95 + 1))],
+    10: [[], [], list(range(86, 100 + 1)), list(range(56, 85 + 1)), list(range(1, 55 + 1))],
+    11: [[], [], list(range(91, 100 + 1)), list(range(61, 90 + 1)), list(range(1, 60 + 1))],
+    12: [[], [], [], list(range(81, 100 + 1)), list(range(1, 80 + 1))]
 }

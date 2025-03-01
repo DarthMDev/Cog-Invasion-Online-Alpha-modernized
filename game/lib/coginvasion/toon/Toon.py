@@ -434,7 +434,7 @@ class Toon(Avatar.Avatar, ToonHead, ToonDNA.ToonDNA):
         self.detachGun()
 
     def setAdminToken(self, tokenId):
-        if tokenId in ToonGlobals.STAFF_TOKENS.keys():
+        if tokenId in list(ToonGlobals.STAFF_TOKENS.keys()):
             icons = loader.loadModel("phase_3/models/props/gm_icons.bam")
             self.tokenIcon = icons.find('**/access_level_%s' % (ToonGlobals.STAFF_TOKENS[tokenId]))
             self.tokenIcon.reparentTo(self)

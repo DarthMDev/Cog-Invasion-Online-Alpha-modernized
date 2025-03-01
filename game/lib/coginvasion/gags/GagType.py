@@ -6,4 +6,4 @@
 """
 
 class GagType:
-    THROW, SQUIRT, TRAP, DROP, TOON_UP, SOUND, LURE = range(7)
+    THROW, SQUIRT, TRAP, DROP, TOON_UP, SOUND, LURE = list(range(7))

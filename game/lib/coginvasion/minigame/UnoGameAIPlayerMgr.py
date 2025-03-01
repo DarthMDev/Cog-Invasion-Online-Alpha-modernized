@@ -18,7 +18,7 @@ class UnoGameAIPlayerMgr:
         self.idAllocator = UniqueIdAllocator(1, 4)
         
     def createPlayer(self, difficulty = None):
-        npc_name = random.choice(NPCGlobals.NPC_DNA.keys())
+        npc_name = random.choice(list(NPCGlobals.NPC_DNA.keys()))
         player = UnoGameAIPlayer(npc_name, self.idAllocator.allocate(), self.game)
         player.generate()
         self.players.append(player)

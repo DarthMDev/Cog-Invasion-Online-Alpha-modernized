@@ -11,6 +11,6 @@ class AdminPouch(Backpack):
     def __init__(self):
         Backpack.__init__(self)
         gagMgr = GagManager()
-        for gag in gagMgr.getGags().values():
+        for gag in list(gagMgr.getGags().values()):
             gag = gag()
             self.setMaxSupply(255, gag.getName())

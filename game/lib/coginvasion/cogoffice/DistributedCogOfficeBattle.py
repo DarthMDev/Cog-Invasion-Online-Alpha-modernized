@@ -13,9 +13,9 @@ from lib.coginvasion.minigame import DistributedMinigame
 from lib.coginvasion.nametag import NametagGlobals
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog import Dept, SuitBank
-from ElevatorUtils import *
-from ElevatorConstants import *
-from CogOfficeConstants import *
+from .ElevatorUtils import *
+from .ElevatorConstants import *
+from .CogOfficeConstants import *
 import random
 
 PROPS = {'photo_frame':     'phase_7/models/props/photo_frame.egg',
@@ -58,10 +58,10 @@ class Elevator:
             self.activeElev.reparentTo(hidden)
 
         if index == Elevator.BLDG:
-            print "setting active elev to BLDG"
+            print("setting active elev to BLDG")
             self.activeElev = self.elevatorMdl
         elif index == Elevator.COGDO:
-            print "setting active elev to COGDO"
+            print("setting active elev to COGDO")
             self.activeElev = self.cogdoElev
 
         self.activeElev.reparentTo(render)
@@ -502,7 +502,7 @@ class DistributedCogOfficeBattle(DistributedObject):
         self.faceOffTrack.append(Func(camera.lookAt, base.localAvatar.smartCamera.getLookAtPoint()))
         self.faceOffTrack.append(Func(setCamRunY))
         runTrack = Parallel()
-        for i in xrange(len(self.avatars)):
+        for i in range(len(self.avatars)):
             avId = self.avatars[i]
             toon = self.cr.doId2do.get(avId)
             if toon:
@@ -704,7 +704,7 @@ class DistributedCogOfficeBattle(DistributedObject):
             name = propData[0]
             otherProps = []
             if isinstance(PROPS[name], list):
-                for i in xrange(len(PROPS[name])):
+                for i in range(len(PROPS[name])):
                     if i == 0:
                         continue
                     path = PROPS[name][i]
@@ -716,7 +716,7 @@ class DistributedCogOfficeBattle(DistributedObject):
                 propMdl = loader.loadModel(PROPS[name][0])
             else:
                 if name == 'tv_on_wall':
-                    print "TVONWALL"
+                    print("TVONWALL")
                     # This is a tv with a movie texture.
                     propMdl = CogTV()
                 else:
@@ -733,7 +733,7 @@ class DistributedCogOfficeBattle(DistributedObject):
             self.props.append(propMdl)
 
     def loadElevators(self):
-        for _ in xrange(2):
+        for _ in range(2):
             elevMdl = loader.loadModel('phase_4/models/modules/elevator.bam')
             cogdoElevMdl = loader.loadModel('phase_7/models/modules/cogoffice_elevator.bam')
             elevator = Elevator(elevMdl, cogdoElevMdl)
@@ -765,12 +765,12 @@ class DistributedCogOfficeBattle(DistributedObject):
         # and collision sphere to the new active elevator.
         messenger.send(self.uniqueName('prepareElevator'))
 
-        for i in xrange(len(dataList)):
+        for i in range(len(dataList)):
             x, y, z, h, p, r = dataList[i]
             elevMdl = self.elevators[i].getElevatorModel()
             elevMdl.setPosHpr(x, y, z, h, p, r)
             npc = elevMdl.findAllMatches('**/floor_light_?;+s')
-            for i in xrange(npc.getNumPaths()):
+            for i in range(npc.getNumPaths()):
                 np = npc.getPath(i)
                 floor = int(np.getName()[-1:]) - 1
                 if floor < self.numFloors:

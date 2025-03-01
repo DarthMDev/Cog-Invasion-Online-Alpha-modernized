@@ -4,7 +4,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
 
-from DistributedDroppableCollectableObjectAI import DistributedDroppableCollectableObjectAI
+from .DistributedDroppableCollectableObjectAI import DistributedDroppableCollectableObjectAI
 from lib.coginvasion.gags.backpack.Backpack import Backpack
 from lib.coginvasion.gags import GagGlobals
 

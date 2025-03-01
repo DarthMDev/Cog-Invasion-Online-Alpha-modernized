@@ -6,7 +6,7 @@ from direct.interval.IntervalGlobal import LerpPosInterval, Sequence, Wait
 
 from lib.coginvasion.cog.DistributedSuit import DistributedSuit
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
-import DeliveryGameGlobals as DGG
+from . import DeliveryGameGlobals as DGG
 
 import random
 

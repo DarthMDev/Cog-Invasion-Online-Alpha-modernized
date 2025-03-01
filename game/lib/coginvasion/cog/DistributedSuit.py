@@ -18,16 +18,16 @@ from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 
 from lib.coginvasion.suit.PythonCTMusicMgr import PythonCTMusicManager as PCTMM
 
-from SuitState import SuitState
-from SuitBank import SuitPlan
-from Suit import Suit
-from SpawnMode import SpawnMode
-from SuitUtils import getMoveIvalFromPath
-import SuitBank
-import SuitGlobals
-import Voice
-import Variant
-import SuitAttacks
+from .SuitState import SuitState
+from .SuitBank import SuitPlan
+from .Suit import Suit
+from .SpawnMode import SpawnMode
+from .SuitUtils import getMoveIvalFromPath
+from . import SuitBank
+from . import SuitGlobals
+from . import Voice
+from . import Variant
+from . import SuitAttacks
 
 from panda3d.core import Point3, VBase4
 import types, random
@@ -116,9 +116,9 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
     def enterFlyingDown(self, startIndex, endIndex, ts = 0.0):
         if self.getHood() != '' and startIndex != -1 and endIndex != -1:
             duration = 3.5
-            startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
+            startPoint = list(CIGlobals.SuitSpawnPoints[self.getHood()].keys())[startIndex]
             startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint] + (0, 0, 6.5 * 4.8)
-            endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
+            endPoint = list(CIGlobals.SuitSpawnPoints[self.getHood()].keys())[endIndex]
             endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint]
             self.stopMoving(finish = 1)
             groundF = 28
@@ -142,12 +142,12 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         if self.getHood() != '':
             duration = 3
             if startIndex > -1:
-                startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
+                startPoint = list(CIGlobals.SuitSpawnPoints[self.getHood()].keys())[startIndex]
                 startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint]
             else:
                 startPos = self.getPos(render)
             if endIndex > -1:
-                endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
+                endPoint = list(CIGlobals.SuitSpawnPoints[self.getHood()].keys())[endIndex]
                 endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint] + (0, 0, 6.5 * 4.8)
             else:
                 endPos = self.getPos(render) + (0, 0, 6.5 * 4.8)
@@ -351,7 +351,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
         voice = Voice.NORMAL
         if variant:
-            if isinstance(variant, (int, long, float, complex)):
+            if isinstance(variant, (int, float, complex)):
                 variant = Variant.getVariantById(variant)
 
         if plan.getForcedVoice():
@@ -370,9 +370,9 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
 
     def spawn(self, startIndex, endIndex, spawnMode = SpawnMode.FLYDOWN):
         if spawnMode == SpawnMode.FLYDOWN:
-            startPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[startIndex]
+            startPoint = list(CIGlobals.SuitSpawnPoints[self.getHood()].keys())[startIndex]
             startPos = CIGlobals.SuitSpawnPoints[self.getHood()][startPoint] + (0, 0, 50)
-            endPoint = CIGlobals.SuitSpawnPoints[self.getHood()].keys()[endIndex]
+            endPoint = list(CIGlobals.SuitSpawnPoints[self.getHood()].keys())[endIndex]
             endPos = CIGlobals.SuitSpawnPoints[self.getHood()][endPoint]
             if self.moveIval:
                 self.moveIval.finish()
@@ -388,7 +388,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             4 : self.suitFSM.getStateNamed('lured')
         }
         self.suitState2stateIndex = {}
-        for stateId, state in self.stateIndex2suitState.items():
+        for stateId, state in list(self.stateIndex2suitState.items()):
             self.suitState2stateIndex[state.getName()] = stateId
 
     def setSuitState(self, index, startPoint, endPoint, timestamp = None):
@@ -415,7 +415,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
         else:
             ts = globalClockDelta.localElapsedTime(timestamp)
 
-        if type(anim) == types.IntType:
+        if type(anim) == int:
             if anim != 44 and anim != 45:
                 anim = SuitGlobals.getAnimById(anim)
                 animName = anim.getName()
@@ -423,7 +423,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
                 animName = 'die'
             elif anim == 45:
                 animName = 'flyNeutral'
-        elif type(anim) == types.StringType:
+        elif type(anim) == bytes:
             animName = anim
 
         if self.animFSM.hasStateNamed(animName):
@@ -440,7 +440,7 @@ class DistributedSuit(Suit, DistributedAvatar, DistributedSmoothNode, DelayDelet
             ts = 0.0
         else:
             ts = globalClockDelta.localElapsedTime(timestamp)
-        attackName = SuitAttacks.SuitAttackLengths.keys()[attackId]
+        attackName = list(SuitAttacks.SuitAttackLengths.keys())[attackId]
         attackTaunt = CIGlobals.SuitAttackTaunts[attackName][random.randint(0, len(CIGlobals.SuitAttackTaunts[attackName]) - 1)]
         avatar = self.cr.doId2do.get(avId)
         shouldChat = 0

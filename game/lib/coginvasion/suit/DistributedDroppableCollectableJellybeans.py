@@ -7,7 +7,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import SoundInterval
-from DistributedDroppableCollectableObject import DistributedDroppableCollectableObject
+from .DistributedDroppableCollectableObject import DistributedDroppableCollectableObject
 
 class DistributedDroppableCollectableJellybeans(DistributedDroppableCollectableObject):
     notify = directNotify.newCategory("DistributedDroppableCollectableJellybeans")

@@ -25,7 +25,7 @@ class SuitBrain(DirectObject):
         self.organizeBehaviors()
 
     def removeBehavior(self, behavior):
-        for iBehavior in self.behaviors.keys():
+        for iBehavior in list(self.behaviors.keys()):
             if iBehavior == behavior:
                 self.behaviors.remove(iBehavior)
                 if self.currentBehavior == behavior:
@@ -40,23 +40,23 @@ class SuitBrain(DirectObject):
 
     def setPriorityOfBehavior(self, behaviorType, priority):
         # Update the priority on this behavior.
-        for behavior in self.behaviors.keys():
+        for behavior in list(self.behaviors.keys()):
             if behavior.__class__ == behaviorType:
                 self.behaviors.update({behavior : priority})
                 break
         # Now, push the behaviors with lower priorities down.
-        for behavior, oldPrior in self.behaviors.keys():
+        for behavior, oldPrior in list(self.behaviors.keys()):
             if behavior.__class__ != behaviorType:
                 if priority >= oldPrior:
                     self.behaviors.update({behavior, oldPrior + 1})
 
     def getPriorityOfBehavior(self, behaviorType):
-        for behavior, priority in self.behaviors.items():
+        for behavior, priority in list(self.behaviors.items()):
             if behavior.__class__ == behaviorType:
                 return priority
 
     def getBehavior(self, behaviorType):
-        for behavior in self.behaviors.keys():
+        for behavior in list(self.behaviors.keys()):
             if behavior.__class__ == behaviorType:
                 return behavior
 
@@ -73,9 +73,9 @@ class SuitBrain(DirectObject):
 
     def organizeBehaviors(self):
         behaviors = {}
-        for behavior, priority in self.behaviors.items():
+        for behavior, priority in list(self.behaviors.items()):
             behaviors[behavior] = priority
-        sorted_behaviors = sorted(behaviors.items(), key = operator.itemgetter(1))
+        sorted_behaviors = sorted(list(behaviors.items()), key = operator.itemgetter(1))
         self.behaviors = {}
         for behaviorEntry in sorted_behaviors:
             behavior = behaviorEntry[0]
@@ -95,7 +95,7 @@ class SuitBrain(DirectObject):
         self.exitCurrentBehavior()
 
     def unloadBehaviors(self):
-        for behavior in self.behaviors.keys():
+        for behavior in list(self.behaviors.keys()):
             behavior.unload()
             del self.behaviors[behavior]
         if self.suit:
@@ -126,7 +126,7 @@ class SuitBrain(DirectObject):
         # Let's see if we have any queued behaviors.
         if not self.queuedBehavior is None:
             self.exitCurrentBehavior()
-            for behavior in self.behaviors.keys():
+            for behavior in list(self.behaviors.keys()):
                 if behavior.__class__ == self.queuedBehavior:
                     behavior.enter()
                     self.currentBehavior = behavior
@@ -136,7 +136,7 @@ class SuitBrain(DirectObject):
 
         readyBehaviors = []
         # Let's figure out which behaviors are ready (shouldStart = True).
-        for behavior in self.behaviors.keys():
+        for behavior in list(self.behaviors.keys()):
             # Don't even check if it should start if it's already entered.
             if behavior.isEntered == 1:
                 continue

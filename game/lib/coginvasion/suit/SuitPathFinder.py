@@ -44,7 +44,7 @@ def find_path(pointDict, pathData, start_key, target_key):
     closed_nodes = []
     node_class_by_key = {}
 
-    for key, point in pointDict.items():
+    for key, point in list(pointDict.items()):
         g_cost = get_distance(point, start_point)
         h_cost = get_distance(point, target_point)
         node = Node(g_cost, h_cost, key, point)

@@ -4,8 +4,8 @@ from panda3d.core import BillboardEffect, Vec3, Point3, PGButton, VBase4
 from panda3d.core import DepthWriteAttrib, Point2, CardMaker
 
 from lib.coginvasion.toon.ChatBalloon import ChatBalloon
-import NametagGlobals
-from Nametag import Nametag
+from . import NametagGlobals
+from .Nametag import Nametag
 from lib.coginvasion.gui.Clickable3d import Clickable3d
 
 from ccoginvasion import CNametag3d

@@ -12,8 +12,8 @@ from direct.fsm.ClassicFSM import ClassicFSM
 from lib.coginvasion.hood import ZoneUtil
 from lib.coginvasion.gui.BackpackGUI import BackpackGUI
 
-from OptionPage import OptionPage
-from AdminPage import AdminPage
+from .OptionPage import OptionPage
+from .AdminPage import AdminPage
 from lib.coginvasion.book.NamePage import NamePage
 
 qt_btn = loader.loadModel("phase_3/models/gui/quit_button.bam")
@@ -114,7 +114,7 @@ class ShtickerBook(StateData):
         textDisabledColor = Vec4(0.4, 0.8, 0.4, 1)
 
         self.shardButtons = []
-        for shard in base.cr.activeDistricts.values():
+        for shard in list(base.cr.activeDistricts.values()):
             shardName = shard.getDistrictName()
             shardId = shard.doId
             btn = DirectButton(
@@ -393,7 +393,7 @@ class ShtickerBook(StateData):
 
     def __updateGamePopulation(self, task):
         population = 0
-        for district in base.cr.activeDistricts.values():
+        for district in list(base.cr.activeDistricts.values()):
             population += district.getPopulation()
         self.populationLbl.setText("Game Population:\n" + str(population))
         recordPopulation = base.cr.myDistrict.getPopRecord()

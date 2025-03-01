@@ -61,22 +61,22 @@ class ToonUpGag(Gag):
     def getClosestAvatar(self, radius):
         avatars = {}
         distances = []
-        for obj in base.cr.doId2do.values():
+        for obj in list(base.cr.doId2do.values()):
             if obj.__class__.__name__ == "DistributedToon":
                 distance = self.avatar.getDistance(obj)
                 if obj != self.avatar:
                     if distance <= radius:
                         avatars.update({obj : distance})
-        for dist in avatars.values():
+        for dist in list(avatars.values()):
             distances.append(dist)
         distances.sort()
-        for avatar in avatars.keys():
+        for avatar in list(avatars.keys()):
             distance = avatars.get(avatar)
             if distance == distances[0]:
                 return avatar
 
     def healNearbyAvatars(self, radius):
-        for obj in base.cr.doId2do.values():
+        for obj in list(base.cr.doId2do.values()):
             if obj.__class__.__name__ == "DistributedToon":
                 if self.avatar.getDistance(obj) <= radius:
                     if obj.getHealth() < obj.getMaxHealth():

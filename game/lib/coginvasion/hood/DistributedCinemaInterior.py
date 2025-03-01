@@ -9,8 +9,8 @@ from direct.interval.IntervalGlobal import SoundInterval, Sequence, Wait, Func
 from direct.gui.DirectGui import DirectLabel
 
 from lib.coginvasion.globals import CIGlobals
-import DistributedToonInterior
-import CinemaGlobals
+from . import DistributedToonInterior
+from . import CinemaGlobals
 
 CardScaleDivisor = 50.0
 

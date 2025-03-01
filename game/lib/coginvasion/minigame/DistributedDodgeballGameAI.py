@@ -4,9 +4,9 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm import ClassicFSM, State
 
-from DistributedToonFPSGameAI import DistributedToonFPSGameAI
-from DistributedDodgeballGame import BLUE, RED
-from TeamMinigameAI import TeamMinigameAI
+from .DistributedToonFPSGameAI import DistributedToonFPSGameAI
+from .DistributedDodgeballGame import BLUE, RED
+from .TeamMinigameAI import TeamMinigameAI
 
 import random
 

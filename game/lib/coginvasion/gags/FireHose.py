@@ -6,8 +6,8 @@ from panda3d.core import Point3, Vec3
 from direct.interval.IntervalGlobal import Sequence, Wait, Func, ActorInterval, LerpScaleInterval, Parallel
 
 from lib.coginvasion.globals import CIGlobals
-from SquirtGag import SquirtGag
-import GagGlobals
+from .SquirtGag import SquirtGag
+from . import GagGlobals
 
 class FireHose(SquirtGag):
 

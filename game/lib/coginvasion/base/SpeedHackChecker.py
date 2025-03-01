@@ -17,7 +17,7 @@ def __speedHackCheckTask(task):
 	tcElapsed = TrueClock.getGlobalPtr().getLongTime() - lastTrueClockTime
 	
 	if tcElapsed > (elapsed + 0.05):
-		print "Detected speed hacks, closing game."
+		print("Detected speed hacks, closing game.")
 		sys.exit()
 		return task.done
 	

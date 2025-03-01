@@ -138,7 +138,7 @@ class NamePage(StateData):
         self.nameList.removeAndDestroyAllItems()
 
     def __buildItems(self):
-        for i in xrange(self.requestsPerCluster):
+        for i in range(self.requestsPerCluster):
             request = self.nameServ.getNameRequests()[self.baseRequestIndex + i]
             date = request['date']
             date = date.replace(' ', '-')
@@ -180,7 +180,7 @@ class NamePage(StateData):
         StateData.unload(self)
         self.loadingLabel.destroy()
         self.loadingLabel = None
-        for request in self.requestsContainer.values():
+        for request in list(self.requestsContainer.values()):
             for element in request:
                 element.destroy()
         self.requestsContainer = {}

@@ -2,7 +2,7 @@
 # Created by:  DecodedLogic (11Aug15)
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-import DistributedNPCToon
+from . import DistributedNPCToon
 
 class DistributedTailorNPCToon(DistributedNPCToon.DistributedNPCToon):
     notify = directNotify.newCategory('DistributedTailorToon')

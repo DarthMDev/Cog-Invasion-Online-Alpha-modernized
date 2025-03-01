@@ -206,7 +206,7 @@ class ToonHeads(Actor.Actor):
 			pass
 			
 		if jsonInfo["toon" + str(slot)]["gender"] == "girl":
-			print jsonInfo["toon" + str(slot)]["head"]
+			print(jsonInfo["toon" + str(slot)]["head"])
 			lashes = loader.loadModel("phase_3/models/char/" + jsonInfo["toon" + str(slot)]["head"] + "-lashes.bam")
 			lashes.reparentTo(h)
 			if jsonInfo["toon" + str(slot)]["headtype"] == "1" or jsonInfo["toon" + str(slot)]["headtype"] == "dgm_skirt" or jsonInfo["toon" + str(slot)]["headtype"] == "dgm_shorts" or jsonInfo["toon" + str(slot)]["headtype"] == "dgs_shorts":

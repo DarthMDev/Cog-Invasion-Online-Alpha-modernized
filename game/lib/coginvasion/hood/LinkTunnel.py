@@ -2,7 +2,7 @@
 # Created by:  blach (24Jul15)
 
 from direct.showbase.DirectObject import DirectObject
-import ZoneUtil
+from . import ZoneUtil
 from lib.coginvasion.globals import CIGlobals
 
 CollisionName = 'tunnel_trigger'
@@ -26,7 +26,7 @@ def globalIgnoreCollisions():
     base.ignore('enter' + CollisionName)
 
 def getTunnelThatGoesToZone(zoneId):
-    for linkTunnel in TunnelNode2LinkTunnel.values():
+    for linkTunnel in list(TunnelNode2LinkTunnel.values()):
         if linkTunnel.data['zoneId'] == zoneId:
             return linkTunnel
 

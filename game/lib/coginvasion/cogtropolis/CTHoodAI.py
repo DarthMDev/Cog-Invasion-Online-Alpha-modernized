@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from lib.coginvasion.hood import HoodAI
 from lib.coginvasion.globals import CIGlobals
-import DistributedCityCartAI
+from . import DistributedCityCartAI
 
 class CTHoodAI(HoodAI.HoodAI):
     notify = directNotify.newCategory('CTHoodAI')

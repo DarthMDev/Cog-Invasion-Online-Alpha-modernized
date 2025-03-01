@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed import DistributedObjectAI
 
 from lib.coginvasion.globals import CIGlobals
-import DistributedDoorAI
+from . import DistributedDoorAI
 from lib.coginvasion.toon import DistributedNPCToonAI, DistributedHQNPCToonAI, DistributedTailorNPCToonAI, DistributedClerkNPCToonAI
 
 class DistributedToonInteriorAI(DistributedObjectAI.DistributedObjectAI):
@@ -29,7 +29,7 @@ class DistributedToonInteriorAI(DistributedObjectAI.DistributedObjectAI):
         for npcId in npcIdList:
             while npcIdList.count(npcId) > 1:
                 npcIdList.remove(npcId)
-        for i in xrange(len(npcIdList)):
+        for i in range(len(npcIdList)):
             npcId = npcIdList[i]
             npcData = CIGlobals.NPCToonDict.get(npcId)
             if not npcData[3] in [CIGlobals.NPC_REGULAR, CIGlobals.NPC_HQ, CIGlobals.NPC_TAILOR, CIGlobals.NPC_CLERK]:

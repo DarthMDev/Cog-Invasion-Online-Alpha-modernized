@@ -3,7 +3,7 @@
 # Created by: DecodedLogic (12Mar16)
 ########################################
 
-from DistributedRestockBarrel import DistributedRestockBarrel
+from .DistributedRestockBarrel import DistributedRestockBarrel
 
 class DistributedGagBarrel(DistributedRestockBarrel):
     

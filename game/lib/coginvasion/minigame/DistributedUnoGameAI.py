@@ -9,8 +9,8 @@
 from direct.interval.IntervalGlobal import Sequence, Func, Wait
 from lib.coginvasion.minigame.UnoGameAIPlayerMgr import UnoGameAIPlayerMgr
 from collections import Counter
-import DistributedMinigameAI
-import UnoGameGlobals as UGG
+from . import DistributedMinigameAI
+from . import UnoGameGlobals as UGG
 import random
 
 class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
@@ -61,7 +61,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
         if announceShuffling:
             self.d_setPlayByPlay(UGG.EVENT_SHUFFLING)
         newDeck = []
-        for cardId in UGG.DRAW_CARD_DECK_DATA.keys():
+        for cardId in list(UGG.DRAW_CARD_DECK_DATA.keys()):
             cardCount = UGG.DRAW_CARD_DECK_DATA[cardId]
             for _ in range(cardCount):
                 newDeck.append(cardId)
@@ -82,7 +82,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
             self.singlePlayer = True
             self.playerMgr = UnoGameAIPlayerMgr(self)
             players = random.randint(1, 3)
-            for _ in xrange(1):
+            for _ in range(1):
                 self.playerMgr.createPlayer()
             self.ais = len(self.playerMgr.getPlayers())
             self.playerMgr.generateHeadPanels()
@@ -334,7 +334,7 @@ class DistributedUnoGameAI(DistributedMinigameAI.DistributedMinigameAI):
             if not card in [UGG.CARD_WILD, UGG.CARD_WILD_DRAW_FOUR]:
                 colors.append(card[-2:])
         counter = Counter(colors)
-        set_color = counter.keys()[0]
+        set_color = list(counter.keys())[0]
         self.takeNewCardColor(origId = wild_card, id = set_color, doId = player.getID())
 
     def __handleAIWin(self, player):

@@ -102,7 +102,7 @@ class SquirtingFlower(SquirtGag):
             self.handJoint = self.avatar.find('**/def_joint_left_hold')
 
             if not self.handJoint:
-                print self.avatar.findAllMatches('**/*joint*')
+                print(self.avatar.findAllMatches('**/*joint*'))
 
     def buildFlower(self):
         if self.flower:

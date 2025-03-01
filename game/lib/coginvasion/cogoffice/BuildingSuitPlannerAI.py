@@ -6,8 +6,8 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.suit import CogBattleGlobals
 from lib.coginvasion.cog import Dept, SuitBank, Variant
-from DistributedTakeOverSuitAI import DistributedTakeOverSuitAI
-import SuitBuildingGlobals
+from .DistributedTakeOverSuitAI import DistributedTakeOverSuitAI
+from . import SuitBuildingGlobals
 
 import random
 
@@ -42,12 +42,12 @@ class BuildingSuitPlannerAI:
             suitLevel = random.choice(CogBattleGlobals.HoodIndex2LevelRange[CogBattleGlobals.HoodId2HoodIndex[hoodName]])
         numFloors = self.chooseNumFloors(suitLevel)
 
-        print "SuitBuildingPlannerAI.takeOverBuilding: hood - {0} | street - {1} | numFloors - {2} | dept - {3}".format(
+        print("SuitBuildingPlannerAI.takeOverBuilding: hood - {0} | street - {1} | numFloors - {2} | dept - {3}".format(
             self.hoodClass.hood,
             self.streetName,
             numFloors,
             dept.getName()
-        )
+        ))
 
         if bldg.fsm.getCurrentState().getName() == 'toon':
             bldg.suitTakeOver(dept, 0, numFloors)
@@ -113,7 +113,7 @@ class BuildingSuitPlannerAI:
 
     def __setupInitialBuildings(self):
 
-        for _ in xrange(self.minBuildings):
+        for _ in range(self.minBuildings):
 
             if self.numCogBuildings >= self.minBuildings:
                 break

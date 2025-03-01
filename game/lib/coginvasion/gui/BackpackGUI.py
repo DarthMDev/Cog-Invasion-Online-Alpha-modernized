@@ -63,7 +63,7 @@ class BackpackGUI(DirectFrame):
         self.__updateButtons_remove()
 
     def __updateButtons_add(self):
-        for gagName, button in self.gagButtonByName.items():
+        for gagName, button in list(self.gagButtonByName.items()):
             if self.isInLoadoutNew(gagName):
                 button['state'] = DGG.DISABLED
                 button['image_color'] = self.InLoadoutColor
@@ -77,7 +77,7 @@ class BackpackGUI(DirectFrame):
                 button['image_color'] = self.DefaultColor
 
     def __updateButtons_remove(self):
-        for gagName, button in self.gagButtonByName.items():
+        for gagName, button in list(self.gagButtonByName.items()):
             if self.isInLoadoutNew(gagName):
                 button['state'] = DGG.NORMAL
                 button['command'] = self.__removeGagFromLoadout
@@ -143,7 +143,7 @@ class BackpackGUI(DirectFrame):
         self.editButton['text'] = 'Edit Loadout'
         self.editButton['command'] = self.fsm.request
         self.editButton['extraArgs'] = ['edit']
-        for gagName, button in self.gagButtonByName.items():
+        for gagName, button in list(self.gagButtonByName.items()):
             button['state'] = DGG.DISABLED
             if self.isInLoadoutLive(gagName):
                 button['image_color'] = self.InLoadoutColor
@@ -181,10 +181,10 @@ class BackpackGUI(DirectFrame):
         self.gagButtonByName[gagName] = button
 
     def createGUI(self):
-        for i in xrange(len(GagGlobals.TrackNameById)):
+        for i in range(len(GagGlobals.TrackNameById)):
             trackName = GagGlobals.TrackNameById[i]
             self.__makeTrack(trackName)
-            for j in xrange(len(GagGlobals.TrackGagNamesByTrackName[trackName])):
+            for j in range(len(GagGlobals.TrackGagNamesByTrackName[trackName])):
                 gagName = GagGlobals.TrackGagNamesByTrackName[trackName][j]
                 gagId = GagGlobals.gagIdByName[gagName]
                 if base.localAvatar.getBackpack().hasGag(gagId):
@@ -200,10 +200,10 @@ class BackpackGUI(DirectFrame):
     def deleteGUI(self):
         self.editFSM.requestFinalState()
         self.fsm.requestFinalState()
-        for button in self.gagButtonByName.values():
+        for button in list(self.gagButtonByName.values()):
             button.destroy()
         self.gagButtonByName = None
-        for track in self.trackByName.values():
+        for track in list(self.trackByName.values()):
             track.destroy()
         self.trackByName = None
         self.editButton.destroy()

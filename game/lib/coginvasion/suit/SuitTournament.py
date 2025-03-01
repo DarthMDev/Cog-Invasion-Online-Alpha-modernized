@@ -12,9 +12,9 @@ import random
 
 class SuitTournament:
     notify = directNotify.newCategory("SuitTournament")
-    round_difficulties = [range(1, 4 + 1),
-                        range(5, 8 + 1),
-                        range(9, 12 + 1)]
+    round_difficulties = [list(range(1, 4 + 1)),
+                        list(range(5, 8 + 1)),
+                        list(range(9, 12 + 1))]
     round_sizes = [25,
                 25,
                 25]
@@ -27,9 +27,9 @@ class SuitTournament:
                             "end": "Wow, great job fighting off the Vice President! I don't think we'll be seeing him again."}}
     BACKUP_INTERVAL = 150.0
     INITIAL_BACKUP_INTERVAL = 40.0
-    backup_levels = {1: range(1, 4 + 1),
-                    2: range(5, 8 + 1),
-                    3: range(9, 12 + 1)}
+    backup_levels = {1: list(range(1, 4 + 1)),
+                    2: list(range(5, 8 + 1)),
+                    3: list(range(9, 12 + 1))}
 
     def __init__(self, suitMgr):
         self.suitMgr = suitMgr
@@ -116,7 +116,7 @@ class SuitTournament:
         self.backupLevel += 1
         if self.backupLevel == 4:
             return task.done
-        for suit in self.suitMgr.suits.values():
+        for suit in list(self.suitMgr.suits.values()):
             if suit.head == "vp":
                 bosses += 1
         if bosses == 0:

@@ -3,7 +3,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-import DistributedNPCToonAI
+from . import DistributedNPCToonAI
 from lib.coginvasion.globals import CIGlobals
 
 import random

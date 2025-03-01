@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import SoundInterval
 from direct.task import Task
 
-from DistributedDroppableCollectableObject import DistributedDroppableCollectableObject
+from .DistributedDroppableCollectableObject import DistributedDroppableCollectableObject
 from lib.coginvasion.gui.Dialog import GlobalDialog
 from lib.coginvasion.gags import GagGlobals
 

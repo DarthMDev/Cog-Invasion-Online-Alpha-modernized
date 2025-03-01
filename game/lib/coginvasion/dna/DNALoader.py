@@ -9,7 +9,7 @@ class DNABulkLoader:
 
     def loadDNAFiles(self):
         for file in self.dnaFiles:
-            print 'Reading DNA file...', file
+            print('Reading DNA file...', file)
             loadDNABulk(self.dnaStorage, file)
         del self.dnaStorage
         del self.dnaFiles
@@ -19,7 +19,7 @@ def loadDNABulk(dnaStorage, file):
     dnaLoader.loadDNAFile(dnaStorage, file)
 
 def loadDNAFile(dnaStorage, file):
-    print 'Reading DNA file...', file
+    print('Reading DNA file...', file)
     dnaLoader = DNALoader()
     node = dnaLoader.loadDNAFile(dnaStorage, file)
     if not node.isEmpty():

@@ -10,8 +10,8 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from direct.interval.IntervalGlobal import Sequence, Func
 
-from SuitPathDataAI import *
-from SuitUtils import getMoveIvalFromPath
+from .SuitPathDataAI import *
+from .SuitUtils import getMoveIvalFromPath
 
 import random
 
@@ -50,7 +50,7 @@ class SuitPathBehavior(SuitBehaviorBase):
 
     def startPath(self, path, z, durationFactor):
         correctedPath = []
-        for i in xrange(len(path)):
+        for i in range(len(path)):
             waypoint = path[i]
             correctedPath.append([waypoint[0], waypoint[1], z])
         self.suit.d_setWalkPath(correctedPath)

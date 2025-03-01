@@ -6,8 +6,8 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed import DistributedObject
 
 from libpandadna import *
-import ToonInteriorColors
-import ZoneUtil
+from . import ToonInteriorColors
+from . import ZoneUtil
 
 import random
 
@@ -34,7 +34,7 @@ class DistributedToonInterior(DistributedObject.DistributedObject):
     def replaceRandomInModel(self, model):
         baseTag = 'random_'
         npc = model.findAllMatches('**/' + baseTag + '???_*')
-        for i in xrange(npc.getNumPaths()):
+        for i in range(npc.getNumPaths()):
             np = npc.getPath(i)
             name = np.getName()
             b = len(baseTag)

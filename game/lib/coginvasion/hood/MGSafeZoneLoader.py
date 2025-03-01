@@ -6,8 +6,8 @@
 """
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-import SafeZoneLoader
-import MGPlayground
+from . import SafeZoneLoader
+from . import MGPlayground
 
 class MGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
     notify = directNotify.newCategory("MGSafeZoneLoader")

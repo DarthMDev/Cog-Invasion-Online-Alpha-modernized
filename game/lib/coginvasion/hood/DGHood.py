@@ -4,10 +4,10 @@
 from panda3d.core import TransparencyAttrib
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from ToonHood import ToonHood
-import SkyUtil
-from DGSafeZoneLoader import DGSafeZoneLoader
-import DGTownLoader
+from .ToonHood import ToonHood
+from . import SkyUtil
+from .DGSafeZoneLoader import DGSafeZoneLoader
+from . import DGTownLoader
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 

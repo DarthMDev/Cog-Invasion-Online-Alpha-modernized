@@ -2,9 +2,9 @@ from direct.task.Task import Task
 from panda3d.core import VBase4, PandaNode
 
 from lib.coginvasion.margins.MarginVisible import MarginVisible
-import NametagGlobals
-from Nametag2d import Nametag2d
-from Nametag3d import Nametag3d
+from . import NametagGlobals
+from .Nametag2d import Nametag2d
+from .Nametag3d import Nametag3d
 
 
 class NametagGroup:

@@ -328,7 +328,7 @@ class ToonHead(Actor.Actor):
     def findSomethingToLookAt(self):
         toons = []
         if hasattr(base, 'localAvatar'):
-            for key in self.cr.doId2do.keys():
+            for key in list(self.cr.doId2do.keys()):
                 val = self.cr.doId2do[key]
                 if not val.doId == base.localAvatar.doId:
                     if val.__class__.__name__ in ["DistributedToon", "DistributedSuit"]:

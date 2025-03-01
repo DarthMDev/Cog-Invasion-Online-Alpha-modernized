@@ -1,8 +1,8 @@
 # Filename: DistributedToonHQInteriorAI.py
 # Created by:  blach (29Jul15)
 
-import DistributedToonInteriorAI
-import DistributedDoorAI
+from . import DistributedToonInteriorAI
+from . import DistributedDoorAI
 
 class DistributedToonHQInteriorAI(DistributedToonInteriorAI.DistributedToonInteriorAI):
 

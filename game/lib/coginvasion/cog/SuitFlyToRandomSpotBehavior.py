@@ -42,7 +42,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
             self.exit()
             return
         self.accept(self.suit.healthChangeEvent, self.__healthChange)
-        pathKeys = CIGlobals.SuitSpawnPoints[self.suit.getHood()].keys()
+        pathKeys = list(CIGlobals.SuitSpawnPoints[self.suit.getHood()].keys())
         pathKey = random.choice(pathKeys)
         endIndex = pathKeys.index(pathKey)
         if not self.suit.getCurrentPath():
@@ -121,7 +121,7 @@ class SuitFlyToRandomSpotBehavior(SuitHabitualBehavior):
         chanceIncreases = 0
         if hpPerct > 0:
             chanceIncreases = int(float(hpPerct) / 0.25)
-            for _ in xrange(chanceIncreases):
+            for _ in range(chanceIncreases):
                 defaultChance += 0.15
         return self.canFly and random.random() < defaultChance
 

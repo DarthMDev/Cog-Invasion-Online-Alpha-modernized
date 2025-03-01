@@ -13,7 +13,7 @@ from panda3d.core import Fog
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 from lib.coginvasion.toon import ParticleLoader
-import Place
+from . import Place
 
 class Playground(Place.Place):
     notify = directNotify.newCategory("Playground")

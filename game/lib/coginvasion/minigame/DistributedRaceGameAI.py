@@ -6,7 +6,7 @@
 """
 
 from lib.coginvasion.globals import CIGlobals
-import DistributedMinigameAI
+from . import DistributedMinigameAI
 
 class DistributedRaceGameAI(DistributedMinigameAI.DistributedMinigameAI):
 

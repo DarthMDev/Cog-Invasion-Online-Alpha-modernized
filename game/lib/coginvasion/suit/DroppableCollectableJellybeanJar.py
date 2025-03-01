@@ -7,7 +7,7 @@
 
 from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from DroppableCollectableJellybeans import DroppableCollectableJellybeans
+from .DroppableCollectableJellybeans import DroppableCollectableJellybeans
 
 class DroppableCollectableJellybeanJar(DroppableCollectableJellybeans):
 	notify = directNotify.newCategory("DroppableCollectableJellybeanJar")

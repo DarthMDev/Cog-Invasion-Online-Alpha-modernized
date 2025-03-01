@@ -4,8 +4,8 @@
 from direct.showbase.DirectObject import DirectObject
 
 from lib.coginvasion.globals import CIGlobals
-from QuestManagerBase import QuestManagerBase
-import QuestNote, Quests, QuestGlobals
+from .QuestManagerBase import QuestManagerBase
+from . import QuestNote, Quests, QuestGlobals
 from lib.coginvasion.hood import ZoneUtil
 
 class QuestManager(QuestManagerBase):
@@ -16,7 +16,7 @@ class QuestManager(QuestManagerBase):
     def makeQuestNotes(self, quests = None):
         notes = []
         if not quests:
-            quests = self.quests.values()
+            quests = list(self.quests.values())
         for quest in quests:
 
             objective = quest.currentObjective

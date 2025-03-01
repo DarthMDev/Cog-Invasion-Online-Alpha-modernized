@@ -584,7 +584,7 @@ class MakeAToon:
 
     def nextHead(self):
         head = self.toonGen.getNextHead()
-        print head
+        print(head)
         newAnimal = None
         # NOTE: head = what the head of the next animal would be.
         # NOTE: self.toonGen.toon.animal = what the current animal is.

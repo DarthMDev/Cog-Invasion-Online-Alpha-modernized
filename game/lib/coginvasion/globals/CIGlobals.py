@@ -1260,21 +1260,21 @@ def getSuitLevelRanges():
     if not SuitLevelRanges:
         SuitLevelRanges = {}
         for suit in ('flunky', 'bottomfeeder', 'shortchange', 'coldcaller'):
-            SuitLevelRanges[suit] = range(1, 5 + 1)
+            SuitLevelRanges[suit] = list(range(1, 5 + 1))
         for suit in ('pencilpusher', 'bloodsucker', 'pennypincher', 'telemarketer'):
-            SuitLevelRanges[suit] = range(2, 6 + 1)
+            SuitLevelRanges[suit] = list(range(2, 6 + 1))
         for suit in ('yesman', 'doubletalker', 'tightwad', 'namedropper'):
-            SuitLevelRanges[suit] = range(3, 7 + 1)
+            SuitLevelRanges[suit] = list(range(3, 7 + 1))
         for suit in ('micromanager', 'ambulancechaser', 'beancounter', 'gladhander'):
-            SuitLevelRanges[suit] = range(4, 8 + 1)
+            SuitLevelRanges[suit] = list(range(4, 8 + 1))
         for suit in ('downsizer', 'backstabber', 'numbercruncher', 'movershaker'):
-            SuitLevelRanges[suit] = range(5, 9 + 1)
+            SuitLevelRanges[suit] = list(range(5, 9 + 1))
         for suit in ('headhunter', 'spindoctor', 'moneybags', 'twoface'):
-            SuitLevelRanges[suit] = range(6, 10 + 1)
+            SuitLevelRanges[suit] = list(range(6, 10 + 1))
         for suit in ('corporateraider', 'legaleagle', 'loanshark', 'mingler'):
-            SuitLevelRanges[suit] = range(7, 11 + 1)
+            SuitLevelRanges[suit] = list(range(7, 11 + 1))
         for suit in ('bigcheese', 'bigwig', 'robberbaron', 'mrhollywood'):
-            SuitLevelRanges[suit] = range(8, 12 + 1)
+            SuitLevelRanges[suit] = list(range(8, 12 + 1))
         SuitLevelRanges['vp'] = [70]
     return SuitLevelRanges
 
@@ -3766,7 +3766,7 @@ zone2NpcDict = None
 
 if zone2NpcDict == None:
     zone2NpcDict = {}
-    for id, npcData in NPCToonDict.items():
+    for id, npcData in list(NPCToonDict.items()):
         zoneId = npcData[0]
         if zoneId in zone2NpcDict:
             zone2NpcDict[zoneId].append(id)

@@ -1,8 +1,8 @@
 # Filename: MLTownLoader.py
 # Created by:  blach (26Jul15)
 
-import TownLoader
-import MLStreet
+from . import TownLoader
+from . import MLStreet
 
 from lib.coginvasion.globals import CIGlobals
 

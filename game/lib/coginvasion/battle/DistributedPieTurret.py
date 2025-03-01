@@ -290,7 +290,7 @@ class DistributedPieTurret(DistributedAvatar, DistributedSmoothNode):
         if self.isLocal():
             intoNP = entry.getIntoNodePath()
             avNP = intoNP.getParent()
-            for key in self.cr.doId2do.keys():
+            for key in list(self.cr.doId2do.keys()):
                 obj = self.cr.doId2do[key]
                 if obj.__class__.__name__ == 'DistributedSuit':
                     if obj.getKey() == avNP.getKey():

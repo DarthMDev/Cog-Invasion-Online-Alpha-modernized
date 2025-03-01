@@ -12,8 +12,8 @@ from direct.interval.IntervalGlobal import Parallel, LerpHprInterval
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog.Suit import Suit
-import NURBSMopath
-import CityCartGlobals
+from . import NURBSMopath
+from . import CityCartGlobals
 
 import random
 
@@ -117,7 +117,7 @@ class DistributedCityCart(DistributedNode):
         self.cart.reparentTo(self)
         self.cart.setH(180)
         heads = []
-        for head in CIGlobals.SuitBodyData.keys():
+        for head in list(CIGlobals.SuitBodyData.keys()):
             if CIGlobals.SuitBodyData[head][0] != 'B':
                 heads.append(head)
         head = random.choice(heads)

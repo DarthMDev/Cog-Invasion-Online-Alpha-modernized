@@ -3,8 +3,8 @@
 # Created by: blach (18Apr15)
 ########################################
 
-import FileUtility
-from LoadUtility import LoadUtility
+from . import FileUtility
+from .LoadUtility import LoadUtility
 
 class EnterLoad(LoadUtility):
 

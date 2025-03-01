@@ -6,9 +6,9 @@
 """
 
 from panda3d.core import *
-import DistributedMinigame
-import UnoGameGlobals as UGG
-import UnoGameCardDeck
+from . import DistributedMinigame
+from . import UnoGameGlobals as UGG
+from . import UnoGameCardDeck
 from lib.coginvasion.globals import CIGlobals
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *

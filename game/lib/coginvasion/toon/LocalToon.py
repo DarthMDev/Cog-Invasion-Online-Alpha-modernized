@@ -10,8 +10,8 @@ from lib.coginvasion.globals import CIGlobals
 from direct.controls import ControlManager
 from direct.controls.GravityWalker import GravityWalker
 from direct.task import Task
-from DistributedToon import DistributedToon
-from SmartCamera import SmartCamera
+from .DistributedToon import DistributedToon
+from .SmartCamera import SmartCamera
 from lib.coginvasion.gui.ChatInput import ChatInput
 from lib.coginvasion.gui.LaffOMeter import LaffOMeter
 from lib.coginvasion.gui.MoneyGui import MoneyGui
@@ -337,7 +337,7 @@ class LocalToon(DistributedToon):
 
         if not self.isDead() and base.config.GetBool('want-sa-reactions'):
             base.taskMgr.remove('LT.attackReactionDone')
-            attack = SuitAttacks.SuitAttackLengths.keys()[attack_id]
+            attack = list(SuitAttacks.SuitAttackLengths.keys())[attack_id]
             suit = self.cr.doId2do.get(suit_id)
             animToPlay = None
             timeToWait = 3.0
@@ -365,7 +365,7 @@ class LocalToon(DistributedToon):
     def printPos(self):
         x, y, z = self.getPos(render)
         h, p, r = self.getHpr(render)
-        print "Pos: (%s, %s, %s), Hpr: (%s, %s, %s)" % (x, y, z, h, p, r)
+        print("Pos: (%s, %s, %s), Hpr: (%s, %s, %s)" % (x, y, z, h, p, r))
 
     def enableAvatarControls(self):
         self.walkControls.enableAvatarControls()
@@ -424,7 +424,7 @@ class LocalToon(DistributedToon):
         self.isMoving_jump = False
         self.avatarMovementEnabled = False
         self.playMovementSfx(None)
-        for k, _ in self.movementKeymap.items():
+        for k, _ in list(self.movementKeymap.items()):
             self.updateMovementKeymap(k, 0)
 
     def updateMovementKeymap(self, key, value):
@@ -933,4 +933,4 @@ class LocalToon(DistributedToon):
         self.removeAdminToken()
 
     def printAvPos(self):
-        print "Pos: %s, Hpr: %s" % (self.getPos(), self.getHpr())
+        print("Pos: %s, Hpr: %s" % (self.getPos(), self.getHpr()))

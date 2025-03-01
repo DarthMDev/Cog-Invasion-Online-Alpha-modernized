@@ -117,7 +117,7 @@ class DistributedBuilding(DistributedObject):
         pass
 
     def enterWaitForVictors(self, ts):
-        print 'wait for victors'
+        print('wait for victors')
         if self.mode != 'suit':
             self.setToSuit()
         victorCount = self.victorList.count(base.localAvatar.doId)
@@ -180,7 +180,7 @@ class DistributedBuilding(DistributedObject):
     def getNodePaths(self):
         nodePath = []
         npc = self.townTopLevel.findAllMatches('**/?b' + str(self.block) + ':*_DNARoot;+s')
-        for i in xrange(npc.getNumPaths()):
+        for i in range(npc.getNumPaths()):
             nodePath.append(npc.getPath(i))
         return nodePath
 
@@ -192,7 +192,7 @@ class DistributedBuilding(DistributedObject):
         self.elevatorNodePath = hidden.attachNewNode('elevatorNodePath')
         self.elevatorModel = loader.loadModel('phase_4/models/modules/elevator.bam')
         npc = self.elevatorModel.findAllMatches('**/floor_light_?;+s')
-        for i in xrange(npc.getNumPaths()):
+        for i in range(npc.getNumPaths()):
             np = npc.getPath(i)
             floor = int(np.getName()[-1:]) - 1
             self.floorIndicator[floor] = np
@@ -455,7 +455,7 @@ class DistributedBuilding(DistributedObject):
                 toon.stopSmooth()
                 toon.setParent(CIGlobals.SPHidden)
                 origPosTrack.append(Func(toon.setPosHpr, self.elevatorNodePath,
-                                    apply(Point3, ElevatorPoints[i]), Point3(180, 0, 0)))
+                                    Point3(*ElevatorPoints[i]), Point3(180, 0, 0)))
                 origPosTrack.append(Func(toon.setParent, CIGlobals.SPRender))
             i += 1
 
@@ -510,7 +510,7 @@ class DistributedBuilding(DistributedObject):
             currTime = bounceTime
         realScale = nodeObj.getScale()
         currScaleDiff = startScale - realScale[2]
-        for currBounceScale in xrange(numBounces):
+        for currBounceScale in range(numBounces):
             if currBounceScale == numBounces - 1:
                 currScale = realScale[2]
             elif currBounceScale % 2:
@@ -551,7 +551,7 @@ class DistributedBuilding(DistributedObject):
                     i.stash()
 
         npc = hidden.findAllMatches(self.getSbSearchString())
-        for i in xrange(npc.getNumPaths()):
+        for i in range(npc.getNumPaths()):
             nodePath = npc.getPath(i)
             self.adjustSbNodepathScale(nodePath)
             self.setupSuitBuilding(nodePath)

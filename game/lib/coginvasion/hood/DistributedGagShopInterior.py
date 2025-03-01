@@ -4,9 +4,9 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from libpandadna import *
-import ZoneUtil
-import ToonInteriorColors
-import DistributedToonInterior
+from . import ZoneUtil
+from . import ToonInteriorColors
+from . import DistributedToonInterior
 
 import random
 

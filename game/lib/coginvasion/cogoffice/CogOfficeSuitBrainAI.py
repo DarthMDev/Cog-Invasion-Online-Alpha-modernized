@@ -4,9 +4,9 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.fsm import ClassicFSM, State
 
-from CogOfficeConstants import *
-from CogOfficeSuitAttackBehavior import CogOfficeSuitAttackBehavior
-from CogOfficeSuitWalkBehavior import CogOfficeSuitWalkBehavior
+from .CogOfficeConstants import *
+from .CogOfficeSuitAttackBehavior import CogOfficeSuitAttackBehavior
+from .CogOfficeSuitWalkBehavior import CogOfficeSuitWalkBehavior
 
 import random
 
@@ -31,9 +31,9 @@ class CogOfficeSuitBrainAI(DirectObject):
         self.clearStuff()
         
     def clearStuff(self):
-        if self.currentSpot is not None and self.currentSpot in self.suit.battle.spotTaken2suitId.keys():
+        if self.currentSpot is not None and self.currentSpot in list(self.suit.battle.spotTaken2suitId.keys()):
             del self.suit.battle.spotTaken2suitId[self.currentSpot]
-        if (self.targetToon is not None and self.targetToon in self.suit.battle.avId2suitsAttacking.keys() and
+        if (self.targetToon is not None and self.targetToon in list(self.suit.battle.avId2suitsAttacking.keys()) and
         self.suit.doId in self.suit.battle.avId2suitsAttacking[self.targetToon]):
             self.suit.battle.avId2suitsAttacking[self.targetToon].remove(self.suit.doId)
         
@@ -59,7 +59,7 @@ class CogOfficeSuitBrainAI(DirectObject):
         # We're no longer attacking, clear our ID out of the attackers for our target.
         self.clearStuff()
         # We finished the number of attacks we can do, let's walk to a new spot now.
-        spotsTaken = self.suit.battle.spotTaken2suitId.keys()
+        spotsTaken = list(self.suit.battle.spotTaken2suitId.keys())
         availableSpots = []
         if self.suit.battle.currentFloor in self.suit.battle.UNIQUE_FLOORS:
             points = list(POINTS[self.suit.battle.deptClass][self.suit.battle.currentFloor]['battle'])

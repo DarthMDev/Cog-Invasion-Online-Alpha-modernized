@@ -1,7 +1,7 @@
 # Filename: CogOfficePathDataAI.py
 # Created by:  blach (15Feb16)
 
-from CogOfficeConstants import *
+from .CogOfficeConstants import *
 
 from lib.coginvasion.cog.SuitPathFinderAI import SuitPathFinderAI
 

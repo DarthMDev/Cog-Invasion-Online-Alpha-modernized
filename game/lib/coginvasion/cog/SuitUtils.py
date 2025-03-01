@@ -7,7 +7,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.interval.IntervalGlobal import Sequence, Func
 
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
-import SuitAttacks
+from . import SuitAttacks
 
 import random
 
@@ -16,9 +16,9 @@ def attack(suit, toon, attackIndex = None):
     suit.headsUp(toon)
     if attackIndex is None:
         attack = random.choice(suit.suitPlan.getAttacks())
-        attackIndex = SuitAttacks.SuitAttackLengths.keys().index(attack)
+        attackIndex = list(SuitAttacks.SuitAttackLengths.keys()).index(attack)
     else:
-        attack = SuitAttacks.SuitAttackLengths.keys()[attackIndex]
+        attack = list(SuitAttacks.SuitAttackLengths.keys())[attackIndex]
     timestamp = globalClockDelta.getFrameNetworkTime()
     if suit.isDead():
         return None
@@ -29,7 +29,7 @@ def getMoveIvalFromPath(suit, path, elapsedT, isClient, seqName):
     moveIval = Sequence(name = suit.uniqueName(seqName))
     if isClient:
         moveIval.append(Func(suit.animFSM.request, 'walk'))
-    for i in xrange(len(path)):
+    for i in range(len(path)):
         if i == 0:
             continue
         waypoint = path[i]

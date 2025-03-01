@@ -8,10 +8,10 @@ from direct.gui.DirectGui import OnscreenText
 from direct.interval.IntervalGlobal import Sequence, LerpFunc, Wait, Func
 
 from lib.coginvasion.globals import CIGlobals
-from FactorySneakJellybeanBarrel import FactorySneakJellybeanBarrel
-from FactorySneakPlayer import FactorySneakPlayer
-from FactorySneakGuardSuit import FactorySneakGuardSuit
-import CogGuardGlobals as CGG
+from .FactorySneakJellybeanBarrel import FactorySneakJellybeanBarrel
+from .FactorySneakPlayer import FactorySneakPlayer
+from .FactorySneakGuardSuit import FactorySneakGuardSuit
+from . import CogGuardGlobals as CGG
 
 class FactorySneakWorld(DirectObject):
     notify = directNotify.newCategory("FactorySneakWorld")
@@ -128,7 +128,7 @@ class FactorySneakWorld(DirectObject):
             guard.delete()
 
     def makeGuards(self):
-        for key in CGG.FactoryGuardPoints.keys():
+        for key in list(CGG.FactoryGuardPoints.keys()):
             self.makeGuard(key)
 
     def deleteGuards(self):
@@ -151,7 +151,7 @@ class FactorySneakWorld(DirectObject):
             barrel.cleanup()
 
     def loadJellybeanBarrels(self):
-        for i in xrange(len(CGG.JellybeanBarrelPoints)):
+        for i in range(len(CGG.JellybeanBarrelPoints)):
             self.createJellybeanBarrel(i)
 
     def deleteJellybeanBarrels(self):

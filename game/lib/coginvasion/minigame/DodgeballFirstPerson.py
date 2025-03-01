@@ -6,8 +6,8 @@ from direct.fsm import ClassicFSM, State
 from direct.actor.Actor import Actor
 from direct.interval.IntervalGlobal import Sequence, Func, ActorInterval, Parallel, Wait
 
-from FirstPerson import FirstPerson
-from MinigameUtils import *
+from .FirstPerson import FirstPerson
+from .MinigameUtils import *
 
 ToonSpeedFactor = 1.0
 ToonForwardSpeed = 16.0 * ToonSpeedFactor
@@ -90,7 +90,7 @@ class DodgeballFirstPerson(FirstPerson):
     def __tryToCatchOrGrab(self):
         snowballs = list(self.mg.snowballs)
         snowballs.sort(key = lambda snowball: snowball.getDistance(base.localAvatar))
-        for i in xrange(len(snowballs)):
+        for i in range(len(snowballs)):
             snowball = snowballs[i]
             if (not snowball.hasOwner() and not snowball.isAirborne and
                 snowball.getDistance(base.localAvatar) <= DodgeballFirstPerson.MaxPickupDistance):

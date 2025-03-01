@@ -7,7 +7,7 @@ from direct.interval.IntervalGlobal import LerpPosInterval, Sequence, Wait, Func
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
-import EagleGameGlobals as EGG
+from . import EagleGameGlobals as EGG
 
 import random
 

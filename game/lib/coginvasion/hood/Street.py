@@ -6,7 +6,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.State import State
 from direct.fsm.ClassicFSM import ClassicFSM
 
-from Place import Place
+from .Place import Place
 
 from lib.coginvasion.globals import CIGlobals
 
@@ -144,7 +144,7 @@ class Street(Place):
                 if newZoneId in loader.zoneVisDict:
                     base.cr.sendSetZoneMsg(newZoneId, loader.zoneVisDict[newZoneId])
                 else:
-                    visList = [newZoneId] + loader.zoneVisDict.values()[0]
+                    visList = [newZoneId] + list(loader.zoneVisDict.values())[0]
                     base.cr.sendSetZoneMsg(newZoneId, visList)
             self.zoneId = newZoneId
         geom = base.cr.playGame.getPlace().loader.geom

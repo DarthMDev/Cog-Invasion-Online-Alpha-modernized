@@ -6,8 +6,8 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm import ClassicFSM, State
 from direct.task import Task
 
-import DistributedToonInteriorAI
-import CinemaGlobals
+from . import DistributedToonInteriorAI
+from . import CinemaGlobals
 
 class DistributedCinemaInteriorAI(DistributedToonInteriorAI.DistributedToonInteriorAI):
     notify = directNotify.newCategory("DistributedCinemaInteriorAI")

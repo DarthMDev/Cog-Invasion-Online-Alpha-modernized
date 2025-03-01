@@ -109,14 +109,14 @@ class Char(Avatar.Avatar):
                 self.mickeyEye = self.controlJoint(None, "modelRoot", "joint_pupilR")
                 self.mickeyEye.setY(0.025)
 
-            for bundle in self.getPartBundleDict().values():
+            for bundle in list(self.getPartBundleDict().values()):
                 bundle = bundle['modelRoot'].getBundle()
                 earNull = bundle.findChild('sphere3')
                 if not earNull:
                     earNull = bundle.findChild('*sphere3')
                 earNull.clearNetTransforms()
 
-            for bundle in self.getPartBundleDict().values():
+            for bundle in list(self.getPartBundleDict().values()):
                 charNodepath = bundle['modelRoot'].partBundleNP
                 bundle = bundle['modelRoot'].getBundle()
                 earNull = bundle.findChild('sphere3')
@@ -150,7 +150,7 @@ class Char(Avatar.Avatar):
             self.loadAnims({"neutral": "phase_6/models/char/TT_GWait.bam",
                                 "walk": "phase_6/models/char/TT_GWalk.bam"})
         else:
-            raise StandardError("unknown char %s!" % (charType))
+            raise Exception("unknown char %s!" % (charType))
         #self.getGeomNode().setScale(1.25)
         Avatar.Avatar.initShadow(self)
 

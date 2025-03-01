@@ -145,7 +145,7 @@ class AdminPage(StateData):
 	def sendKickMessage(self, foo = None, andBan = 0):
 		if self.idEntry.get().isspace() or len(self.idEntry.get()) == 0:
 			return
-		print "Sending out kick request for avatar id: " + str(self.idEntry.get())
+		print("Sending out kick request for avatar id: " + str(self.idEntry.get()))
 		base.localAvatar.sendUpdate("requestEject", [int(self.idEntry.get()), andBan])
 		self.fsm.request('basePage')
 

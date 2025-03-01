@@ -35,10 +35,10 @@ class PythonCTMusicManager(DirectObject, ccoginvasion.CTMusicManager):
         ccoginvasion.CTMusicManager.__init__(self)
 
         songs = []
-        for i in xrange(base.config.GetInt('ctmusic-numsongs', 1)):
+        for i in range(base.config.GetInt('ctmusic-numsongs', 1)):
             songs.append("encntr_nfsmw_bg_" + str(i + 1))
         songName = random.choice(songs)
-        print songName
+        print(songName)
         self.set_song_name(songName)
 
         self.suitMgr = suitMgr
@@ -182,11 +182,11 @@ class PythonCTMusicManager(DirectObject, ccoginvasion.CTMusicManager):
 
     def handle_part_done(self, partIndex):
         # PartIndex = the index of the part that just finished
-        print "Python: handle_part_done"
+        print("Python: handle_part_done")
         if self.shouldSwitchToIntro:
-            print "Should switch"
+            print("Should switch")
             if self.switchToIntroPoint == partIndex:
-                print "switching"
+                print("switching")
                 self.set_clip_request("intro_orchestra_from_located")
                 self.shouldSwitchToIntro = False
                 self.switchToIntroPoint = 0
@@ -212,7 +212,7 @@ class PythonCTMusicManager(DirectObject, ccoginvasion.CTMusicManager):
     def play_arrested(self):
         base.taskMgr.remove(self.suitMgr.uniqueName('monitorSituationTask'))
         choices = []
-        for i in xrange(4):
+        for i in range(4):
             choices.append("arrested_" + str(i + 1))
         clip = random.choice(choices)
         self.set_clip_request(clip)
@@ -220,7 +220,7 @@ class PythonCTMusicManager(DirectObject, ccoginvasion.CTMusicManager):
     def play_evaded(self):
         base.taskMgr.remove(self.suitMgr.uniqueName('monitorSituationTask'))
         choices = []
-        for i in xrange(8):
+        for i in range(8):
             choices.append("evaded_" + str(i + 1))
         clip = random.choice(choices)
         self.set_clip_request(clip)

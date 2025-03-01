@@ -10,7 +10,7 @@ from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.gui.WhisperPopup import WhisperPopup
 from lib.coginvasion.minigame.Timer import Timer
 from lib.coginvasion.nametag import NametagGlobals
-import CogBattleGlobals
+from . import CogBattleGlobals
 
 class DistributedCogBattle(DistributedObject):
     notify = directNotify.newCategory("DistributedCogBattle")

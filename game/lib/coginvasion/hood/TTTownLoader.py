@@ -1,8 +1,8 @@
 # Filename: TTTownLoader.py
 # Created by:  blach (25Jul15)
 
-import TownLoader
-import TTStreet
+from . import TownLoader
+from . import TTStreet
 
 from lib.coginvasion.globals import CIGlobals
 

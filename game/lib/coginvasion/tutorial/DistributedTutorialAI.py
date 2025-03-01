@@ -6,7 +6,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.cog import SuitBank, Variant
-import DistributedTutorialSuitAI
+from . import DistributedTutorialSuitAI
 
 class DistributedTutorialAI(DistributedObjectAI):
     notify = directNotify.newCategory('DistributedTutorialAI')
@@ -37,7 +37,7 @@ class DistributedTutorialAI(DistributedObjectAI):
         self.requestDelete()
 
     def __monitorAvatar(self, task):
-        if not self.avatarId in self.air.doId2do.keys():
+        if not self.avatarId in list(self.air.doId2do.keys()):
             self.notify.info('Deleting tutorial: avatar logged out')
             self.requestDelete()
             return task.done

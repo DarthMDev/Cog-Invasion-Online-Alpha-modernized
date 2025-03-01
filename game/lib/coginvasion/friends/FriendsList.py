@@ -125,7 +125,7 @@ class FriendsList(DirectFrame):
     def handleFriendsList(self, friendIdArray, nameArray, flags, adminTokens):
         self.friends = {}
         self.onlineFriends = {}
-        for i in xrange(len(friendIdArray)):
+        for i in range(len(friendIdArray)):
             avatarId = friendIdArray[i]
             name = nameArray[i]
             adminToken = adminTokens[i]
@@ -171,7 +171,7 @@ class FriendsList(DirectFrame):
 
     def enterAllFriendsList(self):
         self.headingText.setText("All\nFriends")
-        for friendId, data in self.friends.items():
+        for friendId, data in list(self.friends.items()):
             name = data[0]
             adminToken = data[1]
             self.addFriend(name, friendId, adminToken)
@@ -183,7 +183,7 @@ class FriendsList(DirectFrame):
 
     def enterOnlineFriendsList(self):
         self.headingText.setText("Online\nFriends")
-        for friendId, data in self.onlineFriends.items():
+        for friendId, data in list(self.onlineFriends.items()):
             name = data[0]
             adminToken = data[1]
             self.addFriend(name, friendId, adminToken)

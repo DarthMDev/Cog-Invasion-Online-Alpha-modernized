@@ -3,8 +3,8 @@
 
 from panda3d.core import ModelNode, NodePath
 
-import DistributedToonInterior
-import ToonInteriorColors
+from . import DistributedToonInterior
+from . import ToonInteriorColors
 from lib.coginvasion.hood import ZoneUtil
 from libpandadna import *
 from lib.coginvasion.globals import CIGlobals
@@ -29,7 +29,7 @@ class DistributedToonHQInterior(DistributedToonInterior.DistributedToonInterior)
         color = self.generator.choice(self.colors['TI_door'])
         doorOrigins = render.findAllMatches('**/door_origin*')
         numDoorOrigins = doorOrigins.getNumPaths()
-        for npIndex in xrange(numDoorOrigins):
+        for npIndex in range(numDoorOrigins):
             doorOrigin = doorOrigins[npIndex]
             doorOriginNPName = doorOrigin.getName()
             doorOriginIndexStr = doorOriginNPName[len('door_origin_'):]

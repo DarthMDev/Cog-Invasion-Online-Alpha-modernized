@@ -8,13 +8,13 @@ from lib.coginvasion.cog import SuitBank
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.suit.SuitTournament import SuitTournament
 from lib.coginvasion.globals import CIGlobals
-import CogBattleGlobals
+from . import CogBattleGlobals
 import random
 
 class DistributedSuitManagerAI(DistributedObjectAI):
     notify = directNotify.newCategory("DistributedSuitManagerAI")
 
-    chances = {'invasion': range(56, 100 + 1), 'cog': range(8, 55 + 1), 'tournament': range(1, 7 + 1)}
+    chances = {'invasion': list(range(56, 100 + 1)), 'cog': list(range(8, 55 + 1)), 'tournament': list(range(1, 7 + 1))}
     # The delays after a certain spawn type has ended
     delayRangeBySpawn = {'invasion': [20, 40], 'cog': [5, 20], 'tournament': [20, 40]}
     suitsRequestBySize = {'small': 7, 'medium': 14, 'large': 21}
@@ -98,7 +98,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         return self.activeInvasion
 
     def killAllSuits(self, andVP = 0):
-        for suit in self.suits.values():
+        for suit in list(self.suits.values()):
             if not andVP:
                 if not suit.isDead() and not suit.suitPlan in [SuitBank.VicePresident,
                                                                SuitBank.LucyCrossbill]:
@@ -108,7 +108,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
                     suit.b_setHealth(0)
 
     def flyAwayAllSuits(self):
-        for suit in self.suits.values():
+        for suit in list(self.suits.values()):
             if not suit.isDead() and not suit.suitPlan in [SuitBank.VicePresident,
                                                            SuitBank.LucyCrossbill]:
                 base.taskMgr.remove(suit.uniqueName('monitorHealth'))
@@ -326,7 +326,7 @@ class DistributedSuitManagerAI(DistributedObjectAI):
         self.stopSpawner()
         self.stopBreak()
         taskMgr.remove(self.uniqueName('doInvasion'))
-        for suit in self.suits.values():
+        for suit in list(self.suits.values()):
             self.deadSuit(suit.doId)
             suit.disable()
             suit.requestDelete()

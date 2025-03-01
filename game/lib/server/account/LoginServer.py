@@ -57,7 +57,7 @@ class LoginServer(MiniServer.MiniServer):
 
     def canMakeNewAccount(self, mac):
         numAccs = 0
-        for accountData in self.jsonAccInfo.values():
+        for accountData in list(self.jsonAccInfo.values()):
             if accountData.get("mac", None) == mac:
                 numAccs += 1
         if numAccs >= self.getAccountLimitPerComp():
@@ -85,12 +85,12 @@ class LoginServer(MiniServer.MiniServer):
         self.accInfoFile.flush()
 
     def handleDatagram(self, datagram):
-        print "I got a datagram."
+        print("I got a datagram.")
         dgi = DatagramIterator(datagram)
         connection = datagram.getConnection()
         address = datagram.getAddress()
         msgType = dgi.getUint16()
-        print msgType
+        print(msgType)
         if msgType == ACC_VALIDATE:
             name = dgi.getString()
             password = dgi.getString()
@@ -112,7 +112,7 @@ class LoginServer(MiniServer.MiniServer):
             self.__handleBaseLinkRequest(connection)
 
     def __handleBaseLinkRequest(self, connection):
-        print "Got a baseLink request"
+        print("Got a baseLink request")
         dg = PyDatagram()
         dg.addUint16(BASE_LINK)
         dg.addString(baseLink)
@@ -137,9 +137,9 @@ class LoginServer(MiniServer.MiniServer):
         self.cWriter.send(dg, connection)
 
     def __handleDownloadTimeReport(self, dgi, address):
-        print "----------DOWNLOAD TIME----------"
-        print "From: " + str(address)
-        print "Total download time: " + str(dgi.getFloat64()) + " seconds."
+        print("----------DOWNLOAD TIME----------")
+        print("From: " + str(address))
+        print("Total download time: " + str(dgi.getFloat64()) + " seconds.")
 
     def __handleClientMD5(self, dgi, connection):
         filename = dgi.getString()
@@ -155,25 +155,25 @@ class LoginServer(MiniServer.MiniServer):
 
     def createAccount(self, name, password, mac, connection):
         name = name.lower()
-        print "Attemping to create account: %s, %s" % (name, password)
-        if self.jsonAccInfo.has_key(name):
-            print "Account already exists: %s, %s" % (name, password)
+        print("Attemping to create account: %s, %s" % (name, password))
+        if name in self.jsonAccInfo:
+            print("Account already exists: %s, %s" % (name, password))
             self.sendAccountExists(connection)
             return
         elif not self.canMakeNewAccount(mac):
-            print "Too many accounts have been created on this computer."
+            print("Too many accounts have been created on this computer.")
             self.sendServerMessage('tmaotc', connection, self.getAccountLimitPerComp())
             return
         elif self.isTotalAccountLimitReached():
-            print "The game's total account limit has already been reached."
+            print("The game's total account limit has already been reached.")
             self.sendServerMessage('tmait', connection, self.getAccountLimit())
             return
-        print "Hashing password..."
+        print("Hashing password...")
         hash = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
         self.jsonAccInfo[name] = {"password": hash, "mac": mac}
         self.flushData(self.jsonAccInfo)
         self.sendAccountCreated(connection)
-        print "Created account: %s, %s" % (name, password)
+        print("Created account: %s, %s" % (name, password))
 
     def sendAccountCreated(self, connection):
         dg = PyDatagram()
@@ -186,7 +186,7 @@ class LoginServer(MiniServer.MiniServer):
         self.cWriter.send(dg, connection)
 
     def isValidAccount(self, name, password):
-        accExists = self.jsonAccInfo.has_key(name)
+        accExists = name in self.jsonAccInfo
         if accExists:
             acc = self.jsonAccInfo.get(name)
             hash = acc.get('password')
@@ -199,14 +199,14 @@ class LoginServer(MiniServer.MiniServer):
 
     def validateAccount(self, name, password, connection, address):
         name = name.lower()
-        print "I'm validating an account with credidentials: %s, %s" % (name, password)
+        print("I'm validating an account with credidentials: %s, %s" % (name, password))
         if self.isValidAccount(name, password):
             self.sendValidAccount(connection, address)
         else:
             self.sendInvalidAccount(connection)
 
     def sendValidAccount(self, connection, address):
-        print "The account is valid."
+        print("The account is valid.")
         dg = PyDatagram()
         dg.addUint16(ACC_VALID)
         dg.addString("gameserver.coginvasion.com:7032")
@@ -225,7 +225,7 @@ class LoginServer(MiniServer.MiniServer):
         self.cWriter.send(dg, self.serverConnection)
 
     def sendInvalidAccount(self, connection):
-        print "The account is invalid."
+        print("The account is invalid.")
         dg = PyDatagram()
         dg.addUint16(ACC_INVALID)
         self.cWriter.send(dg, connection)

@@ -6,7 +6,7 @@
 """
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from DistributedDroppableCollectableJellybeans import DistributedDroppableCollectableJellybeans
+from .DistributedDroppableCollectableJellybeans import DistributedDroppableCollectableJellybeans
 from direct.interval.IntervalGlobal import SoundInterval
 
 class DistributedDroppableCollectableJellybeanJar(DistributedDroppableCollectableJellybeans):

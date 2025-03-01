@@ -8,7 +8,7 @@ from direct.interval.IntervalGlobal import Parallel, LerpPosInterval, LerpQuatIn
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.quests import Quests
 from lib.coginvasion.nametag import NametagGlobals
-from DistributedToon import DistributedToon
+from .DistributedToon import DistributedToon
 
 class DistributedNPCToon(DistributedToon):
     notify = directNotify.newCategory("DistributedNPCToon")

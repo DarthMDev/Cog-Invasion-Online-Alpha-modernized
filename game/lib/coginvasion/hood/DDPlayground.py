@@ -1,7 +1,7 @@
 # Filename: DDPlayground.py
 # Created by:  blach (26Jul15)
 
-import Playground
+from . import Playground
 from direct.interval.SoundInterval import SoundInterval
 import random
 

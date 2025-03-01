@@ -4,7 +4,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from lib.coginvasion.globals import CIGlobals
-from DistributedNPCToonAI import DistributedNPCToonAI
+from .DistributedNPCToonAI import DistributedNPCToonAI
 
 class DistributedClerkNPCToonAI(DistributedNPCToonAI):
     notify = directNotify.newCategory('DistributedClerkNPCToonAI')

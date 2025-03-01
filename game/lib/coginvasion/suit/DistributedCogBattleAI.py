@@ -9,7 +9,7 @@ from lib.coginvasion.suit.DistributedSuitManagerAI import DistributedSuitManager
 from lib.coginvasion.shop.DistributedGagShopAI import DistributedGagShopAI
 from lib.coginvasion.shop.DistributedBattleShopAI import DistributedBattleShopAI
 from lib.coginvasion.battle.DistributedPieTurretManagerAI import DistributedPieTurretManagerAI
-import CogBattleGlobals
+from . import CogBattleGlobals
 
 class DistributedCogBattleAI(DistributedObjectAI):
     notify = directNotify.newCategory("DistributedCogBattleAI")
@@ -120,7 +120,7 @@ class DistributedCogBattleAI(DistributedObjectAI):
     def handleToonLeft(self, avId, died = 0):
         self.notify.warning("Removing avatar {0} from DistributedCogBattleAI-{1}...".format(avId, self.doId))
         # Check if this avatar had a turret.
-        for turret in self.turretMgr.turretId2turret.values():
+        for turret in list(self.turretMgr.turretId2turret.values()):
             if turret.getOwner() == avId:
                 # We won't keep the turret of an avatar that has
                 # left because it will raise issues.

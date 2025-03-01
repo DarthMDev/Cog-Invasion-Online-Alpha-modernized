@@ -13,7 +13,7 @@ class DistrictNameManagerUD(DistributedObjectGlobalUD):
 
     def shuttingDown(self, name):
         # This district is shutting down.. make their name available.
-        print "Freeing up District name: {0}".format(name)
+        print("Freeing up District name: {0}".format(name))
         self.availableNames.append(name)
 
     def requestDistrictName(self):

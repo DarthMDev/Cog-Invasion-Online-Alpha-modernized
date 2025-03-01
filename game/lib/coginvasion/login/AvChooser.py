@@ -12,8 +12,8 @@ from direct.fsm.StateData import StateData
 from lib.coginvasion.globals import CIGlobals, ChatGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType, HolidayGlobals
 from lib.coginvasion.gui.WhisperPopup import WhisperPopup
-from AvChoice import AvChoice
-from CharSelection import CharSelection
+from .AvChoice import AvChoice
+from .CharSelection import CharSelection
 
 class AvChooser(StateData):
     notify = directNotify.newCategory("AvChooser")

@@ -82,12 +82,12 @@ class GagManager:
                      CIGlobals.SquirtFlower : SquirtingFlower}
         
     def getGagNameByType(self, gagType):
-        for gName, definedType in self.gags.iteritems():
+        for gName, definedType in self.gags.items():
             if definedType == type(gagType):
                 return gName
 
     def getGagByName(self, name):
-        for gName in self.gags.keys():
+        for gName in list(self.gags.keys()):
             if gName == name:
                 return self.gags.get(name)()
 

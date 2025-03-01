@@ -530,11 +530,11 @@ class Suit(Avatar):
         self.propellerSounds['in'] = self.audio3d.loadSfx(SuitGlobals.propellerInSfx)
         self.propellerSounds['out'] = self.audio3d.loadSfx(SuitGlobals.propellerOutSfx)
         self.propellerSounds['neutral'] = self.audio3d.loadSfx(SuitGlobals.propellerNeutSfx)
-        for sound in self.propellerSounds.values():
+        for sound in list(self.propellerSounds.values()):
             self.audio3d.attachSoundToObject(sound, self.propeller)
 
     def cleanupPropeller(self):
-        for sound in self.propellerSounds.values():
+        for sound in list(self.propellerSounds.values()):
             self.audio3d.detachSound(sound)
             sound.stop()
         self.propellerSounds = {}

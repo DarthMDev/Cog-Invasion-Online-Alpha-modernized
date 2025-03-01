@@ -8,7 +8,7 @@ from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
 from lib.coginvasion.cog import SuitGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from lib.coginvasion.globals import CIGlobals
-import DeliveryGameGlobals as DGG
+from . import DeliveryGameGlobals as DGG
 
 import random
 

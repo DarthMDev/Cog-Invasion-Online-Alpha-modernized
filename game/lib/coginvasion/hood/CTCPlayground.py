@@ -5,7 +5,7 @@
 
 """
 
-import Playground
+from . import Playground
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.SoundInterval import SoundInterval
 import random

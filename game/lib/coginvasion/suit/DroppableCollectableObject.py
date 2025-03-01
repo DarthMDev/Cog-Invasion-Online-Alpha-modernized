@@ -54,12 +54,12 @@ class DroppableCollectableObject(DirectObject, NodePath):
 			self.collRayNodePath = None
 		
 	def load(self):
-		print "loading droppableCollectableObject"
+		print("loading droppableCollectableObject")
 		self.loadObject()
 		self.loadCollisions()
 		
 	def unload(self):
-		print "unloading..."
+		print("unloading...")
 		self.removeCollisions()
 		self.removeObject()
 		self.removeNode()

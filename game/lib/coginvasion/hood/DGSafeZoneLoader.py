@@ -2,8 +2,8 @@
 # Created by:  blach (24Jul15)
 
 from lib.coginvasion.holiday.HolidayManager import HolidayType
-import SafeZoneLoader
-import DGPlayground
+from . import SafeZoneLoader
+from . import DGPlayground
 
 class DGSafeZoneLoader(SafeZoneLoader.SafeZoneLoader):
 

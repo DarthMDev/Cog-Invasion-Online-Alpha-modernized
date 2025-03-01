@@ -10,7 +10,7 @@ QuestSubjects = {-1: "Nothing", 0: "Cogs", 1: "Cog Invasions", 2: "Lawbots",
 AbbrToDept = {'l': QuestSubjects[2], 'c': QuestSubjects[3], 's': QuestSubjects[4], 'm': QuestSubjects[5]}
 CogSubjects = [0, 2, 3, 4, 5, 6]
 DeptSubjects = [2, 3, 4, 5]
-QuestSubject2SubjectId = {v: k for k, v in QuestSubjects.items()}
+QuestSubject2SubjectId = {v: k for k, v in list(QuestSubjects.items())}
 Areas = [ToontownCentral, TheBrrrgh, DonaldsDreamland, MinniesMelodyland, DaisyGardens, DonaldsDock]
 QuestAreas = {
     -1: "Nowhere",

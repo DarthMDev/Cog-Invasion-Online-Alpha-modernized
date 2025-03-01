@@ -3,11 +3,11 @@
 # Created by: DecodedLogic (13Sep15)
 ########################################
 
-from SuitHabitualBehavior import SuitHabitualBehavior
-from SuitType import SuitType
-import SuitAttacks
-import SuitGlobals
-import SuitUtils
+from .SuitHabitualBehavior import SuitHabitualBehavior
+from .SuitType import SuitType
+from . import SuitAttacks
+from . import SuitGlobals
+from . import SuitUtils
 
 from direct.interval.IntervalGlobal import Sequence, Wait, Func
 from direct.task.Task import Task
@@ -190,7 +190,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
         toonObjsInRange = {}
         self.avatarsInRange = []
 
-        for obj in base.air.doId2do.values():
+        for obj in list(base.air.doId2do.values()):
             className = obj.__class__.__name__
             if className in ['DistributedToonAI', 'DistributedPieTurretAI']:
                 if obj.zoneId == self.suit.zoneId:
@@ -201,7 +201,7 @@ class SuitAttackBehavior(SuitHabitualBehavior):
                         if dist <= self.ATTACK_DISTANCE:
                             toonObjsInRange.update({obj : dist})
 
-        toonObjsInRange = sorted(toonObjsInRange.items(), key = operator.itemgetter(1))
+        toonObjsInRange = sorted(list(toonObjsInRange.items()), key = operator.itemgetter(1))
         for toonObj, _ in toonObjsInRange:
             self.avatarsInRange.append(toonObj)
 

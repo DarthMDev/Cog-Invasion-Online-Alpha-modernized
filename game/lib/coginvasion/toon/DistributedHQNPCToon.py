@@ -5,7 +5,7 @@ from panda3d.core import Vec4
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import DirectFrame, DirectButton, DGG
 
-import DistributedNPCToon
+from . import DistributedNPCToon
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.quests import Quests, QuestNote
 
@@ -28,7 +28,7 @@ class DistributedHQNPCToon(DistributedNPCToon.DistributedNPCToon):
             geom = DGG.getDefaultDialogGeom(), geom_color=Vec4(0.8, 0.6, 0.4, 1),
             geom_scale=(1.85, 1, 0.9), geom_hpr=(0, 0, -90))
         self.questBtns = []
-        for i in xrange(len(self.questNotes)):
+        for i in range(len(self.questNotes)):
             note = self.questNotes[i]
             note.setPos(0, 0, 0)
             if quests[i].currentObjective.type in Quests.DefeatObjectives:

@@ -8,7 +8,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
-import GroupStation
+from . import GroupStation
 
 class DistributedGroupStation(GroupStation.GroupStation, DistributedObject):
 	notify = directNotify.newCategory("DistributedGroupStation")

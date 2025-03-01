@@ -6,4 +6,4 @@
 """
 
 class ItemType:
-    GAG, UPGRADE, HEAL = range(3)
+    GAG, UPGRADE, HEAL = list(range(3))

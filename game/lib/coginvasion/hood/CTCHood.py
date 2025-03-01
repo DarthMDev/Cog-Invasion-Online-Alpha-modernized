@@ -8,7 +8,7 @@
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 from panda3d.core import TransparencyAttrib
-import ToonHood, CTCSafeZoneLoader, TTTownLoader, SkyUtil
+from . import ToonHood, CTCSafeZoneLoader, TTTownLoader, SkyUtil
 
 class CTCHood(ToonHood.ToonHood):
 

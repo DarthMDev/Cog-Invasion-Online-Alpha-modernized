@@ -5,7 +5,7 @@ from direct.distributed.DistributedNodeAI import DistributedNodeAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import globalClockDelta
 
-import CityCartGlobals
+from . import CityCartGlobals
 
 import random
 

@@ -9,7 +9,7 @@
 from direct.distributed.ClientRepository import ClientRepository
 from panda3d.core import CollisionTraverser, AntialiasAttrib, loadPrcFile, loadPrcFileData
 from panda3d.core import CullBinManager
-import __builtin__
+import builtins
 
 loadPrcFile('config/config_client.prc')
 loadPrcFileData('', 'framebuffer-multisample 0')
@@ -56,7 +56,7 @@ class Standalone:
     
     def __init__(self):
         self.process = 'client'
-        __builtin__.game = self
+        builtins.game = self
         
         base.cr = ClientRepository(['phase_3/etc/direct.dc', 'phase_3/etc/toon.dc'])
         base.cr.isShowingPlayerIds = None

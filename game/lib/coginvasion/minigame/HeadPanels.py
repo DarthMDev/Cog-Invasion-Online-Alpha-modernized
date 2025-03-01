@@ -24,11 +24,11 @@ class HeadPanels:
         self.doId2Frame = {}
 
     def showFrames(self):
-        for frame in self.doId2Frame.values():
+        for frame in list(self.doId2Frame.values()):
             frame[0].show()
 
     def hideFrames(self):
-        for frame in self.doId2Frame.values():
+        for frame in list(self.doId2Frame.values()):
             frame[0].hide()
 
     def generate(self, gender, head, headtype, color, doId, name, valueLabel = 1):
@@ -62,7 +62,7 @@ class HeadPanels:
 
     def updateValue(self, doId, direction):
         count = 0
-        if self.doId2Frame.has_key(doId):
+        if doId in self.doId2Frame:
             container, headframe, toon, nameLbl, valueLabel = self.doId2Frame[doId]
             if direction == 0:
                 count = int(valueLabel['text']) - 1

@@ -3,7 +3,7 @@
 # Created by: DecodedLogic (12Mar16)
 ########################################
 
-from DistributedRestockBarrelAI import DistributedRestockBarrelAI
+from .DistributedRestockBarrelAI import DistributedRestockBarrelAI
 from lib.coginvasion.gags import GagGlobals
 
 class DistributedGagBarrelAI(DistributedRestockBarrelAI):
@@ -62,8 +62,8 @@ class DistributedGagBarrelAI(DistributedRestockBarrelAI):
                     giveAmount = restockLeft
                 restockGags[gagId] = supply + giveAmount
                 restockLeft -= giveAmount
-                print 'Requesting to give %s %ss.' % (str(restockGags[gagId]), GagGlobals.getGagByID(gagId))
+                print('Requesting to give %s %ss.' % (str(restockGags[gagId]), GagGlobals.getGagByID(gagId)))
                 
-        for gagId in restockGags.keys():
+        for gagId in list(restockGags.keys()):
             avatar.b_setGagAmmo(gagId, restockGags.get(gagId))
             

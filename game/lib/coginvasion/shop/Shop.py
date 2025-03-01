@@ -56,7 +56,7 @@ class Shop(StateData):
         base.localAvatar.setMoney(self.avMoney)
         base.localAvatar.setHealth(self.origHealth)
 
-        for healCooldown in self.newHealCooldowns.keys():
+        for healCooldown in list(self.newHealCooldowns.keys()):
             if self.healCooldowns.get(healCooldown):
                 del self.healCooldowns[healCooldown]
 
@@ -155,13 +155,13 @@ class Shop(StateData):
             return self.healCooldowns.get(item)
 
     def hasCooldown(self, item):
-        return item in self.healCooldowns.keys()
+        return item in list(self.healCooldowns.keys())
 
     def purchaseItem(self, item, page):
         items = self.items
         itemType = None
         values = None
-        for iItem, iValues in items.iteritems():
+        for iItem, iValues in items.items():
             if iItem == item:
                 values = iValues
                 itemType = values.get('type')
@@ -224,7 +224,7 @@ class Shop(StateData):
 
     def destroy(self):
         self.exit()
-        for cooldown in self.healCooldowns.keys():
+        for cooldown in list(self.healCooldowns.keys()):
             base.taskMgr.remove(cooldown)
             if cooldown in self.healCooldowns:
                 del self.healCooldowns[cooldown]
@@ -239,7 +239,7 @@ class Page(DirectFrame):
         self.items = {}
 
     def update(self):
-        for item, values in self.items.iteritems():
+        for item, values in self.items.items():
             entry = self.itemEntries.get(item)
             itemType = values.get('type')
             price = values.get('price')
@@ -299,7 +299,7 @@ class Page(DirectFrame):
     def destroy(self):
         self.items = {}
         del self.items
-        for key, entry in self.itemEntries.iteritems():
+        for key, entry in self.itemEntries.items():
             entry[0].destroy()
             entry[1].destroy()
             self.itemEntries[key] = None
@@ -462,7 +462,7 @@ class ShopWindow(DirectFrame):
         # Let's show the loadout gags first in a full shop.
         if self.shop.wantFullShop:
             crcGags = OrderedDict(newItems)
-            for item, values in newItems.items():
+            for item, values in list(newItems.items()):
                 if values.get('type') == ItemType.GAG:
                     gag = item()
                     hasGag = base.localAvatar.getBackpack().hasGag(gag.getID())
@@ -475,9 +475,9 @@ class ShopWindow(DirectFrame):
             # Let's add back the other gags.
             crcGags.update(newItems)
             newItems = crcGags
-            print len(newItems)
+            print(len(newItems))
         else:
-            for item, values in newItems.items():
+            for item, values in list(newItems.items()):
                 if values.get('type') == ItemType.GAG:
                     gag = item()
                     if gag.getID() not in loadout or not base.localAvatar.getBackpack().hasGag(gag.getID()):
@@ -495,7 +495,7 @@ class ShopWindow(DirectFrame):
         for _ in range(self.nPages):
             page = Page(self.shop, self)
             self.pages.append(page)
-        for item, values in newItems.iteritems():
+        for item, values in newItems.items():
             pos = itemPos[itemIndex]
             page = self.pages[pageIndex]
             itemType = values.get('type')

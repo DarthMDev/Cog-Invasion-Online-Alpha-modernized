@@ -1,8 +1,8 @@
 # Filename: DDTownLoader.py
 # Created by:  blach (26Jul15)
 
-import TownLoader
-import DDStreet
+from . import TownLoader
+from . import DDStreet
 
 from lib.coginvasion.globals import CIGlobals
 

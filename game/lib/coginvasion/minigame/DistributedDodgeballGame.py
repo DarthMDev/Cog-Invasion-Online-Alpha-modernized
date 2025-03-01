@@ -12,19 +12,19 @@ from direct.interval.IntervalGlobal import Sequence, Wait, Func, LerpPosInterval
 from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.toon import ParticleLoader
 
-from DistributedMinigame import getAlertText, getAlertPulse
-from DistributedEagleGame import getGameText, getCountdownIval
-from DistributedToonFPSGame import DistributedToonFPSGame
-from DodgeballFirstPerson import DodgeballFirstPerson
-from Snowball import Snowball
-from TeamMinigame import TeamMinigame, TEAM1, TEAM2
+from .DistributedMinigame import getAlertText, getAlertPulse
+from .DistributedEagleGame import getGameText, getCountdownIval
+from .DistributedToonFPSGame import DistributedToonFPSGame
+from .DodgeballFirstPerson import DodgeballFirstPerson
+from .Snowball import Snowball
+from .TeamMinigame import TeamMinigame, TEAM1, TEAM2
 
 BLUE = TEAM1
 RED = TEAM2
 
 TEAM_COLOR_BY_ID = {RED: (1, 0, 0, 1), BLUE: (0.2, 0.2, 1, 1)}
 
-from RemoteDodgeballAvatar import RemoteDodgeballAvatar
+from .RemoteDodgeballAvatar import RemoteDodgeballAvatar
 
 class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
     """The winter dodgeball minigame (client side)"""
@@ -118,7 +118,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
     def snowballHitPlayer(self, damagedPlayer, snowballIndex):
         av = self.getRemoteAvatar(damagedPlayer)
         if av:
-            print "setting health"
+            print("setting health")
             av.setHealth(av.health - DistributedDodgeballGame.SnowBallDmg)
         if damagedPlayer == base.localAvatar.doId:
             self.showAlert("You were hit by a snowball!")
@@ -136,7 +136,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
         av = RemoteDodgeballAvatar(self, self.cr, avId)
         if avId == self.cr.localAvId:
             self.myRemoteAvatar = av
-        print "setup remove avatar {0}".format(avId)
+        print("setup remove avatar {0}".format(avId))
         self.remoteAvatars.append(av)
 
     def __getSnowTree(self, path):
@@ -179,7 +179,7 @@ class DistributedDodgeballGame(DistributedToonFPSGame, TeamMinigame):
             tree.setPos(pos)
             self.trees.append(tree)
 
-        for i in xrange(len(DistributedDodgeballGame.SnowballData)):
+        for i in range(len(DistributedDodgeballGame.SnowballData)):
             snowdata = DistributedDodgeballGame.SnowballData[i]
             snowball = Snowball(self, i)
             snowball.load()

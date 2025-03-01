@@ -8,7 +8,7 @@ from lib.coginvasion.suit.DistributedDroppableCollectableBackpackAI import Distr
 from lib.coginvasion.suit.DistributedDroppableCollectableJellybeanAI import DistributedDroppableCollectableJellybeanAI as DJellybeanAI
 from lib.coginvasion.suit.DistributedDroppableCollectableJellybeanJarAI import DistributedDroppableCollectableJellybeanJarAI as DJellybeanJarAI
 import random
-import SuitAttacks
+from . import SuitAttacks
 
 class SuitItemDropper:
     notify = directNotify.newCategory('SuitItemDropper')
@@ -29,10 +29,10 @@ class SuitItemDropper:
             self.numDrops = 5
             self.setDropChance(DBackpackAI, 0)
             """
-        for _ in xrange(self.numDrops):
+        for _ in range(self.numDrops):
             chance = random.randint(1, 100)
             drop = None
-            for constructor, values in self.possibleDrops.iteritems():
+            for constructor, values in self.possibleDrops.items():
                 if 'chance' in values:
                     dropChance = values.get('chance')
                     if chance <= dropChance:
@@ -40,7 +40,7 @@ class SuitItemDropper:
                         gags = list(GagGlobals.gagIds.keys())
                         maxGags = values.get('maxGags')
                         backpackGags = []
-                        for _ in xrange(maxGags):
+                        for _ in range(maxGags):
                             choice = random.choice(gags)
                             backpackGags.append(choice)
                             gags.remove(choice)
@@ -65,7 +65,7 @@ class SuitItemDropper:
         return drop
 
     def drop(self):
-        for i in xrange(len(self.suitDrops)):
+        for i in range(len(self.suitDrops)):
             drop = self.suitDrops[i]
             x, y, z = self.suit.getPos(render)
             if i > 0:

@@ -62,7 +62,7 @@ class DistributedDistrictAI(DistributedObjectAI):
     def setPopulation(self, amount):
         self.population = amount
         if amount > self.getPopRecord():
-            print "New Population Record: " + str(amount)
+            print("New Population Record: " + str(amount))
             population_file = open("astron/databases/record_population.txt", "w")
             population_file.write(str(amount))
             population_file.flush()
@@ -82,14 +82,14 @@ class DistributedDistrictAI(DistributedObjectAI):
 
     def joining(self):
         avId = self.air.getAvatarIdFromSender()
-        print "[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is joining my district!"
+        print("[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is joining my district!")
         self.avatarIds.append(avId)
         self.b_setPopulation(self.getPopulation() + 1)
 
     def monitorAvatars(self, task):
         for avId in self.avatarIds:
-            if not avId in self.air.doId2do.keys():
-                print "[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is leaving my district!"
+            if not avId in list(self.air.doId2do.keys()):
+                print("[" + str(time.strftime("%m-%d-%Y %H:%M:%S")) + "] " + str(avId) + " is leaving my district!")
                 self.avatarIds.remove(avId)
                 self.b_setPopulation(self.getPopulation() - 1)
         task.delayTime = 0.5
@@ -103,10 +103,10 @@ class DistributedDistrictAI(DistributedObjectAI):
             if (adminToken in tokens and
             av.getAdminToken() in tokens and
             av.getAdminToken() == adminToken):
-                print "DistributedDistrictAI: Sending update 'systemMessage' with message: " + message
+                print("DistributedDistrictAI: Sending update 'systemMessage' with message: " + message)
                 self.sendUpdate('systemMessage', [message])
         else:
-            print "DistributedDistrictAI: Could not find the avatar that requested a system message..."
+            print("DistributedDistrictAI: Could not find the avatar that requested a system message...")
 
     def setAvailable(self, available):
         self.available = available

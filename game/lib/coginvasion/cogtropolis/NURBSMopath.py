@@ -139,7 +139,7 @@ class NURBSMopath():
                 self.__extractCurves(curve)
             elif isinctance(curve, RopeNode):
                 self.setCurve(curve)
-        print self.name
+        print(self.name)
         
     def loadCurves(self, fname, parent = render):
         if self.cnpRef:
@@ -149,9 +149,9 @@ class NURBSMopath():
         self.cnpRef.ls()
         if self.cnpRef:
             if not self.__extractCurves(self.cnpRef):
-                print 'NURBSMopath: can\'t find any curves in file: %s' % fname
+                print('NURBSMopath: can\'t find any curves in file: %s' % fname)
         else:
-            print 'NURBSMopath: no data in file: %s' % fname
+            print('NURBSMopath: no data in file: %s' % fname)
             
     def setCurve(self, curve):
             self.rope = NodePath(curve)
@@ -211,7 +211,7 @@ class NURBSMopath():
             self.stop()
             t = taskMgr.add(self.__playTask, self.name + '-play')
         else:
-            print 'NURBSMopath: has no curve.'
+            print('NURBSMopath: has no curve.')
         
     def stop(self):
         self.tDisplace = self.tCurrent

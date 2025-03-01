@@ -58,7 +58,7 @@ class SoundGag(Gag):
         if not radius:
             radius = self.soundRange
         suits = []
-        for obj in base.cr.doId2do.values():
+        for obj in list(base.cr.doId2do.values()):
             if obj.__class__.__name__ in CIGlobals.SuitClasses:
                 if obj.getPlace() == base.localAvatar.zoneId:
                     if obj.getDistance(self.avatar) <= radius:

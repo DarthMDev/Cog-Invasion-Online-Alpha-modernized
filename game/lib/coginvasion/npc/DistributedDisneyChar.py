@@ -16,7 +16,7 @@ from lib.coginvasion.nametag import NametagGlobals
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval, NPCLookInterval
 from lib.coginvasion.globals import CIGlobals
 
-from DisneyCharGlobals import *
+from .DisneyCharGlobals import *
 
 import random
 
@@ -201,14 +201,14 @@ class DistributedDisneyChar(DistributedAvatar, DistributedSmoothNode):
         self.ears = []
 
         if self.charId in [MINNIE, MICKEY]:
-            for bundle in self.getPartBundleDict().values():
+            for bundle in list(self.getPartBundleDict().values()):
                 bundle = bundle['modelRoot'].getBundle()
                 earNull = bundle.findChild('sphere3')
                 if not earNull:
                     earNull = bundle.findChild('*sphere3')
                 earNull.clearNetTransforms()
 
-            for bundle in self.getPartBundleDict().values():
+            for bundle in list(self.getPartBundleDict().values()):
                 charNodepath = bundle['modelRoot'].partBundleNP
                 bundle = bundle['modelRoot'].getBundle()
                 earNull = bundle.findChild('sphere3')

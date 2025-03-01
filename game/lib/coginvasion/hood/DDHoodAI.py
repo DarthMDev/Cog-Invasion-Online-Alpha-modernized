@@ -3,8 +3,8 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from ToonHoodAI import ToonHoodAI
-import DistributedBoatAI
+from .ToonHoodAI import ToonHoodAI
+from . import DistributedBoatAI
 from lib.coginvasion.globals import CIGlobals
 
 class DDHoodAI(ToonHoodAI):

@@ -16,7 +16,7 @@ class SuitPlan:
 
     def __init__(self, name, suitType, dept, head, scale, nametagZ, height, headColor = None,
                  headTex = None, headAnims = None, handColor = None, forcedVariant = None, forcedVoice = None,
-                 levelRange = None, forcedLevel = None, attacks = SuitAttacks.SuitAttackLengths.keys()):
+                 levelRange = None, forcedLevel = None, attacks = list(SuitAttacks.SuitAttackLengths.keys())):
         self.name = name
         self.height = height
         self.suitType = suitType
@@ -484,18 +484,18 @@ SuitIds = {
     33 : LucyCrossbill
 }
 
-totalSuits = SuitIds.values()
+totalSuits = list(SuitIds.values())
 
 def getSuitById(suitId):
     return SuitIds.get(suitId)
 
 def getIdFromSuit(suit):
-    for suitId, iSuit in SuitIds.items():
+    for suitId, iSuit in list(SuitIds.items()):
         if iSuit == suit:
             return suitId
 
 def getSuitByName(suitName):
-    for suit in SuitIds.values():
+    for suit in list(SuitIds.values()):
         if suit.getName() == suitName:
             return suit
 

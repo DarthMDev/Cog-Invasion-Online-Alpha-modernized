@@ -1,7 +1,7 @@
 # Filename: DistributedTailorInteriorAI.py
 # Created by:  DecodedLogic (11Aug15)
 
-import DistributedToonInteriorAI
+from . import DistributedToonInteriorAI
 
 class DistributedTailorInteriorAI(DistributedToonInteriorAI.DistributedToonInteriorAI):
 

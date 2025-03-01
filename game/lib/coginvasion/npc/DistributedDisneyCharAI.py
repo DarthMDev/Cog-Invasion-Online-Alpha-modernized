@@ -9,7 +9,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 
 from lib.coginvasion.avatar.DistributedAvatarAI import DistributedAvatarAI
 
-from DisneyCharGlobals import *
+from .DisneyCharGlobals import *
 
 import random
 
@@ -85,7 +85,7 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if self.charId != SAILOR_DONALD:
             self.startLonelyTask()
             if pickRandomPoint:
-                self.currentPointLetter = random.choice(WALK_POINTS[self.charId].keys())
+                self.currentPointLetter = random.choice(list(WALK_POINTS[self.charId].keys()))
             self.sendUpdate('doNeutral', [self.currentPointLetter])
 
     def startLonelyTask(self):
@@ -175,7 +175,7 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
         if self.currentPointLetter is None:
             # We haven't walked anywhere yet.
             # Choose any random point.
-            point = random.choice(WALK_POINTS[self.charId].items())
+            point = random.choice(list(WALK_POINTS[self.charId].items()))
             pointLetter = point[0]
             timeUntilNeutral = 1.0
         else:
@@ -223,7 +223,7 @@ class DistributedDisneyCharAI(DistributedAvatarAI, DistributedSmoothNodeAI):
                 self.avatars.append(avId)
 
     def avatarExit(self, avId = None, foo = None, foo2 = None):
-        print "avatar Exit"
+        print("avatar Exit")
         if avId == None:
             avId = self.air.getAvatarIdFromSender()
         if avId in self.avatars:

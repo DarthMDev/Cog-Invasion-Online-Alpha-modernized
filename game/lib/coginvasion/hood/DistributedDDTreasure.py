@@ -1,7 +1,7 @@
 # Filename: DistributedDDTreasure.py
 # Created by:  blach (29Jul15)
 
-import DistributedTreasure
+from . import DistributedTreasure
 
 class DistributedDDTreasure(DistributedTreasure.DistributedTreasure):
 

@@ -10,7 +10,7 @@ from lib.coginvasion.cog.DistributedSuitAI import DistributedSuitAI
 from lib.coginvasion.cog import SuitGlobals, SuitAttacks
 from lib.coginvasion.npc.NPCWalker import NPCWalkInterval
 from lib.coginvasion.globals import CIGlobals
-import TutorialGlobals
+from . import TutorialGlobals
 
 import random
 
@@ -132,7 +132,7 @@ class DistributedTutorialSuitAI(DistributedSuitAI):
         self.headsUp(target)
         # Choose a random attack and start it.
         attack = random.choice(self.suitPlan.getAttacks())
-        attackIndex = SuitAttacks.SuitAttackLengths.keys().index(attack)
+        attackIndex = list(SuitAttacks.SuitAttackLengths.keys()).index(attack)
         attackTaunt = random.randint(0, len(CIGlobals.SuitAttackTaunts[attack]) - 1)
         timestamp = globalClockDelta.getFrameNetworkTime()
         if self.isDead():

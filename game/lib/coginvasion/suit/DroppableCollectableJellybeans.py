@@ -5,7 +5,7 @@
 
 """
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from DroppableCollectableObject import DroppableCollectableObject
+from .DroppableCollectableObject import DroppableCollectableObject
 
 class DroppableCollectableJellybeans(DroppableCollectableObject):
 	notify = directNotify.newCategory("DroppableCollectableJellybeans")

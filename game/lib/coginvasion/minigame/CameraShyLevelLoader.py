@@ -125,7 +125,7 @@ class CameraShyLevelLoader:
                     loadDNAFile(self.dnaStore, dnaFiles[index])
         elif data.get('models'):
             models = data['models']
-            for model, modifiers in models.items():
+            for model, modifiers in list(models.items()):
                 mdl = loader.loadModel(model)
 
                 if modifiers.get('name'):
@@ -212,7 +212,7 @@ class CameraShyLevelLoader:
             points = self.levelData[self.level].get('spawnPoints')
 
             # Do we need to disect the pos and hpr coordinates?
-            if points in hoodMgr.dropPoints.values():
+            if points in list(hoodMgr.dropPoints.values()):
                 twoPointArray = []
                 for posHpr in points:
                     twoPointArray.append(

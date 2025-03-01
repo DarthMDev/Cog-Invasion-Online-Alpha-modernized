@@ -3,7 +3,7 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from DistributedToonAI import DistributedToonAI
+from .DistributedToonAI import DistributedToonAI
 from lib.coginvasion.quests import Quests
 from lib.coginvasion.globals import CIGlobals
 

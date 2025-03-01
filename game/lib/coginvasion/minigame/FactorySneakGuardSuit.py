@@ -11,7 +11,7 @@ from lib.coginvasion.globals import CIGlobals
 from lib.coginvasion.npc.NPCWalker import NPCLookInterval, NPCWalkInterval
 from lib.coginvasion.cog.Suit import Suit
 from lib.coginvasion.suit import SuitPathFinder
-import CogGuardGlobals as CGG
+from . import CogGuardGlobals as CGG
 
 import random
 
@@ -65,7 +65,7 @@ class FactorySneakGuardSuit(Suit, FSM):
         if self.queue.getNumEntries() > 0:
             self.queue.sortEntries()
             hitObj = self.queue.getEntry(0).getIntoNodePath()
-            print hitObj
+            print(hitObj)
             isLocalAvatar = hitObj.getParent().getPythonTag('localAvatar')
             if isLocalAvatar == 1:
                 # Yes! We see the prowler!
@@ -167,16 +167,16 @@ class FactorySneakGuardSuit(Suit, FSM):
         # Return the key of the closest point to the localAvatar.
         closestPoint = None
         pointKey2range = {}
-        for key, point in CGG.FactoryWalkPoints.items():
+        for key, point in list(CGG.FactoryWalkPoints.items()):
             dummyNode = render.attachNewNode('dummyNode')
             dummyNode.setPos(point)
             pointKey2range[key] = base.localAvatar.getDistance(dummyNode)
             dummyNode.removeNode()
         ranges = []
-        for distance in pointKey2range.values():
+        for distance in list(pointKey2range.values()):
             ranges.append(distance)
         ranges.sort()
-        for key in pointKey2range.keys():
+        for key in list(pointKey2range.keys()):
             distance = pointKey2range[key]
             if distance == ranges[0]:
                 closestPoint = key
@@ -214,7 +214,7 @@ class FactorySneakGuardSuit(Suit, FSM):
             elif self.getCurrentOrNextState() == 'GoBackToGuardSpot':
                 self.request('Guard')
             return
-        print self.pathQueue[self.currentPathIndex]
+        print(self.pathQueue[self.currentPathIndex])
         if self.currentPathIndex == 1 and self.pathQueue[0] == 1:
             # We need to walk from our guard point to the first waypoint in our path
             startPoint = self.getPos(render)

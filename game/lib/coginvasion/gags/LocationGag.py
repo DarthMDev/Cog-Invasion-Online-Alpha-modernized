@@ -5,7 +5,7 @@
 
 """
 
-from LocationSeeker import LocationSeeker
+from .LocationSeeker import LocationSeeker
 from direct.interval.IntervalGlobal import Sequence, Func, Parallel, SoundInterval, Wait, ActorInterval
 from direct.gui.DirectGui import OnscreenText
 from panda3d.core import Point3

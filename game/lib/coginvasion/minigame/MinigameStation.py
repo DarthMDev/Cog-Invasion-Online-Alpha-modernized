@@ -9,7 +9,7 @@ from panda3d.core import *
 from lib.coginvasion.globals import CIGlobals
 from direct.gui.DirectGui import *
 
-from GroupStation import GroupStation
+from .GroupStation import GroupStation
 
 class MinigameStation(GroupStation):
     game2maxPlayers = {CIGlobals.UnoGame: 4,

@@ -49,7 +49,7 @@ class DistributedGroupStationAI(DistributedObjectAI):
 		
 	def monitorAvatars(self, task):
 		for avatar in self.avatars:
-			if not avatar in self.air.doId2do.values():
+			if not avatar in list(self.air.doId2do.values()):
 				self.clearAvatar(avatar.doId)
 		return task.cont
 				
@@ -71,7 +71,7 @@ class DistributedGroupStationAI(DistributedObjectAI):
 		
 	def appendAvatar(self, doId):
 		if not self.isAvatarPresent(doId):
-			for key in self.air.doId2do.keys():
+			for key in list(self.air.doId2do.keys()):
 				obj = self.air.doId2do[key]
 				if obj.doId == doId:
 					self.avatars.append(obj)

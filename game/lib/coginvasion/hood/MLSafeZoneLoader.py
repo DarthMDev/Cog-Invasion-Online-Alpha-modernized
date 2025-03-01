@@ -3,8 +3,8 @@
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-from SafeZoneLoader import SafeZoneLoader
-from MLPlayground import MLPlayground
+from .SafeZoneLoader import SafeZoneLoader
+from .MLPlayground import MLPlayground
 from lib.coginvasion.holiday.HolidayManager import HolidayType
 
 class MLSafeZoneLoader(SafeZoneLoader):

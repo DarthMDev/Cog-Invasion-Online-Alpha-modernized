@@ -67,7 +67,7 @@ class BackpackAI:
     # Returns true or false depending on if the gag
     # is in the backpack.
     def hasGag(self, gagId):
-        return gagId in self.gags.keys()
+        return gagId in list(self.gags.keys())
     
     # Returns the gags dictionary.
     def getGags(self):
@@ -83,9 +83,9 @@ class BackpackAI:
     
     # Update the network ammo.
     def updateNetAmmo(self):
-        gagIds = self.gags.keys()
+        gagIds = list(self.gags.keys())
         ammo = []
-        for i in xrange(len(gagIds)):
+        for i in range(len(gagIds)):
             gagId = gagIds[i]
             ammo.append(self.gags.get(gagId)[0])
         self.owner.b_setBackpackAmmo(gagIds, ammo)

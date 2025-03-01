@@ -10,7 +10,7 @@ from direct.fsm import State
 from lib.coginvasion.minigame.DistributedMinigame import DistributedMinigame
 from lib.coginvasion.hood.SkyUtil import SkyUtil
 from lib.coginvasion.globals import CIGlobals
-import DeliveryGameGlobals as DGG
+from . import DeliveryGameGlobals as DGG
 
 import random
 

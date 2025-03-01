@@ -69,3 +69,5 @@ prod
 game/puzzleroomidea.png
 game/puzzleroomidea.pdn
 game/puzzle.py
+/ccoginvasion/build
+.DS_Store

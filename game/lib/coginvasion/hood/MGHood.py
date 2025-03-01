@@ -9,9 +9,9 @@ from lib.coginvasion.globals import CIGlobals
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.State import State
 from panda3d.core import TransparencyAttrib
-import ToonHood
-import MGSafeZoneLoader
-import SkyUtil
+from . import ToonHood
+from . import MGSafeZoneLoader
+from . import SkyUtil
 
 class MGHood(ToonHood.ToonHood):
     notify = directNotify.newCategory("MGHood")

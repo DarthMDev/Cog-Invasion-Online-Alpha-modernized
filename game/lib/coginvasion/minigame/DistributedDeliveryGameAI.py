@@ -6,8 +6,8 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from lib.coginvasion.cog import SuitBank, Variant
 from lib.coginvasion.minigame.DistributedMinigameAI import DistributedMinigameAI
 from lib.coginvasion.globals import CIGlobals
-from DistributedDeliveryTruckAI import DistributedDeliveryTruckAI
-from DistributedDeliveryGameSuitAI import DistributedDeliveryGameSuitAI
+from .DistributedDeliveryTruckAI import DistributedDeliveryTruckAI
+from .DistributedDeliveryGameSuitAI import DistributedDeliveryGameSuitAI
 
 import random
 
